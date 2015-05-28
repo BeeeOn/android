@@ -1,5 +1,5 @@
 /**
- * @brief Package for facilitys that implements sensors
+ * @brief Package for devices that implements sensors
  */
 package com.rehivetech.beeeon.household.device;
 
@@ -14,10 +14,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @brief Facility class which contains own data and devices (sensors, actors)
+ * @brief Device class which contains own data and devices (sensors, actors)
  * @author Robyer
  */
-public class Facility implements IIdentifier {
+public class Device implements IIdentifier {
 	protected String mAddress;
 	protected String mAdapterId;
 	protected String mLocationId;
@@ -34,19 +34,19 @@ public class Facility implements IIdentifier {
 	/**
 	 * Class constructor
 	 */
-	public Facility() {
+	public Device() {
 	}
 
 	/**
-	 * Represents settings of facility which could be saved to server
+	 * Represents settings of mDevice which could be saved to server
 	 */
-	public enum Savefacility {
-		SAVE_NAME, // rename facility
+	public enum SaveFacility {
+		SAVE_NAME, // rename mDevice
 		SAVE_LOCATION, // change location
 		SAVE_VISIBILITY, // change visibility //NOTE: sending always
 		SAVE_REFRESH, // change refresh interval
 		SAVE_VALUE, // change value (of actor)
-		SAVE_TYPE, // change facility's icon, etc. //NOTE: what? type cannot be changed
+		SAVE_TYPE, // change mDevice's icon, etc. //NOTE: what? type cannot be changed
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Get unique identifier of facility
+	 * Get unique identifier of mDevice
 	 * 
 	 * @return id
 	 */
@@ -104,7 +104,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Get location of facility
+	 * Get location of mDevice
 	 * 
 	 * @return location
 	 */
@@ -113,7 +113,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Setting location of facility
+	 * Setting location of mDevice
 	 * 
 	 * @param locationId
 	 */
@@ -126,7 +126,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Get adapter id of facility
+	 * Get adapter id of mDevice
 	 * 
 	 * @return adapter id
 	 */
@@ -135,7 +135,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Setting adapter id of facility
+	 * Setting adapter id of mDevice
 	 * 
 	 * @param adapterId
 	 */
@@ -144,7 +144,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Returning flag if facility has been initialized yet
+	 * Returning flag if mDevice has been initialized yet
 	 * 
 	 * @return
 	 */
@@ -153,7 +153,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Setting flag for facility initialization state
+	 * Setting flag for mDevice initialization state
 	 * 
 	 * @param initialized
 	 */
@@ -180,7 +180,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Get time of setting of facility to system
+	 * Get time of setting of mDevice to system
 	 * 
 	 * @return involve time
 	 */
@@ -198,7 +198,7 @@ public class Facility implements IIdentifier {
 	}
 
 	/**
-	 * Get MAC address of facility
+	 * Get MAC address of mDevice
 	 * 
 	 * @return address
 	 */
@@ -235,7 +235,7 @@ public class Facility implements IIdentifier {
 
 	@Override
 	public String toString() {
-		return String.format("Facility: %s", getId());
+		return String.format("Device: %s", getId());
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class Facility implements IIdentifier {
 	}
 
 	public void addModule(Module module) {
-		module.setFacility(this);
+		module.setDevice(this);
 		mModules.add(module);
 		mSorted = false;
 	}

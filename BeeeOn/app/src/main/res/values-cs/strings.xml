@@ -393,7 +393,7 @@
 	<string name="dev_boiler_status_shutdown">Vypnuto</string>
 	<string name="dev_boiler_status_type">Stav kotle</string>
 	<string name="dev_boiler_status_undefined">Nedefinováno</string>
-	<string name="progress_loading_facilities">Nahrávám data ze zařízení&#8230;</string>
+	<string name="progress_loading_devices">Nahrávám data ze zařízení&#8230;</string>
 	<string name="progress_loading_locations">Nahrávám umístění&#8230;</string>
 	<string name="action_notification">Notifikace</string>
 	<string name="dev_actor_boiler_operation_mode">Režim provozu kotle</string>

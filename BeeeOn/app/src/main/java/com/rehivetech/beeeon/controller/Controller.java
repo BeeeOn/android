@@ -16,11 +16,11 @@ import com.rehivetech.beeeon.model.AchievementsModel;
 import com.rehivetech.beeeon.model.AdaptersModel;
 import com.rehivetech.beeeon.model.BaseModel;
 import com.rehivetech.beeeon.model.ModuleLogsModel;
-import com.rehivetech.beeeon.model.FacilitiesModel;
+import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.model.GcmModel;
 import com.rehivetech.beeeon.model.GeofenceModel;
 import com.rehivetech.beeeon.model.LocationsModel;
-import com.rehivetech.beeeon.model.UninitializedFacilitiesModel;
+import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.model.UsersModel;
 import com.rehivetech.beeeon.model.WatchdogsModel;
 import com.rehivetech.beeeon.network.DemoNetwork;
@@ -217,12 +217,12 @@ public final class Controller {
 		return (LocationsModel) getModelInstance(LocationsModel.class);
 	}
 
-	public FacilitiesModel getFacilitiesModel() {
-		return (FacilitiesModel) getModelInstance(FacilitiesModel.class);
+	public DevicesModel getDevicesModel() {
+		return (DevicesModel) getModelInstance(DevicesModel.class);
 	}
 
-	public UninitializedFacilitiesModel getUninitializedFacilitiesModel() {
-		return (UninitializedFacilitiesModel) getModelInstance(UninitializedFacilitiesModel.class);
+	public UninitializedDevicesModel getUninitializedDevicesModel() {
+		return (UninitializedDevicesModel) getModelInstance(UninitializedDevicesModel.class);
 	}
 
 	public ModuleLogsModel getModuleLogsModel() {
@@ -458,7 +458,7 @@ public final class Controller {
 	}
 
 	/**
-	 * Sets active adapter and load all locations and facilities, if needed (or if forceReload = true)
+	 * Sets active adapter and load all locations and devices, if needed (or if forceReload = true)
 	 *
 	 * This CAN'T be called on UI thread!
 	 *
@@ -484,9 +484,9 @@ public final class Controller {
 
 		Log.d(TAG, String.format("Set active adapter to '%s'", mActiveAdapter.getName()));
 
-		// Load locations and facilities, if needed
+		// Load locations and devices, if needed
 		getLocationsModel().reloadLocationsByAdapter(id, forceReload);
-		getFacilitiesModel().reloadFacilitiesByAdapter(id, forceReload);
+		getDevicesModel().reloadDevicesByAdapter(id, forceReload);
 
 		return true;
 	}

@@ -341,7 +341,7 @@ final public class Utils {
 	}
 
 	/**
-	 * For getting objects from lists (Location / Facility / etc)
+	 * For getting objects from lists (Location / Device / etc)
 	 * @param id
 	 * @param objects
 	 * @param <T>

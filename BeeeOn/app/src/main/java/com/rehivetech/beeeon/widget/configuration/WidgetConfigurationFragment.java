@@ -25,8 +25,8 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
@@ -230,7 +230,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected abstract void updateLayout();
 
 	/**
-	 * After reload task we can get new facilities and locations by adapter.
+	 * After reload task we can get new devices and locations by adapter.
 	 * If no adapter set, it selects active adapter in the app
 	 * @param adapterId
 	 */
@@ -239,12 +239,12 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		mLocations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
 
-		// get all devices by locations (avoiding facility without location)
+		// get all devices by locations (avoiding mDevice without location)
 		mModules.clear();
 		for(Location loc : mLocations){
-			List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, loc.getId());
-			for (Facility facility : tempFac) {
-				mModules.addAll(facility.getModules());
+			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(adapterId, loc.getId());
+			for (Device device : tempFac) {
+				mModules.addAll(device.getModules());
 			}
 		}
 	}

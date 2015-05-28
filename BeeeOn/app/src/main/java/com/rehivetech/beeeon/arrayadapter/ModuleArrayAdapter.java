@@ -62,7 +62,7 @@ public class ModuleArrayAdapter extends ArrayAdapter<Module> {
 
 		holder.ItemLabel.setText(module.getName());
         holder.ItemIcon.setImageResource(module.getIconResource());
-        holder.ItemLocation.setText(mLocations.get(getLocationsIndexFromArray(module.getFacility().getLocationId())).getName());
+        holder.ItemLocation.setText(mLocations.get(getLocationsIndexFromArray(module.getDevice().getLocationId())).getName());
 
 		return convertView;
 	}
@@ -80,7 +80,7 @@ public class ModuleArrayAdapter extends ArrayAdapter<Module> {
 		icon.setImageResource(module.getIconResource());
 
         TextView sublabel = (TextView) row.findViewById(R.id.custom_spinner2_sublabel);
-        sublabel.setText(mLocations.get(getLocationsIndexFromArray(module.getFacility().getLocationId())).getName());
+        sublabel.setText(mLocations.get(getLocationsIndexFromArray(module.getDevice().getLocationId())).getName());
 
 		return row;
 	}

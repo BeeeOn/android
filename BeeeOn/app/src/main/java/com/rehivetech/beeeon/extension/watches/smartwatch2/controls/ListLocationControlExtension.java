@@ -39,7 +39,7 @@ import android.os.Bundle;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.util.Log;
@@ -182,9 +182,9 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
+			List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
 			Intent intent;
-			if (facilities.size() < 1) {
+			if (devices.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_sensor_available));
 			} else {

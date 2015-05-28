@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -97,7 +97,7 @@ public class WidgetGraphData extends WidgetModuleData {
         Log.d(TAG, "init()");
 		// NOTE: we don't override base method here cause it would need to do similar work twice
 
-        mFacilities.clear();
+        mDevices.clear();
         for(WidgetModulePersistence dev : widgetModules){
             if(dev.getId().isEmpty()){
                 Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
@@ -105,16 +105,16 @@ public class WidgetGraphData extends WidgetModuleData {
             }
 
             String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
-            Facility facility = new Facility();
-            facility.setAdapterId(widgetAdapterId);
-            facility.setAddress(ids[0]);
-            facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-            facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
+            Device device = new Device();
+            device.setAdapterId(widgetAdapterId);
+            device.setAddress(ids[0]);
+            device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
+            device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
 
             Module module = Module.createFromModuleTypeId(ids[1]);
-            facility.addModule(module);
+            device.addModule(module);
 
-            mFacilities.add(facility);
+            mDevices.add(device);
             initGraph(module.getValue());
             createLogDataPair();
             break;          // only one module possible
@@ -194,7 +194,7 @@ public class WidgetGraphData extends WidgetModuleData {
      * Creates new log pair from data saved last time when was updated
      */
     private void createLogDataPair() {
-        Facility fac = (Facility) mFacilities.get(0);
+        Device fac = (Device) mDevices.get(0);
         if(fac == null) return;
 
         mLogDataPair = new LogDataPair(
@@ -251,10 +251,10 @@ public class WidgetGraphData extends WidgetModuleData {
         if(adapter == null) return false;
 
         for(WidgetModulePersistence dev : widgetModules) {
-            Module module = mController.getFacilitiesModel().getModule(widgetAdapterId, dev.getId());
+            Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
             if(module == null) continue;
 
-            Location location = mController.getLocationsModel().getLocation(dev.adapterId, module.getFacility().getLocationId());
+            Location location = mController.getLocationsModel().getLocation(dev.adapterId, module.getDevice().getLocationId());
             if(location != null){
                 widgetLocation.configure(location, adapter);
             }
@@ -296,7 +296,7 @@ public class WidgetGraphData extends WidgetModuleData {
     public List<Object> getObjectsToReload() {
         List<Object> resultObj = new ArrayList<>();
 
-        // first add parent objects (facilities)
+        // first add parent objects (devices)
         resultObj.addAll(super.getObjectsToReload());
 
         // then from this widget

@@ -8,7 +8,7 @@ import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.pair.DelWatchdogPair;
 
 /**
- * Reloads facilities by adapter
+ * Reloads devices by adapter
  */
 public class RemoveWatchdogTask extends CallbackTask<DelWatchdogPair> {
 

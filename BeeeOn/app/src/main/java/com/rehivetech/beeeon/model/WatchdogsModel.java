@@ -38,7 +38,7 @@ public class WatchdogsModel extends BaseModel {
 	public List<Watchdog> getWatchdogsByAdapter(String adapterId) {
 		List<Watchdog> watchdogs = mWatchdogs.getObjects(adapterId);
 
-		// Sort result facilities by name, id
+		// Sort result devices by name, id
 		Collections.sort(watchdogs, new NameIdentifierComparator());
 
 		return watchdogs;

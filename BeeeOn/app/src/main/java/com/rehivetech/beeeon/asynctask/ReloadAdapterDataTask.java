@@ -42,7 +42,7 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 			if (active == null)
 				return true;
 
-			// We need to update also facilities
+			// We need to update also devices
 			adapterId = active.getId();
 			mWhat = ReloadWhat.FACILITIES;
 		}
@@ -52,11 +52,11 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 		}
 
 		if (mWhat == ReloadWhat.FACILITIES) {
-			controller.getFacilitiesModel().reloadFacilitiesByAdapter(adapterId, mForceReload);
+			controller.getDevicesModel().reloadDevicesByAdapter(adapterId, mForceReload);
 		}
 
 		if (mWhat == ReloadWhat.UNINITIALIZED_FACILITIES) {
-			controller.getUninitializedFacilitiesModel().reloadUninitializedFacilitiesByAdapter(adapterId, mForceReload);
+			controller.getUninitializedDevicesModel().reloadUninitializedDevicesByAdapter(adapterId, mForceReload);
 		}
 
 		if (mWhat == ReloadWhat.USERS) {

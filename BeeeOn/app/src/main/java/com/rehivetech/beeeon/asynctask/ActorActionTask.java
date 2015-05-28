@@ -16,7 +16,7 @@ public class ActorActionTask extends CallbackTask<Module> {
 	@Override
 	protected Boolean doInBackground(Module module) {
 		Controller controller = Controller.getInstance(mContext);
-		boolean success = controller.getFacilitiesModel().switchActor(module);
+		boolean success = controller.getDevicesModel().switchActor(module);
 		sendActorChangedBroadcast(module);
 		return success;
 	}
@@ -28,7 +28,7 @@ public class ActorActionTask extends CallbackTask<Module> {
 	private void sendActorChangedBroadcast(Module module){
 		Intent actionIntent = new Intent(Constants.BROADCAST_ACTOR_CHANGED);
 		actionIntent.putExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID, module.getId());
-		actionIntent.putExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID, module.getFacility().getAdapterId());
+		actionIntent.putExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID, module.getDevice().getAdapterId());
 		mContext.sendBroadcast(actionIntent);
 	}
 }

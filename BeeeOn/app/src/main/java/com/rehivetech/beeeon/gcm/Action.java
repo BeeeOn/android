@@ -9,7 +9,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 
 import java.util.List;
 
@@ -23,14 +23,14 @@ public final class Action {
 	@Nullable
 	static public void getSensorDetailIntent(Context context, int adapterId, String sensorId, int type) {
 		Controller controller = Controller.getInstance(context);
-		Facility facility = controller.getFacilitiesModel().getFacility(String.valueOf(adapterId), sensorId);
-		if (facility == null) {
+		Device device = controller.getDevicesModel().getFacility(String.valueOf(adapterId), sensorId);
+		if (device == null) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
 
-		List<Module> modules = facility.getModules();
+		List<Module> modules = device.getModules();
 		if (modules.size() == 0) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;

@@ -8,25 +8,25 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 
 public class SetupSensorListAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private Facility mFacility;
+	private Device mDevice;
 	private EditText mName;
 
 	private LayoutInflater mInflater;
 
-	public SetupSensorListAdapter(Context context, Facility facility) {
+	public SetupSensorListAdapter(Context context, Device device) {
 		mContext = context;
-		mFacility = facility;
+		mDevice = device;
 
 	}
 
 	@Override
 	public int getCount() {
-		return mFacility.getModules().size();
+		return mDevice.getModules().size();
 	}
 
 	@Override
@@ -48,10 +48,10 @@ public class SetupSensorListAdapter extends BaseAdapter {
 		ImageView img = (ImageView) itemView.findViewById(R.id.setup_sensor_item_icon);
 		mName = (EditText) itemView.findViewById(R.id.setup_sensor_item_name);
 		// Set image resource by sensor type
-		img.setImageResource(mFacility.getModules().get(position).getIconResource());
+		img.setImageResource(mDevice.getModules().get(position).getIconResource());
 		// Set name of sensor if isnt empty
-		if(!mFacility.getModules().get(position).getServerName().isEmpty())
-			mName.setText(mFacility.getModules().get(position).getServerName());
+		if(!mDevice.getModules().get(position).getServerName().isEmpty())
+			mName.setText(mDevice.getModules().get(position).getServerName());
 
 
 		// TODO Auto-generated method stub

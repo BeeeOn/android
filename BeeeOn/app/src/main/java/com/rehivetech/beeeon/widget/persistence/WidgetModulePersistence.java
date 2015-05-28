@@ -106,8 +106,8 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		type = module.getType().getTypeId();
 
 		mUserRole = Utils.getEnumFromId(User.Role.class, adapterRole, User.Role.Guest);
-		lastUpdateTime = module.getFacility().getLastUpdate().getMillis();
-		refresh = module.getFacility().getRefresh().getInterval();
+		lastUpdateTime = module.getDevice().getLastUpdate().getMillis();
+		refresh = module.getDevice().getRefresh().getInterval();
 
 		mModuleType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)
@@ -123,7 +123,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		// Check if we can format module's last update (timeHelper is null when user is not logged in)
 		if (mTimeHelper != null) {
 			// NOTE: This should use always absolute time, because widgets aren't updated so often
-			lastUpdateText = mTimeHelper.formatLastUpdate(module.getFacility().getLastUpdate(), adapter);
+			lastUpdateText = mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), adapter);
 		}
 	}
 

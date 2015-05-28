@@ -24,12 +24,12 @@ public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair>
 			if (newLocation == null)
 				return false;
 
-			pair.facility.setLocationId(newLocation.getId());
+			pair.mDevice.setLocationId(newLocation.getId());
 		}
 
 		EnumSet<SaveModule> what = EnumSet.of(SaveModule.SAVE_LOCATION, SaveModule.SAVE_NAME, SaveModule.SAVE_INITIALIZED);
 
-		return controller.getFacilitiesModel().saveFacility(pair.facility, what);
+		return controller.getDevicesModel().saveFacility(pair.mDevice, what);
 	}
 
 }

@@ -307,7 +307,7 @@ public class LoginActivity extends BaseActivity {
 							// Load data for active adapter
 							mProgress.setMessageResource(R.string.progress_loading_adapter);
 							mController.getLocationsModel().reloadLocationsByAdapter(active.getId(), true);
-							mController.getFacilitiesModel().reloadFacilitiesByAdapter(active.getId(), true);
+							mController.getDevicesModel().reloadDevicesByAdapter(active.getId(), true);
 						}
 
 						if (mLoginCancel) {

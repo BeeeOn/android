@@ -11,9 +11,9 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
@@ -198,15 +198,15 @@ public class XmlParsers {
 		case DEVICES:
 			String aid = getSecureAttrValue(Xconstants.AID);
 			if (aid.length() > 0) {
-				// List<Facility>
-				result.data = parseNewFacilities(aid);
+				// List<Device>
+				result.data = parseNewDevices(aid);
 			} else
-				// List<Facility>
-				result.data = parseFacilities();
+				// List<Device>
+				result.data = parseDevices();
 			break;
 		case ALLDEVICES:
-			// List<Facility>
-			result.data = parseAllFacilities();
+			// List<Device>
+			result.data = parseAllDevices();
 			break;
 		case NOTIFICATIONS:
 			// List<Notification>
@@ -287,17 +287,17 @@ public class XmlParsers {
 	/**
 	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
 	 *
-	 * @return list of facilities
+	 * @return list of devices
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, ParseException {
+	private List<Device> parseAllDevices() throws XmlPullParserException, IOException, ParseException {
 
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag(); // dev start tag
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
 		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
@@ -308,10 +308,10 @@ public class XmlParsers {
 	}
 
 	// special case of parseFacility
-	private List<Facility> parseNewFacilities(String aid) throws XmlPullParserException, IOException, ParseException {
+	private List<Device> parseNewDevices(String aid) throws XmlPullParserException, IOException, ParseException {
 		mParser.nextTag(); // dev start tag
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
 		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
@@ -324,15 +324,15 @@ public class XmlParsers {
 	/**
 	 * Method parse inner part of Module message (old:Partial message (set of module's tag))
 	 *
-	 * @return List of facilities
+	 * @return List of devices
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	private List<Facility> parseFacilities() throws XmlPullParserException, IOException, ParseException {
+	private List<Device> parseDevices() throws XmlPullParserException, IOException, ParseException {
 		mParser.nextTag(); // adapter tag
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
 		if (!mParser.getName().equals(Xconstants.ADAPTER))
 			return result;
@@ -349,25 +349,25 @@ public class XmlParsers {
 		return result;
 	}
 
-	private void parseInnerDevs(List<Facility> result, String aid, boolean init) throws XmlPullParserException, IOException {
-		do { // go through devs (facilities)
-			Facility facility = new Facility();
-			facility.setAdapterId(aid);
-			// facility.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
+	private void parseInnerDevs(List<Device> result, String aid, boolean init) throws XmlPullParserException, IOException {
+		do { // go through devs (devices)
+			Device device = new Device();
+			device.setAdapterId(aid);
+			// mDevice.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
 			// true);
-			facility.setInitialized(init);
-			facility.setAddress(getSecureAttrValue(Xconstants.DID));
-			facility.setLocationId(getSecureAttrValue(Xconstants.LID));
-			facility.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
-			facility.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
-			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
-			facility.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
-			facility.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
+			device.setInitialized(init);
+			device.setAddress(getSecureAttrValue(Xconstants.DID));
+			device.setLocationId(getSecureAttrValue(Xconstants.LID));
+			device.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
+			device.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
+			device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
+			device.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
+			device.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
 			mParser.nextTag(); // part tag
 
-			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in facility -> error in DB on server
-				Log.e(TAG,"Missing module in facility: " + facility.getId());
+			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in mDevice -> error in DB on server
+				Log.e(TAG,"Missing module in mDevice: " + device.getId());
 				continue;
 			}
 
@@ -376,11 +376,11 @@ public class XmlParsers {
 				module.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
 				module.setName(getSecureAttrValue(Xconstants.NAME));
 				module.setValue(getSecureAttrValue(Xconstants.VALUE));
-				facility.addModule(module);
+				device.addModule(module);
 				mParser.nextTag(); // part endtag
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
 
-			result.add(facility);
+			result.add(device);
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
 				&& (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
@@ -649,42 +649,42 @@ public class XmlParsers {
 	// ///////////////////////////////// OTHER
 
 	// FIXME: check on first use
-	List<Facility> getFalseMessage10() throws XmlPullParserException, IOException {
+	List<Device> getFalseMessage10() throws XmlPullParserException, IOException {
 
 		mParser.nextTag();
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
 		mParser.nextTag();
 		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
 
 		do {
-			Facility facility = null;
+			Device device = null;
 			boolean facilityExists = false;
 
 			Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
 
 			String id = getSecureAttrValue(Xconstants.ID);
-			for (Facility fac : result) {
+			for (Device fac : result) {
 				if (fac.getAddress().equals(id)) {
-					// We already have this facility, just add new devices to it
+					// We already have this mDevice, just add new devices to it
 					facilityExists = true;
-					facility = fac;
+					device = fac;
 					break;
 				}
 			}
 
-			if (facility == null) {
-				// This facility is new, first create a object for it
-				facility = new Facility();
-				facility.setAddress(id);
+			if (device == null) {
+				// This mDevice is new, first create a object for it
+				device = new Device();
+				device.setAddress(id);
 			}
 
-			facility.addModule(module);
+			device.addModule(module);
 
 			if (!facilityExists)
-				result.add(facility);
+				result.add(device);
 
 			mParser.nextTag();
 
@@ -798,12 +798,12 @@ public class XmlParsers {
 	 * Factory for parsing adapter from asset.
 	 *
 	 * @param context of app
-	 * @param filename of facilities xml
+	 * @param filename of devices xml
 	 * @return Adapter or null
 	 */
-	public List<Facility> getDemoFacilitiesFromAsset(Context context, String filename) throws AppException {
+	public List<Device> getDemoDevicesFromAsset(Context context, String filename) throws AppException {
 		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
-		List<Facility> result = null;
+		List<Device> result = null;
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));
@@ -819,7 +819,7 @@ public class XmlParsers {
 					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
-			result = parseAllFacilities();
+			result = parseAllDevices();
 		} catch (IOException | XmlPullParserException | ParseException e) {
 			e.printStackTrace();
 		} finally {

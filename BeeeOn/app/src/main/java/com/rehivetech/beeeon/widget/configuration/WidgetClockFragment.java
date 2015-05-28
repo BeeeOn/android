@@ -257,7 +257,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 				return false;
 			}
 
-			Location location = Utils.getFromList(module.getFacility().getLocationId(), mLocations);
+			Location location = Utils.getFromList(module.getDevice().getLocationId(), mLocations);
 			if(location != null) {
 				wDev.configure(module, adapter, location);
 			}

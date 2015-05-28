@@ -14,7 +14,7 @@ public class SaveFacilityTask extends CallbackTask<SaveFacilityPair> {
 	protected Boolean doInBackground(SaveFacilityPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.getFacilitiesModel().saveFacility(pair.facility, pair.what);
+		return controller.getDevicesModel().saveFacility(pair.mDevice, pair.what);
 	}
 
 }

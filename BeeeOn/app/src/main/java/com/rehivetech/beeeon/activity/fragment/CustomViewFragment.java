@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
@@ -178,10 +178,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		// Prepare data
 		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
 
-		for (Facility facility : mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId())) {
-			Log.d(TAG, String.format("Preparing facility with %d modules", facility.getModules().size()));
+		for (Device device : mController.getDevicesModel().getDevicesByAdapter(adapter.getId())) {
+			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getModules().size()));
 
-			for (Module module : facility.getModules()) {
+			for (Module module : device.getModules()) {
 				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getName(), module.getType().getTypeId()));
 
 				List<Module> modules = mModules.get(module.getType().getTypeId());

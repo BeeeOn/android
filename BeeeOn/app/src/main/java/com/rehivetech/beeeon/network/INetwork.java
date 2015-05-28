@@ -4,10 +4,10 @@ import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -140,7 +140,7 @@ public interface INetwork {
 	 * @param adapterID of wanted adapter
 	 * @return Adapter
 	 */
-	List<Facility> initAdapter(String adapterID);
+	List<Device> initAdapter(String adapterID);
 
 	/**
 	 * Method change adapter id
@@ -160,7 +160,7 @@ public interface INetwork {
 	 *
 	 * @return true if everything goes well, false otherwise
 	 */
-	boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveModule> toSave);
+	boolean updateDevices(String adapterID, List<Device> devices, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method send wanted fields of module to server
@@ -191,30 +191,30 @@ public interface INetwork {
 	boolean prepareAdapterToListenNewSensors(String adapterID);
 
 	/**
-	 * Method delete facility from server
+	 * Method delete mDevice from server
 	 *
-	 * @param facility to be deleted
+	 * @param device to be deleted
 	 * @return true if is deleted, false otherwise
 	 */
-	boolean deleteFacility(Facility facility);
+	boolean deleteFacility(Device device);
 
 	/**
-	 * Method ask for actual data of facilities
+	 * Method ask for actual data of devices
 	 *
-	 * @param facilities list of facilities to which needed actual data
-	 * @return list of updated facilities fields
+	 * @param devices list of devices to which needed actual data
+	 * @return list of updated devices fields
 	 */
-	List<Facility> getFacilities(List<Facility> facilities);
+	List<Device> getDevices(List<Device> devices);
 
 	/**
-	 * Method ask server for actual data of one facility
+	 * Method ask server for actual data of one mDevice
 	 *
-	 * @param facility
+	 * @param device
 	 * @return
 	 */
-	Facility getFacility(Facility facility);
+	Device getFacility(Device device);
 
-	boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveModule> toSave);
+	boolean updateFacility(String adapterID, Device device, EnumSet<SaveModule> toSave);
 
 	/**
 	 * TODO: need to test
@@ -222,7 +222,7 @@ public interface INetwork {
 	 * @param adapterID
 	 * @return
 	 */
-	List<Facility> getNewFacilities(String adapterID);
+	List<Device> getNewDevices(String adapterID);
 
 	/**
 	 * Method ask for data of logs

@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 public class Module implements INameIdentifier {
 	public static final String ID_SEPARATOR = "---";
 
-	protected Facility mFacility;
+	protected Device mDevice;
 	protected String mName = "";
 	protected boolean mVisibility;
 
@@ -58,9 +58,9 @@ public class Module implements INameIdentifier {
 	 */
 	public enum SaveModule {
 		SAVE_NAME, // change name of module
-		SAVE_LOCATION, // change location of facility
+		SAVE_LOCATION, // change location of mDevice
 		SAVE_VISIBILITY, // change visibility of module
-		SAVE_REFRESH, // change refresh interval of facility
+		SAVE_REFRESH, // change refresh interval of mDevice
 		SAVE_VALUE, // change value of actor module
 		SAVE_INITIALIZED,
 	}
@@ -90,24 +90,24 @@ public class Module implements INameIdentifier {
 		return getType().isActor() ? mValue.getActorIconResource() : mValue.getIconResource();
 	}
 
-	public void setFacility(Facility facility) {
-		mFacility = facility;
+	public void setDevice(Device device) {
+		mDevice = device;
 	}
 
-	public Facility getFacility() {
-		return mFacility;
+	public Device getDevice() {
+		return mDevice;
 	}
 
 	/**
-	 * Get unique identifier of module (address of facility + raw type id containing offset)
+	 * Get unique identifier of module (address of mDevice + raw type id containing offset)
 	 * 
 	 * @return id
 	 */
 	public String getId() {
-		if (mFacility == null)
-			throw new RuntimeException("Module's facility is null!");
+		if (mDevice == null)
+			throw new RuntimeException("Module's mDevice is null!");
 
-		return mFacility.getAddress() + ID_SEPARATOR + getRawTypeId();
+		return mDevice.getAddress() + ID_SEPARATOR + getRawTypeId();
 	}
 
 	public String getRawTypeId() {

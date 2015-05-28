@@ -378,7 +378,7 @@
     <string name="place_must_be_filled">Poloha musí byť vyplnená</string>
     <string name="profile_category_friends">Priatelia</string>
     <string name="progress_checking_location">Overujem polohu</string>
-    <string name="progress_loading_facilities">Nahrávam dáta zo zariadenia</string>
+    <string name="progress_loading_devices">Nahrávam dáta zo zariadenia</string>
     <string name="progress_loading_locations">Nahrávam umiestnenia</string>
     <string name="title_activity_profile_detail">Detaily účtu</string>
     <string name="users_pending_header">Žiadosť o pridanie</string>

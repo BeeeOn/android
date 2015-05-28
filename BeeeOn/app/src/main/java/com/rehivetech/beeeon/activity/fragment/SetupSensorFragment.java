@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SetupSensorActivity;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
@@ -42,7 +42,7 @@ public class SetupSensorFragment extends TrackFragment {
 	private static final int NAME_ITEM_HEIGHT = 56;
 
 	private Adapter mAdapter;
-	private List<Facility> mNewFacilities;
+	private List<Device> mNewDevices;
 	
 	private LinearLayout mLayout;
 
@@ -69,7 +69,7 @@ public class SetupSensorFragment extends TrackFragment {
 			// CHYBA
 			return;
 		}
-		mNewFacilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mAdapter.getId());
+		mNewDevices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mAdapter.getId());
 
 		// TODO: sent as parameter if we want first uninitialized module or some
 		// module with particular id
@@ -115,7 +115,7 @@ public class SetupSensorFragment extends TrackFragment {
 		TextView time = (TextView) mView.findViewById(R.id.setup_sensor_info_text);
 
 		// Create adapter for setting names of new sensors
-		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity, mNewFacilities.get(0));
+		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity, mNewDevices.get(0));
 		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.custom_spinner_item);
 
 		// Set layout to DataAdapter for locations
@@ -150,21 +150,21 @@ public class SetupSensorFragment extends TrackFragment {
 
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
-		// Set involved time of facility
+		// Set involved time of mDevice
 		if (timeHelper != null) {
-			Facility facility = mNewFacilities.get(0);
-			Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
-			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(facility.getInvolveTime(), adapter)));
+			Device device = mNewDevices.get(0);
+			Adapter adapter = mController.getAdaptersModel().getAdapter(device.getAdapterId());
+			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getInvolveTime(), adapter)));
 		}
 
-		// Set involved time of facility
+		// Set involved time of mDevice
 
 		// Set adapter to ListView and to Spinner
 		mListOfName.setAdapter(listAdapter);
 		mSpinner.setAdapter(dataAdapter);
 		// Set listview height, for all 
 		float scale = mActivity.getResources().getDisplayMetrics().density;
-		mListOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale*NAME_ITEM_HEIGHT*mNewFacilities.get(0).getModules().size())));
+		mListOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale*NAME_ITEM_HEIGHT* mNewDevices.get(0).getModules().size())));
 	}
 
 	/**

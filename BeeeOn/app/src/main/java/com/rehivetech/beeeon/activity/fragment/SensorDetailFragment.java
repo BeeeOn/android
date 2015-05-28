@@ -42,7 +42,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BoilerOperationModeValue;
@@ -152,7 +152,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 		}
 		Log.d(TAG, "OnActivityCreated");
-		mModule = mController.getFacilitiesModel().getModule(mAdapterId, mModuleID);
+		mModule = mController.getDevicesModel().getModule(mAdapterId, mModuleID);
 		if (mModule != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mModule.getId(), mModule.getName()));
 			initLayout(mModule);
@@ -177,7 +177,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			Log.d(TAG,"This fragment is visible - dev "+ mModuleID);
-			doReloadFacilitiesTask(mAdapterId, false);
+			doReloadDevicesTask(mAdapterId, false);
 		}
 
 	}
@@ -318,7 +318,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 			Adapter adapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			if (adapter != null) {
-				location = mController.getLocationsModel().getLocation(adapter.getId(), module.getFacility().getLocationId());
+				location = mController.getLocationsModel().getLocation(adapter.getId(), module.getDevice().getLocationId());
 			}
 
 			if (location != null) {
@@ -330,11 +330,11 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		} else {
 			Log.e(TAG, "mController is null (this shouldn't happen)");
-			mLocation.setText(module.getFacility().getLocationId());
+			mLocation.setText(module.getDevice().getLocationId());
 		}
 
-		Facility facility = module.getFacility();
-		Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
+		Device device = module.getDevice();
+		Adapter adapter = mController.getAdaptersModel().getAdapter(device.getAdapterId());
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
@@ -356,17 +356,17 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Set time of sensor
 		if (mTimeHelper != null) {
-			mTime.setText(mTimeHelper.formatLastUpdate(facility.getLastUpdate(), adapter));
+			mTime.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), adapter));
 		}
 
 		// Set refresh time Text
-		mRefreshTimeText.setText(facility.getRefresh().getStringInterval(mActivity));
+		mRefreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
 
 		// Set battery
-		mBattery.setText(facility.getBattery() + "%");
+		mBattery.setText(device.getBattery() + "%");
 
 		// Set signal
-		mSignal.setText(facility.getNetworkQuality()+"%");
+		mSignal.setText(device.getNetworkQuality()+"%");
 
 		// Add Graph
 		if (mUnitsHelper != null && mTimeHelper != null && mGraphView.getSeries().size() == 0) {
@@ -414,7 +414,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			@Override
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
-				doReloadFacilitiesTask(mAdapterId, true);
+				doReloadDevicesTask(mAdapterId, true);
 			}
 		});
 		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
@@ -556,7 +556,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			@Override
 			public void onExecute(boolean success) {
 				// Get new module
-				mModule = mController.getFacilitiesModel().getModule(module.getFacility().getAdapterId(), module.getId());
+				mModule = mController.getDevicesModel().getModule(module.getDevice().getAdapterId(), module.getId());
 
 				// Set icon of sensor
 				mIcon.setImageResource(mModule.getIconResource());
@@ -571,10 +571,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
 	}
 
-	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
-		ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+	protected void doReloadDevicesTask(final String adapterId, final boolean forceRefresh) {
+		ReloadAdapterDataTask reloadDevicesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
-		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadDevicesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -586,7 +586,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mModule = mController.getFacilitiesModel().getModule(adapterId, mModuleID);
+				mModule = mController.getDevicesModel().getModule(adapterId, mModuleID);
 				if (mModule == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;
@@ -598,7 +598,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, adapterId);
 	}
 
 	protected void doLoadGraphData() {

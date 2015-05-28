@@ -42,6 +42,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.rehivetech.beeeon.household.device.Device;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
@@ -50,7 +51,6 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClic
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
@@ -112,8 +112,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			// if default adapter is defined
 			if (adapter != null) {
 				if (strLocation != null) {
-					controller.getFacilitiesModel().reloadFacilitiesByAdapter(adapter.getId(), false);
-					List<Facility> sensors = controller.getFacilitiesModel().getFacilitiesByLocation(adapter.getId(), strLocation);
+					controller.getDevicesModel().reloadDevicesByAdapter(adapter.getId(), false);
+					List<Device> sensors = controller.getDevicesModel().getDevicesByLocation(adapter.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
 						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());

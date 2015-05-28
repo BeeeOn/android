@@ -47,7 +47,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -192,8 +192,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		item.listItemPosition = position;
 
 		Module curModule = mModules.get(position);
-		Facility curFacility = curModule.getFacility();
-		Adapter curAdapter = mController.getAdaptersModel().getAdapter(curFacility.getAdapterId());
+		Device curDevice = curModule.getDevice();
+		Adapter curAdapter = mController.getAdaptersModel().getAdapter(curDevice.getAdapterId());
 
 		// Title data
 		Bundle syncBundle = new Bundle();
@@ -205,7 +205,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// Last update data
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 		if (timeHelper != null) {
-			String dateTime = timeHelper.formatLastUpdate(curFacility.getLastUpdate(), curAdapter);
+			String dateTime = timeHelper.formatLastUpdate(curDevice.getLastUpdate(), curAdapter);
 			syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 		}
 
@@ -225,7 +225,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();
-		if (curModule.getFacility().getBattery() < MIN_BATTERY_STATE) {
+		if (curModule.getDevice().getBattery() < MIN_BATTERY_STATE) {
 			batteryBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
 			batteryBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, R.drawable.battery));
 		}
@@ -261,7 +261,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 				Module module = mModules.get(lastPosition);
-				if (mController.getFacilitiesModel().refreshFacility(module.getFacility(), false)) {
+				if (mController.getDevicesModel().refreshFacility(module.getDevice(), false)) {
 					sendListItem(createControlListItem(lastPosition));
 				}
 
@@ -277,9 +277,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 				mModules = new ArrayList<Module>();
 
-				mController.getFacilitiesModel().reloadFacilitiesByAdapter(mAdapterId, true);
-				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapterId, mLocationStr);
-				for (Facility facility : facilities) {
+				mController.getDevicesModel().reloadDevicesByAdapter(mAdapterId, true);
+				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mAdapterId, mLocationStr);
+				for (Device facility : devices) {
 					mModules.addAll(facility.getModules());
 				}
 

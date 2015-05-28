@@ -7,7 +7,7 @@ import android.view.View;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
@@ -35,7 +35,7 @@ public class WidgetClockData extends WidgetData {
 
 	public static String weekDays[] = reloadWeekDays();
 	public WidgetWeatherPersistence weather;
-	private List<Facility> mFacilities = new ArrayList<>();
+	private List<Device> mDevices = new ArrayList<>();
 	private Calendar mCalendar;
 
 	private int mClockFont = R.dimen.widget_textsize_clock;
@@ -90,7 +90,7 @@ public class WidgetClockData extends WidgetData {
 			mCalendar.setTime(new Date());
 		}
 
-		mFacilities.clear();
+		mDevices.clear();
 		for(WidgetModulePersistence dev : widgetModules){
 			if(dev.getId().isEmpty()){
 				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
@@ -98,14 +98,14 @@ public class WidgetClockData extends WidgetData {
 			}
 
 			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
-			Facility facility = new Facility();
-			facility.setAdapterId(widgetAdapterId);
-			facility.setAddress(ids[0]);
-			facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-			facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			facility.addModule(Module.createFromModuleTypeId(ids[1]));
+			Device device = new Device();
+			device.setAdapterId(widgetAdapterId);
+			device.setAddress(ids[0]);
+			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
+			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
+			device.addModule(Module.createFromModuleTypeId(ids[1]));
 
-			mFacilities.add(facility);
+			mDevices.add(device);
 		}
 
 		// sets icon of weather (even default)
@@ -322,7 +322,7 @@ public class WidgetClockData extends WidgetData {
 		if(adapter == null) return false;
 
 		for(WidgetModulePersistence dev : widgetModules) {
-			Module module = mController.getFacilitiesModel().getModule(widgetAdapterId, dev.getId());
+			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
 			if (module != null) {
 				if(!dev.locationId.isEmpty()){
 					Location location = mController.getLocationsModel().getLocation(widgetAdapterId, dev.locationId);
@@ -385,8 +385,8 @@ public class WidgetClockData extends WidgetData {
 	public List<Object> getObjectsToReload() {
 		List<Object> resultObj = new ArrayList<>();
 
-		// first add parent objects (facilities)
-		resultObj.addAll(mFacilities);
+		// first add parent objects (devices)
+		resultObj.addAll(mDevices);
 
 		// then from this widget
 		resultObj.add(weather);

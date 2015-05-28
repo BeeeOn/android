@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.view.CustomViewPager;
 
@@ -108,7 +108,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			}
 			else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
 				Log.d(TAG, "Edit sensor succes");
-				doReloadFacilitiesTask(mActiveAdapterId, false);
+				doReloadDevicesTask(mActiveAdapterId, false);
 			}
 		}
 	}
@@ -116,7 +116,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		doReloadFacilitiesTask(mActiveAdapterId, false);
+		doReloadDevicesTask(mActiveAdapterId, false);
 	}
 
 	@Override
@@ -129,25 +129,25 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		return false;
 	}
 
-	private void doReloadFacilitiesTask(final String adapterId, final boolean forceReload) {
-		ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+	private void doReloadDevicesTask(final String adapterId, final boolean forceReload) {
+		ReloadAdapterDataTask reloadDevicesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
-		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadDevicesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				Module module = mController.getFacilitiesModel().getModule(adapterId, mActiveModuleId);
+				Module module = mController.getDevicesModel().getModule(adapterId, mActiveModuleId);
 				if (module == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
 				}
 
-				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, module.getFacility().getLocationId());
+				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(adapterId, module.getDevice().getLocationId());
 
 				List<Module> modules = new ArrayList<Module>();
-				for (Facility facility : facilities) {
-					modules.addAll(facility.getModules());
+				for (Device device : devices) {
+					modules.addAll(device.getModules());
 				}
 				mModules = modules;
 
@@ -166,7 +166,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
+		callbackTaskManager.executeTask(reloadDevicesTask, adapterId);
 	}
 
 	/**
@@ -183,7 +183,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			Log.d(TAG, "Here 2 " + position);
 			SensorDetailFragment fragment = new SensorDetailFragment();
 			fragment.setSensorID(mModules.get(position).getId());
-			fragment.setLocationID(mModules.get(position).getFacility().getLocationId());
+			fragment.setLocationID(mModules.get(position).getDevice().getLocationId());
 			fragment.setPosition(position);
 			fragment.setSelectedPosition(mActiveModulePosition);
 			fragment.setAdapterID(mActiveAdapterId);
@@ -208,7 +208,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			public void onPageSelected(int position) {
 				mActiveModulePosition = position;
 				mActiveModuleId = mModules.get(position).getId();
-				mActiveAdapterId = mModules.get(position).getFacility().getAdapterId();
+				mActiveAdapterId = mModules.get(position).getDevice().getAdapterId();
 
 				// When changing pages, reset the action bar actions since they are dependent
 				// on which page is currently active. An alternative approach is to have each

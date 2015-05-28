@@ -47,7 +47,7 @@ import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -241,9 +241,9 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 				if (mAdapter != null) {
 					mModules = new ArrayList<Module>();
 
-					mController.getFacilitiesModel().reloadFacilitiesByAdapter(mAdapterId, true);
-					List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), mLocationStr);
-					for (Facility facility : facilities) {
+					mController.getDevicesModel().reloadDevicesByAdapter(mAdapterId, true);
+					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mAdapter.getId(), mLocationStr);
+					for (Device facility : devices) {
 						mModules.addAll(facility.getModules());
 					}
 

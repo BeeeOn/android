@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
@@ -324,17 +324,17 @@ public class WidgetService extends Service {
             // Reload adapters to have data about Timezone offset
             mController.getAdaptersModel().reloadAdapters(false);
 
-            List<Facility> usedFacilities = new ArrayList<>();
+            List<Device> usedDevices = new ArrayList<>();
             List<WidgetWeatherPersistence> usedWeatherData = new ArrayList<>();
 
             // check if any objects need to refresh
             if(!widgetsObjectsToReload.isEmpty()){
                 for(Object refObj : widgetsObjectsToReload){
-                    if(refObj instanceof Facility){
-                        Facility fac = (Facility) refObj;
+                    if(refObj instanceof Device){
+                        Device fac = (Device) refObj;
                         // already there, skip
-                        if(Utils.getFromList(fac.getId(), usedFacilities) != null) continue;
-                        usedFacilities.add((Facility) refObj);
+                        if(Utils.getFromList(fac.getId(), usedDevices) != null) continue;
+                        usedDevices.add((Device) refObj);
                     }
                     else if(refObj instanceof Location){
                         Location loc = (Location) refObj;
@@ -352,10 +352,10 @@ public class WidgetService extends Service {
                 }
             }
 
-			// updates all facilities in once
-            if(!usedFacilities.isEmpty()){
-                Log.v(TAG, "refreshing facilities...");
-                mController.getFacilitiesModel().refreshFacilities(usedFacilities, isForceUpdate);
+			// updates all devices in once
+            if(!usedDevices.isEmpty()){
+                Log.v(TAG, "refreshing devices...");
+                mController.getDevicesModel().refreshDevices(usedDevices, isForceUpdate);
             }
 
 			// updates all weather data
@@ -441,7 +441,7 @@ public class WidgetService extends Service {
         if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
         // ----- first get the module and change value
-        final Module module = mController.getFacilitiesModel().getModule(adapterId, actorId);
+        final Module module = mController.getDevicesModel().getModule(adapterId, actorId);
         if(module == null || !module.getType().isActor()){
             Log.e(TAG, "MODULE NOT actor OR NOT FOUND --> probably need to refresh controller");
             return;

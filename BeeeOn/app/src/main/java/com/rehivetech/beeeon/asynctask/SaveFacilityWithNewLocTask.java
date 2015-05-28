@@ -22,10 +22,10 @@ public class SaveFacilityWithNewLocTask extends CallbackTask<SaveFacilityWithNew
 			if (newLocation == null)
 				return false;
 
-			pair.facility.setLocationId(newLocation.getId());
+			pair.mDevice.setLocationId(newLocation.getId());
 		}
 
-		return controller.getFacilitiesModel().saveFacility(pair.facility, pair.what);
+		return controller.getDevicesModel().saveFacility(pair.mDevice, pair.what);
 	}
 
 }

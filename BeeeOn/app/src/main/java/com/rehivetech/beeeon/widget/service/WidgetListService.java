@@ -14,8 +14,8 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -36,7 +36,7 @@ public class WidgetListService extends RemoteViewsService {
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = ListRemoteViewsFactory.class.getSimpleName();
 
-    private List<Facility> mFacilities;
+    private List<Device> mDevices;
     private List<Module> mModules;
 
     private TimeHelper mTimeHelper;
@@ -91,18 +91,18 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
             return rv;
         }
 
-        Adapter adapter = mController.getAdaptersModel().getAdapter(dev.getFacility().getAdapterId());
+        Adapter adapter = mController.getAdaptersModel().getAdapter(dev.getDevice().getAdapterId());
 
         rv.setTextViewText(R.id.widget_loc_item_name, dev.getName());
         rv.setImageViewResource(R.id.widget_loc_item_icon, dev.getIconResource());
 
-        rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(dev.getFacility().getLastUpdate(), adapter));
+        rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(dev.getDevice().getLastUpdate(), adapter));
         rv.setTextViewText(R.id.widget_loc_item_value, mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(dev.getValue()) : dev.getValue().getRawValue());
 
         // send broadcast to widgetprovider with information about clicked item
         Bundle extras = new Bundle();
         extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
-        extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getFacility().getAdapterId());
+        extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getDevice().getAdapterId());
         Intent fillInIntent = new Intent();
         fillInIntent.putExtras(extras);
         rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
@@ -142,16 +142,16 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         mController = Controller.getInstance(mContext);
         try {
             mController.getLocationsModel().reloadLocationsByAdapter(mLocationAdapterId, false);
-            mFacilities = mController.getFacilitiesModel().getFacilitiesByLocation(mLocationAdapterId, mLocationId);
+            mDevices = mController.getDevicesModel().getDevicesByLocation(mLocationAdapterId, mLocationId);
         }
         catch(AppException e){
             e.printStackTrace();
         }
 
 
-        Log.d(TAG, String.format("mfacit length = %d", mFacilities.size()));
+        Log.d(TAG, String.format("mfacit length = %d", mDevices.size()));
         mModules.clear();
-        for(Facility fac : mFacilities){
+        for(Device fac : mDevices){
             if(fac == null) continue;
 
             Log.d("FAC: ", fac.getModules().get(0).getName());

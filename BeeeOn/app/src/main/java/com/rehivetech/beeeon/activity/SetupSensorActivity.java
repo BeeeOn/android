@@ -24,7 +24,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.activity.fragment.SetupSensorFragment;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.InitializeFacilityTask;
@@ -129,10 +129,10 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				mListOfName = mFragment.getListOfName();
 				mNewLocation = mFragment.getNewLocation();
 				mNewIconSpinner = mFragment.getNewIconSpinner();
-				Facility newFacility = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId()).get(0);
+				Device newDevice = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairAdapter.getId()).get(0);
 
 				// Controll if Names arent empty
-				for (int i = 0; i < newFacility.getModules().size(); i++) {
+				for (int i = 0; i < newDevice.getModules().size(); i++) {
 					// Get new names from EditText
 					String name = ((EditText) mListOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
@@ -141,7 +141,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 					// Set this new name to sensor
-					newFacility.getModules().get(i).setName(name);
+					newDevice.getModules().get(i).setName(name);
 
 				}
 
@@ -165,17 +165,17 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 					location = (Location) mSpinner.getSelectedItem();
 				}
 
-				// Set location to facility
-				newFacility.setLocationId(location.getId());
+				// Set location to mDevice
+				newDevice.setLocationId(location.getId());
 
-				// Set that facility was initialized
-				newFacility.setInitialized(true);
+				// Set that mDevice was initialized
+				newDevice.setInitialized(true);
 				// Show progress bar for saving
 				mProgress.show();
 
-				// Save that facility
-				Log.d(TAG, String.format("InitializeFacility - facility: %s, loc: %s", newFacility.getId(), location.getId()));
-				doInitializeFacilityTask(new InitializeFacilityPair(newFacility, location));
+				// Save that mDevice
+				Log.d(TAG, String.format("InitializeFacility - mDevice: %s, loc: %s", newDevice.getId(), location.getId()));
+				doInitializeFacilityTask(new InitializeFacilityPair(newDevice, location));
 			}
 		});
 		

@@ -39,8 +39,8 @@ import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.util.Log;
@@ -153,7 +153,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 					return;
 				}
 				mActivity.redraw();
-				doReloadFacilitiesTask(adapter.getId(), true);
+				doReloadDevicesTask(adapter.getId(), true);
 			}
 		});
 		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
@@ -177,7 +177,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		if (isPaused) {
 			return false;
 		}
-		List<Facility> facilities;
+		List<Device> devices;
         List<Location> locations;
 
 		Log.d(TAG, "LifeCycle: redraw modules list start");
@@ -201,7 +201,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			public void onClick(View v) {
 				Adapter adapter = mController.getActiveAdapter();
 				if(adapter != null) {
-					doReloadFacilitiesTask(adapter.getId(), true);
+					doReloadDevicesTask(adapter.getId(), true);
 				} else {
 					doFullReloadTask(true);
 				}
@@ -218,9 +218,9 @@ public class SensorListFragment extends BaseApplicationFragment {
         List<Module> modules = new ArrayList<Module>();
 		for (Location loc : locations) {
 			mSensorAdapter.addHeader(new LocationListItem(loc.getName(),loc.getIconResource(),loc.getId()));
-            // all facilities from actual location
-            facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mActiveAdapterId,loc.getId());
-            for(Facility fac : facilities) {
+            // all devices from actual location
+            devices = mController.getDevicesModel().getDevicesByLocation(mActiveAdapterId, loc.getId());
+            for(Device fac : devices) {
 				for(int x = 0; x < fac.getModules().size(); x++) {
 					Module dev = fac.getModules().get(x);
 					mSensorAdapter.addItem(new SensorListItem(dev,dev.getId(),mActivity,(x==(fac.getModules().size()-1))?true:false));
@@ -381,7 +381,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Module module = mSensorAdapter.getModule(position);
 					Bundle bundle = new Bundle();
-					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, module.getFacility().getAdapterId());
+					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, module.getDevice().getAdapterId());
 					bundle.putString(SensorDetailActivity.EXTRA_MODULE_ID, module.getId());
 					Intent intent = new Intent(mActivity, SensorDetailActivity.class);
 					intent.putExtras(bundle);
@@ -433,10 +433,10 @@ public class SensorListFragment extends BaseApplicationFragment {
 		isPaused = value;
 	}
 
-    private void doReloadFacilitiesTask(String adapterId, boolean forceRefresh) {
-        ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+    private void doReloadDevicesTask(String adapterId, boolean forceRefresh) {
+        ReloadAdapterDataTask reloadDevicesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
 
-		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadDevicesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -449,7 +449,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, adapterId);
     }
 
 	private void doFullReloadTask(boolean forceRefresh) {
@@ -469,9 +469,9 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mActivity.callbackTaskManager.executeTask(fullReloadTask);
 	}
 
-    private void doRemoveFacilityTask(Facility facility) {
+    private void doRemoveFacilityTask(Device device) {
         RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity);
-        DelFacilityPair pair = new DelFacilityPair(facility.getId(), facility.getAdapterId());
+        DelFacilityPair pair = new DelFacilityPair(device.getId(), device.getAdapterId());
 
         removeFacilityTask.setListener(new CallbackTaskListener() {
 			@Override
@@ -510,7 +510,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
-				doRemoveFacilityTask(mSelectedItem.getFacility());
+				doRemoveFacilityTask(mSelectedItem.getDevice());
 			}
 
 			mode.finish();

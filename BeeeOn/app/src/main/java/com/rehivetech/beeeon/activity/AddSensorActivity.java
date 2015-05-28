@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,7 +21,7 @@ import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -172,10 +171,10 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		mFragment = fragment;
 	}
 	
-	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
-		ReloadAdapterDataTask reloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
+	public void doReloadUninitializedDevicesTask(String adapterId, boolean forceReload) {
+		ReloadAdapterDataTask reloadUninitializedDevicesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
-		reloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadUninitializedDevicesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -183,9 +182,9 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					return;
 				}
 
-				List<Facility> facilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId());
+				List<Device> devices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairAdapter.getId());
 
-				if (facilities.size() > 0) {
+				if (devices.size() > 0) {
 					mFragment.stopTimer();
 					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
 					mFragment.stopTimer();
@@ -204,7 +203,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadUninitializedFacilitiesTask, adapterId);
+		callbackTaskManager.executeTask(reloadUninitializedDevicesTask, adapterId);
 	}
 	
 	private void doPairRequestTask(String adapterId) {
@@ -231,8 +230,8 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	}
 	
 	public void checkUnInitSensor() {
-		Log.d(TAG, "Send if some uninit facility");
-		doReloadUninitializedFacilitiesTask(mPairAdapter.getId(), true);
+		Log.d(TAG, "Send if some uninit mDevice");
+		doReloadUninitializedDevicesTask(mPairAdapter.getId(), true);
 	}
 
 

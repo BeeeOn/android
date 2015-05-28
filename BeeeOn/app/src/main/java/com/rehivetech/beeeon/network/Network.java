@@ -11,10 +11,10 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -509,11 +509,11 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Facility> initAdapter(String adapterID){
+	public List<Device> initAdapter(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mBT, adapterID));
 
 		if (msg.getState() == State.ALLDEVICES)
-			return (ArrayList<Facility>) msg.data;
+			return (ArrayList<Device>) msg.data;
 
 		throw processFalse(msg);
 	}
@@ -533,8 +533,8 @@ public class Network implements INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveModule> toSave){
-		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mBT, adapterID, facilities, toSave));
+	public boolean updateDevices(String adapterID, List<Device> devices, EnumSet<SaveModule> toSave){
+		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mBT, adapterID, devices, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -573,8 +573,8 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteFacility(Facility facility){
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, facility));
+	public boolean deleteFacility(Device device){
+		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, device));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -585,40 +585,40 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Facility> getFacilities(List<Facility> facilities){
-		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mBT, facilities));
+	public List<Device> getDevices(List<Device> devices){
+		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mBT, devices));
 
 		if (msg.getState() == State.DEVICES)
-			return (List<Facility>) msg.data;
+			return (List<Device>) msg.data;
 
 		throw processFalse(msg);
 	}
 
 	@Override
-	public Facility getFacility(Facility facility){
+	public Device getFacility(Device device){
 
-		ArrayList<Facility> list = new ArrayList<>();
-		list.add(facility);
+		ArrayList<Device> list = new ArrayList<>();
+		list.add(device);
 
-		return getFacilities(list).get(0);
+		return getDevices(list).get(0);
 	}
 
 	@Override
-	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveModule> toSave) {
+	public boolean updateFacility(String adapterID, Device device, EnumSet<SaveModule> toSave) {
 
-		ArrayList<Facility> list = new ArrayList<>();
-		list.add(facility);
+		ArrayList<Device> list = new ArrayList<>();
+		list.add(device);
 
-		return updateFacilities(adapterID, list, toSave);
+		return updateDevices(adapterID, list, toSave);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Facility> getNewFacilities(String adapterID) {
+	public List<Device> getNewDevices(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetNewDevices(mBT, adapterID));
 
 		if (msg.getState() == State.DEVICES)
-			return (List<Facility>) msg.data;
+			return (List<Device>) msg.data;
 
 		throw processFalse(msg);
 	}
@@ -626,7 +626,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
 	public ModuleLog getLog(String adapterID, Module module, LogDataPair pair){
-		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, module.getFacility().getAddress(), module.getRawTypeId(),
+		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, module.getDevice().getAddress(), module.getRawTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getId(), pair.gap.getSeconds());
 

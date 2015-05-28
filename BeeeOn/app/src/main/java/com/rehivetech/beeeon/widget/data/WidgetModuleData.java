@@ -4,8 +4,8 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -24,7 +24,7 @@ import java.util.List;
 public class WidgetModuleData extends WidgetData {
     private static final String TAG = WidgetModuleData.class.getSimpleName();
 
-    protected List<Object> mFacilities;
+    protected List<Object> mDevices;
 
     /**
      * Constructing object holding information about widget (instantiating in config activity and then in service)
@@ -40,7 +40,7 @@ public class WidgetModuleData extends WidgetData {
         widgetModules = new ArrayList<>();
         widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
 
-        mFacilities = new ArrayList<>();
+        mDevices = new ArrayList<>();
     }
 
     // ----------------------------------------------------------- //
@@ -55,7 +55,7 @@ public class WidgetModuleData extends WidgetData {
 
     @Override
     public void init() {
-        mFacilities.clear();
+        mDevices.clear();
         for(WidgetModulePersistence dev : widgetModules){
             if(dev.getId().isEmpty()){
                 Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
@@ -63,14 +63,14 @@ public class WidgetModuleData extends WidgetData {
             }
 
             String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
-            Facility facility = new Facility();
-            facility.setAdapterId(widgetAdapterId);
-            facility.setAddress(ids[0]);
-            facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-            facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-            facility.addModule(Module.createFromModuleTypeId(ids[1]));
+            Device device = new Device();
+            device.setAdapterId(widgetAdapterId);
+            device.setAddress(ids[0]);
+            device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
+            device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
+            device.addModule(Module.createFromModuleTypeId(ids[1]));
 
-            mFacilities.add(facility);
+            mDevices.add(device);
         }
     }
 
@@ -138,7 +138,7 @@ public class WidgetModuleData extends WidgetData {
         if(adapter == null) return false;
 
         for(WidgetModulePersistence dev : widgetModules) {
-            Module module = mController.getFacilitiesModel().getModule(widgetAdapterId, dev.getId());
+            Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
             if(module != null) {
                 dev.configure(module, adapter);
             }
@@ -189,7 +189,7 @@ public class WidgetModuleData extends WidgetData {
 
     @Override
     public List<Object> getObjectsToReload() {
-        return mFacilities;
+        return mDevices;
     }
 
     @Override

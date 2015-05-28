@@ -26,8 +26,8 @@ import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.SaveFacilityPair;
@@ -113,19 +113,19 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			Adapter adapter = mController.getActiveAdapter();
 			if(adapter == null)
 				return  false;
-			Module module = mController.getFacilitiesModel().getModule(adapter.getId(), mModuleId);
-			Facility facility = module.getFacility();
+			Module module = mController.getDevicesModel().getModule(adapter.getId(), mModuleId);
+			Device device = module.getDevice();
 
 			if(!mFragment.getName().equals(module.getName())) {
 				what.add(Module.SaveModule.SAVE_NAME);
 				module.setName(mFragment.getName());
 			}
 
-			if(!mFragment.getRefreshTime().equals(facility.getRefresh())) {
+			if(!mFragment.getRefreshTime().equals(device.getRefresh())) {
 				what.add(Module.SaveModule.SAVE_REFRESH);
-				facility.setRefresh(mFragment.getRefreshTime());
+				device.setRefresh(mFragment.getRefreshTime());
 			}
-			if(!mFragment.getLocationId().equals(facility.getLocationId())) {
+			if(!mFragment.getLocationId().equals(device.getLocationId())) {
 				what.add(Module.SaveModule.SAVE_LOCATION);
 				if(mFragment.isSetNewRoom()) {
 					Location location;
@@ -141,10 +141,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 						location = mFragment.getLocation();
 					}
 					// Send request for new loc ..
-					doSaveFacilityWithNewLocation(new SaveFacilityWithNewLocPair(facility,location,EnumSet.copyOf(what)));
+					doSaveFacilityWithNewLocation(new SaveFacilityWithNewLocPair(device,location,EnumSet.copyOf(what)));
 					return true;
 				} else {
-					facility.setLocationId(mFragment.getLocationId());
+					device.setLocationId(mFragment.getLocationId());
 				}
 			}
 			if(what.isEmpty()) { // nothing change
@@ -154,7 +154,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			}
 
 			if(!mFragment.isSetNewRoom())
-				doSaveFacilityTask(new SaveFacilityPair(facility,EnumSet.copyOf(what)));
+				doSaveFacilityTask(new SaveFacilityPair(device,EnumSet.copyOf(what)));
 
 			return true;
 		}
@@ -255,7 +255,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		private Controller mController;
 		private Module mModule;
 		private TextView mRefreshTimeVal;
-		private Facility mFacility;
+		private Device mDevice;
 		private Adapter mAdapter;
 		private String mLocationId;
 		private Spinner mNewIconSpinner;
@@ -283,11 +283,11 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			mAdapter = mController.getActiveAdapter();
 			if(mAdapter == null)
 				return;
-			mModule = mController.getFacilitiesModel().getModule(mAdapter.getId(), mModuleID);
+			mModule = mController.getDevicesModel().getModule(mAdapter.getId(), mModuleID);
 			if(mModule == null)
 				return;
-			mFacility = mModule.getFacility();
-			mLocationId = mFacility.getLocationId();
+			mDevice = mModule.getDevice();
+			mLocationId = mDevice.getLocationId();
 			initLayout();
 			if(savedInstanceState != null) {
 				mName.setText(savedInstanceState.getString(EXTRA_ACT_NAME));
@@ -380,10 +380,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				}
 			});
 			// Set refresh time Text
-			mRefreshTimeVal.setText(" " + mFacility.getRefresh().getStringInterval(mActivity));
+			mRefreshTimeVal.setText(" " + mDevice.getRefresh().getStringInterval(mActivity));
 
 			// Set refresh time SeekBar
-			mRefreshTime.setProgress(mFacility.getRefresh().getIntervalIndex());
+			mRefreshTime.setProgress(mDevice.getRefresh().getIntervalIndex());
 
 		}
 

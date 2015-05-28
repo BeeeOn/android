@@ -35,8 +35,8 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.household.watchdog.WatchdogBaseType;
@@ -85,7 +85,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
     private SharedPreferences mPrefs;
 
     private List<Location> mLocations;
-    private List<Facility> mFacilities;
+    private List<Device> mDevices;
     private List<SimpleGeofence> mGeofences;
 
     // TODO??
@@ -178,11 +178,11 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		String userId = mController.getActualUser().getId();
         mGeofences = mController.getGeofenceModel().getAllGeofences(userId);
 
-        // facilities get by cycling through all locations
-        mFacilities = new ArrayList<Facility>();
+        // devices get by cycling through all locations
+        mDevices = new ArrayList<Device>();
         for(Location loc : mLocations){
-            List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), loc.getId());
-            mFacilities.addAll(tempFac);
+            List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(mAdapter.getId(), loc.getId());
+            mDevices.addAll(tempFac);
         }
 
         // get watchdog rule
@@ -236,7 +236,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
         if(!moduleSensors.isEmpty()) {
 			mSpinnerMultiAdapter.addHeader(getString(R.string.modules));
 			for (Module dev : moduleSensors) {
-				Location loc = Utils.getFromList(dev.getFacility().getLocationId(), mLocations);
+				Location loc = Utils.getFromList(dev.getDevice().getLocationId(), mLocations);
 				mSpinnerMultiAdapter.addItem(new ModuleSpinnerItem(dev, loc, dev.getId(), this));
 			}
 			isAnyIfInput = true;
@@ -573,7 +573,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
     // ---------- HELPER FUNCTIONS ---------- //
 
     /**
-     * Helper function for getting type of modules from list of facilities
+     * Helper function for getting type of modules from list of devices
      * @param type MODULES_ALL | MODULES_ACTORS | MODULES_SENSORS
      * @return
      */
@@ -587,8 +587,8 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 
         List<Module> modules = new ArrayList<Module>();
 
-        for(Facility facility : mFacilities)
-            for (Module module : facility.getModules()) {
+        for(Device device : mDevices)
+            for (Module module : device.getModules()) {
                 if (type == MODULES_ACTORS && !module.getType().isActor()) {
                     continue;
                 }
