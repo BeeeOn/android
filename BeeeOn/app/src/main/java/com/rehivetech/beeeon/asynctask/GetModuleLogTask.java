@@ -5,9 +5,9 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
 
-public class GetDeviceLogTask extends CallbackTask<LogDataPair> {
+public class GetModuleLogTask extends CallbackTask<LogDataPair> {
 
-	public GetDeviceLogTask(Context context) {
+	public GetModuleLogTask(Context context) {
 		super(context);
 	}
 

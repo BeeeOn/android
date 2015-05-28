@@ -7,9 +7,9 @@ import com.rehivetech.beeeon.pair.LogDataPair;
 
 import java.util.List;
 
-public class GetDevicesLogsTask extends CallbackTask<List<LogDataPair>> {
+public class GetModulesLogsTask extends CallbackTask<List<LogDataPair>> {
 
-	public GetDevicesLogsTask(Context context) {
+	public GetModulesLogsTask(Context context) {
 		super(context);
 	}
 

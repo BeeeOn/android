@@ -40,7 +40,7 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 
 		mGeneralWidgetdata = new WidgetGraphData(mActivity.getWidgetId(), mActivity, null, null);
 		mWidgetData = (WidgetGraphData) mGeneralWidgetdata;
-		mWidgetDevice = mWidgetData.widgetDevices.get(0);
+		mWidgetDevice = mWidgetData.widgetModules.get(0);
 	}
 
 	protected int getFragmentLayoutResource(){

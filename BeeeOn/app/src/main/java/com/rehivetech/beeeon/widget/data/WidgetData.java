@@ -52,7 +52,7 @@ public abstract class WidgetData {
 	public WidgetSettings settings;
 
 	// if widget has any devices in layout, we can ensure that widget's layout is update across all widgets (e.g. actor)
-	public List<WidgetDevicePersistence> widgetDevices;
+	public List<WidgetDevicePersistence> widgetModules;
 
 	// private managing variables
 	protected Context mContext;

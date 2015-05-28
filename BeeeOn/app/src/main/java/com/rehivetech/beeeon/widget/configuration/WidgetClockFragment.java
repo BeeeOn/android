@@ -63,7 +63,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mGeneralWidgetdata = new WidgetClockData(mActivity.getWidgetId(), mActivity, null, null);
 		mWidgetData = (WidgetClockData) mGeneralWidgetdata;
 
-		mWidgetDevices = mWidgetData.widgetDevices;
+		mWidgetDevices = mWidgetData.widgetModules;
 		mDeviceSpinners = new ArrayList<>();
 
 		setRefreshBounds(WidgetService.UPDATE_INTERVAL_WEATHER_MIN);

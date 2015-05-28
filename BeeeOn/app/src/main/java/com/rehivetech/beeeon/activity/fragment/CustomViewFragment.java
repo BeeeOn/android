@@ -17,7 +17,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.GetDevicesLogsTask;
+import com.rehivetech.beeeon.asynctask.GetModulesLogsTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
@@ -220,9 +220,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			}
 
 			// Prepare and run the reload logs task
-			GetDevicesLogsTask getDevicesLogsTask = new GetDevicesLogsTask(mActivity);
+			GetModulesLogsTask getModulesLogsTask = new GetModulesLogsTask(mActivity);
 
-			getDevicesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
+			getModulesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
 				@Override
 				public void onExecute(boolean success) {
 					// Remember type of graph we're downloading data for
@@ -241,7 +241,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			});
 
 			// Execute and remember task so it can be stopped automatically
-			mActivity.callbackTaskManager.executeTask(getDevicesLogsTask, pairs);
+			mActivity.callbackTaskManager.executeTask(getModulesLogsTask, pairs);
 		}
 	}
 

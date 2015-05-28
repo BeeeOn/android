@@ -33,7 +33,7 @@ import com.rehivetech.beeeon.activity.SensorEditActivity;
 import com.rehivetech.beeeon.activity.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.GetDeviceLogTask;
+import com.rehivetech.beeeon.asynctask.GetModuleLogTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
@@ -608,14 +608,14 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
 		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
 
-		GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask(mActivity);
+		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(mActivity);
 		final LogDataPair pair = new LogDataPair( //
 				mModule, // module
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
 				(mModule.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
 
-		getDeviceLogTask.setListener(new CallbackTaskListener() {
+		getModuleLogTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				fillGraph(mController.getDeviceLogsModel().getDeviceLog(pair));
@@ -623,7 +623,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(getDeviceLogTask, pair);
+		mActivity.callbackTaskManager.executeTask(getModuleLogTask, pair);
 	}
 
 	protected void doChangeStateDeviceTask(final Module module) {

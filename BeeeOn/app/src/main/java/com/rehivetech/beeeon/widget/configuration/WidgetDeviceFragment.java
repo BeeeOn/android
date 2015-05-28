@@ -34,7 +34,7 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 
 		mGeneralWidgetdata = new WidgetDeviceData(mActivity.getWidgetId(), mActivity, null, null);
 		mWidgetData = (WidgetDeviceData) mGeneralWidgetdata;
-		mWidgetDevice = mWidgetData.widgetDevices.get(0);
+		mWidgetDevice = mWidgetData.widgetModules.get(0);
 	}
 
 	protected int getFragmentLayoutResource(){

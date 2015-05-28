@@ -98,7 +98,7 @@ public class WidgetGraphData extends WidgetDeviceData {
 		// NOTE: we don't override base method here cause it would need to do similar work twice
 
         mFacilities.clear();
-        for(WidgetDevicePersistence dev : widgetDevices){
+        for(WidgetDevicePersistence dev : widgetModules){
             if(dev.getId().isEmpty()){
                 Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
                 continue;
@@ -250,7 +250,7 @@ public class WidgetGraphData extends WidgetDeviceData {
         Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
         if(adapter == null) return false;
 
-        for(WidgetDevicePersistence dev : widgetDevices) {
+        for(WidgetDevicePersistence dev : widgetModules) {
             Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
             if(module == null) continue;
 

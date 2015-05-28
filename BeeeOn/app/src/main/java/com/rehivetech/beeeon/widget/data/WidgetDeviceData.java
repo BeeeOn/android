@@ -37,8 +37,8 @@ public class WidgetDeviceData extends WidgetData {
     public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
         super(widgetId, context, unitsHelper, timeHelper);
 
-        widgetDevices = new ArrayList<>();
-        widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
+        widgetModules = new ArrayList<>();
+        widgetModules.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
 
         mFacilities = new ArrayList<>();
     }
@@ -50,13 +50,13 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public void load() {
         super.load();
-        WidgetDevicePersistence.loadAll(widgetDevices);
+        WidgetDevicePersistence.loadAll(widgetModules);
     }
 
     @Override
     public void init() {
         mFacilities.clear();
-        for(WidgetDevicePersistence dev : widgetDevices){
+        for(WidgetDevicePersistence dev : widgetModules){
             if(dev.getId().isEmpty()){
                 Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
                 continue;
@@ -77,7 +77,7 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public void save() {
         super.save();
-        WidgetDevicePersistence.saveAll(widgetDevices);
+        WidgetDevicePersistence.saveAll(widgetModules);
     }
 
     // ----------------------------------------------------------- //
@@ -96,7 +96,7 @@ public class WidgetDeviceData extends WidgetData {
         // -------------------- render layout
         // updates all inside devices
         boolean isOnlyOne = true;
-        for(WidgetDevicePersistence dev : widgetDevices){
+        for(WidgetDevicePersistence dev : widgetModules){
             // detail activity
             mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
             mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
@@ -137,7 +137,7 @@ public class WidgetDeviceData extends WidgetData {
         Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
         if(adapter == null) return false;
 
-        for(WidgetDevicePersistence dev : widgetDevices) {
+        for(WidgetDevicePersistence dev : widgetModules) {
             Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
             if(module != null) {
                 dev.configure(module, adapter);

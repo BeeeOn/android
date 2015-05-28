@@ -546,11 +546,11 @@ public class WidgetService extends Service {
         for(int widgetId : allWidgetIds){
             WidgetData data = getWidgetData(widgetId);
             // skips not compatible widgets
-            if(data == null || data.widgetDevices == null || data.widgetDevices.isEmpty()) continue;
+            if(data == null || data.widgetModules == null || data.widgetModules.isEmpty()) continue;
 
             int updatedActors = 0;
             // go through all devices in that widget
-            for(WidgetDevicePersistence wDev : data.widgetDevices){
+            for(WidgetDevicePersistence wDev : data.widgetModules){
                 if(!adapterId.equals(wDev.getAdapterId()) || !actorId.equals(wDev.getId())) continue;
 
                 if(perform == UPDATE_LAYOUT){
