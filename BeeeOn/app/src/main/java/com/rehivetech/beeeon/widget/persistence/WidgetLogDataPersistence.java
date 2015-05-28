@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.widget.persistence;
 import android.content.Context;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.device.DeviceLog;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -34,18 +34,18 @@ public class WidgetLogDataPersistence extends WidgetPersistence {
 	public void load() {
 		gapRadioId = mPrefs.getInt(getProperty(PREF_GAP_RADIO_ID), R.id.widget_gap_weekly);
 		intervalStart = mPrefs.getLong(getProperty(PREF_INTERVAL_START), DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis());
-		type = mPrefs.getString(getProperty(PREF_TYPE), DeviceLog.DataType.AVERAGE.getId());
-		gap = mPrefs.getInt(getProperty(PREF_GAP), DeviceLog.DataInterval.HOUR.getSeconds());
+		type = mPrefs.getString(getProperty(PREF_TYPE), ModuleLog.DataType.AVERAGE.getId());
+		gap = mPrefs.getInt(getProperty(PREF_GAP), ModuleLog.DataInterval.HOUR.getSeconds());
 	}
 
 	@Override
 	public void save() {
 		mPrefs.edit()
-			.putLong(getProperty(PREF_INTERVAL_START), intervalStart)
-			.putString(getProperty(PREF_TYPE), type)
-			.putInt(getProperty(PREF_GAP), gap)
-			.putInt(getProperty(PREF_GAP_RADIO_ID), gapRadioId)
-			.apply();
+				.putLong(getProperty(PREF_INTERVAL_START), intervalStart)
+				.putString(getProperty(PREF_TYPE), type)
+				.putInt(getProperty(PREF_GAP), gap)
+				.putInt(getProperty(PREF_GAP_RADIO_ID), gapRadioId)
+				.apply();
 	}
 
 	@Override

@@ -25,8 +25,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Persistence service that handles caching data on this device.
- * 
+ * Persistence service that handles caching data on this module.
+ *
  * @author Robyer
  */
 public class Persistence {
@@ -43,7 +43,9 @@ public class Persistence {
 		mContext = context;
 	}
 
-	/** SHAREDPREFERENCES MANIPULATION **/
+	/**
+	 * SHAREDPREFERENCES MANIPULATION *
+	 */
 
 	public static String getPreferencesFilename(String namespace) {
 		return String.format(Constants.PERSISTENCE_PREF_FILENAME, namespace);
@@ -58,7 +60,9 @@ public class Persistence {
 		return getSettings(mContext, namespace);
 	}
 
-	/** INITIALIZATION OF DEFAULT SETTINGS **/
+	/**
+	 * INITIALIZATION OF DEFAULT SETTINGS *
+	 */
 
 	private void initItemPreference(String namespace, SettingsItem item, int id) {
 		initializePreference(namespace, item.getPersistenceKey(), String.valueOf(id));
@@ -81,7 +85,9 @@ public class Persistence {
 		initItemDefaultPreference(namespace, new NoiseUnit());
 	}
 
-	/** HELPERS **/
+	/**
+	 * HELPERS *
+	 */
 
 	public void initializePreference(String namespace, String key, String value) {
 		if (!getSettings(namespace).contains(key)) {
@@ -114,6 +120,7 @@ public class Persistence {
 
 	/**
 	 * Tries to get external cache dir and if it fails, then returns internal cache dir.
+	 *
 	 * @return File representing cache dir
 	 */
 	private File getCacheDir() {
@@ -140,19 +147,21 @@ public class Persistence {
 			try {
 				if (os != null)
 					os.close();
-			} catch (IOException e) {}
+			} catch (IOException e) {
+			}
 		}
 	}
-	
+
 	private Bitmap loadBitmap(String filename) {
 		File file = new File(getCacheDir(), filename + ".jpg");
 		return BitmapFactory.decodeFile(file.getAbsolutePath());
 	}
 
-	/** DATA MANIPULATION **/
+	/**
+	 * DATA MANIPULATION *
+	 */
 
 	// Last demo mode
-
 	public static boolean loadLastDemoMode(Context context) {
 		return getSettings(context, GLOBAL).getBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, false);
 	}
@@ -206,7 +215,7 @@ public class Persistence {
 
 		return provider;
 	}
-	
+
 	public void saveLastBT(String userId, String BT) {
 		setOrRemoveString(userId, Constants.PERSISTENCE_PREF_USER_BT, BT);
 	}
@@ -214,18 +223,18 @@ public class Persistence {
 	public String loadLastBT(String userId) {
 		return getSettings(userId).getString(Constants.PERSISTENCE_PREF_USER_BT, "");
 	}
-	
+
 	public void saveUserDetails(String userId, User user) {
 		getSettings(userId) //
-			.edit() //
-			.putString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()) //
-			.putString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()) //
-			.putString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()) //
-			.putString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()) //
-			.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()) //
-			.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()) //
-			.apply();
-		
+				.edit() //
+				.putString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()) //
+				.putString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()) //
+				.putString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()) //
+				.putString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()) //
+				.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()) //
+				.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()) //
+				.apply();
+
 		Bitmap picture = user.getPicture();
 		if (picture != null)
 			saveBitmap(picture, userId);
@@ -240,7 +249,7 @@ public class Persistence {
 		user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()));
 		user.setGender(Utils.getEnumFromId(Gender.class, prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()), Gender.UNKNOWN));
 		user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()));
-		
+
 		user.setPicture(loadBitmap(userId));
 	}
 

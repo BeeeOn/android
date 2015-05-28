@@ -43,8 +43,8 @@ public abstract class VisibleNotification extends BaseNotification {
 			case WATCHDOG:
 				notification = WatchdogNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
-			case ADAPTER_ADDED:
-				notification = AdapterAddedNotification.getInstance(msgId, time, type, isRead, parser);
+			case GATE_ADDED:
+				notification = GateAddedNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 			case SENSOR_ADDED:
 				notification = SensorAddedNotification.getInstance(msgId, time, type, isRead, parser);
@@ -58,8 +58,8 @@ public abstract class VisibleNotification extends BaseNotification {
 			case SENSOR_LOW_SIGNAL:
 				notification = SensorLowSignalNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
-			case ADAPTER_OFFLINE:
-				notification = AdapterOfflineNotification.getInstance(msgId, time, type, isRead, parser);
+			case GATE_OFFLINE:
+				notification = GateOfflineNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 			case ACHIEVEMENT:
 				notification = AchievementNotification.getInstance(msgId, time, type, isRead, parser);

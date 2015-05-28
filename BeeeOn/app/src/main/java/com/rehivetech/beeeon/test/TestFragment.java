@@ -11,44 +11,44 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
 public final class TestFragment extends Fragment {
-    private static final String KEY_CONTENT = "TestFragment:Content";
+	private static final String KEY_CONTENT = "TestFragment:Content";
 
-    public static TestFragment newInstance(int resourceImg) {
-        TestFragment fragment = new TestFragment();
+	public static TestFragment newInstance(int resourceImg) {
+		TestFragment fragment = new TestFragment();
 
-        fragment.mContent = resourceImg;
+		fragment.mContent = resourceImg;
 
-        return fragment;
-    }
+		return fragment;
+	}
 
-    private int mContent = 0;
+	private int mContent = 0;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-        if ((savedInstanceState != null) && savedInstanceState.containsKey(KEY_CONTENT)) {
-            mContent = savedInstanceState.getInt(KEY_CONTENT);
-        }
-    }
+		if ((savedInstanceState != null) && savedInstanceState.containsKey(KEY_CONTENT)) {
+			mContent = savedInstanceState.getInt(KEY_CONTENT);
+		}
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ImageView image = new ImageView(getActivity());
-        image.setImageResource(mContent);
-        image.setPadding(20, 20, 20, 20);
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		ImageView image = new ImageView(getActivity());
+		image.setImageResource(mContent);
+		image.setPadding(20, 20, 20, 20);
 
-        LinearLayout layout = new LinearLayout(getActivity());
-        layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-        layout.setGravity(Gravity.CENTER);
-        layout.addView(image);
+		LinearLayout layout = new LinearLayout(getActivity());
+		layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		layout.setGravity(Gravity.CENTER);
+		layout.addView(image);
 
-        return layout;
-    }
+		return layout;
+	}
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(KEY_CONTENT, mContent);
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(KEY_CONTENT, mContent);
+	}
 }

@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.base;
 
 //import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.support.v7.app.ActionBarActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;

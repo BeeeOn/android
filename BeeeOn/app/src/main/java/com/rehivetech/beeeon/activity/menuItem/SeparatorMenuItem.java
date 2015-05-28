@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.activity.menuItem;
 
 import android.view.View;
+
 import com.rehivetech.beeeon.R;
 
 public class SeparatorMenuItem extends AbstractMenuItem {
@@ -22,13 +23,13 @@ public class SeparatorMenuItem extends AbstractMenuItem {
 	@Override
 	public void setIsSelected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setNotSelected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

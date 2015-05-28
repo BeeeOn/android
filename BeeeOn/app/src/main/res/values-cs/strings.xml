@@ -7,12 +7,12 @@
     <string name="title_activity_notification">Notifikace</string>
     <string name="title_activity_add_sensor">Přidat nové zařízení</string>
     <string name="title_activity_sensor_detail">Detail zařízení</string>
-    <string name="title_activity_add_adapter">Přidat bránu</string>
+    <string name="title_activity_add_gate">Přidat bránu</string>
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
     <string name="title_activity_map_geofence">Geolokační oblasti</string>
-    <string name="title_activity_adapter_users">Uživatelé brány</string>
+    <string name="title_activity_gate_users">Uživatelé brány</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
     <string name="title_activity_achievement_overview">Přehled achievementů</string>
@@ -67,7 +67,7 @@
     <string name="add_users_adapter">Přidat uživatele</string>
     <string name="add_user_email_header">E-mail</string>
     <string name="add_user_role_header">Role</string>
-    <string name="adapter_user_title_change_role">Změnit roli uživatele</string>
+    <string name="gate_user_title_change_role">Změnit roli uživatele</string>
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
@@ -98,7 +98,7 @@
     <string name="toast_auth_provider_error">Nastala chyba během procesu autorizace</string>
     <string name="toast_adapter_activate_failed">Selhalo přidání brány</string>
     <string name="toast_adapter_activated">Brána byla aktivována</string>
-    <string name="toast_adapter_removed">Brána byla odstraněna</string>
+    <string name="toast_gate_removed">Brána byla odstraněna</string>
     <string name="toast_no_adapter">Nemáte žádnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všech zařízení</string>
@@ -116,8 +116,8 @@
     <string name="progress_signing">Přihlašuji&#8230;</string>
     <string name="progress_google">Přenášení dat s Googlem&#8230;</string>
     <string name="progress_signup">Registruji nového uživatele&#8230;</string>
-    <string name="progress_loading_adapters">Nahrávám brány&#8230;</string>
-    <string name="progress_loading_adapter">Nahrávám data bran&#8230;</string>
+    <string name="progress_loading_gates">Nahrávám brány&#8230;</string>
+    <string name="progress_loading_gate">Nahrávám data bran&#8230;</string>
     <string name="progress_loading_demo">Nahrávám demo data&#8230;</string>
     <string name="progress_saving_data">Ukládám data&#8230;</string>
     <string name="progress_checking_location">Ověřuji polohu&#8230;</string>
@@ -128,10 +128,10 @@
     <string name="drawer_close">ZAVŘÍT</string>
     <string name="location">Umístění</string>
     <string name="custom_view">Uživatelský pohled</string>
-    <string name="adapter">Brány</string>
+    <string name="gate">Brány</string>
     <string name="no_location">Žádná umístění</string>
     <string name="no_custom_view">Uživatelský pohled není k dispozici</string>
-    <string name="no_adapters">Nemáte žádné brány</string>
+    <string name="no_gates">Nemáte žádné brány</string>
     <string name="menu_managment">Správa domácnosti</string>
     <string name="menu_control">Přehled</string>
     <string name="menu_dashboard">Grafy</string>
@@ -152,12 +152,12 @@
     <string name="action_about">O aplikaci</string>
     <string name="action_search">Hledání</string>
     <string name="action_refreshlist">Obnovit seznam</string>
-    <string name="action_addadapter">Přidání brány</string>
+    <string name="action_addgate">Přidání brány</string>
     <string name="action_addsensor">Přidání zařízení</string>
     <string name="action_logout">Odhlášení</string>
     <string name="action_hide_sensor">Skrýt zařízení</string>
-    <string name="action_unregist_facility">Odstranit zařízení</string>
-    <string name="action_hide_facility">Skrýt zařízení</string>
+    <string name="action_unregist_device">Odstranit zařízení</string>
+    <string name="action_hide_device">Skrýt zařízení</string>
     <string name="action_close">Zrušit</string>
     <string name="action_intro">Představení</string>
     <string name="action_intro_dialog">Úvodní dialog</string>
@@ -166,7 +166,7 @@
     <string name="sen_detail_graph_info">Aktivujte dotykem</string>
     <string name="loading_data">Nahrávám data&#8230;</string>
     <string name="no_sensor_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
-    <string name="no_adapter_cap">ŽÁDNÁ BRÁNA</string>
+    <string name="no_gate_cap">ŽÁDNÁ BRÁNA</string>
     <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
     <string name="profile_category_senzors">Zařízení</string>
     <string name="profile_category_friends">Přátelé</string>
@@ -222,7 +222,7 @@
     <string name="widget_configuration_interval_widget">Interval aktualizace widgetu</string>
     <string name="widget_configuration_login_first">Je třeba se nejprve přihlásit</string>
     <string name="widget_configuration_no_adapters">K nastavení widgetu je nutné být uživatelem brány</string>
-    <string name="widget_configuration_select_adapter">Vyberte bránu ze seznamu</string>
+    <string name="widget_configuration_select_gate">Vyberte bránu ze seznamu</string>
     <string name="widget_configuration_select_device">Vyberte zařízení ze seznamu</string>
     <string name="widget_configuration_select_location">Vyberte umístění ze seznamu</string>
 
@@ -288,7 +288,7 @@
     <string name="default_location">Výchozí umístění</string>
     <string name="default_adapter">Výchozí brána</string>
     <string name="actual_timezone">Aktuální časové pásmo</string>
-    <string name="adapter_timezone">Časové pásmo brány</string>
+    <string name="gate_timezone">Časové pásmo brány</string>
 
     <!-- Default names -->
     <string name="adapter_default_name">Brána #%d</string>
@@ -303,8 +303,8 @@
 
 
     <!-- Tutorial -->
-    <string name="tut_add_adapter_header">PŘIDAT BRÁNU</string>
-    <string name="tut_add_adapter_text">Pro přidání brány klepněte na plus (+)</string>
+    <string name="tut_add_gate_header">PŘIDAT BRÁNU</string>
+    <string name="tut_add_gate_text">Pro přidání brány klepněte na plus (+)</string>
     <string name="tut_add_sensor_header">PŘIDAT ZAŘÍZENÍ</string>
     <string name="tut_add_sensor_text">Pro přidání zařízení klepněte na plus (+)</string>
 
@@ -314,9 +314,9 @@
     <string name="tutorial_open_menu">Otevřte nabídku</string>
     <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
     <!-- Help in Add dialogs -->
-    <string name="tut_add_adapter_text_1">Připojte bránu k internetové síti</string>
-    <string name="tut_add_adapter_text_2">Zapojte bránu do elektrické sítě</string>
-    <string name="tut_add_adapter_text_3">V následujícím kroku zadejte název brány a naskenujte QR kód</string>
+    <string name="tut_add_gate_text_1">Připojte bránu k internetové síti</string>
+    <string name="tut_add_gate_text_2">Zapojte bránu do elektrické sítě</string>
+    <string name="tut_add_gate_text_3">V následujícím kroku zadejte název brány a naskenujte QR kód</string>
     <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze zařízení nebo zapojte aktor do elektrické sítě</string>
     <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se zařízení nebo stiskněte párovací tlačítko na aktoru</string>
 
@@ -329,7 +329,7 @@
 	<string name="date_today">Dnes</string>
 	<string name="date_yesterday">Včera</string>
 
-    <!-- WatchDog -->
+    <!-- Watchdog -->
     <string name="action_watchdog">Hlídač</string>
     <string name="watchdog_rule">Pravidlo hlídače</string>
     <string name="treshold_value">Prahová Hodnota</string>
@@ -364,7 +364,7 @@
     <string name="action_done">Hotovo</string>
 
 	<string name="delete_geofence">Odstranit oblast</string>
-	<string name="devices">Zařízení</string>
+	<string name="modules">Zařízení</string>
 	<string name="name">Název</string>
 	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla</string>
 	<string name="title_activity_sensor_edit">Editace zařízení</string>
@@ -393,12 +393,12 @@
 	<string name="dev_boiler_status_shutdown">Vypnuto</string>
 	<string name="dev_boiler_status_type">Stav kotle</string>
 	<string name="dev_boiler_status_undefined">Nedefinováno</string>
-	<string name="progress_loading_facilities">Nahrávám data ze zařízení&#8230;</string>
+	<string name="progress_loading_devices">Nahrávám data ze zařízení&#8230;</string>
 	<string name="progress_loading_locations">Nahrávám umístění&#8230;</string>
 	<string name="action_notification">Notifikace</string>
 	<string name="dev_actor_boiler_operation_mode">Režim provozu kotle</string>
 	<string name="dev_actor_boiler_operation_type">Typ provozu kotle</string>
-	<string name="notification_name_new_adapter">Přidána nová brána</string>
+	<string name="notification_name_new_gate">Přidána nová brána</string>
 	<string name="notification_name_new_sensor">Přidáno nové zařízení</string>
 	<string name="notification_name_link">Spoj</string>
     <string name="sensor_name_label">Meno zařízení</string>

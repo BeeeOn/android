@@ -129,7 +129,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 		String[] accounts = this.getAccountNames(activity);
 		if (!mEmail.isEmpty()) {
-			// Check if this e-mail still exists on this device
+			// Check if this e-mail still exists on this module
 			boolean found = false;
 			for (String account : accounts) {
 				if (account.equalsIgnoreCase(mEmail)) {
@@ -145,7 +145,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 		if (mEmail.isEmpty()) {
 
-			Log.d(TAG, String.format("Found number of accounts on this device: %d", accounts.length));
+			Log.d(TAG, String.format("Found number of accounts on this module: %d", accounts.length));
 
 			if (accounts.length == 1) {
 				// Set the only one email account used
@@ -302,7 +302,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 					JSONObject tokenJson = Utils.fetchJsonByPost(TOKEN_URL, params);
 					Log.d(TAG, String.format("received: %s", tokenJson.toString()));
 					token = tokenJson.getString("access_token");
-				}  catch (IOException | JSONException e) {
+				} catch (IOException | JSONException e) {
 					e.printStackTrace();
 				}
 				return token;

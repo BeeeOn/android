@@ -7,8 +7,12 @@ import android.app.Activity;
  */
 public interface BeeeOnSocialNetwork {
 	public void logIn(Activity activity);
+
 	public void logOut();
+
 	public boolean isPaired();
+
 	public String getUserName();
+
 	public String getName();
 }

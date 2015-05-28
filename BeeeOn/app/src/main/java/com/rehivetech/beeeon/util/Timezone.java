@@ -1,13 +1,14 @@
 package com.rehivetech.beeeon.util;
 
 import android.content.Context;
+
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 
 public class Timezone extends SettingsItem {
 
 	public static final int ACTUAL = 0;
-	public static final int ADAPTER = 1;
+	public static final int GATE = 1;
 
 	public class Item extends BaseItem {
 		private final int mResName;
@@ -31,7 +32,7 @@ public class Timezone extends SettingsItem {
 		super();
 
 		mItems.add(this.new Item(ACTUAL, R.string.actual_timezone));
-		mItems.add(this.new Item(ADAPTER, R.string.adapter_timezone));
+		mItems.add(this.new Item(GATE, R.string.gate_timezone));
 	}
 
 	@Override

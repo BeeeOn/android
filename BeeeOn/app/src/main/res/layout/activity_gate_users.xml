@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/beeeon_toolbar"/>
+
+
+    <ScrollView 
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/toolbar">
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+            <TextView 
+	            android:layout_width="fill_parent"
+	            android:layout_height="48dp"
+                android:gravity="center_vertical"
+	            android:text="@string/users_header"
+	            android:textColor="@color/beeeon_text_hint"
+			    android:textAppearance="?android:attr/textAppearanceMedium"
+			    android:layout_marginLeft="16dp"
+                android:paddingBottom="8dp"/>
+	        <ListView
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:id="@+id/gate_users_list"
+	            android:divider="@null"
+	            />
+	        <!--TextView
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:text="@string/users_pending_header"
+	            android:textColor="@color/beeeon_text_color" 
+			    android:textAppearance="?android:attr/textAppearanceMedium"
+			    android:layout_marginLeft="5dp" />
+	        <ListView
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:id="@+id/adapter_users_pending_list"
+	            /-->
+
+
+        </LinearLayout>
+        
+    </ScrollView>
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/fab_add_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_add_white_24dp"
+        fab:fab_colorNormal="@color/beeeon_secundary_pink"
+        fab:fab_colorPressed="@color/black"/>
+</RelativeLayout>

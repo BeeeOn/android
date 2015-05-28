@@ -22,7 +22,7 @@ import java.util.Observer;
 /**
  * @author Jan Lamacz
  */
-public abstract class Achievement  implements Observer {
+public abstract class Achievement implements Observer {
 	private static final String TAG = Achievement.class.getSimpleName();
 
 	protected AchievementList mAchievementList;
@@ -30,7 +30,7 @@ public abstract class Achievement  implements Observer {
 	protected Context mContext = null;
 	protected Controller mController;
 	private String mAchievementId;
-	private String mAdapterId;
+	private String mGateId;
 	private boolean mSendUpdate;
 	protected UpdateAchievementTask mUpdateAchievementTask;
 
@@ -43,36 +43,34 @@ public abstract class Achievement  implements Observer {
 		mAchievementId = achievement_id;
 		mSendUpdate = sendUpdate;
 
-		mAdapterId = "0";
+		mGateId = "0";
 		mController = Controller.getInstance(mContext);
-		if(mController.getActiveAdapter() != null)
-			mAdapterId = mController.getActiveAdapter().getId();
+		if (mController.getActiveGate() != null)
+			mGateId = mController.getActiveGate().getId();
 		mAchievementList = AchievementList.getInstance(mContext);
-		if(mAchievementList.isDownloaded()) {
+		if (mAchievementList.isDownloaded()) {
 			mData = mAchievementList.getItem(achievement_id);
-			doAddUpdateAchievementTask(new AchievementPair(mAdapterId, mAchievementId));
-		}
-		else
+			doAddUpdateAchievementTask(new AchievementPair(mGateId, mAchievementId));
+		} else
 			mAchievementList.addObserver(this);
 	}
 
 	protected void doAddUpdateAchievementTask(AchievementPair pair) {
-		if(!mSendUpdate && mData.isDone()) return; // if is done and should not be send, skip it
+		if (!mSendUpdate && mData.isDone()) return; // if is done and should not be send, skip it
 
 		mUpdateAchievementTask = new UpdateAchievementTask(mContext);
 		mUpdateAchievementTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				List<String> idList = mUpdateAchievementTask.getAchievementId();
-				if(!success) {
+				if (!success) {
 					Toast.makeText(mContext, mContext.getString(R.string.social_no_connection), Toast.LENGTH_LONG).show();
 					return;
-				}
-				else if (idList == null) return; // DEMO, don`t update anything
-				for(int i = 0; i < idList.size(); i++) {
+				} else if (idList == null) return; // DEMO, don`t update anything
+				for (int i = 0; i < idList.size(); i++) {
 					AchievementListItem item = mAchievementList.getItem(idList.get(i));
-					if(item == null) continue;
-					else if(item.updateProgress())
+					if (item == null) continue;
+					else if (item.updateProgress())
 						showSuccess(item);
 					Log.d(TAG, "Updated achievement " + idList.get(i));
 				}
@@ -84,7 +82,7 @@ public abstract class Achievement  implements Observer {
 
 	public void showSuccess(AchievementListItem item) {
 		LayoutInflater i = LayoutInflater.from(mContext);
-		View layout = i.inflate(R.layout.achievement_toast,null);
+		View layout = i.inflate(R.layout.achievement_toast, null);
 
 		TextView name = (TextView) layout.findViewById(R.id.achievement_toast_name);
 		TextView points = (TextView) layout.findViewById(R.id.achievement_toast_points);
@@ -99,7 +97,7 @@ public abstract class Achievement  implements Observer {
 
 	@Override
 	public void update(Observable observable, Object o) {
-		if(o.toString().equals("achievements"))
-			doAddUpdateAchievementTask(new AchievementPair(mAdapterId, mAchievementId));
+		if (o.toString().equals("achievements"))
+			doAddUpdateAchievementTask(new AchievementPair(mGateId, mAchievementId));
 	}
 }

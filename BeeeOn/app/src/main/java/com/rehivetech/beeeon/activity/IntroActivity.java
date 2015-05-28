@@ -22,13 +22,13 @@ public class IntroActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
-		
-		mAdapter = new IntroFragmentAdapter(getSupportFragmentManager(),this);
-		
-		mPager = (ViewPager)findViewById(R.id.intro_pager);
+
+		mAdapter = new IntroFragmentAdapter(getSupportFragmentManager(), this);
+
+		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
-		
-		mIndicator = (CirclePageIndicator)findViewById(R.id.intro_indicator);
+
+		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
 
 		mIndicator.setPageColor(0x88FFFFFF);
@@ -40,9 +40,9 @@ public class IntroActivity extends BaseActivity {
 
 	private void initLayout() {
 		// Get buttons
-		mSkip = (Button) findViewById(R.id.add_adapter_skip);
-		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
-		mNext = (Button) findViewById(R.id.add_adapter_next);
+		mSkip = (Button) findViewById(R.id.add_gate_skip);
+		mCancel = (Button) findViewById(R.id.add_gate_cancel);
+		mNext = (Button) findViewById(R.id.add_gate_next);
 
 		mSkip.setVisibility(View.INVISIBLE);
 		mCancel.setVisibility(View.INVISIBLE);
@@ -50,10 +50,9 @@ public class IntroActivity extends BaseActivity {
 		mNext.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(mPager.getCurrentItem() != (mPager.getAdapter().getCount()-1)) {
-					mPager.setCurrentItem(mPager.getCurrentItem()+1);
-				}
-				else {
+				if (mPager.getCurrentItem() != (mPager.getAdapter().getCount() - 1)) {
+					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+				} else {
 					finish();
 				}
 
@@ -62,7 +61,7 @@ public class IntroActivity extends BaseActivity {
 	}
 
 	public boolean isLastFragment() {
-		return (mPager.getCurrentItem() == (mPager.getAdapter().getCount()-1));
+		return (mPager.getCurrentItem() == (mPager.getAdapter().getCount() - 1));
 	}
 
 	public void resetBtn() {

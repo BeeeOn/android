@@ -10,7 +10,7 @@
 
     <string name="choose_adapter">Choose gateway:</string>
     <string name="choose_location">Choose location:</string>
-    <string name="choose_sensor">Choose device:</string>
+    <string name="choose_sensor">Choose module:</string>
     
     
     <string name="adapter_isnt_set">Set default gateway</string>
@@ -19,7 +19,7 @@
     
     <string name="please_log_in">Please Log In</string>
     <string name="no_adapter_available">No gateway available</string>
-    <string name="no_sensor_available">No device available</string>
+    <string name="no_sensor_available">No module available</string>
     <string name="no_location_available">No location available</string>
 	
 </resources>

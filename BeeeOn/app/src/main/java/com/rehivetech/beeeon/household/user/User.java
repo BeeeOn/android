@@ -20,7 +20,7 @@ public class User implements INameIdentifier {
 
 	private String mName = "";
 
-    private String mSurname = "";
+	private String mSurname = "";
 
 	private String mEmail = "";
 
@@ -34,7 +34,8 @@ public class User implements INameIdentifier {
 
 	private SoftReference<Bitmap> mDefaultPicture = new SoftReference<>(null);
 
-	public User() {}
+	public User() {
+	}
 
 	public User(final String id, final String name, final String surname, final String email, final Gender gender, final Role role) {
 		mId = id;
@@ -52,10 +53,10 @@ public class User implements INameIdentifier {
 	}
 
 	public enum Role implements IIdentifier {
-		Guest("guest", R.string.user_role_guest), // can only read adapter and devices' data
+		Guest("guest", R.string.user_role_guest), // can only read gate and devices' data
 		User("user", R.string.user_role_user), // = guest + can switch state of switch devices
 		Admin("admin", R.string.user_role_admin), // = user + can change devices' settings (rename, logging, refresh,...)
-		Superuser("superuser", R.string.user_role_superuser); // = admin + can change whole adapter's settings (devices, users,...)
+		Superuser("superuser", R.string.user_role_superuser); // = admin + can change whole gate's settings (devices, users,...)
 
 		private final String mRole;
 		private final int mStringRes;
@@ -69,7 +70,9 @@ public class User implements INameIdentifier {
 			return mRole;
 		}
 
-		public int getStringResource() { return mStringRes; }
+		public int getStringResource() {
+			return mStringRes;
+		}
 	}
 
 	public enum Gender implements IIdentifier {
@@ -89,7 +92,7 @@ public class User implements INameIdentifier {
 	}
 
 	public String getId() {
-		if(!mId.isEmpty())
+		if (!mId.isEmpty())
 			return mId;
 		return getEmail();
 	}
@@ -110,15 +113,15 @@ public class User implements INameIdentifier {
 		mName = name;
 	}
 
-    public String getSurname() {
-        return mSurname;
-    }
+	public String getSurname() {
+		return mSurname;
+	}
 
-    public void setSurname(String surname) {
-        this.mSurname = surname;
-    }
+	public void setSurname(String surname) {
+		this.mSurname = surname;
+	}
 
-    public String getEmail() {
+	public String getEmail() {
 		return mEmail;
 	}
 

@@ -6,9 +6,9 @@ import com.rehivetech.beeeon.R;
 
 /**
  * @author mlyko
- * Class for saving widget settings
+ *         Class for saving widget settings
  */
-public class WidgetSettings extends WidgetPersistence{
+public class WidgetSettings extends WidgetPersistence {
 
 	protected static final String PREF_IS_COLOR_SCHEME = "is_color_scheme";
 	protected static final String PREF_COLOR_PRIMARY = "color_primary";
@@ -20,6 +20,7 @@ public class WidgetSettings extends WidgetPersistence{
 
 	/**
 	 * Private constructor so that we have always loaded data
+	 *
 	 * @param context
 	 * @param widgetId
 	 */
@@ -29,11 +30,12 @@ public class WidgetSettings extends WidgetPersistence{
 
 	/**
 	 * Instead of constructor - we always have to load data first
+	 *
 	 * @param context
 	 * @param widgetId
 	 * @return
 	 */
-	public static WidgetSettings getSettings(Context context, int widgetId){
+	public static WidgetSettings getSettings(Context context, int widgetId) {
 		WidgetSettings settings = new WidgetSettings(context, widgetId);
 		settings.load();
 		return settings;
@@ -41,10 +43,11 @@ public class WidgetSettings extends WidgetPersistence{
 
 	/**
 	 * Sets and saves the colors
+	 *
 	 * @param primary
 	 * @param secondary
 	 */
-	public void setColorScheme(int primary, int secondary){
+	public void setColorScheme(int primary, int secondary) {
 		isColorScheme = true;
 		colorPrimary = primary;
 		colorSecondary = secondary;
@@ -53,12 +56,13 @@ public class WidgetSettings extends WidgetPersistence{
 
 	/**
 	 * Compares all colors
+	 *
 	 * @param col1
 	 * @param col2
 	 * @return
 	 */
-	public boolean isColorSchemeEqual(int col1, int col2){
-		if(colorPrimary == col1 && colorSecondary == col2) return true;
+	public boolean isColorSchemeEqual(int col1, int col2) {
+		if (colorPrimary == col1 && colorSecondary == col2) return true;
 
 		return false;
 	}
@@ -73,10 +77,10 @@ public class WidgetSettings extends WidgetPersistence{
 	@Override
 	public void save() {
 		mPrefs.edit()
-			.putBoolean(getProperty(PREF_IS_COLOR_SCHEME), isColorScheme)
-			.putInt(getProperty(PREF_COLOR_PRIMARY), colorPrimary)
-			.putInt(getProperty(PREF_COLOR_SECONDARY), colorSecondary)
-			.apply();
+				.putBoolean(getProperty(PREF_IS_COLOR_SCHEME), isColorScheme)
+				.putInt(getProperty(PREF_COLOR_PRIMARY), colorPrimary)
+				.putInt(getProperty(PREF_COLOR_SECONDARY), colorSecondary)
+				.apply();
 	}
 
 	@Override

@@ -7,22 +7,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
 public class SensorListItem extends AbstractListItem {
 	private final Context mContext;
 	private final Controller mController;
-	private Device mDevice;
+	private Module mModule;
 	private boolean mSeparatorVisible;
 
-	public SensorListItem(Device device, String id, Context context, boolean separator) {
+	public SensorListItem(Module module, String id, Context context, boolean separator) {
 		super(id, ListItemType.SENSOR);
-		mDevice = device;
+		mModule = module;
 		mSeparatorVisible = separator;
 		mContext = context;
 		mController = Controller.getInstance(context);
@@ -51,25 +51,25 @@ public class SensorListItem extends AbstractListItem {
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 
 		// Set the results into TextViews
-		txtTitle.setText(mDevice.getName());
+		txtTitle.setText(mModule.getName());
 
 		if (unitsHelper != null) {
-			txtValue.setText(unitsHelper.getStringValue(mDevice.getValue()));
-			txtUnit.setText(unitsHelper.getStringUnit(mDevice.getValue()));
+			txtValue.setText(unitsHelper.getStringValue(mModule.getValue()));
+			txtUnit.setText(unitsHelper.getStringUnit(mModule.getValue()));
 		}
 
-		Facility facility = mDevice.getFacility();
-		Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
+		Device device = mModule.getDevice();
+		Gate gate = mController.getGatesModel().getGate(device.getGateId());
 
 		if (timeHelper != null) {
-			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(facility.getLastUpdate(), adapter)));
+			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(device.getLastUpdate(), gate)));
 		}
 
 		// Set title selected for animation if is text long
 		txtTitle.setSelected(true);
 
 		// Set the results into ImageView
-		imgIcon.setImageResource(mDevice.getIconResource());
+		imgIcon.setImageResource(mModule.getIconResource());
 
 		if (mSeparatorVisible) {
 			sepMidle.setVisibility(View.VISIBLE);
@@ -86,16 +86,16 @@ public class SensorListItem extends AbstractListItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
-	public Device getDevice() {
-		return mDevice;
+	public Module getModule() {
+		return mModule;
 	}
 
 }

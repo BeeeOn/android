@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.util;
 
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,9 @@ import android.widget.RelativeLayout;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.controller.Controller;
 
 public class TutorialHelper {
 	private static final String TAG = TutorialHelper.class.getSimpleName();
@@ -31,7 +28,7 @@ public class TutorialHelper {
 		} else {
 			lps.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 			lps.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			marginPixel= 40;
+			marginPixel = 40;
 		}
 
 
@@ -52,7 +49,7 @@ public class TutorialHelper {
 				Log.d(TAG, "OnShowCase hide");
 				ShowcaseView mSV;
 
-				if (mLoginTutorialClick == 1){
+				if (mLoginTutorialClick == 1) {
 					ViewTarget target = new ViewTarget(R.id.login_btn_mojeid, activity);
 					mSV = new ShowcaseView.Builder(activity, true)
 							.setTarget(target)
@@ -65,8 +62,7 @@ public class TutorialHelper {
 					mLoginTutorialClick++;
 					// TODO: Save that Google account was clicked
 
-				}
-				else if (mLoginTutorialClick == 2){
+				} else if (mLoginTutorialClick == 2) {
 					ViewTarget target = new ViewTarget(R.id.login_btn_demo, activity);
 					mSV = new ShowcaseView.Builder(activity, true)
 							.setTarget(target)
@@ -78,8 +74,7 @@ public class TutorialHelper {
 					mSV.setButtonPosition(lps);
 					mLoginTutorialClick++;
 					// TODO: Save that MojeID account was clicked
-				}
-				else if (mLoginTutorialClick == 3) {
+				} else if (mLoginTutorialClick == 3) {
 					// TODO: Save that Demo mode was clicked
 
 				}
@@ -122,7 +117,7 @@ public class TutorialHelper {
 		lps.setMargins(margin, margin, margin, bottomMargin);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
@@ -133,7 +128,7 @@ public class TutorialHelper {
 			@Override
 			public void onShowcaseViewHide(ShowcaseView showcaseView) {
 				Log.d(TAG, "OnShowCase hide");
-				// TODO: Save that ADD ADAPTER was clicked
+				// TODO: Save that ADD GATE was clicked
 
 			}
 
@@ -162,7 +157,7 @@ public class TutorialHelper {
 
 	}
 
-	public static void showAddAdapterTutorial(final MainActivity activity, View layout) {
+	public static void showAddGateTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		int marginPixel = 25;
 		int marginPixelBottom = 55;
@@ -174,18 +169,18 @@ public class TutorialHelper {
 		lps.setMargins(margin, margin, margin, bottomMargin);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
-		OnShowcaseEventListener	listener = new OnShowcaseEventListener() {
+		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show ADD ADAPTER");
+				Log.d(TAG, "OnShowCase show ADD GATE");
 
 			}
 
 			@Override
 			public void onShowcaseViewHide(ShowcaseView showcaseView) {
 				Log.d(TAG, "OnShowCase hide");
-				// TODO: Save that ADD ADAPTER was clicked
+				// TODO: Save that ADD GATE was clicked
 
 			}
 
@@ -198,8 +193,8 @@ public class TutorialHelper {
 
 		ShowcaseView mSV = new ShowcaseView.Builder(activity, true)
 				.setTarget(target)
-				.setContentTitle(activity.getString(R.string.tut_add_adapter_header))
-				.setContentText(activity.getString(R.string.tut_add_adapter_text))
+				.setContentTitle(activity.getString(R.string.tut_add_gate_header))
+				.setContentText(activity.getString(R.string.tut_add_gate_text))
 				.setStyle(R.style.CustomShowcaseTheme)
 				.setShowcaseEventListener(listener)
 				.build();

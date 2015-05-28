@@ -8,13 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.rehivetech.beeeon.achievements.GeneralAchievement;
-import com.vk.sdk.dialogs.VKShareDialog;
-
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.achievements.GeneralAchievement;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnGooglePlus;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
@@ -51,9 +48,9 @@ public class ShareFragmentDialog extends DialogFragment {
 		mVk = BeeeOnVKontakte.getInstance(getActivity());
 
 		socialNetworks.add(mGp.getName());
-		if(mFb.isPaired()) socialNetworks.add(mFb.getName());
-		if(mTw.isPaired()) socialNetworks.add(mTw.getName());
-		if(mVk.isPaired()) socialNetworks.add(mVk.getName());
+		if (mFb.isPaired()) socialNetworks.add(mFb.getName());
+		if (mTw.isPaired()) socialNetworks.add(mTw.getName());
+		if (mVk.isPaired()) socialNetworks.add(mVk.getName());
 	}
 
 	@Override
@@ -68,8 +65,7 @@ public class ShareFragmentDialog extends DialogFragment {
 									startActivityForResult(mGp.shareAchievement(name), Constants.SHARE_GOOGLE);
 								else if (mFb.isPaired() && which == 1) {
 //									this.show(mFb.shareAchievement(name, date));
-								}
-								else if (mTw.isPaired() && (which == 1 || which == 2))
+								} else if (mTw.isPaired() && (which == 1 || which == 2))
 									startActivityForResult(mTw.shareAchievement(name), Constants.SHARE_TWITTER);
 								else if (mVk.isPaired() && (which == 1 || which == 2 || which == 3))
 									mVk.shareAchievement(name, date).show(getFragmentManager(), "string");
@@ -86,7 +82,7 @@ public class ShareFragmentDialog extends DialogFragment {
 	public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		// works when user haven't twitter native app - cant control, if sharing was successful
-		if(requestCode == Constants.SHARE_TWITTER) {
+		if (requestCode == Constants.SHARE_TWITTER) {
 			new GeneralAchievement(Constants.ACHIEVEMENT_TWITTER_SHARE, getActivity());
 		}
 	}

@@ -4,9 +4,9 @@ import android.view.View;
 
 /**
  * @author Jan Lamacz
- * from http://milesburton.com/Android_-_Building_a_ListView_with_an_OnClick_Position
+ *         from http://milesburton.com/Android_-_Building_a_ListView_with_an_OnClick_Position
  */
-public class AchievementListClickListener  implements View.OnClickListener {
+public class AchievementListClickListener implements View.OnClickListener {
 	private int position;
 	private AchievementListOnClickListener callback;
 

@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -11,15 +8,17 @@ import android.preference.ListPreference;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-
 import com.rehivetech.beeeon.ActionBarPreferenceActivity;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
 import com.rehivetech.beeeon.household.device.units.NoiseUnit;
 import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.persistence.Persistence;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The control preference activity handles the preferences for the control extension.
@@ -47,12 +46,12 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 		mPreferences.put(unit.getPersistenceKey(), pref);
 	}
 
-    @Override
-    protected int getPreferencesXmlId() {
-        return R.xml.unit_preferences;
-    }
+	@Override
+	protected int getPreferencesXmlId() {
+		return R.xml.unit_preferences;
+	}
 
-    // added suppressWarnings because of support of lower version
+	// added suppressWarnings because of support of lower version
 	@SuppressWarnings("deprecation")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -60,8 +59,8 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 
 		mController = Controller.getInstance(this);
 
-        final Toolbar toolbar=getToolbar();
-        toolbar.setTitle(R.string.units);
+		final Toolbar toolbar = getToolbar();
+		toolbar.setTitle(R.string.units);
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getId()));
@@ -93,9 +92,9 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 		return false;
 	}

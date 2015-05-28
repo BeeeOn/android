@@ -114,16 +114,16 @@ public class SimpleGeofence implements IIdentifier {
 	// Instance field getters
 
 	/**
-	 * Create geofence ID which is unique. It contains device ID and timestamp.
+	 * Create geofence ID which is unique. It contains module ID and timestamp.
 	 *
 	 * @return Unique geofence ID per user. Ex. deviceId_timestamp
 	 */
 	private static String createGeofenceId(Context context) {
 		final String timestamp = String.valueOf(System.currentTimeMillis());
-		final String deviceId = Utils.getPhoneName();
+		final String moduleId = Utils.getPhoneName();
 		final String separator = "_";
 
-		return deviceId + separator + timestamp;
+		return moduleId + separator + timestamp;
 	}
 
 	/**

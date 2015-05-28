@@ -16,13 +16,13 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.dialog.ILocationPickerDialogListener;
 import com.rehivetech.beeeon.activity.dialog.LocationPickerDialogFragment;
-import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.service.WeatherProvider;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public class WidgetClockFragment extends WidgetConfigurationFragment implements ILocationPickerDialogListener{
+public class WidgetClockFragment extends WidgetConfigurationFragment implements ILocationPickerDialogListener {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	private static final int REQUEST_LOCATION_DIALOG = 1;
 
@@ -42,9 +42,9 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	protected WidgetClockData mWidgetData;
 
-	protected List<WidgetDevicePersistence> mWidgetDevices;
-	protected List<Spinner> mDeviceSpinners;
-	private LinearLayout mDeviceSpinnersWrapper;
+	protected List<WidgetModulePersistence> mWidgetModules;
+	protected List<Spinner> mModuleSpinners;
+	private LinearLayout mModuleSpinnersWrapper;
 
 	private RadioGroup mColorSchemeGroup;
 	private TextView mCityLabel;
@@ -52,7 +52,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	private Handler mHandler;
 	private WeatherProvider.City mWeatherCity;
 
-	public WidgetClockFragment(){
+	public WidgetClockFragment() {
 		mHandler = new Handler();
 	}
 
@@ -63,19 +63,19 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mGeneralWidgetdata = new WidgetClockData(mActivity.getWidgetId(), mActivity, null, null);
 		mWidgetData = (WidgetClockData) mGeneralWidgetdata;
 
-		mWidgetDevices = mWidgetData.widgetDevices;
-		mDeviceSpinners = new ArrayList<>();
+		mWidgetModules = mWidgetData.widgetModules;
+		mModuleSpinners = new ArrayList<>();
 
 		setRefreshBounds(WidgetService.UPDATE_INTERVAL_WEATHER_MIN);
 
 		mWeatherProvider = new WeatherProvider(mActivity);
 	}
 
-	protected int getFragmentLayoutResource(){
+	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_clock;
 	}
 
-	protected int getFragmentTitle(){
+	protected int getFragmentTitle() {
 		return R.string.widget_configuration_widget_clock;
 	}
 
@@ -86,14 +86,14 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		mDeviceSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
+		mModuleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
 		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		spinnerLayoutParams.setMargins(0, 0, 0, (int) mActivity.getResources().getDimension(R.dimen.widget_margin));
 
-		for(WidgetDevicePersistence wDev : mWidgetDevices){
-			Spinner deviceSpinner = new Spinner(mActivity);
-			mDeviceSpinnersWrapper.addView(deviceSpinner, spinnerLayoutParams);
-			mDeviceSpinners.add(deviceSpinner);
+		for (WidgetModulePersistence wDev : mWidgetModules) {
+			Spinner moduleSpinner = new Spinner(mActivity);
+			mModuleSpinnersWrapper.addView(moduleSpinner, spinnerLayoutParams);
+			mModuleSpinners.add(moduleSpinner);
 		}
 
 		mColorSchemeGroup = (RadioGroup) mActivity.findViewById(R.id.widget_configuration_scheme);
@@ -141,32 +141,31 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	public void onPositiveButtonClicked(int var1, EditText city, final LocationPickerDialogFragment dialog) {
-		if(city.getText().length() == 0){
+		if (city.getText().length() == 0) {
 			city.setError(mActivity.getString(R.string.place_must_be_filled));
 			return;
 		}
 
 		// show dialog of loading
-		if(mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
+		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
 
 		final String cityInput = city.getText().toString();
 		// load city data in background
-		new Thread(){
-			public void run(){
+		new Thread() {
+			public void run() {
 				final JSONObject data = mWeatherProvider.getLocations(cityInput);
-				if(data == null){
-					mHandler.post(new Runnable(){
-						public void run(){
+				if (data == null) {
+					mHandler.post(new Runnable() {
+						public void run() {
 							loadingCityFail();
 						}
 					});
-				}
-				else{
+				} else {
 					final List<WeatherProvider.City> foundCities = mWeatherProvider.parseCities(data);
-					mHandler.post(new Runnable(){
-						public void run(){
+					mHandler.post(new Runnable() {
+						public void run() {
 							WeatherProvider.City city = foundCities.get(0);
-							if(city == null){
+							if (city == null) {
 								loadingCityFail();
 								return;
 							}
@@ -178,20 +177,20 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}.start();
 	}
 
-	private void loadingCityFail(){
+	private void loadingCityFail() {
 		Toast.makeText(mActivity, mActivity.getString(R.string.weather_place_not_found), Toast.LENGTH_LONG).show();
-		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
-	private void loadingCitySuccess(WeatherProvider.City city, LocationPickerDialogFragment dialog){
+	private void loadingCitySuccess(WeatherProvider.City city, LocationPickerDialogFragment dialog) {
 		mWeatherCity = city;
 		// setup city label
 		mCityLabel.setText(city.name);
 
 		// hide location picker dialog
-		if(dialog != null) dialog.dismiss();
+		if (dialog != null) dialog.dismiss();
 		// hide progress dialog
-		if(mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
 	@Override
@@ -205,15 +204,13 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		updateIntervalLayout(mWidgetUpdateSeekBar);
 
 		// setup weather location if provided
-		if(!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
+		if (!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
 
-		if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
+		if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
 			mColorSchemeGroup.check(R.id.scheme_white);
-		}
-		else if(mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)){
+		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
 			mColorSchemeGroup.check(R.id.scheme_pink_cyan);
-		}
-		else if(mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)){
+		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)) {
 			mColorSchemeGroup.check(R.id.scheme_black);
 		}
 	}
@@ -223,17 +220,17 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mDevices, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
 
 		int index = 0;
-		for(WidgetDevicePersistence wDev : mWidgetDevices){
-			Spinner spinner = mDeviceSpinners.get(index);
+		for (WidgetModulePersistence wDev : mWidgetModules) {
+			Spinner spinner = mModuleSpinners.get(index);
 			spinner.setAdapter(dataAdapter);
 
-			int foundIndex = Utils.getObjectIndexFromList(wDev.getId(), mDevices);
-			if(foundIndex != -1) spinner.setSelection(foundIndex);
+			int foundIndex = Utils.getObjectIndexFromList(wDev.getId(), mModules);
+			if (foundIndex != -1) spinner.setSelection(foundIndex);
 
 			index++;
 		}
@@ -241,34 +238,33 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	protected boolean saveSettings() {
-		Adapter adapter = (Adapter) mAdapterSpinner.getSelectedItem();
-		if (adapter == null) {
-			Toast.makeText(mActivity, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
+		Gate gate = (Gate) mGateSpinner.getSelectedItem();
+		if (gate == null) {
+			Toast.makeText(mActivity, R.string.widget_configuration_select_gate, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
 		int index = 0;
-		for(WidgetDevicePersistence wDev : mWidgetDevices) {
-			Spinner spinner = mDeviceSpinners.get(index);
+		for (WidgetModulePersistence wDev : mWidgetModules) {
+			Spinner spinner = mModuleSpinners.get(index);
 
-			Device device = (Device) spinner.getSelectedItem();
-			if (device == null) {
+			Module module = (Module) spinner.getSelectedItem();
+			if (module == null) {
 				Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
 				return false;
 			}
 
-			Location location = Utils.getFromList(device.getFacility().getLocationId(), mLocations);
-			if(location != null) {
-				wDev.configure(device, adapter, location);
-			}
-			else{
-				wDev.configure(device, adapter);
+			Location location = Utils.getFromList(module.getDevice().getLocationId(), mLocations);
+			if (location != null) {
+				wDev.configure(module, gate, location);
+			} else {
+				wDev.configure(module, gate);
 			}
 
 			index++;
 		}
 
-		if(mWeatherCity != null){
+		if (mWeatherCity != null) {
 			// setup weather persistence
 			mWidgetData.weather.id = mWeatherCity.id;
 			mWidgetData.weather.cityName = mWeatherCity.name;
@@ -277,7 +273,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}
 
 		// setup widget
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, gate);
 		return true;
 	}
 }

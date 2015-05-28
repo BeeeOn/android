@@ -10,14 +10,14 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -37,7 +37,6 @@ import java.util.TreeMap;
 
 /**
  * @author ThinkDeep
- *
  */
 public class XmlParsers {
 
@@ -53,7 +52,7 @@ public class XmlParsers {
 	 * @author ThinkDeep
 	 */
 	public enum State implements IIdentifier {
-		ADAPTERS("adapters"),
+		GATES("adapters"),
 		ALLDEVICES("alldevs"),
 		DEVICES("devs"),
 		LOGDATA("logdata"),
@@ -89,12 +88,11 @@ public class XmlParsers {
 	/**
 	 * Method parse message (XML) in communication version
 	 *
-	 * @param xmlInput raw string xml input
+	 * @param xmlInput  raw string xml input
 	 * @param namespace always false
 	 * @return object with parsed xml data inside
 	 * @throws XmlPullParserException
-	 * @throws IOException
-	 *             means Communication version mismatch exception
+	 * @throws IOException            means Communication version mismatch exception
 	 * @throws ParseException
 	 */
 	public ParsedMessage parseCommunication(String xmlInput, boolean namespace) throws XmlPullParserException, IOException,
@@ -114,7 +112,7 @@ public class XmlParsers {
 			String srv[] = version.split("\\.");
 			String app[] = COM_VER.split("\\.");
 
-			if(srv.length != 0 && app.length!=0) {
+			if (srv.length != 0 && app.length != 0) {
 				int srv_major = Integer.parseInt(srv[0]);
 				int srv_minor = Integer.parseInt(srv[1]);
 				int app_major = Integer.parseInt(app[0]);
@@ -125,8 +123,7 @@ public class XmlParsers {
 							.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
 							.set(NetworkError.PARAM_COM_VER_SERVER, version);
 				}
-			}
-			else  {
+			} else {
 				// Server must have same major version as app and same or greater minor version than app
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
 						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
@@ -139,118 +136,118 @@ public class XmlParsers {
 		ParsedMessage result = new ParsedMessage(state);
 
 		switch (state) {
-		case USERINFO:
-			// User
-			User user = new User();
-			user.setId(getSecureAttrValue(Xconstants.UID));
-			user.setName(getSecureAttrValue(Xconstants.NAME));
-			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
-			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
-			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
-			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
+			case USERINFO:
+				// User
+				User user = new User();
+				user.setId(getSecureAttrValue(Xconstants.UID));
+				user.setName(getSecureAttrValue(Xconstants.NAME));
+				user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+				user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
+				user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
-			result.data = user;
-			break;
-		case BT:
-			// String (BeeeonToken)
-			result.data = getSecureAttrValue(Xconstants.BT);
-			break;
-		case TRUE:
-			// nothing
-			break;
-		case FALSE:
-			// FalseAnswer
-			result.data = parseFalse();
-			break;
-		case ADAPTERS:
-			// List<Adapter>
-			result.data = parseAdaptersReady();
-			break;
-		case LOGDATA:
-			// DeviceLog
-			result.data = parseLogData();
-			break;
-		case ROOMS:
-			// List<Location>
-			result.data = parseRooms();
-			break;
-		case ROOMCREATED:
-			// String (locationID)
-			result.data = getSecureAttrValue(Xconstants.LID);
-			break;
-		case ALGCREATED:
-			// String (AlgorithmID)
-			result.data = getSecureAttrValue(Xconstants.ALGID);
-			break;
-		case ALGORITHMS:
-			getSecureAttrValue(Xconstants.ATYPE); // not used yet
-			// ArrayList<WatchDog>
-			result.data = parseWatchDog();
-			break;
-		case ACCOUNTS:
-			// List<User>
-			result.data = parseConAccountList();
-			break;
-		case TIMEZONE:
-			// integer
-			result.data = getSecureInt(getSecureAttrValue(Xconstants.UTC));
-			break;
-		case DEVICES:
-			String aid = getSecureAttrValue(Xconstants.AID);
-			if (aid.length() > 0) {
-				// List<Facility>
-				result.data = parseNewFacilities(aid);
-			} else
-				// List<Facility>
-				result.data = parseFacilities();
-			break;
-		case ALLDEVICES:
-			// List<Facility>
-			result.data = parseAllFacilities();
-			break;
-		case NOTIFICATIONS:
-			// List<Notification>
-			result.data = parseNotifications();
-			break;
-		case ACHIEVEMENTS:
-			// List<AchievementListItem>
-			result.data = parseAchievements();
-			break;
-		case PROGRESS:
-			// List<String>
-			result.data = parseProgress();
-			break;
-		default:
-			break;
+				result.data = user;
+				break;
+			case BT:
+				// String (BeeeonToken)
+				result.data = getSecureAttrValue(Xconstants.BT);
+				break;
+			case TRUE:
+				// nothing
+				break;
+			case FALSE:
+				// FalseAnswer
+				result.data = parseFalse();
+				break;
+			case GATES:
+				// List<Gate>
+				result.data = parseGatesReady();
+				break;
+			case LOGDATA:
+				// ModuleLog
+				result.data = parseLogData();
+				break;
+			case ROOMS:
+				// List<Location>
+				result.data = parseRooms();
+				break;
+			case ROOMCREATED:
+				// String (locationID)
+				result.data = getSecureAttrValue(Xconstants.LID);
+				break;
+			case ALGCREATED:
+				// String (AlgorithmID)
+				result.data = getSecureAttrValue(Xconstants.ALGID);
+				break;
+			case ALGORITHMS:
+				getSecureAttrValue(Xconstants.ATYPE); // not used yet
+				// ArrayList<Watchdog>
+				result.data = parseWatchdog();
+				break;
+			case ACCOUNTS:
+				// List<User>
+				result.data = parseConAccountList();
+				break;
+			case TIMEZONE:
+				// integer
+				result.data = getSecureInt(getSecureAttrValue(Xconstants.UTC));
+				break;
+			case DEVICES:
+				String aid = getSecureAttrValue(Xconstants.AID);
+				if (aid.length() > 0) {
+					// List<Device>
+					result.data = parseNewDevices(aid);
+				} else
+					// List<Device>
+					result.data = parseDevices();
+				break;
+			case ALLDEVICES:
+				// List<Device>
+				result.data = parseAllDevices();
+				break;
+			case NOTIFICATIONS:
+				// List<Notification>
+				result.data = parseNotifications();
+				break;
+			case ACHIEVEMENTS:
+				// List<AchievementListItem>
+				result.data = parseAchievements();
+				break;
+			case PROGRESS:
+				// List<String>
+				result.data = parseProgress();
+				break;
+			default:
+				break;
 		}
 		mParser = null;
 		return result;
 	}
 
-	// /////////////////////////////////FALSE, ADAPTERS, USERINFO////////////////////////////////////
+	// /////////////////////////////////FALSE, GATES, USERINFO////////////////////////////////////
 
 	/**
-	 * Method parse inner part of AdaptersReady message
+	 * Method parse inner part of GatesReady message
 	 *
-	 * @return List of adapters (contains only Id, name, and user role)
+	 * @return List of gates (contains only Id, name, and user role)
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @since 2.2
 	 */
-	private List<Adapter> parseAdaptersReady() throws XmlPullParserException, IOException {
+	private List<Gate> parseGatesReady() throws XmlPullParserException, IOException {
 		mParser.nextTag();
-		List<Adapter> result = new ArrayList<>();
+		List<Gate> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.ADAPTER))
+		if (!mParser.getName().equals(Xconstants.GATE))
 			return result;
 
 		do {
-			Adapter adapter = new Adapter();
-			adapter.setId(getSecureAttrValue(Xconstants.ID));
-			adapter.setName(getSecureAttrValue(Xconstants.NAME));
-			adapter.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
-			adapter.setUtcOffset(getSecureInt(getSecureAttrValue(Xconstants.UTC)));
-			result.add(adapter);
+			Gate gate = new Gate();
+			gate.setId(getSecureAttrValue(Xconstants.ID));
+			gate.setName(getSecureAttrValue(Xconstants.NAME));
+			gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
+			gate.setUtcOffset(getSecureInt(getSecureAttrValue(Xconstants.UTC)));
+			result.add(gate);
 
 			mParser.nextTag();
 
@@ -276,10 +273,10 @@ public class XmlParsers {
 		if (err == 17) { // TODO: check this with pavel
 			trouble = getFalseMessage17();
 		}
-		if (err == 3){
+		if (err == 3) {
 			trouble = getFalseMessage17();
 		}
-		return new FalseAnswer((mParser.getEventType() == XmlPullParser.END_TAG)? "" : readText(Xconstants.COM_ROOT), err, trouble);
+		return new FalseAnswer((mParser.getEventType() == XmlPullParser.END_TAG) ? "" : readText(Xconstants.COM_ROOT), err, trouble);
 	}
 
 	// /////////////////////////////////DEVICES, LOGS/////////////////////////////////////////////////////////
@@ -287,19 +284,19 @@ public class XmlParsers {
 	/**
 	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
 	 *
-	 * @return list of facilities
+	 * @return list of devices
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	private List<Facility> parseAllFacilities() throws XmlPullParserException, IOException, ParseException {
+	private List<Device> parseAllDevices() throws XmlPullParserException, IOException, ParseException {
 
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag(); // dev start tag
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.DEVICE))
+		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
 
 		parseInnerDevs(result, aid, true);
@@ -307,13 +304,13 @@ public class XmlParsers {
 		return result;
 	}
 
-	// special case of parseFacility
-	private List<Facility> parseNewFacilities(String aid) throws XmlPullParserException, IOException, ParseException {
+	// special case of parseDevice
+	private List<Device> parseNewDevices(String aid) throws XmlPullParserException, IOException, ParseException {
 		mParser.nextTag(); // dev start tag
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.DEVICE))
+		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
 
 		parseInnerDevs(result, aid, false);
@@ -322,68 +319,68 @@ public class XmlParsers {
 	}
 
 	/**
-	 * Method parse inner part of Device message (old:Partial message (set of device's tag))
+	 * Method parse inner part of Module message (old:Partial message (set of module's tag))
 	 *
-	 * @return List of facilities
+	 * @return List of devices
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 * @throws ParseException
 	 */
-	private List<Facility> parseFacilities() throws XmlPullParserException, IOException, ParseException {
-		mParser.nextTag(); // adapter tag
+	private List<Device> parseDevices() throws XmlPullParserException, IOException, ParseException {
+		mParser.nextTag(); // gate tag
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.ADAPTER))
+		if (!mParser.getName().equals(Xconstants.GATE))
 			return result;
 
-		do { // go through adapters
+		do { // go through gates
 			String aid = getSecureAttrValue(Xconstants.ID);
 			mParser.nextTag(); // dev tag
 
 			parseInnerDevs(result, aid, true);
 
-			mParser.nextTag(); // adapter endtag
+			mParser.nextTag(); // gate endtag
 		} while (!mParser.getName().equals(Xconstants.COM_ROOT) && mParser.nextTag() != XmlPullParser.END_TAG);
 
 		return result;
 	}
 
-	private void parseInnerDevs(List<Facility> result, String aid, boolean init) throws XmlPullParserException, IOException {
-		do { // go through devs (facilities)
-			Facility facility = new Facility();
-			facility.setAdapterId(aid);
-			// facility.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
+	private void parseInnerDevs(List<Device> result, String aid, boolean init) throws XmlPullParserException, IOException {
+		do { // go through devs (devices)
+			Device device = new Device();
+			device.setGateId(aid);
+			// mDevice.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
 			// true);
-			facility.setInitialized(init);
-			facility.setAddress(getSecureAttrValue(Xconstants.DID));
-			facility.setLocationId(getSecureAttrValue(Xconstants.LID));
-			facility.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
-			facility.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
-			facility.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
-			facility.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
-			facility.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
+			device.setInitialized(init);
+			device.setAddress(getSecureAttrValue(Xconstants.DID));
+			device.setLocationId(getSecureAttrValue(Xconstants.LID));
+			device.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
+			device.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
+			device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
+			device.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
+			device.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
 			mParser.nextTag(); // part tag
 
-			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no device in facility -> error in DB on server
-				Log.e(TAG,"Missing device in facility: " + facility.getId());
+			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in mDevice -> error in DB on server
+				Log.e(TAG, "Missing module in mDevice: " + device.getId());
 				continue;
 			}
 
 			do { // go through parts (devices)
-				Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
-				device.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
-				device.setName(getSecureAttrValue(Xconstants.NAME));
-				device.setValue(getSecureAttrValue(Xconstants.VALUE));
-				facility.addDevice(device);
+				Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
+				module.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
+				module.setName(getSecureAttrValue(Xconstants.NAME));
+				module.setValue(getSecureAttrValue(Xconstants.VALUE));
+				device.addModule(module);
 				mParser.nextTag(); // part endtag
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.DEVICE));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
 
-			result.add(facility);
+			result.add(device);
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
-				&& (!mParser.getName().equals(Xconstants.ADAPTER) || !mParser.getName().equals(Xconstants.COM_ROOT)));
+				&& (!mParser.getName().equals(Xconstants.GATE) || !mParser.getName().equals(Xconstants.COM_ROOT)));
 	}
 
 	/**
@@ -393,11 +390,11 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private DeviceLog parseLogData() throws XmlPullParserException, IOException {
+	private ModuleLog parseLogData() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		// mParser.require(XmlPullParser.START_TAG, ns, Xconstants.ROW); // strict solution
 
-		DeviceLog log = new DeviceLog();
+		ModuleLog log = new ModuleLog();
 
 		if (!mParser.getName().equals(Xconstants.ROW))
 			return log;
@@ -513,7 +510,7 @@ public class XmlParsers {
 			String id = getSecureAttrValue(Xconstants.MID); // message id
 			String time = getSecureAttrValue(Xconstants.TIME); // time
 			String type = getSecureAttrValue(Xconstants.TYPE); // type
-			boolean read = (getSecureInt(getSecureAttrValue(Xconstants.READ)) == 0)?false:true; // read
+			boolean read = (getSecureInt(getSecureAttrValue(Xconstants.READ)) == 0) ? false : true; // read
 
 			//TODO
 			// call here some method from gcm/notification part
@@ -537,78 +534,77 @@ public class XmlParsers {
 
 	/**
 	 * Method parse inner part of watchdog
+	 *
 	 * @return list of watchdog objects
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private ArrayList<WatchDog> parseWatchDog() throws XmlPullParserException, IOException{
+	private ArrayList<Watchdog> parseWatchdog() throws XmlPullParserException, IOException {
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag();
 
-		ArrayList<WatchDog> result = new ArrayList<>();
+		ArrayList<Watchdog> result = new ArrayList<>();
 
-		if(!mParser.getName().equals(Xconstants.ALGORITHM))
+		if (!mParser.getName().equals(Xconstants.ALGORITHM))
 			return result;
 
-		do{
-			WatchDog watchDog = new WatchDog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
-			watchDog.setId(getSecureAttrValue(Xconstants.ID));
-			watchDog.setAdapterId(aid);
-			watchDog.setEnabled(getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0);
-			watchDog.setName(getSecureAttrValue(Xconstants.NAME));
+		do {
+			Watchdog watchdog = new Watchdog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
+			watchdog.setId(getSecureAttrValue(Xconstants.ID));
+			watchdog.setGateId(aid);
+			watchdog.setEnabled(getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0);
+			watchdog.setName(getSecureAttrValue(Xconstants.NAME));
 
 			TreeMap<String, String> tDevices = new TreeMap<>();
 			TreeMap<String, String> tParams = new TreeMap<>();
 
 			mParser.nextTag();
 
-			if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
+			if (!mParser.getName().equals(Xconstants.MODULE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
 				Log.e(TAG, "someone send bad xml");//TODO do something
 
-			do{
+			do {
 				String position = getSecureAttrValue(Xconstants.POSITION);
 
-				if(mParser.getName().equals(Xconstants.DEVICE)){
-					String device = getSecureAttrValue(Xconstants.ID) + Device.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
-					tDevices.put(position, device);
+				if (mParser.getName().equals(Xconstants.MODULE)) {
+					String module = getSecureAttrValue(Xconstants.ID) + Module.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
+					tDevices.put(position, module);
 
 					mParser.nextTag();
-				}
-				else if(mParser.getName().equals(Xconstants.GEOFENCE)){
-					watchDog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
+				} else if (mParser.getName().equals(Xconstants.GEOFENCE)) {
+					watchdog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
 					mParser.nextTag();
-				}
-				else{
+				} else {
 					String param = readText(Xconstants.PARAM);
 					tParams.put(position, param);
 					// FIXME: this is workaround cause server not returning <geo> tag .. when it's added, this will not be necessary
-					if(position.equals("1") && watchDog.getType() == WatchDog.TYPE_GEOFENCE && watchDog.getGeoRegionId() == null){
-						watchDog.setGeoRegionId(param);
+					if (position.equals("1") && watchdog.getType() == Watchdog.TYPE_GEOFENCE && watchdog.getGeoRegionId() == null) {
+						watchdog.setGeoRegionId(param);
 					}
 				}
 
-			}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
 
-			watchDog.setDevices(new ArrayList<>(tDevices.values()));
-			watchDog.setParams(new ArrayList<>(tParams.values()));
+			watchdog.setModules(new ArrayList<>(tDevices.values()));
+			watchdog.setParams(new ArrayList<>(tParams.values()));
 
-			result.add(watchDog);
+			result.add(watchdog);
 
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
 	}
 
-	private ArrayList<AchievementListItem> parseAchievements() throws XmlPullParserException, IOException{
+	private ArrayList<AchievementListItem> parseAchievements() throws XmlPullParserException, IOException {
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag();
 
 		ArrayList<AchievementListItem> result = new ArrayList<>();
 
-		if(!mParser.getName().equals(Xconstants.ACHIEVEMENT))
+		if (!mParser.getName().equals(Xconstants.ACHIEVEMENT))
 			return result;
 
-		do{
+		do {
 			AchievementListItem item = new AchievementListItem(
 					getSecureAttrValue(Xconstants.ID),
 					getSecureAttrValue(Xconstants.PID),
@@ -625,23 +621,23 @@ public class XmlParsers {
 
 			mParser.nextTag();
 
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
 	}
 
-	private List<String> parseProgress() throws XmlPullParserException, IOException{
+	private List<String> parseProgress() throws XmlPullParserException, IOException {
 		mParser.nextTag();
 		List<String> result = new ArrayList<>();
 
-		if(!mParser.getName().equals(Xconstants.ACHIEVEMENT)) {
+		if (!mParser.getName().equals(Xconstants.ACHIEVEMENT)) {
 			return result;
 		}
 
-		do{
+		do {
 			result.add(getSecureAttrValue(Xconstants.ID));
 			mParser.nextTag();
-		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
 	}
@@ -649,42 +645,42 @@ public class XmlParsers {
 	// ///////////////////////////////// OTHER
 
 	// FIXME: check on first use
-	List<Facility> getFalseMessage10() throws XmlPullParserException, IOException {
+	List<Device> getFalseMessage10() throws XmlPullParserException, IOException {
 
 		mParser.nextTag();
 
-		List<Facility> result = new ArrayList<>();
+		List<Device> result = new ArrayList<>();
 
 		mParser.nextTag();
-		if (!mParser.getName().equals(Xconstants.DEVICE))
+		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
 
 		do {
-			Facility facility = null;
-			boolean facilityExists = false;
+			Device device = null;
+			boolean deviceExists = false;
 
-			Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
+			Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
 
 			String id = getSecureAttrValue(Xconstants.ID);
-			for (Facility fac : result) {
+			for (Device fac : result) {
 				if (fac.getAddress().equals(id)) {
-					// We already have this facility, just add new devices to it
-					facilityExists = true;
-					facility = fac;
+					// We already have this mDevice, just add new devices to it
+					deviceExists = true;
+					device = fac;
 					break;
 				}
 			}
 
-			if (facility == null) {
-				// This facility is new, first create a object for it
-				facility = new Facility();
-				facility.setAddress(id);
+			if (device == null) {
+				// This mDevice is new, first create a object for it
+				device = new Device();
+				device.setAddress(id);
 			}
 
-			facility.addDevice(device);
+			device.addModule(module);
 
-			if (!facilityExists)
-				result.add(facility);
+			if (!deviceExists)
+				result.add(device);
 
 			mParser.nextTag();
 
@@ -739,12 +735,12 @@ public class XmlParsers {
 		int depth = 1;
 		while (depth != 0) {
 			switch (mParser.next()) {
-			case XmlPullParser.END_TAG:
-				depth--;
-				break;
-			case XmlPullParser.START_TAG:
-				depth++;
-				break;
+				case XmlPullParser.END_TAG:
+					depth--;
+					break;
+				case XmlPullParser.START_TAG:
+					depth++;
+					break;
 			}
 		}
 	}
@@ -773,8 +769,7 @@ public class XmlParsers {
 	/**
 	 * Method change null result value to empty string (mParser and namespace is included)
 	 *
-	 * @param name
-	 *            of the attribute
+	 * @param name of the attribute
 	 * @return parsed attribute or empty string
 	 */
 	private String getSecureAttrValue(String name) {
@@ -795,15 +790,15 @@ public class XmlParsers {
 	// /////////////////////////////// DEMO
 
 	/**
-	 * Factory for parsing adapter from asset.
+	 * Factory for parsing gate from asset.
 	 *
-	 * @param context of app
-	 * @param filename of facilities xml
-	 * @return Adapter or null
+	 * @param context  of app
+	 * @param filename of devices xml
+	 * @return Gate or null
 	 */
-	public List<Facility> getDemoFacilitiesFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading adapter from asset '%s'", filename));
-		List<Facility> result = null;
+	public List<Device> getDemoDevicesFromAsset(Context context, String filename) throws AppException {
+		Log.i(TAG, String.format("Loading gate from asset '%s'", filename));
+		List<Device> result = null;
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));
@@ -815,11 +810,11 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
-			result = parseAllFacilities();
+			result = parseAllDevices();
 		} catch (IOException | XmlPullParserException | ParseException e) {
 			e.printStackTrace();
 		} finally {
@@ -836,7 +831,7 @@ public class XmlParsers {
 	/**
 	 * Factory for parsing locations from asset.
 	 *
-	 * @param context of app
+	 * @param context  of app
 	 * @param filename of locations xml
 	 * @return list of locations or empty list
 	 */
@@ -854,8 +849,8 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
 			locations = parseRooms();
@@ -873,15 +868,15 @@ public class XmlParsers {
 	}
 
 	/**
-	 * Factory for parsing list of adapters from asset
+	 * Factory for parsing list of gates from asset
 	 *
-	 * @param context of ap
-	 * @param filename of adapters xml
-	 * @return list of adapters or empty list
+	 * @param context  of ap
+	 * @param filename of gates xml
+	 * @return list of gates or empty list
 	 */
-	public List<Adapter> getDemoAdaptersFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading adapters from asset '%s'", filename));
-		List<Adapter> adapters = new ArrayList<>();
+	public List<Gate> getDemoGatesFromAsset(Context context, String filename) throws AppException {
+		Log.i(TAG, String.format("Loading gates from asset '%s'", filename));
+		List<Gate> gates = new ArrayList<>();
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));
@@ -893,11 +888,11 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
-			adapters = parseAdaptersReady();
+			gates = parseGatesReady();
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		} finally {
@@ -908,19 +903,20 @@ public class XmlParsers {
 				Log.e(TAG, ioe.getMessage(), ioe);
 			}
 		}
-		return adapters;
+		return gates;
 	}
 
 	/**
 	 * Factory for parsing list of watchdogs
-	 * @param context of app
+	 *
+	 * @param context  of app
 	 * @param filename of watchdogs xml
 	 * @return list of watchogs
 	 * @throws AppException
 	 */
-	public List<WatchDog> getDemoWatchDogsFromAsset(Context context, String filename) throws AppException {
+	public List<Watchdog> getDemoWatchdogsFromAsset(Context context, String filename) throws AppException {
 		Log.i(TAG, String.format("Loading watchdog from asset '%s'", filename));
-		List<WatchDog> watchdogs = new ArrayList<>();
+		List<Watchdog> watchdogs = new ArrayList<>();
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));
@@ -932,11 +928,11 @@ public class XmlParsers {
 			String version = getSecureAttrValue(Xconstants.VERSION);
 			if (!version.equals(COM_VER)) {
 				throw new AppException(NetworkError.COM_VER_MISMATCH)
-					.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-					.set(NetworkError.PARAM_COM_VER_SERVER, version);
+						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
-			watchdogs = parseWatchDog();
+			watchdogs = parseWatchdog();
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		} finally {

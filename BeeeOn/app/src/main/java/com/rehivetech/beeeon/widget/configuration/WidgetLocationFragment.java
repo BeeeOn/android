@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetLocationData;
@@ -37,10 +37,11 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 		mWidgetLocation = mWidgetData.widgetLocation;
 	}
 
-	protected int getFragmentLayoutResource(){
+	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_location;
 	}
-	protected int getFragmentTitle(){
+
+	protected int getFragmentTitle() {
 		return R.string.widget_configuration_widget_location;
 	}
 
@@ -73,14 +74,14 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 
 		// set selection
 		int foundIndex = Utils.getObjectIndexFromList(mWidgetLocation.getId(), mLocations);
-		if(foundIndex != -1) mLocationSpinner.setSelection(foundIndex);
+		if (foundIndex != -1) mLocationSpinner.setSelection(foundIndex);
 	}
 
 	@Override
 	protected boolean saveSettings() {
-		Adapter adapter = (Adapter) mAdapterSpinner.getSelectedItem();
-		if (adapter == null) {
-			Toast.makeText(mActivity, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
+		Gate gate = (Gate) mGateSpinner.getSelectedItem();
+		if (gate == null) {
+			Toast.makeText(mActivity, R.string.widget_configuration_select_gate, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
@@ -90,10 +91,10 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-		mWidgetLocation.configure(location, adapter);
+		mWidgetLocation.configure(location, gate);
 
 		//sets widgetdata
-		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, adapter);
+		mWidgetData.configure(mActivity.isAppWidgetEditing(), getRefreshSeconds(mWidgetUpdateSeekBar.getProgress()), false, gate);
 		return true;
 	}
 }

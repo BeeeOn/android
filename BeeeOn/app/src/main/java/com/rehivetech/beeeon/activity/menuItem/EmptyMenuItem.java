@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.activity.menuItem;
 
 import android.view.View;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 
 public class EmptyMenuItem extends AbstractMenuItem {
@@ -29,13 +30,13 @@ public class EmptyMenuItem extends AbstractMenuItem {
 	@Override
 	public void setIsSelected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setNotSelected() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

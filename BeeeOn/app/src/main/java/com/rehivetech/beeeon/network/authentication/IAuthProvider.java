@@ -10,13 +10,19 @@ public interface IAuthProvider {
 
 	// Result codes
 
-	/** Provider has all data he needs and they are given via Intent object */
+	/**
+	 * Provider has all data he needs and they are given via Intent object
+	 */
 	public static final int RESULT_AUTH = 100;
 
-	/** User cancelled authorization process */
+	/**
+	 * User cancelled authorization process
+	 */
 	public static final int RESULT_CANCEL = 101;
 
-	/** Error happened during authorization process */
+	/**
+	 * Error happened during authorization process
+	 */
 	public static final int RESULT_ERROR = 102;
 
 
@@ -58,7 +64,7 @@ public interface IAuthProvider {
 	 * Do steps required for filling the parameters map (e.g. open login dialog to set login/password or load Google auth token).
 	 * AuthProvider will provide the result via calling activity.onActivityResult(), read description in each AuthProvider to know what data receive/handle and how.
 	 * AuthProvider must NOT throw any exceptions in this method. They won't be catch by caller.
-	 *
+	 * <p/>
 	 * This will be called (probably) on UI thread so Provider must start the separate thread by itself.
 	 */
 	public void prepareAuth(LoginActivity activity);

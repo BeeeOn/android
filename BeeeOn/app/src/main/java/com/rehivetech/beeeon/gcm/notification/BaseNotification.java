@@ -14,7 +14,6 @@ import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public abstract class BaseNotification implements GcmNotification, Comparable<BaseNotification> {
 
@@ -66,7 +65,7 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 			}
 			// control if actual user ID is the samesdsdas
 			if (!userId.equals(controller.getActualUser().getId())) {
-				Log.w(TAG, "GCM: Sent user ID is different from actual user ID. Deleting GCM on server. Actual ID: "+ controller.getActualUser().getId()+ ", recieved ID: " + userId);
+				Log.w(TAG, "GCM: Sent user ID is different from actual user ID. Deleting GCM on server. Actual ID: " + controller.getActualUser().getId() + ", recieved ID: " + userId);
 				controller.getGcmModel().deleteGCM(userId, null);
 				return null;
 			}
@@ -95,8 +94,8 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 			case WATCHDOG:
 				notification = WatchdogNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case ADAPTER_ADDED:
-				notification = AdapterAddedNotification.getInstance(msgId, time, type, bundle);
+			case GATE_ADDED:
+				notification = GateAddedNotification.getInstance(msgId, time, type, bundle);
 				break;
 			case SENSOR_ADDED:
 				notification = SensorAddedNotification.getInstance(msgId, time, type, bundle);
@@ -113,8 +112,8 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 			case SENSOR_LOW_SIGNAL:
 				notification = SensorLowSignalNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case ADAPTER_OFFLINE:
-				notification = AdapterOfflineNotification.getInstance(msgId, time, type, bundle);
+			case GATE_OFFLINE:
+				notification = GateOfflineNotification.getInstance(msgId, time, type, bundle);
 				break;
 			case ACHIEVEMENT:
 				notification = AchievementNotification.getInstance(msgId, time, type, bundle);

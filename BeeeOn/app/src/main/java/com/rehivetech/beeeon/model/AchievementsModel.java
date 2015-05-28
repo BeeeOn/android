@@ -22,22 +22,22 @@ public class AchievementsModel extends BaseModel {
 		super(network);
 	}
 
-	public List<AchievementListItem> getAchievements(String adapterId) {
-		return mAchievementsHolder.getObjects(adapterId);
+	public List<AchievementListItem> getAchievements(String gateId) {
+		return mAchievementsHolder.getObjects(gateId);
 	}
 
-	public synchronized boolean reloadAchievementsByAdapter(String adapterId, boolean forceReload) throws AppException {
-		if (!forceReload && !mAchievementsHolder.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
+	public synchronized boolean reloadAchievementsByGate(String gateId, boolean forceReload) throws AppException {
+		if (!forceReload && !mAchievementsHolder.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		mAchievementsHolder.setObjects(adapterId, mNetwork.getAllAchievements(adapterId));
-		mAchievementsHolder.setLastUpdate(adapterId, DateTime.now());
+		mAchievementsHolder.setObjects(gateId, mNetwork.getAllAchievements(gateId));
+		mAchievementsHolder.setLastUpdate(gateId, DateTime.now());
 
 		return true;
 	}
 
-	public List<String> updateAchievement(String adapterId, String achievementId) {
-		return mNetwork.setProgressLvl(adapterId, achievementId);
+	public List<String> updateAchievement(String gateId, String achievementId) {
+		return mNetwork.setProgressLvl(gateId, achievementId);
 	}
 }

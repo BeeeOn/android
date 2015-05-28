@@ -22,7 +22,6 @@ import java.io.IOException;
 
 /**
  * Created by Martin on 22. 4. 2015.
- *
  */
 public class AchievementNotification extends VisibleNotification {
 	public static final String TAG = AchievementNotification.class.getSimpleName();
@@ -121,9 +120,9 @@ public class AchievementNotification extends VisibleNotification {
 		Intent intent;
 
 		mList = AchievementList.getInstance(context);
-		if(mList.isDownloaded() && mAchievementID != null) {
+		if (mList.isDownloaded() && mAchievementID != null) {
 			AchievementListItem achievementItem = mList.getItem(String.valueOf(mAchievementID));
-			if(achievementItem != null) {
+			if (achievementItem != null) {
 				achievementItem.setCompleted(mTime);
 				mList.updateData();
 				Bundle bundle = new Bundle();
@@ -131,12 +130,11 @@ public class AchievementNotification extends VisibleNotification {
 
 				intent = new Intent(context, AchievementOverviewActivity.class);
 				intent.putExtras(bundle);
-			}
-			else
+			} else
 				intent = new Intent(context, NotificationActivity.class);
 		}
 		// Known ID, but somehow couldnt download achievement data
-		else if(mAchievementID != null) {
+		else if (mAchievementID != null) {
 			intent = new Intent(context, ProfileDetailActivity.class);
 		}
 		// Unknown ID
@@ -153,7 +151,7 @@ public class AchievementNotification extends VisibleNotification {
 
 	@Override
 	protected String getName(Context context) {
-		if(mAchievementID != null)
+		if (mAchievementID != null)
 			return context.getString(context.getResources().getIdentifier("name_" + mAchievementID, "string", context.getPackageName()));
 		return "New achievement";
 	}

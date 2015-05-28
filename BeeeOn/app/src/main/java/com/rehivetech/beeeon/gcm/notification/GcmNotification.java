@@ -2,8 +2,6 @@ package com.rehivetech.beeeon.gcm.notification;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.util.Log;
-
 /**
  * Created by Martin on 26. 4. 2015.
  */
@@ -23,8 +21,8 @@ public interface GcmNotification {
 		SENSOR_ADDED("sensor_add", SensorAddedNotification.class),
 		SENSOR_LOW_BATTERY("sensor_bat", SensorLowBatteryNotification.class),
 		SENSOR_LOW_SIGNAL("sensor_sig", SensorLowSignalNotification.class),
-		ADAPTER_ADDED("adapter_add", AdapterAddedNotification.class),
-		ADAPTER_OFFLINE("adapter_off", AdapterOfflineNotification.class),
+		GATE_ADDED("adapter_add", GateAddedNotification.class),
+		GATE_OFFLINE("adapter_off", GateOfflineNotification.class),
 		ACHIEVEMENT("achievement", AchievementNotification.class);
 
 		private final String mName;

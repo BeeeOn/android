@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.util.Log;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
- * 
+ * <p/>
  * When user is not logged in, it will switch to LoginActivity automatically.
  * Provides useful methods for using CallbackTasks.
  */

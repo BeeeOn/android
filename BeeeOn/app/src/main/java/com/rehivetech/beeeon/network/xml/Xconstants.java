@@ -2,12 +2,11 @@ package com.rehivetech.beeeon.network.xml;
 
 /**
  * @author ThinkDeep
- *
  */
 public class Xconstants {
 
 	public static final String COM_ROOT = "com";
-	public static final String BT =  "bt";
+	public static final String BT = "bt";
 	public static final String ID = "id";
 	public static final String AID = "aid";
 	public static final String LID = "lid";
@@ -28,7 +27,7 @@ public class Xconstants {
 	public static final String VERSION = "ver";
 	public static final String USER = "user";
 	public static final String EMAIL = "email";
-	public static final String ADAPTER = "adapter";
+	public static final String GATE = "adapter";
 	public static final String ROLE = "role";
 	public static final String FROM = "from";
 	public static final String TO = "to";
@@ -40,7 +39,7 @@ public class Xconstants {
 	public static final String INTERVAL = "interval";
 	public static final String NOTIFICAION = "notif";
 	public static final String PART = "part";
-	public static final String DEVICE = "dev";
+	public static final String MODULE = "dev";
 	public static final String INITIALIZED = "init";
 	public static final String TYPE = "type";
 	public static final String FTYPE = "ftype";

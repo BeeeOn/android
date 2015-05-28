@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.util.Log;

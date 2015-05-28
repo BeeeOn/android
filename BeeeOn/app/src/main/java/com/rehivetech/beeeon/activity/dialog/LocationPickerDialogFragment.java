@@ -11,8 +11,6 @@ import android.widget.EditText;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
 import com.avast.android.dialogs.core.BaseDialogFragment;
-import com.avast.android.dialogs.iface.INegativeButtonDialogListener;
-import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.R;
 
 import java.util.Iterator;
@@ -31,9 +29,10 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 
 	EditText mCityName;
 
-	public LocationPickerDialogFragment(){}
+	public LocationPickerDialogFragment() {
+	}
 
-	public static LocationPickerDialogFragment.LocationPickerDialogBuilder createBuilder(Context context, FragmentManager fragmentManager){
+	public static LocationPickerDialogFragment.LocationPickerDialogBuilder createBuilder(Context context, FragmentManager fragmentManager) {
 		return new LocationPickerDialogFragment.LocationPickerDialogBuilder(context, fragmentManager);
 	}
 
@@ -42,7 +41,7 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 	}
 
 	@Override
-	public Builder build(Builder builder){
+	public Builder build(Builder builder) {
 		LayoutInflater inflater = builder.getLayoutInflater();
 		View view = inflater.inflate(R.layout.fragment_dialog_location_picker, null, false);
 
@@ -50,16 +49,16 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 		this.mCityName.setText(this.getArguments().getString(ARG_CITY_NAME));
 
 		builder
-			.setTitle(this.getArguments().getString(ARG_TITLE))
-			.setView(view);
+				.setTitle(this.getArguments().getString(ARG_TITLE))
+				.setView(view);
 
 		String positiveButtonText = this.getArguments().getString(ARG_POSITIVE_BUTTON_TEXT);
-		if(!TextUtils.isEmpty(positiveButtonText)) {
+		if (!TextUtils.isEmpty(positiveButtonText)) {
 			builder.setPositiveButton(positiveButtonText, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Iterator var2 = LocationPickerDialogFragment.this.getDialogListeners().iterator();
-					while(var2.hasNext()){
+					while (var2.hasNext()) {
 						ILocationPickerDialogListener listener = (ILocationPickerDialogListener) var2.next();
 						listener.onPositiveButtonClicked(LocationPickerDialogFragment.this.mRequestCode, mCityName, LocationPickerDialogFragment.this);
 					}
@@ -68,7 +67,7 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 		}
 
 		String negativeButtonText = this.getArguments().getString(ARG_NEGATIVE_BUTTON_TEXT);
-		if(!TextUtils.isEmpty(negativeButtonText)) {
+		if (!TextUtils.isEmpty(negativeButtonText)) {
 			builder.setNegativeButton(negativeButtonText, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -87,18 +86,18 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		if(this.getArguments() == null){
+		if (this.getArguments() == null) {
 			throw new IllegalArgumentException("use LocationPickerDialogBuilder to construct this dialog");
 		}
 	}
 
-	public static class LocationPickerDialogBuilder extends BaseDialogBuilder<LocationPickerDialogFragment.LocationPickerDialogBuilder>{
+	public static class LocationPickerDialogBuilder extends BaseDialogBuilder<LocationPickerDialogFragment.LocationPickerDialogBuilder> {
 		private String mCityName;
 		private String mTitle;
 		private String mPositiveButtonText;
 		private String mNegativeButtonText;
 
-		protected LocationPickerDialogBuilder(Context context, FragmentManager fragmentManager){
+		protected LocationPickerDialogBuilder(Context context, FragmentManager fragmentManager) {
 			super(context, fragmentManager, LocationPickerDialogFragment.class);
 		}
 
@@ -107,17 +106,17 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 			return this;
 		}
 
-		public LocationPickerDialogFragment.LocationPickerDialogBuilder setTitle(String title){
+		public LocationPickerDialogFragment.LocationPickerDialogBuilder setTitle(String title) {
 			this.mTitle = title;
 			return this;
 		}
 
-		public LocationPickerDialogFragment.LocationPickerDialogBuilder setCityName(String cityName){
+		public LocationPickerDialogFragment.LocationPickerDialogBuilder setCityName(String cityName) {
 			this.mCityName = cityName;
 			return this;
 		}
 
-		public LocationPickerDialogFragment.LocationPickerDialogBuilder setPositiveButtonText(String text){
+		public LocationPickerDialogFragment.LocationPickerDialogBuilder setPositiveButtonText(String text) {
 			this.mPositiveButtonText = text;
 			return this;
 		}

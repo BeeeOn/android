@@ -9,20 +9,20 @@ import android.graphics.Bitmap;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gamification.AchievementList;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.model.AchievementsModel;
-import com.rehivetech.beeeon.model.AdaptersModel;
+import com.rehivetech.beeeon.model.GatesModel;
 import com.rehivetech.beeeon.model.BaseModel;
-import com.rehivetech.beeeon.model.DeviceLogsModel;
-import com.rehivetech.beeeon.model.FacilitiesModel;
+import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.model.GcmModel;
 import com.rehivetech.beeeon.model.GeofenceModel;
 import com.rehivetech.beeeon.model.LocationsModel;
-import com.rehivetech.beeeon.model.UninitializedFacilitiesModel;
+import com.rehivetech.beeeon.model.ModuleLogsModel;
+import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.model.UsersModel;
-import com.rehivetech.beeeon.model.WatchDogsModel;
+import com.rehivetech.beeeon.model.WatchdogsModel;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -39,40 +39,56 @@ import java.util.Map;
 
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
- * 
+ *
  * @author Robyer
  */
 public final class Controller {
 
 	public static final String TAG = Controller.class.getSimpleName();
 
-	/** This singleton instance. */
+	/**
+	 * This singleton instance.
+	 */
 	private static Controller sController;
 
-	/** Switch for using demo mode (with example adapter, without server) */
+	/**
+	 * Switch for using demo mode (with example gate, without server)
+	 */
 	private final boolean mDemoMode;
 
-	/** Application context */
+	/**
+	 * Application context
+	 */
 	private final Context mContext;
 
-	/** Persistence service for caching purposes */
+	/**
+	 * Persistence service for caching purposes
+	 */
 	private final Persistence mPersistence;
 
-	/** Network service for communication with server */
+	/**
+	 * Network service for communication with server
+	 */
 	private final INetwork mNetwork;
 
-	/** Active user object */
+	/**
+	 * Active user object
+	 */
 	private final User mUser;
 
-	/** Active adapter */
-	private Adapter mActiveAdapter;
+	/**
+	 * Active gate
+	 */
+	private Gate mActiveGate;
 
-	/** Models for keeping and handling data */
+	/**
+	 * Models for keeping and handling data
+	 */
 	private final Map<String, BaseModel> mModels = new HashMap<>();
 
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
-	 * 
+	 *
 	 * @param context
 	 * @return singleton instance of controller
 	 */
@@ -94,11 +110,9 @@ public final class Controller {
 
 	/**
 	 * Private constructor.
-	 * 
-	 * @param context
-	 *            This must be the global application context.
-	 * @param demoMode
-	 *            Whether should be created Controller in demoMode
+	 *
+	 * @param context  This must be the global application context.
+	 * @param demoMode Whether should be created Controller in demoMode
 	 */
 	private Controller(Context context, boolean demoMode) {
 		mContext = context.getApplicationContext();
@@ -128,8 +142,7 @@ public final class Controller {
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
 	 *
-	 * @param context
-	 *            This must be the global Application context.
+	 * @param context  This must be the global Application context.
 	 * @param demoMode
 	 */
 	public static synchronized void setDemoMode(Context context, boolean demoMode) {
@@ -161,13 +174,12 @@ public final class Controller {
 			synchronized (mModels) {
 				if (!mModels.containsKey(name)) {
 					// Known parameters we can automatically give to model constructor
-					final Object[] supportedParams = { mNetwork, mContext, mPersistence, mUser };
+					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser};
 
 					// Create instance of the given model class
 					final Constructor constructor = modelClass.getConstructors()[0];
 					final List<Object> params = new ArrayList<>();
-					for (Class<?> pType : constructor.getParameterTypes())
-					{
+					for (Class<?> pType : constructor.getParameterTypes()) {
 						Object param = null;
 						for (Object obj : supportedParams) {
 							if (pType.isInstance(obj)) {
@@ -205,8 +217,8 @@ public final class Controller {
 		return (GeofenceModel) getModelInstance(GeofenceModel.class);
 	}
 
-	public AdaptersModel getAdaptersModel() {
-		return (AdaptersModel) getModelInstance(AdaptersModel.class);
+	public GatesModel getGatesModel() {
+		return (GatesModel) getModelInstance(GatesModel.class);
 	}
 
 	public AchievementsModel getAchievementsModel() {
@@ -217,20 +229,20 @@ public final class Controller {
 		return (LocationsModel) getModelInstance(LocationsModel.class);
 	}
 
-	public FacilitiesModel getFacilitiesModel() {
-		return (FacilitiesModel) getModelInstance(FacilitiesModel.class);
+	public DevicesModel getDevicesModel() {
+		return (DevicesModel) getModelInstance(DevicesModel.class);
 	}
 
-	public UninitializedFacilitiesModel getUninitializedFacilitiesModel() {
-		return (UninitializedFacilitiesModel) getModelInstance(UninitializedFacilitiesModel.class);
+	public UninitializedDevicesModel getUninitializedDevicesModel() {
+		return (UninitializedDevicesModel) getModelInstance(UninitializedDevicesModel.class);
 	}
 
-	public DeviceLogsModel getDeviceLogsModel() {
-		return (DeviceLogsModel) getModelInstance(DeviceLogsModel.class);
+	public ModuleLogsModel getModuleLogsModel() {
+		return (ModuleLogsModel) getModelInstance(ModuleLogsModel.class);
 	}
 
-	public WatchDogsModel getWatchDogsModel() {
-		return (WatchDogsModel) getModelInstance(WatchDogsModel.class);
+	public WatchdogsModel getWatchdogsModel() {
+		return (WatchdogsModel) getModelInstance(WatchdogsModel.class);
 	}
 
 	public GcmModel getGcmModel() {
@@ -241,7 +253,9 @@ public final class Controller {
 		return (UsersModel) getModelInstance(UsersModel.class);
 	}
 
-	/** Persistence methods *************************************************/
+	/**
+	 * Persistence methods ************************************************
+	 */
 
 	public IAuthProvider getLastAuthProvider() {
 		return mPersistence.loadLastAuthProvider();
@@ -437,56 +451,56 @@ public final class Controller {
 	}
 
 	/**
-	 * Return active adapter.
+	 * Return active gate.
 	 *
-	 * @return active adapter, or first adapter, or null if there are no adapters
+	 * @return active gate, or first gate, or null if there are no gates
 	 */
-	public synchronized Adapter getActiveAdapter() {
-		if (mActiveAdapter == null) {
+	public synchronized Gate getActiveGate() {
+		if (mActiveGate == null) {
 			// UserSettings can be null when user is not logged in!
 			SharedPreferences prefs = getUserSettings();
 
-			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
+			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_GATE, "");
 
-			mActiveAdapter = getAdaptersModel().getAdapterOrFirst(lastId);
+			mActiveGate = getGatesModel().getGateOrFirst(lastId);
 
-			if (mActiveAdapter != null && prefs != null)
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveAdapter.getId()).apply();
+			if (mActiveGate != null && prefs != null)
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_GATE, mActiveGate.getId()).apply();
 		}
 
-		return mActiveAdapter;
+		return mActiveGate;
 	}
 
 	/**
-	 * Sets active adapter and load all locations and facilities, if needed (or if forceReload = true)
-	 *
+	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
 	 * @param forceReload
-	 * @return true on success, false if there is no adapter with this id
+	 * @return true on success, false if there is no gate with this id
 	 */
-	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
+	public synchronized boolean setActiveGate(String id, boolean forceReload) {
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null) {
-			// Save it whether adapter below will be loaded or not
-			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, id).apply();
+			// Save it whether gate below will be loaded or not
+			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_GATE, id).apply();
 		}
 
-		// Find specified adapter
-		mActiveAdapter = getAdaptersModel().getAdapter(id);
+		// Find specified gate
+		mActiveGate = getGatesModel().getGate(id);
 
-		if (mActiveAdapter == null) {
-			Log.d(TAG, String.format("Can't set active adapter to '%s'", id));
+		if (mActiveGate == null) {
+			Log.d(TAG, String.format("Can't set active gate to '%s'", id));
 			return false;
 		}
 
-		Log.d(TAG, String.format("Set active adapter to '%s'", mActiveAdapter.getName()));
+		Log.d(TAG, String.format("Set active gate to '%s'", mActiveGate.getName()));
 
-		// Load locations and facilities, if needed
-		getLocationsModel().reloadLocationsByAdapter(id, forceReload);
-		getFacilitiesModel().reloadFacilitiesByAdapter(id, forceReload);
+		// Load locations and devices, if needed
+		getLocationsModel().reloadLocationsByGate(id, forceReload);
+		getDevicesModel().reloadDevicesByGate(id, forceReload);
 
 		return true;
 	}
@@ -499,7 +513,7 @@ public final class Controller {
 	 * UCA
 	 */
 	public boolean isUserAllowed(Role role) {
-		if (role.equals(Role.User) ||role.equals(Role.Guest)) {
+		if (role.equals(Role.User) || role.equals(Role.Guest)) {
 			return false;
 		}
 		return true;
@@ -507,7 +521,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 *
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {

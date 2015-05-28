@@ -35,11 +35,10 @@ package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
-import com.sonyericsson.extras.liveware.extension.util.control.ControlTouchEvent;
-
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
+import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
+import com.sonyericsson.extras.liveware.extension.util.control.ControlTouchEvent;
 
 /**
  * The phone control manager manages which control to currently show on the display. This class then forwards any life-cycle methods and events events to the running control. This base class only
@@ -59,11 +58,9 @@ public class ControlManagerBase extends ControlExtension {
 
 	/**
 	 * Create phone control manager.
-	 * 
-	 * @param context
-	 *            The context to use.
-	 * @param packageName
-	 *            The package name of the host application.
+	 *
+	 * @param context     The context to use.
+	 * @param packageName The package name of the host application.
 	 */
 	public ControlManagerBase(final Context context, final String packageName) {
 		super(context, packageName);
@@ -157,9 +154,8 @@ public class ControlManagerBase extends ControlExtension {
 
 	/**
 	 * Start a new control. Any currently running control will be stopped.
-	 * 
-	 * @param newControlId
-	 *            The control to start.
+	 *
+	 * @param newControlId The control to start.
 	 */
 	protected void startControl(final ControlExtension newControl) {
 

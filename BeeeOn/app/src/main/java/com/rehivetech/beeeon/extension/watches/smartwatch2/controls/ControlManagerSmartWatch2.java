@@ -32,28 +32,27 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Stack;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClickEvent;
 
-import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * The phone control manager manages which control to currently show on the display. This class then forwards any life-cycle methods and events events to the running control. This class handles API
@@ -97,47 +96,47 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		SharedPreferences prefs = mController.getUserSettings();
 
 		// Try to find default setting
-		String adapterId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
+		String gateId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
 		String strLocation = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, null);
 
-		Log.v(SW2ExtensionService.LOG_TAG, "Default adapter ID: " + ((adapterId == null) ? "null" : adapterId));
+		Log.v(SW2ExtensionService.LOG_TAG, "Default gate ID: " + ((gateId == null) ? "null" : gateId));
 		Log.v(SW2ExtensionService.LOG_TAG, "Default location: " + ((strLocation == null) ? "null" : strLocation));
 
 		// TODO zkontrolovat jestli neni cil prazdny
-		if (adapterId != null) {
+		if (gateId != null) {
 			Controller controller = Controller.getInstance(mContext);
 
-			controller.getAdaptersModel().reloadAdapters(false);
-			Adapter adapter = controller.getAdaptersModel().getAdapter(adapterId);
-			// if default adapter is defined
-			if (adapter != null) {
+			controller.getGatesModel().reloadGates(false);
+			Gate gate = controller.getGatesModel().getGate(gateId);
+			// if default gate is defined
+			if (gate != null) {
 				if (strLocation != null) {
-					controller.getFacilitiesModel().reloadFacilitiesByAdapter(adapter.getId(), false);
-					List<Facility> sensors = controller.getFacilitiesModel().getFacilitiesByLocation(adapter.getId(), strLocation);
+					controller.getDevicesModel().reloadDevicesByGate(gate.getId(), false);
+					List<Device> sensors = controller.getDevicesModel().getDevicesByLocation(gate.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
-						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
+						intent.putExtra(ListSensorControlExtension.EXTRA_GATE_ID, gate.getId());
 						intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, strLocation);
 						mCurrentControl = createControl(intent);
 						return;
 					}
 				}
 				Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapter.getId());
+				intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, gate.getId());
 				mCurrentControl = createControl(intent);
 				return;
 			}
 		}
 
-		List<Adapter> adapters = mController.getAdaptersModel().getAdapters();
-		if (adapters.size() < 1) {
+		List<Gate> gates = mController.getGatesModel().getGates();
+		if (gates.size() < 1) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
 			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));
 			mCurrentControl = createControl(initialControlIntent);
 			return;
-		} else if (adapters.size() < 2) {
+		} else if (gates.size() < 2) {
 			Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, adapters.get(0).getId());
+			intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, gates.get(0).getId());
 			mCurrentControl = createControl(intent);
 			return;
 		}
@@ -148,9 +147,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 	/**
 	 * Get supported control width.
-	 * 
-	 * @param context
-	 *            The context.
+	 *
+	 * @param context The context.
 	 * @return the width.
 	 */
 	public static int getSupportedControlWidth(Context context) {
@@ -159,9 +157,8 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 	/**
 	 * Get supported control height.
-	 * 
-	 * @param context
-	 *            The context.
+	 *
+	 * @param context The context.
 	 * @return the height.
 	 */
 	public static int getSupportedControlHeight(Context context) {
@@ -253,10 +250,9 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 	/**
 	 * Start a new control. Any currently running control will be stopped and put on the control extension stack.
-	 * 
-	 * @param intent
-	 *            the Intent used to create the ManagedControlExtension. The intent must have the requested ManagedControlExtension as component, e.g. Intent intent = new Intent(mContext,
-	 *            CallLogDetailsControl.class);
+	 *
+	 * @param intent the Intent used to create the ManagedControlExtension. The intent must have the requested ManagedControlExtension as component, e.g. Intent intent = new Intent(mContext,
+	 *               CallLogDetailsControl.class);
 	 */
 	public void startControl(Intent intent) {
 		addCurrentToControlStack();
@@ -290,7 +286,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			if (ctor == null) {
 				return null;
 			}
-			Object object = ctor.newInstance(new Object[] { mContext, mHostAppPackageName, this, intent });
+			Object object = ctor.newInstance(new Object[]{mContext, mHostAppPackageName, this, intent});
 			if (object instanceof ManagedControlExtension) {
 				return (ManagedControlExtension) object;
 			} else {

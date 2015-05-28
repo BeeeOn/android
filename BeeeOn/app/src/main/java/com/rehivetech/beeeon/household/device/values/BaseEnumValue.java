@@ -1,17 +1,18 @@
 package com.rehivetech.beeeon.household.device.values;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Color;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.BlankUnit;
 import com.rehivetech.beeeon.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class BaseEnumValue extends BaseValue {
 
 	private static final String TAG = BaseEnumValue.class.getSimpleName();
-	
+
 	protected final List<Item> mItems = new ArrayList<Item>();
 
 	protected final Item mUnknownValue = this.new Item(-1, "", R.drawable.dev_unknown, R.string.dev_unknown_unit, Color.BLACK);
@@ -38,7 +39,7 @@ public abstract class BaseEnumValue extends BaseValue {
 		public int getId() {
 			return mId;
 		}
-		
+
 		public String getValue() {
 			return mValue;
 		}
@@ -61,7 +62,7 @@ public abstract class BaseEnumValue extends BaseValue {
 		super.setValue(value);
 		mValue = getItemByValue(value);
 	}
-	
+
 	public void setValue(Item item) {
 		super.setValue(item.getValue());
 		mValue = item;
@@ -100,14 +101,14 @@ public abstract class BaseEnumValue extends BaseValue {
 		}
 		return mUnknownValue;
 	}
-	
+
 	/**
 	 * @param value
 	 * @return Item object with specified double value (= id for now), or mUnknownValue Item
 	 */
 	public Item getItemByDoubleValue(double value) {
 		for (Item item : mItems) {
-			if (item.getId() == (int)value) {
+			if (item.getId() == (int) value) {
 				return item;
 			}
 		}
@@ -127,7 +128,7 @@ public abstract class BaseEnumValue extends BaseValue {
 	public int getStateStringResource() {
 		return mValue.getStringResource();
 	}
-	
+
 	public List<Item> getEnumItems() {
 		return mItems;
 	}
@@ -138,7 +139,7 @@ public abstract class BaseEnumValue extends BaseValue {
 			Log.e(TAG, "Item was not found (probably unknown value), we can't use any offset");
 			return false;
 		}
-		
+
 		if (mItems.size() < 2) {
 			Log.e(TAG, "There are less than 2 items in this value, we can't use any offset");
 			return false;
@@ -148,13 +149,15 @@ public abstract class BaseEnumValue extends BaseValue {
 		setValue(mItems.get(pos));
 		return true;
 	}
-	
-	/** Actors support ****************************************************/
+
+	/**
+	 * Actors support ***************************************************
+	 */
 
 	public boolean setNextValue() {
 		return setValueToOffset(1);
 	}
-	
+
 	public boolean setPrevValue() {
 		return setValueToOffset(-1);
 	}
@@ -163,6 +166,8 @@ public abstract class BaseEnumValue extends BaseValue {
 		return mValue.getValue().equalsIgnoreCase(value);
 	}
 
-	public Item getActive() { return mValue; }
+	public Item getActive() {
+		return mValue;
+	}
 
 }

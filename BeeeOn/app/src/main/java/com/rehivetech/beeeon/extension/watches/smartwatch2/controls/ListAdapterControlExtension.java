@@ -32,21 +32,20 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
+import java.util.List;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array. Tapping on list items opens a swipable detail view.
@@ -55,7 +54,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
 	// protected int mLastKnowPosition = 0;
 
-	private List<Adapter> mAdapters;
+	private List<Gate> mGates;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
 
@@ -84,11 +83,11 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
 		data[0] = b1;
 
-		while (mAdapters == null)
+		while (mGates == null)
 			;
 
 		showLayout(R.layout.sw2_list_title, data);
-		sendListCount(R.id.listView, mAdapters.size());
+		sendListCount(R.id.listView, mGates.size());
 
 		// If requested, move to the correct position in the list.
 		// int startPosition = getIntent().getIntExtra(GalleryTestControl.EXTRA_INITIAL_POSITION, 0);
@@ -154,15 +153,15 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
 		if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
 			Intent intent;
-			String adapterId = mAdapters.get(listItem.listItemPosition).getId();
-			// mController.setActiveAdapter(adapterId, false);
-			List<Location> locations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
+			String gateId = mGates.get(listItem.listItemPosition).getId();
+			// mController.setActiveGate(gateId, false);
+			List<Location> locations = mController.getLocationsModel().getLocationsByGate(gateId);
 			if (locations.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_location_available));
 			} else {
 				intent = new Intent(mContext, ListLocationControlExtension.class);
-				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mAdapters.get(listItem.listItemPosition).getId());
+				intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, mGates.get(listItem.listItemPosition).getId());
 			}
 			mControlManager.startControl(intent);
 		}
@@ -180,7 +179,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-		headerBundle.putString(Control.Intents.EXTRA_TEXT, mAdapters.get(position).getName());
+		headerBundle.putString(Control.Intents.EXTRA_TEXT, mGates.get(position).getName());
 
 		item.layoutData = new Bundle[1];
 		item.layoutData[0] = headerBundle;
@@ -193,7 +192,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mAdapters = mController.getAdaptersModel().getAdapters();
+				mGates = mController.getGatesModel().getGates();
 
 				resume();
 

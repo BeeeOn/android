@@ -38,8 +38,8 @@ import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.util.Log;
@@ -55,11 +55,11 @@ import java.util.List;
  */
 public class ListLocationControlExtension extends ManagedControlExtension {
 
-	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	public static final String EXTRA_GATE_ID = "GATE_ID";
 
-	private Adapter mAdapter;
+	private Gate mGate;
 	private List<Location> mLocations;
-	private String mAdapterId;
+	private String mGateId;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
 
@@ -80,8 +80,8 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 		mLocations = new ArrayList<Location>();
 
-		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-		if (mAdapterId == null) {
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
+		if (mGateId == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -117,7 +117,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 		showLayout(R.layout.sw2_list_title, data);
 
-		if (mAdapterId == null) {
+		if (mGateId == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -182,14 +182,14 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), mLocations.get(listItem.listItemPosition).getId());
+			List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocations.get(listItem.listItemPosition).getId());
 			Intent intent;
-			if (facilities.size() < 1) {
+			if (devices.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_sensor_available));
 			} else {
 				intent = new Intent(mContext, ListSensorControlExtension.class);
-				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+				intent.putExtra(ListSensorControlExtension.EXTRA_GATE_ID, mGate.getId());
 				intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocations.get(listItem.listItemPosition).getId());
 			}
 			mControlManager.startControl(intent);
@@ -229,11 +229,11 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
+				mGate = mController.getGatesModel().getGate(mGateId);
 
 				LocationsModel locationsModel = mController.getLocationsModel();
-				locationsModel.reloadLocationsByAdapter(mAdapterId, mForceUpdate);
-				mLocations = locationsModel.getLocationsByAdapter(mAdapterId);
+				locationsModel.reloadLocationsByGate(mGateId, mForceUpdate);
+				mLocations = locationsModel.getLocationsByGate(mGateId);
 
 				mForceUpdate = true;
 

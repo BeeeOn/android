@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.network.xml;
 
 /**
  * @author ThinkDeep
- * 
  */
 public class ParsedMessage {
 
@@ -16,9 +15,8 @@ public class ParsedMessage {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param state
-	 *            of communication (e.g. addview)
+	 *
+	 * @param state of communication (e.g. addview)
 	 */
 	public ParsedMessage(XmlParsers.State state) {
 		mState = state;
@@ -28,7 +26,7 @@ public class ParsedMessage {
 
 	/**
 	 * Getter
-	 * 
+	 *
 	 * @return
 	 */
 	public XmlParsers.State getState() {
@@ -37,7 +35,7 @@ public class ParsedMessage {
 
 	/**
 	 * Setter
-	 * 
+	 *
 	 * @param state
 	 */
 	public void setState(XmlParsers.State state) {
@@ -46,7 +44,7 @@ public class ParsedMessage {
 
 	/**
 	 * Getter
-	 * 
+	 *
 	 * @return
 	 */
 	public String getUserId() {
@@ -55,7 +53,7 @@ public class ParsedMessage {
 
 	/**
 	 * Setter
-	 * 
+	 *
 	 * @param userId
 	 */
 	public void setUserId(String userId) {

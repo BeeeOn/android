@@ -22,7 +22,7 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 	}
 
 	@Override
-	public void setDropDownView(View convertView){
+	public void setDropDownView(View convertView) {
 		TextView ItemLabel = (TextView) convertView.findViewById(R.id.text1);
 		ItemLabel.setText(mGeofence.getName());
 
@@ -50,12 +50,12 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
 }

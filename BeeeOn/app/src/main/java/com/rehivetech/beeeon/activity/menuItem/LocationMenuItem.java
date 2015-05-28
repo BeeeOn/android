@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 
 public class LocationMenuItem extends AbstractMenuItem {
@@ -47,12 +48,12 @@ public class LocationMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
 }

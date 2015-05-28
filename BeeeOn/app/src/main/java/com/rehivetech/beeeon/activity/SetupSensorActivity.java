@@ -17,101 +17,100 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.activity.fragment.SetupSensorFragment;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.InitializeFacilityTask;
+import com.rehivetech.beeeon.asynctask.InitializeDeviceTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.InitializeFacilityPair;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.pair.InitializeDevicePair;
 import com.rehivetech.beeeon.util.Log;
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class SetupSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupSensorActivity.class.getSimpleName();
-	
+
 	private Controller mController;
-	private Adapter mPairAdapter;
-	
+	private Gate mPairGate;
+
 	private SetupSensorFragmentAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
-	
+
 	private SetupSensorFragment mFragment;
-	
+
 
 	private ProgressDialog mProgress;
-	
+
 	private Spinner mSpinner;
 	private ListView mListOfName;
 	private TextView mNewLocation;
 	private Spinner mNewIconSpinner;
-	
+
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
-	
+
 
 	private boolean mFirstUse = true;
-	
-	private Activity mActivity;
-    private Toolbar mToolbar;
 
-    @Override
+	private Activity mActivity;
+	private Toolbar mToolbar;
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_setup_sensor);
-            setSupportActionBar(mToolbar);
-        }
-		
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_setup_sensor);
+			setSupportActionBar(mToolbar);
+		}
+
 		// Get controller
 		mController = Controller.getInstance(this);
-		mPairAdapter = mController.getActiveAdapter();
-		
+		mPairGate = mController.getActiveGate();
+
 		mActivity = this;
-		
+
 		mAdapter = new SetupSensorFragmentAdapter(getSupportFragmentManager());
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		mPager = (ViewPager)findViewById(R.id.intro_pager);
+
+		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(mAdapter.getCount());
-		
-		mIndicator = (CirclePageIndicator)findViewById(R.id.intro_indicator);
+
+		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
 		mIndicator.setVisibility(View.GONE);
-		
+
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(mActivity);
 		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		
+
 		initButtons();
 	}
-	
-	
+
+
 	private void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_adapter_skip);
-		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
-		mNext = (Button) findViewById(R.id.add_adapter_next);
-		
+		mSkip = (Button) findViewById(R.id.add_gate_skip);
+		mCancel = (Button) findViewById(R.id.add_gate_cancel);
+		mNext = (Button) findViewById(R.id.add_gate_next);
+
 		mSkip.setVisibility(View.INVISIBLE);
-		
+
 		mCancel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -129,10 +128,10 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				mListOfName = mFragment.getListOfName();
 				mNewLocation = mFragment.getNewLocation();
 				mNewIconSpinner = mFragment.getNewIconSpinner();
-				Facility newFacility = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId()).get(0);
+				Device newDevice = mController.getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
 
 				// Controll if Names arent empty
-				for (int i = 0; i < newFacility.getDevices().size(); i++) {
+				for (int i = 0; i < newDevice.getModules().size(); i++) {
 					// Get new names from EditText
 					String name = ((EditText) mListOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
@@ -141,7 +140,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 					// Set this new name to sensor
-					newFacility.getDevices().get(i).setName(name);
+					newDevice.getModules().get(i).setName(name);
 
 				}
 
@@ -159,29 +158,29 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairAdapter.getId(), ((Location.LocationIcon) mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
+					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairGate.getId(), ((Location.LocationIcon) mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
 
 				} else {
 					location = (Location) mSpinner.getSelectedItem();
 				}
 
-				// Set location to facility
-				newFacility.setLocationId(location.getId());
+				// Set location to mDevice
+				newDevice.setLocationId(location.getId());
 
-				// Set that facility was initialized
-				newFacility.setInitialized(true);
+				// Set that mDevice was initialized
+				newDevice.setInitialized(true);
 				// Show progress bar for saving
 				mProgress.show();
 
-				// Save that facility
-				Log.d(TAG, String.format("InitializeFacility - facility: %s, loc: %s", newFacility.getId(), location.getId()));
-				doInitializeFacilityTask(new InitializeFacilityPair(newFacility, location));
+				// Save that mDevice
+				Log.d(TAG, String.format("InitializeDevice - mDevice: %s, loc: %s", newDevice.getId(), location.getId()));
+				doInitializeDeviceTask(new InitializeDevicePair(newDevice, location));
 			}
 		});
-		
-		
+
+
 	}
-	
+
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
 		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
@@ -197,10 +196,10 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		mFragment = fragment;
 	}
 
-	private void doInitializeFacilityTask(final InitializeFacilityPair pair) {
-		InitializeFacilityTask initializeFacilityTask = new InitializeFacilityTask(this);
+	private void doInitializeDeviceTask(final InitializeDevicePair pair) {
+		InitializeDeviceTask initializeDeviceTask = new InitializeDeviceTask(this);
 
-		initializeFacilityTask.setListener(new CallbackTaskListener() {
+		initializeDeviceTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -222,7 +221,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(initializeFacilityTask, pair);
+		callbackTaskManager.executeTask(initializeDeviceTask, pair);
 	}
 
 

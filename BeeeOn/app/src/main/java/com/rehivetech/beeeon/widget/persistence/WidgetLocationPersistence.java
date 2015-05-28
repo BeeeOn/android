@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.widget.persistence;
 import android.content.Context;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -27,7 +27,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	@Override
 	public void load() {
 		super.load();
-		type = mPrefs.getString(getProperty(PREF_TYPE), "0");		// TODO should be unknown location
+		type = mPrefs.getString(getProperty(PREF_TYPE), "0");        // TODO should be unknown location
 	}
 
 	@Override
@@ -35,13 +35,13 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 		super.configure(obj, obj2);
 
 		Location location = (Location) obj;
-		Adapter adapter = (Adapter) obj2;
-		if (location == null || adapter == null) return;
+		Gate gate = (Gate) obj2;
+		if (location == null || gate == null) return;
 
 		id = location.getId();
 		name = location.getName();
 		type = location.getType();
-		adapterId = adapter.getId();
+		gateId = gate.getId();
 	}
 
 	@Override
@@ -68,11 +68,10 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	@Override
 	public void renderView(ViewsBuilder parentBuilder) {
 		super.renderView(parentBuilder);
-		if(mBoundView == 0){
+		if (mBoundView == 0) {
 			parentBuilder.setTextViewText(R.id.name, name);
 			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
-		}
-		else {
+		} else {
 			mBuilder.loadRootView(R.layout.widget_include_location);
 			mBuilder.setTextViewText(R.id.name, name);
 			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());

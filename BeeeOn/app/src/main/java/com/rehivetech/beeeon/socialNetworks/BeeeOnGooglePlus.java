@@ -23,7 +23,7 @@ public class BeeeOnGooglePlus implements BeeeOnSocialNetwork {
 	}
 
 	public static BeeeOnGooglePlus getInstance(Context context) {
-		if(mInstance == null) {
+		if (mInstance == null) {
 			mInstance = new BeeeOnGooglePlus(context);
 		}
 		return mInstance;
@@ -32,7 +32,7 @@ public class BeeeOnGooglePlus implements BeeeOnSocialNetwork {
 	public Intent shareAchievement(String text) {
 		return new PlusShare.Builder(mContext)
 				.setType("text/plain")
-				.setText(text+" @BeeeOn")
+				.setText(text + " @BeeeOn")
 				.setContentUrl(Uri.parse("https://www.beeeon.com/"))
 				.getIntent();
 	}
@@ -40,13 +40,23 @@ public class BeeeOnGooglePlus implements BeeeOnSocialNetwork {
 	@Override
 	public void logIn(Activity activity) {
 	}
+
 	@Override
 	public void logOut() {
 	}
+
 	@Override
-	public boolean isPaired() {return true;}
+	public boolean isPaired() {
+		return true;
+	}
+
 	@Override
-	public String getName() {return NAME;}
+	public String getName() {
+		return NAME;
+	}
+
 	@Override
-	public String getUserName() {return Controller.getInstance(mContext).getActualUser().getName();}
+	public String getUserName() {
+		return Controller.getInstance(mContext).getActualUser().getName();
+	}
 }

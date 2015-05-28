@@ -4,13 +4,13 @@ import com.rehivetech.beeeon.IIdentifier;
 
 public enum NetworkError implements ErrorCode, IIdentifier {
 	UNKNOWN(0),
-	
+
 	COM_VER_MISMATCH(1),
 	NOT_VALID_USER(2),
 	USER_EXISTS(3),
-	ADAPTER_NOT_EXISTS(5),
-	ADAPTER_NOT_FREE(6),
-	ADAPTER_HAVE_YET(7),
+	GATE_NOT_EXISTS(5),
+	GATE_NOT_FREE(6),
+	GATE_HAVE_YET(7),
 	BAD_AGREG_FUNC(8),
 	BAD_INTERVAL(9),
 	NOT_CONSISTENT_SENSOR_ADDR(10),

@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.activity.menuItem;
 
 import android.view.View;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 
 public class GroupMenuItem extends AbstractMenuItem {
@@ -34,12 +35,12 @@ public class GroupMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor( getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
 	}
 
 }

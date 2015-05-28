@@ -17,15 +17,15 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.GetDevicesLogsTask;
+import com.rehivetech.beeeon.asynctask.GetModulesLogsTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
-import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
+import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
@@ -46,8 +46,8 @@ import java.util.SortedMap;
 
 public class CustomViewFragment extends BaseApplicationFragment {
 
-	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
-	// private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
+	private SparseArray<List<Module>> mModules = new SparseArray<List<Module>>();
+	// private SparseArray<List<ModuleLog>> mLogs = new SparseArray<List<ModuleLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
 	private SparseArray<LegendView> mLegends = new SparseArray<>();
 
@@ -75,37 +75,37 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 		mLayout = (LinearLayout) view.findViewById(R.id.container);
 
-		prepareDevices();
+		prepareModules();
 		loadData();
 
 		return view;
 	}
 
-	private void addGraph(final Device device, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
+	private void addGraph(final Module module, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
 		// Inflate layout
 		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 		// Create and set graphView
 		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
-		GraphViewHelper.prepareGraphView(graphView, mActivity, device, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(graphView, mActivity, module, fmt, unitsHelper); // empty heading
 		LegendView legend = (LegendView) row.findViewById(R.id.legend);
 		legend.setDrawBackground(true);
 		legend.setIconRound(10f);
 
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
-		tv.setText(getString(device.getType().getStringResource()));
+		tv.setText(getString(module.getType().getStringResource()));
 
-		mGraphs.put(device.getType().getTypeId(), graphView);
-		mLegends.put(device.getType().getTypeId(), legend);
+		mGraphs.put(module.getType().getTypeId(), graphView);
+		mLegends.put(module.getType().getTypeId(), legend);
 
 		// Add whole item to global layout
 		mLayout.addView(row);
 	}
 
-	private void fillGraph(DeviceLog log, Device device) {
+	private void fillGraph(ModuleLog log, Module module) {
 
-		GraphView graphView = mGraphs.get(device.getType().getTypeId());
+		GraphView graphView = mGraphs.get(module.getType().getTypeId());
 		if (graphView == null) {
 			return;
 		}
@@ -113,7 +113,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		Random random = new Random();
 		int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 
-		// for (DeviceLog log : logs) {
+		// for (ModuleLog log : logs) {
 
 		// GraphViewSeriesStyle seriesStyleBlue = new
 		// GraphViewSeriesStyle(mContext.getResources().getColor(R.color.beeeon_primary_cyan), 2);
@@ -121,19 +121,19 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		// GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
 		BaseSeries<DataPoint> graphSeries;
-		if (device.getValue() instanceof BaseEnumValue) {
+		if (module.getValue() instanceof BaseEnumValue) {
 			graphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
 			graphView.setDrawPointer(false);
 		} else {
 			graphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
-			((LineGraphSeries)graphSeries).setThickness(4);
+			((LineGraphSeries) graphSeries).setThickness(4);
 		}
-		graphSeries.setTitle(device.getName());
+		graphSeries.setTitle(module.getName());
 		graphSeries.setColor(color);
 
 		graphView.addSeries(graphSeries);
 
-		LegendView legend = mLegends.get(device.getType().getTypeId());
+		LegendView legend = mLegends.get(module.getType().getTypeId());
 		legend.initLegendSeries(graphView.getSeries());
 		legend.setDrawBackground(false);
 		legend.setSeriesPosition(LegendView.SeriesPosition.VERTICAL);
@@ -143,7 +143,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
 		DataPoint[] data = new DataPoint[size];
-		
+
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
 		int i = 0;
@@ -152,12 +152,12 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
 
 			data[i++] = new DataPoint(dateMillis, value);
-			
+
 			// This shouldn't happen, only when some other thread changes this values object - can it happen?
 			if (i >= size)
 				break;
 		}
-		
+
 		Log.d(TAG, "Filling graph finished");
 
 		graphSeries.resetData(data);
@@ -165,33 +165,33 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	}
 
-	private void prepareDevices() {
-		Adapter adapter = mController.getActiveAdapter();
-		if (adapter == null)
+	private void prepareModules() {
+		Gate gate = mController.getActiveGate();
+		if (gate == null)
 			return;
 
 		// Prepare helpers
 		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, adapter);
+		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, gate);
 
 		// Prepare data
-		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
+		Log.d(TAG, String.format("Preparing custom view for gate %s", gate.getId()));
 
-		for (Facility facility : mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId())) {
-			Log.d(TAG, String.format("Preparing facility with %d devices", facility.getDevices().size()));
+		for (Device device : mController.getDevicesModel().getDevicesByGate(gate.getId())) {
+			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getModules().size()));
 
-			for (Device device : facility.getDevices()) {
-				Log.d(TAG, String.format("Preparing device %s (type %d)", device.getName(), device.getType().getTypeId()));
+			for (Module module : device.getModules()) {
+				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getName(), module.getType().getTypeId()));
 
-				List<Device> devices = mDevices.get(device.getType().getTypeId());
-				if (devices == null) {
-					devices = new ArrayList<Device>();
-					mDevices.put(device.getType().getTypeId(), devices);
-					addGraph(device, unitsHelper, timeHelper, fmt);
+				List<Module> modules = mModules.get(module.getType().getTypeId());
+				if (modules == null) {
+					modules = new ArrayList<Module>();
+					mModules.put(module.getType().getTypeId(), modules);
+					addGraph(module, unitsHelper, timeHelper, fmt);
 				}
 
-				devices.add(device);
+				modules.add(module);
 			}
 		}
 	}
@@ -200,13 +200,13 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusDays(3);// end.minusWeeks(1);
 
-		for (int i = 0; i < mDevices.size(); i++) {
+		for (int i = 0; i < mModules.size(); i++) {
 			// Prepare data for this graph
 			final List<LogDataPair> pairs = new ArrayList<>();
 
-			for (Device device : mDevices.valueAt(i)) {
+			for (Module module : mModules.valueAt(i)) {
 				LogDataPair pair = new LogDataPair( //
-						device, // device
+						module, // module
 						new Interval(start, end), // interval from-to
 						DataType.AVERAGE, // type
 						DataInterval.TEN_MINUTES); // interval
@@ -214,23 +214,23 @@ public class CustomViewFragment extends BaseApplicationFragment {
 				pairs.add(pair);
 			}
 
-			// If devices list is empty, just continue
+			// If modules list is empty, just continue
 			if (pairs.isEmpty()) {
 				continue;
 			}
 
 			// Prepare and run the reload logs task
-			GetDevicesLogsTask getDevicesLogsTask = new GetDevicesLogsTask(mActivity);
+			GetModulesLogsTask getModulesLogsTask = new GetModulesLogsTask(mActivity);
 
-			getDevicesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
+			getModulesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
 				@Override
 				public void onExecute(boolean success) {
 					// Remember type of graph we're downloading data for
-					int typeId = pairs.get(0).device.getType().getTypeId();
+					int typeId = pairs.get(0).module.getType().getTypeId();
 
 					for (LogDataPair pair : pairs) {
-						DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(pair);
-						fillGraph(log, pair.device);
+						ModuleLog log = mController.getModuleLogsModel().getModuleLog(pair);
+						fillGraph(log, pair.module);
 					}
 
 					// Hide loading label for this graph
@@ -241,7 +241,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			});
 
 			// Execute and remember task so it can be stopped automatically
-			mActivity.callbackTaskManager.executeTask(getDevicesLogsTask, pairs);
+			mActivity.callbackTaskManager.executeTask(getModulesLogsTask, pairs);
 		}
 	}
 

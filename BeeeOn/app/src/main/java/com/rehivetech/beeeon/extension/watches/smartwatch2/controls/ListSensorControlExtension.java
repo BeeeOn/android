@@ -32,38 +32,37 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.util.UnitsHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array. Tapping on list items opens a swipable detail view.
  */
 public class ListSensorControlExtension extends ManagedControlExtension {
 
-	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	public static final String EXTRA_GATE_ID = "GATE_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
-	private List<Device> mDevices;
+	private List<Module> mModules;
 	private String mLocationStr;
-	private Adapter mAdapter;
-	private String mAdapterId;
+	private Gate mGate;
+	private String mGateId;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
 
@@ -79,14 +78,14 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
 
-		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
 
-		mDevices = new ArrayList<Device>();
+		mModules = new ArrayList<Module>();
 		actualize();
 	}
 
@@ -104,12 +103,12 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		showLayout(R.layout.sw2_list_title, data);
 
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
 
-		sendListCount(R.id.listView, mDevices.size());
+		sendListCount(R.id.listView, mModules.size());
 
 		// If requested, move to the correct position in the list.
 		int startPosition = getIntent().getIntExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION, 0);
@@ -164,7 +163,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	public void onSwipe(int direction) {
 		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
 			Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+			intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, mGate.getId());
 			mControlManager.previousScreen(intent);
 		}
 	}
@@ -187,7 +186,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			// also be possible to put some unique item id in the listitem and
 			// pass listItem.listItemId here.
 			Intent intent = new Intent(mContext, GalleryControlExtension.class);
-			intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mAdapter.getId());
+			intent.putExtra(ListSensorControlExtension.EXTRA_GATE_ID, mGate.getId());
 			intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocationStr);
 			intent.putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
 			mControlManager.startControl(intent);
@@ -207,11 +206,11 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		// Icon data
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
-		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, mDevices.get(position).getIconResource()));
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, mModules.get(position).getIconResource()));
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-		headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
+		headerBundle.putString(Control.Intents.EXTRA_TEXT, mModules.get(position).getName());
 
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
@@ -220,7 +219,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		SharedPreferences prefs = mController.getUserSettings();
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 		if (unitsHelper != null) {
-			valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mDevices.get(position).getValue()));
+			valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mModules.get(position).getValue()));
 		}
 
 		item.layoutData = new Bundle[3];
@@ -236,18 +235,18 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mController.getAdaptersModel().reloadAdapters(true);
-				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
-				if (mAdapter != null) {
-					mDevices = new ArrayList<Device>();
+				mController.getGatesModel().reloadGates(true);
+				mGate = mController.getGatesModel().getGate(mGateId);
+				if (mGate != null) {
+					mModules = new ArrayList<Module>();
 
-					mController.getFacilitiesModel().reloadFacilitiesByAdapter(mAdapterId, true);
-					List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), mLocationStr);
-					for (Facility facility : facilities) {
-						mDevices.addAll(facility.getDevices());
+					mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
+					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocationStr);
+					for (Device device : devices) {
+						mModules.addAll(device.getModules());
 					}
 
-					if (mDevices != null) {
+					if (mModules != null) {
 						resume();
 					}
 				}

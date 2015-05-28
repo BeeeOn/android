@@ -30,12 +30,12 @@ public class TemperatureUnit extends BaseUnit {
 	@Override
 	public double convertValue(Item to, double value) {
 		switch (to.getId()) {
-		case FAHRENHEIT:
-			return value * 9 / 5 + 32;
-		case KELVIN:
-			return value + 273.15;
-		default:
-			return value;
+			case FAHRENHEIT:
+				return value * 9 / 5 + 32;
+			case KELVIN:
+				return value + 273.15;
+			default:
+				return value;
 		}
 	}
 

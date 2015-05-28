@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.NotificationFragment;
-import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 
 import java.util.List;
@@ -62,7 +61,7 @@ public class NotificationAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
-		if (pos == mList.size()-1) {
+		if (pos == mList.size() - 1) {
 			holder.separator.setVisibility(View.INVISIBLE);
 		} else {
 			holder.separator.setVisibility(View.VISIBLE);

@@ -1,10 +1,10 @@
 package com.rehivetech.beeeon.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SettingsItem {
 
@@ -64,7 +64,7 @@ public abstract class SettingsItem {
 
 	/**
 	 * Get Item by ID which will be saved in SharedPreferences.
-	 * 
+	 *
 	 * @return If the ID exists, it returns Item object. Otherwise it returns default Item.
 	 */
 	private BaseItem getItemById(int id) {

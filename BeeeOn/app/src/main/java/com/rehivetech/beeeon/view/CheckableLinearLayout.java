@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.rehivetech.beeeon.view;
 
@@ -12,9 +12,8 @@ import android.widget.LinearLayout;
 
 /**
  * Layout for customListView, used in custom_spinner_dropdown_item.xml
- * 
+ *
  * @author ThinkDeep
- * 
  */
 public class CheckableLinearLayout extends LinearLayout implements Checkable {
 

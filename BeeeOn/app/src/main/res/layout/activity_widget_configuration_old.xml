@@ -23,7 +23,7 @@
 		       	android:text="@string/widget_configuration_adapter" />
 		    
 		    <Spinner
-		        android:id="@+id/adapter"
+		        android:id="@+id/gate"
 		        android:layout_marginLeft="15dp"
 		        android:layout_width="match_parent"
 		        android:layout_height="50dp" />

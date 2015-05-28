@@ -5,7 +5,7 @@ import android.view.View;
 public interface ListItem {
 	public static final String ID_UNDEFINED = "id_undefined";
 
-    // TODO test pryc -> presunout do sekce Applications
+	// TODO test pryc -> presunout do sekce Applications
 
 	public enum ListItemType {
 		LOCATION, SENSOR
@@ -18,8 +18,8 @@ public interface ListItem {
 	public String getId();
 
 	public ListItemType getType();
-	
+
 	public void setIsSelected();
-	
+
 	public void setNotSelected();
 }

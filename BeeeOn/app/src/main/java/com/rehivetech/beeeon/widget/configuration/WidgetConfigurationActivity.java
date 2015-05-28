@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.util.Log;
 /**
  * @author mlyko
  */
-public class WidgetConfigurationActivity extends ActionBarActivity{
+public class WidgetConfigurationActivity extends ActionBarActivity {
 	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
 	public static final String EXTRA_WIDGET_EDITING = "com.rehivetech.beeeon.widget.EXTRA_WIDGET_EDITING";
@@ -38,7 +38,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 		Intent intent = getIntent();
 		Bundle extras = intent.getExtras();
 		// if no extras, there's no widget id -> exit
-		if(extras == null) {
+		if (extras == null) {
 			Log.e(TAG, "No widget Id => finish()");
 			finishActivity();
 			return;
@@ -46,7 +46,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 
 		// Prepare progress dialog
 		mDialog = new ProgressDialog(this);
-		mDialog.setMessage(getString(R.string.progress_loading_adapters));
+		mDialog.setMessage(getString(R.string.progress_loading_gates));
 		mDialog.setCancelable(false);
 		mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
@@ -75,15 +75,15 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 		String widgetProviderShortClassName = widgetProviderClassName.substring(lastDot);
 
 		// ------------ add here awailable widgets
-		switch(widgetProviderShortClassName){
+		switch (widgetProviderShortClassName) {
 			case ".WidgetClockProvider":
 				mConfigFragment = new WidgetClockFragment();
 				break;
 
-			case ".WidgetDeviceProvider":
-			case ".WidgetDeviceProviderMedium":
-			case ".WidgetDeviceProviderLarge":
-				mConfigFragment = new WidgetDeviceFragment();
+			case ".WidgetModuleProvider":
+			case ".WidgetModuleProviderMedium":
+			case ".WidgetModuleProviderLarge":
+				mConfigFragment = new WidgetModuleFragment();
 				break;
 
 			case ".WidgetGraphProvider":
@@ -91,8 +91,8 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 				break;
 
 			case ".WidgetLocationListProvider":
-                mConfigFragment = new WidgetLocationFragment();
-                break;
+				mConfigFragment = new WidgetLocationFragment();
+				break;
 
 			default:
 				Log.e(TAG, "No widget with class: " + widgetProviderShortClassName);
@@ -107,9 +107,10 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 
 	/**
 	 * Finishes the configuration of widget, calls widget-specific startWidgetOk / startWidgetCancel
+	 *
 	 * @param success if true activity finishes with widget creation
 	 */
-	public void returnIntent(boolean success){
+	public void returnIntent(boolean success) {
 		// return the original widget ID, found in onCreate()
 		Intent resultValue = new Intent();
 		resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, getWidgetId());
@@ -121,7 +122,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 	/**
 	 * Finishes activity with last set result - returnIntent()
 	 */
-	public void finishActivity(){
+	public void finishActivity() {
 		// TODO somehow manage to alway going to homescreen
 		finish();
 	}
@@ -130,8 +131,8 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 		return mDialog;
 	}
 
-	public ProgressDialog getDialog(String title){
-		if(mDialog != null) mDialog.setMessage(title);
+	public ProgressDialog getDialog(String title) {
+		if (mDialog != null) mDialog.setMessage(title);
 		return mDialog;
 	}
 

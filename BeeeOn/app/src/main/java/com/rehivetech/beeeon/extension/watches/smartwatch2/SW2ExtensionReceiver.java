@@ -33,6 +33,7 @@ package com.rehivetech.beeeon.extension.watches.smartwatch2;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import com.rehivetech.beeeon.util.Log;
 
 /**

@@ -5,16 +5,16 @@ import android.text.format.DateFormat;
 import android.view.View;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 
 import org.joda.time.DateTime;
@@ -35,7 +35,7 @@ public class WidgetClockData extends WidgetData {
 
 	public static String weekDays[] = reloadWeekDays();
 	public WidgetWeatherPersistence weather;
-	private List<Facility> mFacilities = new ArrayList<>();
+	private List<Device> mDevices = new ArrayList<>();
 	private Calendar mCalendar;
 
 	private int mClockFont = R.dimen.widget_textsize_clock;
@@ -56,9 +56,9 @@ public class WidgetClockData extends WidgetData {
 		super(widgetId, context, unitsHelper, timeHelper);
 
 		// inside devices persistence data
-		widgetDevices = new ArrayList<>();
-		widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper, settings));
-		widgetDevices.add(new WidgetDevicePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper, settings));
+		widgetModules = new ArrayList<>();
+		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper, settings));
+		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper, settings));
 
 		// weather persistence data
 		weather = new WidgetWeatherPersistence(mContext, mWidgetId, mUnitsHelper, mTimeHelper, settings);
@@ -72,7 +72,7 @@ public class WidgetClockData extends WidgetData {
 	public void load() {
 		super.load();
 		weather.load();
-		WidgetDevicePersistence.loadAll(widgetDevices);
+		WidgetModulePersistence.loadAll(widgetModules);
 	}
 
 	@Override
@@ -85,27 +85,27 @@ public class WidgetClockData extends WidgetData {
 	public void init() {
 
 		// NOTE: if in any case someone calls this instead of initAdvanced()
-		if(mCalendar == null){
+		if (mCalendar == null) {
 			mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
 			mCalendar.setTime(new Date());
 		}
 
-		mFacilities.clear();
-		for(WidgetDevicePersistence dev : widgetDevices){
-			if(dev.getId().isEmpty()){
-				Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
+		mDevices.clear();
+		for (WidgetModulePersistence dev : widgetModules) {
+			if (dev.getId().isEmpty()) {
+				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
 				continue;
 			}
 
-			String[] ids = dev.getId().split(Device.ID_SEPARATOR, 2);
-			Facility facility = new Facility();
-			facility.setAdapterId(widgetAdapterId);
-			facility.setAddress(ids[0]);
-			facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-			facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
+			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
+			Device device = new Device();
+			device.setGateId(widgetGateId);
+			device.setAddress(ids[0]);
+			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
+			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
+			device.addModule(Module.createFromModuleTypeId(ids[1]));
 
-			mFacilities.add(facility);
+			mDevices.add(device);
 		}
 
 		// sets icon of weather (even default)
@@ -116,7 +116,7 @@ public class WidgetClockData extends WidgetData {
 	public void save() {
 		super.save();
 		weather.save();
-		WidgetDevicePersistence.saveAll(widgetDevices);
+		WidgetModulePersistence.saveAll(widgetModules);
 	}
 
 	// ----------------------------------------------------------- //
@@ -129,10 +129,10 @@ public class WidgetClockData extends WidgetData {
 		mBuilder.setOnClickListener(R.id.widget_clock_container, mConfigurationPendingIntent);
 		mBuilder.setOnClickListener(R.id.widget_clock_household_label, mRefreshPendingIntent);
 
-		if(widgetAdapterId.isEmpty()) return;
+		if (widgetGateId.isEmpty()) return;
 
 		// -------------------- render layout
-		switch (this.widgetLayout){
+		switch (this.widgetLayout) {
 			case R.layout.widget_clock_3x2:
 				mClockFont = R.dimen.widget_textsize_clock_large;
 				mWeatherFont = R.dimen.textsize_title;
@@ -153,16 +153,15 @@ public class WidgetClockData extends WidgetData {
 		}
 
 		// updates all inside devices
-		for(WidgetDevicePersistence dev : widgetDevices){
+		for (WidgetModulePersistence dev : widgetModules) {
 			dev.renderView(mBuilder);
 			// detail activity
-			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
 			dev.setValueUnitColor(settings.colorSecondary);
 
-			if(this.widgetLayout == R.layout.widget_clock_3x2) {
-				if(dev.containerType == WidgetDevicePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
-			}
-			else if(this.widgetLayout == R.layout.widget_clock_2x2){
+			if (this.widgetLayout == R.layout.widget_clock_3x2) {
+				if (dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
+			} else if (this.widgetLayout == R.layout.widget_clock_2x2) {
 				dev.setValueUnitSize(R.dimen.textsize_caption);
 			}
 		}
@@ -170,10 +169,9 @@ public class WidgetClockData extends WidgetData {
 		renderClock();
 		renderDate();
 		// render weather data
-		if(weather.cityName == null || weather.cityName.isEmpty()){
+		if (weather.cityName == null || weather.cityName.isEmpty()) {
 			renderFailedWeatherData();
-		}
-		else{
+		} else {
 			renderOkWeatherData();
 		}
 	}
@@ -181,7 +179,7 @@ public class WidgetClockData extends WidgetData {
 	/**
 	 * Renders digital clock and sets its color and font size
 	 */
-	private void renderClock(){
+	private void renderClock() {
 		ViewsBuilder clockBuilder = new ViewsBuilder(mContext, R.layout.widget_include_clock);
 
 		boolean is24hMode = is24HourMode(mContext);
@@ -203,10 +201,9 @@ public class WidgetClockData extends WidgetData {
 		);
 
 		// show pm / am
-		if(is24hMode){
+		if (is24hMode) {
 			clockBuilder.setViewVisibility(R.id.widget_clock_ampm, View.GONE);
-		}
-		else {
+		} else {
 			clockBuilder.setViewVisibility(R.id.widget_clock_ampm, View.VISIBLE);
 			clockBuilder.setTextViewText(R.id.widget_clock_ampm, DateFormat.format("aa", mCalendar.getTime()).toString());
 			clockBuilder.setTextViewColor(R.id.widget_clock_ampm, settings.colorPrimary);
@@ -224,7 +221,7 @@ public class WidgetClockData extends WidgetData {
 	/**
 	 * Renders date with color
 	 */
-	private void renderDate(){
+	private void renderDate() {
 		ViewsBuilder builder = new ViewsBuilder(mContext, R.layout.widget_include_date);
 
 		// set day of week
@@ -252,7 +249,7 @@ public class WidgetClockData extends WidgetData {
 	 * Renders new weather data based on data saved in preferences
 	 */
 	private void renderOkWeatherData() {
-		switch (this.widgetLayout){
+		switch (this.widgetLayout) {
 			case R.layout.widget_clock_3x2:
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_humidity,
@@ -292,8 +289,8 @@ public class WidgetClockData extends WidgetData {
 	/**
 	 * Hides weather data
 	 */
-	private void renderFailedWeatherData(){
-		switch (this.widgetLayout){
+	private void renderFailedWeatherData() {
+		switch (this.widgetLayout) {
 			case R.layout.widget_clock_3x2:
 			case R.layout.widget_clock_2x2:
 				mBuilder.setViewVisibility(R.id.widget_weather_container, View.GONE);
@@ -310,7 +307,7 @@ public class WidgetClockData extends WidgetData {
 	 * Updates widget's time asynchroningly to sensor updates
 	 * Updates always on time broadcasts
 	 */
-	public void handleClockUpdate(){
+	public void handleClockUpdate() {
 		Log.d(TAG, String.format("handleClockUpdate(%d)", mWidgetId));
 		renderWidget();
 	}
@@ -318,27 +315,26 @@ public class WidgetClockData extends WidgetData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
-		if(adapter == null) return false;
+		Gate gate = mController.getGatesModel().getGate(widgetGateId);
+		if (gate == null) return false;
 
-		for(WidgetDevicePersistence dev : widgetDevices) {
-			Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
-			if (device != null) {
-				if(!dev.locationId.isEmpty()){
-					Location location = mController.getLocationsModel().getLocation(widgetAdapterId, dev.locationId);
-					dev.configure(device, adapter, location);
-				}
-				else {
-					dev.configure(device, adapter);
+		for (WidgetModulePersistence dev : widgetModules) {
+			Module module = mController.getDevicesModel().getModule(widgetGateId, dev.getId());
+			if (module != null) {
+				if (!dev.locationId.isEmpty()) {
+					Location location = mController.getLocationsModel().getLocation(widgetGateId, dev.locationId);
+					dev.configure(module, gate, location);
+				} else {
+					dev.configure(module, gate);
 				}
 				updated++;
 			}
 		}
 
-		if(updated > 0) {
+		if (updated > 0) {
 			// update last update to "now"
 			widgetLastUpdate = getTimeNow();
-			widgetAdapterId = adapter.getId();
+			widgetGateId = gate.getId();
 
 			// Save fresh data
 			this.save();
@@ -385,8 +381,8 @@ public class WidgetClockData extends WidgetData {
 	public List<Object> getObjectsToReload() {
 		List<Object> resultObj = new ArrayList<>();
 
-		// first add parent objects (facilities)
-		resultObj.addAll(mFacilities);
+		// first add parent objects (devices)
+		resultObj.addAll(mDevices);
 
 		// then from this widget
 		resultObj.add(weather);
@@ -405,6 +401,7 @@ public class WidgetClockData extends WidgetData {
 
 	/**
 	 * Checs if user uses 24 hour format or not
+	 *
 	 * @param context
 	 * @return
 	 */
@@ -414,9 +411,10 @@ public class WidgetClockData extends WidgetData {
 
 	/**
 	 * When changed locale, change statically week day names
+	 *
 	 * @return array of weekday names
 	 */
-	public static String[] reloadWeekDays(){
+	public static String[] reloadWeekDays() {
 		weekDays = new DateFormatSymbols().getShortWeekdays();
 		return weekDays;
 	}

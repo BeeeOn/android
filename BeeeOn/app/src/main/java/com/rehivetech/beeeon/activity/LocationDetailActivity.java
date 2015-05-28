@@ -6,7 +6,6 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 
-
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.LocationDetailFragment;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -34,9 +33,9 @@ public class LocationDetailActivity extends BaseApplicationActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 		return false;
 	}

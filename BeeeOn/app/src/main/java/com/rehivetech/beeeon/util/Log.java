@@ -1,11 +1,10 @@
 /**
- * 
+ *
  */
 package com.rehivetech.beeeon.util;
 
 /**
  * @author ThinkDeep
- * 
  */
 public class Log {
 

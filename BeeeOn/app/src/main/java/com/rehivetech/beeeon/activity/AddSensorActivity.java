@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,11 +17,11 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.AddSensorFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -30,91 +29,90 @@ import java.util.List;
 
 public class AddSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = AddSensorActivity.class.getSimpleName();
-	
+
 	private Controller mController;
-	private Adapter mPairAdapter;
-	
+	private Gate mPairGate;
+
 	private AddSensorFragmentAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
-	
+
 	private AddSensorFragment mFragment;
-	
+
 	private Button mSkip;
 	private Button mCancel;
 	private Button mNext;
-	
+
 
 	private boolean mFirstUse = true;
-	
-    private Toolbar mToolbar;
 
-    @Override
+	private Toolbar mToolbar;
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_add_sensor);
-            setSupportActionBar(mToolbar);
-        }
-		
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_add_sensor);
+			setSupportActionBar(mToolbar);
+		}
+
 		// Get controller
 		mController = Controller.getInstance(this);
-		mPairAdapter = mController.getActiveAdapter();
-		
+		mPairGate = mController.getActiveGate();
+
 		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager(), this);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		
-		mPager = (ViewPager)findViewById(R.id.intro_pager);
+
+		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(mAdapter.getCount());
-		
-		mIndicator = (CirclePageIndicator)findViewById(R.id.intro_indicator);
+
+		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
-		
+
 		mIndicator.setPageColor(0x88FFFFFF);
 		mIndicator.setFillColor(0xFFFFFFFF);
 		mIndicator.setStrokeColor(0x88FFFFFF);
-		
+
 		initButtons();
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
-		if(requestCode == Constants.SETUP_SENSOR_REQUEST_CODE ) {
+
+		if (requestCode == Constants.SETUP_SENSOR_REQUEST_CODE) {
 			Log.d(TAG, "Return from setup sensor activity");
-			if(resultCode == Constants.SETUP_SENSOR_CANCELED) {
+			if (resultCode == Constants.SETUP_SENSOR_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			}
-			else if (resultCode == Constants.SETUP_SENSOR_SUCCESS) {
-				// Succes of add adapter -> setActive adapter a redraw ALL
+			} else if (resultCode == Constants.SETUP_SENSOR_SUCCESS) {
+				// Succes of add gate -> setActive gate a redraw ALL
 				Log.d(TAG, "Setup sensor success");
 				setResult(Constants.ADD_SENSOR_SUCCESS, data);
 				finish();
 			}
 		}
 	}
-	
-	
+
+
 	private void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_adapter_skip);
-		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
-		mNext = (Button) findViewById(R.id.add_adapter_next);
-		
+		mSkip = (Button) findViewById(R.id.add_gate_skip);
+		mCancel = (Button) findViewById(R.id.add_gate_cancel);
+		mNext = (Button) findViewById(R.id.add_gate_next);
+
 		mSkip.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				mPager.setCurrentItem(mAdapter.getCount()-1);
+				mPager.setCurrentItem(mAdapter.getCount() - 1);
 			}
 		});
-		
+
 		mCancel.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -125,7 +123,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				finish();
 			}
 		});
-		
+
 		mNext.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -133,29 +131,29 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				if (mNext.getText().equals(AddSensorActivity.this.getString(R.string.tutorial_next))) {
 					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 				} else if (mNext.getText().equals(AddSensorActivity.this.getString(R.string.addsensor_send_pair))) {
-					doPairRequestTask(mPairAdapter.getId());
+					doPairRequestTask(mPairGate.getId());
 					mNext.setEnabled(false);
 				}
 			}
 		});
-		
-		
+
+
 	}
-	
+
 	public void setBtnLastPage() {
 		mSkip.setVisibility(View.INVISIBLE);
 		mNext.setText(getString(R.string.addsensor_send_pair));
 	}
 
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			setResult(Constants.ADD_SENSOR_CANCELED);
-			finish();
-			break;
+			case android.R.id.home:
+				setResult(Constants.ADD_SENSOR_CANCELED);
+				finish();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -171,11 +169,11 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	public void setFragment(AddSensorFragment fragment) {
 		mFragment = fragment;
 	}
-	
-	public void doReloadUninitializedFacilitiesTask(String adapterId, boolean forceReload) {
-		ReloadAdapterDataTask reloadUninitializedFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
-		reloadUninitializedFacilitiesTask.setListener(new CallbackTaskListener() {
+	public void doReloadUninitializedDevicesTask(String gateId, boolean forceReload) {
+		ReloadGateDataTask reloadUninitializedDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
+
+		reloadUninitializedDevicesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -183,9 +181,9 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					return;
 				}
 
-				List<Facility> facilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId());
+				List<Device> devices = mController.getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId());
 
-				if (facilities.size() > 0) {
+				if (devices.size() > 0) {
 					mFragment.stopTimer();
 					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
 					mFragment.stopTimer();
@@ -195,7 +193,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 				} else {
 					if (mFirstUse) {
 						mFirstUse = false;
-						doPairRequestTask(mPairAdapter.getId());
+						doPairRequestTask(mPairGate.getId());
 						mNext.setEnabled(false);
 					}
 				}
@@ -204,10 +202,10 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadUninitializedFacilitiesTask, adapterId);
+		callbackTaskManager.executeTask(reloadUninitializedDevicesTask, gateId);
 	}
-	
-	private void doPairRequestTask(String adapterId) {
+
+	private void doPairRequestTask(String gateId) {
 		// Send First automatic pair request
 		PairRequestTask pairRequestTask = new PairRequestTask(this);
 
@@ -227,12 +225,12 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(pairRequestTask, adapterId);
+		callbackTaskManager.executeTask(pairRequestTask, gateId);
 	}
-	
+
 	public void checkUnInitSensor() {
-		Log.d(TAG, "Send if some uninit facility");
-		doReloadUninitializedFacilitiesTask(mPairAdapter.getId(), true);
+		Log.d(TAG, "Send if some uninit mDevice");
+		doReloadUninitializedDevicesTask(mPairGate.getId(), true);
 	}
 
 

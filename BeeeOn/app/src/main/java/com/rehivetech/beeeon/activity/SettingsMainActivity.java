@@ -9,7 +9,6 @@ import android.preference.Preference;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-
 import com.rehivetech.beeeon.ActionBarPreferenceActivity;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -36,20 +35,20 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 	private Controller mController;
 	private SharedPreferences mPrefs;
 
-    @Override
-    protected int getPreferencesXmlId() {
-        return R.xml.main_preferences;
-    }
+	@Override
+	protected int getPreferencesXmlId() {
+		return R.xml.main_preferences;
+	}
 
-    // added suppressWarnings because of support of lower version
+	// added suppressWarnings because of support of lower version
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mController = Controller.getInstance(this);
 
-        final Toolbar toolbar=getToolbar();
-        toolbar.setTitle(R.string.settings);
+		final Toolbar toolbar = getToolbar();
+		toolbar.setTitle(R.string.settings);
 
 
 		// Use own name for sharedPreferences
@@ -106,9 +105,9 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 		return false;
 	}

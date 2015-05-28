@@ -81,7 +81,7 @@ public class GcmRegisterRunnable implements Runnable {
 			}
 		}
 
-		Log.i(TAG, GcmHelper.TAG_GCM + "Device registered, attempt number " + String.valueOf(attempt) + " , registration ID="
+		Log.i(TAG, GcmHelper.TAG_GCM + "Module registered, attempt number " + String.valueOf(attempt) + " , registration ID="
 				+ mNewGcmId);
 
 		// if new GCM ID is different then the old one, delete old on server side and apply new one

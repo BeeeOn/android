@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -15,18 +14,15 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 
-import com.rehivetech.beeeon.R;
-
 /**
- * @brief Methods for fixing various compatibility issues
  * @author Robyer
- * 
+ * @brief Methods for fixing various compatibility issues
  */
 public class Compatibility {
 
 	/**
 	 * Set background of View with correct API method
-	 * 
+	 *
 	 * @param view
 	 * @param background
 	 */
@@ -42,7 +38,7 @@ public class Compatibility {
 
 	/**
 	 * Handle resizing widgets for TouchWiz (Galaxy S3 and similar) on Android 4.1.2
-	 * 
+	 *
 	 * @param widgetProvider
 	 * @param context
 	 * @param intent
@@ -72,6 +68,7 @@ public class Compatibility {
 
 	/**
 	 * Sets remoteAdapter with correct API method
+	 *
 	 * @param rv
 	 * @param widgetId
 	 * @param intent
@@ -79,17 +76,17 @@ public class Compatibility {
 	 */
 	@SuppressWarnings("deprecation")
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public static void setRemoteAdapter(RemoteViews rv, int widgetId, Intent intent, int viewId){
+	public static void setRemoteAdapter(RemoteViews rv, int widgetId, Intent intent, int viewId) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
 			rv.setRemoteAdapter(viewId, intent);
-		}
-		else{
+		} else {
 			rv.setRemoteAdapter(widgetId, viewId, intent);
 		}
 	}
 
 	/**
 	 * Depending on system version sets TextView text size
+	 *
 	 * @param context
 	 * @param rv
 	 * @param viewId
@@ -97,11 +94,10 @@ public class Compatibility {
 	 * @param size
 	 */
 	@SuppressWarnings("deprecation")
-	public static void setTextViewTextSize(Context context, RemoteViews rv, int viewId, int unit, float size){
-		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
+	public static void setTextViewTextSize(Context context, RemoteViews rv, int viewId, int unit, float size) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			rv.setTextViewTextSize(viewId, unit, size);
-		}
-		else{
+		} else {
 			DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 			float valueInSp = TypedValue.applyDimension(unit, size, metrics) / metrics.scaledDensity;
 			rv.setFloat(viewId, "setTextSize", (int) valueInSp);

@@ -1,17 +1,16 @@
 package com.rehivetech.beeeon.network;
 
-import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.gcm.notification.BaseNotification;
+import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
-import com.rehivetech.beeeon.household.device.DeviceLog;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.Module.SaveModule;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.pair.LogDataPair;
 
@@ -49,7 +48,7 @@ public interface INetwork {
 	boolean isAvailable();
 
 	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////SIGNIN,SIGNUP,ADAPTERS//////////////////////
+	// /////////////////////////////////////SIGNIN,SIGNUP,GATES//////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -120,37 +119,37 @@ public interface INetwork {
 	boolean deleteMyAccount();
 
 	/**
-	 * Method register adapter to server
+	 * Method register gate to server
 	 *
-	 * @param adapterID   adapter id
-	 * @param adapterName adapter name
-	 * @return true if adapter has been registered, false otherwise
+	 * @param gateID   gate id
+	 * @param gateName gate name
+	 * @return true if gate has been registered, false otherwise
 	 */
-	boolean addAdapter(String adapterID, String adapterName);
+	boolean addGate(String gateID, String gateName);
 
 	/**
-	 * Method ask for list of adapters. User has to be sign in before
+	 * Method ask for list of gates. User has to be sign in before
 	 *
-	 * @return list of adapters or empty list
+	 * @return list of gates or empty list
 	 */
-	List<Adapter> getAdapters();
+	List<Gate> getGates();
 
 	/**
-	 * Method ask for whole adapter data
+	 * Method ask for whole gate data
 	 *
-	 * @param adapterID of wanted adapter
-	 * @return Adapter
+	 * @param gateID of wanted gate
+	 * @return Gate
 	 */
-	List<Facility> initAdapter(String adapterID);
+	List<Device> initGate(String gateID);
 
 	/**
-	 * Method change adapter id
+	 * Method change gate id
 	 *
 	 * @param oldId id to be changed
 	 * @param newId new id
 	 * @return true if change has been successfully
 	 */
-	boolean reInitAdapter(String oldId, String newId);
+	boolean reInitGate(String oldId, String newId);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
@@ -161,69 +160,69 @@ public interface INetwork {
 	 *
 	 * @return true if everything goes well, false otherwise
 	 */
-	boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave);
+	boolean updateDevices(String gateID, List<Device> devices, EnumSet<SaveModule> toSave);
 
 	/**
-	 * Method send wanted fields of device to server
+	 * Method send wanted fields of module to server
 	 *
-	 * @param adapterID id of adapter
-	 * @param device    to save
+	 * @param gateID id of gate
+	 * @param module    to save
 	 * @param toSave    ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
 	 */
-	boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave);
+	boolean updateModule(String gateID, Module module, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method toggle or set actor to new value
 	 *
-	 * @param adapterID
+	 * @param gateID
+	 * @param module
+	 * @return
+	 */
+	boolean switchState(String gateID, Module module);
+
+	/**
+	 * Method make gate to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
+	 * shaken to connect
+	 *
+	 * @param gateID
+	 * @return
+	 */
+	boolean prepareGateToListenNewSensors(String gateID);
+
+	/**
+	 * Method delete mDevice from server
+	 *
+	 * @param device to be deleted
+	 * @return true if is deleted, false otherwise
+	 */
+	boolean deleteDevice(Device device);
+
+	/**
+	 * Method ask for actual data of devices
+	 *
+	 * @param devices list of devices to which needed actual data
+	 * @return list of updated devices fields
+	 */
+	List<Device> getDevices(List<Device> devices);
+
+	/**
+	 * Method ask server for actual data of one mDevice
+	 *
 	 * @param device
 	 * @return
 	 */
-	boolean switchState(String adapterID, Device device);
+	Device getDevice(Device device);
 
-	/**
-	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
-	 * shaken to connect
-	 *
-	 * @param adapterID
-	 * @return
-	 */
-	boolean prepareAdapterToListenNewSensors(String adapterID);
-
-	/**
-	 * Method delete facility from server
-	 *
-	 * @param facility to be deleted
-	 * @return true if is deleted, false otherwise
-	 */
-	boolean deleteFacility(Facility facility);
-
-	/**
-	 * Method ask for actual data of facilities
-	 *
-	 * @param facilities list of facilities to which needed actual data
-	 * @return list of updated facilities fields
-	 */
-	List<Facility> getFacilities(List<Facility> facilities);
-
-	/**
-	 * Method ask server for actual data of one facility
-	 *
-	 * @param facility
-	 * @return
-	 */
-	Facility getFacility(Facility facility);
-
-	boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave);
+	boolean updateDevice(String gateID, Device device, EnumSet<SaveModule> toSave);
 
 	/**
 	 * TODO: need to test
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @return
 	 */
-	List<Facility> getNewFacilities(String adapterID);
+	List<Device> getNewDevices(String gateID);
 
 	/**
 	 * Method ask for data of logs
@@ -231,7 +230,7 @@ public interface INetwork {
 	 * @param pair data of log (from, to, type, interval)
 	 * @return list of rows with logged data
 	 */
-	DeviceLog getLog(String adapterID, Device device, LogDataPair pair);
+	ModuleLog getLog(String gateID, Module module, LogDataPair pair);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ROOMS///////////////////////////////////////
@@ -242,7 +241,7 @@ public interface INetwork {
 	 *
 	 * @return List with locations
 	 */
-	List<Location> getLocations(String adapterID);
+	List<Location> getLocations(String gateID);
 
 	/**
 	 * Method call to server to update location
@@ -250,7 +249,7 @@ public interface INetwork {
 	 * @param locations to update
 	 * @return true if everything is OK, false otherwise
 	 */
-	boolean updateLocations(String adapterID, List<Location> locations);
+	boolean updateLocations(String gateID, List<Location> locations);
 
 	/**
 	 * Method call to server to update location
@@ -274,57 +273,57 @@ public interface INetwork {
 	// /////////////////////////////////////ACCOUNTS////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	boolean addAccounts(String adapterID, ArrayList<User> users);
+	boolean addAccounts(String gateID, ArrayList<User> users);
 
 	/**
-	 * Method add new user to adapter
+	 * Method add new user to gate
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @return
 	 */
-	boolean addAccount(String adapterID, User user);
+	boolean addAccount(String gateID, User user);
 
 	/**
-	 * Method delete users from actual adapter
+	 * Method delete users from actual gate
 	 *
 	 * @param users email of user
 	 * @return true if all users has been deleted, false otherwise
 	 */
-	boolean deleteAccounts(String adapterID, List<User> users);
+	boolean deleteAccounts(String gateID, List<User> users);
 
 	/**
-	 * Method delete on user from adapter
+	 * Method delete on user from gate
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @param user
 	 * @return
 	 */
-	boolean deleteAccount(String adapterID, User user);
+	boolean deleteAccount(String gateID, User user);
 
 	/**
-	 * Method ask for list of users of current adapter
+	 * Method ask for list of users of current gate
 	 *
 	 * @return Map of users where key is email and value is User object
 	 */
-	List<User> getAccounts(String adapterID);
+	List<User> getAccounts(String gateID);
 
 	/**
-	 * Method update users roles on server on current adapter
+	 * Method update users roles on server on current gate
 	 * <p/>
 	 * map with email as key and role as value
 	 *
 	 * @return true if all accounts has been changed false otherwise
 	 */
-	boolean updateAccounts(String adapterID, ArrayList<User> users);
+	boolean updateAccounts(String gateID, ArrayList<User> users);
 
 	/**
-	 * Method update users role on adapter
+	 * Method update users role on gate
 	 *
-	 * @param adapterID
+	 * @param gateID
 	 * @param user
 	 * @return
 	 */
-	boolean updateAccount(String adapterID, User user);
+	boolean updateAccount(String gateID, User user);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////TIME////////////////////////////////////////
@@ -336,14 +335,14 @@ public interface INetwork {
 	 * @param offsetInMinutes - difference from GMT (UTC+0)
 	 * @return
 	 */
-	boolean setTimeZone(String adapterID, int offsetInMinutes);
+	boolean setTimeZone(String gateID, int offsetInMinutes);
 
 	/**
 	 * Method call to server to get actual time zone
 	 *
 	 * @return integer in range <-12,12>
 	 */
-	int getTimeZone(String adapterID);
+	int getTimeZone(String gateID);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
@@ -363,19 +362,19 @@ public interface INetwork {
 	// /////////////////////////////////////ALGORITHMS//////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	boolean addWatchDog(WatchDog watchDog, String AdapterID);
+	boolean addWatchdog(Watchdog watchdog, String gateId);
 
-	List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterID);
+	List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId);
 
-	List<WatchDog> getAllWatchDogs(String adapterID);
+	List<Watchdog> getAllWatchdogs(String gateId);
 
-	boolean updateWatchDog(WatchDog watchDog, String AdapterId);
+	boolean updateWatchdog(Watchdog watchdog, String gateId);
 
-	boolean deleteWatchDog(WatchDog watchDog);
+	boolean deleteWatchdog(Watchdog watchdog);
 
 	boolean passBorder(String regionId, String type);
 
-	List<AchievementListItem> getAllAchievements(String adapterID);
+	List<AchievementListItem> getAllAchievements(String gateId);
 
-	List<String> setProgressLvl(String adapterId, String achievementId);
+	List<String> setProgressLvl(String gateId, String achievementId);
 }

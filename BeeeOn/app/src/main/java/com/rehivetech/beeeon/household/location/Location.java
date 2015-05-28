@@ -6,22 +6,30 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Utils;
 
 public class Location implements INameIdentifier {
-	/** Represents id of newly created location (not saved on server yet) */
+	/**
+	 * Represents id of newly created location (not saved on server yet)
+	 */
 	public static final String NEW_LOCATION_ID = "-NEW-";
 
-	/** Represents id of "no location" (server requires "null" string) */
+	/**
+	 * Represents id of "no location" (server requires "null" string)
+	 */
 	public static final String NO_LOCATION_ID = "null";
 
-	/** Represents type (= icon) of "no location" */
+	/**
+	 * Represents type (= icon) of "no location"
+	 */
 	public static final String NO_LOCATION_TYPE = "0";
 
-	protected final String mAdapterId;
+	protected final String mGateId;
 	protected String mId = "";
 	protected String mName = "";
 	protected String mType;
 	protected LocationIcon mIcon = LocationIcon.UNKNOWN;
 
-	/** Represents location icon. */
+	/**
+	 * Represents location icon.
+	 */
 	public enum LocationIcon implements IIdentifier {
 		UNKNOWN(0, R.drawable.loc_unknown),
 		BATHROOM(1, R.drawable.loc_bath_room),
@@ -76,21 +84,21 @@ public class Location implements INameIdentifier {
 		}
 	}
 
-	public Location(String id, String name, String adapterId, String type) {
+	public Location(String id, String name, String gateId, String type) {
 		setId(id);
 		setName(name);
 		setType(type);
 
-		mAdapterId = adapterId;
+		mGateId = gateId;
 	}
 
 	/**
-	 * Get adapter id of location
-	 * 
-	 * @return adapter id
+	 * Get gate id of location
+	 *
+	 * @return gate id
 	 */
-	public String getAdapterId() {
-		return mAdapterId;
+	public String getGateId() {
+		return mGateId;
 	}
 
 	public String getId() {

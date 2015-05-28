@@ -147,7 +147,7 @@ public class AppException extends RuntimeException {
 			errorMessage = context.getString(resId > 0 ? resId : R.string.unknown_error);
 		}
 
-        return context.getString(R.string.error_message, errorMessage, mErrorCode.getErrorCode());
+		return context.getString(R.string.error_message, errorMessage, mErrorCode.getErrorCode());
 	}
 
 }

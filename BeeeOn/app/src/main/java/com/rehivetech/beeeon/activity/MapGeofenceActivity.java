@@ -491,9 +491,9 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			if (item.getItemId() == R.id.geofence_menu_del) {
 				deleteGeofence(mHolder);
 			} else if (item.getItemId() == R.id.geofence_menu_create_watchdog) {
-				Intent intent = new Intent(MapGeofenceActivity.this, WatchDogEditRuleActivity.class);
-				intent.putExtra(WatchDogEditRuleActivity.EXTRA_GEOFENCE_ID_PICKED, mHolder.getGeofence().getId());
-				intent.putExtra(WatchDogEditRuleActivity.EXTRA_IS_NEW, true);
+				Intent intent = new Intent(MapGeofenceActivity.this, WatchdogEditRuleActivity.class);
+				intent.putExtra(WatchdogEditRuleActivity.EXTRA_GEOFENCE_ID_PICKED, mHolder.getGeofence().getId());
+				intent.putExtra(WatchdogEditRuleActivity.EXTRA_IS_NEW, true);
 				startActivity(intent);
 			}
 

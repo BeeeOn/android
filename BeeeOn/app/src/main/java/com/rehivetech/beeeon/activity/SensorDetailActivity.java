@@ -16,11 +16,11 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Facility;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.view.CustomViewPager;
 
@@ -29,42 +29,41 @@ import java.util.List;
 
 /**
  * Class that handle screen with detail of some sensor
- * 
+ *
  * @author ThinkDeep
- * 
  */
 public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private static final String TAG = SensorDetailActivity.class.getSimpleName();
 
-	public static final String EXTRA_DEVICE_ID = "device_id";
-	public static final String EXTRA_ADAPTER_ID = "adapter_id";
-	public static final String EXTRA_ACTIVE_POS = "act_device_pos";
+	public static final String EXTRA_MODULE_ID = "module_id";
+	public static final String EXTRA_GATE_ID = "gate_id";
+	public static final String EXTRA_ACTIVE_POS = "act_module_pos";
 
 	private Controller mController;
-	private List<Device> mDevices;
+	private List<Module> mModules;
 
 	private PagerAdapter mPagerAdapter;
 	private ViewPager mPager;
 
-	private String mActiveAdapterId;
-	private String mActiveDeviceId;
-	private int mActiveDevicePosition;
+	private String mActiveGateId;
+	private String mActiveModuleId;
+	private int mActiveModulePosition;
 
 	private ProgressDialog mProgress;
 
-    private Toolbar mToolbar;
+	private Toolbar mToolbar;
 
-    @Override
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor_detail_wraper);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        if (mToolbar != null) {
-            mToolbar.setTitle(R.string.title_activity_sensor_detail);
-            setSupportActionBar(mToolbar);
-        }
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (mToolbar != null) {
+			mToolbar.setTitle(R.string.title_activity_sensor_detail);
+			setSupportActionBar(mToolbar);
+		}
 
 		//setBeeeOnProgressBarVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -74,24 +73,23 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mController = Controller.getInstance(this);
 
 
-
 		Log.d(TAG, "onCreate()");
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
-			mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
-			mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
+			mActiveGateId = bundle.getString(EXTRA_GATE_ID);
+			mActiveModuleId = bundle.getString(EXTRA_MODULE_ID);
 		}
-		if(savedInstanceState != null ){
+		if (savedInstanceState != null) {
 			bundle = savedInstanceState;
 			if (bundle != null) {
-				mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
-				mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
-				mActiveDevicePosition = bundle.getInt(EXTRA_ACTIVE_POS);
+				mActiveGateId = bundle.getString(EXTRA_GATE_ID);
+				mActiveModuleId = bundle.getString(EXTRA_MODULE_ID);
+				mActiveModulePosition = bundle.getInt(EXTRA_ACTIVE_POS);
 			}
 		}
 
-		if (mActiveAdapterId == null || mActiveDeviceId == null) {
+		if (mActiveGateId == null || mActiveModuleId == null) {
 			Toast.makeText(this, R.string.toast_wrong_or_no_device, Toast.LENGTH_LONG).show();
 			finish();
 			return;
@@ -101,14 +99,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode == Constants.EDIT_SENSOR_REQUEST_CODE ) {
-			Log.d(TAG, "Return from add adapter activity");
-			if(resultCode == Constants.EDIT_SENSOR_CANCELED) {
+		if (requestCode == Constants.EDIT_SENSOR_REQUEST_CODE) {
+			Log.d(TAG, "Return from add gate activity");
+			if (resultCode == Constants.EDIT_SENSOR_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			}
-			else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
+			} else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
 				Log.d(TAG, "Edit sensor succes");
-				doReloadFacilitiesTask(mActiveAdapterId, false);
+				doReloadDevicesTask(mActiveGateId, false);
 			}
 		}
 	}
@@ -116,61 +113,61 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	@Override
 	public void onStart() {
 		super.onStart();
-		doReloadFacilitiesTask(mActiveAdapterId, false);
+		doReloadDevicesTask(mActiveGateId, false);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
+			case android.R.id.home:
+				finish();
+				return true;
 		}
 		return false;
 	}
 
-	private void doReloadFacilitiesTask(final String adapterId, final boolean forceReload) {
-		ReloadAdapterDataTask reloadFacilitiesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+	private void doReloadDevicesTask(final String gateId, final boolean forceReload) {
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);
 
-		reloadFacilitiesTask.setListener(new CallbackTaskListener() {
+		reloadDevicesTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				Device device = mController.getFacilitiesModel().getDevice(adapterId, mActiveDeviceId);
-				if (device == null) {
+				Module module = mController.getDevicesModel().getModule(gateId, mActiveModuleId);
+				if (module == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
 				}
 
-				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
+				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(gateId, module.getDevice().getLocationId());
 
-				List<Device> devices = new ArrayList<Device>();
-				for (Facility facility : facilities) {
-					devices.addAll(facility.getDevices());
+				List<Module> modules = new ArrayList<Module>();
+				for (Device device : devices) {
+					modules.addAll(device.getModules());
 				}
-				mDevices = devices;
+				mModules = modules;
 
-				// Determine position of wanted device in this list
-				for (int i = 0; i < devices.size(); i++) {
-					if (devices.get(i).getId().equals(device.getId())) {
-						mActiveDevicePosition = i;
+				// Determine position of wanted module in this list
+				for (int i = 0; i < modules.size(); i++) {
+					if (modules.get(i).getId().equals(module.getId())) {
+						mActiveModulePosition = i;
 						break;
 					}
 				}
 
-				Log.d(TAG, String.format("String: %s, Size: %d", mDevices.toString(), mDevices.size()));
+				Log.d(TAG, String.format("String: %s, Size: %d", mModules.toString(), mModules.size()));
 				initLayouts();
 			}
 
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadFacilitiesTask, adapterId);
+		callbackTaskManager.executeTask(reloadDevicesTask, gateId);
 	}
 
 	/**
-	 * A simple pager adapter that represents 5 {@link SensorDetailFragment} objects, in sequence.
+	 * A simple pager gate that represents 5 {@link SensorDetailFragment} objects, in sequence.
 	 */
 	public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
@@ -182,11 +179,11 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		public android.support.v4.app.Fragment getItem(int position) {
 			Log.d(TAG, "Here 2 " + position);
 			SensorDetailFragment fragment = new SensorDetailFragment();
-			fragment.setSensorID(mDevices.get(position).getId());
-			fragment.setLocationID(mDevices.get(position).getFacility().getLocationId());
+			fragment.setSensorID(mModules.get(position).getId());
+			fragment.setLocationID(mModules.get(position).getDevice().getLocationId());
 			fragment.setPosition(position);
-			fragment.setSelectedPosition(mActiveDevicePosition);
-			fragment.setAdapterID(mActiveAdapterId);
+			fragment.setSelectedPosition(mActiveModulePosition);
+			fragment.setGateId(mActiveGateId);
 			fragment.setFragmentAdapter(this);
 
 			return fragment;
@@ -194,7 +191,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		@Override
 		public int getCount() {
-			return mDevices.size();
+			return mModules.size();
 		}
 	}
 
@@ -206,9 +203,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				mActiveDevicePosition = position;
-				mActiveDeviceId = mDevices.get(position).getId();
-				mActiveAdapterId = mDevices.get(position).getFacility().getAdapterId();
+				mActiveModulePosition = position;
+				mActiveModuleId = mModules.get(position).getId();
+				mActiveGateId = mModules.get(position).getDevice().getGateId();
 
 				// When changing pages, reset the action bar actions since they are dependent
 				// on which page is currently active. An alternative approach is to have each
@@ -219,8 +216,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			}
 		});
 		((CustomViewPager) mPager).setPagingEnabled(true);
-		mPager.setOffscreenPageLimit(mDevices.size());
-		mPager.setCurrentItem(mActiveDevicePosition);
+		mPager.setOffscreenPageLimit(mModules.size());
+		mPager.setCurrentItem(mActiveModulePosition);
 		//setBeeeOnProgressBarVisibility(false);
 		visibleAllElements();
 	}
@@ -237,7 +234,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	public void setCurrentViewPager() {
-		mPager.setCurrentItem(mActiveDevicePosition);
+		mPager.setCurrentItem(mActiveModulePosition);
 	}
 
 	public ViewPager getPager() {
@@ -246,9 +243,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
-		savedInstanceState.putString(EXTRA_DEVICE_ID, mActiveDeviceId);
-		savedInstanceState.putInt(EXTRA_ACTIVE_POS,mActiveDevicePosition);
+		savedInstanceState.putString(EXTRA_GATE_ID, mActiveGateId);
+		savedInstanceState.putString(EXTRA_MODULE_ID, mActiveModuleId);
+		savedInstanceState.putInt(EXTRA_ACTIVE_POS, mActiveModulePosition);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);

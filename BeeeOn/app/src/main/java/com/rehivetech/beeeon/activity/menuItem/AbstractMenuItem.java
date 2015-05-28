@@ -21,12 +21,12 @@ public abstract class AbstractMenuItem implements MenuItem {
 	public MenuItemType getType() {
 		return mType;
 	}
-	
+
 	public void setMView(View view) {
 		mMView = view;
 	}
-	
-	public View getMView(){
+
+	public View getMView() {
 		return mMView;
 	}
 }

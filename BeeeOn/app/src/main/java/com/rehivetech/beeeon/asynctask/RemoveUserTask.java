@@ -15,7 +15,7 @@ public class RemoveUserTask extends CallbackTask<UserPair> {
 	protected Boolean doInBackground(UserPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.getUsersModel().deleteUser(pair.adapterID, pair.user);
+		return controller.getUsersModel().deleteUser(pair.gateId, pair.user);
 	}
 
 }

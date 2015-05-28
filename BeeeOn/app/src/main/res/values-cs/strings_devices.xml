@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Units of devices -->
+    <!-- Units of modules -->
     <string name="dev_temperature_celsius_unit_full">Celsius</string>
     <string name="dev_temperature_celsius_unit">°C</string>
     <string name="dev_temperature_fahrenheit_unit_full">Fahrenheit</string>
@@ -23,7 +23,7 @@
     <string name="dev_emission_unit">ppm</string>
     <string name="dev_unknown_unit" />
 
-    <!-- Types of devices -->
+    <!-- Types of modules -->
     <string name="dev_unknown_type">Neznámé zařízení</string>
     <!-- Sensors -->
     <string name="dev_temperature_type">Senzor teploty</string>
@@ -41,7 +41,7 @@
     <string name="dev_actor_range_type">Rozsahový aktor</string>
     <string name="dev_actor_rgb_type">RGB aktor</string>
 
-    <!-- Special values of devices -->
+    <!-- Special values of modules -->
     <string name="dev_enum_value_open">Otevřeno</string>
     <string name="dev_enum_value_closed">Zavřeno</string>
     <string name="dev_enum_value_on">Zapnuto</string>

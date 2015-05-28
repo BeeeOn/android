@@ -32,26 +32,25 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Facility;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnitsHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * GalleryControl displays a swipeable gallery.
@@ -61,12 +60,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	protected int mLastKnowPosition = 0;
 
 	public static final String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
-	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	public static final String EXTRA_GATE_ID = "GATE_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
-	private String mAdapterId;
+	private String mGateId;
 	private String mLocationStr;
-	private List<Device> mDevices;
+	private List<Module> mModules;
 
 	/**
 	 * Bundle for menu icons
@@ -89,11 +88,11 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// setupClickables(context);
 		initializeMenus();
 
-		mDevices = new ArrayList<Device>();
+		mModules = new ArrayList<Module>();
 
-		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -115,12 +114,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		int startPosition = getIntent().getIntExtra(EXTRA_INITIAL_POSITION, 0);
 		mLastKnowPosition = startPosition;
 
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
 
-		sendListCount(R.id.gallery, mDevices.size());
+		sendListCount(R.id.gallery, mModules.size());
 		sendListPosition(R.id.gallery, startPosition);
 
 	}
@@ -159,12 +158,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		if (menuItem == MENU_REFRESH) {
 
 			// clearDisplay();
-			// mDevices = mController.getAdapter(adapterId, false)
+			// mModules = mController.getGate(gateId, false)
 			// .getDevicesByLocation(locationStr);
 			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
 			actualize(mLastKnowPosition);
 
-			// sendListCount(R.id.gallery, mDevices.size());
+			// sendListCount(R.id.gallery, mModules.size());
 			// sendListItem(item)
 		}
 	}
@@ -191,9 +190,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		item.listItemId = position;
 		item.listItemPosition = position;
 
-		Device curDevice = mDevices.get(position);
-		Facility curFacility = curDevice.getFacility();
-		Adapter curAdapter = mController.getAdaptersModel().getAdapter(curFacility.getAdapterId());
+		Module curModule = mModules.get(position);
+		Device curDevice = curModule.getDevice();
+		Gate curGate = mController.getGatesModel().getGate(curDevice.getGateId());
 
 		// Title data
 		Bundle syncBundle = new Bundle();
@@ -205,14 +204,14 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// Last update data
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 		if (timeHelper != null) {
-			String dateTime = timeHelper.formatLastUpdate(curFacility.getLastUpdate(), curAdapter);
+			String dateTime = timeHelper.formatLastUpdate(curDevice.getLastUpdate(), curGate);
 			syncBundle.putString(Control.Intents.EXTRA_TEXT, dateTime);
 		}
 
 		// Title data
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.gallery_title);
-		headerBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getName());
+		headerBundle.putString(Control.Intents.EXTRA_TEXT, curModule.getName());
 
 		// Unit data
 		Bundle unitBundle = new Bundle();
@@ -220,12 +219,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 		if (unitsHelper != null) {
 			unitBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.unit);
-			unitBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringUnit(curDevice.getValue()));
+			unitBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringUnit(curModule.getValue()));
 		}
 
 		// Battery icon
 		Bundle batteryBundle = new Bundle();
-		if (curDevice.getFacility().getBattery() < MIN_BATTERY_STATE) {
+		if (curModule.getDevice().getBattery() < MIN_BATTERY_STATE) {
 			batteryBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
 			batteryBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, R.drawable.battery));
 		}
@@ -233,17 +232,17 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		// Icon data
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
-		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, curDevice.getIconResource()));
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, curModule.getIconResource()));
 		// iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils
-		// .getUriString(mContext, curDevice
+		// .getUriString(mContext, curModule
 		// .getTypeIconResource()));
 
 		// Value data
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
 		// valueBundle.putString(Control.Intents.EXTRA_TEXT,
-		// curDevice.getStringValueUnit(mContext));
-		valueBundle.putString(Control.Intents.EXTRA_TEXT, curDevice.getValue().getRawValue());
+		// curModule.getStringValueUnit(mContext));
+		valueBundle.putString(Control.Intents.EXTRA_TEXT, curModule.getValue().getRawValue());
 
 		item.layoutData = new Bundle[6];
 		item.layoutData[0] = headerBundle;
@@ -260,8 +259,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		Thread thLoc = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Device device = mDevices.get(lastPosition);
-				if (mController.getFacilitiesModel().refreshFacility(device.getFacility(), false)) {
+				Module module = mModules.get(lastPosition);
+				if (mController.getDevicesModel().refreshDevice(module.getDevice(), false)) {
 					sendListItem(createControlListItem(lastPosition));
 				}
 
@@ -275,12 +274,12 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mDevices = new ArrayList<Device>();
+				mModules = new ArrayList<Module>();
 
-				mController.getFacilitiesModel().reloadFacilitiesByAdapter(mAdapterId, true);
-				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapterId, mLocationStr);
-				for (Facility facility : facilities) {
-					mDevices.addAll(facility.getDevices());
+				mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
+				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGateId, mLocationStr);
+				for (Device device : devices) {
+					mModules.addAll(device.getModules());
 				}
 
 				resume();

@@ -11,14 +11,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.base.TrackDialogFragment;
 
 /**
  * About dialog
- * 
+ *
  * @author Martin Doudera
- * 
  */
 public class InfoDialogFragment extends TrackDialogFragment {
 
@@ -54,17 +54,17 @@ public class InfoDialogFragment extends TrackDialogFragment {
 
 			}
 		})
-		// .setNeutralButton(getString(R.string.website),
-		// new OnClickListener() {
-		// @Override
-		// public void onClick(DialogInterface dialog,
-		// int which) {
-		// Intent companyLink = new Intent(
-		// Intent.ACTION_VIEW,
-		// Uri.parse(getString(R.string.company_web)));
-		// startActivity(companyLink);
-		// }
-		// })
+				// .setNeutralButton(getString(R.string.website),
+				// new OnClickListener() {
+				// @Override
+				// public void onClick(DialogInterface dialog,
+				// int which) {
+				// Intent companyLink = new Intent(
+				// Intent.ACTION_VIEW,
+				// Uri.parse(getString(R.string.company_web)));
+				// startActivity(companyLink);
+				// }
+				// })
 				.create();
 	}
 }
