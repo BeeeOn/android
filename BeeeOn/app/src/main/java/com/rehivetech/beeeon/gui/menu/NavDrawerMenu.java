@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.menu;
+package com.rehivetech.beeeon.gui.menu;
 
 import android.content.Intent;
 import android.content.res.Configuration;

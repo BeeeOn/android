@@ -29,7 +29,7 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.menu.NavDrawerMenu;
+import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.util.Log;
 
 public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
