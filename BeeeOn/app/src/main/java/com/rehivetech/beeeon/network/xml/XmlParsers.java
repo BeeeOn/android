@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -184,8 +184,8 @@ public class XmlParsers {
 			break;
 		case ALGORITHMS:
 			getSecureAttrValue(Xconstants.ATYPE); // not used yet
-			// ArrayList<WatchDog>
-			result.data = parseWatchDog();
+			// ArrayList<Watchdog>
+			result.data = parseWatchdog();
 			break;
 		case ACCOUNTS:
 			// List<User>
@@ -541,21 +541,21 @@ public class XmlParsers {
 	 * @throws XmlPullParserException
 	 * @throws IOException
 	 */
-	private ArrayList<WatchDog> parseWatchDog() throws XmlPullParserException, IOException{
+	private ArrayList<Watchdog> parseWatchdog() throws XmlPullParserException, IOException{
 		String aid = getSecureAttrValue(Xconstants.AID);
 		mParser.nextTag();
 
-		ArrayList<WatchDog> result = new ArrayList<>();
+		ArrayList<Watchdog> result = new ArrayList<>();
 
 		if(!mParser.getName().equals(Xconstants.ALGORITHM))
 			return result;
 
 		do{
-			WatchDog watchDog = new WatchDog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
-			watchDog.setId(getSecureAttrValue(Xconstants.ID));
-			watchDog.setAdapterId(aid);
-			watchDog.setEnabled(getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0);
-			watchDog.setName(getSecureAttrValue(Xconstants.NAME));
+			Watchdog watchdog = new Watchdog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
+			watchdog.setId(getSecureAttrValue(Xconstants.ID));
+			watchdog.setAdapterId(aid);
+			watchdog.setEnabled(getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0);
+			watchdog.setName(getSecureAttrValue(Xconstants.NAME));
 
 			TreeMap<String, String> tDevices = new TreeMap<>();
 			TreeMap<String, String> tParams = new TreeMap<>();
@@ -575,24 +575,24 @@ public class XmlParsers {
 					mParser.nextTag();
 				}
 				else if(mParser.getName().equals(Xconstants.GEOFENCE)){
-					watchDog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
+					watchdog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
 					mParser.nextTag();
 				}
 				else{
 					String param = readText(Xconstants.PARAM);
 					tParams.put(position, param);
 					// FIXME: this is workaround cause server not returning <geo> tag .. when it's added, this will not be necessary
-					if(position.equals("1") && watchDog.getType() == WatchDog.TYPE_GEOFENCE && watchDog.getGeoRegionId() == null){
-						watchDog.setGeoRegionId(param);
+					if(position.equals("1") && watchdog.getType() == Watchdog.TYPE_GEOFENCE && watchdog.getGeoRegionId() == null){
+						watchdog.setGeoRegionId(param);
 					}
 				}
 
 			}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
 
-			watchDog.setModules(new ArrayList<>(tDevices.values()));
-			watchDog.setParams(new ArrayList<>(tParams.values()));
+			watchdog.setModules(new ArrayList<>(tDevices.values()));
+			watchdog.setParams(new ArrayList<>(tParams.values()));
 
-			result.add(watchDog);
+			result.add(watchdog);
 
 		}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
@@ -918,9 +918,9 @@ public class XmlParsers {
 	 * @return list of watchogs
 	 * @throws AppException
 	 */
-	public List<WatchDog> getDemoWatchDogsFromAsset(Context context, String filename) throws AppException {
+	public List<Watchdog> getDemoWatchdogsFromAsset(Context context, String filename) throws AppException {
 		Log.i(TAG, String.format("Loading watchdog from asset '%s'", filename));
-		List<WatchDog> watchdogs = new ArrayList<>();
+		List<Watchdog> watchdogs = new ArrayList<>();
 		InputStream stream = null;
 		try {
 			stream = new BufferedInputStream(context.getAssets().open(filename));
@@ -936,7 +936,7 @@ public class XmlParsers {
 					.set(NetworkError.PARAM_COM_VER_SERVER, version);
 			}
 
-			watchdogs = parseWatchDog();
+			watchdogs = parseWatchdog();
 		} catch (IOException | XmlPullParserException e) {
 			e.printStackTrace();
 		} finally {

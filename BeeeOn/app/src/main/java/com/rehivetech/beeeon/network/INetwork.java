@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.pair.LogDataPair;
 
@@ -362,15 +362,15 @@ public interface INetwork {
 	// /////////////////////////////////////ALGORITHMS//////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	boolean addWatchDog(WatchDog watchDog, String AdapterID);
+	boolean addWatchdog(Watchdog watchdog, String AdapterID);
 
-	List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterID);
+	List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterID);
 
-	List<WatchDog> getAllWatchDogs(String adapterID);
+	List<Watchdog> getAllWatchdogs(String adapterID);
 
-	boolean updateWatchDog(WatchDog watchDog, String AdapterId);
+	boolean updateWatchdog(Watchdog watchdog, String AdapterId);
 
-	boolean deleteWatchDog(WatchDog watchDog);
+	boolean deleteWatchdog(Watchdog watchdog);
 
 	boolean passBorder(String regionId, String type);
 

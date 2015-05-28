@@ -64,7 +64,7 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 		}
 
 		if (mWhat == ReloadWhat.WATCHDOGS) {
-			controller.getWatchDogsModel().reloadWatchDogsByAdapter(adapterId, mForceReload);
+			controller.getWatchdogsModel().reloadWatchdogsByAdapter(adapterId, mForceReload);
 		}
 		if (mWhat == ReloadWhat.ACHIEVEMENTS) {
 			controller.getAchievementsModel().reloadAchievementsByAdapter(adapterId, mForceReload);

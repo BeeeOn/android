@@ -115,7 +115,7 @@
     <string name="toast_no_uninitialized_devices">There are no uninitialized modules</string>
     <string name="toast_success_save_data">Data saved successfully</string>
     <string name="toast_fail_save_data">Failed saving data</string>
-    <string name="toast_wrong_or_no_watchdog_rule">Wrong or no WatchDog rule selected</string>
+    <string name="toast_wrong_or_no_watchdog_rule">Wrong or no Watchdog rule selected</string>
 	<string name="toast_achievement_title">Achievement unlocked!</string>
     <string name="toast_field_must_be_filled">This field must be filled!</string>
     <string name="toast_field_must_be_number">This field must be number!</string>
@@ -348,9 +348,9 @@
 	<string name="date_today">Today</string>
 	<string name="date_yesterday">Yesterday</string>
 
-    <!-- WatchDog -->
-    <string name="action_watchdog">WatchDog</string>
-    <string name="watchdog_rule">WatchDog Rule</string>
+    <!-- Watchdog -->
+    <string name="action_watchdog">Watchdog</string>
+    <string name="watchdog_rule">Watchdog Rule</string>
     <string name="watchdog_create">Create watchdog</string>
     <string name="treshold_value">Threshold value</string>
     <string name="watchdog_actor_change_state">Change actor\'s state</string>

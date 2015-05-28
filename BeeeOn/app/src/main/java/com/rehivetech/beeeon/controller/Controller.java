@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.model.GeofenceModel;
 import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.model.UninitializedFacilitiesModel;
 import com.rehivetech.beeeon.model.UsersModel;
-import com.rehivetech.beeeon.model.WatchDogsModel;
+import com.rehivetech.beeeon.model.WatchdogsModel;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -229,8 +229,8 @@ public final class Controller {
 		return (DeviceLogsModel) getModelInstance(DeviceLogsModel.class);
 	}
 
-	public WatchDogsModel getWatchDogsModel() {
-		return (WatchDogsModel) getModelInstance(WatchDogsModel.class);
+	public WatchdogsModel getWatchdogsModel() {
+		return (WatchdogsModel) getModelInstance(WatchdogsModel.class);
 	}
 
 	public GcmModel getGcmModel() {

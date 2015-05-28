@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.WatchDog;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.FalseAnswer;
 import com.rehivetech.beeeon.network.xml.ParsedMessage;
@@ -857,11 +857,11 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean addWatchDog(WatchDog watchDog, String adapterId){
-		ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchDog.getName(), adapterId, watchDog.getType(), watchDog.getModules(), watchDog.getParams(), watchDog.getGeoRegionId()));
+	public boolean addWatchdog(Watchdog watchdog, String adapterId){
+		ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchdog.getName(), adapterId, watchdog.getType(), watchdog.getModules(), watchdog.getParams(), watchdog.getGeoRegionId()));
 
 		if (msg.getState() == State.ALGCREATED) {
-			watchDog.setId((String) msg.data);
+			watchdog.setId((String) msg.data);
 			return true;
 		}
 
@@ -870,11 +870,11 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<WatchDog> getWatchDogs(ArrayList<String> watchDogIds, String adapterId){
-		ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchDogIds));
+	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String adapterId){
+		ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, adapterId, watchdogIds));
 
 		if(msg.getState() == State.ALGORITHMS){
-			return (ArrayList<WatchDog>) msg.data;
+			return (ArrayList<Watchdog>) msg.data;
 		}
 
 		throw processFalse(msg);
@@ -882,19 +882,19 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<WatchDog> getAllWatchDogs(String adapterID){
+	public List<Watchdog> getAllWatchdogs(String adapterID){
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, adapterID));
 
 		if(msg.getState() == State.ALGORITHMS){
-			return (ArrayList<WatchDog>) msg.data;
+			return (ArrayList<Watchdog>) msg.data;
 		}
 
 		throw processFalse(msg);
 	}
 
 	@Override
-	public boolean updateWatchDog(WatchDog watchDog, String AdapterId){
-		ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchDog.getName(), watchDog.getId(), AdapterId, watchDog.getType(), watchDog.isEnabled(), watchDog.getModules(), watchDog.getParams(), watchDog.getGeoRegionId()));
+	public boolean updateWatchdog(Watchdog watchdog, String AdapterId){
+		ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchdog.getName(), watchdog.getId(), AdapterId, watchdog.getType(), watchdog.isEnabled(), watchdog.getModules(), watchdog.getParams(), watchdog.getGeoRegionId()));
 
 		if(msg.getState() == State.TRUE)
 			return true;
@@ -903,8 +903,8 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteWatchDog(WatchDog watchDog){
-		ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchDog.getId()));
+	public boolean deleteWatchdog(Watchdog watchdog){
+		ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchdog.getId()));
 
 		if(msg.getState() == State.TRUE)
 			return true;

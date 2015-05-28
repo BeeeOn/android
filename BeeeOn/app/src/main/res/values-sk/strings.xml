@@ -269,7 +269,7 @@
     <string name="tut_add_sensor_text_2">Počas odpočítavania zatraste krátko so senzorom alebo stlačte párovacie tlačidlo na aktore</string>
 
 
-    <!-- WatchDog -->
+    <!-- Watchdog -->
     <string name="action_watchdog">Sledovač</string>
     <string name="watchdog_rule">Pravidlo sledovača</string>
     <string name="treshold_value">Prahová hodnota</string>

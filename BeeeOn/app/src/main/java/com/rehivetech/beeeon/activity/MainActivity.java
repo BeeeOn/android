@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
-import com.rehivetech.beeeon.activity.fragment.WatchDogListFragment;
+import com.rehivetech.beeeon.activity.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
@@ -52,7 +52,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	private NavDrawerMenu mNavDrawerMenu;
 	private SensorListFragment mListDevices;
 	private CustomViewFragment mCustomView;
-    private WatchDogListFragment mWatchDogApp;
+    private WatchdogListFragment mWatchdogApp;
     private Toolbar mToolbar;
 
 	private static final int BACK_TIME_INTERVAL = 2100;
@@ -117,7 +117,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		// creates fragments
 		mListDevices = new SensorListFragment();
 		mCustomView = new CustomViewFragment();
-		mWatchDogApp = new WatchDogListFragment();
+		mWatchdogApp = new WatchdogListFragment();
 
 		if (savedInstanceState != null) {
 			if (!savedInstanceState.getBoolean(IS_DRAWER_OPEN))
@@ -147,7 +147,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
             ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
         }
         else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
+            ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
         }
 		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
 			Intent intent = new Intent(this, ProfileDetailActivity.class);
@@ -360,8 +360,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
             ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
         }
         else if(mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)){
-            mWatchDogApp = new WatchDogListFragment();
-            ft.replace(R.id.content_frame, mWatchDogApp, FRG_TAG_WAT);
+            mWatchdogApp = new WatchdogListFragment();
+            ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
         }
 		else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)){
 			Intent intent = new Intent(this, ProfileDetailActivity.class);

@@ -329,7 +329,7 @@
 	<string name="date_today">Dnes</string>
 	<string name="date_yesterday">Včera</string>
 
-    <!-- WatchDog -->
+    <!-- Watchdog -->
     <string name="action_watchdog">Hlídač</string>
     <string name="watchdog_rule">Pravidlo hlídače</string>
     <string name="treshold_value">Prahová Hodnota</string>
