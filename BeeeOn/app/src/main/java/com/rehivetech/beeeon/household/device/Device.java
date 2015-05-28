@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class Device implements IIdentifier {
 	protected String mAddress;
-	protected String mAdapterId;
+	protected String mGateId;
 	protected String mLocationId;
 	protected boolean mInitialized;
 	protected RefreshInterval mRefreshInterval;
@@ -131,16 +131,16 @@ public class Device implements IIdentifier {
 	 * @return gate id
 	 */
 	public String getGateId() {
-		return mAdapterId;
+		return mGateId;
 	}
 
 	/**
 	 * Setting gate id of mDevice
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 */
-	public void setAdapterId(String adapterId) {
-		mAdapterId = adapterId;
+	public void setGateId(String gateId) {
+		mGateId = gateId;
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class Device implements IIdentifier {
 	 * @return
 	 */
 	public String toDebugString() {
-		return String.format("Id: %s\nGate: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId, mInitialized, mBattery,
+		return String.format("Id: %s\nGate: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mGateId, mLocationId, mInitialized, mBattery,
 				mRefreshInterval.getInterval(), Integer.toString(mModules.size()));
 	}
 

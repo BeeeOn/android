@@ -88,7 +88,7 @@
     <string name="toast_login_failed">Prihlásenie zlyhalo</string>
     <string name="toast_adapter_activate_failed">Zlyhalo pridanie brány</string>
     <string name="toast_adapter_activated">Brána bola aktivovaná</string>
-    <string name="toast_adapter_removed">Brána bola odstránená</string>
+    <string name="toast_gate_removed">Brána bola odstránená</string>
     <string name="toast_no_adapter">Nemáte žiadnu registrovanú bránu</string>
     <string name="toast_ignore_uninitialized_info">Neskôr môžete pridať ďalšie zariadenie ťuknutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všetkých zariadení</string>
@@ -116,7 +116,7 @@
     <string name="gate">Brány</string>
     <string name="no_location">Žiadne umiestnenia</string>
     <string name="no_custom_view">Požívateľský pohľad nie je k dispozícii</string>
-    <string name="no_adapters">Nemáte žiadne brány</string>
+    <string name="no_gates">Nemáte žiadne brány</string>
     <string name="menu_managment">Správa domácnosti</string>
     <string name="menu_control">Prehľad</string>
     <string name="menu_dashboard">Grafy</string>
@@ -373,7 +373,7 @@
     <string name="dialog_location_select">Vyberte miesto</string>
     <string name="household">Domácnosť</string>
     <string name="notification_name_link">Spoj</string>
-    <string name="notification_name_new_adapter">Pridaná nová brána</string>
+    <string name="notification_name_new_gate">Pridaná nová brána</string>
     <string name="notification_name_new_sensor">Pridané nové zariadenie</string>
     <string name="place_must_be_filled">Poloha musí byť vyplnená</string>
     <string name="profile_category_friends">Priatelia</string>

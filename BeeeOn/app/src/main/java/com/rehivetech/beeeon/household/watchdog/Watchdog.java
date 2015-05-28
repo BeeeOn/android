@@ -36,7 +36,7 @@ public class Watchdog implements INameIdentifier {
 	private String mId;
 	private String mName;
 
-	private String mAdapterId;
+	private String mGateId;
 
 	private String mGeoRegionId;
 
@@ -78,11 +78,11 @@ public class Watchdog implements INameIdentifier {
 	}
 
 	public String getGateId() {
-		return mAdapterId;
+		return mGateId;
 	}
 
-	public void setGateId(String adapterId) {
-		mAdapterId = adapterId;
+	public void setGateId(String gateId) {
+		mGateId = gateId;
 	}
 
 	public String getName() {

@@ -34,7 +34,7 @@ import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
 import com.rehivetech.beeeon.arrayadapter.MenuListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.SwitchGateTask;
-import com.rehivetech.beeeon.asynctask.UnregisterAdapterTask;
+import com.rehivetech.beeeon.asynctask.UnregisterGateTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
@@ -60,7 +60,7 @@ public class NavDrawerMenu {
 	private String mDrawerTitle = "BeeeOn";
 
 	private String mActiveItem;
-	private String mActiveAdapterId;
+	private String mActiveGateId;
 
 	private MenuListAdapter mMenuAdapter;
 
@@ -105,7 +105,7 @@ public class NavDrawerMenu {
 							break;
 						// if it is not chosen, switch to selected gate
 						if (!gate.getId().equals(mSelectedMenuItem.getId())) {
-							doSwitchAdapterTask(mSelectedMenuItem.getId());
+							doSwitchGateTask(mSelectedMenuItem.getId());
 						}
 						break;
 					case LOCATION:
@@ -152,7 +152,7 @@ public class NavDrawerMenu {
 						break;
 					case GATE:
 						Log.i(TAG, "Long press - gate");
-						mMode = mActivity.startSupportActionMode(new ActionModeAdapters());
+						mMode = mActivity.startSupportActionMode(new ActionModeGates());
 						mSelectedMenuItem.setIsSelected();
 						break;
 					default:
@@ -238,7 +238,7 @@ public class NavDrawerMenu {
 	private void changeMenuItem(String ID, boolean closeDrawer) {
 		mActiveItem = ID;
 		// TODO
-		mActivity.setActiveGateId(mActiveAdapterId);
+		mActivity.setActiveGateId(mActiveGateId);
 		mActivity.setActiveMenuID(mActiveItem);
 		mActivity.redrawMainFragment();
 
@@ -248,7 +248,7 @@ public class NavDrawerMenu {
 		}
 	}
 
-	private void doSwitchAdapterTask(String adapterId) {
+	private void doSwitchGateTask(String gateId) {
 		SwitchGateTask switchGateTask = new SwitchGateTask(mActivity, false);
 
 		switchGateTask.setListener(new CallbackTaskListener() {
@@ -264,18 +264,18 @@ public class NavDrawerMenu {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(switchGateTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(switchGateTask, gateId);
 	}
 
-	private void doUnregisterAdapterTask(String adapterId) {
-		UnregisterAdapterTask unregisterAdapterTask = new UnregisterAdapterTask(mActivity);
+	private void doUnregisterGateTask(String gateId) {
+		UnregisterGateTask unregisterGateTask = new UnregisterGateTask(mActivity);
 
-		unregisterAdapterTask.setListener(new CallbackTaskListener() {
+		unregisterGateTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(mActivity, R.string.toast_adapter_removed, Toast.LENGTH_LONG).show();
+					Toast.makeText(mActivity, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
 					mActivity.setActiveGateAndMenu();
 					mActivity.redraw();
 				}
@@ -283,7 +283,7 @@ public class NavDrawerMenu {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(unregisterAdapterTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(unregisterGateTask, gateId);
 	}
 
 	public MenuListAdapter getMenuAdapter() {
@@ -335,7 +335,7 @@ public class NavDrawerMenu {
 			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null) ? mActiveItem.equals(Constants.GUI_MENU_WATCHDOG) : false));
 
 		} else {
-			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_adapters)));
+			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_gates)));
 
 		}
 
@@ -362,15 +362,15 @@ public class NavDrawerMenu {
 	}
 
 	public void setGateId(String adaID) {
-		mActiveAdapterId = adaID;
+		mActiveGateId = adaID;
 	}
 
-	class ActionModeAdapters implements Callback {
+	class ActionModeGates implements Callback {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.adapter_menu, menu);
+			inflater.inflate(R.menu.gate_menu, menu);
 
 			if (!mController.isUserAllowed(mController.getGatesModel().getGate(mSelectedMenuItem.getId()).getRole())) {
 				menu.getItem(0).setVisible(false);// EDIT
@@ -389,7 +389,7 @@ public class NavDrawerMenu {
 		public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 			Log.d(TAG, "ActionMode Gate - item id: " + item.getItemId());
 			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST GATE
-				doUnregisterAdapterTask(mSelectedMenuItem.getId());
+				doUnregisterGateTask(mSelectedMenuItem.getId());
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);
 				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mSelectedMenuItem.getId());

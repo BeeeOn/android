@@ -94,8 +94,8 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 			case WATCHDOG:
 				notification = WatchdogNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case ADAPTER_ADDED:
-				notification = AdapterAddedNotification.getInstance(msgId, time, type, bundle);
+			case GATE_ADDED:
+				notification = GateAddedNotification.getInstance(msgId, time, type, bundle);
 				break;
 			case SENSOR_ADDED:
 				notification = SensorAddedNotification.getInstance(msgId, time, type, bundle);
@@ -112,8 +112,8 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 			case SENSOR_LOW_SIGNAL:
 				notification = SensorLowSignalNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case ADAPTER_OFFLINE:
-				notification = AdapterOfflineNotification.getInstance(msgId, time, type, bundle);
+			case GATE_OFFLINE:
+				notification = GateOfflineNotification.getInstance(msgId, time, type, bundle);
 				break;
 			case ACHIEVEMENT:
 				notification = AchievementNotification.getInstance(msgId, time, type, bundle);

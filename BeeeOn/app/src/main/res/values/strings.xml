@@ -107,7 +107,7 @@
 	<string name="toast_auth_provider_error">Error during authorization process</string>
     <string name="toast_adapter_activate_failed">Failed to activate gateway</string>
     <string name="toast_adapter_activated">Gateway has been activated</string>
-    <string name="toast_adapter_removed">Gateway has been removed</string>
+    <string name="toast_gate_removed">Gateway has been removed</string>
     <string name="toast_no_adapter">You have no registered gateway</string>
     <string name="toast_ignore_uninitialized_info">You can add these modules later by clicking on (+)</string>
     <string name="toast_empty_sensor_name">Please fill names of all modules</string>
@@ -142,7 +142,7 @@
     <string name="gate">Gateways</string>
     <string name="no_location">No locations</string>
     <string name="no_custom_view">No custom views</string>
-    <string name="no_adapters">You have no gateways</string>
+    <string name="no_gates">You have no gateways</string>
     <string name="menu_managment">Management</string>
     <string name="menu_control">Overview</string>
     <string name="menu_dashboard">Graphs</string>
@@ -393,7 +393,7 @@
 	<string name="dialog_title_set_bioler_mode">Choose boiler mode</string>
 	<string name="dialog_title_set_temperature">Choose temperature</string>
 	<string name="action_notification">Notifications</string>
-    <string name="notification_name_new_adapter">New gateway added</string>
+    <string name="notification_name_new_gate">New gateway added</string>
     <string name="notification_name_new_sensor">New module added</string>
     <string name="notification_name_link">Link</string>
     <string name="widget_location_list_title">BeeeOn location</string>

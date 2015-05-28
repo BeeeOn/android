@@ -22,9 +22,9 @@ public final class Action {
 	}
 
 	@Nullable
-	static public void getSensorDetailIntent(Context context, int adapterId, String sensorId, int type) {
+	static public void getSensorDetailIntent(Context context, int gateId, String sensorId, int type) {
 		Controller controller = Controller.getInstance(context);
-		Device device = controller.getDevicesModel().getFacility(String.valueOf(adapterId), sensorId);
+		Device device = controller.getDevicesModel().getFacility(String.valueOf(gateId), sensorId);
 		if (device == null) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
@@ -51,7 +51,7 @@ public final class Action {
 		// Sensor exists, we can open activity
 		Intent intent = new Intent(context, SensorDetailActivity.class);
 		intent.putExtra(SensorDetailActivity.EXTRA_MODULE_ID, module.getId());
-		intent.putExtra(SensorDetailActivity.EXTRA_GATE_ID, String.valueOf(adapterId));
+		intent.putExtra(SensorDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
 		intent.putExtra(SensorDetailActivity.EXTRA_ACTIVE_POS, pos);
 
 		context.startActivity(intent);

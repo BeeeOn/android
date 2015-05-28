@@ -18,12 +18,12 @@ import java.io.IOException;
 public class SensorAddedNotification extends VisibleNotification {
 	public static final String TAG = SensorAddedNotification.class.getSimpleName();
 
-	private int mAdapterId;
+	private int mGateId;
 	private String mSensorId;
 
-	private SensorAddedNotification(int msgid, long time, NotificationType type, boolean read, int adapterId, String sensorId) {
+	private SensorAddedNotification(int msgid, long time, NotificationType type, boolean read, int gateId, String sensorId) {
 		super(msgid, time, type, read);
-		mAdapterId = adapterId;
+		mGateId = gateId;
 		mSensorId = sensorId;
 	}
 
@@ -31,15 +31,15 @@ public class SensorAddedNotification extends VisibleNotification {
 		SensorAddedNotification instance = null;
 
 		try {
-			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
+			Integer gateId = Integer.valueOf(bundle.getString(Xconstants.AID));
 			String moduleId = bundle.getString(Xconstants.DID);
 
-			if (adapterId == null || moduleId == null) {
+			if (gateId == null || moduleId == null) {
 				Log.d(TAG, "SensorAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new SensorAddedNotification(msgId, time, type, false, adapterId, moduleId);
+			instance = new SensorAddedNotification(msgId, time, type, false, gateId, moduleId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -48,7 +48,7 @@ public class SensorAddedNotification extends VisibleNotification {
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
-		Integer adapterId = null;
+		Integer gateId = null;
 		String moduleId = null;
 
 		String text = null;
@@ -70,7 +70,7 @@ public class SensorAddedNotification extends VisibleNotification {
 
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase(Xconstants.AID)) {
-						adapterId = Integer.valueOf(text);
+						gateId = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
 						moduleId = text;
 					}
@@ -81,12 +81,12 @@ public class SensorAddedNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (adapterId == null || moduleId == null) {
+		if (gateId == null || moduleId == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new SensorAddedNotification(msgId, time, type, isRead, adapterId, moduleId);
+		return new SensorAddedNotification(msgId, time, type, isRead, gateId, moduleId);
 
 	}
 

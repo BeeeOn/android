@@ -17,7 +17,7 @@ import java.util.Observable;
 public class AchievementList extends Observable {
 	private static final String TAG = AchievementList.class.getSimpleName();
 	private static AchievementList mInstance = null;
-	private static String mAdapterId = "0";
+	private static String mGateId = "0";
 	private Context mContext;
 	private Controller mController;
 
@@ -33,41 +33,41 @@ public class AchievementList extends Observable {
 		mController = controller;
 		allDataDownloaded = false;
 		allAchievementList = null;
-		doReloadAchievementsTask(mAdapterId, true);
+		doReloadAchievementsTask(mGateId, true);
 	}
 
 	public static AchievementList getInstance(Context context) {
 		Controller controller = Controller.getInstance(context);
-		String oldId = mAdapterId;
+		String oldId = mGateId;
 		if (controller.getActiveGate() != null)
-			mAdapterId = controller.getActiveGate().getId();
+			mGateId = controller.getActiveGate().getId();
 
-		if (mInstance == null || !oldId.equals(mAdapterId)) {
+		if (mInstance == null || !oldId.equals(mGateId)) {
 			mInstance = new AchievementList(context, controller);
 		}
 		return mInstance;
 	}
 
 	public static void cleanAll() {
-		mAdapterId = null;
+		mGateId = null;
 		mInstance = null;
 	}
 
-	public void doReloadAchievementsTask(final String adapterId, boolean forceReload) {
+	public void doReloadAchievementsTask(final String gateId, boolean forceReload) {
 		ReloadGateDataTask reloadAchievementsTask = new ReloadGateDataTask(mContext, forceReload, ReloadGateDataTask.ReloadWhat.ACHIEVEMENTS);
 
 		reloadAchievementsTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "successfully downloaded data");
-				allAchievementList = mController.getAchievementsModel().getAchievements(adapterId);
+				allAchievementList = mController.getAchievementsModel().getAchievements(gateId);
 				updateData();
 				allDataDownloaded = true;
 				setChanged();
 				notifyObservers("achievements");
 			}
 		});
-		reloadAchievementsTask.execute(adapterId);
+		reloadAchievementsTask.execute(gateId);
 	}
 
 	public boolean isDownloaded() {

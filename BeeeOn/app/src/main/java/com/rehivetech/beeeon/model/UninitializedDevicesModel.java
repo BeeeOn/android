@@ -15,7 +15,7 @@ public class UninitializedDevicesModel extends BaseModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	private final MultipleDataHolder<Device> mUninitializedDevices = new MultipleDataHolder<>(); // adapterId => mDevice dataHolder
+	private final MultipleDataHolder<Device> mUninitializedDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
 
 	public UninitializedDevicesModel(INetwork network) {
 		super(network);
@@ -24,11 +24,11 @@ public class UninitializedDevicesModel extends BaseModel {
 	/**
 	 * Return list of all uninitialized devices from gate
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @return List of uninitialized devices (or empty list)
 	 */
-	public List<Device> getUninitializedDevicesByGate(String adapterId) {
-		List<Device> devices = mUninitializedDevices.getObjects(adapterId);
+	public List<Device> getUninitializedDevicesByGate(String gateId) {
+		List<Device> devices = mUninitializedDevices.getObjects(gateId);
 
 		// Sort result devices by id
 		Collections.sort(devices, new IdentifierComparator());
@@ -39,17 +39,17 @@ public class UninitializedDevicesModel extends BaseModel {
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadUninitializedDevicesByGate(String adapterId, boolean forceReload) throws AppException {
-		if (!forceReload && !mUninitializedDevices.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
+	public synchronized boolean reloadUninitializedDevicesByGate(String gateId, boolean forceReload) throws AppException {
+		if (!forceReload && !mUninitializedDevices.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		mUninitializedDevices.setObjects(adapterId, mNetwork.getNewDevices(adapterId));
-		mUninitializedDevices.setLastUpdate(adapterId, DateTime.now());
+		mUninitializedDevices.setObjects(gateId, mNetwork.getNewDevices(gateId));
+		mUninitializedDevices.setLastUpdate(gateId, DateTime.now());
 
 		return true;
 	}

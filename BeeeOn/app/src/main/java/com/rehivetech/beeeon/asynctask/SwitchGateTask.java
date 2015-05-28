@@ -18,7 +18,7 @@ public class SwitchGateTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String gateId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.setActiveAdapter(gateId, mForceReload);
+		return controller.setActiveGate(gateId, mForceReload);
 	}
 
 }

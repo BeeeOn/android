@@ -21,7 +21,7 @@ public class Location implements INameIdentifier {
 	 */
 	public static final String NO_LOCATION_TYPE = "0";
 
-	protected final String mAdapterId;
+	protected final String mGateId;
 	protected String mId = "";
 	protected String mName = "";
 	protected String mType;
@@ -84,12 +84,12 @@ public class Location implements INameIdentifier {
 		}
 	}
 
-	public Location(String id, String name, String adapterId, String type) {
+	public Location(String id, String name, String gateId, String type) {
 		setId(id);
 		setName(name);
 		setType(type);
 
-		mAdapterId = adapterId;
+		mGateId = gateId;
 	}
 
 	/**
@@ -97,8 +97,8 @@ public class Location implements INameIdentifier {
 	 *
 	 * @return gate id
 	 */
-	public String getAdapterId() {
-		return mAdapterId;
+	public String getGateId() {
+		return mGateId;
 	}
 
 	public String getId() {

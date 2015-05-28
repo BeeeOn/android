@@ -21,7 +21,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 
 	private Context mContext;
 
-	private String mAdapter;
+	private String mGate;
 	private String mPid;
 	private String mAid;
 	private String mName;
@@ -142,7 +142,7 @@ public class AchievementListItem implements IIdentifier, Comparable<AchievementL
 	}
 
 	public void setAid(String aid) {
-		mAdapter = aid;
+		mGate = aid;
 	}
 
 	public void setContext(Context c) {

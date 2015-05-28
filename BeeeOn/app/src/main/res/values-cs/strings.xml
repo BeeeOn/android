@@ -98,7 +98,7 @@
     <string name="toast_auth_provider_error">Nastala chyba během procesu autorizace</string>
     <string name="toast_adapter_activate_failed">Selhalo přidání brány</string>
     <string name="toast_adapter_activated">Brána byla aktivována</string>
-    <string name="toast_adapter_removed">Brána byla odstraněna</string>
+    <string name="toast_gate_removed">Brána byla odstraněna</string>
     <string name="toast_no_adapter">Nemáte žádnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všech zařízení</string>
@@ -131,7 +131,7 @@
     <string name="gate">Brány</string>
     <string name="no_location">Žádná umístění</string>
     <string name="no_custom_view">Uživatelský pohled není k dispozici</string>
-    <string name="no_adapters">Nemáte žádné brány</string>
+    <string name="no_gates">Nemáte žádné brány</string>
     <string name="menu_managment">Správa domácnosti</string>
     <string name="menu_control">Přehled</string>
     <string name="menu_dashboard">Grafy</string>
@@ -398,7 +398,7 @@
 	<string name="action_notification">Notifikace</string>
 	<string name="dev_actor_boiler_operation_mode">Režim provozu kotle</string>
 	<string name="dev_actor_boiler_operation_type">Typ provozu kotle</string>
-	<string name="notification_name_new_adapter">Přidána nová brána</string>
+	<string name="notification_name_new_gate">Přidána nová brána</string>
 	<string name="notification_name_new_sensor">Přidáno nové zařízení</string>
 	<string name="notification_name_link">Spoj</string>
     <string name="sensor_name_label">Meno zařízení</string>

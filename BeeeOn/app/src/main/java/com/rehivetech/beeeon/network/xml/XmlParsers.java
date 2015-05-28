@@ -349,7 +349,7 @@ public class XmlParsers {
 	private void parseInnerDevs(List<Device> result, String aid, boolean init) throws XmlPullParserException, IOException {
 		do { // go through devs (devices)
 			Device device = new Device();
-			device.setAdapterId(aid);
+			device.setGateId(aid);
 			// mDevice.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
 			// true);
 			device.setInitialized(init);

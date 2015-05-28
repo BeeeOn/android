@@ -140,7 +140,7 @@ public interface INetwork {
 	 * @param adapterID of wanted gate
 	 * @return Gate
 	 */
-	List<Device> initAdapter(String adapterID);
+	List<Device> initGate(String adapterID);
 
 	/**
 	 * Method change gate id

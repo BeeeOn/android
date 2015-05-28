@@ -14,7 +14,7 @@ public class WatchdogsModel extends BaseModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	private final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>(); // adapterId => watchdog dataHolder
+	private final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>(); // gateId => watchdog dataHolder
 
 	public WatchdogsModel(INetwork network) {
 		super(network);
@@ -23,22 +23,22 @@ public class WatchdogsModel extends BaseModel {
 	/**
 	 * Returns a watchdog by parameters
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param id
 	 * @return
 	 */
-	public Watchdog getWatchdog(String adapterId, String id) {
-		return mWatchdogs.getObject(adapterId, id);
+	public Watchdog getWatchdog(String gateId, String id) {
+		return mWatchdogs.getObject(gateId, id);
 	}
 
 	/**
 	 * Return list of watchdogs from a gate
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @return
 	 */
-	public List<Watchdog> getWatchdogsByAdapter(String adapterId) {
-		List<Watchdog> watchdogs = mWatchdogs.getObjects(adapterId);
+	public List<Watchdog> getWatchdogsByGate(String gateId) {
+		List<Watchdog> watchdogs = mWatchdogs.getObjects(gateId);
 
 		// Sort result devices by name, id
 		Collections.sort(watchdogs, new NameIdentifierComparator());
@@ -51,17 +51,17 @@ public class WatchdogsModel extends BaseModel {
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param forceReload
 	 * @return
 	 */
-	public boolean reloadWatchdogsByGate(String adapterId, boolean forceReload) {
-		if (!forceReload && !mWatchdogs.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
+	public boolean reloadWatchdogsByGate(String gateId, boolean forceReload) {
+		if (!forceReload && !mWatchdogs.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		mWatchdogs.setObjects(adapterId, mNetwork.getAllWatchdogs(adapterId));
-		mWatchdogs.setLastUpdate(adapterId, DateTime.now());
+		mWatchdogs.setObjects(gateId, mNetwork.getAllWatchdogs(gateId));
+		mWatchdogs.setLastUpdate(gateId, DateTime.now());
 
 		return true;
 	}
@@ -108,11 +108,11 @@ public class WatchdogsModel extends BaseModel {
 	 * @return
 	 */
 	public boolean addWatchdog(Watchdog watchdog) {
-		String adapterId = watchdog.getGateId();
+		String gateId = watchdog.getGateId();
 
-		if (mNetwork.addWatchdog(watchdog, adapterId)) {
+		if (mNetwork.addWatchdog(watchdog, gateId)) {
 			// Watchdog was updated on server, update it in map too
-			mWatchdogs.addObject(adapterId, watchdog);
+			mWatchdogs.addObject(gateId, watchdog);
 			return true;
 		}
 

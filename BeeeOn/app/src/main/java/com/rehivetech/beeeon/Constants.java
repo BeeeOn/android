@@ -29,7 +29,7 @@ public final class Constants {
 	 * Persistence's shared preferences
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
-	public static final String PERSISTENCE_PREF_ACTIVE_ADAPTER = "active_adapter";
+	public static final String PERSISTENCE_PREF_ACTIVE_GATE = "active_adapter";
 	public static final String PERSISTENCE_PREF_IGNORE_NO_GATE = "ignore_no_adapter";
 	public static final String PERSISTENCE_PREF_LAST_LOCATION = "location_%s";
 	public static final String PERSISTENCE_PREF_SW2_ADAPTER = "pref_sw2_adapter";

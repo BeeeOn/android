@@ -18,13 +18,13 @@ import java.io.IOException;
 public class SensorLowBatteryNotification extends VisibleNotification {
 	public static final String TAG = SensorLowBatteryNotification.class.getSimpleName();
 
-	private int mAdapterId;
+	private int mGateId;
 	private String mSensorId;
 	private int mBatteryLevel;
 
-	private SensorLowBatteryNotification(int msgid, long time, NotificationType type, boolean read, int adapterId, String sensorId, int batteryLevel) {
+	private SensorLowBatteryNotification(int msgid, long time, NotificationType type, boolean read, int gateId, String sensorId, int batteryLevel) {
 		super(msgid, time, type, read);
-		mAdapterId = adapterId;
+		mGateId = gateId;
 		mSensorId = sensorId;
 		mBatteryLevel = batteryLevel;
 	}
@@ -33,16 +33,16 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 		SensorLowBatteryNotification instance = null;
 
 		try {
-			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
+			Integer gateId = Integer.valueOf(bundle.getString(Xconstants.AID));
 			String moduleId = bundle.getString(Xconstants.DID);
 			Integer batterylevel = Integer.valueOf(bundle.getString(Xconstants.BATTERY));
 
-			if (adapterId == null || moduleId == null || batterylevel == null) {
+			if (gateId == null || moduleId == null || batterylevel == null) {
 				Log.d(TAG, "SensorAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new SensorLowBatteryNotification(msgId, time, type, false, adapterId, moduleId, batterylevel);
+			instance = new SensorLowBatteryNotification(msgId, time, type, false, gateId, moduleId, batterylevel);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -51,7 +51,7 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
-		Integer adapterId = null;
+		Integer gateId = null;
 		String moduleId = null;
 		Integer batteryLevel = null;
 
@@ -74,7 +74,7 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase(Xconstants.AID)) {
-						adapterId = Integer.valueOf(text);
+						gateId = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
 						moduleId = text;
 					} else if (tagname.equalsIgnoreCase(Xconstants.BATTERY)) {
@@ -87,12 +87,12 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (adapterId == null || moduleId == null || batteryLevel == null) {
+		if (gateId == null || moduleId == null || batteryLevel == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new SensorLowBatteryNotification(msgId, time, type, isRead, adapterId, moduleId, batteryLevel);
+		return new SensorLowBatteryNotification(msgId, time, type, isRead, gateId, moduleId, batteryLevel);
 
 	}
 

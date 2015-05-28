@@ -342,7 +342,7 @@ public class WidgetService extends Service {
 						usedDevices.add((Device) refObj);
 					} else if (refObj instanceof Location) {
 						Location loc = (Location) refObj;
-						mController.getLocationsModel().reloadLocationsByGate(loc.getAdapterId(), false); // TODO load only necessary locations
+						mController.getLocationsModel().reloadLocationsByGate(loc.getGateId(), false); // TODO load only necessary locations
 					} else if (refObj instanceof LogDataPair) {
 						LogDataPair logPair = (LogDataPair) refObj;
 						mController.getModuleLogsModel().reloadModuleLog(logPair);

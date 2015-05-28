@@ -5,9 +5,9 @@ import android.content.Context;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 
-public class UnregisterAdapterTask extends CallbackTask<String> {
+public class UnregisterGateTask extends CallbackTask<String> {
 
-	public UnregisterAdapterTask(Context context) {
+	public UnregisterGateTask(Context context) {
 		super(context);
 	}
 
@@ -20,7 +20,7 @@ public class UnregisterAdapterTask extends CallbackTask<String> {
 		// Unegister gate and reset activeGate
 		if (controller.getGatesModel().unregisterGate(adapterId, controller.getActualUser())) {
 			if (activeGate != null && activeGate.getId().equals(adapterId)) {
-				controller.setActiveAdapter("", false);
+				controller.setActiveGate("", false);
 			}
 			return true;
 		}

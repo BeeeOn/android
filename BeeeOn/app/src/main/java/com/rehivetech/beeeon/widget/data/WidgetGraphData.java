@@ -106,7 +106,7 @@ public class WidgetGraphData extends WidgetModuleData {
 
 			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
 			Device device = new Device();
-			device.setAdapterId(widgetAdapterId);
+			device.setGateId(widgetAdapterId);
 			device.setAddress(ids[0]);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));

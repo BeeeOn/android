@@ -547,7 +547,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddRoom(String bt, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LTYPE, location.getType(), Xconstants.LNAME,
+		return createComAttribsVariant(Xconstants.STATE, ADDROOM, Xconstants.BT, bt, Xconstants.AID, location.getGateId(), Xconstants.LTYPE, location.getType(), Xconstants.LNAME,
 				location.getName());
 	}
 
@@ -596,7 +596,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeleteRoom(String bt, Location location) {
-		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.BT, bt, Xconstants.AID, location.getAdapterId(), Xconstants.LID, location.getId());
+		return createComAttribsVariant(Xconstants.STATE, DELROOM, Xconstants.BT, bt, Xconstants.AID, location.getGateId(), Xconstants.LID, location.getId());
 	}
 
 	/**

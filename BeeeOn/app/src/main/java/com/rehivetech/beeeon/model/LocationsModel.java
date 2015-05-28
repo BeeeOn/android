@@ -19,15 +19,15 @@ public class LocationsModel extends BaseModel {
 
 	private final String mNoLocationName;
 
-	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // adapterId => location dataHolder
+	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // gateId => location dataHolder
 
 	public LocationsModel(INetwork network, Context context) {
 		super(network);
 		mNoLocationName = context.getString(R.string.loc_none);
 	}
 
-	private Location createNoLocation(String adapterId) {
-		return new Location(Location.NO_LOCATION_ID, mNoLocationName, adapterId, Location.NO_LOCATION_TYPE);
+	private Location createNoLocation(String gateId) {
+		return new Location(Location.NO_LOCATION_ID, mNoLocationName, gateId, Location.NO_LOCATION_TYPE);
 	}
 
 	/**
@@ -36,13 +36,13 @@ public class LocationsModel extends BaseModel {
 	 * @param id
 	 * @return Location if found, null otherwise.
 	 */
-	public Location getLocation(String adapterId, String id) {
+	public Location getLocation(String gateId, String id) {
 		// Support "no location"
 		if (id.equals(Location.NO_LOCATION_ID)) {
-			return createNoLocation(adapterId);
+			return createNoLocation(gateId);
 		}
 
-		return mLocations.getObject(adapterId, id);
+		return mLocations.getObject(gateId, id);
 	}
 
 	/**
@@ -50,14 +50,14 @@ public class LocationsModel extends BaseModel {
 	 *
 	 * @return List of locations (or empty list)
 	 */
-	public List<Location> getLocationsByGate(String adapterId) {
-		List<Location> locations = mLocations.getObjects(adapterId);
+	public List<Location> getLocationsByGate(String gateId) {
+		List<Location> locations = mLocations.getObjects(gateId);
 
 		// Sort result locations by name, id
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "no location" for devices without location
-		locations.add(createNoLocation(adapterId));
+		locations.add(createNoLocation(gateId));
 
 		return locations;
 	}
@@ -65,17 +65,17 @@ public class LocationsModel extends BaseModel {
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadLocationsByGate(String adapterId, boolean forceReload) {
-		if (!forceReload && !mLocations.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
+	public synchronized boolean reloadLocationsByGate(String gateId, boolean forceReload) {
+		if (!forceReload && !mLocations.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		mLocations.setObjects(adapterId, mNetwork.getLocations(adapterId));
-		mLocations.setLastUpdate(adapterId, DateTime.now());
+		mLocations.setObjects(gateId, mNetwork.getLocations(gateId));
+		mLocations.setLastUpdate(gateId, DateTime.now());
 
 		return true;
 	}
@@ -87,11 +87,11 @@ public class LocationsModel extends BaseModel {
 	 * @return
 	 */
 	public boolean updateLocation(Location location) {
-		String adapterId = location.getAdapterId();
+		String gateId = location.getGateId();
 
 		if (mNetwork.updateLocation(location)) {
 			// Location was updated on server, update it in map too
-			mLocations.addObject(adapterId, location);
+			mLocations.addObject(gateId, location);
 			return true;
 		}
 
@@ -107,12 +107,12 @@ public class LocationsModel extends BaseModel {
 	 * @return
 	 */
 	public boolean deleteLocation(Location location) {
-		String adapterId = location.getAdapterId();
+		String gateId = location.getGateId();
 		String locationId = location.getId();
 
 		if (mNetwork.deleteLocation(location)) {
 			// Location was deleted on server, remove it from map too
-			mLocations.removeObject(adapterId, locationId);
+			mLocations.removeObject(gateId, locationId);
 			return true;
 		}
 
@@ -128,12 +128,12 @@ public class LocationsModel extends BaseModel {
 	 * @return Location on success, null otherwise
 	 */
 	public Location createLocation(Location location) {
-		String adapterId = location.getAdapterId();
+		String gateId = location.getGateId();
 
 		Location newLocation = mNetwork.createLocation(location);
 		if (newLocation != null) {
 			// Location was updated on server, update it in map too
-			mLocations.addObject(adapterId, newLocation);
+			mLocations.addObject(gateId, newLocation);
 		}
 
 		return newLocation;

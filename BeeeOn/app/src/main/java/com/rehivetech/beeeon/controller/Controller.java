@@ -453,19 +453,19 @@ public final class Controller {
 	/**
 	 * Return active gate.
 	 *
-	 * @return active gate, or first gate, or null if there are no adapters
+	 * @return active gate, or first gate, or null if there are no gates
 	 */
 	public synchronized Gate getActiveGate() {
 		if (mActiveGate == null) {
 			// UserSettings can be null when user is not logged in!
 			SharedPreferences prefs = getUserSettings();
 
-			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
+			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_GATE, "");
 
 			mActiveGate = getGatesModel().getGateOrFirst(lastId);
 
 			if (mActiveGate != null && prefs != null)
-				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveGate.getId()).apply();
+				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_GATE, mActiveGate.getId()).apply();
 		}
 
 		return mActiveGate;
@@ -480,12 +480,12 @@ public final class Controller {
 	 * @param forceReload
 	 * @return true on success, false if there is no gate with this id
 	 */
-	public synchronized boolean setActiveAdapter(String id, boolean forceReload) {
+	public synchronized boolean setActiveGate(String id, boolean forceReload) {
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = getUserSettings();
 		if (prefs != null) {
 			// Save it whether gate below will be loaded or not
-			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, id).apply();
+			prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_GATE, id).apply();
 		}
 
 		// Find specified gate

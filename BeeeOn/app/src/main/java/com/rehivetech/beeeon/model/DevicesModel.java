@@ -25,7 +25,7 @@ public class DevicesModel extends BaseModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // adapterId => mDevice dataHolder
+	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
 
 	public DevicesModel(INetwork network) {
 		super(network);
@@ -37,21 +37,21 @@ public class DevicesModel extends BaseModel {
 	 * @param id
 	 * @return mDevice or null if no mDevice is found
 	 */
-	public Device getFacility(String adapterId, String id) {
-		return mDevices.getObject(adapterId, id);
+	public Device getFacility(String gateId, String id) {
+		return mDevices.getObject(gateId, id);
 	}
 
 	/**
 	 * Return module by ID
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param id
 	 * @return
 	 */
-	public Module getModule(String adapterId, String id) {
+	public Module getModule(String gateId, String id) {
 		String[] ids = id.split(Module.ID_SEPARATOR, 2);
 
-		Device device = getFacility(adapterId, ids[0]);
+		Device device = getFacility(gateId, ids[0]);
 		if (device == null)
 			return null;
 
@@ -77,11 +77,11 @@ public class DevicesModel extends BaseModel {
 	/**
 	 * Return list of all devices from gate
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @return List of devices (or empty list)
 	 */
-	public List<Device> getDevicesByGate(String adapterId) {
-		List<Device> devices = mDevices.getObjects(adapterId);
+	public List<Device> getDevicesByGate(String gateId) {
+		List<Device> devices = mDevices.getObjects(gateId);
 
 		// Sort result devices by id
 		Collections.sort(devices, new IdentifierComparator());
@@ -95,10 +95,10 @@ public class DevicesModel extends BaseModel {
 	 * @param locationId
 	 * @return List of devices (or empty list)
 	 */
-	public List<Device> getDevicesByLocation(String adapterId, String locationId) {
+	public List<Device> getDevicesByLocation(String gateId, String locationId) {
 		List<Device> devices = new ArrayList<>();
 
-		for (Device device : getDevicesByGate(adapterId)) {
+		for (Device device : getDevicesByGate(gateId)) {
 			if (device.getLocationId().equals(locationId)) {
 				devices.add(device);
 			}
@@ -110,17 +110,17 @@ public class DevicesModel extends BaseModel {
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadDevicesByGate(String adapterId, boolean forceReload) throws AppException {
-		if (!forceReload && !mDevices.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
+	public synchronized boolean reloadDevicesByGate(String gateId, boolean forceReload) throws AppException {
+		if (!forceReload && !mDevices.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		mDevices.setObjects(adapterId, mNetwork.initAdapter(adapterId));
-		mDevices.setLastUpdate(adapterId, DateTime.now());
+		mDevices.setObjects(gateId, mNetwork.initGate(gateId));
+		mDevices.setLastUpdate(gateId, DateTime.now());
 
 		return true;
 	}

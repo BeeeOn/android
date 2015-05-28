@@ -237,7 +237,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 * Redraw GUI rules, called asynchronously (callback) when new data available
 	 */
 	private void redrawRules() {
-		mWatchdogs = mController.getWatchdogsModel().getWatchdogsByAdapter(mActiveGateId);
+		mWatchdogs = mController.getWatchdogsModel().getWatchdogsByGate(mActiveGateId);
 
 		boolean haveWatchdogs = mWatchdogs.size() > 0;
 

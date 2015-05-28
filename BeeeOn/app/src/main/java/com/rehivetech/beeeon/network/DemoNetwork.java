@@ -263,7 +263,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Device> initAdapter(String adapterId) {
+	public List<Device> initGate(String adapterId) {
 		List<Device> devices = mDevices.getObjects(adapterId);
 
 		Random rand = getRandomForAdapter(adapterId);
@@ -384,7 +384,7 @@ public class DemoNetwork implements INetwork {
 		if (rand.nextInt(4) == 0) {
 			Device device = new Device();
 
-			device.setAdapterId(adapterId);
+			device.setGateId(adapterId);
 
 			// Create unique mDevice id
 			String address;
@@ -516,7 +516,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean updateLocation(Location location) {
-		String adapterId = location.getAdapterId();
+		String adapterId = location.getGateId();
 
 		if (!mAdapters.hasObject(adapterId)) {
 			return false;
@@ -529,12 +529,12 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean deleteLocation(Location location) {
-		return mLocations.removeObject(location.getAdapterId(), location.getId()) != null;
+		return mLocations.removeObject(location.getGateId(), location.getId()) != null;
 	}
 
 	@Override
 	public Location createLocation(Location location) {
-		String adapterId = location.getAdapterId();
+		String adapterId = location.getGateId();
 
 		if (!mAdapters.hasObject(adapterId)) {
 			return null;

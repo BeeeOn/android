@@ -15,29 +15,29 @@ import java.io.IOException;
 /**
  * Created by Martin on 22. 4. 2015.
  */
-public class AdapterOfflineNotification extends VisibleNotification {
+public class GateOfflineNotification extends VisibleNotification {
 
-	public static final String TAG = AdapterOfflineNotification.class.getSimpleName();
+	public static final String TAG = GateOfflineNotification.class.getSimpleName();
 
-	private int mAdapterId;
+	private int mGateId;
 
-	private AdapterOfflineNotification(int msgid, long time, NotificationType type, boolean read, int adapterId) {
+	private GateOfflineNotification(int msgid, long time, NotificationType type, boolean read, int gateId) {
 		super(msgid, time, type, read);
-		mAdapterId = adapterId;
+		mGateId = gateId;
 	}
 
-	protected static AdapterOfflineNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		AdapterOfflineNotification instance = null;
+	protected static GateOfflineNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+		GateOfflineNotification instance = null;
 
 		try {
-			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
+			Integer gateId = Integer.valueOf(bundle.getString(Xconstants.AID));
 
-			if (adapterId == null) {
+			if (gateId == null) {
 				Log.d(TAG, "Gate added: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new AdapterOfflineNotification(msgId, time, type, false, adapterId);
+			instance = new GateOfflineNotification(msgId, time, type, false, gateId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -46,7 +46,7 @@ public class AdapterOfflineNotification extends VisibleNotification {
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
-		Integer adapterId = null;
+		Integer gateId = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -67,7 +67,7 @@ public class AdapterOfflineNotification extends VisibleNotification {
 
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase(Xconstants.AID)) {
-						adapterId = Integer.valueOf(text);
+						gateId = Integer.valueOf(text);
 					}
 					break;
 				default:
@@ -76,12 +76,12 @@ public class AdapterOfflineNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (adapterId == null) {
+		if (gateId == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new AdapterOfflineNotification(msgId, time, type, false, adapterId);
+		return new GateOfflineNotification(msgId, time, type, false, gateId);
 
 	}
 

@@ -509,7 +509,7 @@ public class Network implements INetwork {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Device> initAdapter(String adapterID) {
+	public List<Device> initGate(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mBT, adapterID));
 
 		if (msg.getState() == State.ALLDEVICES)
@@ -672,7 +672,7 @@ public class Network implements INetwork {
 		List<Location> list = new ArrayList<>();
 		list.add(location);
 
-		return updateLocations(location.getAdapterId(), list);
+		return updateLocations(location.getGateId(), list);
 	}
 
 	@Override
