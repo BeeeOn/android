@@ -14,7 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.AddGateFragmentAdapter;
+import com.rehivetech.beeeon.gui.adapter.AddGateFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;

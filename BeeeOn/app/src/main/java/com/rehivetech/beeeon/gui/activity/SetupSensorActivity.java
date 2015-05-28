@@ -19,7 +19,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.SetupSensorFragmentAdapter;
+import com.rehivetech.beeeon.gui.adapter.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
 import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;

@@ -1,9 +1,10 @@
-package com.rehivetech.beeeon;
+package com.rehivetech.beeeon.gui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 

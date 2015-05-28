@@ -11,7 +11,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
-import com.rehivetech.beeeon.AddSensorFragmentAdapter;
+import com.rehivetech.beeeon.gui.adapter.AddSensorFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;

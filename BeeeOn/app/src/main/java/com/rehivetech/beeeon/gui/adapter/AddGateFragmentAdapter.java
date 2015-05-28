@@ -1,15 +1,16 @@
-package com.rehivetech.beeeon;
+package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
-public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+public class AddGateFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 	protected static final String[] CONTENT = new String[]{"Welcome", "to", "BeeeOn", "Test",};
 	protected static final int[] ICONS = new int[]{
 			R.drawable.loc_bath_room,
@@ -19,9 +20,9 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
 	};
 	private final Context mActivity;
 
-	private int mCount = 3;
+	private int mCount = 4;
 
-	public AddSensorFragmentAdapter(FragmentManager fm, Context context) {
+	public AddGateFragmentAdapter(FragmentManager fm, Context context) {
 		super(fm);
 		mActivity = context;
 	}
@@ -30,14 +31,13 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				// Prepare your sensor
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_first_step, mActivity.getString(R.string.tut_add_sensor_text_1));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step, mActivity.getString(R.string.tut_add_gate_text_1));
 			case 1:
-				// After start timer ,
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_second_step, mActivity.getString(R.string.tut_add_sensor_text_2));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step, mActivity.getString(R.string.tut_add_gate_text_2));
 			case 2:
-				// circle timer
-				return new AddSensorFragment();
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step, mActivity.getString(R.string.tut_add_gate_text_3));
+			case 3:
+				return new AddGateFragment();
 		}
 		return null;
 	}
@@ -49,7 +49,7 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		return AddSensorFragmentAdapter.CONTENT[position % CONTENT.length];
+		return AddGateFragmentAdapter.CONTENT[position % CONTENT.length];
 	}
 
 	@Override

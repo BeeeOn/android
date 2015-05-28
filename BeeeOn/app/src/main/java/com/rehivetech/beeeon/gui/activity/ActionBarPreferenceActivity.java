@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon;
+package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
 import android.os.Build.VERSION;
@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.rehivetech.beeeon.R;
 
 /*
  Převzato z https://github.com/AndroidDeveloperLB/ActionBarPreferenceActivity

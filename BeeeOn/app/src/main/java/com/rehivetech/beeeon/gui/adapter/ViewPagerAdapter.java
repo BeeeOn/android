@@ -1,10 +1,11 @@
-package com.rehivetech.beeeon;
+package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
 

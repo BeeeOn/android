@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
-import com.rehivetech.beeeon.IntroFragmentAdapter;
+import com.rehivetech.beeeon.gui.adapter.IntroFragmentAdapter;
 import com.rehivetech.beeeon.R;
 import com.viewpagerindicator.CirclePageIndicator;
 

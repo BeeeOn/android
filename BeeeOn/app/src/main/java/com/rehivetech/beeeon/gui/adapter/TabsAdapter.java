@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon;
+package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.os.Bundle;

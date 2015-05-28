@@ -8,7 +8,6 @@ import android.preference.ListPreference;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.rehivetech.beeeon.ActionBarPreferenceActivity;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
