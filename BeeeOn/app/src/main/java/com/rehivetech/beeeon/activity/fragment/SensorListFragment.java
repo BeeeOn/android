@@ -35,7 +35,7 @@ import com.rehivetech.beeeon.activity.listItem.SensorListItem;
 import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
-import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
+import com.rehivetech.beeeon.asynctask.RemoveDeviceTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
@@ -430,7 +430,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
 	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
-		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.FACILITIES);
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
 
 		reloadDevicesTask.setListener(new CallbackTaskListener() {
 
@@ -465,10 +465,10 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mActivity.callbackTaskManager.executeTask(fullReloadTask);
 	}
 
-	private void doRemoveFacilityTask(Device device) {
-		RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity);
+	private void doRemoveDeviceTask(Device device) {
+		RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
 
-		removeFacilityTask.setListener(new CallbackTaskListener() {
+		removeDeviceTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				mActivity.redraw();
@@ -482,7 +482,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(removeFacilityTask, device);
+		mActivity.callbackTaskManager.executeTask(removeDeviceTask, device);
 	}
 
 
@@ -504,7 +504,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
-				doRemoveFacilityTask(mSelectedItem.getDevice());
+				doRemoveDeviceTask(mSelectedItem.getDevice());
 			}
 
 			mode.finish();

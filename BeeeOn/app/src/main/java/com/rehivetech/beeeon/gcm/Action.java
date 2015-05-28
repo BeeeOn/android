@@ -24,7 +24,7 @@ public final class Action {
 	@Nullable
 	static public void getSensorDetailIntent(Context context, int gateId, String sensorId, int type) {
 		Controller controller = Controller.getInstance(context);
-		Device device = controller.getDevicesModel().getFacility(String.valueOf(gateId), sensorId);
+		Device device = controller.getDevicesModel().getDevice(String.valueOf(gateId), sensorId);
 		if (device == null) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;

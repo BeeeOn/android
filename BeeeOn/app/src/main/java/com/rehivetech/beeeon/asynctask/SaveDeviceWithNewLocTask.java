@@ -3,20 +3,17 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.InitializeFacilityPair;
+import com.rehivetech.beeeon.pair.SaveDeviceWithNewLocPair;
 
-import java.util.EnumSet;
+public class SaveDeviceWithNewLocTask extends CallbackTask<SaveDeviceWithNewLocPair> {
 
-public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair> {
-
-	public InitializeFacilityTask(Context context) {
+	public SaveDeviceWithNewLocTask(Context context) {
 		super(context);
 	}
 
 	@Override
-	protected Boolean doInBackground(InitializeFacilityPair pair) {
+	protected Boolean doInBackground(SaveDeviceWithNewLocPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
 		if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {
@@ -28,9 +25,7 @@ public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair>
 			pair.mDevice.setLocationId(newLocation.getId());
 		}
 
-		EnumSet<SaveModule> what = EnumSet.of(SaveModule.SAVE_LOCATION, SaveModule.SAVE_NAME, SaveModule.SAVE_INITIALIZED);
-
-		return controller.getDevicesModel().saveFacility(pair.mDevice, what);
+		return controller.getDevicesModel().saveDevice(pair.mDevice, pair.what);
 	}
 
 }

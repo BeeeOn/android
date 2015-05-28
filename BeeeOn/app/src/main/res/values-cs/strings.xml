@@ -156,8 +156,8 @@
     <string name="action_addsensor">Přidání zařízení</string>
     <string name="action_logout">Odhlášení</string>
     <string name="action_hide_sensor">Skrýt zařízení</string>
-    <string name="action_unregist_facility">Odstranit zařízení</string>
-    <string name="action_hide_facility">Skrýt zařízení</string>
+    <string name="action_unregist_device">Odstranit zařízení</string>
+    <string name="action_hide_device">Skrýt zařízení</string>
     <string name="action_close">Zrušit</string>
     <string name="action_intro">Představení</string>
     <string name="action_intro_dialog">Úvodní dialog</string>

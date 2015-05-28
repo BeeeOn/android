@@ -167,8 +167,8 @@
     <string name="action_addsensor">Add module</string>
     <string name="action_logout">Logout</string>
     <string name="action_hide_sensor">Hide module</string>
-    <string name="action_unregist_facility">Remove module</string>
-    <string name="action_hide_facility">Hide module</string>
+    <string name="action_unregist_device">Remove module</string>
+    <string name="action_hide_device">Hide module</string>
     <string name="action_close">Cancel</string>
     <string name="action_done">Done</string>
     <string name="action_intro">Intro</string>

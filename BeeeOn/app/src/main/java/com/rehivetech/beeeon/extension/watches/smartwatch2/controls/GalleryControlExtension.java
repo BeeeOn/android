@@ -260,7 +260,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 				Module module = mModules.get(lastPosition);
-				if (mController.getDevicesModel().refreshFacility(module.getDevice(), false)) {
+				if (mController.getDevicesModel().refreshDevice(module.getDevice(), false)) {
 					sendListItem(createControlListItem(lastPosition));
 				}
 
@@ -278,8 +278,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 				mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
 				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGateId, mLocationStr);
-				for (Device facility : devices) {
-					mModules.addAll(facility.getModules());
+				for (Device device : devices) {
+					mModules.addAll(device.getModules());
 				}
 
 				resume();

@@ -302,7 +302,7 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<Module.SaveModule> toSave) {
 		for (Device device : devices) {
-			if (!updateFacility(gateId, device, toSave)) {
+			if (!updateDevice(gateId, device, toSave)) {
 				return false;
 			}
 		}
@@ -313,7 +313,7 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public boolean updateModule(String gateId, Module module, EnumSet<SaveModule> toSave) {
 		// NOTE: this replaces (or add) whole mDevice, not only module's fields marked as toSave
-		return updateFacility(gateId, module.getDevice(), toSave);
+		return updateDevice(gateId, module.getDevice(), toSave);
 	}
 
 	@Override
@@ -327,7 +327,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteFacility(Device device) {
+	public boolean deleteDevice(Device device) {
 		return mDevices.removeObject(device.getGateId(), device.getId()) != null;
 	}
 
@@ -336,7 +336,7 @@ public class DemoNetwork implements INetwork {
 		List<Device> result = new ArrayList<Device>();
 
 		for (Device device : devices) {
-			Device newDevice = getFacility(device);
+			Device newDevice = getDevice(device);
 			if (newDevice != null && newDevice.isInitialized()) {
 				result.add(newDevice);
 			}
@@ -346,7 +346,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public Device getFacility(Device device) {
+	public Device getDevice(Device device) {
 		Random rand = getRandomForGate(device.getGateId());
 
 		Device newDevice = mDevices.getObject(device.getGateId(), device.getId());
@@ -366,7 +366,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateFacility(String gateId, Device device, EnumSet<Module.SaveModule> toSave) {
+	public boolean updateDevice(String gateId, Device device, EnumSet<Module.SaveModule> toSave) {
 		// NOTE: this replaces (or add, in case of initializing new mDevice) whole mDevice, not only fields marked as toSave
 		mDevices.addObject(gateId, device);
 		return true;

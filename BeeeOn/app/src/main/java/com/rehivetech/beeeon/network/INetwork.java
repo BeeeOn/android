@@ -196,7 +196,7 @@ public interface INetwork {
 	 * @param device to be deleted
 	 * @return true if is deleted, false otherwise
 	 */
-	boolean deleteFacility(Device device);
+	boolean deleteDevice(Device device);
 
 	/**
 	 * Method ask for actual data of devices
@@ -212,9 +212,9 @@ public interface INetwork {
 	 * @param device
 	 * @return
 	 */
-	Device getFacility(Device device);
+	Device getDevice(Device device);
 
-	boolean updateFacility(String gateID, Device device, EnumSet<SaveModule> toSave);
+	boolean updateDevice(String gateID, Device device, EnumSet<SaveModule> toSave);
 
 	/**
 	 * TODO: need to test

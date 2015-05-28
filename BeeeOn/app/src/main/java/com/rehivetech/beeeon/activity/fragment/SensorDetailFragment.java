@@ -569,7 +569,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
-		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.FACILITIES);
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
 
 		reloadDevicesTask.setListener(new CallbackTaskListener() {
 

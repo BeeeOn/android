@@ -37,7 +37,7 @@ public class DevicesModel extends BaseModel {
 	 * @param id
 	 * @return mDevice or null if no mDevice is found
 	 */
-	public Device getFacility(String gateId, String id) {
+	public Device getDevice(String gateId, String id) {
 		return mDevices.getObject(gateId, id);
 	}
 
@@ -51,7 +51,7 @@ public class DevicesModel extends BaseModel {
 	public Module getModule(String gateId, String id) {
 		String[] ids = id.split(Module.ID_SEPARATOR, 2);
 
-		Device device = getFacility(gateId, ids[0]);
+		Device device = getDevice(gateId, ids[0]);
 		if (device == null)
 			return null;
 
@@ -161,12 +161,12 @@ public class DevicesModel extends BaseModel {
 	 * @param device
 	 * @return
 	 */
-	public boolean refreshFacility(Device device, boolean forceReload) throws AppException {
+	public boolean refreshDevice(Device device, boolean forceReload) throws AppException {
 		if (!forceReload && !device.isExpired()) {
 			return false;
 		}
 
-		Device newDevice = mNetwork.getFacility(device);
+		Device newDevice = mNetwork.getDevice(device);
 		if (newDevice == null)
 			return false;
 
@@ -184,9 +184,9 @@ public class DevicesModel extends BaseModel {
 	 * @param what   type of settings to save
 	 * @return true on success, false otherwise
 	 */
-	public boolean saveFacility(Device device, EnumSet<SaveModule> what) throws AppException {
-		mNetwork.updateFacility(device.getGateId(), device, what);
-		refreshFacility(device, true);
+	public boolean saveDevice(Device device, EnumSet<SaveModule> what) throws AppException {
+		mNetwork.updateDevice(device.getGateId(), device, what);
+		refreshDevice(device, true);
 
 		return true;
 	}
@@ -196,8 +196,8 @@ public class DevicesModel extends BaseModel {
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 */
-	public boolean deleteFacility(Device device) throws AppException {
-		if (mNetwork.deleteFacility(device)) {
+	public boolean deleteDevice(Device device) throws AppException {
+		if (mNetwork.deleteDevice(device)) {
 			// Device was deleted on server, remove it from map too
 			mDevices.removeObject(device.getGateId(), device.getId());
 			return true;
@@ -219,7 +219,7 @@ public class DevicesModel extends BaseModel {
 		Device device = module.getDevice();
 
 		mNetwork.updateModule(device.getGateId(), module, what);
-		refreshFacility(device, true);
+		refreshDevice(device, true);
 
 		return true;
 	}
@@ -241,7 +241,7 @@ public class DevicesModel extends BaseModel {
 		Device device = module.getDevice();
 
 		mNetwork.switchState(module.getDevice().getGateId(), module);
-		refreshFacility(device, true);
+		refreshDevice(device, true);
 
 		return true;
 	}

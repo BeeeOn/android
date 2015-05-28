@@ -304,7 +304,7 @@ public class XmlParsers {
 		return result;
 	}
 
-	// special case of parseFacility
+	// special case of parseDevice
 	private List<Device> parseNewDevices(String aid) throws XmlPullParserException, IOException, ParseException {
 		mParser.nextTag(); // dev start tag
 
@@ -657,7 +657,7 @@ public class XmlParsers {
 
 		do {
 			Device device = null;
-			boolean facilityExists = false;
+			boolean deviceExists = false;
 
 			Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
 
@@ -665,7 +665,7 @@ public class XmlParsers {
 			for (Device fac : result) {
 				if (fac.getAddress().equals(id)) {
 					// We already have this mDevice, just add new devices to it
-					facilityExists = true;
+					deviceExists = true;
 					device = fac;
 					break;
 				}
@@ -679,7 +679,7 @@ public class XmlParsers {
 
 			device.addModule(module);
 
-			if (!facilityExists)
+			if (!deviceExists)
 				result.add(device);
 
 			mParser.nextTag();

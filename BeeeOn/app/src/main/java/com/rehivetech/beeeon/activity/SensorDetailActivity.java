@@ -127,7 +127,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	private void doReloadDevicesTask(final String gateId, final boolean forceReload) {
-		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.FACILITIES);
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);
 
 		reloadDevicesTask.setListener(new CallbackTaskListener() {
 

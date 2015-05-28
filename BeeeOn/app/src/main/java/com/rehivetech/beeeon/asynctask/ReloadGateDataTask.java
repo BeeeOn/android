@@ -17,8 +17,8 @@ public class ReloadGateDataTask extends CallbackTask<String> {
 	public enum ReloadWhat {
 		GATES_AND_ACTIVE_GATE,
 		LOCATIONS,
-		FACILITIES,
-		UNINITIALIZED_FACILITIES,
+		DEVICES,
+		UNINITIALIZED_DEVICES,
 		USERS,
 		WATCHDOGS,
 		ACHIEVEMENTS,
@@ -44,18 +44,18 @@ public class ReloadGateDataTask extends CallbackTask<String> {
 
 			// We need to update also devices
 			gateId = active.getId();
-			mWhat = ReloadWhat.FACILITIES;
+			mWhat = ReloadWhat.DEVICES;
 		}
 
-		if (mWhat == ReloadWhat.LOCATIONS || mWhat == ReloadWhat.FACILITIES) {
+		if (mWhat == ReloadWhat.LOCATIONS || mWhat == ReloadWhat.DEVICES) {
 			controller.getLocationsModel().reloadLocationsByGate(gateId, mForceReload);
 		}
 
-		if (mWhat == ReloadWhat.FACILITIES) {
+		if (mWhat == ReloadWhat.DEVICES) {
 			controller.getDevicesModel().reloadDevicesByGate(gateId, mForceReload);
 		}
 
-		if (mWhat == ReloadWhat.UNINITIALIZED_FACILITIES) {
+		if (mWhat == ReloadWhat.UNINITIALIZED_DEVICES) {
 			controller.getUninitializedDevicesModel().reloadUninitializedDevicesByGate(gateId, mForceReload);
 		}
 

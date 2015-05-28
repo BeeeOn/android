@@ -111,7 +111,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 				Gate gate = mGates.get(position);
 				if (gate == null) return;
 
-				doChangeGate(gate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
+				doChangeGate(gate.getId(), ReloadGateDataTask.ReloadWhat.DEVICES);
 			}
 
 			@Override
@@ -216,7 +216,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		int selectedGateIndex = selectGate(mGeneralWidgetdata.widgetGateId);
 		if (selectedGateIndex == mGateSpinner.getSelectedItemPosition()) {
-			doChangeGate(mActiveGate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
+			doChangeGate(mActiveGate.getId(), ReloadGateDataTask.ReloadWhat.DEVICES);
 		} else {
 			mGateSpinner.setSelection(selectedGateIndex);
 		}

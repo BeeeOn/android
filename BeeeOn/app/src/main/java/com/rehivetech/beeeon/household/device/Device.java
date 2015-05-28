@@ -40,7 +40,7 @@ public class Device implements IIdentifier {
 	/**
 	 * Represents settings of mDevice which could be saved to server
 	 */
-	public enum SaveFacility {
+	public enum SaveDevice {
 		SAVE_NAME, // rename mDevice
 		SAVE_LOCATION, // change location
 		SAVE_VISIBILITY, // change visibility //NOTE: sending always

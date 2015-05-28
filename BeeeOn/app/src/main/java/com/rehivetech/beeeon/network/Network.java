@@ -573,7 +573,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean deleteFacility(Device device) {
+	public boolean deleteDevice(Device device) {
 		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, device));
 
 		if (msg.getState() == State.TRUE)
@@ -595,7 +595,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public Device getFacility(Device device) {
+	public Device getDevice(Device device) {
 
 		ArrayList<Device> list = new ArrayList<>();
 		list.add(device);
@@ -604,7 +604,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateFacility(String gateId, Device device, EnumSet<SaveModule> toSave) {
+	public boolean updateDevice(String gateId, Device device, EnumSet<SaveModule> toSave) {
 
 		ArrayList<Device> list = new ArrayList<>();
 		list.add(device);

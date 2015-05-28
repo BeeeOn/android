@@ -171,7 +171,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	}
 
 	public void doReloadUninitializedDevicesTask(String gateId, boolean forceReload) {
-		ReloadGateDataTask reloadUninitializedDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
+		ReloadGateDataTask reloadUninitializedDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
 
 		reloadUninitializedDevicesTask.setListener(new CallbackTaskListener() {
 

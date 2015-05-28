@@ -21,8 +21,8 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.SaveFacilityTask;
-import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
+import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
+import com.rehivetech.beeeon.asynctask.SaveDeviceWithNewLocTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -140,7 +140,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 						location = mFragment.getLocation();
 					}
 					// Send request for new loc ..
-					doSaveFacilityWithNewLocation(new SaveDeviceWithNewLocPair(device, location, EnumSet.copyOf(what)));
+					doSaveDeviceWithNewLocation(new SaveDeviceWithNewLocPair(device, location, EnumSet.copyOf(what)));
 					return true;
 				} else {
 					device.setLocationId(mFragment.getLocationId());
@@ -153,7 +153,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			}
 
 			if (!mFragment.isSetNewRoom())
-				doSaveFacilityTask(new SaveDevicePair(device, EnumSet.copyOf(what)));
+				doSaveDeviceTask(new SaveDevicePair(device, EnumSet.copyOf(what)));
 
 			return true;
 		} else if (id == android.R.id.home) {
@@ -178,11 +178,11 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	 * ASYNC TASK - SAVE
 	 */
 
-	private void doSaveFacilityWithNewLocation(SaveDeviceWithNewLocPair pair) {
+	private void doSaveDeviceWithNewLocation(SaveDeviceWithNewLocPair pair) {
 		mProgress.show();
-		SaveFacilityWithNewLocTask saveFacilityWithNewLocTask = new SaveFacilityWithNewLocTask(mActivity);
+		SaveDeviceWithNewLocTask saveDeviceWithNewLocTask = new SaveDeviceWithNewLocTask(mActivity);
 
-		saveFacilityWithNewLocTask.setListener(new CallbackTask.CallbackTaskListener() {
+		saveDeviceWithNewLocTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
@@ -201,14 +201,14 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		// And don't show progressbar because in this activity is showing progress dialog
-		callbackTaskManager.executeTask(saveFacilityWithNewLocTask, pair, false);
+		callbackTaskManager.executeTask(saveDeviceWithNewLocTask, pair, false);
 	}
 
-	public void doSaveFacilityTask(SaveDevicePair pair) {
+	public void doSaveDeviceTask(SaveDevicePair pair) {
 		mProgress.show();
-		SaveFacilityTask saveFacilityTask = new SaveFacilityTask(mActivity);
+		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 
-		saveFacilityTask.setListener(new CallbackTask.CallbackTaskListener() {
+		saveDeviceTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
@@ -227,7 +227,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		// And don't show progressbar because in this activity is showing progress dialog
-		callbackTaskManager.executeTask(saveFacilityTask, pair, false);
+		callbackTaskManager.executeTask(saveDeviceTask, pair, false);
 	}
 
 	/**

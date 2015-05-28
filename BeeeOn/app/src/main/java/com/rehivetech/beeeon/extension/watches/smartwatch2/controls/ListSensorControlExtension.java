@@ -242,8 +242,8 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 					mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
 					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocationStr);
-					for (Device facility : devices) {
-						mModules.addAll(facility.getModules());
+					for (Device device : devices) {
+						mModules.addAll(device.getModules());
 					}
 
 					if (mModules != null) {
