@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.arrayadapter;
+package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.arrayadapter;
+package com.rehivetech.beeeon.gui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

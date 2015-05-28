@@ -13,7 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.NotificationActivity;
-import com.rehivetech.beeeon.arrayadapter.NotificationAdapter;
+import com.rehivetech.beeeon.gui.adapter.NotificationAdapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 

@@ -31,7 +31,7 @@ import com.rehivetech.beeeon.gui.menuItem.MenuItem;
 import com.rehivetech.beeeon.gui.menuItem.ProfileMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.SeparatorMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.SettingMenuItem;
-import com.rehivetech.beeeon.arrayadapter.MenuListAdapter;
+import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
 import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.SwitchGateTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;

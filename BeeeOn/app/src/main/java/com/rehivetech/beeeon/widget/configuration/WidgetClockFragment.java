@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.dialog.ILocationPickerDialogListener;
 import com.rehivetech.beeeon.gui.dialog.LocationPickerDialogFragment;
-import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
+import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;

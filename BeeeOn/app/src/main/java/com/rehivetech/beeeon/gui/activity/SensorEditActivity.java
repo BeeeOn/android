@@ -18,8 +18,8 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
-import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
+import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
+import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.controller.Controller;

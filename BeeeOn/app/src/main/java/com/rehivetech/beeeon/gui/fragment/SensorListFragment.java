@@ -32,7 +32,7 @@ import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.gui.listItem.LocationListItem;
 import com.rehivetech.beeeon.gui.listItem.SensorListItem;
-import com.rehivetech.beeeon.arrayadapter.SenListAdapter;
+import com.rehivetech.beeeon.gui.adapter.SenListAdapter;
 import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;

@@ -23,7 +23,7 @@ import android.widget.ScrollView;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.arrayadapter.UsersListAdapter;
+import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
 import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.EditUserTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;

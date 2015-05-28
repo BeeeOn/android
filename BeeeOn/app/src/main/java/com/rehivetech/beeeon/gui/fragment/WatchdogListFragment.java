@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.WatchdogEditRuleActivity;
-import com.rehivetech.beeeon.arrayadapter.WatchdogListAdapter;
+import com.rehivetech.beeeon.gui.adapter.WatchdogListAdapter;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveWatchdogTask;
