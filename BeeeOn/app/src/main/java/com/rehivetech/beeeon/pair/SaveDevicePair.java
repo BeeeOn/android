@@ -1,7 +1,8 @@
 package com.rehivetech.beeeon.pair;
 
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Module.SaveModule;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.EnumSet;
 
@@ -10,10 +11,16 @@ import java.util.EnumSet;
  */
 public class SaveDevicePair {
 	public final Device mDevice;
-	public final EnumSet<SaveModule> what;
+	public final EnumSet<Module.SaveModule> what;
+	public final Location location;
 
-	public SaveDevicePair(final Device deviceId, final EnumSet<SaveModule> what) {
-		this.mDevice = deviceId;
+	public SaveDevicePair(final Device device, final EnumSet<Module.SaveModule> what) {
+		this(device, null, what);
+	}
+
+	public SaveDevicePair(final Device device, final Location newLoc, final EnumSet<Module.SaveModule> what) {
+		this.mDevice = device;
 		this.what = what;
+		this.location = newLoc;
 	}
 }

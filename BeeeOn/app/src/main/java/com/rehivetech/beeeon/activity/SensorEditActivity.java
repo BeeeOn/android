@@ -22,7 +22,6 @@ import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.LocationIconAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
-import com.rehivetech.beeeon.asynctask.SaveDeviceWithNewLocTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -31,7 +30,6 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.SaveDevicePair;
-import com.rehivetech.beeeon.pair.SaveDeviceWithNewLocPair;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.EnumSet;
@@ -140,7 +138,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 						location = mFragment.getLocation();
 					}
 					// Send request for new loc ..
-					doSaveDeviceWithNewLocation(new SaveDeviceWithNewLocPair(device, location, EnumSet.copyOf(what)));
+					doSaveDeviceWithNewLocation(new SaveDevicePair(device, location, EnumSet.copyOf(what)));
 					return true;
 				} else {
 					device.setLocationId(mFragment.getLocationId());
@@ -178,11 +176,11 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	 * ASYNC TASK - SAVE
 	 */
 
-	private void doSaveDeviceWithNewLocation(SaveDeviceWithNewLocPair pair) {
+	private void doSaveDeviceWithNewLocation(SaveDevicePair pair) {
 		mProgress.show();
-		SaveDeviceWithNewLocTask saveDeviceWithNewLocTask = new SaveDeviceWithNewLocTask(mActivity);
+		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 
-		saveDeviceWithNewLocTask.setListener(new CallbackTask.CallbackTaskListener() {
+		saveDeviceTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
@@ -201,7 +199,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		// And don't show progressbar because in this activity is showing progress dialog
-		callbackTaskManager.executeTask(saveDeviceWithNewLocTask, pair, false);
+		callbackTaskManager.executeTask(saveDeviceTask, pair, false);
 	}
 
 	public void doSaveDeviceTask(SaveDevicePair pair) {
