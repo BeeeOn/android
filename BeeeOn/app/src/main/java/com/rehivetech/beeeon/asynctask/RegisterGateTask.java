@@ -5,7 +5,6 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.pair.RegisterGatePair;
 
 import java.util.Locale;
 import java.util.Vector;
@@ -13,7 +12,7 @@ import java.util.Vector;
 /**
  * Registers new gate. It automatically reloads list of adapters and then we set this gate as active which also load all its sensors.
  */
-public class RegisterGateTask extends CallbackTask<RegisterGatePair> {
+public class RegisterGateTask extends CallbackTask<Gate> {
 
 	private Controller mController;
 
@@ -48,11 +47,11 @@ public class RegisterGateTask extends CallbackTask<RegisterGatePair> {
 	}
 
 	@Override
-	protected Boolean doInBackground(RegisterGatePair pair) {
+	protected Boolean doInBackground(Gate gate) {
 		mController = Controller.getInstance(mContext);
 
-		String serialNumber = pair.gateId;
-		String name = pair.gateName.trim();
+		String serialNumber = gate.getId();
+		String name = gate.getName().trim();
 
 		// Set default name for this gate, if user didn't filled any
 		if (name.isEmpty()) {

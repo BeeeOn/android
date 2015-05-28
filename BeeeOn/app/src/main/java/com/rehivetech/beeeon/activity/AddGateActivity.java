@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.RegisterGateTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.RegisterGatePair;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -133,7 +133,10 @@ public class AddGateActivity extends BaseApplicationActivity {
 					} else {
 						// Show progress bar for saving
 						mProgress.show();
-						doRegisterGateTask(new RegisterGatePair(gateCode, gateName));
+						Gate gate = new Gate();
+						gate.setId(gateCode);
+						gate.setName(gateName);
+						doRegisterGateTask(gate);
 					}
 				}
 			}
@@ -174,7 +177,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 		mFragment = addGateFragment;
 	}
 
-	public void doRegisterGateTask(RegisterGatePair pair) {
+	public void doRegisterGateTask(Gate gate) {
 		RegisterGateTask registerGateTask = new RegisterGateTask(this);
 
 		registerGateTask.setListener(new CallbackTaskListener() {
@@ -195,7 +198,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(registerGateTask, pair);
+		callbackTaskManager.executeTask(registerGateTask, gate);
 	}
 
 }
