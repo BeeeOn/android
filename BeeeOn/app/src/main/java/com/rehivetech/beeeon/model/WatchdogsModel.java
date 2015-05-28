@@ -55,7 +55,7 @@ public class WatchdogsModel extends BaseModel {
 	 * @param forceReload
 	 * @return
 	 */
-	public boolean reloadWatchdogsByAdapter(String adapterId, boolean forceReload) {
+	public boolean reloadWatchdogsByGate(String adapterId, boolean forceReload) {
 		if (!forceReload && !mWatchdogs.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
@@ -73,9 +73,9 @@ public class WatchdogsModel extends BaseModel {
 	 * @return
 	 */
 	public boolean updateWatchdog(Watchdog watchdog) {
-		if (mNetwork.updateWatchdog(watchdog, watchdog.getAdapterId())) {
+		if (mNetwork.updateWatchdog(watchdog, watchdog.getGateId())) {
 			// Location was updated on server, update it in map too
-			mWatchdogs.addObject(watchdog.getAdapterId(), watchdog);
+			mWatchdogs.addObject(watchdog.getGateId(), watchdog);
 			return true;
 		}
 
@@ -94,7 +94,7 @@ public class WatchdogsModel extends BaseModel {
 		// delete from server
 		if (mNetwork.deleteWatchdog(watchdog)) {
 			// watchdog was deleted on server, remove it from gate too
-			mWatchdogs.removeObject(watchdog.getAdapterId(), watchdog.getId());
+			mWatchdogs.removeObject(watchdog.getGateId(), watchdog.getId());
 			return true;
 		}
 
@@ -108,7 +108,7 @@ public class WatchdogsModel extends BaseModel {
 	 * @return
 	 */
 	public boolean addWatchdog(Watchdog watchdog) {
-		String adapterId = watchdog.getAdapterId();
+		String adapterId = watchdog.getGateId();
 
 		if (mNetwork.addWatchdog(watchdog, adapterId)) {
 			// Watchdog was updated on server, update it in map too

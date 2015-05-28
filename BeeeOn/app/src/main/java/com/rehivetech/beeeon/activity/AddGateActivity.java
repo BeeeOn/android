@@ -17,17 +17,17 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.AddAdapterFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.fragment.AddAdapterFragment;
+import com.rehivetech.beeeon.activity.fragment.AddGateFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.RegisterAdapterTask;
+import com.rehivetech.beeeon.asynctask.RegisterGateTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.RegisterAdapterPair;
+import com.rehivetech.beeeon.pair.RegisterGatePair;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class AddAdapterActivity extends BaseApplicationActivity {
-	private static final String TAG = AddAdapterActivity.class.getSimpleName();
+public class AddGateActivity extends BaseApplicationActivity {
+	private static final String TAG = AddGateActivity.class.getSimpleName();
 
 	private Controller mController;
 
@@ -35,7 +35,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
 
-	private AddAdapterFragment mFragment;
+	private AddGateFragment mFragment;
 
 	private Button mSkip;
 	private Button mCancel;
@@ -89,9 +89,9 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 
 
 	private void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_adapter_skip);
-		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
-		mNext = (Button) findViewById(R.id.add_adapter_next);
+		mSkip = (Button) findViewById(R.id.add_gate_skip);
+		mCancel = (Button) findViewById(R.id.add_gate_cancel);
+		mNext = (Button) findViewById(R.id.add_gate_next);
 
 		mSkip.setOnClickListener(new OnClickListener() {
 
@@ -107,9 +107,9 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 			public void onClick(View v) {
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
-					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).apply();
+					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_GATE, true).apply();
 				}
-				setResult(Constants.ADD_ADAPTER_CANCELED);
+				setResult(Constants.ADD_GATE_CANCELED);
 				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				finish();
@@ -123,8 +123,8 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 				if (mNext.getText().equals(mActivity.getString(R.string.tutorial_next))) {
 					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 				} else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
-					String adapterName = mFragment.getAdapterName();
-					String adapterCode = mFragment.getAdapterCode();
+					String adapterName = mFragment.getGateName();
+					String adapterCode = mFragment.getGateCode();
 					Log.d(TAG, "adaName: " + adapterName + " adaCode: " + adapterCode);
 
 					if (adapterCode.isEmpty()) {
@@ -133,7 +133,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 					} else {
 						// Show progress bar for saving
 						mProgress.show();
-						doRegisterAdapterTask(new RegisterAdapterPair(adapterCode, adapterName));
+						doRegisterAdapterTask(new RegisterGatePair(adapterCode, adapterName));
 					}
 				}
 			}
@@ -154,9 +154,9 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 			case android.R.id.home:
 				SharedPreferences prefs = mController.getUserSettings();
 				if (prefs != null) {
-					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, true).apply();
+					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_GATE, true).apply();
 				}
-				setResult(Constants.ADD_ADAPTER_CANCELED);
+				setResult(Constants.ADD_GATE_CANCELED);
 				finish();
 				break;
 		}
@@ -170,14 +170,14 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 	}
 
 
-	public void setFragment(AddAdapterFragment addAdapterFragment) {
-		mFragment = addAdapterFragment;
+	public void setFragment(AddGateFragment addGateFragment) {
+		mFragment = addGateFragment;
 	}
 
-	public void doRegisterAdapterTask(RegisterAdapterPair pair) {
-		RegisterAdapterTask registerAdapterTask = new RegisterAdapterTask(this);
+	public void doRegisterAdapterTask(RegisterGatePair pair) {
+		RegisterGateTask registerGateTask = new RegisterGateTask(this);
 
-		registerAdapterTask.setListener(new CallbackTaskListener() {
+		registerGateTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -186,7 +186,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 				if (success) {
 					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
 
-					setResult(Constants.ADD_ADAPTER_SUCCESS);
+					setResult(Constants.ADD_GATE_SUCCESS);
 					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					finish();
@@ -195,7 +195,7 @@ public class AddAdapterActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(registerAdapterTask, pair);
+		callbackTaskManager.executeTask(registerGateTask, pair);
 	}
 
 }

@@ -28,6 +28,6 @@ public class RemoveWatchdogTask extends CallbackTask<DelWatchdogPair> {
 			return false;
 		}
 
-		return controller.getWatchdogsModel().deleteWatchdog(controller.getWatchdogsModel().getWatchdog(pair.adapterID, pair.watchdogID));
+		return controller.getWatchdogsModel().deleteWatchdog(controller.getWatchdogsModel().getWatchdog(pair.gateId, pair.watchdogId));
 	}
 }

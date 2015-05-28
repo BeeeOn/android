@@ -29,7 +29,7 @@ public class ActorActionTask extends CallbackTask<Module> {
 	private void sendActorChangedBroadcast(Module module) {
 		Intent actionIntent = new Intent(Constants.BROADCAST_ACTOR_CHANGED);
 		actionIntent.putExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID, module.getId());
-		actionIntent.putExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID, module.getDevice().getAdapterId());
+		actionIntent.putExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID, module.getDevice().getGateId());
 		mContext.sendBroadcast(actionIntent);
 	}
 }

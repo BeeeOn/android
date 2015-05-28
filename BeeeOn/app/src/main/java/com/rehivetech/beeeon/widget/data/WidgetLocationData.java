@@ -125,7 +125,7 @@ public class WidgetLocationData extends WidgetData {
 			return false;
 		}
 
-		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
 		if (gate == null) return false;
 		widgetLocation.configure(location, gate);
 

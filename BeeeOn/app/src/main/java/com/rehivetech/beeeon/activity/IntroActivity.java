@@ -40,9 +40,9 @@ public class IntroActivity extends BaseActivity {
 
 	private void initLayout() {
 		// Get buttons
-		mSkip = (Button) findViewById(R.id.add_adapter_skip);
-		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
-		mNext = (Button) findViewById(R.id.add_adapter_next);
+		mSkip = (Button) findViewById(R.id.add_gate_skip);
+		mCancel = (Button) findViewById(R.id.add_gate_cancel);
+		mNext = (Button) findViewById(R.id.add_gate_next);
 
 		mSkip.setVisibility(View.INVISIBLE);
 		mCancel.setVisibility(View.INVISIBLE);

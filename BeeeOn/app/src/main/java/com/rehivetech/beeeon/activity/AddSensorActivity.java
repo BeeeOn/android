@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.AddSensorFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.PairRequestTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -101,9 +101,9 @@ public class AddSensorActivity extends BaseApplicationActivity {
 
 
 	private void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_adapter_skip);
-		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
-		mNext = (Button) findViewById(R.id.add_adapter_next);
+		mSkip = (Button) findViewById(R.id.add_gate_skip);
+		mCancel = (Button) findViewById(R.id.add_gate_cancel);
+		mNext = (Button) findViewById(R.id.add_gate_next);
 
 		mSkip.setOnClickListener(new OnClickListener() {
 
@@ -170,8 +170,8 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		mFragment = fragment;
 	}
 
-	public void doReloadUninitializedDevicesTask(String adapterId, boolean forceReload) {
-		ReloadAdapterDataTask reloadUninitializedDevicesTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
+	public void doReloadUninitializedDevicesTask(String gateId, boolean forceReload) {
+		ReloadGateDataTask reloadUninitializedDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_FACILITIES);
 
 		reloadUninitializedDevicesTask.setListener(new CallbackTaskListener() {
 
@@ -181,7 +181,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 					return;
 				}
 
-				List<Device> devices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairGate.getId());
+				List<Device> devices = mController.getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId());
 
 				if (devices.size() > 0) {
 					mFragment.stopTimer();
@@ -202,10 +202,10 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadUninitializedDevicesTask, adapterId);
+		callbackTaskManager.executeTask(reloadUninitializedDevicesTask, gateId);
 	}
 
-	private void doPairRequestTask(String adapterId) {
+	private void doPairRequestTask(String gateId) {
 		// Send First automatic pair request
 		PairRequestTask pairRequestTask = new PairRequestTask(this);
 
@@ -225,7 +225,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(pairRequestTask, adapterId);
+		callbackTaskManager.executeTask(pairRequestTask, gateId);
 	}
 
 	public void checkUnInitSensor() {

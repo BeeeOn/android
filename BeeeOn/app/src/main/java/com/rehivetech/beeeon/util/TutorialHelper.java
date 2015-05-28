@@ -128,7 +128,7 @@ public class TutorialHelper {
 			@Override
 			public void onShowcaseViewHide(ShowcaseView showcaseView) {
 				Log.d(TAG, "OnShowCase hide");
-				// TODO: Save that ADD ADAPTER was clicked
+				// TODO: Save that ADD GATE was clicked
 
 			}
 
@@ -157,7 +157,7 @@ public class TutorialHelper {
 
 	}
 
-	public static void showAddAdapterTutorial(final MainActivity activity, View layout) {
+	public static void showAddGateTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		int marginPixel = 25;
 		int marginPixelBottom = 55;
@@ -173,14 +173,14 @@ public class TutorialHelper {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show ADD ADAPTER");
+				Log.d(TAG, "OnShowCase show ADD GATE");
 
 			}
 
 			@Override
 			public void onShowcaseViewHide(ShowcaseView showcaseView) {
 				Log.d(TAG, "OnShowCase hide");
-				// TODO: Save that ADD ADAPTER was clicked
+				// TODO: Save that ADD GATE was clicked
 
 			}
 

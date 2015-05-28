@@ -155,7 +155,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 			Intent intent;
 			String adapterId = mGates.get(listItem.listItemPosition).getId();
 			// mController.setActiveAdapter(adapterId, false);
-			List<Location> locations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
+			List<Location> locations = mController.getLocationsModel().getLocationsByGate(adapterId);
 			if (locations.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_location_available));
@@ -192,7 +192,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mGates = mController.getAdaptersModel().getAdapters();
+				mGates = mController.getGatesModel().getGates();
 
 				resume();
 

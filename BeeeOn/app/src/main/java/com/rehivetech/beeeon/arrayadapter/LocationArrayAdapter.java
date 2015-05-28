@@ -94,7 +94,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
 		Gate gate = mController.getActiveGate();
 		if (gate != null) {
-			locations = mController.getLocationsModel().getLocationsByAdapter(gate.getId());
+			locations = mController.getLocationsModel().getLocationsByGate(gate.getId());
 		} else {
 			// We need to have gate to continue below
 			return locations;

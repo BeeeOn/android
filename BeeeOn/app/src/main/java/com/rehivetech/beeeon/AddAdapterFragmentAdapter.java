@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.rehivetech.beeeon.activity.fragment.AddAdapterFragment;
+import com.rehivetech.beeeon.activity.fragment.AddGateFragment;
 import com.rehivetech.beeeon.activity.fragment.IntroImageFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
@@ -36,7 +36,7 @@ public class AddAdapterFragmentAdapter extends FragmentPagerAdapter implements I
 			case 2:
 				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step, mActivity.getString(R.string.tut_add_adapter_text_3));
 			case 3:
-				return new AddAdapterFragment();
+				return new AddGateFragment();
 		}
 		return null;
 	}

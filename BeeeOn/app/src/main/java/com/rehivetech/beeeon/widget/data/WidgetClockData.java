@@ -315,7 +315,7 @@ public class WidgetClockData extends WidgetData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
 		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {

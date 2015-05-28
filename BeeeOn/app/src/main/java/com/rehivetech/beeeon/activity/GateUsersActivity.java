@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.UsersListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.EditUserTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveUserTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
@@ -36,15 +36,15 @@ import com.rehivetech.beeeon.pair.UserPair;
 
 import java.util.List;
 
-public class AdapterUsersActivity extends BaseApplicationActivity {
+public class GateUsersActivity extends BaseApplicationActivity {
 
 	private Controller mController;
 
-	private AdapterUsersActivity mActivity;
+	private GateUsersActivity mActivity;
 
 	private Gate mGate;
 
-	private List<User> mAdapterUsers;
+	private List<User> mGateUsers;
 
 	private ListView mListActUsers;
 	private ListView mListPenUsers;
@@ -61,11 +61,11 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_adapter_users);
+		setContentView(R.layout.activity_gate_users);
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_adapter_users);
+			mToolbar.setTitle(R.string.title_activity_gate_users);
 			setSupportActionBar(mToolbar);
 		}
 
@@ -78,18 +78,18 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Get selected gate
-		mGate = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		mGate = mController.getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
 
 		// Get all users for gate
-		doReloadAdapterUsersTask(mGate.getId(), true);
+		doReloadGateUsersTask(mGate.getId(), true);
 	}
 
 	private void initLayouts() {
 		// Get elements
-		mListActUsers = (ListView) findViewById(R.id.adapter_users_list);
+		mListActUsers = (ListView) findViewById(R.id.gate_users_list);
 		//mListPenUsers = (ListView) findViewById(R.id.adapter_users_pending_list);
 
-		mListActUsers.setAdapter(new UsersListAdapter(mActivity, mAdapterUsers, null));
+		mListActUsers.setAdapter(new UsersListAdapter(mActivity, mGateUsers, null));
 
 		mListActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
@@ -104,7 +104,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 		// Set listview height, for all 
 		float scale = mActivity.getResources().getDisplayMetrics().density;
-		mListActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mAdapterUsers.size())));
+		mListActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mGateUsers.size())));
 
 		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.fab_add_user);
 		mButton.setOnClickListener(new OnClickListener() {
@@ -112,8 +112,8 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			@Override
 			public void onClick(View v) {
 				// Go to add new user 
-				Intent intent = new Intent(mActivity, AddAdapterUserActivity.class);
-				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mGate.getId());
+				Intent intent = new Intent(mActivity, AddGateUserActivity.class);
+				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mGate.getId());
 				mActivity.startActivity(intent);
 			}
 		});
@@ -123,7 +123,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 	@Override
 	protected void onAppResume() {
 		if (mGate != null)
-			doReloadAdapterUsersTask(mGate.getId(), true);
+			doReloadGateUsersTask(mGate.getId(), true);
 	}
 
 	@Override
@@ -160,14 +160,14 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		}
 	}
 
-	private void doReloadAdapterUsersTask(final String adapterId, boolean forceReload) {
-		ReloadAdapterDataTask reloadUsersTask = new ReloadAdapterDataTask(this, forceReload, ReloadAdapterDataTask.ReloadWhat.USERS);
+	private void doReloadGateUsersTask(final String gateId, boolean forceReload) {
+		ReloadGateDataTask reloadUsersTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.USERS);
 
 		reloadUsersTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
-				mAdapterUsers = mController.getUsersModel().getUsersByAdapter(adapterId);
+				mGateUsers = mController.getUsersModel().getUsersByGate(gateId);
 
 				initLayouts();
 			}
@@ -175,7 +175,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadUsersTask, adapterId);
+		callbackTaskManager.executeTask(reloadUsersTask, gateId);
 	}
 
 
@@ -187,7 +187,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				// Get all users for gate
-				doReloadAdapterUsersTask(mGate.getId(), true);
+				doReloadGateUsersTask(mGate.getId(), true);
 				if (success) {
 					// Hlaska o uspechu
 				}
@@ -206,7 +206,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				// Get all users for gate
-				doReloadAdapterUsersTask(mGate.getId(), true);
+				doReloadGateUsersTask(mGate.getId(), true);
 				if (success) {
 					// Hlaska o uspechu
 				}
@@ -225,7 +225,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.adapteruser_menu, menu);
+			inflater.inflate(R.menu.gateuser_menu, menu);
 			return true;
 		}
 
@@ -280,7 +280,7 @@ public class AdapterUsersActivity extends BaseApplicationActivity {
 
 		builder = new AlertDialog.Builder(mActivity);
 		builder.setView(mLayoutDialog)
-				.setTitle(getString(R.string.adapter_user_title_change_role));
+				.setTitle(getString(R.string.gate_user_title_change_role));
 
 		builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {

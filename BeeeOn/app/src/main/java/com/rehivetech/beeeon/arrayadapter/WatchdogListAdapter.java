@@ -104,7 +104,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 			case Watchdog.TYPE_SENSOR:
 				List<String> modulesIds = rule.getModules();
 				if (modulesIds.size() > 0) {
-					Module moduleFirst = mController.getDevicesModel().getModule(rule.getAdapterId(), modulesIds.get(0));
+					Module moduleFirst = mController.getDevicesModel().getModule(rule.getGateId(), modulesIds.get(0));
 					if (moduleFirst == null) return convertView;
 
 					holder.ItemIcon.setImageResource(moduleFirst.getIconResource());

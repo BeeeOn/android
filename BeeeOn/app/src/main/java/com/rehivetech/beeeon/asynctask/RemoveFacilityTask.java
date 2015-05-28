@@ -16,7 +16,7 @@ public class RemoveFacilityTask extends CallbackTask<DelFacilityPair> {
 	protected Boolean doInBackground(DelFacilityPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		Device device = controller.getDevicesModel().getFacility(pair.adapterID, pair.facilityID);
+		Device device = controller.getDevicesModel().getFacility(pair.gateId, pair.facilityId);
 		if (device == null)
 			return false;
 

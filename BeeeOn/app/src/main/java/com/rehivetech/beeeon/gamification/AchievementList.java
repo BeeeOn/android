@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.gamification;
 import android.content.Context;
 
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
@@ -54,7 +54,7 @@ public class AchievementList extends Observable {
 	}
 
 	public void doReloadAchievementsTask(final String adapterId, boolean forceReload) {
-		ReloadAdapterDataTask reloadAchievementsTask = new ReloadAdapterDataTask(mContext, forceReload, ReloadAdapterDataTask.ReloadWhat.ACHIEVEMENTS);
+		ReloadGateDataTask reloadAchievementsTask = new ReloadGateDataTask(mContext, forceReload, ReloadGateDataTask.ReloadWhat.ACHIEVEMENTS);
 
 		reloadAchievementsTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override

@@ -103,9 +103,9 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 
 	private void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_adapter_skip);
-		mCancel = (Button) findViewById(R.id.add_adapter_cancel);
-		mNext = (Button) findViewById(R.id.add_adapter_next);
+		mSkip = (Button) findViewById(R.id.add_gate_skip);
+		mCancel = (Button) findViewById(R.id.add_gate_cancel);
+		mNext = (Button) findViewById(R.id.add_gate_next);
 
 		mSkip.setVisibility(View.INVISIBLE);
 
@@ -128,7 +128,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				mListOfName = mFragment.getListOfName();
 				mNewLocation = mFragment.getNewLocation();
 				mNewIconSpinner = mFragment.getNewIconSpinner();
-				Device newDevice = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mPairGate.getId()).get(0);
+				Device newDevice = mController.getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
 
 				// Controll if Names arent empty
 				for (int i = 0; i < newDevice.getModules().size(); i++) {

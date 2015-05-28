@@ -59,7 +59,7 @@ public class SensorListItem extends AbstractListItem {
 		}
 
 		Device device = mModule.getDevice();
-		Gate gate = mController.getAdaptersModel().getAdapter(device.getAdapterId());
+		Gate gate = mController.getGatesModel().getGate(device.getGateId());
 
 		if (timeHelper != null) {
 			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(device.getLastUpdate(), gate)));

@@ -4,21 +4,21 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 
-public class SwitchAdapterTask extends CallbackTask<String> {
+public class SwitchGateTask extends CallbackTask<String> {
 
 	private boolean mForceReload;
 
-	public SwitchAdapterTask(Context context, boolean forceReload) {
+	public SwitchGateTask(Context context, boolean forceReload) {
 		super(context);
 
 		mForceReload = forceReload;
 	}
 
 	@Override
-	protected Boolean doInBackground(String adapterId) {
+	protected Boolean doInBackground(String gateId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.setActiveAdapter(adapterId, mForceReload);
+		return controller.setActiveAdapter(gateId, mForceReload);
 	}
 
 }

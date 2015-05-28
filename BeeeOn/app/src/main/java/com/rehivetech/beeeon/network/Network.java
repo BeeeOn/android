@@ -486,7 +486,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean addAdapter(String adapterID, String adapterName) {
+	public boolean addGate(String adapterID, String adapterName) {
 		ParsedMessage msg = doRequest(XmlCreator.createAddAdapter(mBT, adapterID, adapterName));
 
 		if (msg.getState() == State.TRUE)
@@ -498,7 +498,7 @@ public class Network implements INetwork {
 	@Override
 	// http://stackoverflow.com/a/509288/1642090
 	@SuppressWarnings("unchecked")
-	public List<Gate> getAdapters() {
+	public List<Gate> getGates() {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAdapters(mBT));
 
 		if (msg.getState() == State.ADAPTERS)
@@ -563,7 +563,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean prepareAdapterToListenNewSensors(String adapterID) {
+	public boolean prepareGateToListenNewSensors(String adapterID) {
 		ParsedMessage msg = doRequest(XmlCreator.createAdapterScanMode(mBT, adapterID));
 
 		if (msg.getState() == State.TRUE)

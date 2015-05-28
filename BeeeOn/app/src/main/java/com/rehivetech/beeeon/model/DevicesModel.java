@@ -80,7 +80,7 @@ public class DevicesModel extends BaseModel {
 	 * @param adapterId
 	 * @return List of devices (or empty list)
 	 */
-	public List<Device> getDevicesByAdapter(String adapterId) {
+	public List<Device> getDevicesByGate(String adapterId) {
 		List<Device> devices = mDevices.getObjects(adapterId);
 
 		// Sort result devices by id
@@ -98,7 +98,7 @@ public class DevicesModel extends BaseModel {
 	public List<Device> getDevicesByLocation(String adapterId, String locationId) {
 		List<Device> devices = new ArrayList<>();
 
-		for (Device device : getDevicesByAdapter(adapterId)) {
+		for (Device device : getDevicesByGate(adapterId)) {
 			if (device.getLocationId().equals(locationId)) {
 				devices.add(device);
 			}
@@ -114,7 +114,7 @@ public class DevicesModel extends BaseModel {
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadDevicesByAdapter(String adapterId, boolean forceReload) throws AppException {
+	public synchronized boolean reloadDevicesByGate(String adapterId, boolean forceReload) throws AppException {
 		if (!forceReload && !mDevices.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
@@ -148,7 +148,7 @@ public class DevicesModel extends BaseModel {
 			return false;
 
 		for (Device newDevice : newDevices) {
-			mDevices.addObject(newDevice.getAdapterId(), newDevice);
+			mDevices.addObject(newDevice.getGateId(), newDevice);
 		}
 
 		return true;
@@ -170,7 +170,7 @@ public class DevicesModel extends BaseModel {
 		if (newDevice == null)
 			return false;
 
-		mDevices.addObject(device.getAdapterId(), device);
+		mDevices.addObject(device.getGateId(), device);
 
 		return true;
 	}
@@ -185,7 +185,7 @@ public class DevicesModel extends BaseModel {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveFacility(Device device, EnumSet<SaveModule> what) throws AppException {
-		mNetwork.updateFacility(device.getAdapterId(), device, what);
+		mNetwork.updateFacility(device.getGateId(), device, what);
 		refreshFacility(device, true);
 
 		return true;
@@ -199,7 +199,7 @@ public class DevicesModel extends BaseModel {
 	public boolean deleteFacility(Device device) throws AppException {
 		if (mNetwork.deleteFacility(device)) {
 			// Device was deleted on server, remove it from map too
-			mDevices.removeObject(device.getAdapterId(), device.getId());
+			mDevices.removeObject(device.getGateId(), device.getId());
 			return true;
 		}
 
@@ -218,7 +218,7 @@ public class DevicesModel extends BaseModel {
 	public boolean saveModule(Module module, EnumSet<SaveModule> what) throws AppException {
 		Device device = module.getDevice();
 
-		mNetwork.updateModule(device.getAdapterId(), module, what);
+		mNetwork.updateModule(device.getGateId(), module, what);
 		refreshFacility(device, true);
 
 		return true;
@@ -240,7 +240,7 @@ public class DevicesModel extends BaseModel {
 
 		Device device = module.getDevice();
 
-		mNetwork.switchState(module.getDevice().getAdapterId(), module);
+		mNetwork.switchState(module.getDevice().getGateId(), module);
 		refreshFacility(device, true);
 
 		return true;

@@ -51,7 +51,7 @@ public final class Action {
 		// Sensor exists, we can open activity
 		Intent intent = new Intent(context, SensorDetailActivity.class);
 		intent.putExtra(SensorDetailActivity.EXTRA_MODULE_ID, module.getId());
-		intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, String.valueOf(adapterId));
+		intent.putExtra(SensorDetailActivity.EXTRA_GATE_ID, String.valueOf(adapterId));
 		intent.putExtra(SensorDetailActivity.EXTRA_ACTIVE_POS, pos);
 
 		context.startActivity(intent);

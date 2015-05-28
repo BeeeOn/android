@@ -46,7 +46,7 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
 
 		// Prepare progress dialog
 		mDialog = new ProgressDialog(this);
-		mDialog.setMessage(getString(R.string.progress_loading_adapters));
+		mDialog.setMessage(getString(R.string.progress_loading_gates));
 		mDialog.setCancelable(false);
 		mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 

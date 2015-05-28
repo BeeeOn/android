@@ -61,7 +61,7 @@ import java.util.List;
 public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private static final String TAG = WatchdogEditRuleActivity.class.getSimpleName();
 
-	public static final String EXTRA_ADAPTER_ID = "adapter_id";
+	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_RULE_ID = "rule_id";
 	public static final String EXTRA_IS_NEW = "rule_is_new";
 	public static final String EXTRA_GEOFENCE_ID_PICKED = "geofence_id_picked";
@@ -72,7 +72,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private static final int MODULES_SENSORS = 2;
 
 	// extras
-	private String mActiveAdapterId;
+	private String mActiveGateId;
 	private String mActiveRuleId;
 	private String mActiveGeoId;
 	private boolean mIsNew = false;
@@ -140,19 +140,19 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		}
 
 		if (bundle != null) {
-			mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
+			mActiveGateId = bundle.getString(EXTRA_GATE_ID);
 			mActiveRuleId = bundle.getString(EXTRA_RULE_ID);
 			mActiveGeoId = bundle.getString(EXTRA_GEOFENCE_ID_PICKED);
 			mIsNew = bundle.getBoolean(EXTRA_IS_NEW);
 		} else {
-			mActiveAdapterId = "";
+			mActiveGateId = "";
 			mActiveRuleId = "";
 			mActiveGeoId = "";
 			mIsNew = true;
 		}
 
 		// it's existing rule
-		if (!mIsNew && (mActiveAdapterId == null || mActiveAdapterId.isEmpty() || mActiveRuleId == null || mActiveRuleId.isEmpty())) {
+		if (!mIsNew && (mActiveGateId == null || mActiveGateId.isEmpty() || mActiveRuleId == null || mActiveRuleId.isEmpty())) {
 			Toast.makeText(this, R.string.toast_wrong_or_no_watchdog_rule, Toast.LENGTH_LONG).show();
 			finish();
 			return;
@@ -161,7 +161,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// get controller
 		mController = Controller.getInstance(this);
 		// get gate
-		mGate = (mActiveAdapterId == null || mActiveAdapterId.isEmpty()) ? mController.getActiveGate() : mController.getAdaptersModel().getAdapter(mActiveAdapterId);
+		mGate = (mActiveGateId == null || mActiveGateId.isEmpty()) ? mController.getActiveGate() : mController.getGatesModel().getGate(mActiveGateId);
 		if (mGate == null) {
 			Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
 			finish();
@@ -173,7 +173,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
 		// get all locations for spinners
-		mLocations = mController.getLocationsModel().getLocationsByAdapter(mGate.getId());
+		mLocations = mController.getLocationsModel().getLocationsByGate(mGate.getId());
 		// get all geofence areas
 		String userId = mController.getActualUser().getId();
 		mGeofences = mController.getGeofenceModel().getAllGeofences(userId);
@@ -195,7 +195,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 			}
 		} else {
 			mWatchdog = new Watchdog(Watchdog.TYPE_SENSOR);
-			mWatchdog.setAdapterId(mGate.getId());
+			mWatchdog.setGateId(mGate.getId());
 		}
 
 		mWatchdogOperator = mWatchdog.getOperatorType();
@@ -385,7 +385,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
+		savedInstanceState.putString(EXTRA_GATE_ID, mActiveGateId);
 		savedInstanceState.putString(EXTRA_RULE_ID, mActiveRuleId);
 		savedInstanceState.putBoolean(EXTRA_IS_NEW, mIsNew);
 		savedInstanceState.putString(EXTRA_GEOFENCE_ID_PICKED, mActiveGeoId);
@@ -556,7 +556,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	 */
 	private void doRemoveWatchdogTask() {
 		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(this, false);
-		DelWatchdogPair pair = new DelWatchdogPair(mWatchdog.getId(), mWatchdog.getAdapterId());
+		DelWatchdogPair pair = new DelWatchdogPair(mWatchdog.getId(), mWatchdog.getGateId());
 
 		removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override

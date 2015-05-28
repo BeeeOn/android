@@ -26,7 +26,7 @@ public class AchievementsModel extends BaseModel {
 		return mAchievementsHolder.getObjects(adapterId);
 	}
 
-	public synchronized boolean reloadAchievementsByAdapter(String adapterId, boolean forceReload) throws AppException {
+	public synchronized boolean reloadAchievementsByGate(String adapterId, boolean forceReload) throws AppException {
 		if (!forceReload && !mAchievementsHolder.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}

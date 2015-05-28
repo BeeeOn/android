@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.fragment.AddAdapterFragment;
+import com.rehivetech.beeeon.activity.fragment.AddGateFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
 public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
@@ -36,7 +36,7 @@ public class TestFragmentAdapter extends FragmentPagerAdapter implements IconPag
 
 				break;
 			case 4:
-				return new AddAdapterFragment();
+				return new AddGateFragment();
 		}
 		return null;
 	}

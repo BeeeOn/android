@@ -37,7 +37,7 @@
 				    android:textAppearance="?android:attr/textAppearanceMedium" />
 				
 				<EditText
-				    android:id="@+id/addadapter_text_name"
+				    android:id="@+id/addgate_text_name"
 				    android:layout_width="fill_parent"
 				    android:layout_height="wrap_content"
 				    android:layout_gravity="center"
@@ -78,7 +78,7 @@
 			        android:layout_gravity="center">
 			        
 			        <ImageButton
-					    android:id="@+id/addadapter_qrcode_button"
+					    android:id="@+id/addgate_qrcode_button"
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
 					    android:layout_gravity="center_horizontal"
@@ -96,7 +96,7 @@
 					    android:textAppearance="?android:attr/textAppearanceMedium" />
 					
 					<EditText
-					    android:id="@+id/addadapter_ser_num"
+					    android:id="@+id/addgate_ser_num"
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
 					    android:layout_gravity="center"

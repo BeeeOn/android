@@ -30,7 +30,7 @@ public final class Constants {
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
 	public static final String PERSISTENCE_PREF_ACTIVE_ADAPTER = "active_adapter";
-	public static final String PERSISTENCE_PREF_IGNORE_NO_ADAPTER = "ignore_no_adapter";
+	public static final String PERSISTENCE_PREF_IGNORE_NO_GATE = "ignore_no_adapter";
 	public static final String PERSISTENCE_PREF_LAST_LOCATION = "location_%s";
 	public static final String PERSISTENCE_PREF_SW2_ADAPTER = "pref_sw2_adapter";
 	public static final String PERSISTENCE_PREF_SW2_LOCATION = "pref_sw2_location";
@@ -86,17 +86,17 @@ public final class Constants {
 	 * GUI constants
 	 */
 
-	public static final int ADD_ADAPTER_REQUEST_CODE = 1000;
+	public static final int ADD_GATE_REQUEST_CODE = 1000;
 	public static final int EDIT_SENSOR_REQUEST_CODE = 1001;
 	public static final int ADD_SENSOR_REQUEST_CODE = 1002;
 	public static final int SETUP_SENSOR_REQUEST_CODE = 1003;
 
-	public static final int ADD_ADAPTER_SUCCESS = 1020;
+	public static final int ADD_GATE_SUCCESS = 1020;
 	public static final int SETUP_SENSOR_SUCCESS = 1021;
 	public static final int ADD_SENSOR_SUCCESS = 1022;
 	public static final int EDIT_SENSOR_SUCCESS = 1023;
 
-	public static final int ADD_ADAPTER_CANCELED = 1040;
+	public static final int ADD_GATE_CANCELED = 1040;
 	public static final int ADD_SENSOR_CANCELED = 1041;
 	public static final int SETUP_SENSOR_CANCELED = 1042;
 	public static final int EDIT_SENSOR_CANCELED = 1043;
@@ -109,7 +109,7 @@ public final class Constants {
 
 	public static final boolean GUI_DEBUG = true;
 
-	public static final String TUTORIAL_ADD_ADAPTER_SHOWED = "TUTORIAL_ADD_ADAPTER_SHOWED";
+	public static final String TUTORIAL_ADD_GATE_SHOWED = "TUTORIAL_ADD_GATE_SHOWED";
 
 	public static final String TUTORIAL_ADD_SENSOR_SHOWED = "TUTORIAL_ADD_SENSOR_SHOWED";
 
@@ -117,7 +117,7 @@ public final class Constants {
 
 	public static final String GUI_MENU_ALL_SENSOR_ID = "GUI_MENU_ALL_SENSOR_ID";
 
-	public static final String GUI_SELECTED_ADAPTER_ID = "GUI_SELECTED_ADAPTER_ID";
+	public static final String GUI_SELECTED_GATE_ID = "GUI_SELECTED_GATE_ID";
 
 	public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
 
@@ -164,5 +164,5 @@ public final class Constants {
 	// actor change
 	public static final String BROADCAST_ACTOR_CHANGED = "com.rehivetech.beeeon.BROADCAST_ACTOR_CHANGED";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
-	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID";
+	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID";
 }

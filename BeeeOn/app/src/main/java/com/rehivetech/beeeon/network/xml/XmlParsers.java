@@ -551,7 +551,7 @@ public class XmlParsers {
 		do {
 			Watchdog watchdog = new Watchdog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
 			watchdog.setId(getSecureAttrValue(Xconstants.ID));
-			watchdog.setAdapterId(aid);
+			watchdog.setGateId(aid);
 			watchdog.setEnabled(getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0);
 			watchdog.setName(getSecureAttrValue(Xconstants.NAME));
 

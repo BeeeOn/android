@@ -298,16 +298,16 @@ public class LoginActivity extends BaseActivity {
 						Log.d(TAG, "Login successful");
 						errFlag = false;
 
-						// Load all adapters and data for active one on login
-						mProgress.setMessageResource(R.string.progress_loading_adapters);
-						mController.getAdaptersModel().reloadAdapters(true);
+						// Load all gates and data for active one on login
+						mProgress.setMessageResource(R.string.progress_loading_gates);
+						mController.getGatesModel().reloadGates(true);
 
 						Gate active = mController.getActiveGate();
 						if (active != null) {
 							// Load data for active gate
-							mProgress.setMessageResource(R.string.progress_loading_adapter);
-							mController.getLocationsModel().reloadLocationsByAdapter(active.getId(), true);
-							mController.getDevicesModel().reloadDevicesByAdapter(active.getId(), true);
+							mProgress.setMessageResource(R.string.progress_loading_gate);
+							mController.getLocationsModel().reloadLocationsByGate(active.getId(), true);
+							mController.getDevicesModel().reloadDevicesByGate(active.getId(), true);
 						}
 
 						if (mLoginCancel) {

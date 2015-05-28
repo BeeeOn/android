@@ -125,14 +125,14 @@ public interface INetwork {
 	 * @param adapterName gate name
 	 * @return true if gate has been registered, false otherwise
 	 */
-	boolean addAdapter(String adapterID, String adapterName);
+	boolean addGate(String adapterID, String adapterName);
 
 	/**
 	 * Method ask for list of adapters. User has to be sign in before
 	 *
 	 * @return list of adapters or empty list
 	 */
-	List<Gate> getAdapters();
+	List<Gate> getGates();
 
 	/**
 	 * Method ask for whole gate data
@@ -188,7 +188,7 @@ public interface INetwork {
 	 * @param adapterID
 	 * @return
 	 */
-	boolean prepareAdapterToListenNewSensors(String adapterID);
+	boolean prepareGateToListenNewSensors(String adapterID);
 
 	/**
 	 * Method delete mDevice from server

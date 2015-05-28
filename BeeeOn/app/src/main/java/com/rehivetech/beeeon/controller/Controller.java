@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.model.AchievementsModel;
-import com.rehivetech.beeeon.model.AdaptersModel;
+import com.rehivetech.beeeon.model.GatesModel;
 import com.rehivetech.beeeon.model.BaseModel;
 import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.model.GcmModel;
@@ -217,8 +217,8 @@ public final class Controller {
 		return (GeofenceModel) getModelInstance(GeofenceModel.class);
 	}
 
-	public AdaptersModel getAdaptersModel() {
-		return (AdaptersModel) getModelInstance(AdaptersModel.class);
+	public GatesModel getGatesModel() {
+		return (GatesModel) getModelInstance(GatesModel.class);
 	}
 
 	public AchievementsModel getAchievementsModel() {
@@ -462,7 +462,7 @@ public final class Controller {
 
 			String lastId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, "");
 
-			mActiveGate = getAdaptersModel().getAdapterOrFirst(lastId);
+			mActiveGate = getGatesModel().getGateOrFirst(lastId);
 
 			if (mActiveGate != null && prefs != null)
 				prefs.edit().putString(Constants.PERSISTENCE_PREF_ACTIVE_ADAPTER, mActiveGate.getId()).apply();
@@ -489,7 +489,7 @@ public final class Controller {
 		}
 
 		// Find specified gate
-		mActiveGate = getAdaptersModel().getAdapter(id);
+		mActiveGate = getGatesModel().getGate(id);
 
 		if (mActiveGate == null) {
 			Log.d(TAG, String.format("Can't set active gate to '%s'", id));
@@ -499,8 +499,8 @@ public final class Controller {
 		Log.d(TAG, String.format("Set active gate to '%s'", mActiveGate.getName()));
 
 		// Load locations and devices, if needed
-		getLocationsModel().reloadLocationsByAdapter(id, forceReload);
-		getDevicesModel().reloadDevicesByAdapter(id, forceReload);
+		getLocationsModel().reloadLocationsByGate(id, forceReload);
+		getDevicesModel().reloadDevicesByGate(id, forceReload);
 
 		return true;
 	}

@@ -13,7 +13,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.AddAdapterActivity;
+import com.rehivetech.beeeon.activity.AddGateActivity;
 import com.rehivetech.beeeon.activity.AddSensorActivity;
 import com.rehivetech.beeeon.activity.IntroActivity;
 
@@ -72,8 +72,8 @@ public final class IntroImageFragment extends Fragment {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			Context mActivity = getActivity();
-			if (mActivity instanceof AddAdapterActivity) {
-				((AddAdapterActivity) mActivity).resetBtn();
+			if (mActivity instanceof AddGateActivity) {
+				((AddGateActivity) mActivity).resetBtn();
 			}
 			if (mActivity instanceof AddSensorActivity) {
 				((AddSensorActivity) mActivity).resetBtn();

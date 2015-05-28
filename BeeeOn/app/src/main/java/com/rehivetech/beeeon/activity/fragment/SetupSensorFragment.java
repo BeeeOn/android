@@ -70,7 +70,7 @@ public class SetupSensorFragment extends TrackFragment {
 			// CHYBA
 			return;
 		}
-		mNewDevices = mController.getUninitializedDevicesModel().getUninitializedDevicesByAdapter(mGate.getId());
+		mNewDevices = mController.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGate.getId());
 
 		// TODO: sent as parameter if we want first uninitialized module or some
 		// module with particular id
@@ -153,7 +153,7 @@ public class SetupSensorFragment extends TrackFragment {
 		// Set involved time of mDevice
 		if (timeHelper != null) {
 			Device device = mNewDevices.get(0);
-			Gate gate = mController.getAdaptersModel().getAdapter(device.getAdapterId());
+			Gate gate = mController.getGatesModel().getGate(device.getGateId());
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getInvolveTime(), gate)));
 		}
 

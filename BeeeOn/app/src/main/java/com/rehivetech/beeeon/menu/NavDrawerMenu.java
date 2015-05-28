@@ -19,11 +19,11 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.AdapterUsersActivity;
+import com.rehivetech.beeeon.activity.GateUsersActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
-import com.rehivetech.beeeon.activity.menuItem.AdapterMenuItem;
+import com.rehivetech.beeeon.activity.menuItem.GateMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.LocationMenuItem;
@@ -33,7 +33,7 @@ import com.rehivetech.beeeon.activity.menuItem.SeparatorMenuItem;
 import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
 import com.rehivetech.beeeon.arrayadapter.MenuListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.SwitchAdapterTask;
+import com.rehivetech.beeeon.asynctask.SwitchGateTask;
 import com.rehivetech.beeeon.asynctask.UnregisterAdapterTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -100,7 +100,7 @@ public class NavDrawerMenu {
 				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
 				Gate gate = mController.getActiveGate();
 				switch (mSelectedMenuItem.getType()) {
-					case ADAPTER:
+					case GATE:
 						if (gate == null)
 							break;
 						// if it is not chosen, switch to selected gate
@@ -150,7 +150,7 @@ public class NavDrawerMenu {
 					case LOCATION:
 
 						break;
-					case ADAPTER:
+					case GATE:
 						Log.i(TAG, "Long press - gate");
 						mMode = mActivity.startSupportActionMode(new ActionModeAdapters());
 						mSelectedMenuItem.setIsSelected();
@@ -238,7 +238,7 @@ public class NavDrawerMenu {
 	private void changeMenuItem(String ID, boolean closeDrawer) {
 		mActiveItem = ID;
 		// TODO
-		mActivity.setActiveAdapterID(mActiveAdapterId);
+		mActivity.setActiveGateId(mActiveAdapterId);
 		mActivity.setActiveMenuID(mActiveItem);
 		mActivity.redrawMainFragment();
 
@@ -249,14 +249,14 @@ public class NavDrawerMenu {
 	}
 
 	private void doSwitchAdapterTask(String adapterId) {
-		SwitchAdapterTask switchAdapterTask = new SwitchAdapterTask(mActivity, false);
+		SwitchGateTask switchGateTask = new SwitchGateTask(mActivity, false);
 
-		switchAdapterTask.setListener(new CallbackTaskListener() {
+		switchGateTask.setListener(new CallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mActivity.setActiveAdapterAndMenu();
+					mActivity.setActiveGateAndMenu();
 					mActivity.redrawMainFragment();
 					redrawMenu();
 				}
@@ -264,7 +264,7 @@ public class NavDrawerMenu {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(switchAdapterTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(switchGateTask, adapterId);
 	}
 
 	private void doUnregisterAdapterTask(String adapterId) {
@@ -276,7 +276,7 @@ public class NavDrawerMenu {
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(mActivity, R.string.toast_adapter_removed, Toast.LENGTH_LONG).show();
-					mActivity.setActiveAdapterAndMenu();
+					mActivity.setActiveGateAndMenu();
 					mActivity.redraw();
 				}
 			}
@@ -303,7 +303,7 @@ public class NavDrawerMenu {
 			}
 		}));
 
-		List<Gate> gates = mController.getAdaptersModel().getAdapters();
+		List<Gate> gates = mController.getGatesModel().getGates();
 
 
 		// Adding separator as item (we don't want to let it float as header)
@@ -317,7 +317,7 @@ public class NavDrawerMenu {
 				return mMenuAdapter;
 			// Adding gates
 			for (Gate actGate : gates) {
-				mMenuAdapter.addItem(new AdapterMenuItem(actGate.getName(), actGate.getRole().getStringResource(), activeGate.getId().equals(actGate.getId()), actGate.getId()));
+				mMenuAdapter.addItem(new GateMenuItem(actGate.getName(), actGate.getRole().getStringResource(), activeGate.getId().equals(actGate.getId()), actGate.getId()));
 			}
 
 			// Adding separator as item (we don't want to let it float as header)
@@ -361,7 +361,7 @@ public class NavDrawerMenu {
 		mActiveItem = id;
 	}
 
-	public void setAdapterID(String adaID) {
+	public void setGateId(String adaID) {
 		mActiveAdapterId = adaID;
 	}
 
@@ -372,7 +372,7 @@ public class NavDrawerMenu {
 			MenuInflater inflater = mode.getMenuInflater();
 			inflater.inflate(R.menu.adapter_menu, menu);
 
-			if (!mController.isUserAllowed(mController.getAdaptersModel().getAdapter(mSelectedMenuItem.getId()).getRole())) {
+			if (!mController.isUserAllowed(mController.getGatesModel().getGate(mSelectedMenuItem.getId()).getRole())) {
 				menu.getItem(0).setVisible(false);// EDIT
 				menu.getItem(1).setVisible(false);// USERS
 			}
@@ -388,14 +388,14 @@ public class NavDrawerMenu {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 			Log.d(TAG, "ActionMode Gate - item id: " + item.getItemId());
-			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST ADAPTER
+			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST GATE
 				doUnregisterAdapterTask(mSelectedMenuItem.getId());
-			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF ADAPTER
-				Intent intent = new Intent(mActivity, AdapterUsersActivity.class);
-				intent.putExtra(Constants.GUI_SELECTED_ADAPTER_ID, mSelectedMenuItem.getId());
+			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
+				Intent intent = new Intent(mActivity, GateUsersActivity.class);
+				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
 
-			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME ADAPTER
+			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME GATE
 				Toast.makeText(mActivity, R.string.toast_not_implemented, Toast.LENGTH_LONG).show();
 			}
 

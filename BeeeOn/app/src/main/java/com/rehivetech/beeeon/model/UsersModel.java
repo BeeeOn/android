@@ -35,7 +35,7 @@ public class UsersModel extends BaseModel {
 	 *
 	 * @return List of users (or empty list)
 	 */
-	public List<User> getUsersByAdapter(String adapterId) {
+	public List<User> getUsersByGate(String adapterId) {
 		List<User> users = mUsers.getObjects(adapterId);
 
 		// Sort result users by name, id
@@ -51,7 +51,7 @@ public class UsersModel extends BaseModel {
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadUsersByAdapter(String adapterId, boolean forceReload) {
+	public synchronized boolean reloadUsersByGate(String adapterId, boolean forceReload) {
 		if (!forceReload && !mUsers.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}

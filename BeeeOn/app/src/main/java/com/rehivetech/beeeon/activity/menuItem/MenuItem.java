@@ -11,7 +11,7 @@ public interface MenuItem {
 	// TODO test pryc -> presunout do sekce Applications
 
 	public enum MenuItemType {
-		ADAPTER, GROUP_IMAGE, GROUP, CUSTOM_VIEW, LOCATION, PROFILE, SEPARATOR, SETTING, EMPTY, APPLICATION
+		GATE, GROUP_IMAGE, GROUP, CUSTOM_VIEW, LOCATION, PROFILE, SEPARATOR, SETTING, EMPTY, APPLICATION
 	}
 
 	public void setView(View view);

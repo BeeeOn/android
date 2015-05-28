@@ -55,7 +55,7 @@ import java.util.List;
  */
 public class ListLocationControlExtension extends ManagedControlExtension {
 
-	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	public static final String EXTRA_ADAPTER_ID = "GATE_ID";
 
 	private Gate mGate;
 	private List<Location> mLocations;
@@ -229,11 +229,11 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
+				mGate = mController.getGatesModel().getGate(mAdapterId);
 
 				LocationsModel locationsModel = mController.getLocationsModel();
-				locationsModel.reloadLocationsByAdapter(mAdapterId, mForceUpdate);
-				mLocations = locationsModel.getLocationsByAdapter(mAdapterId);
+				locationsModel.reloadLocationsByGate(mAdapterId, mForceUpdate);
+				mLocations = locationsModel.getLocationsByGate(mAdapterId);
 
 				mForceUpdate = true;
 

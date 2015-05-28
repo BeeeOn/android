@@ -91,7 +91,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 			return rv;
 		}
 
-		Gate gate = mController.getAdaptersModel().getAdapter(dev.getDevice().getAdapterId());
+		Gate gate = mController.getGatesModel().getGate(dev.getDevice().getGateId());
 
 		rv.setTextViewText(R.id.widget_loc_item_name, dev.getName());
 		rv.setImageViewResource(R.id.widget_loc_item_icon, dev.getIconResource());
@@ -102,7 +102,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		// send broadcast to widgetprovider with information about clicked item
 		Bundle extras = new Bundle();
 		extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
-		extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getDevice().getAdapterId());
+		extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getDevice().getGateId());
 		Intent fillInIntent = new Intent();
 		fillInIntent.putExtras(extras);
 		rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
@@ -141,7 +141,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 		mController = Controller.getInstance(mContext);
 		try {
-			mController.getLocationsModel().reloadLocationsByAdapter(mLocationAdapterId, false);
+			mController.getLocationsModel().reloadLocationsByGate(mLocationAdapterId, false);
 			mDevices = mController.getDevicesModel().getDevicesByLocation(mLocationAdapterId, mLocationId);
 		} catch (AppException e) {
 			e.printStackTrace();

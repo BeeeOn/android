@@ -6,13 +6,13 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 
-public class AdapterMenuItem extends AbstractMenuItem {
+public class GateMenuItem extends AbstractMenuItem {
 	private String mName;
 	private int mRole;
 	private boolean mIsChosen;
 
-	public AdapterMenuItem(String name, int resRole, boolean isChosen, String id) {
-		super(id, MenuItemType.ADAPTER);
+	public GateMenuItem(String name, int resRole, boolean isChosen, String id) {
+		super(id, MenuItemType.GATE);
 		mName = name;
 		mRole = resRole;
 		mIsChosen = isChosen;
@@ -37,7 +37,7 @@ public class AdapterMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_adapter;
+		return R.layout.drawer_listview_gate;
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class UpdateAchievementTask extends CallbackTask<AchievementPair> {
 	protected Boolean doInBackground(AchievementPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		mAchievementId = controller.getAchievementsModel().updateAchievement(pair.adapter, pair.achievement);
+		mAchievementId = controller.getAchievementsModel().updateAchievement(pair.gate, pair.achievement);
 		return mAchievementId.size() > 0;
 	}
 

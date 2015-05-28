@@ -7,10 +7,10 @@ import com.rehivetech.beeeon.household.user.User;
  */
 public class UserPair {
 	public final User user;
-	public final String adapterID;
+	public final String gateId;
 
 	public UserPair(final User usr, final String adapter) {
 		this.user = usr;
-		this.adapterID = adapter;
+		this.gateId = adapter;
 	}
 }

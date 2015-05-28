@@ -178,7 +178,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		// Prepare data
 		Log.d(TAG, String.format("Preparing custom view for gate %s", gate.getId()));
 
-		for (Device device : mController.getDevicesModel().getDevicesByAdapter(gate.getId())) {
+		for (Device device : mController.getDevicesModel().getDevicesByGate(gate.getId())) {
 			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getModules().size()));
 
 			for (Module module : device.getModules()) {

@@ -104,7 +104,7 @@ public class DemoNetwork implements INetwork {
 		if (module.getType().isActor() && module.getValue().hasValue())
 			return;
 
-		Random rand = getRandomForAdapter(module.getDevice().getAdapterId());
+		Random rand = getRandomForAdapter(module.getDevice().getGateId());
 
 		if (module.getValue() instanceof BaseEnumValue) {
 			BaseEnumValue value = (BaseEnumValue) module.getValue();
@@ -231,7 +231,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addAdapter(String adapterId, String adapterName) {
+	public boolean addGate(String adapterId, String adapterName) {
 		if (!isAdapterAllowed(adapterId)) {
 			return false;
 		}
@@ -255,7 +255,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Gate> getAdapters() {
+	public List<Gate> getGates() {
 		// Init demo data, if not initialized yet
 		initDemoData();
 
@@ -322,13 +322,13 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean prepareAdapterToListenNewSensors(String adapterId) {
+	public boolean prepareGateToListenNewSensors(String adapterId) {
 		return isAdapterAllowed(adapterId);
 	}
 
 	@Override
 	public boolean deleteFacility(Device device) {
-		return mDevices.removeObject(device.getAdapterId(), device.getId()) != null;
+		return mDevices.removeObject(device.getGateId(), device.getId()) != null;
 	}
 
 	@Override
@@ -347,9 +347,9 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public Device getFacility(Device device) {
-		Random rand = getRandomForAdapter(device.getAdapterId());
+		Random rand = getRandomForAdapter(device.getGateId());
 
-		Device newDevice = mDevices.getObject(device.getAdapterId(), device.getId());
+		Device newDevice = mDevices.getObject(device.getGateId(), device.getId());
 
 		if (newDevice != null && newDevice.isExpired()) {
 			// Set new random values
@@ -721,7 +721,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean deleteWatchdog(Watchdog watchdog) {
-		return mWatchdogs.removeObject(watchdog.getAdapterId(), watchdog.getId()) != null;
+		return mWatchdogs.removeObject(watchdog.getGateId(), watchdog.getId()) != null;
 	}
 
 	@Override

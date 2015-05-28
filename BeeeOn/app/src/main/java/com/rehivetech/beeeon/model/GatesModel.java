@@ -12,13 +12,13 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 import java.util.List;
 
-public class AdaptersModel extends BaseModel {
+public class GatesModel extends BaseModel {
 
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
-	private final DataHolder<Gate> mAdaptersHolder = new DataHolder<>();
+	private final DataHolder<Gate> mGatesHolder = new DataHolder<>();
 
-	public AdaptersModel(INetwork network) {
+	public GatesModel(INetwork network) {
 		super(network);
 	}
 
@@ -28,17 +28,17 @@ public class AdaptersModel extends BaseModel {
 	 * @param id
 	 * @return Gate if found, null otherwise.
 	 */
-	public Gate getAdapterOrFirst(String id) {
-		return mAdaptersHolder.getObjectOrFirst(id);
+	public Gate getGateOrFirst(String id) {
+		return mGatesHolder.getObjectOrFirst(id);
 	}
 
 	/**
-	 * Return all adapters that this logged in user has access to.
+	 * Return all gates that this logged in user has access to.
 	 *
-	 * @return List of adapters
+	 * @return List of gates
 	 */
-	public List<Gate> getAdapters() {
-		List<Gate> gates = mAdaptersHolder.getObjects();
+	public List<Gate> getGates() {
+		List<Gate> gates = mGatesHolder.getObjects();
 
 		// Sort result gates by name, id
 		Collections.sort(gates, new NameIdentifierComparator());
@@ -52,8 +52,8 @@ public class AdaptersModel extends BaseModel {
 	 * @param id
 	 * @return Gate if found, null otherwise
 	 */
-	public Gate getAdapter(String id) {
-		return mAdaptersHolder.getObject(id);
+	public Gate getGate(String id) {
+		return mGatesHolder.getObject(id);
 	}
 
 	/**
@@ -61,15 +61,15 @@ public class AdaptersModel extends BaseModel {
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @return true on successfully started pairing mode, false otherwise
 	 */
-	public boolean sendPairRequest(String adapterId) {
-		return mNetwork.prepareAdapterToListenNewSensors(adapterId);
+	public boolean sendPairRequest(String gateId) {
+		return mNetwork.prepareGateToListenNewSensors(gateId);
 	}
 
 	/**
-	 * Registers new gate. This automatically reloads list of adapters.
+	 * Registers new gate. This automatically reloads list of gates.
 	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
@@ -77,9 +77,9 @@ public class AdaptersModel extends BaseModel {
 	 * @param name
 	 * @return true on success, false otherwise
 	 */
-	public boolean registerAdapter(String id, String name) {
-		if (mNetwork.isAvailable() && mNetwork.addAdapter(id, name)) {
-			reloadAdapters(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
+	public boolean registerGate(String id, String name) {
+		if (mNetwork.isAvailable() && mNetwork.addGate(id, name)) {
+			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
 			return true;
 		}
 
@@ -94,10 +94,10 @@ public class AdaptersModel extends BaseModel {
 	 * @param id
 	 * @return true on success, false otherwise
 	 */
-	public boolean unregisterAdapter(String id, User user) {
+	public boolean unregisterGate(String id, User user) {
 		// FIXME: This debug implementation unregisters actual user from gate, not gate itself
 		if (mNetwork.deleteAccount(id, user)) {
-			reloadAdapters(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
+			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
 			return true;
 		}
 
@@ -110,13 +110,13 @@ public class AdaptersModel extends BaseModel {
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadAdapters(boolean forceReload) throws AppException {
-		if (!forceReload && !mAdaptersHolder.isExpired(RELOAD_EVERY_SECONDS)) {
+	public synchronized boolean reloadGates(boolean forceReload) throws AppException {
+		if (!forceReload && !mGatesHolder.isExpired(RELOAD_EVERY_SECONDS)) {
 			return false;
 		}
 
-		mAdaptersHolder.setObjects(mNetwork.getAdapters());
-		mAdaptersHolder.setLastUpdate(DateTime.now());
+		mGatesHolder.setObjects(mNetwork.getGates());
+		mGatesHolder.setLastUpdate(DateTime.now());
 
 		return true;
 	}

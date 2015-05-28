@@ -103,7 +103,7 @@
 			android:label="@string/title_activity_sensor_detail">
 		</activity>
 		<activity
-			android:name=".activity.AddAdapterActivity"
+			android:name=".activity.AddGateActivity"
 			android:label="@string/title_activity_add_adapter">
 		</activity>
 		<activity
@@ -134,11 +134,11 @@
 			android:label="@string/title_activity_map_geofence">
 		</activity>
 		<activity
-			android:name=".activity.AdapterUsersActivity"
-			android:label="@string/title_activity_adapter_users">
+			android:name=".activity.GateUsersActivity"
+			android:label="@string/title_activity_gate_users">
 		</activity>
 		<activity
-			android:name=".activity.AddAdapterUserActivity"
+			android:name=".activity.AddGateUserActivity"
 			android:label="@string/title_activity_add_adapter_user">
 		</activity>
 		<activity

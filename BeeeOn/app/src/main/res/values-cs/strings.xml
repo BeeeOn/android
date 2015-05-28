@@ -12,7 +12,7 @@
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
     <string name="title_activity_map_geofence">Geolokační oblasti</string>
-    <string name="title_activity_adapter_users">Uživatelé brány</string>
+    <string name="title_activity_gate_users">Uživatelé brány</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
     <string name="title_activity_achievement_overview">Přehled achievementů</string>
@@ -67,7 +67,7 @@
     <string name="add_users_adapter">Přidat uživatele</string>
     <string name="add_user_email_header">E-mail</string>
     <string name="add_user_role_header">Role</string>
-    <string name="adapter_user_title_change_role">Změnit roli uživatele</string>
+    <string name="gate_user_title_change_role">Změnit roli uživatele</string>
 
     <!-- Hints -->
     <string name="login_user_name_hint">Login/email</string>
@@ -116,8 +116,8 @@
     <string name="progress_signing">Přihlašuji&#8230;</string>
     <string name="progress_google">Přenášení dat s Googlem&#8230;</string>
     <string name="progress_signup">Registruji nového uživatele&#8230;</string>
-    <string name="progress_loading_adapters">Nahrávám brány&#8230;</string>
-    <string name="progress_loading_adapter">Nahrávám data bran&#8230;</string>
+    <string name="progress_loading_gates">Nahrávám brány&#8230;</string>
+    <string name="progress_loading_gate">Nahrávám data bran&#8230;</string>
     <string name="progress_loading_demo">Nahrávám demo data&#8230;</string>
     <string name="progress_saving_data">Ukládám data&#8230;</string>
     <string name="progress_checking_location">Ověřuji polohu&#8230;</string>
@@ -152,7 +152,7 @@
     <string name="action_about">O aplikaci</string>
     <string name="action_search">Hledání</string>
     <string name="action_refreshlist">Obnovit seznam</string>
-    <string name="action_addadapter">Přidání brány</string>
+    <string name="action_addgate">Přidání brány</string>
     <string name="action_addsensor">Přidání zařízení</string>
     <string name="action_logout">Odhlášení</string>
     <string name="action_hide_sensor">Skrýt zařízení</string>
@@ -166,7 +166,7 @@
     <string name="sen_detail_graph_info">Aktivujte dotykem</string>
     <string name="loading_data">Nahrávám data&#8230;</string>
     <string name="no_sensor_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
-    <string name="no_adapter_cap">ŽÁDNÁ BRÁNA</string>
+    <string name="no_gate_cap">ŽÁDNÁ BRÁNA</string>
     <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
     <string name="profile_category_senzors">Zařízení</string>
     <string name="profile_category_friends">Přátelé</string>

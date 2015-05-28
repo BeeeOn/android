@@ -27,9 +27,9 @@ import com.rehivetech.beeeon.pair.AddUserPair;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddAdapterUserActivity extends BaseApplicationActivity {
+public class AddGateUserActivity extends BaseApplicationActivity {
 
-	protected static final String TAG = "AddAdapterUserActivity";
+	protected static final String TAG = "AddGateUserActivity";
 
 	private Controller mController;
 
@@ -48,7 +48,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_adapter_user);
+		setContentView(R.layout.activity_add_gate_user);
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (mToolbar != null) {
@@ -71,7 +71,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		// Get selected gate
-		mGate = mController.getAdaptersModel().getAdapter(getIntent().getStringExtra(Constants.GUI_SELECTED_ADAPTER_ID));
+		mGate = mController.getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
 
 		initLayout();
 	}
@@ -79,7 +79,7 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 	private void initLayout() {
 		mEmail = (EditText) findViewById(R.id.add_user_email);
 		mRole = (Spinner) findViewById(R.id.add_user_role);
-		mBtn = (Button) findViewById(R.id.add_user_adapter_save);
+		mBtn = (Button) findViewById(R.id.add_user_gate_save);
 
 		List<CharSequence> roles = new ArrayList<>();
 		for (User.Role role : User.Role.values()) {
@@ -114,12 +114,12 @@ public class AddAdapterUserActivity extends BaseApplicationActivity {
 
 				AddUserPair pair = new AddUserPair(mGate, newUser);
 
-				doAddAdapterUserTask(pair);
+				doAddGateUserTask(pair);
 			}
 		});
 	}
 
-	protected void doAddAdapterUserTask(AddUserPair pair) {
+	protected void doAddGateUserTask(AddUserPair pair) {
 		AddUserTask addUserTask = new AddUserTask(mActivity);
 
 		addUserTask.setListener(new CallbackTaskListener() {

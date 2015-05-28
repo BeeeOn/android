@@ -27,7 +27,7 @@ public class UninitializedDevicesModel extends BaseModel {
 	 * @param adapterId
 	 * @return List of uninitialized devices (or empty list)
 	 */
-	public List<Device> getUninitializedDevicesByAdapter(String adapterId) {
+	public List<Device> getUninitializedDevicesByGate(String adapterId) {
 		List<Device> devices = mUninitializedDevices.getObjects(adapterId);
 
 		// Sort result devices by id
@@ -43,7 +43,7 @@ public class UninitializedDevicesModel extends BaseModel {
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadUninitializedDevicesByAdapter(String adapterId, boolean forceReload) throws AppException {
+	public synchronized boolean reloadUninitializedDevicesByGate(String adapterId, boolean forceReload) throws AppException {
 		if (!forceReload && !mUninitializedDevices.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}

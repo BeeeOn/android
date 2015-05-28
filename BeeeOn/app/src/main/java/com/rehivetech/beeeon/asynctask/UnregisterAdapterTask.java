@@ -18,7 +18,7 @@ public class UnregisterAdapterTask extends CallbackTask<String> {
 		Gate activeGate = controller.getActiveGate();
 
 		// Unegister gate and reset activeGate
-		if (controller.getAdaptersModel().unregisterAdapter(adapterId, controller.getActualUser())) {
+		if (controller.getGatesModel().unregisterGate(adapterId, controller.getActualUser())) {
 			if (activeGate != null && activeGate.getId().equals(adapterId)) {
 				controller.setActiveAdapter("", false);
 			}

@@ -60,7 +60,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	protected int mLastKnowPosition = 0;
 
 	public static final String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
-	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	public static final String EXTRA_ADAPTER_ID = "GATE_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
 	private String mAdapterId;
@@ -158,7 +158,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		if (menuItem == MENU_REFRESH) {
 
 			// clearDisplay();
-			// mModules = mController.getAdapter(adapterId, false)
+			// mModules = mController.getGate(adapterId, false)
 			// .getDevicesByLocation(locationStr);
 			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
 			actualize(mLastKnowPosition);
@@ -192,7 +192,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		Module curModule = mModules.get(position);
 		Device curDevice = curModule.getDevice();
-		Gate curGate = mController.getAdaptersModel().getAdapter(curDevice.getAdapterId());
+		Gate curGate = mController.getGatesModel().getGate(curDevice.getGateId());
 
 		// Title data
 		Bundle syncBundle = new Bundle();
@@ -276,7 +276,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 				mModules = new ArrayList<Module>();
 
-				mController.getDevicesModel().reloadDevicesByAdapter(mAdapterId, true);
+				mController.getDevicesModel().reloadDevicesByGate(mAdapterId, true);
 				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mAdapterId, mLocationStr);
 				for (Device facility : devices) {
 					mModules.addAll(facility.getModules());

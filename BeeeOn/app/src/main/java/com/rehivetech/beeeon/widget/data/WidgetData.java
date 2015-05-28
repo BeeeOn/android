@@ -428,7 +428,7 @@ public abstract class WidgetData {
 		Intent intent = new Intent(context, SensorDetailActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra(SensorDetailActivity.EXTRA_MODULE_ID, moduleId);
-		intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, adapterId);
+		intent.putExtra(SensorDetailActivity.EXTRA_GATE_ID, adapterId);
 		return intent;
 	}
 
@@ -442,7 +442,7 @@ public abstract class WidgetData {
 	public static PendingIntent startMainActivityPendingIntent(Context context, String adapterId) {
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		intent.putExtra(MainActivity.ADAPTER_ID, adapterId);
+		intent.putExtra(MainActivity.GATE_ID, adapterId);
 
 		return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}

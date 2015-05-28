@@ -237,7 +237,7 @@ public class XmlCreator {
 	 * Method create XML for AddAdapter message
 	 *
 	 * @param bt          userID of user
-	 * @param aid         adapterID of actual gate
+	 * @param aid         gateId of actual gate
 	 * @param adapterName name of gate
 	 * @return AddAdapter message
 	 * @since 2.2
@@ -276,7 +276,7 @@ public class XmlCreator {
 	 * Method create XML for AdapterListen message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual gate
+	 * @param aid gateId of actual gate
 	 * @return XML of AdapterListen message
 	 * @since 2.2
 	 */
@@ -288,7 +288,7 @@ public class XmlCreator {
 	 * Method create XML for GetAllDevices message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual gate
+	 * @param aid gateId of actual gate
 	 * @return XML of GetAllDevices message
 	 * @since 2.2
 	 */
@@ -300,7 +300,7 @@ public class XmlCreator {
 	 * Method create XML for getting uninitialized devices
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual gate
+	 * @param aid gateId of actual gate
 	 * @return XML of GetNewDevices message
 	 * @since 2.2
 	 */
@@ -331,18 +331,18 @@ public class XmlCreator {
 
 				@Override
 				public int compare(Device left, Device right) {
-					return Integer.valueOf(left.getAdapterId()).compareTo(Integer.valueOf(right.getAdapterId()));
+					return Integer.valueOf(left.getGateId()).compareTo(Integer.valueOf(right.getGateId()));
 				}
 			});
 
 			String aid = "";
 			for (Device device : devices) {
 
-				boolean isSameAdapter = aid.equals(device.getAdapterId());
+				boolean isSameAdapter = aid.equals(device.getGateId());
 				if (!isSameAdapter) { // new gate
 					if (aid.length() > 0)
 						serializer.endTag(ns, Xconstants.ADAPTER);
-					aid = device.getAdapterId();
+					aid = device.getGateId();
 					serializer.startTag(ns, Xconstants.ADAPTER);
 					serializer.attribute(ns, Xconstants.ID, aid);
 				}
@@ -370,7 +370,7 @@ public class XmlCreator {
 	 * Method create XML for GetLog message
 	 *
 	 * @param bt         userID of user
-	 * @param aid        adapterID of actual gate
+	 * @param aid        gateId of actual gate
 	 * @param did        deviceID of wanted module
 	 * @param moduleType is type of sensor
 	 * @param from       date in unix timestamp
@@ -407,7 +407,7 @@ public class XmlCreator {
 	 * Method create XML of SetDevs message. Almost all fields are optional
 	 *
 	 * @param bt      userID of user
-	 * @param aid     adapterID of actual gate
+	 * @param aid     gateId of actual gate
 	 * @param devices with changed fields
 	 * @return Partial message
 	 * @since 2.2
@@ -460,7 +460,7 @@ public class XmlCreator {
 	 * New method create XML of SetDevs message with only one module in it. toSave parameter must by set properly.
 	 *
 	 * @param bt     userID of user
-	 * @param aid    adapterID of actual gate
+	 * @param aid    gateId of actual gate
 	 * @param module to save
 	 * @param toSave ECO mode to save only wanted fields
 	 * @return SetDevs message
@@ -514,7 +514,7 @@ public class XmlCreator {
 	 * Method create XML for Switch message
 	 *
 	 * @param bt     userID of user
-	 * @param aid    adapterID of actual gate
+	 * @param aid    gateId of actual gate
 	 * @param module to switch value
 	 * @return XML of Switch message
 	 * @since 2.2
@@ -533,7 +533,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeleteDevice(String bt, Device device) {
-		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.BT, bt, Xconstants.AID, device.getAdapterId(), Xconstants.DID, device.getAddress());
+		return createComAttribsVariant(Xconstants.STATE, DELDEVICE, Xconstants.BT, bt, Xconstants.AID, device.getGateId(), Xconstants.DID, device.getAddress());
 	}
 
 	// /////////////////////////////////////ROOMS//////////////////////////////////////////////////////
@@ -555,7 +555,7 @@ public class XmlCreator {
 	 * Method create XML of SetRooms message
 	 *
 	 * @param bt        userID of user
-	 * @param aid       adapterID of actual gate
+	 * @param aid       gateId of actual gate
 	 * @param locations list of location object to update
 	 * @return message SetRooms
 	 * @since 2.2
@@ -603,7 +603,7 @@ public class XmlCreator {
 	 * Method create XML of GetRooms message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual gate
+	 * @param aid gateId of actual gate
 	 * @return message GetRooms
 	 * @since 2.2
 	 */
@@ -617,7 +617,7 @@ public class XmlCreator {
 	 * Method create XML for AddAcount message
 	 *
 	 * @param bt    userID of user
-	 * @param aid   adapterID of actual gate
+	 * @param aid   gateId of actual gate
 	 * @param users map with User object and User.Role
 	 * @return AddAcc message
 	 * @since 2.2
@@ -630,7 +630,7 @@ public class XmlCreator {
 	 * Method create XML for SetAcount message
 	 *
 	 * @param bt    userID of user
-	 * @param aid   adapterID of actual gate
+	 * @param aid   gateId of actual gate
 	 * @param users map with User object and User.Role
 	 * @return SetAcc message
 	 * @since 2.2
@@ -643,7 +643,7 @@ public class XmlCreator {
 	 * Method create XML for DelAcc message
 	 *
 	 * @param bt    userID of user
-	 * @param aid   adapterID of actual gate
+	 * @param aid   gateId of actual gate
 	 * @param users list with Users
 	 * @return dellAcc message
 	 * @since 2.2
@@ -675,7 +675,7 @@ public class XmlCreator {
 	 * Method create XML for GetAccs message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual gate
+	 * @param aid gateId of actual gate
 	 * @return GetAcc message
 	 * @since 2.2
 	 */
@@ -689,7 +689,7 @@ public class XmlCreator {
 	 * Method create XML of SetTimeZone message
 	 *
 	 * @param bt              userID of user
-	 * @param aid             adapterID of actual gate
+	 * @param aid             gateId of actual gate
 	 * @param offsetInMinutes difference to GMT (Xconstants.UTC+0)
 	 * @return SetTimeZone message
 	 * @since 2.2
@@ -702,7 +702,7 @@ public class XmlCreator {
 	 * Method create XML of GetTimeZone message
 	 *
 	 * @param bt  userID of user
-	 * @param aid adapterID of actual gate
+	 * @param aid gateId of actual gate
 	 * @return GetTimeZone message
 	 * @since 2.2
 	 */

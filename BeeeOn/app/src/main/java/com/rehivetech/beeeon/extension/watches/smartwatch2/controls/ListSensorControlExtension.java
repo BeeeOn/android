@@ -56,7 +56,7 @@ import java.util.List;
  */
 public class ListSensorControlExtension extends ManagedControlExtension {
 
-	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
+	public static final String EXTRA_ADAPTER_ID = "GATE_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
 	private List<Module> mModules;
@@ -235,12 +235,12 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mController.getAdaptersModel().reloadAdapters(true);
-				mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
+				mController.getGatesModel().reloadGates(true);
+				mGate = mController.getGatesModel().getGate(mAdapterId);
 				if (mGate != null) {
 					mModules = new ArrayList<Module>();
 
-					mController.getDevicesModel().reloadDevicesByAdapter(mAdapterId, true);
+					mController.getDevicesModel().reloadDevicesByGate(mAdapterId, true);
 					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocationStr);
 					for (Device facility : devices) {
 						mModules.addAll(facility.getModules());

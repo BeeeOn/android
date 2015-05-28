@@ -34,7 +34,7 @@ import com.rehivetech.beeeon.activity.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.asynctask.ActorActionTask;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.GetModuleLogTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -79,7 +79,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
 	public static final String ARG_LOC_ID = "locationid";
-	public static final String ARG_ADAPTER_ID = "adapterid";
+	public static final String ARG_GATE_ID = "gateid";
 
 	private SensorDetailActivity mActivity;
 
@@ -107,7 +107,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	private String mLocationID;
 	private int mCurPageNumber;
 	private int mSelPageNumber;
-	private String mAdapterId;
+	private String mGateId;
 
 
 	private BaseSeries<DataPoint> mGraphSeries;
@@ -129,7 +129,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "OnCreate - Here 1 " + mCurPageNumber);
 		mController = Controller.getInstance(mActivity);
-		mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
+		mGate = mController.getGatesModel().getGate(mGateId);
 	}
 
 	@Override
@@ -145,14 +145,14 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
 			mModuleID = savedInstanceState.getString(ARG_SEN_ID);
-			mAdapterId = savedInstanceState.getString(ARG_ADAPTER_ID);
+			mGateId = savedInstanceState.getString(ARG_GATE_ID);
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
 			mCurPageNumber = savedInstanceState.getInt(ARG_CUR_PAGE);
-			mGate = mController.getAdaptersModel().getAdapter(mAdapterId);
+			mGate = mController.getGatesModel().getGate(mGateId);
 		}
 		Log.d(TAG, "OnActivityCreated");
-		mModule = mController.getDevicesModel().getModule(mAdapterId, mModuleID);
+		mModule = mController.getDevicesModel().getModule(mGateId, mModuleID);
 		if (mModule != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mModule.getId(), mModule.getName()));
 			initLayout(mModule);
@@ -164,7 +164,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(ARG_SEN_ID, mModuleID);
-		savedInstanceState.putString(ARG_ADAPTER_ID, mAdapterId);
+		savedInstanceState.putString(ARG_GATE_ID, mGateId);
 		savedInstanceState.putString(ARG_LOC_ID, mLocationID);
 		savedInstanceState.putInt(ARG_CUR_PAGE, mCurPageNumber);
 		savedInstanceState.putInt(ARG_SEL_PAGE, mSelPageNumber);
@@ -177,7 +177,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			Log.d(TAG, "This fragment is visible - dev " + mModuleID);
-			doReloadDevicesTask(mAdapterId, false);
+			doReloadDevicesTask(mGateId, false);
 		}
 
 	}
@@ -314,7 +314,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		if (mController != null) {
 			Location location = null;
 
-			Gate gate = mController.getAdaptersModel().getAdapter(mAdapterId);
+			Gate gate = mController.getGatesModel().getGate(mGateId);
 			if (gate != null) {
 				location = mController.getLocationsModel().getLocation(gate.getId(), module.getDevice().getLocationId());
 			}
@@ -332,7 +332,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		Device device = module.getDevice();
-		Gate gate = mController.getAdaptersModel().getAdapter(device.getAdapterId());
+		Gate gate = mController.getGatesModel().getGate(device.getGateId());
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = mController.getUserSettings();
@@ -411,7 +411,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			@Override
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
-				doReloadDevicesTask(mAdapterId, true);
+				doReloadDevicesTask(mGateId, true);
 			}
 		});
 		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
@@ -521,8 +521,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mSelPageNumber = mActiveModulePosition;
 	}
 
-	public void setAdapterID(String mActiveAdapterId) {
-		mAdapterId = mActiveAdapterId;
+	public void setGateId(String mActiveGateId) {
+		mGateId = mActiveGateId;
 	}
 
 	public void setFragmentAdapter(SensorDetailActivity.ScreenSlidePagerAdapter screenSlidePagerAdapter) {
@@ -553,7 +553,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			@Override
 			public void onExecute(boolean success) {
 				// Get new module
-				mModule = mController.getDevicesModel().getModule(module.getDevice().getAdapterId(), module.getId());
+				mModule = mController.getDevicesModel().getModule(module.getDevice().getGateId(), module.getId());
 
 				// Set icon of sensor
 				mIcon.setImageResource(mModule.getIconResource());
@@ -568,8 +568,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
 	}
 
-	protected void doReloadDevicesTask(final String adapterId, final boolean forceRefresh) {
-		ReloadAdapterDataTask reloadDevicesTask = new ReloadAdapterDataTask(mActivity, forceRefresh, ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.FACILITIES);
 
 		reloadDevicesTask.setListener(new CallbackTaskListener() {
 
@@ -583,7 +583,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mModule = mController.getDevicesModel().getModule(adapterId, mModuleID);
+				mModule = mController.getDevicesModel().getModule(gateId, mModuleID);
 				if (mModule == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;
@@ -595,7 +595,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, gateId);
 	}
 
 	protected void doLoadGraphData() {

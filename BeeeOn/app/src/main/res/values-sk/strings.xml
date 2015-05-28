@@ -11,7 +11,7 @@
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurácia widgetu</string>
     <string name="title_activity_map_geofence">Geolokačné oblasti</string>
-    <string name="title_activity_adapter_users">Používatelia brány</string>
+    <string name="title_activity_gate_users">Používatelia brány</string>
     <string name="title_activity_add_adapter_user">Pridanie nového používateľa</string>
     <string name="title_activity_setup_sensor">Nastavenie zariadenia</string>
 
@@ -103,8 +103,8 @@
     <string name="progress_signing">Prihlasujem&#8230;</string>
     <string name="progress_google">Prenášanie dát s Google&#8230;</string>
     <string name="progress_signup">Registrujem nového užívateľa&#8230;</string>
-    <string name="progress_loading_adapters">Nahrávam Vaše brány&#8230;</string>
-    <string name="progress_loading_adapter">Nahrávam dáta brán&#8230;</string>
+    <string name="progress_loading_gates">Nahrávam Vaše brány&#8230;</string>
+    <string name="progress_loading_gate">Nahrávam dáta brán&#8230;</string>
     <string name="progress_loading_demo">Nahrávam demo dáta&#8230;</string>
     <string name="progress_saving_data">Ukladám dáta&#8230;</string>
 
@@ -137,7 +137,7 @@
     <string name="action_about">O aplikácii</string>
     <string name="action_search">Hľadanie</string>
     <string name="action_refreshlist">Obnoviť zoznam</string>
-    <string name="action_addadapter">Pridanie brány</string>
+    <string name="action_addgate">Pridanie brány</string>
     <string name="action_addsensor">Pridanie zaradenia</string>
     <string name="action_logout">Odhlásenie</string>
     <string name="action_hide_sensor">Skryť zariadenie</string>
@@ -151,7 +151,7 @@
     <string name="sen_detail_graph_info">Aktivujte dotykom</string>
     <string name="loading_data">Nahrávam dáta&#8230;</string>
     <string name="no_sensor_cap">ŽIADNE ZARIADENIE</string>
-    <string name="no_adapter_cap">ŽIADNA BRÁNA</string>
+    <string name="no_gate_cap">ŽIADNA BRÁNA</string>
     <string name="no_rules_cap">ŽIADNE PRAVIDLO</string>
 
     <!-- Arrays -->
@@ -294,7 +294,7 @@
     <string name="choose_adapter">Zvoľte bránu:</string>
     <string name="adausr_menu_edit">Editovať používateľa</string>
     <string name="adausr_menu_del">Odstrániť používateľa</string>
-    <string name="adapter_user_title_change_role">Zmeniť úlohu používateľa</string>
+    <string name="gate_user_title_change_role">Zmeniť úlohu používateľa</string>
     <string name="adapter_isnt_set">Nastavte východziu bránu</string>
     <string name="adapter_doest_exist">Východzia brána už neexistuje. Nastavte novú východziu bránu.</string>
     <string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>

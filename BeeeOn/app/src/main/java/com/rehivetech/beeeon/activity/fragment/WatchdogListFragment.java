@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.WatchdogEditRuleActivity;
 import com.rehivetech.beeeon.arrayadapter.WatchdogListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchdogTask;
 import com.rehivetech.beeeon.asynctask.SaveWatchdogTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
@@ -42,7 +42,7 @@ import java.util.List;
 public class WatchdogListFragment extends BaseApplicationFragment {
 	private static final String TAG = WatchdogListFragment.class.getSimpleName();
 
-	private static final String ADAPTER_ID = "lastAdapterId";
+	private static final String GATE_ID = "lastGateId";
 
 	private SwipeRefreshLayout mSwipeLayout;
 	private Controller mController;
@@ -52,7 +52,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	List<Watchdog> mWatchdogs;
 
-	private String mActiveAdapterId;
+	private String mActiveGateId;
 
 	private View mView;
 	private ActionMode mMode;
@@ -71,7 +71,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		Log.d(TAG, "onCreate()");
 
 		if (savedInstanceState != null) {
-			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
+			mActiveGateId = savedInstanceState.getString(GATE_ID);
 		}
 	}
 
@@ -124,17 +124,17 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		super.onResume();
 		mController = Controller.getInstance(mActivity);
 
-		if (mActiveAdapterId == null) {
+		if (mActiveGateId == null) {
 			Gate gate = mController.getActiveGate();
 			if (gate == null)
 				return;
-			mActiveAdapterId = gate.getId();
+			mActiveGateId = gate.getId();
 		}
 
 		// if we don't have any data first time shows button to refresh
 		redrawRules();
 		// try to reload data
-		doReloadWatchdogsTask(mActiveAdapterId, false, false);
+		doReloadWatchdogsTask(mActiveGateId, false, false);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
+		savedInstanceState.putString(GATE_ID, mActiveGateId);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -210,7 +210,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 				Watchdog rule = mWatchdogAdapter.getRule(position);
 
 				Bundle bundle = new Bundle();
-				bundle.putString(WatchdogEditRuleActivity.EXTRA_ADAPTER_ID, rule.getAdapterId());
+				bundle.putString(WatchdogEditRuleActivity.EXTRA_GATE_ID, rule.getGateId());
 				bundle.putString(WatchdogEditRuleActivity.EXTRA_RULE_ID, rule.getId());
 
 				Intent intent = new Intent(mActivity, WatchdogEditRuleActivity.class);
@@ -237,7 +237,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 * Redraw GUI rules, called asynchronously (callback) when new data available
 	 */
 	private void redrawRules() {
-		mWatchdogs = mController.getWatchdogsModel().getWatchdogsByAdapter(mActiveAdapterId);
+		mWatchdogs = mController.getWatchdogsModel().getWatchdogsByAdapter(mActiveGateId);
 
 		boolean haveWatchdogs = mWatchdogs.size() > 0;
 
@@ -286,12 +286,12 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	/**
 	 * Async task for reloading fresh watchdog data
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 */
-	public void doReloadWatchdogsTask(String adapterId, boolean forceReload, final boolean isSwipeRefresh) {
+	public void doReloadWatchdogsTask(String gateId, boolean forceReload, final boolean isSwipeRefresh) {
 		Log.d(TAG, "reloadWatchdogsTask()");
 
-		ReloadAdapterDataTask reloadWatchdogTask = new ReloadAdapterDataTask(mActivity, forceReload, ReloadAdapterDataTask.ReloadWhat.WATCHDOGS);
+		ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, forceReload, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
 
 		reloadWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
@@ -303,7 +303,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadWatchdogTask, adapterId);
+		mActivity.callbackTaskManager.executeTask(reloadWatchdogTask, gateId);
 	}
 
 	/**
@@ -313,7 +313,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 */
 	private void doRemoveWatchdogTask(Watchdog watchdog) {
 		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity, false);
-		DelWatchdogPair pair = new DelWatchdogPair(watchdog.getId(), watchdog.getAdapterId());
+		DelWatchdogPair pair = new DelWatchdogPair(watchdog.getId(), watchdog.getGateId());
 
 		removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override

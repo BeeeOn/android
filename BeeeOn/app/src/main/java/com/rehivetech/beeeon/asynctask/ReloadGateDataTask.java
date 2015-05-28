@@ -8,14 +8,14 @@ import com.rehivetech.beeeon.household.gate.Gate;
 /**
  * Reloads specified data from server.
  */
-public class ReloadAdapterDataTask extends CallbackTask<String> {
+public class ReloadGateDataTask extends CallbackTask<String> {
 
 	private final boolean mForceReload;
 
 	private ReloadWhat mWhat;
 
 	public enum ReloadWhat {
-		ADAPTERS_AND_ACTIVE_ADAPTER,
+		GATES_AND_ACTIVE_GATE,
 		LOCATIONS,
 		FACILITIES,
 		UNINITIALIZED_FACILITIES,
@@ -24,7 +24,7 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 		ACHIEVEMENTS,
 	}
 
-	public ReloadAdapterDataTask(Context context, boolean forceReload, ReloadWhat what) {
+	public ReloadGateDataTask(Context context, boolean forceReload, ReloadWhat what) {
 		super(context);
 
 		mForceReload = forceReload;
@@ -32,42 +32,42 @@ public class ReloadAdapterDataTask extends CallbackTask<String> {
 	}
 
 	@Override
-	protected Boolean doInBackground(String adapterId) {
+	protected Boolean doInBackground(String gateId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		if (mWhat == ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER) {
-			controller.getAdaptersModel().reloadAdapters(mForceReload);
+		if (mWhat == ReloadWhat.GATES_AND_ACTIVE_GATE) {
+			controller.getGatesModel().reloadGates(mForceReload);
 
 			Gate active = controller.getActiveGate();
 			if (active == null)
 				return true;
 
 			// We need to update also devices
-			adapterId = active.getId();
+			gateId = active.getId();
 			mWhat = ReloadWhat.FACILITIES;
 		}
 
 		if (mWhat == ReloadWhat.LOCATIONS || mWhat == ReloadWhat.FACILITIES) {
-			controller.getLocationsModel().reloadLocationsByAdapter(adapterId, mForceReload);
+			controller.getLocationsModel().reloadLocationsByGate(gateId, mForceReload);
 		}
 
 		if (mWhat == ReloadWhat.FACILITIES) {
-			controller.getDevicesModel().reloadDevicesByAdapter(adapterId, mForceReload);
+			controller.getDevicesModel().reloadDevicesByGate(gateId, mForceReload);
 		}
 
 		if (mWhat == ReloadWhat.UNINITIALIZED_FACILITIES) {
-			controller.getUninitializedDevicesModel().reloadUninitializedDevicesByAdapter(adapterId, mForceReload);
+			controller.getUninitializedDevicesModel().reloadUninitializedDevicesByGate(gateId, mForceReload);
 		}
 
 		if (mWhat == ReloadWhat.USERS) {
-			controller.getUsersModel().reloadUsersByAdapter(adapterId, mForceReload);
+			controller.getUsersModel().reloadUsersByGate(gateId, mForceReload);
 		}
 
 		if (mWhat == ReloadWhat.WATCHDOGS) {
-			controller.getWatchdogsModel().reloadWatchdogsByAdapter(adapterId, mForceReload);
+			controller.getWatchdogsModel().reloadWatchdogsByGate(gateId, mForceReload);
 		}
 		if (mWhat == ReloadWhat.ACHIEVEMENTS) {
-			controller.getAchievementsModel().reloadAchievementsByAdapter(adapterId, mForceReload);
+			controller.getAchievementsModel().reloadAchievementsByGate(gateId, mForceReload);
 		}
 
 		return true;

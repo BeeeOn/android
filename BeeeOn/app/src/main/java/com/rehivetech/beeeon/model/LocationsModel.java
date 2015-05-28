@@ -50,7 +50,7 @@ public class LocationsModel extends BaseModel {
 	 *
 	 * @return List of locations (or empty list)
 	 */
-	public List<Location> getLocationsByAdapter(String adapterId) {
+	public List<Location> getLocationsByGate(String adapterId) {
 		List<Location> locations = mLocations.getObjects(adapterId);
 
 		// Sort result locations by name, id
@@ -69,7 +69,7 @@ public class LocationsModel extends BaseModel {
 	 * @param forceReload
 	 * @return
 	 */
-	public synchronized boolean reloadLocationsByAdapter(String adapterId, boolean forceReload) {
+	public synchronized boolean reloadLocationsByGate(String adapterId, boolean forceReload) {
 		if (!forceReload && !mLocations.isExpired(adapterId, RELOAD_EVERY_SECONDS)) {
 			return false;
 		}

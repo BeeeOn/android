@@ -106,12 +106,12 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		if (adapterId != null) {
 			Controller controller = Controller.getInstance(mContext);
 
-			controller.getAdaptersModel().reloadAdapters(false);
-			Gate gate = controller.getAdaptersModel().getAdapter(adapterId);
+			controller.getGatesModel().reloadGates(false);
+			Gate gate = controller.getGatesModel().getGate(adapterId);
 			// if default gate is defined
 			if (gate != null) {
 				if (strLocation != null) {
-					controller.getDevicesModel().reloadDevicesByAdapter(gate.getId(), false);
+					controller.getDevicesModel().reloadDevicesByGate(gate.getId(), false);
 					List<Device> sensors = controller.getDevicesModel().getDevicesByLocation(gate.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
@@ -128,7 +128,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			}
 		}
 
-		List<Gate> gates = mController.getAdaptersModel().getAdapters();
+		List<Gate> gates = mController.getGatesModel().getGates();
 		if (gates.size() < 1) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
 			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));

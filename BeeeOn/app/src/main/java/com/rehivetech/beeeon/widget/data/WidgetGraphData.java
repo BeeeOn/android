@@ -156,7 +156,7 @@ public class WidgetGraphData extends WidgetModuleData {
 		if (mTimeHelper == null || mUnitsHelper == null) return;
 		Log.d(TAG, "prepareWidgetGraphView");
 
-		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
 		String graphDateTimeFormat = "dd.MM. kk:mm";
 		final DateTimeFormatter fmt = mTimeHelper.getFormatter(graphDateTimeFormat, gate);
 		GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
@@ -250,7 +250,7 @@ public class WidgetGraphData extends WidgetModuleData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Gate gate = mController.getAdaptersModel().getAdapter(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
 		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {

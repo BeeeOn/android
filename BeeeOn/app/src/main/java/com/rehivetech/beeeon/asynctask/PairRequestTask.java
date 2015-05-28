@@ -11,10 +11,10 @@ public class PairRequestTask extends CallbackTask<String> {
 	}
 
 	@Override
-	protected Boolean doInBackground(String adapterId) {
+	protected Boolean doInBackground(String gateId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		return controller.getAdaptersModel().sendPairRequest(adapterId);
+		return controller.getGatesModel().sendPairRequest(gateId);
 	}
 
 }

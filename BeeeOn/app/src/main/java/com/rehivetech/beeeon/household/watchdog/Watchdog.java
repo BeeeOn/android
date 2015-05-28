@@ -77,11 +77,11 @@ public class Watchdog implements INameIdentifier {
 		mId = Id;
 	}
 
-	public String getAdapterId() {
+	public String getGateId() {
 		return mAdapterId;
 	}
 
-	public void setAdapterId(String adapterId) {
+	public void setGateId(String adapterId) {
 		mAdapterId = adapterId;
 	}
 

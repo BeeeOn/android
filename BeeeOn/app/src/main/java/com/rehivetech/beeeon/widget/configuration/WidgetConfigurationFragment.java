@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
@@ -51,7 +51,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected Controller mController;
 
 	protected WidgetData mGeneralWidgetdata;
-	protected ReloadAdapterDataTask mReloadTask;
+	protected ReloadGateDataTask mReloadTask;
 
 	protected List<Gate> mGates;
 	protected Gate mActiveGate;
@@ -111,7 +111,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 				Gate gate = mGates.get(position);
 				if (gate == null) return;
 
-				doChangeAdapter(gate.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+				doChangeAdapter(gate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
 			}
 
 			@Override
@@ -142,7 +142,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		mController = Controller.getInstance(mActivity);
 
 		// reloads all gateways and actual one
-		mReloadTask = new ReloadAdapterDataTask(mActivity, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		mReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
 		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -199,7 +199,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * When fragment is shown for the first time
 	 */
 	protected void onAllAdaptersReload() {
-		mGates = mController.getAdaptersModel().getAdapters();
+		mGates = mController.getGatesModel().getGates();
 		mAdapterNeedsToReload = false;
 		// gate spinner refresh
 		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, mGates);
@@ -216,7 +216,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.widgetAdapterId);
 		if (selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()) {
-			doChangeAdapter(mActiveGate.getId(), ReloadAdapterDataTask.ReloadWhat.FACILITIES);
+			doChangeAdapter(mActiveGate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
 		} else {
 			mAdapterSpinner.setSelection(selectedAdapterIndex);
 		}
@@ -238,7 +238,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected void getAdapterData(String adapterId) {
 		if (adapterId.isEmpty()) return;
 
-		mLocations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
+		mLocations = mController.getLocationsModel().getLocationsByGate(adapterId);
 
 		// get all devices by locations (avoiding mDevice without location)
 		mModules.clear();
@@ -256,7 +256,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 *
 	 * @param adapterId
 	 */
-	protected void doChangeAdapter(final String adapterId, ReloadAdapterDataTask.ReloadWhat whatToReload) {
+	protected void doChangeAdapter(final String adapterId, ReloadGateDataTask.ReloadWhat whatToReload) {
 		if (!mAdapterNeedsToReload) {
 			getAdapterData(adapterId);
 			updateLayout();
@@ -264,7 +264,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 			return;
 		}
 
-		mReloadTask = new ReloadAdapterDataTask(mActivity, false, whatToReload);
+		mReloadTask = new ReloadGateDataTask(mActivity, false, whatToReload);
 		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {

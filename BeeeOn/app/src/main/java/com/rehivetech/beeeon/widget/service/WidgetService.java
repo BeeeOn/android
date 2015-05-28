@@ -327,7 +327,7 @@ public class WidgetService extends Service {
 			}
 
 			// Reload adapters to have data about Timezone offset
-			mController.getAdaptersModel().reloadAdapters(false);
+			mController.getGatesModel().reloadGates(false);
 
 			List<Device> usedDevices = new ArrayList<>();
 			List<WidgetWeatherPersistence> usedWeatherData = new ArrayList<>();
@@ -342,7 +342,7 @@ public class WidgetService extends Service {
 						usedDevices.add((Device) refObj);
 					} else if (refObj instanceof Location) {
 						Location loc = (Location) refObj;
-						mController.getLocationsModel().reloadLocationsByAdapter(loc.getAdapterId(), false); // TODO load only necessary locations
+						mController.getLocationsModel().reloadLocationsByGate(loc.getAdapterId(), false); // TODO load only necessary locations
 					} else if (refObj instanceof LogDataPair) {
 						LogDataPair logPair = (LogDataPair) refObj;
 						mController.getModuleLogsModel().reloadModuleLog(logPair);
@@ -1070,7 +1070,7 @@ public class WidgetService extends Service {
 
 				// if any actor value was changed, tell the service to refresh widget with that module
 				case Constants.BROADCAST_ACTOR_CHANGED:
-					final String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
+					final String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID);
 					final String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
 
 					if (adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()) {

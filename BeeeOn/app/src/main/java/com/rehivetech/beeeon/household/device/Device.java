@@ -130,7 +130,7 @@ public class Device implements IIdentifier {
 	 *
 	 * @return gate id
 	 */
-	public String getAdapterId() {
+	public String getGateId() {
 		return mAdapterId;
 	}
 

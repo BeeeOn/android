@@ -14,36 +14,36 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.AddAdapterActivity;
+import com.rehivetech.beeeon.activity.AddGateActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
 import com.rehivetech.beeeon.base.TrackFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
-public class AddAdapterFragment extends TrackFragment {
+public class AddGateFragment extends TrackFragment {
 
-	private static final String TAG = AddAdapterFragment.class.getSimpleName();
+	private static final String TAG = AddGateFragment.class.getSimpleName();
 
-	public AddAdapterActivity mActivity;
+	public AddGateActivity mActivity;
 	private LinearLayout mLayout;
 	private View mView;
 	private Controller mController;
 
-	private EditText mAdapterCode;
-	private EditText mAdapterName;
+	private EditText mGateCode;
+	private EditText mGateName;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Get activity and controller
-		mActivity = (AddAdapterActivity) getActivity();
+		mActivity = (AddGateActivity) getActivity();
 		mController = Controller.getInstance(mActivity);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.activity_add_adapter_activity_dialog, container, false);
+		mView = inflater.inflate(R.layout.activity_add_gate_activity_dialog, container, false);
 
 		mLayout = (LinearLayout) mView.findViewById(R.id.container);
 
@@ -56,7 +56,7 @@ public class AddAdapterFragment extends TrackFragment {
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
-			Log.d(TAG, "ADD ADAPTER fragment is visible");
+			Log.d(TAG, "ADD GATE fragment is visible");
 			mActivity.setBtnLastPage();
 			mActivity.setFragment(this);
 			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -66,7 +66,7 @@ public class AddAdapterFragment extends TrackFragment {
 	}
 
 	private void initLayout() {
-		((ImageButton) mView.findViewById(R.id.addadapter_qrcode_button)).setOnClickListener(new OnClickListener() {
+		((ImageButton) mView.findViewById(R.id.addgate_qrcode_button)).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -81,8 +81,8 @@ public class AddAdapterFragment extends TrackFragment {
 			}
 		});
 
-		mAdapterCode = (EditText) mView.findViewById(R.id.addadapter_ser_num);
-		mAdapterName = (EditText) mView.findViewById(R.id.addadapter_text_name);
+		mGateCode = (EditText) mView.findViewById(R.id.addgate_ser_num);
+		mGateName = (EditText) mView.findViewById(R.id.addgate_text_name);
 	}
 
 
@@ -92,19 +92,19 @@ public class AddAdapterFragment extends TrackFragment {
 
 		if (requestCode == 0 && resultCode == MainActivity.RESULT_OK) {
 			// Fill scanned code into edit text
-			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addadapter_ser_num);
+			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
 			serialNumberEdit.setText(data.getStringExtra("SCAN_RESULT"));
 
 			//TODO: And click positive button
 		}
 	}
 
-	public String getAdapterName() {
-		return mAdapterName.getText().toString();
+	public String getGateName() {
+		return mGateName.getText().toString();
 	}
 
-	public String getAdapterCode() {
-		return mAdapterCode.getText().toString();
+	public String getGateCode() {
+		return mGateCode.getText().toString();
 	}
 
 }

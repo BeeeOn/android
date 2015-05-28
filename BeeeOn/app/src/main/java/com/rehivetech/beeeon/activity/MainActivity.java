@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
 import com.rehivetech.beeeon.activity.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
+import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -38,7 +38,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	private Controller mController;
 
-	public static final String ADD_ADAPTER_TAG = "addAdapterDialog";
+	public static final String ADD_GATE_TAG = "addGateDialog";
 	public static final String ADD_SENSOR_TAG = "addSensorDialog";
 	public static final String FRG_TAG_LOC = "Loc";
 	public static final String FRG_TAG_CUS = "Cus";
@@ -58,7 +58,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	/**
 	 * Instance save state tags
 	 */
-	public static final String ADAPTER_ID = "lastAdapterId";
+	public static final String GATE_ID = "lastGateId";
 
 	private static final String LAST_MENU_ID = "lastMenuId";
 	private static final String CSTVIEW = "lastcustomView";
@@ -69,7 +69,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	 * saved instance states
 	 */
 	private String mActiveMenuId;
-	private String mActiveAdapterId;
+	private String mActiveGateId;
 
 	private boolean mFirstUseApp = true;
 	private ShowcaseView mSV;
@@ -87,8 +87,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		Log.d(TAG, "onNewIntent()");
 
 		if (intent == null) return;
-		String adapterId = intent.getStringExtra(ADAPTER_ID);
-		Log.d(TAG, "chosen gate = " + adapterId);
+		String gateId = intent.getStringExtra(GATE_ID);
+		Log.d(TAG, "chosen gate = " + gateId);
 		// TODO should perform change of gate and show location (scroll to it?)
 	}
 
@@ -120,15 +120,15 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 				mNavDrawerMenu.closeMenu();
 
 			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
-			mActiveAdapterId = savedInstanceState.getString(ADAPTER_ID);
+			mActiveGateId = savedInstanceState.getString(GATE_ID);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+			mNavDrawerMenu.setGateId(mActiveGateId);
 
 		} else {
 			mNavDrawerMenu.closeMenu();
-			setActiveAdapterAndMenu();
+			setActiveGateAndMenu();
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+			mNavDrawerMenu.setGateId(mActiveGateId);
 			mNavDrawerMenu.redrawMenu();
 		}
 
@@ -200,14 +200,14 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		super.onActivityResult(requestCode, resultCode, data);
 
 		Log.d(TAG, "Request code " + requestCode);
-		if (requestCode == Constants.ADD_ADAPTER_REQUEST_CODE) {
+		if (requestCode == Constants.ADD_GATE_REQUEST_CODE) {
 			Log.d(TAG, "Return from add gate activity");
-			if (resultCode == Constants.ADD_ADAPTER_CANCELED) {
+			if (resultCode == Constants.ADD_GATE_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			} else if (resultCode == Constants.ADD_ADAPTER_SUCCESS) {
+			} else if (resultCode == Constants.ADD_GATE_SUCCESS) {
 				// Succes of add gate -> setActive gate a redraw ALL
 				Log.d(TAG, "Add gate succes");
-				setActiveAdapterAndMenu();
+				setActiveGateAndMenu();
 				doRedraw = false;
 			}
 		} else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
@@ -215,7 +215,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			if (resultCode == Constants.ADD_SENSOR_SUCCESS) {
 				// Set active location
 				String res = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
-				Log.d(TAG, "Active locID: " + res + " adapterID: " + mActiveAdapterId);
+				Log.d(TAG, "Active locID: " + res + " gateID: " + mActiveGateId);
 				redraw();
 			}
 		}
@@ -223,16 +223,16 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	public void onAppResume() {
 		// ASYN TASK - Reload all data, if wasnt download in login activity
-		final ReloadAdapterDataTask fullReloadTask = new ReloadAdapterDataTask(this, false, ReloadAdapterDataTask.ReloadWhat.ADAPTERS_AND_ACTIVE_ADAPTER);
+		final ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(this, false, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
 		fullReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
 					// Redraw Activity - probably list of sensors
 					Log.d(TAG, "After reload task - go to redraw mainActivity");
-					setActiveAdapterAndMenu();
+					setActiveGateAndMenu();
 					if (mController.getActiveGate() == null) {
-						checkNoAdapters();
+						checkNoGates();
 					} else {
 						redraw();
 					}
@@ -284,9 +284,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onListItemSelected(CharSequence val, int i, int code) {
 		if (code == ADD_ACTION_CODE) {
 			Log.d(TAG, "Add dialog selected: " + val);
-			if (getString(R.string.action_addadapter).equals(val)) {
-				// ADD ADAPTER
-				mListModules.showAddAdapterDialog();
+			if (getString(R.string.action_addgate).equals(val)) {
+				// ADD GATE
+				mListModules.showAddGateDialog();
 			} else {
 				// ADD SENSOR
 				mListModules.showAddSensorDialog();
@@ -296,18 +296,18 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(ADAPTER_ID, mActiveAdapterId);
+		savedInstanceState.putString(GATE_ID, mActiveGateId);
 		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
 		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.isMenuOpened());
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	public void setActiveAdapterAndMenu() {
+	public void setActiveGateAndMenu() {
 		// Set active gate and location
 		Gate gate = mController.getActiveGate();
 		if (gate != null) {
-			mActiveAdapterId = gate.getId();
-			setActiveAdapterID(mActiveAdapterId);
+			mActiveGateId = gate.getId();
+			setActiveGateId(mActiveGateId);
 
 			if (mActiveMenuId != null) {
 				setActiveMenuID(mActiveMenuId);
@@ -315,7 +315,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 				setActiveMenuID(Constants.GUI_MENU_CONTROL);
 			}
 		} else {
-			mActiveAdapterId = null;
+			mActiveGateId = null;
 			mActiveMenuId = null;
 		}
 	}
@@ -327,18 +327,18 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mListModules = new SensorListFragment();
 			mListModules.setIsPaused(isPaused);
 			mListModules.setMenuID(mActiveMenuId);
-			mListModules.setAdapterID(mActiveAdapterId);
+			mListModules.setGateId(mActiveGateId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+			mNavDrawerMenu.setGateId(mActiveGateId);
 
 			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
 			mListModules = new SensorListFragment();
 			mListModules.setIsPaused(isPaused);
 			mListModules.setMenuID(mActiveMenuId);
-			mListModules.setAdapterID(mActiveAdapterId);
+			mListModules.setGateId(mActiveGateId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+			mNavDrawerMenu.setGateId(mActiveGateId);
 
 			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
@@ -358,23 +358,23 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void redraw() {
-		Log.d(TAG, "REDRAW - activeMenu: " + mActiveMenuId + " activeAdapter: " + mActiveAdapterId);
+		Log.d(TAG, "REDRAW - activeMenu: " + mActiveMenuId + " activeGate: " + mActiveGateId);
 		mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-		mNavDrawerMenu.setAdapterID(mActiveAdapterId);
+		mNavDrawerMenu.setGateId(mActiveGateId);
 		mNavDrawerMenu.redrawMenu();
 		redrawMainFragment();
 	}
 
 
-	public void checkNoAdapters() {
+	public void checkNoGates() {
 		if (mController.getActiveGate() == null) {
 			// UserSettings can be null when user is not logged in!
-			Log.d(TAG, "CheckNoAdapter");
+			Log.d(TAG, "CheckNoGate");
 			SharedPreferences prefs = mController.getUserSettings();
-			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_ADAPTER, false)) {
-				Log.d(TAG, "Call ADD ADAPTER");
-				Intent intent = new Intent(MainActivity.this, AddAdapterActivity.class);
-				startActivityForResult(intent, Constants.ADD_ADAPTER_REQUEST_CODE);
+			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_GATE, false)) {
+				Log.d(TAG, "Call ADD GATE");
+				Intent intent = new Intent(MainActivity.this, AddGateActivity.class);
+				startActivityForResult(intent, Constants.ADD_GATE_REQUEST_CODE);
 			}
 		}
 	}
@@ -414,11 +414,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		return super.onOptionsItemSelected(item);
 	}
 
-	public void setActiveAdapterID(String adapterId) {
-		mActiveAdapterId = adapterId;
-		mNavDrawerMenu.setAdapterID(adapterId);
+	public void setActiveGateId(String gateId) {
+		mActiveGateId = gateId;
+		mNavDrawerMenu.setGateId(gateId);
 		if (mListModules != null)
-			mListModules.setAdapterID(adapterId);
+			mListModules.setGateId(gateId);
 	}
 
 	public void setActiveMenuID(String id) {
