@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.pair;
 
-import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.EnumSet;

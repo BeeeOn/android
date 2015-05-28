@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.activity.menuItem;
 
 import android.view.View;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 
 public class EmptyMenuItem extends AbstractMenuItem {

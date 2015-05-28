@@ -11,8 +11,6 @@ import android.widget.EditText;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
 import com.avast.android.dialogs.core.BaseDialogFragment;
-import com.avast.android.dialogs.iface.INegativeButtonDialogListener;
-import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.R;
 
 import java.util.Iterator;

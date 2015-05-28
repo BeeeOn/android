@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.NotificationFragment;
-import com.rehivetech.beeeon.gcm.notification.GcmNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 
 import java.util.List;

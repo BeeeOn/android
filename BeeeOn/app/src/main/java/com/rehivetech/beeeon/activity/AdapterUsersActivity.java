@@ -34,7 +34,6 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.UserPair;
 
-
 import java.util.List;
 
 public class AdapterUsersActivity extends BaseApplicationActivity {

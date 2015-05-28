@@ -14,8 +14,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import com.rehivetech.beeeon.AddAdapterFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -26,6 +24,7 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.RegisterAdapterPair;
 import com.rehivetech.beeeon.util.Log;
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class AddAdapterActivity extends BaseApplicationActivity {
 	private static final String TAG = AddAdapterActivity.class.getSimpleName();

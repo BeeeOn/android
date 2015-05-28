@@ -32,21 +32,20 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
+import java.util.List;
 
 /**
  * ListControlExtension displays a scrollable list, based on a string array. Tapping on list items opens a swipable detail view.

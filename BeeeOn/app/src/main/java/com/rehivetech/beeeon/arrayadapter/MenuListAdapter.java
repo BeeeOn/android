@@ -1,17 +1,19 @@
 package com.rehivetech.beeeon.arrayadapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
+
 import com.rehivetech.beeeon.activity.menuItem.MenuItem;
 import com.rehivetech.beeeon.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
  * Class for location left drawer menu

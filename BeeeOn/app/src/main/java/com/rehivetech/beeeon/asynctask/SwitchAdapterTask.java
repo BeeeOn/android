@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
+
 import com.rehivetech.beeeon.controller.Controller;
 
 public class SwitchAdapterTask extends CallbackTask<String> {

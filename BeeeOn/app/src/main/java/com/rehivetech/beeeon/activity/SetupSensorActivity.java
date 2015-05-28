@@ -17,21 +17,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.viewpagerindicator.CirclePageIndicator;
-
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.activity.fragment.SetupSensorFragment;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.InitializeFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.InitializeFacilityPair;
 import com.rehivetech.beeeon.util.Log;
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class SetupSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupSensorActivity.class.getSimpleName();

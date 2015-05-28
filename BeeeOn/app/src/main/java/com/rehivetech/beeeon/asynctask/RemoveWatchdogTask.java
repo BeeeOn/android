@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.pair.DelFacilityPair;
 import com.rehivetech.beeeon.pair.DelWatchdogPair;
 
 /**

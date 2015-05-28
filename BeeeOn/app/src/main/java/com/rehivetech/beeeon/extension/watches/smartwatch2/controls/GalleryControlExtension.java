@@ -32,26 +32,25 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.adapter.Adapter;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
-import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnitsHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * GalleryControl displays a swipeable gallery.

@@ -2,8 +2,8 @@ package com.rehivetech.beeeon.asynctask;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.SaveFacilityWithNewLocPair;
 
 public class SaveFacilityWithNewLocTask extends CallbackTask<SaveFacilityWithNewLocPair> {

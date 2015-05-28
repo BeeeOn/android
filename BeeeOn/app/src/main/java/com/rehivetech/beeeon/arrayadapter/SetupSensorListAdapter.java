@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Device;
 

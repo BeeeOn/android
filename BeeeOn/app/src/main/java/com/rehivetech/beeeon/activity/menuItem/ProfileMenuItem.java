@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 
 public class ProfileMenuItem extends AbstractMenuItem {

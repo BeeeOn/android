@@ -14,7 +14,6 @@ import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.Calendar;
-import java.util.TimeZone;
 
 public abstract class BaseNotification implements GcmNotification, Comparable<BaseNotification> {
 

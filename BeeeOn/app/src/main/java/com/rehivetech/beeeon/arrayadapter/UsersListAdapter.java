@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.arrayadapter;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +8,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.user.User;
+
+import java.util.List;
 
 public class UsersListAdapter extends BaseAdapter {
 

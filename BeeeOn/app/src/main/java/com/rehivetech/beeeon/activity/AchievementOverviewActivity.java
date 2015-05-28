@@ -6,24 +6,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.share.Sharer;
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.achievements.GeneralAchievement;
+import com.rehivetech.beeeon.activity.dialog.ShareFragmentDialog;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.gamification.AchievementList;
-import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
-import com.rehivetech.beeeon.activity.dialog.ShareFragmentDialog;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.Observable;
 import java.util.Observer;

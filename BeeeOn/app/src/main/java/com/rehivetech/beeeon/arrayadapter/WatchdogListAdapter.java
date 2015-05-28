@@ -11,11 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;

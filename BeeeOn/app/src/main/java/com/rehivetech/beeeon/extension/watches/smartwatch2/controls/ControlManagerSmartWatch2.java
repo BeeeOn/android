@@ -32,28 +32,27 @@ Copyright (c) 2011-2013, Sony Mobile Communications AB
 
 package com.rehivetech.beeeon.extension.watches.smartwatch2.controls;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Stack;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
+import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.util.Log;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlExtension;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlObjectClickEvent;
 
-import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
-import com.rehivetech.beeeon.util.Log;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * The phone control manager manages which control to currently show on the display. This class then forwards any life-cycle methods and events events to the running control. This class handles API

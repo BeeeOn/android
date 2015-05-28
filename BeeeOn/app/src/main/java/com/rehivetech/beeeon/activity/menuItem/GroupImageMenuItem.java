@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.activity.menuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+
 import com.rehivetech.beeeon.R;
 
 public class GroupImageMenuItem extends GroupMenuItem {

@@ -2,8 +2,6 @@ package com.rehivetech.beeeon.gcm.notification;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.util.Log;
-
 /**
  * Created by Martin on 26. 4. 2015.
  */

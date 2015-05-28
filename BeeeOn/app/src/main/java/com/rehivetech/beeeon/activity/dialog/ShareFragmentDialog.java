@@ -8,13 +8,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.rehivetech.beeeon.achievements.GeneralAchievement;
-import com.vk.sdk.dialogs.VKShareDialog;
-
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.achievements.GeneralAchievement;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnGooglePlus;
 import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;

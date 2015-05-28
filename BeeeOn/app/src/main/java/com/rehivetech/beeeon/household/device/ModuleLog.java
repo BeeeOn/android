@@ -2,11 +2,11 @@ package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.IIdentifier;
 
+import org.joda.time.Interval;
+
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
-
-import org.joda.time.Interval;
 
 /**
  * Represents history of values for module.

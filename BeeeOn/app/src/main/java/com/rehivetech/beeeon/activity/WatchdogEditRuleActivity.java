@@ -23,8 +23,8 @@ import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.spinnerItem.ModuleSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.GeofenceSpinnerItem;
+import com.rehivetech.beeeon.activity.spinnerItem.ModuleSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
 import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.SpinnerMultiAdapter;

@@ -36,9 +36,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.sonyericsson.extras.liveware.aef.control.Control;
-
 import com.rehivetech.beeeon.R;
+import com.sonyericsson.extras.liveware.aef.control.Control;
 
 /**
  * GalleryTestControl displays a swipeable gallery, based on a string array.

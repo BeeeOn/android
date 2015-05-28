@@ -1,9 +1,8 @@
 package com.rehivetech.beeeon.activity.listItem;
 
-import android.graphics.Typeface;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 
 public class LocationListItem extends AbstractListItem {

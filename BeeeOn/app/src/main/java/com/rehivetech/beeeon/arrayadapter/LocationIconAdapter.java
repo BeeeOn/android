@@ -1,16 +1,17 @@
 package com.rehivetech.beeeon.arrayadapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 

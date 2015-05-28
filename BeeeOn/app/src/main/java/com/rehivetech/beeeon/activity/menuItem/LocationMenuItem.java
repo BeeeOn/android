@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.rehivetech.beeeon.R;
 
 public class LocationMenuItem extends AbstractMenuItem {

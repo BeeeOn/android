@@ -18,7 +18,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.AchievementListClickListener;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;

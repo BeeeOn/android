@@ -35,14 +35,13 @@ package com.rehivetech.beeeon.extension.watches.smartwatch2;
 import android.content.ContentValues;
 import android.content.Context;
 
-import com.sonyericsson.extras.liveware.aef.registration.Registration;
-import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
-import com.sonyericsson.extras.liveware.extension.util.registration.RegistrationInformation;
-
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.controls.ControlManagerSmartWatch2;
 import com.rehivetech.beeeon.util.Log;
+import com.sonyericsson.extras.liveware.aef.registration.Registration;
+import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
+import com.sonyericsson.extras.liveware.extension.util.registration.RegistrationInformation;
 
 /**
  * Provides information needed during extension registration

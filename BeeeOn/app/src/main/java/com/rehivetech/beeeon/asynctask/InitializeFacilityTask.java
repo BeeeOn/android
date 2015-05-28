@@ -1,12 +1,13 @@
 package com.rehivetech.beeeon.asynctask;
 
-import java.util.EnumSet;
-
 import android.content.Context;
+
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.InitializeFacilityPair;
+
+import java.util.EnumSet;
 
 public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair> {
 

@@ -1,10 +1,10 @@
 package com.rehivetech.beeeon.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SettingsItem {
 

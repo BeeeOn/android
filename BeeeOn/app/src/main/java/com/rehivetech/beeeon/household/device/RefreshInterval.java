@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.household.device;
 
 import android.content.Context;
+
 import com.rehivetech.beeeon.R;
 
 public enum RefreshInterval {

@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.household.device.units;
 
 import android.content.Context;
+
 import com.rehivetech.beeeon.util.SettingsItem;
 
 public abstract class BaseUnit extends SettingsItem {

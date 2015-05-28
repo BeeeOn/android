@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.AchievementPair;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.network;
 
-import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.IIdentifier;
+import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Device;

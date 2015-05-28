@@ -1,12 +1,13 @@
 package com.rehivetech.beeeon.household.device.values;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Color;
+
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.BlankUnit;
 import com.rehivetech.beeeon.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseEnumValue extends BaseValue {
 

@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.activity.menuItem;
 
 import android.view.View;
+
 import com.rehivetech.beeeon.R;
 
 public class SeparatorMenuItem extends AbstractMenuItem {

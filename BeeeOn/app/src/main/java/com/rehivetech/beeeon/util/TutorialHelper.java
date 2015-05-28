@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.util;
 
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,9 @@ import android.widget.RelativeLayout;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.LoginActivity;
 import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.controller.Controller;
 
 public class TutorialHelper {
 	private static final String TAG = TutorialHelper.class.getSimpleName();

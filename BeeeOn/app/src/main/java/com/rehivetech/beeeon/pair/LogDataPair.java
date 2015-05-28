@@ -1,10 +1,10 @@
 package com.rehivetech.beeeon.pair;
 
-import org.joda.time.Interval;
-
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
+
+import org.joda.time.Interval;
 
 /**
  * Represents "pair" of data required for get module log

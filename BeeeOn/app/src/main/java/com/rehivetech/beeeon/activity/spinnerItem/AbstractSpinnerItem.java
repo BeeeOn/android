@@ -2,8 +2,6 @@ package com.rehivetech.beeeon.activity.spinnerItem;
 
 import android.view.View;
 
-import com.rehivetech.beeeon.activity.listItem.ListItem;
-
 public abstract class AbstractSpinnerItem implements SpinnerItem {
 	private String mId = ID_UNDEFINED;
 	private SpinnerItemType mType;

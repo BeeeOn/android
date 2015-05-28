@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.Module;
 
 public class ActorActionTask extends CallbackTask<Module> {
 
