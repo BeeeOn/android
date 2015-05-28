@@ -106,7 +106,7 @@ public class WidgetGraphData extends WidgetModuleData {
 
 			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
 			Device device = new Device();
-			device.setGateId(widgetAdapterId);
+			device.setGateId(widgetGateId);
 			device.setAddress(ids[0]);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
@@ -156,7 +156,7 @@ public class WidgetGraphData extends WidgetModuleData {
 		if (mTimeHelper == null || mUnitsHelper == null) return;
 		Log.d(TAG, "prepareWidgetGraphView");
 
-		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetGateId);
 		String graphDateTimeFormat = "dd.MM. kk:mm";
 		final DateTimeFormatter fmt = mTimeHelper.getFormatter(graphDateTimeFormat, gate);
 		GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
@@ -250,14 +250,14 @@ public class WidgetGraphData extends WidgetModuleData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetGateId);
 		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {
-			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
+			Module module = mController.getDevicesModel().getModule(widgetGateId, dev.getId());
 			if (module == null) continue;
 
-			Location location = mController.getLocationsModel().getLocation(dev.adapterId, module.getDevice().getLocationId());
+			Location location = mController.getLocationsModel().getLocation(dev.gateId, module.getDevice().getLocationId());
 			if (location != null) {
 				widgetLocation.configure(location, gate);
 			}
@@ -269,7 +269,7 @@ public class WidgetGraphData extends WidgetModuleData {
 		if (updated > 0) {
 			// update last update to "now"
 			widgetLastUpdate = getTimeNow();
-			widgetAdapterId = gate.getId();
+			widgetGateId = gate.getId();
 
 			ModuleLog log = mController.getModuleLogsModel().getModuleLog(mLogDataPair);
 			if (log != null) {

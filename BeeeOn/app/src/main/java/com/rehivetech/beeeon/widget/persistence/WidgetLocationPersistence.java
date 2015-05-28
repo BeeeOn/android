@@ -41,7 +41,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 		id = location.getId();
 		name = location.getName();
 		type = location.getType();
-		adapterId = gate.getId();
+		gateId = gate.getId();
 	}
 
 	@Override

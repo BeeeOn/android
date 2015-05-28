@@ -17,8 +17,8 @@ public class WidgetLocationListProvider extends WidgetProvider {
 		// open detail activity of chosen module from list
 		if (intent.getAction().equals(WidgetLocationData.OPEN_DETAIL_ACTION)) {
 			String moduleId = intent.getStringExtra(WidgetLocationData.EXTRA_ITEM_DEV_ID);
-			String adapterId = intent.getStringExtra(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID);
-			context.startActivity(WidgetData.startDetailActivityIntent(context, adapterId, moduleId));
+			String gateId = intent.getStringExtra(WidgetLocationData.EXTRA_ITEM_GATE_ID);
+			context.startActivity(WidgetData.startDetailActivityIntent(context, gateId, moduleId));
 		}
 
 		super.onReceive(context, intent);

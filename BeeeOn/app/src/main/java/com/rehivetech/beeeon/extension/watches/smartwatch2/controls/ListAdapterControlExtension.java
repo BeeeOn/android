@@ -153,15 +153,15 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 
 		if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
 			Intent intent;
-			String adapterId = mGates.get(listItem.listItemPosition).getId();
-			// mController.setActiveGate(adapterId, false);
-			List<Location> locations = mController.getLocationsModel().getLocationsByGate(adapterId);
+			String gateId = mGates.get(listItem.listItemPosition).getId();
+			// mController.setActiveGate(gateId, false);
+			List<Location> locations = mController.getLocationsModel().getLocationsByGate(gateId);
 			if (locations.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_location_available));
 			} else {
 				intent = new Intent(mContext, ListLocationControlExtension.class);
-				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mGates.get(listItem.listItemPosition).getId());
+				intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, mGates.get(listItem.listItemPosition).getId());
 			}
 			mControlManager.startControl(intent);
 		}

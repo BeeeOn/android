@@ -104,7 +104,7 @@
 		</activity>
 		<activity
 			android:name=".activity.AddGateActivity"
-			android:label="@string/title_activity_add_adapter">
+			android:label="@string/title_activity_add_gate">
 		</activity>
 		<activity
 			android:name=".widget.configuration.WidgetConfigurationActivity"

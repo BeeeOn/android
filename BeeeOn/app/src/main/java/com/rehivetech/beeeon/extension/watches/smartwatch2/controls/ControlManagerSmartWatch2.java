@@ -96,18 +96,18 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		SharedPreferences prefs = mController.getUserSettings();
 
 		// Try to find default setting
-		String adapterId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
+		String gateId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
 		String strLocation = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_LOCATION, null);
 
-		Log.v(SW2ExtensionService.LOG_TAG, "Default gate ID: " + ((adapterId == null) ? "null" : adapterId));
+		Log.v(SW2ExtensionService.LOG_TAG, "Default gate ID: " + ((gateId == null) ? "null" : gateId));
 		Log.v(SW2ExtensionService.LOG_TAG, "Default location: " + ((strLocation == null) ? "null" : strLocation));
 
 		// TODO zkontrolovat jestli neni cil prazdny
-		if (adapterId != null) {
+		if (gateId != null) {
 			Controller controller = Controller.getInstance(mContext);
 
 			controller.getGatesModel().reloadGates(false);
-			Gate gate = controller.getGatesModel().getGate(adapterId);
+			Gate gate = controller.getGatesModel().getGate(gateId);
 			// if default gate is defined
 			if (gate != null) {
 				if (strLocation != null) {
@@ -115,14 +115,14 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 					List<Device> sensors = controller.getDevicesModel().getDevicesByLocation(gate.getId(), strLocation);
 					if (sensors != null) {
 						Intent intent = new Intent(mContext, ListSensorControlExtension.class);
-						intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, gate.getId());
+						intent.putExtra(ListSensorControlExtension.EXTRA_GATE_ID, gate.getId());
 						intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, strLocation);
 						mCurrentControl = createControl(intent);
 						return;
 					}
 				}
 				Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-				intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, gate.getId());
+				intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, gate.getId());
 				mCurrentControl = createControl(intent);
 				return;
 			}
@@ -136,7 +136,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			return;
 		} else if (gates.size() < 2) {
 			Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, gates.get(0).getId());
+			intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, gates.get(0).getId());
 			mCurrentControl = createControl(intent);
 			return;
 		}

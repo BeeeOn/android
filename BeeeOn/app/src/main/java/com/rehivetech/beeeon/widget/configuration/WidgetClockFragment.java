@@ -238,9 +238,9 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	protected boolean saveSettings() {
-		Gate gate = (Gate) mAdapterSpinner.getSelectedItem();
+		Gate gate = (Gate) mGateSpinner.getSelectedItem();
 		if (gate == null) {
-			Toast.makeText(mActivity, R.string.widget_configuration_select_adapter, Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, R.string.widget_configuration_select_gate, Toast.LENGTH_LONG).show();
 			return false;
 		}
 

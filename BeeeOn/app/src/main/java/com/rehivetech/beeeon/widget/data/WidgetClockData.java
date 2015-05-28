@@ -99,7 +99,7 @@ public class WidgetClockData extends WidgetData {
 
 			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
 			Device device = new Device();
-			device.setGateId(widgetAdapterId);
+			device.setGateId(widgetGateId);
 			device.setAddress(ids[0]);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
@@ -129,7 +129,7 @@ public class WidgetClockData extends WidgetData {
 		mBuilder.setOnClickListener(R.id.widget_clock_container, mConfigurationPendingIntent);
 		mBuilder.setOnClickListener(R.id.widget_clock_household_label, mRefreshPendingIntent);
 
-		if (widgetAdapterId.isEmpty()) return;
+		if (widgetGateId.isEmpty()) return;
 
 		// -------------------- render layout
 		switch (this.widgetLayout) {
@@ -156,7 +156,7 @@ public class WidgetClockData extends WidgetData {
 		for (WidgetModulePersistence dev : widgetModules) {
 			dev.renderView(mBuilder);
 			// detail activity
-			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if (this.widgetLayout == R.layout.widget_clock_3x2) {
@@ -315,14 +315,14 @@ public class WidgetClockData extends WidgetData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetGateId);
 		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {
-			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
+			Module module = mController.getDevicesModel().getModule(widgetGateId, dev.getId());
 			if (module != null) {
 				if (!dev.locationId.isEmpty()) {
-					Location location = mController.getLocationsModel().getLocation(widgetAdapterId, dev.locationId);
+					Location location = mController.getLocationsModel().getLocation(widgetGateId, dev.locationId);
 					dev.configure(module, gate, location);
 				} else {
 					dev.configure(module, gate);
@@ -334,7 +334,7 @@ public class WidgetClockData extends WidgetData {
 		if (updated > 0) {
 			// update last update to "now"
 			widgetLastUpdate = getTimeNow();
-			widgetAdapterId = gate.getId();
+			widgetGateId = gate.getId();
 
 			// Save fresh data
 			this.save();

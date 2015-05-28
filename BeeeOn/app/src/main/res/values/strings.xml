@@ -14,7 +14,7 @@
     <string name="title_activity_notification">Notification</string>
     <string name="title_activity_add_sensor">Add Device</string>
     <string name="title_activity_sensor_detail">Device Detail</string>
-    <string name="title_activity_add_adapter">Add Gateway</string>
+    <string name="title_activity_add_gate">Add Gateway</string>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Widget Configuration</string>
@@ -232,7 +232,7 @@
     <string name="widget_configuration_interval_widget">Widget update interval</string>
     <string name="widget_configuration_login_first">You must be logged in first</string>
     <string name="widget_configuration_no_adapters">You have no gateways and thus no module to show in widget</string>
-    <string name="widget_configuration_select_adapter">Select gateway from list</string>
+    <string name="widget_configuration_select_gate">Select gateway from list</string>
     <string name="widget_configuration_select_device">Select module from list</string>
     <string name="widget_configuration_select_location">Select location from list</string>
 
@@ -299,7 +299,7 @@
     <string name="default_location">Default location</string>
     <string name="default_adapter">Default gateway</string>
     <string name="actual_timezone">Current timezone</string>
-    <string name="adapter_timezone">gateway timezone</string>
+    <string name="gate_timezone">gateway timezone</string>
 
     <!-- Default names -->
     <string name="adapter_default_name">gateway #%d</string>
@@ -314,8 +314,8 @@
 
 
     <!-- Tutorial -->
-    <string name="tut_add_adapter_header">ADD GATEWAY</string>
-    <string name="tut_add_adapter_text">To add your new gateway, please click on plus</string>
+    <string name="tut_add_gate_header">ADD GATEWAY</string>
+    <string name="tut_add_gate_text">To add your new gateway, please click on plus</string>
     <string name="tut_add_sensor_header">ADD DEVICE</string>
     <string name="tut_add_sensor_text">To add your new module, please click on plus</string>
 	<string name="tut_intro_text_1">Welcome to BeeeOn intelligent home control. The tutorial will explain you BeeeOn components and this application.</string>
@@ -331,9 +331,9 @@
     <string name="tutorial_open_menu">Open Menu</string>
     <string name="tutorial_open_menu_text">For switch location tap to Icon and Menu will rise</string>
     <!-- Help in Add dialogs -->
-    <string name="tut_add_adapter_text_1">Please connect your gateway to the Internet</string>
-    <string name="tut_add_adapter_text_2">Please connect your gateway to the AC power</string>
-    <string name="tut_add_adapter_text_3">In the next step, please give name to your gateway and scan QR code</string>
+    <string name="tut_add_gate_text_1">Please connect your gateway to the Internet</string>
+    <string name="tut_add_gate_text_2">Please connect your gateway to the AC power</string>
+    <string name="tut_add_gate_text_3">In the next step, please give name to your gateway and scan QR code</string>
     <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
     <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actuator</string>
 

@@ -37,7 +37,7 @@ public abstract class WidgetData {
 	protected static final String PREF_INTERVAL = "widget_interval";
 	protected static final String PREF_LAST_UPDATE = "widget_last_update";
 	protected static final String PREF_INITIALIZED = "widget_initialized";
-	protected static final String PREF_ADAPTER_ID = "widget_adapter_id";
+	protected static final String PREF_GATE_ID = "widget_adapter_id";
 	protected static final String PREF_USER_ID = "widget_user_id";
 	protected static final String PREF_WIFI_ONLY = "widget_wifi_only";
 
@@ -47,7 +47,7 @@ public abstract class WidgetData {
 	public int widgetInterval;
 	public long widgetLastUpdate;
 	public boolean widgetInitialized;
-	public String widgetAdapterId;
+	public String widgetGateId;
 	public boolean widgetWifiOnly;
 	public WidgetSettings settings;
 
@@ -109,7 +109,7 @@ public abstract class WidgetData {
 		widgetInterval = mPrefs.getInt(PREF_INTERVAL, WidgetService.UPDATE_INTERVAL_DEFAULT.getInterval());
 		widgetLastUpdate = mPrefs.getLong(PREF_LAST_UPDATE, 0);
 		widgetInitialized = mPrefs.getBoolean(PREF_INITIALIZED, false);
-		widgetAdapterId = mPrefs.getString(PREF_ADAPTER_ID, "");
+		widgetGateId = mPrefs.getString(PREF_GATE_ID, "");
 		widgetWifiOnly = mPrefs.getBoolean(PREF_WIFI_ONLY, false);
 		mUserId = mPrefs.getString(PREF_USER_ID, mController.getActualUser().getId());
 		// load widget's settings (color scheme e.g)
@@ -155,7 +155,7 @@ public abstract class WidgetData {
 		widgetLastUpdate = 0;
 		widgetInitialized = true;
 		widgetInterval = interval;
-		widgetAdapterId = gate.getId();
+		widgetGateId = gate.getId();
 		widgetWifiOnly = isWifiOnly;
 		this.save();
 	}
@@ -186,7 +186,7 @@ public abstract class WidgetData {
 				.putInt(PREF_LAYOUT, widgetLayout)
 				.putInt(PREF_INTERVAL, widgetInterval)
 				.putLong(PREF_LAST_UPDATE, widgetLastUpdate)
-				.putString(PREF_ADAPTER_ID, widgetAdapterId)
+				.putString(PREF_GATE_ID, widgetGateId)
 				.putString(PREF_USER_ID, mUserId)
 				.putBoolean(PREF_INITIALIZED, widgetInitialized)
 				.putBoolean(PREF_WIFI_ONLY, widgetWifiOnly)
@@ -406,13 +406,13 @@ public abstract class WidgetData {
 	 *
 	 * @param context
 	 * @param widgetId
-	 * @param adapterId
+	 * @param gateId
 	 * @param moduleId
 	 * @return
 	 */
-	public static PendingIntent startDetailActivityPendingIntent(Context context, int widgetId, String adapterId, String moduleId) {
-		Intent intent = startDetailActivityIntent(context, adapterId, moduleId);
-		int requestNum = widgetId + adapterId.hashCode() + moduleId.hashCode();
+	public static PendingIntent startDetailActivityPendingIntent(Context context, int widgetId, String gateId, String moduleId) {
+		Intent intent = startDetailActivityIntent(context, gateId, moduleId);
+		int requestNum = widgetId + gateId.hashCode() + moduleId.hashCode();
 		return PendingIntent.getActivity(context, requestNum, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
@@ -420,15 +420,15 @@ public abstract class WidgetData {
 	 * Is called in location widget cause he can setup pending intents directly
 	 *
 	 * @param context
-	 * @param adapterId
+	 * @param gateId
 	 * @param moduleId
 	 * @return
 	 */
-	public static Intent startDetailActivityIntent(Context context, String adapterId, String moduleId) {
+	public static Intent startDetailActivityIntent(Context context, String gateId, String moduleId) {
 		Intent intent = new Intent(context, SensorDetailActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		intent.putExtra(SensorDetailActivity.EXTRA_MODULE_ID, moduleId);
-		intent.putExtra(SensorDetailActivity.EXTRA_GATE_ID, adapterId);
+		intent.putExtra(SensorDetailActivity.EXTRA_GATE_ID, gateId);
 		return intent;
 	}
 
@@ -439,10 +439,10 @@ public abstract class WidgetData {
 	 * @param context
 	 * @return
 	 */
-	public static PendingIntent startMainActivityPendingIntent(Context context, String adapterId) {
+	public static PendingIntent startMainActivityPendingIntent(Context context, String gateId) {
 		Intent intent = new Intent(context, MainActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		intent.putExtra(MainActivity.GATE_ID, adapterId);
+		intent.putExtra(MainActivity.GATE_ID, gateId);
 
 		return PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}

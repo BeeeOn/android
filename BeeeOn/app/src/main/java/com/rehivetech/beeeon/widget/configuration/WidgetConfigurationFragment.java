@@ -55,8 +55,8 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	protected List<Gate> mGates;
 	protected Gate mActiveGate;
-	protected boolean mAdapterNeedsToReload;
-	protected Spinner mAdapterSpinner;
+	protected boolean mGateNeedsToReload;
+	protected Spinner mGateSpinner;
 	protected RelativeLayout mWidgetWifiLayoutWrapper;
 	protected CheckBox mWidgetUpdateWiFiCheckBox;
 
@@ -104,14 +104,14 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mAdapterSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway);
-		mAdapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		mGateSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway);
+		mGateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Gate gate = mGates.get(position);
 				if (gate == null) return;
 
-				doChangeAdapter(gate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
+				doChangeGate(gate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
 			}
 
 			@Override
@@ -164,7 +164,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 				// Redraw Activity
 				Log.d(TAG, "After reload task - go to redraw activity");
-				onAllAdaptersReload();
+				onAllGatesReload();
 				// continue to refresh fragment
 				onFragmentResume();
 				if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
@@ -198,13 +198,13 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	/**
 	 * When fragment is shown for the first time
 	 */
-	protected void onAllAdaptersReload() {
+	protected void onAllGatesReload() {
 		mGates = mController.getGatesModel().getGates();
-		mAdapterNeedsToReload = false;
+		mGateNeedsToReload = false;
 		// gate spinner refresh
 		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, mGates);
 		arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mAdapterSpinner.setAdapter(arrayAdapter);
+		mGateSpinner.setAdapter(arrayAdapter);
 	}
 
 	/**
@@ -214,11 +214,11 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	protected void onFragmentResume() {
 		mGeneralWidgetdata.load();
 
-		int selectedAdapterIndex = selectAdapter(mGeneralWidgetdata.widgetAdapterId);
-		if (selectedAdapterIndex == mAdapterSpinner.getSelectedItemPosition()) {
-			doChangeAdapter(mActiveGate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
+		int selectedGateIndex = selectGate(mGeneralWidgetdata.widgetGateId);
+		if (selectedGateIndex == mGateSpinner.getSelectedItemPosition()) {
+			doChangeGate(mActiveGate.getId(), ReloadGateDataTask.ReloadWhat.FACILITIES);
 		} else {
-			mAdapterSpinner.setSelection(selectedAdapterIndex);
+			mGateSpinner.setSelection(selectedGateIndex);
 		}
 
 		// we have to check it cause not every widget settings have it
@@ -233,17 +233,17 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * After reload task we can get new devices and locations by gate.
 	 * If no gate set, it selects active gate in the app
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 */
-	protected void getAdapterData(String adapterId) {
-		if (adapterId.isEmpty()) return;
+	protected void getGateData(String gateId) {
+		if (gateId.isEmpty()) return;
 
-		mLocations = mController.getLocationsModel().getLocationsByGate(adapterId);
+		mLocations = mController.getLocationsModel().getLocationsByGate(gateId);
 
 		// get all devices by locations (avoiding mDevice without location)
 		mModules.clear();
 		for (Location loc : mLocations) {
-			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(adapterId, loc.getId());
+			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(gateId, loc.getId());
 			for (Device device : tempFac) {
 				mModules.addAll(device.getModules());
 			}
@@ -252,15 +252,15 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	/**
 	 * Happens when change gate in spinner, this reloads data to be from new selected gate
-	 * !! NOTE: if mAdapterNeedsToReload == false Then it skips whole reload task
+	 * !! NOTE: if mGateNeedsToReload == false Then it skips whole reload task
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 */
-	protected void doChangeAdapter(final String adapterId, ReloadGateDataTask.ReloadWhat whatToReload) {
-		if (!mAdapterNeedsToReload) {
-			getAdapterData(adapterId);
+	protected void doChangeGate(final String gateId, ReloadGateDataTask.ReloadWhat whatToReload) {
+		if (!mGateNeedsToReload) {
+			getGateData(gateId);
 			updateLayout();
-			mAdapterNeedsToReload = true;
+			mGateNeedsToReload = true;
 			return;
 		}
 
@@ -268,38 +268,38 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				selectAdapter(adapterId);
-				getAdapterData(adapterId);
+				selectGate(gateId);
+				getGateData(gateId);
 				updateLayout();
 				mActivity.getDialog().dismiss();
 			}
 		});
 
 		mActivity.getDialog().show();
-		mReloadTask.execute(adapterId);
+		mReloadTask.execute(gateId);
 	}
 
 	/**
-	 * Selects gate either from list of adapters or if not found as active gate
+	 * Selects gate either from list of gates or if not found as active gate
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @return Pair of gate index in list & Gate
 	 */
-	protected int selectAdapter(String adapterId) {
-		int mActiveAdapterIndex = 0;
-		if (!adapterId.isEmpty()) {
-			Pair<Integer, Gate> indexAdapter = Utils.getIndexAndObjectFromList(adapterId, mGates);
-			if (indexAdapter == null) {
+	protected int selectGate(String gateId) {
+		int mActiveGateIndex = 0;
+		if (!gateId.isEmpty()) {
+			Pair<Integer, Gate> indexGate = Utils.getIndexAndObjectFromList(gateId, mGates);
+			if (indexGate == null) {
 				mActiveGate = mController.getActiveGate();
 			} else {
-				mActiveAdapterIndex = indexAdapter.first;
-				mActiveGate = indexAdapter.second;
+				mActiveGateIndex = indexGate.first;
+				mActiveGate = indexGate.second;
 			}
 		} else {
 			mActiveGate = mController.getActiveGate();
 		}
 
-		return mActiveAdapterIndex;
+		return mActiveGateIndex;
 	}
 
 	/**

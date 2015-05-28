@@ -14,7 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.AddAdapterFragmentAdapter;
+import com.rehivetech.beeeon.AddGateFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.AddGateFragment;
@@ -31,7 +31,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 
 	private Controller mController;
 
-	private AddAdapterFragmentAdapter mAdapter;
+	private AddGateFragmentAdapter mGate;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
 
@@ -54,7 +54,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_add_adapter);
+			mToolbar.setTitle(R.string.title_activity_add_gate);
 			setSupportActionBar(mToolbar);
 		}
 		getSupportActionBar().setHomeButtonEnabled(true);
@@ -64,12 +64,12 @@ public class AddGateActivity extends BaseApplicationActivity {
 
 		mActivity = this;
 
-		mAdapter = new AddAdapterFragmentAdapter(getSupportFragmentManager(), mActivity);
+		mGate = new AddGateFragmentAdapter(getSupportFragmentManager(), mActivity);
 
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
-		mPager.setAdapter(mAdapter);
-		mPager.setOffscreenPageLimit(mAdapter.getCount());
+		mPager.setAdapter(mGate);
+		mPager.setOffscreenPageLimit(mGate.getCount());
 
 		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
@@ -97,7 +97,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onClick(View v) {
-				mPager.setCurrentItem(mAdapter.getCount() - 1);
+				mPager.setCurrentItem(mGate.getCount() - 1);
 			}
 		});
 
@@ -123,17 +123,17 @@ public class AddGateActivity extends BaseApplicationActivity {
 				if (mNext.getText().equals(mActivity.getString(R.string.tutorial_next))) {
 					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 				} else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
-					String adapterName = mFragment.getGateName();
-					String adapterCode = mFragment.getGateCode();
-					Log.d(TAG, "adaName: " + adapterName + " adaCode: " + adapterCode);
+					String gateName = mFragment.getGateName();
+					String gateCode = mFragment.getGateCode();
+					Log.d(TAG, "adaName: " + gateName + " adaCode: " + gateCode);
 
-					if (adapterCode.isEmpty()) {
+					if (gateCode.isEmpty()) {
 						// TODO: Please fill AdapterCode
 						Toast.makeText(mActivity, R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
 					} else {
 						// Show progress bar for saving
 						mProgress.show();
-						doRegisterAdapterTask(new RegisterGatePair(adapterCode, adapterName));
+						doRegisterGateTask(new RegisterGatePair(gateCode, gateName));
 					}
 				}
 			}
@@ -174,7 +174,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 		mFragment = addGateFragment;
 	}
 
-	public void doRegisterAdapterTask(RegisterGatePair pair) {
+	public void doRegisterGateTask(RegisterGatePair pair) {
 		RegisterGateTask registerGateTask = new RegisterGateTask(this);
 
 		registerGateTask.setListener(new CallbackTaskListener() {

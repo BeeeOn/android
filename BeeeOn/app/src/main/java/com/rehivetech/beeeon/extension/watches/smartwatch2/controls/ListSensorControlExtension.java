@@ -56,13 +56,13 @@ import java.util.List;
  */
 public class ListSensorControlExtension extends ManagedControlExtension {
 
-	public static final String EXTRA_ADAPTER_ID = "GATE_ID";
+	public static final String EXTRA_GATE_ID = "GATE_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
 	private List<Module> mModules;
 	private String mLocationStr;
 	private Gate mGate;
-	private String mAdapterId;
+	private String mGateId;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
 
@@ -78,9 +78,9 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		Log.d(SW2ExtensionService.LOG_TAG, "AdaptersListControl constructor");
 		initializeMenus();
 
-		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -103,7 +103,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 
 		showLayout(R.layout.sw2_list_title, data);
 
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -163,7 +163,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	public void onSwipe(int direction) {
 		if (direction == Control.Intents.SWIPE_DIRECTION_RIGHT) {
 			Intent intent = new Intent(mContext, ListLocationControlExtension.class);
-			intent.putExtra(ListLocationControlExtension.EXTRA_ADAPTER_ID, mGate.getId());
+			intent.putExtra(ListLocationControlExtension.EXTRA_GATE_ID, mGate.getId());
 			mControlManager.previousScreen(intent);
 		}
 	}
@@ -186,7 +186,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			// also be possible to put some unique item id in the listitem and
 			// pass listItem.listItemId here.
 			Intent intent = new Intent(mContext, GalleryControlExtension.class);
-			intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mGate.getId());
+			intent.putExtra(ListSensorControlExtension.EXTRA_GATE_ID, mGate.getId());
 			intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocationStr);
 			intent.putExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION, listItem.listItemPosition);
 			mControlManager.startControl(intent);
@@ -236,11 +236,11 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			public void run() {
 
 				mController.getGatesModel().reloadGates(true);
-				mGate = mController.getGatesModel().getGate(mAdapterId);
+				mGate = mController.getGatesModel().getGate(mGateId);
 				if (mGate != null) {
 					mModules = new ArrayList<Module>();
 
-					mController.getDevicesModel().reloadDevicesByGate(mAdapterId, true);
+					mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
 					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocationStr);
 					for (Device facility : devices) {
 						mModules.addAll(facility.getModules());

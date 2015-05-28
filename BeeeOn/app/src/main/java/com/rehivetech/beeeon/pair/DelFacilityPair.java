@@ -7,8 +7,8 @@ public class DelFacilityPair {
 	public final String facilityId;
 	public final String gateId;
 
-	public DelFacilityPair(final String fac, final String adapter) {
+	public DelFacilityPair(final String fac, final String gateId) {
 		this.facilityId = fac;
-		this.gateId = adapter;
+		this.gateId = gateId;
 	}
 }

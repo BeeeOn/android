@@ -9,8 +9,8 @@ public class UserPair {
 	public final User user;
 	public final String gateId;
 
-	public UserPair(final User usr, final String adapter) {
-		this.user = usr;
-		this.gateId = adapter;
+	public UserPair(final User user, final String gateId) {
+		this.user = user;
+		this.gateId = gateId;
 	}
 }

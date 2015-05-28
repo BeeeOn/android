@@ -55,11 +55,11 @@ import java.util.List;
  */
 public class ListLocationControlExtension extends ManagedControlExtension {
 
-	public static final String EXTRA_ADAPTER_ID = "GATE_ID";
+	public static final String EXTRA_GATE_ID = "GATE_ID";
 
 	private Gate mGate;
 	private List<Location> mLocations;
-	private String mAdapterId;
+	private String mGateId;
 
 	private Bundle[] mMenuItemsIcons = new Bundle[1];
 
@@ -80,8 +80,8 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 		mLocations = new ArrayList<Location>();
 
-		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
-		if (mAdapterId == null) {
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
+		if (mGateId == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -117,7 +117,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 
 		showLayout(R.layout.sw2_list_title, data);
 
-		if (mAdapterId == null) {
+		if (mGateId == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -189,7 +189,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_sensor_available));
 			} else {
 				intent = new Intent(mContext, ListSensorControlExtension.class);
-				intent.putExtra(ListSensorControlExtension.EXTRA_ADAPTER_ID, mGate.getId());
+				intent.putExtra(ListSensorControlExtension.EXTRA_GATE_ID, mGate.getId());
 				intent.putExtra(ListSensorControlExtension.EXTRA_LOCATION_NAME, mLocations.get(listItem.listItemPosition).getId());
 			}
 			mControlManager.startControl(intent);
@@ -229,11 +229,11 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mGate = mController.getGatesModel().getGate(mAdapterId);
+				mGate = mController.getGatesModel().getGate(mGateId);
 
 				LocationsModel locationsModel = mController.getLocationsModel();
-				locationsModel.reloadLocationsByGate(mAdapterId, mForceUpdate);
-				mLocations = locationsModel.getLocationsByGate(mAdapterId);
+				locationsModel.reloadLocationsByGate(mGateId, mForceUpdate);
+				mLocations = locationsModel.getLocationsByGate(mGateId);
 
 				mForceUpdate = true;
 

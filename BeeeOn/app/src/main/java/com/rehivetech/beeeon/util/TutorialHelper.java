@@ -193,8 +193,8 @@ public class TutorialHelper {
 
 		ShowcaseView mSV = new ShowcaseView.Builder(activity, true)
 				.setTarget(target)
-				.setContentTitle(activity.getString(R.string.tut_add_adapter_header))
-				.setContentText(activity.getString(R.string.tut_add_adapter_text))
+				.setContentTitle(activity.getString(R.string.tut_add_gate_header))
+				.setContentText(activity.getString(R.string.tut_add_gate_text))
 				.setStyle(R.style.CustomShowcaseTheme)
 				.setShowcaseEventListener(listener)
 				.build();

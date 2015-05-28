@@ -7,7 +7,7 @@
     <string name="title_activity_notification">Notifikace</string>
     <string name="title_activity_add_sensor">Přidat nové zařízení</string>
     <string name="title_activity_sensor_detail">Detail zařízení</string>
-    <string name="title_activity_add_adapter">Přidat bránu</string>
+    <string name="title_activity_add_gate">Přidat bránu</string>
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
@@ -222,7 +222,7 @@
     <string name="widget_configuration_interval_widget">Interval aktualizace widgetu</string>
     <string name="widget_configuration_login_first">Je třeba se nejprve přihlásit</string>
     <string name="widget_configuration_no_adapters">K nastavení widgetu je nutné být uživatelem brány</string>
-    <string name="widget_configuration_select_adapter">Vyberte bránu ze seznamu</string>
+    <string name="widget_configuration_select_gate">Vyberte bránu ze seznamu</string>
     <string name="widget_configuration_select_device">Vyberte zařízení ze seznamu</string>
     <string name="widget_configuration_select_location">Vyberte umístění ze seznamu</string>
 
@@ -288,7 +288,7 @@
     <string name="default_location">Výchozí umístění</string>
     <string name="default_adapter">Výchozí brána</string>
     <string name="actual_timezone">Aktuální časové pásmo</string>
-    <string name="adapter_timezone">Časové pásmo brány</string>
+    <string name="gate_timezone">Časové pásmo brány</string>
 
     <!-- Default names -->
     <string name="adapter_default_name">Brána #%d</string>
@@ -303,8 +303,8 @@
 
 
     <!-- Tutorial -->
-    <string name="tut_add_adapter_header">PŘIDAT BRÁNU</string>
-    <string name="tut_add_adapter_text">Pro přidání brány klepněte na plus (+)</string>
+    <string name="tut_add_gate_header">PŘIDAT BRÁNU</string>
+    <string name="tut_add_gate_text">Pro přidání brány klepněte na plus (+)</string>
     <string name="tut_add_sensor_header">PŘIDAT ZAŘÍZENÍ</string>
     <string name="tut_add_sensor_text">Pro přidání zařízení klepněte na plus (+)</string>
 
@@ -314,9 +314,9 @@
     <string name="tutorial_open_menu">Otevřte nabídku</string>
     <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
     <!-- Help in Add dialogs -->
-    <string name="tut_add_adapter_text_1">Připojte bránu k internetové síti</string>
-    <string name="tut_add_adapter_text_2">Zapojte bránu do elektrické sítě</string>
-    <string name="tut_add_adapter_text_3">V následujícím kroku zadejte název brány a naskenujte QR kód</string>
+    <string name="tut_add_gate_text_1">Připojte bránu k internetové síti</string>
+    <string name="tut_add_gate_text_2">Zapojte bránu do elektrické sítě</string>
+    <string name="tut_add_gate_text_3">V následujícím kroku zadejte název brány a naskenujte QR kód</string>
     <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze zařízení nebo zapojte aktor do elektrické sítě</string>
     <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se zařízení nebo stiskněte párovací tlačítko na aktoru</string>
 

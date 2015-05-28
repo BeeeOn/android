@@ -64,7 +64,7 @@ public class WidgetModuleData extends WidgetData {
 
 			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
 			Device device = new Device();
-			device.setGateId(widgetAdapterId);
+			device.setGateId(widgetGateId);
 			device.setAddress(ids[0]);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
@@ -91,15 +91,15 @@ public class WidgetModuleData extends WidgetData {
 		mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
 		mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
 
-		if (widgetAdapterId.isEmpty()) return;
+		if (widgetGateId.isEmpty()) return;
 
 		// -------------------- render layout
 		// updates all inside devices
 		boolean isOnlyOne = true;
 		for (WidgetModulePersistence dev : widgetModules) {
 			// detail activity
-			mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
-			mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
 
 			// when only 1 module is in the widget - we assume that we need icon and name
 			if (isOnlyOne) {
@@ -134,11 +134,11 @@ public class WidgetModuleData extends WidgetData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetGateId);
 		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {
-			Module module = mController.getDevicesModel().getModule(widgetAdapterId, dev.getId());
+			Module module = mController.getDevicesModel().getModule(widgetGateId, dev.getId());
 			if (module != null) {
 				dev.configure(module, gate);
 			}
@@ -148,7 +148,7 @@ public class WidgetModuleData extends WidgetData {
 		if (updated > 0) {
 			// update last update to "now"
 			widgetLastUpdate = getTimeNow();
-			widgetAdapterId = gate.getId();
+			widgetGateId = gate.getId();
 
 			// Save fresh data
 			this.save();

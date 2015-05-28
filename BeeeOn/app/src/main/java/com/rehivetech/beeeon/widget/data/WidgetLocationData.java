@@ -30,9 +30,9 @@ public class WidgetLocationData extends WidgetData {
 
 	public static final String OPEN_DETAIL_ACTION = "com.rehivetech.beeeon.widget.locationlist.OPEN_DETAIL_ACTION";
 	public static final String EXTRA_ITEM_DEV_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_DEV_ID";
-	public static final String EXTRA_ITEM_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_ADAPTER_ID";
+	public static final String EXTRA_ITEM_GATE_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_ADAPTER_ID";
 	public static final String EXTRA_LOCATION_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ID";
-	public static final String EXTRA_LOCATION_ADAPTER_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ADAPTER_ID";
+	public static final String EXTRA_LOCATION_GATE_ID = "com.rehivetech.beeeon.widget.locationlist.LOCATON_ADAPTER_ID";
 
 	protected Intent mRemoteViewsFactoryIntent;
 
@@ -66,7 +66,7 @@ public class WidgetLocationData extends WidgetData {
 	@Override
 	public void init() {
 		mLocations.clear();
-		mLocations.add(new Location(widgetLocation.id, widgetLocation.name, widgetAdapterId, widgetLocation.type));
+		mLocations.add(new Location(widgetLocation.id, widgetLocation.name, widgetGateId, widgetLocation.type));
 	}
 
 	@Override
@@ -87,15 +87,15 @@ public class WidgetLocationData extends WidgetData {
 		mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
 
 		// TODO scroll to location?
-		mBuilder.setOnClickListener(R.id.icon, startMainActivityPendingIntent(mContext, widgetAdapterId));
-		mBuilder.setOnClickListener(R.id.name, startMainActivityPendingIntent(mContext, widgetAdapterId));
+		mBuilder.setOnClickListener(R.id.icon, startMainActivityPendingIntent(mContext, widgetGateId));
+		mBuilder.setOnClickListener(R.id.name, startMainActivityPendingIntent(mContext, widgetGateId));
 
 		// onclick listener when clicked on item
 		mRemoteViewsFactoryIntent = new Intent(mContext, WidgetListService.class);
 		mRemoteViewsFactoryIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId);
 		mRemoteViewsFactoryIntent.setData(Uri.parse(mRemoteViewsFactoryIntent.toUri(Intent.URI_INTENT_SCHEME)));
 		mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ID, widgetLocation.id);
-		mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_ADAPTER_ID, widgetAdapterId);
+		mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_GATE_ID, widgetGateId);
 
 		mBuilder.setRemoteAdapter(R.id.widget_sensor_list_view, mWidgetId, mRemoteViewsFactoryIntent);
 		mBuilder.setEmptyView(R.id.widget_sensor_list_view, R.id.empty_view);
@@ -119,18 +119,18 @@ public class WidgetLocationData extends WidgetData {
 
 	@Override
 	public boolean handleUpdateData() {
-		Location location = mController.getLocationsModel().getLocation(widgetAdapterId, widgetLocation.id);
+		Location location = mController.getLocationsModel().getLocation(widgetGateId, widgetLocation.id);
 		if (location == null) {
 			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
 			return false;
 		}
 
-		Gate gate = mController.getGatesModel().getGate(widgetAdapterId);
+		Gate gate = mController.getGatesModel().getGate(widgetGateId);
 		if (gate == null) return false;
 		widgetLocation.configure(location, gate);
 
 		widgetLastUpdate = getTimeNow();
-		widgetAdapterId = gate.getId();
+		widgetGateId = gate.getId();
 
 		mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
 

@@ -71,7 +71,7 @@ public class WidgetService extends Service {
 	private static final String EXTRA_CHANGE_LAYOUT_MIN_WIDTH = "com.rehivetech.beeeon.change_layout_min_width";
 	private static final String EXTRA_CHANGE_LAYOUT_MIN_HEIGHT = "com.rehivetech.beeeon.change_layout_min_height";
 	private static final String EXTRA_WIDGETS_SHOULD_RELOAD = "com.rehivetech.beeeon.widget_should_reload";
-	private static final String EXTRA_ACTOR_ADAPTER_ID = "com.rehivetech.beeeon.actor_adapter_id";
+	private static final String EXTRA_ACTOR_GATE_ID = "com.rehivetech.beeeon.actor_adapter_id";
 
 	// when finding all widgets with the same actor
 	private static final int UPDATE_LAYOUT = 0;
@@ -200,9 +200,9 @@ public class WidgetService extends Service {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						String adapterId = intent.getStringExtra(EXTRA_ACTOR_ADAPTER_ID);
+						String gateId = intent.getStringExtra(EXTRA_ACTOR_GATE_ID);
 						String actorId = intent.getStringExtra(EXTRA_ACTOR_ID);
-						changeWidgetActorRequest(adapterId, actorId);
+						changeWidgetActorRequest(gateId, actorId);
 					}
 				}).start();
 				return START_STICKY;
@@ -438,15 +438,15 @@ public class WidgetService extends Service {
 	/**
 	 * Actor task request (disables all widgets)
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param actorId
 	 */
-	private void changeWidgetActorRequest(final String adapterId, final String actorId) {
-		Log.d(TAG, String.format("changeWidgetActorRequest(%s, %s)", adapterId, actorId));
-		if (actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
+	private void changeWidgetActorRequest(final String gateId, final String actorId) {
+		Log.d(TAG, String.format("changeWidgetActorRequest(%s, %s)", gateId, actorId));
+		if (actorId == null || gateId == null || actorId.isEmpty() || gateId.isEmpty()) return;
 
 		// ----- first get the module and change value
-		final Module module = mController.getDevicesModel().getModule(adapterId, actorId);
+		final Module module = mController.getDevicesModel().getModule(gateId, actorId);
 		if (module == null || !module.getType().isActor()) {
 			Log.e(TAG, "MODULE NOT actor OR NOT FOUND --> probably need to refresh controller");
 			return;
@@ -466,7 +466,7 @@ public class WidgetService extends Service {
 		final boolean newValue = boolVal.isActiveValue(BooleanValue.TRUE);
 
 		// ----- then we need to check what widgets have this actor
-		performWidgetActorChange(UPDATE_LAYOUT, adapterId, actorId, true, newValue);
+		performWidgetActorChange(UPDATE_LAYOUT, gateId, actorId, true, newValue);
 
 		// ----- and finally run asyncTask
 		final ActorActionTask actorActionTask = new ActorActionTask(mContext);
@@ -476,7 +476,7 @@ public class WidgetService extends Service {
 				// NOTE: we don't have any response here, cause that manages received broadcast
 				if (!success) {
 					// if not successfull, put back the state
-					performWidgetActorChange(UPDATE_LAYOUT, adapterId, actorId, false, oldValue);
+					performWidgetActorChange(UPDATE_LAYOUT, gateId, actorId, false, oldValue);
 				}
 			}
 		});
@@ -486,15 +486,15 @@ public class WidgetService extends Service {
 	/**
 	 * Actor task result (this is called by broadcast receiver) -> goes through all widgets
 	 *
-	 * @param adapterId
+	 * @param gateId
 	 * @param actorId
 	 */
-	private void changeWidgetActorResult(String adapterId, String actorId) {
-		Log.d(TAG, String.format("changeWidgetActorResult(%s, %s)", adapterId, actorId));
-		if (actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
+	private void changeWidgetActorResult(String gateId, String actorId) {
+		Log.d(TAG, String.format("changeWidgetActorResult(%s, %s)", gateId, actorId));
+		if (actorId == null || gateId == null || actorId.isEmpty() || gateId.isEmpty()) return;
 
 		// does not set value cause updates whole widget (and there asks for new value)
-		performWidgetActorChange(UPDATE_WHOLE, adapterId, actorId, false, false);
+		performWidgetActorChange(UPDATE_WHOLE, gateId, actorId, false, false);
 	}
 
 
@@ -544,14 +544,14 @@ public class WidgetService extends Service {
 	 * and perform partial (only changes layout) or whole update
 	 *
 	 * @param perform    UPDATE_LAYOUT or UPDATE_WHOLE
-	 * @param adapterId
+	 * @param gateId
 	 * @param actorId
 	 * @param isDisabled if should be switch disabled
 	 * @param isValueOn  when UPDATE_WHOLE this does nothing
 	 */
-	private void performWidgetActorChange(int perform, String adapterId, String actorId, boolean isDisabled, boolean isValueOn) {
+	private void performWidgetActorChange(int perform, String gateId, String actorId, boolean isDisabled, boolean isValueOn) {
 		int[] allWidgetIds = getAllWidgetIds();
-		if (allWidgetIds.length == 0 || actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
+		if (allWidgetIds.length == 0 || actorId == null || gateId == null || actorId.isEmpty() || gateId.isEmpty()) return;
 		for (int widgetId : allWidgetIds) {
 			WidgetData data = getWidgetData(widgetId);
 			// skips not compatible widgets
@@ -560,7 +560,7 @@ public class WidgetService extends Service {
 			int updatedActors = 0;
 			// go through all devices in that widget
 			for (WidgetModulePersistence wDev : data.widgetModules) {
-				if (!adapterId.equals(wDev.getAdapterId()) || !actorId.equals(wDev.getId())) continue;
+				if (!gateId.equals(wDev.getGateId()) || !actorId.equals(wDev.getId())) continue;
 
 				if (perform == UPDATE_LAYOUT) {
 					wDev.setSwitchChecked(isValueOn);
@@ -905,11 +905,11 @@ public class WidgetService extends Service {
 	 * @param actorId
 	 * @return
 	 */
-	public static Intent getIntentActorChangeRequest(Context context, String actorId, String adapterId) {
+	public static Intent getIntentActorChangeRequest(Context context, String actorId, String gateId) {
 		Intent intent = new Intent(context, WidgetService.class);
 		intent.putExtra(WidgetService.EXTRA_ACTOR_CHANGE_REQUEST, true);
 		intent.putExtra(EXTRA_ACTOR_ID, actorId);
-		intent.putExtra(EXTRA_ACTOR_ADAPTER_ID, adapterId);
+		intent.putExtra(EXTRA_ACTOR_GATE_ID, gateId);
 		return intent;
 	}
 
@@ -921,8 +921,8 @@ public class WidgetService extends Service {
 	 * @param actorId
 	 * @return
 	 */
-	public static PendingIntent getPendingIntentActorChangeRequest(Context context, int widgetId, String actorId, String adapterId) {
-		return getPendingIntentActor(context, widgetId, actorId, adapterId, PendingIntent.FLAG_UPDATE_CURRENT);
+	public static PendingIntent getPendingIntentActorChangeRequest(Context context, int widgetId, String actorId, String gateId) {
+		return getPendingIntentActor(context, widgetId, actorId, gateId, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
 	/**
@@ -931,11 +931,11 @@ public class WidgetService extends Service {
 	 * @param context
 	 * @param widgetId
 	 * @param actorId
-	 * @param adapterId
+	 * @param gateId
 	 * @return
 	 */
-	public static PendingIntent cancelPendingIntentActorChangeRequest(Context context, int widgetId, String actorId, String adapterId) {
-		return getPendingIntentActor(context, widgetId, actorId, adapterId, PendingIntent.FLAG_CANCEL_CURRENT);
+	public static PendingIntent cancelPendingIntentActorChangeRequest(Context context, int widgetId, String actorId, String gateId) {
+		return getPendingIntentActor(context, widgetId, actorId, gateId, PendingIntent.FLAG_CANCEL_CURRENT);
 	}
 
 	/**
@@ -944,14 +944,14 @@ public class WidgetService extends Service {
 	 * @param context
 	 * @param widgetId
 	 * @param actorId
-	 * @param adapterId
+	 * @param gateId
 	 * @param flag
 	 * @return
 	 */
-	private static PendingIntent getPendingIntentActor(Context context, int widgetId, String actorId, String adapterId, int flag) {
-		Intent intent = getIntentActorChangeRequest(context, actorId, adapterId);
+	private static PendingIntent getPendingIntentActor(Context context, int widgetId, String actorId, String gateId, int flag) {
+		Intent intent = getIntentActorChangeRequest(context, actorId, gateId);
 		// requestNum guarantees that PendingIntent is unique
-		int requestNum = widgetId + adapterId.hashCode() + actorId.hashCode();
+		int requestNum = widgetId + gateId.hashCode() + actorId.hashCode();
 		return PendingIntent.getService(context, requestNum, intent, flag);
 	}
 
@@ -1070,10 +1070,10 @@ public class WidgetService extends Service {
 
 				// if any actor value was changed, tell the service to refresh widget with that module
 				case Constants.BROADCAST_ACTOR_CHANGED:
-					final String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID);
+					final String gateId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID);
 					final String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
 
-					if (adapterId == null || adapterId.isEmpty() || actorId == null || actorId.isEmpty()) {
+					if (gateId == null || gateId.isEmpty() || actorId == null || actorId.isEmpty()) {
 						Log.e(TAG, "Not all data received from actor change broadcast");
 						return;
 					}
@@ -1082,7 +1082,7 @@ public class WidgetService extends Service {
 					new Thread(new Runnable() {
 						@Override
 						public void run() {
-							changeWidgetActorResult(adapterId, actorId);
+							changeWidgetActorResult(gateId, actorId);
 						}
 					}).start();
 					break;

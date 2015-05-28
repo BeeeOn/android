@@ -30,7 +30,7 @@ public abstract class Achievement implements Observer {
 	protected Context mContext = null;
 	protected Controller mController;
 	private String mAchievementId;
-	private String mAdapterId;
+	private String mGateId;
 	private boolean mSendUpdate;
 	protected UpdateAchievementTask mUpdateAchievementTask;
 
@@ -43,14 +43,14 @@ public abstract class Achievement implements Observer {
 		mAchievementId = achievement_id;
 		mSendUpdate = sendUpdate;
 
-		mAdapterId = "0";
+		mGateId = "0";
 		mController = Controller.getInstance(mContext);
 		if (mController.getActiveGate() != null)
-			mAdapterId = mController.getActiveGate().getId();
+			mGateId = mController.getActiveGate().getId();
 		mAchievementList = AchievementList.getInstance(mContext);
 		if (mAchievementList.isDownloaded()) {
 			mData = mAchievementList.getItem(achievement_id);
-			doAddUpdateAchievementTask(new AchievementPair(mAdapterId, mAchievementId));
+			doAddUpdateAchievementTask(new AchievementPair(mGateId, mAchievementId));
 		} else
 			mAchievementList.addObserver(this);
 	}
@@ -98,6 +98,6 @@ public abstract class Achievement implements Observer {
 	@Override
 	public void update(Observable observable, Object o) {
 		if (o.toString().equals("achievements"))
-			doAddUpdateAchievementTask(new AchievementPair(mAdapterId, mAchievementId));
+			doAddUpdateAchievementTask(new AchievementPair(mGateId, mAchievementId));
 	}
 }

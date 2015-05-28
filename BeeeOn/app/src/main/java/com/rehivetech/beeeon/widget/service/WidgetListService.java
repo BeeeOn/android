@@ -47,7 +47,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	private int mWidgetId;
 
 	private String mLocationId;
-	private String mLocationAdapterId;
+	private String mLocationGateId;
 
 	public ListRemoteViewsFactory(Context context, Intent intent) {
 		mContext = context.getApplicationContext();
@@ -55,7 +55,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		mModules = new ArrayList<>();
 
 		mLocationId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ID);
-		mLocationAdapterId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ADAPTER_ID);
+		mLocationGateId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_GATE_ID);
 	}
 
 	public void onCreate() {
@@ -102,7 +102,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		// send broadcast to widgetprovider with information about clicked item
 		Bundle extras = new Bundle();
 		extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
-		extras.putString(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID, dev.getDevice().getGateId());
+		extras.putString(WidgetLocationData.EXTRA_ITEM_GATE_ID, dev.getDevice().getGateId());
 		Intent fillInIntent = new Intent();
 		fillInIntent.putExtras(extras);
 		rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
@@ -133,7 +133,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	}
 
 	public void onDataSetChanged() {
-		Log.d(TAG, String.format("onDataSetChanged(%d), locId=%s, adId=%s", mWidgetId, mLocationId, mLocationAdapterId));
+		Log.d(TAG, String.format("onDataSetChanged(%d), locId=%s, adId=%s", mWidgetId, mLocationId, mLocationGateId));
 
 		// TODO problem if logged out
 		// TODO problem when changed room
@@ -141,8 +141,8 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 		mController = Controller.getInstance(mContext);
 		try {
-			mController.getLocationsModel().reloadLocationsByGate(mLocationAdapterId, false);
-			mDevices = mController.getDevicesModel().getDevicesByLocation(mLocationAdapterId, mLocationId);
+			mController.getLocationsModel().reloadLocationsByGate(mLocationGateId, false);
+			mDevices = mController.getDevicesModel().getDevicesByLocation(mLocationGateId, mLocationId);
 		} catch (AppException e) {
 			e.printStackTrace();
 		}

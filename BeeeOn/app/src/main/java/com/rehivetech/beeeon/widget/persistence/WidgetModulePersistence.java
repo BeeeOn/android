@@ -101,11 +101,11 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		id = module.getId();
 		name = module.getName();
 		icon = module.getIconResource();
-		adapterId = gate.getId();
-		adapterRole = gate.getRole().getId();
+		gateId = gate.getId();
+		mGateRole = gate.getRole().getId();
 		type = module.getType().getTypeId();
 
-		mUserRole = Utils.getEnumFromId(User.Role.class, adapterRole, User.Role.Guest);
+		mUserRole = Utils.getEnumFromId(User.Role.class, mGateRole, User.Role.Guest);
 		lastUpdateTime = module.getDevice().getLastUpdate().getMillis();
 		refresh = module.getDevice().getRefresh().getInterval();
 
@@ -189,7 +189,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 			containerType = SWITCHCOMPAT;
 
 			mBuilder.loadRootView(R.layout.widget_include_switchcompat);
-			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
+			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), gateId));
 			moduleValueChecked = ((BooleanValue) moduleValue).isActiveValue(BooleanValue.TRUE);
 
 			if (mIsCached) {
@@ -276,10 +276,10 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 		if (disabled == true) {
 			mBuilder.setSwitchDisabled(true, moduleValueChecked);
-			WidgetService.cancelPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId);
+			WidgetService.cancelPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), gateId);
 		} else {
 			mBuilder.setSwitchDisabled(false, moduleValueChecked);
-			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
+			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), gateId));
 		}
 
 		// prevent from getting updated the value

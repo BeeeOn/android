@@ -7,8 +7,8 @@ public class DelWatchdogPair {
 	public final String watchdogId;
 	public final String gateId;
 
-	public DelWatchdogPair(final String wat, final String adapter) {
+	public DelWatchdogPair(final String wat, final String gateId) {
 		this.watchdogId = wat;
-		this.gateId = adapter;
+		this.gateId = gateId;
 	}
 }

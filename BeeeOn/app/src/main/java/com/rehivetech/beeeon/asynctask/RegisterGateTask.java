@@ -22,10 +22,10 @@ public class RegisterGateTask extends CallbackTask<RegisterGatePair> {
 	}
 
 	private String getUniqueGateName() {
-		Vector<String> adapterNames = new Vector<String>();
+		Vector<String> gateNames = new Vector<String>();
 
 		for (Gate gate : mController.getGatesModel().getGates()) {
-			adapterNames.add(gate.getName());
+			gateNames.add(gate.getName());
 		}
 
 		String name = "";
@@ -33,12 +33,12 @@ public class RegisterGateTask extends CallbackTask<RegisterGatePair> {
 		int number = 1;
 		do {
 			name = mContext.getString(R.string.adapter_default_name, number++);
-		} while (adapterNames.contains(name));
+		} while (gateNames.contains(name));
 
 		return name;
 	}
 
-	private String getHexaAdapterName(String id) {
+	private String getHexaGateName(String id) {
 		try {
 			int number = Integer.parseInt(id);
 			return Integer.toHexString(number).toUpperCase(Locale.getDefault());
@@ -51,13 +51,13 @@ public class RegisterGateTask extends CallbackTask<RegisterGatePair> {
 	protected Boolean doInBackground(RegisterGatePair pair) {
 		mController = Controller.getInstance(mContext);
 
-		String serialNumber = pair.adapterId;
-		String name = pair.adapterName.trim();
+		String serialNumber = pair.gateId;
+		String name = pair.gateName.trim();
 
 		// Set default name for this gate, if user didn't filled any
 		if (name.isEmpty()) {
 			// name = getUniqueGateName();
-			name = getHexaAdapterName(serialNumber);
+			name = getHexaGateName(serialNumber);
 		}
 
 		// Register new gate and set it as active

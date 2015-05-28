@@ -60,10 +60,10 @@ public class GalleryControlExtension extends ManagedControlExtension {
 	protected int mLastKnowPosition = 0;
 
 	public static final String EXTRA_INITIAL_POSITION = "EXTRA_INITIAL_POSITION";
-	public static final String EXTRA_ADAPTER_ID = "GATE_ID";
+	public static final String EXTRA_GATE_ID = "GATE_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
-	private String mAdapterId;
+	private String mGateId;
 	private String mLocationStr;
 	private List<Module> mModules;
 
@@ -90,9 +90,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		mModules = new ArrayList<Module>();
 
-		mAdapterId = getIntent().getStringExtra(EXTRA_ADAPTER_ID);
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		mLocationStr = getIntent().getStringExtra(EXTRA_LOCATION_NAME);
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -114,7 +114,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		int startPosition = getIntent().getIntExtra(EXTRA_INITIAL_POSITION, 0);
 		mLastKnowPosition = startPosition;
 
-		if (mAdapterId == null || mLocationStr == null) {
+		if (mGateId == null || mLocationStr == null) {
 			mControlManager.onBack();
 			return;
 		}
@@ -158,7 +158,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		if (menuItem == MENU_REFRESH) {
 
 			// clearDisplay();
-			// mModules = mController.getGate(adapterId, false)
+			// mModules = mController.getGate(gateId, false)
 			// .getDevicesByLocation(locationStr);
 			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
 			actualize(mLastKnowPosition);
@@ -276,8 +276,8 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 				mModules = new ArrayList<Module>();
 
-				mController.getDevicesModel().reloadDevicesByGate(mAdapterId, true);
-				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mAdapterId, mLocationStr);
+				mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
+				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGateId, mLocationStr);
 				for (Device facility : devices) {
 					mModules.addAll(facility.getModules());
 				}
