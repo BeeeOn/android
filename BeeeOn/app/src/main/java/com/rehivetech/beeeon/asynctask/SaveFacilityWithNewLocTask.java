@@ -4,16 +4,16 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.SaveFacilityWithNewLocPair;
+import com.rehivetech.beeeon.pair.SaveDeviceWithNewLocPair;
 
-public class SaveFacilityWithNewLocTask extends CallbackTask<SaveFacilityWithNewLocPair> {
+public class SaveFacilityWithNewLocTask extends CallbackTask<SaveDeviceWithNewLocPair> {
 
 	public SaveFacilityWithNewLocTask(Context context) {
 		super(context);
 	}
 
 	@Override
-	protected Boolean doInBackground(SaveFacilityWithNewLocPair pair) {
+	protected Boolean doInBackground(SaveDeviceWithNewLocPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
 		if (pair.location.getId().equals(Location.NEW_LOCATION_ID)) {

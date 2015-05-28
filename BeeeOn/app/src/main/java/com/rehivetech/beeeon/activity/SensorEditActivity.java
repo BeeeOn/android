@@ -30,8 +30,8 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.SaveFacilityPair;
-import com.rehivetech.beeeon.pair.SaveFacilityWithNewLocPair;
+import com.rehivetech.beeeon.pair.SaveDevicePair;
+import com.rehivetech.beeeon.pair.SaveDeviceWithNewLocPair;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.EnumSet;
@@ -140,7 +140,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 						location = mFragment.getLocation();
 					}
 					// Send request for new loc ..
-					doSaveFacilityWithNewLocation(new SaveFacilityWithNewLocPair(device, location, EnumSet.copyOf(what)));
+					doSaveFacilityWithNewLocation(new SaveDeviceWithNewLocPair(device, location, EnumSet.copyOf(what)));
 					return true;
 				} else {
 					device.setLocationId(mFragment.getLocationId());
@@ -153,7 +153,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			}
 
 			if (!mFragment.isSetNewRoom())
-				doSaveFacilityTask(new SaveFacilityPair(device, EnumSet.copyOf(what)));
+				doSaveFacilityTask(new SaveDevicePair(device, EnumSet.copyOf(what)));
 
 			return true;
 		} else if (id == android.R.id.home) {
@@ -178,7 +178,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	 * ASYNC TASK - SAVE
 	 */
 
-	private void doSaveFacilityWithNewLocation(SaveFacilityWithNewLocPair pair) {
+	private void doSaveFacilityWithNewLocation(SaveDeviceWithNewLocPair pair) {
 		mProgress.show();
 		SaveFacilityWithNewLocTask saveFacilityWithNewLocTask = new SaveFacilityWithNewLocTask(mActivity);
 
@@ -204,7 +204,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		callbackTaskManager.executeTask(saveFacilityWithNewLocTask, pair, false);
 	}
 
-	public void doSaveFacilityTask(SaveFacilityPair pair) {
+	public void doSaveFacilityTask(SaveDevicePair pair) {
 		mProgress.show();
 		SaveFacilityTask saveFacilityTask = new SaveFacilityTask(mActivity);
 

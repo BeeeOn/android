@@ -7,15 +7,15 @@ import com.rehivetech.beeeon.household.location.Location;
 import java.util.EnumSet;
 
 /**
- * Represents pair of module and location for saving it to server
+ * Represents pair of device and location for saving it to server
  */
-public class SaveFacilityWithNewLocPair {
+public class SaveDeviceWithNewLocPair {
 	public final Device mDevice;
 	public final EnumSet<Module.SaveModule> what;
 	public final Location location;
 
-	public SaveFacilityWithNewLocPair(final Device fac, final Location newLoc, final EnumSet<Module.SaveModule> what) {
-		this.mDevice = fac;
+	public SaveDeviceWithNewLocPair(final Device device, final Location newLoc, final EnumSet<Module.SaveModule> what) {
+		this.mDevice = device;
 		this.what = what;
 		this.location = newLoc;
 	}

@@ -4,19 +4,19 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.pair.DelFacilityPair;
+import com.rehivetech.beeeon.pair.DelDevicePair;
 
-public class RemoveFacilityTask extends CallbackTask<DelFacilityPair> {
+public class RemoveFacilityTask extends CallbackTask<DelDevicePair> {
 
 	public RemoveFacilityTask(Context context) {
 		super(context);
 	}
 
 	@Override
-	protected Boolean doInBackground(DelFacilityPair pair) {
+	protected Boolean doInBackground(DelDevicePair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
-		Device device = controller.getDevicesModel().getFacility(pair.gateId, pair.facilityId);
+		Device device = controller.getDevicesModel().getFacility(pair.gateId, pair.deviceId);
 		if (device == null)
 			return false;
 

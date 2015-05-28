@@ -42,7 +42,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.DelFacilityPair;
+import com.rehivetech.beeeon.pair.DelDevicePair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TutorialHelper;
 import com.rehivetech.beeeon.util.Utils;
@@ -468,7 +468,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 	private void doRemoveFacilityTask(Device device) {
 		RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity);
-		DelFacilityPair pair = new DelFacilityPair(device.getId(), device.getGateId());
+		DelDevicePair pair = new DelDevicePair(device.getId(), device.getGateId());
 
 		removeFacilityTask.setListener(new CallbackTaskListener() {
 			@Override
