@@ -38,11 +38,10 @@ import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
 import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.DelDevicePair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TutorialHelper;
 import com.rehivetech.beeeon.util.Utils;
@@ -468,7 +467,6 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 	private void doRemoveFacilityTask(Device device) {
 		RemoveFacilityTask removeFacilityTask = new RemoveFacilityTask(mActivity);
-		DelDevicePair pair = new DelDevicePair(device.getId(), device.getGateId());
 
 		removeFacilityTask.setListener(new CallbackTaskListener() {
 			@Override
@@ -484,7 +482,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(removeFacilityTask, pair);
+		mActivity.callbackTaskManager.executeTask(removeFacilityTask, device);
 	}
 
 
