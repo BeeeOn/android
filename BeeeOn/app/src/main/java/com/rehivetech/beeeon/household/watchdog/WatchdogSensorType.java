@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
+import com.rehivetech.beeeon.gui.spinnerItem.SpinnerItem;
 import com.rehivetech.beeeon.household.device.Module;
 
 /**

@@ -69,7 +69,7 @@
 			android:value="050bb3e73bcdf2d45c0bf93f2b5595ef82ebc937"/>
 
 		<activity
-			android:name=".activity.LoginActivity"
+			android:name=".gui.activity.LoginActivity"
 			android:configChanges="orientation"
 			android:label="@string/app_name">
 			<intent-filter>
@@ -79,31 +79,31 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".activity.WebAuthActivity"
+			android:name=".gui.activity.WebAuthActivity"
 			android:label="@string/title_activity_location_screen">
 		</activity>
 		<activity
-			android:name=".activity.MainActivity"
+			android:name=".gui.activity.MainActivity"
 			android:label="@string/title_activity_location_screen">
 		</activity>
 		<activity
-			android:name=".activity.LocationDetailActivity"
+			android:name=".gui.activity.LocationDetailActivity"
 			android:label="@string/title_activity_location_detail_screen">
 		</activity>
 		<activity
-			android:name=".activity.AddSensorActivity"
+			android:name=".gui.activity.AddSensorActivity"
 			android:label="@string/title_activity_add_sensor">
 		</activity>
 		<activity
-			android:name=".activity.SetupSensorActivity"
+			android:name=".gui.activity.SetupSensorActivity"
 			android:label="@string/title_activity_add_sensor">
 		</activity>
 		<activity
-			android:name=".activity.SensorDetailActivity"
+			android:name=".gui.activity.SensorDetailActivity"
 			android:label="@string/title_activity_sensor_detail">
 		</activity>
 		<activity
-			android:name=".activity.AddGateActivity"
+			android:name=".gui.activity.AddGateActivity"
 			android:label="@string/title_activity_add_gate">
 		</activity>
 		<activity
@@ -117,7 +117,7 @@
 		</activity>
 
 		<activity
-			android:name=".activity.SettingsMainActivity"
+			android:name=".gui.activity.SettingsMainActivity"
 			android:label="@string/preference_activity_title"
 			android:theme="@style/settingsTheme">
 			<intent-filter>
@@ -125,43 +125,43 @@
 			</intent-filter>
 		</activity>
 		<activity
-			android:name=".activity.SettingsUnitActivity"
+			android:name=".gui.activity.SettingsUnitActivity"
 			android:label="@string/units"
 			android:theme="@style/settingsTheme">
 		</activity>
 		<activity
-			android:name=".activity.MapGeofenceActivity"
+			android:name=".gui.activity.MapGeofenceActivity"
 			android:label="@string/title_activity_map_geofence">
 		</activity>
 		<activity
-			android:name=".activity.GateUsersActivity"
+			android:name=".gui.activity.GateUsersActivity"
 			android:label="@string/title_activity_gate_users">
 		</activity>
 		<activity
-			android:name=".activity.AddGateUserActivity"
+			android:name=".gui.activity.AddGateUserActivity"
 			android:label="@string/title_activity_add_adapter_user">
 		</activity>
 		<activity
-			android:name=".activity.WatchdogEditRuleActivity"
+			android:name=".gui.activity.WatchdogEditRuleActivity"
 			android:label="@string/action_watchdog">
 		</activity>
 		<activity
-			android:name=".activity.NotificationActivity"
+			android:name=".gui.activity.NotificationActivity"
 			android:label="@string/action_notification">
 		</activity>
 		<activity
-			android:name=".activity.AchievementOverviewActivity"
+			android:name=".gui.activity.AchievementOverviewActivity"
 			android:label="@string/title_activity_achievement_overview">
 		</activity>
 		<activity
-			android:name=".activity.ProfileDetailActivity"
+			android:name=".gui.activity.ProfileDetailActivity"
 			android:label="@string/title_activity_profile_detail">
 		</activity>
 		<activity
-			android:name=".activity.SensorEditActivity"
+			android:name=".gui.activity.SensorEditActivity"
 			android:label="@string/title_activity_sensor_edit"/>
 		<activity
-			android:name=".activity.IntroActivity"
+			android:name=".gui.activity.IntroActivity"
 			android:label="@string/app_name"/>
 		<!-- Facebook login screen -->
 		<activity

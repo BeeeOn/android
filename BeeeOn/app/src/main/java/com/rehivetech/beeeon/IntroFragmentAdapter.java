@@ -5,7 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.rehivetech.beeeon.activity.fragment.IntroImageFragment;
+import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
 public class IntroFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {

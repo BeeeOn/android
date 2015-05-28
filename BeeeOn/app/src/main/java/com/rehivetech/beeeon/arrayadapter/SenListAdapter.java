@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.rehivetech.beeeon.activity.listItem.ListItem;
-import com.rehivetech.beeeon.activity.listItem.SensorListItem;
+import com.rehivetech.beeeon.gui.listItem.ListItem;
+import com.rehivetech.beeeon.gui.listItem.SensorListItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
 

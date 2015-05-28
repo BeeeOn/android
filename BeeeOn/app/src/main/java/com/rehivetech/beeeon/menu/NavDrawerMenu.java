@@ -19,18 +19,18 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.GateUsersActivity;
-import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.activity.SettingsMainActivity;
-import com.rehivetech.beeeon.activity.dialog.InfoDialogFragment;
-import com.rehivetech.beeeon.activity.menuItem.GateMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.EmptyMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.GroupMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.LocationMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.MenuItem;
-import com.rehivetech.beeeon.activity.menuItem.ProfileMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.SeparatorMenuItem;
-import com.rehivetech.beeeon.activity.menuItem.SettingMenuItem;
+import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
+import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
+import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
+import com.rehivetech.beeeon.gui.menuItem.GateMenuItem;
+import com.rehivetech.beeeon.gui.menuItem.EmptyMenuItem;
+import com.rehivetech.beeeon.gui.menuItem.GroupMenuItem;
+import com.rehivetech.beeeon.gui.menuItem.LocationMenuItem;
+import com.rehivetech.beeeon.gui.menuItem.MenuItem;
+import com.rehivetech.beeeon.gui.menuItem.ProfileMenuItem;
+import com.rehivetech.beeeon.gui.menuItem.SeparatorMenuItem;
+import com.rehivetech.beeeon.gui.menuItem.SettingMenuItem;
 import com.rehivetech.beeeon.arrayadapter.MenuListAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.SwitchGateTask;
@@ -117,10 +117,10 @@ public class NavDrawerMenu {
 						break;
 
 					case SETTING:
-						if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT)) {
+						if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_ABOUT)) {
 							InfoDialogFragment dialog = new InfoDialogFragment();
 							dialog.show(mActivity.getSupportFragmentManager(), TAG_INFO);
-						} else if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS)) {
+						} else if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_SETTINGS)) {
 							Intent intent = new Intent(mActivity, SettingsMainActivity.class);
 							mActivity.startActivity(intent);
 						} else if (mSelectedMenuItem.getId().equals(MenuItem.ID_LOGOUT)) {
@@ -343,8 +343,8 @@ public class NavDrawerMenu {
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding settings, about etc.
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_SETTINGS));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.activity.menuItem.MenuItem.ID_ABOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_SETTINGS));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_ABOUT));
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.logout, MenuItem.ID_LOGOUT));
 		return mMenuAdapter;
 	}

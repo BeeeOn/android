@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.network.authentication;
 
 import android.content.Intent;
 
-import com.rehivetech.beeeon.activity.LoginActivity;
+import com.rehivetech.beeeon.gui.activity.LoginActivity;
 
 import java.util.Map;
 

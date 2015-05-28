@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.rehivetech.beeeon.activity.fragment.SetupSensorFragment;
+import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
 public class SetupSensorFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {

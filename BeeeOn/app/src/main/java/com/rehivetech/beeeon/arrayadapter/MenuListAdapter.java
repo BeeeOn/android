@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.rehivetech.beeeon.activity.menuItem.MenuItem;
+import com.rehivetech.beeeon.gui.menuItem.MenuItem;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;

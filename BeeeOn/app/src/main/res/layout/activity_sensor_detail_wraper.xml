@@ -5,7 +5,7 @@
 
     <include layout="@layout/beeeon_toolbar" />
 
-    <com.rehivetech.beeeon.view.CustomViewPager
+    <com.rehivetech.beeeon.gui.view.CustomViewPager
         android:id="@+id/sensor_detail_wraper"
 		android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"

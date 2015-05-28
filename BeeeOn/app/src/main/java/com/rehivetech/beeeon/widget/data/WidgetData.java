@@ -8,8 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
 
-import com.rehivetech.beeeon.activity.MainActivity;
-import com.rehivetech.beeeon.activity.SensorDetailActivity;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
+import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;

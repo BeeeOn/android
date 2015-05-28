@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.rehivetech.beeeon.activity.fragment.CustomViewFragment;
-import com.rehivetech.beeeon.activity.fragment.SensorListFragment;
+import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
+import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 

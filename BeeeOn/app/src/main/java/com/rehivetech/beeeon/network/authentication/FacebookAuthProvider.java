@@ -8,7 +8,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.rehivetech.beeeon.activity.LoginActivity;
+import com.rehivetech.beeeon.gui.activity.LoginActivity;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.rehivetech.beeeon.activity.spinnerItem.HeaderSpinnerItem;
-import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
+import com.rehivetech.beeeon.gui.spinnerItem.HeaderSpinnerItem;
+import com.rehivetech.beeeon.gui.spinnerItem.SpinnerItem;
 
 import java.util.ArrayList;
 import java.util.List;
