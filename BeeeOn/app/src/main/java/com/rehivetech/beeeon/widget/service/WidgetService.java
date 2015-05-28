@@ -443,7 +443,7 @@ public class WidgetService extends Service {
         // ----- first get the module and change value
         final Module module = mController.getFacilitiesModel().getDevice(adapterId, actorId);
         if(module == null || !module.getType().isActor()){
-            Log.e(TAG, "DEVICE NOT actor OR NOT FOUND --> probably need to refresh controller");
+            Log.e(TAG, "MODULE NOT actor OR NOT FOUND --> probably need to refresh controller");
             return;
         }
 

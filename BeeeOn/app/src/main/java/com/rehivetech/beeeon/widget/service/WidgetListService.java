@@ -87,7 +87,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
         Module dev = mModules.get(position);
         if(dev == null){
-            Log.d(TAG, "NOT FOUND DEVICE BY POS");
+            Log.d(TAG, "NOT FOUND MODULE BY POS");
             return rv;
         }
 

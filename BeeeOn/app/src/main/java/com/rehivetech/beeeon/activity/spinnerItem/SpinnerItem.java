@@ -6,7 +6,7 @@ public interface SpinnerItem {
 	public static final String ID_UNDEFINED = "id_undefined";
 
 	public enum SpinnerItemType {
-		HEADER, DEVICE, GEOFENCE
+		HEADER, MODULE, GEOFENCE
 	}
 
 	public void setDropDownView(View view);

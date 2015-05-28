@@ -14,7 +14,7 @@ public class DeviceSpinnerItem extends AbstractSpinnerItem {
 	private Location mLocation;
 
 	public DeviceSpinnerItem(Module module, Location location, String id, Context context) {
-		super(id, SpinnerItemType.DEVICE);
+		super(id, SpinnerItemType.MODULE);
 		mModule = module;
 		mLocation = location;
 	}

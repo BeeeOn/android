@@ -299,7 +299,7 @@ public class XmlParsers {
 
 		List<Facility> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.DEVICE))
+		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
 
 		parseInnerDevs(result, aid, true);
@@ -313,7 +313,7 @@ public class XmlParsers {
 
 		List<Facility> result = new ArrayList<>();
 
-		if (!mParser.getName().equals(Xconstants.DEVICE))
+		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
 
 		parseInnerDevs(result, aid, false);
@@ -378,7 +378,7 @@ public class XmlParsers {
 				module.setValue(getSecureAttrValue(Xconstants.VALUE));
 				facility.addDevice(module);
 				mParser.nextTag(); // part endtag
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.DEVICE));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
 
 			result.add(facility);
 
@@ -562,15 +562,15 @@ public class XmlParsers {
 
 			mParser.nextTag();
 
-			if(!mParser.getName().equals(Xconstants.DEVICE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
+			if(!mParser.getName().equals(Xconstants.MODULE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
 				Log.e(TAG, "someone send bad xml");//TODO do something
 
 			do{
 				String position = getSecureAttrValue(Xconstants.POSITION);
 
-				if(mParser.getName().equals(Xconstants.DEVICE)){
-					String device = getSecureAttrValue(Xconstants.ID) + Module.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
-					tDevices.put(position, device);
+				if(mParser.getName().equals(Xconstants.MODULE)){
+					String module = getSecureAttrValue(Xconstants.ID) + Module.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
+					tDevices.put(position, module);
 
 					mParser.nextTag();
 				}
@@ -589,7 +589,7 @@ public class XmlParsers {
 
 			}while(mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
 
-			watchDog.setDevices(new ArrayList<>(tDevices.values()));
+			watchDog.setModules(new ArrayList<>(tDevices.values()));
 			watchDog.setParams(new ArrayList<>(tParams.values()));
 
 			result.add(watchDog);
@@ -656,7 +656,7 @@ public class XmlParsers {
 		List<Facility> result = new ArrayList<>();
 
 		mParser.nextTag();
-		if (!mParser.getName().equals(Xconstants.DEVICE))
+		if (!mParser.getName().equals(Xconstants.MODULE))
 			return result;
 
 		do {

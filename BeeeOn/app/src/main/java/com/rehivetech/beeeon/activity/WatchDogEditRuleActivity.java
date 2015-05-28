@@ -264,7 +264,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                 SpinnerItem selected = mSpinnerMultiAdapter.getItem(position);
 
                 switch (selected.getType()) {
-                    case DEVICE:
+                    case MODULE:
                         mWatchDogOperator = new WatchDogSensorType(mWatchDogOperator.getIndex());
                         mWatchDog.setType(WatchDog.TYPE_SENSOR);
                         mWatchDog.setGeoRegionId("");
@@ -349,9 +349,9 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 			int index = Utils.getObjectIndexFromList(geoId, mGeofences);
 			if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.GEOFENCE));
 		}
-		else if(mWatchDog.getDevices() != null && mWatchDog.getDevices().size() > 0) {
-			int index = Utils.getObjectIndexFromList(mWatchDog.getDevices().get(0), getDevicesArray(DEVICES_SENSORS));
-			if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.DEVICE));
+		else if(mWatchDog.getModules() != null && mWatchDog.getModules().size() > 0) {
+			int index = Utils.getObjectIndexFromList(mWatchDog.getModules().get(0), getDevicesArray(DEVICES_SENSORS));
+			if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.MODULE));
 		}
 
         // if this is new watchdog, we don't set anything
@@ -475,7 +475,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
         SpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
         switch(selected.getType()){
-            case DEVICE:
+            case MODULE:
                 if(!validateInput(mRuleTreshold, "parseInt")) return;
 
                 Module selectedModule = (Module) selected.getObject();
@@ -526,7 +526,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
 
         mWatchDog.setOperatorType(mWatchDogOperator);
         mWatchDog.setParams(newParams);
-        mWatchDog.setDevices(devsIds);
+        mWatchDog.setModules(devsIds);
 
         mWatchDog.setName(mRuleName.getText().toString());
         mWatchDog.setEnabled(mRuleEnabled.isChecked());

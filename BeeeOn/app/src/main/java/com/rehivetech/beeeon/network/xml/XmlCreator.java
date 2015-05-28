@@ -357,7 +357,7 @@ public class XmlCreator {
 					serializer.startTag(ns, Xconstants.ADAPTER);
 					serializer.attribute(ns, Xconstants.ID, aid);
 				}
-				serializer.startTag(ns, Xconstants.DEVICE);
+				serializer.startTag(ns, Xconstants.MODULE);
 				serializer.attribute(ns, Xconstants.ID, facility.getAddress());
 
 				for (Module module : facility.getModules()) {
@@ -365,7 +365,7 @@ public class XmlCreator {
 					serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
 					serializer.endTag(ns, Xconstants.PART);
 				}
-				serializer.endTag(ns, Xconstants.DEVICE);
+				serializer.endTag(ns, Xconstants.MODULE);
 			}
 			serializer.endTag(ns, Xconstants.ADAPTER);
 
@@ -444,7 +444,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Facility facility : facilities) {
-				serializer.startTag(ns, Xconstants.DEVICE);
+				serializer.startTag(ns, Xconstants.MODULE);
 
 				if (toSave.contains(SaveDevice.SAVE_INITIALIZED))
 					serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
@@ -467,7 +467,7 @@ public class XmlCreator {
 
 					serializer.endTag(ns, Xconstants.PART);
 				}
-				serializer.endTag(ns, Xconstants.DEVICE);
+				serializer.endTag(ns, Xconstants.MODULE);
 			}
 
 			endXml(serializer);
@@ -503,7 +503,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.STATE, SETDEVS);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
-			serializer.startTag(ns, Xconstants.DEVICE);
+			serializer.startTag(ns, Xconstants.MODULE);
 
 			if (toSave.contains(SaveDevice.SAVE_INITIALIZED))
 				serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
@@ -526,7 +526,7 @@ public class XmlCreator {
 				serializer.endTag(ns, Xconstants.PART);
 			}
 
-			serializer.endTag(ns, Xconstants.DEVICE);
+			serializer.endTag(ns, Xconstants.MODULE);
 
 			endXml(serializer);
 
@@ -864,13 +864,13 @@ public class XmlCreator {
 	 * @param name of algorithm
 	 * @param aid adapter id
 	 * @param type of algorithm
-	 * @param devices
-	 *          list of devices in right position for algorithm
+	 * @param modules
+	 *          list of modules in right position for algorithm
 	 * @param params
 	 *          list of strings with additional params for new rule
 	 * @return xml with add or set algorithm
 	 */
-	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> devices, List<String> params, String regionId, Boolean state){
+	public static String createAddSetAlgor(String bt, String name, String algId, String aid, int type, List<String> modules, List<String> params, String regionId, Boolean state){
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer);
@@ -898,13 +898,13 @@ public class XmlCreator {
 
 			i = 1;
 
-			for(String device : devices){
-				serializer.startTag(ns, Xconstants.DEVICE);
-				String[] id_type = device.split(Module.ID_SEPARATOR);
+			for(String module : modules){
+				serializer.startTag(ns, Xconstants.MODULE);
+				String[] id_type = module.split(Module.ID_SEPARATOR);
 				serializer.attribute(ns, Xconstants.ID, id_type[0]);
 				serializer.attribute(ns, Xconstants.TYPE, id_type[1]);
 				serializer.attribute(ns, Xconstants.POSITION, Integer.toString(i++));
-				serializer.endTag(ns, Xconstants.DEVICE);
+				serializer.endTag(ns, Xconstants.MODULE);
 			}
 			i = 1;
 
@@ -925,12 +925,12 @@ public class XmlCreator {
 		}
 	}
 
-	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> devices, List<String> params, String regionId){
-		return createAddSetAlgor(bt, name, null, aid, type, devices, params, regionId, null);
+	public static String createAddAlgor(String bt, String name, String aid, int type, List<String> modules, List<String> params, String regionId){
+		return createAddSetAlgor(bt, name, null, aid, type, modules, params, regionId, null);
 	}
 
-	public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> devices, List<String>params, String regionId){
-		return createAddSetAlgor(bt, name, algId, aid, type, devices, params, regionId, enable);
+	public static String createSetAlgor(String bt, String name, String algId, String aid, int type, boolean enable, List<String> modules, List<String>params, String regionId){
+		return createAddSetAlgor(bt, name, algId, aid, type, modules, params, regionId, enable);
 	}
 
 	/**

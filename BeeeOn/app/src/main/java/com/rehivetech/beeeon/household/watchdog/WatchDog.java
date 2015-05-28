@@ -24,7 +24,7 @@ public class WatchDog implements INameIdentifier {
     };
 
     // types of parameters (TODO should be as enum class in the future)
-    public static final int PAR_DEV_ID = 0;
+    public static final int PAR_MODULE_ID = 0;
     public static final int PAR_OPERATOR = 1;
     public static final int PAR_TRESHOLD = 2;
     public static final int PAR_ACTION_TYPE = 3;
@@ -40,7 +40,7 @@ public class WatchDog implements INameIdentifier {
 
 	private String mGeoRegionId;
 
-    private ArrayList<String> mDevices;
+    private ArrayList<String> mModules;
     private ArrayList<String> mParams;
 
     public WatchDog(int type){
@@ -109,16 +109,16 @@ public class WatchDog implements INameIdentifier {
         mType = type;
     }
 
-    public ArrayList<String> getDevices(){
-        return mDevices;
+    public ArrayList<String> getModules(){
+        return mModules;
     }
 
-    public void setDevices(ArrayList<String> devices){
-        mDevices = devices;
+    public void setModules(ArrayList<String> modules){
+        mModules = modules;
     }
 
-    public void AddDevice(String device){
-        mDevices.add(device);
+    public void addModules(String module){
+        mModules.add(module);
     }
 
     public ArrayList<String> getParams(){

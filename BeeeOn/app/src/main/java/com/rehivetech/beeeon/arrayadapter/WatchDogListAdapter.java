@@ -103,7 +103,7 @@ public class WatchDogListAdapter extends BaseAdapter {
 
         switch(rule.getType()){
             case WatchDog.TYPE_SENSOR:
-                List<String> devicesIds = rule.getDevices();
+                List<String> devicesIds = rule.getModules();
                 if(devicesIds.size() > 0){
                     Module moduleFirst = mController.getFacilitiesModel().getDevice(rule.getAdapterId(), devicesIds.get(0));
                     if(moduleFirst == null) return convertView;

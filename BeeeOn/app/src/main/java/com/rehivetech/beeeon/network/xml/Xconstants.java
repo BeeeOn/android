@@ -40,7 +40,7 @@ public class Xconstants {
 	public static final String INTERVAL = "interval";
 	public static final String NOTIFICAION = "notif";
 	public static final String PART = "part";
-	public static final String DEVICE = "dev";
+	public static final String MODULE = "dev";
 	public static final String INITIALIZED = "init";
 	public static final String TYPE = "type";
 	public static final String FTYPE = "ftype";
