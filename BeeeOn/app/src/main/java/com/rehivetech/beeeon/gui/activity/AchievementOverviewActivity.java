@@ -11,7 +11,7 @@ import com.facebook.CallbackManager;
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.GeneralAchievement;
+import com.rehivetech.beeeon.gamification.achievement.GeneralAchievement;
 import com.rehivetech.beeeon.gui.dialog.ShareFragmentDialog;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;

@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.achievements;
+package com.rehivetech.beeeon.gamification.achievement;
 
 import android.content.Context;
 import android.content.SharedPreferences;

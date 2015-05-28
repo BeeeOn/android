@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.achievements.TwLoginAchievement;
+import com.rehivetech.beeeon.gamification.achievement.TwLoginAchievement;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 import com.twitter.sdk.android.Twitter;
