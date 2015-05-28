@@ -22,15 +22,18 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.activity.fragment.SetupSensorFragment;
 import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
-import com.rehivetech.beeeon.asynctask.InitializeDeviceTask;
+import com.rehivetech.beeeon.asynctask.SaveDeviceTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.InitializeDevicePair;
+import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
+
+import java.util.EnumSet;
 
 public class SetupSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupSensorActivity.class.getSimpleName();
@@ -174,7 +177,8 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 				// Save that mDevice
 				Log.d(TAG, String.format("InitializeDevice - mDevice: %s, loc: %s", newDevice.getId(), location.getId()));
-				doInitializeDeviceTask(new InitializeDevicePair(newDevice, location));
+				EnumSet<Module.SaveModule> what = EnumSet.of(Module.SaveModule.SAVE_LOCATION, Module.SaveModule.SAVE_NAME, Module.SaveModule.SAVE_INITIALIZED);
+				doInitializeDeviceTask(new SaveDevicePair(newDevice, location, what));
 			}
 		});
 
@@ -196,8 +200,8 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		mFragment = fragment;
 	}
 
-	private void doInitializeDeviceTask(final InitializeDevicePair pair) {
-		InitializeDeviceTask initializeDeviceTask = new InitializeDeviceTask(this);
+	private void doInitializeDeviceTask(final SaveDevicePair pair) {
+		SaveDeviceTask initializeDeviceTask = new SaveDeviceTask(this);
 
 		initializeDeviceTask.setListener(new CallbackTaskListener() {
 
