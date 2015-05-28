@@ -13,19 +13,20 @@ import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
  */
 public class WatchdogGeofenceType extends WatchdogBaseType {
 	public static final int[] operatorIcons = {
-		R.drawable.ic_in,
-		R.drawable.ic_out
+			R.drawable.ic_in,
+			R.drawable.ic_out
 	};
 
 	public static final String[] operatorCodes = {
-		"in",
-		"out"
+			"in",
+			"out"
 	};
 
-	public WatchdogGeofenceType(){
+	public WatchdogGeofenceType() {
 		super(WatchdogOperatorType.GEOFENCE, 0);
 	}
-	public WatchdogGeofenceType(int index){
+
+	public WatchdogGeofenceType(int index) {
 		super(WatchdogOperatorType.GEOFENCE, index);
 	}
 
