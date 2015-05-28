@@ -1,6 +1,8 @@
-package com.rehivetech.beeeon.base;
+package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
+
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
 public abstract class BaseApplicationFragment extends TrackFragment {
 

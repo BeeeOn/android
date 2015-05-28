@@ -7,7 +7,6 @@ import android.widget.Button;
 
 import com.rehivetech.beeeon.IntroFragmentAdapter;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.base.BaseActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
 public class IntroActivity extends BaseActivity {

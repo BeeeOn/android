@@ -23,7 +23,6 @@ import com.rehivetech.beeeon.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
 import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;

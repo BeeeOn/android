@@ -8,7 +8,6 @@ import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.LocationDetailFragment;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
 
 public class LocationDetailActivity extends BaseApplicationActivity {
 	private ViewPager mPager;

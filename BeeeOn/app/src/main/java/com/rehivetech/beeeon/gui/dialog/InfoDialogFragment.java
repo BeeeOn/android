@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.base.TrackDialogFragment;
+import com.rehivetech.beeeon.gui.fragment.TrackDialogFragment;
 
 /**
  * About dialog

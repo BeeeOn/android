@@ -14,7 +14,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.achievement.GeneralAchievement;
 import com.rehivetech.beeeon.gui.dialog.ShareFragmentDialog;
 import com.rehivetech.beeeon.arrayadapter.AchievementListAdapter;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
 

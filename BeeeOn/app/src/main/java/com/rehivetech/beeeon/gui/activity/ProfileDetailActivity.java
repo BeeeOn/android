@@ -27,7 +27,6 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.dialog.PairNetworkFragmentDialog;
 import com.rehivetech.beeeon.arrayadapter.GamCategoryListAdapter;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;

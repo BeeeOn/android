@@ -18,7 +18,6 @@ import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.GetModulesLogsTask;
-import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;

@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.NotificationFragment;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
 
 public class NotificationActivity extends BaseApplicationActivity {
 

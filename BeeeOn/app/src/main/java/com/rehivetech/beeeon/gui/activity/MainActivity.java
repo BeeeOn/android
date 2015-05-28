@@ -27,7 +27,6 @@ import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.menu.NavDrawerMenu;

@@ -41,7 +41,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.dialog.GeofenceDialogFragment;
-import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.GeofenceHelper;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;

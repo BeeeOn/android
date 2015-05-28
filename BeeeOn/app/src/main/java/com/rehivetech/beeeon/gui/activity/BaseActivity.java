@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.base;
+package com.rehivetech.beeeon.gui.activity;
 
 //import com.actionbarsherlock.app.SherlockFragmentActivity;
 
