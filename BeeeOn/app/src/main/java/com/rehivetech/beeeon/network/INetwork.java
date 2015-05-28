@@ -5,7 +5,7 @@ import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
@@ -160,7 +160,7 @@ public interface INetwork {
 	 *
 	 * @return true if everything goes well, false otherwise
 	 */
-	boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave);
+	boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method send wanted fields of module to server
@@ -170,7 +170,7 @@ public interface INetwork {
 	 * @param toSave    ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
 	 */
-	boolean updateDevice(String adapterID, Module module, EnumSet<SaveDevice> toSave);
+	boolean updateModule(String adapterID, Module module, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method toggle or set actor to new value
@@ -214,7 +214,7 @@ public interface INetwork {
 	 */
 	Facility getFacility(Facility facility);
 
-	boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave);
+	boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveModule> toSave);
 
 	/**
 	 * TODO: need to test

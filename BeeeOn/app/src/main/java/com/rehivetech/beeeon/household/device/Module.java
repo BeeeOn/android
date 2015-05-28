@@ -33,7 +33,7 @@ public class Module implements INameIdentifier {
 		mOffset = offset;
 	}
 
-	public static Module createFromDeviceTypeId(String typeId) {
+	public static Module createFromModuleTypeId(String typeId) {
 		int iType = -1; // unknown type
 		int offset = 0; // default offset
 
@@ -47,7 +47,7 @@ public class Module implements INameIdentifier {
 		}
 
 		ModuleType type = ModuleType.fromTypeId(iType);
-		BaseValue value = BaseValue.createFromDeviceType(type);
+		BaseValue value = BaseValue.createFromModuleType(type);
 
 		// Create module object with ModuleType, BaseValue, original raw value of type, and offset
 		return new Module(type, value, typeId, offset);
@@ -56,7 +56,7 @@ public class Module implements INameIdentifier {
     /**
 	 * Represents settings of module which could be saved to server
 	 */
-	public enum SaveDevice {
+	public enum SaveModule {
 		SAVE_NAME, // change name of module
 		SAVE_LOCATION, // change location of facility
 		SAVE_VISIBILITY, // change visibility of module

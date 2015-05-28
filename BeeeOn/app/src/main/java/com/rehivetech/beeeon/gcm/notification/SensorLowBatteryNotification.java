@@ -34,15 +34,15 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 
 		try {
 			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
-			String deviceId = bundle.getString(Xconstants.DID);
+			String moduleId = bundle.getString(Xconstants.DID);
 			Integer batterylevel = Integer.valueOf(bundle.getString(Xconstants.BATTERY));
 
-			if (adapterId == null || deviceId == null || batterylevel == null) {
+			if (adapterId == null || moduleId == null || batterylevel == null) {
 				Log.d(TAG, "SensorAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new SensorLowBatteryNotification(msgId, time, type, false, adapterId, deviceId, batterylevel);
+			instance = new SensorLowBatteryNotification(msgId, time, type, false, adapterId, moduleId, batterylevel);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -52,7 +52,7 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
 		Integer adapterId = null;
-		String deviceId = null;
+		String moduleId = null;
 		Integer batteryLevel = null;
 
 		String text = null;
@@ -76,7 +76,7 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 					if (tagname.equalsIgnoreCase(Xconstants.AID)) {
 						adapterId = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
-						deviceId = text;
+						moduleId = text;
 					} else if (tagname.equalsIgnoreCase(Xconstants.BATTERY)) {
 						batteryLevel = Integer.valueOf(text);
 					}
@@ -87,12 +87,12 @@ public class SensorLowBatteryNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (adapterId == null || deviceId == null || batteryLevel == null) {
+		if (adapterId == null || moduleId == null || batteryLevel == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new SensorLowBatteryNotification(msgId, time, type, isRead, adapterId, deviceId, batteryLevel);
+		return new SensorLowBatteryNotification(msgId, time, type, isRead, adapterId, moduleId, batteryLevel);
 
 	}
 

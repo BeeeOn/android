@@ -7,34 +7,34 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
+import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.data.WidgetDeviceData;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.data.WidgetModuleData;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 
 /**
  * @author mlyko
  */
-public class WidgetDeviceFragment extends WidgetConfigurationFragment {
-	private static final String TAG = WidgetDeviceFragment.class.getSimpleName();
+public class WidgetModuleFragment extends WidgetConfigurationFragment {
+	private static final String TAG = WidgetModuleFragment.class.getSimpleName();
 
 	protected SeekBar mWidgetUpdateSeekBar;
 
-	protected WidgetDeviceData mWidgetData;
+	protected WidgetModuleData mWidgetData;
 
-	private WidgetDevicePersistence mWidgetDevice;
+	private WidgetModulePersistence mWidgetModule;
 
-	private Spinner mDeviceSpinner;
+	private Spinner mModuleSpinner;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mGeneralWidgetdata = new WidgetDeviceData(mActivity.getWidgetId(), mActivity, null, null);
-		mWidgetData = (WidgetDeviceData) mGeneralWidgetdata;
-		mWidgetDevice = mWidgetData.widgetModules.get(0);
+		mGeneralWidgetdata = new WidgetModuleData(mActivity.getWidgetId(), mActivity, null, null);
+		mWidgetData = (WidgetModuleData) mGeneralWidgetdata;
+		mWidgetModule = mWidgetData.widgetModules.get(0);
 	}
 
 	protected int getFragmentLayoutResource(){
@@ -51,7 +51,7 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		mDeviceSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
+		mModuleSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
 	}
 
 	@Override
@@ -66,13 +66,13 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
 
-		mDeviceSpinner.setAdapter(dataAdapter);
-		int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.getId(), mModules);
-		if(foundIndex != -1) mDeviceSpinner.setSelection(foundIndex);
+		mModuleSpinner.setAdapter(dataAdapter);
+		int foundIndex = Utils.getObjectIndexFromList(mWidgetModule.getId(), mModules);
+		if(foundIndex != -1) mModuleSpinner.setSelection(foundIndex);
 	}
 
 	@Override
@@ -83,13 +83,13 @@ public class WidgetDeviceFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-		Module module = (Module) mDeviceSpinner.getSelectedItem();
+		Module module = (Module) mModuleSpinner.getSelectedItem();
 		if (module == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
-		mWidgetDevice.configure(module, adapter);
+		mWidgetModule.configure(module, adapter);
 		//sets widgetdata
 		mWidgetData.configure(
 				mActivity.isAppWidgetEditing(),

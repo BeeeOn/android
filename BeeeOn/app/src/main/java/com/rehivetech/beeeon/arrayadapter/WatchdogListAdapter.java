@@ -103,9 +103,9 @@ public class WatchdogListAdapter extends BaseAdapter {
 
         switch(rule.getType()){
             case Watchdog.TYPE_SENSOR:
-                List<String> devicesIds = rule.getModules();
-                if(devicesIds.size() > 0){
-                    Module moduleFirst = mController.getFacilitiesModel().getDevice(rule.getAdapterId(), devicesIds.get(0));
+                List<String> modulesIds = rule.getModules();
+                if(modulesIds.size() > 0){
+                    Module moduleFirst = mController.getFacilitiesModel().getModule(rule.getAdapterId(), modulesIds.get(0));
                     if(moduleFirst == null) return convertView;
 
                     holder.ItemIcon.setImageResource(moduleFirst.getIconResource());
@@ -114,7 +114,7 @@ public class WatchdogListAdapter extends BaseAdapter {
                     String par_treshold = rule.getParam(Watchdog.PAR_TRESHOLD);
                     if(par_treshold != null) {
                         if (mUnitsHelper != null) {
-                            BaseValue valueObj = BaseValue.createFromDeviceType(moduleFirst.getType());
+                            BaseValue valueObj = BaseValue.createFromModuleType(moduleFirst.getType());
                             valueObj.setValue(par_treshold);
                             holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
                         } else {

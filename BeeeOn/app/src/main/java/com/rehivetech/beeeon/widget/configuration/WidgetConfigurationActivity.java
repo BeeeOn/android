@@ -80,10 +80,10 @@ public class WidgetConfigurationActivity extends ActionBarActivity{
 				mConfigFragment = new WidgetClockFragment();
 				break;
 
-			case ".WidgetDeviceProvider":
-			case ".WidgetDeviceProviderMedium":
-			case ".WidgetDeviceProviderLarge":
-				mConfigFragment = new WidgetDeviceFragment();
+			case ".WidgetModuleProvider":
+			case ".WidgetModuleProviderMedium":
+			case ".WidgetModuleProviderLarge":
+				mConfigFragment = new WidgetModuleFragment();
 				break;
 
 			case ".WidgetGraphProvider":

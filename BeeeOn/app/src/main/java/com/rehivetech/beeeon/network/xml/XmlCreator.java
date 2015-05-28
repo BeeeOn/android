@@ -6,7 +6,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
@@ -386,7 +386,7 @@ public class XmlCreator {
 	 *            adapterID of actual adapter
 	 * @param did
 	 *            deviceID of wanted module
-	 * @param deviceType
+	 * @param moduleType
 	 *            is type of sensor
 	 * @param from
 	 *            date in unix timestamp
@@ -399,7 +399,7 @@ public class XmlCreator {
 	 * @return GetLog message
 	 * @since 2.2
 	 */
-	public static String createGetLog(String bt, String aid, String did, String deviceType, String from, String to, String funcType, int interval) {
+	public static String createGetLog(String bt, String aid, String did, String moduleType, String from, String to, String funcType, int interval) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer);
@@ -412,7 +412,7 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.INTERVAL, String.valueOf(interval));
 			serializer.attribute(ns, Xconstants.AID, aid);
 			serializer.attribute(ns, Xconstants.DID, did);
-			serializer.attribute(ns, Xconstants.DTYPE, deviceType);
+			serializer.attribute(ns, Xconstants.DTYPE, moduleType);
 
 			endXml(serializer);
 
@@ -434,7 +434,7 @@ public class XmlCreator {
 	 * @return Partial message
 	 * @since 2.2
 	 */
-	public static String createSetDevs(String bt, String aid, List<Facility> facilities, EnumSet<SaveDevice> toSave) {
+	public static String createSetDevs(String bt, String aid, List<Facility> facilities, EnumSet<SaveModule> toSave) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer);
@@ -446,23 +446,23 @@ public class XmlCreator {
 			for (Facility facility : facilities) {
 				serializer.startTag(ns, Xconstants.MODULE);
 
-				if (toSave.contains(SaveDevice.SAVE_INITIALIZED))
+				if (toSave.contains(SaveModule.SAVE_INITIALIZED))
 					serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 				serializer.attribute(ns, Xconstants.DID, facility.getAddress());
-				if (toSave.contains(SaveDevice.SAVE_LOCATION))
+				if (toSave.contains(SaveModule.SAVE_LOCATION))
 					serializer.attribute(ns, Xconstants.LID, facility.getLocationId());
-				if (toSave.contains(SaveDevice.SAVE_REFRESH))
+				if (toSave.contains(SaveModule.SAVE_REFRESH))
 					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(facility.getRefresh().getInterval()));
 
 				for (Module module : facility.getModules()) {
 					serializer.startTag(ns, Xconstants.PART);
 
 					serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
-					if (toSave.contains(SaveDevice.SAVE_VISIBILITY))
+					if (toSave.contains(SaveModule.SAVE_VISIBILITY))
 						serializer.attribute(ns, Xconstants.VISIBILITY, (module.isVisible()) ? Xconstants.ONE : Xconstants.ZERO);
-					if (toSave.contains(SaveDevice.SAVE_NAME))
+					if (toSave.contains(SaveModule.SAVE_NAME))
 						serializer.attribute(ns, Xconstants.NAME, module.getName());
-					// if (toSave.contains(SaveDevice.SAVE_VALUE))
+					// if (toSave.contains(SaveModule.SAVE_VALUE))
 					// serializer.attribute(ns, Xconstants.VALUE, String.valueOf(module.getId().getDoubleValue()));
 
 					serializer.endTag(ns, Xconstants.PART);
@@ -492,7 +492,7 @@ public class XmlCreator {
 	 * @return SetDevs message
 	 * @since 2.2
 	 */
-	public static String createSetDev(String bt, String aid, Module module, EnumSet<SaveDevice> toSave) {
+	public static String createSetDev(String bt, String aid, Module module, EnumSet<SaveModule> toSave) {
 		StringWriter writer = new StringWriter();
 		try {
 			Facility facility = module.getFacility();
@@ -505,22 +505,22 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.MODULE);
 
-			if (toSave.contains(SaveDevice.SAVE_INITIALIZED))
+			if (toSave.contains(SaveModule.SAVE_INITIALIZED))
 				serializer.attribute(ns, Xconstants.INITIALIZED, (facility.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 			// send always
 			serializer.attribute(ns, Xconstants.DID, facility.getAddress());
-			if (toSave.contains(SaveDevice.SAVE_LOCATION))
+			if (toSave.contains(SaveModule.SAVE_LOCATION))
 				serializer.attribute(ns, Xconstants.LID, facility.getLocationId());
-			if (toSave.contains(SaveDevice.SAVE_REFRESH))
+			if (toSave.contains(Module.SaveModule.SAVE_REFRESH))
 				serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(facility.getRefresh().getInterval()));
 
-			if (toSave.contains(SaveDevice.SAVE_NAME) || toSave.contains(SaveDevice.SAVE_VALUE)) {
+			if (toSave.contains(SaveModule.SAVE_NAME) || toSave.contains(Module.SaveModule.SAVE_VALUE)) {
 				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
 				serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
-				if (toSave.contains(SaveDevice.SAVE_NAME))
+				if (toSave.contains(SaveModule.SAVE_NAME))
 					serializer.attribute(ns, Xconstants.NAME, module.getName());
-				if (toSave.contains(SaveDevice.SAVE_VALUE))
+				if (toSave.contains(SaveModule.SAVE_VALUE))
 					serializer.attribute(ns, Xconstants.VALUE, String.valueOf(module.getValue().getDoubleValue()));
 
 				serializer.endTag(ns, Xconstants.PART);

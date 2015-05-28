@@ -103,7 +103,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
 
-	private String mDeviceID;
+	private String mModuleID;
 	private String mLocationID;
 	private int mCurPageNumber;
 	private int mSelPageNumber;
@@ -144,7 +144,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if(savedInstanceState != null) {
-			mDeviceID = savedInstanceState.getString(ARG_SEN_ID);
+			mModuleID = savedInstanceState.getString(ARG_SEN_ID);
 			mAdapterId = savedInstanceState.getString(ARG_ADAPTER_ID);
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
@@ -152,7 +152,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 		}
 		Log.d(TAG, "OnActivityCreated");
-		mModule = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
+		mModule = mController.getFacilitiesModel().getModule(mAdapterId, mModuleID);
 		if (mModule != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mModule.getId(), mModule.getName()));
 			initLayout(mModule);
@@ -163,7 +163,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(ARG_SEN_ID, mDeviceID);
+		savedInstanceState.putString(ARG_SEN_ID, mModuleID);
 		savedInstanceState.putString(ARG_ADAPTER_ID,mAdapterId);
 		savedInstanceState.putString(ARG_LOC_ID,mLocationID);
 		savedInstanceState.putInt(ARG_CUR_PAGE, mCurPageNumber);
@@ -176,7 +176,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
-			Log.d(TAG,"This fragment is visible - dev "+ mDeviceID);
+			Log.d(TAG,"This fragment is visible - dev "+ mModuleID);
 			doReloadFacilitiesTask(mAdapterId, false);
 		}
 
@@ -219,7 +219,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 				// go to edit senzor
 				Log.d(TAG,"Click - edit senzor");
 				Intent intent = new Intent(mActivity, SensorEditActivity.class);
-				intent.putExtra(Constants.GUI_EDIT_SENSOR_ID, mDeviceID);
+				intent.putExtra(Constants.GUI_EDIT_SENSOR_ID, mModuleID);
 				mActivity.startActivityForResult(intent, Constants.EDIT_SENSOR_REQUEST_CODE);
 			}
 		});
@@ -509,7 +509,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	public void setSensorID(String id) {
-		mDeviceID = id;
+		mModuleID = id;
 	}
 
 	public void setLocationID(String locationId) {
@@ -520,8 +520,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mCurPageNumber = position;
 	}
 
-	public void setSelectedPosition(int mActiveDevicePosition) {
-		mSelPageNumber = mActiveDevicePosition;
+	public void setSelectedPosition(int mActiveModulePosition) {
+		mSelPageNumber = mActiveModulePosition;
 	}
 
 	public void setAdapterID(String mActiveAdapterId) {
@@ -556,7 +556,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			@Override
 			public void onExecute(boolean success) {
 				// Get new module
-				mModule = mController.getFacilitiesModel().getDevice(module.getFacility().getAdapterId(), module.getId());
+				mModule = mController.getFacilitiesModel().getModule(module.getFacility().getAdapterId(), module.getId());
 
 				// Set icon of sensor
 				mIcon.setImageResource(mModule.getIconResource());
@@ -586,7 +586,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mModule = mController.getFacilitiesModel().getDevice(adapterId, mDeviceID);
+				mModule = mController.getFacilitiesModel().getModule(adapterId, mModuleID);
 				if (mModule == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;
@@ -618,7 +618,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		getModuleLogTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				fillGraph(mController.getDeviceLogsModel().getDeviceLog(pair));
+				fillGraph(mController.getModuleLogsModel().getModuleLog(pair));
 			}
 		});
 
@@ -626,10 +626,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mActivity.callbackTaskManager.executeTask(getModuleLogTask, pair);
 	}
 
-	protected void doChangeStateDeviceTask(final Module module) {
-		ActorActionTask changeStateDeviceTask = new ActorActionTask(mActivity);
+	protected void doChangeStateModuleTask(final Module module) {
+		ActorActionTask changeStateModuleTask = new ActorActionTask(mActivity);
 
-		changeStateDeviceTask.setListener(new CallbackTaskListener() {
+		changeStateModuleTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success)
@@ -638,7 +638,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(changeStateDeviceTask, module);
+		mActivity.callbackTaskManager.executeTask(changeStateModuleTask, module);
 	}
 
 	@Override
@@ -646,13 +646,13 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		if(requestCode == REQUEST_BOILER_MODE || requestCode == REQUEST_BOILER_TYPE) {
 			Log.d(TAG,"RESULT - SET BOILDER MODE or TYPE val:"+value+" number:"+number);
 			mModule.setValue(String.valueOf(number));
-			doChangeStateDeviceTask(mModule);
+			doChangeStateModuleTask(mModule);
 		}
 	}
 
 	public void onSetTemperatureClick(Double value) {
 		Log.d(TAG, "SET TEMPERATURE DO TASK");
 		mModule.setValue(String.valueOf(value));
-		doChangeStateDeviceTask(mModule);
+		doChangeStateModuleTask(mModule);
 	}
 }

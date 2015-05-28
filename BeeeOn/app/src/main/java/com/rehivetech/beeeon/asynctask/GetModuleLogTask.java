@@ -16,7 +16,7 @@ public class GetModuleLogTask extends CallbackTask<LogDataPair> {
 		Controller controller = Controller.getInstance(mContext);
 
 		// Load log data if needed
-		return controller.getDeviceLogsModel().reloadDeviceLog(pair);
+		return controller.getModuleLogsModel().reloadModuleLog(pair);
 	}
 
 }

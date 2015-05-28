@@ -9,7 +9,7 @@ import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
@@ -300,7 +300,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateFacilities(String adapterId, List<Facility> facilities, EnumSet<SaveDevice> toSave) {
+	public boolean updateFacilities(String adapterId, List<Facility> facilities, EnumSet<Module.SaveModule> toSave) {
 		for (Facility facility : facilities) {
 			if (!updateFacility(adapterId, facility, toSave)) {
 				return false;
@@ -311,7 +311,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevice(String adapterId, Module module, EnumSet<SaveDevice> toSave) {
+	public boolean updateModule(String adapterId, Module module, EnumSet<SaveModule> toSave) {
 		// NOTE: this replaces (or add) whole facility, not only module's fields marked as toSave
 		return updateFacility(adapterId, module.getFacility(), toSave);
 	}
@@ -366,7 +366,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateFacility(String adapterId, Facility facility, EnumSet<SaveDevice> toSave) {
+	public boolean updateFacility(String adapterId, Facility facility, EnumSet<Module.SaveModule> toSave) {
 		// NOTE: this replaces (or add, in case of initializing new facility) whole facility, not only fields marked as toSave
 		mFacilities.addObject(adapterId, facility);
 		return true;
@@ -425,13 +425,13 @@ public class DemoNetwork implements INetwork {
 				// Create default name
 				String defaultName = String.format("%s %d", mContext.getString(randType.getStringResource()), offset + 1);
 
-				Module module = Module.createFromDeviceTypeId(typeId);
+				Module module = Module.createFromModuleTypeId(typeId);
 				module.setFacility(facility);
 				module.setName(defaultName);
 				module.setVisibility(true);
 				setNewValue(module);
 
-				facility.addDevice(module);
+				facility.addModule(module);
 			} while (--count >= 0);
 
 			// Add new facility to global holder

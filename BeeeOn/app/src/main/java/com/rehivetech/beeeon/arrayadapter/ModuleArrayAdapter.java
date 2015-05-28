@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.List;
 
-public class DeviceArrayAdapter extends ArrayAdapter<Module> {
+public class ModuleArrayAdapter extends ArrayAdapter<Module> {
 
     private final List<Location> mLocations;
     private List<Module> mModules;
@@ -23,7 +23,7 @@ public class DeviceArrayAdapter extends ArrayAdapter<Module> {
 
 	private LayoutInflater mInflater;
 
-	public DeviceArrayAdapter(Context context, int resource, List<Module> objects, List<Location> locations) {
+	public ModuleArrayAdapter(Context context, int resource, List<Module> objects, List<Location> locations) {
 		super(context, resource, objects);
 		mLayoutResource = resource;
         mModules = objects;

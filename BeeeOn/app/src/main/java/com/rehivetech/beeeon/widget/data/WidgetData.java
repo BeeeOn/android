@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetSettings;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
@@ -52,7 +52,7 @@ public abstract class WidgetData {
 	public WidgetSettings settings;
 
 	// if widget has any devices in layout, we can ensure that widget's layout is update across all widgets (e.g. actor)
-	public List<WidgetDevicePersistence> widgetModules;
+	public List<WidgetModulePersistence> widgetModules;
 
 	// private managing variables
 	protected Context mContext;
@@ -391,12 +391,12 @@ public abstract class WidgetData {
 	 * @param context
 	 * @param widgetId
 	 * @param adapterId
-	 * @param deviceId
+	 * @param moduleId
 	 * @return
 	 */
-	public static PendingIntent startDetailActivityPendingIntent(Context context, int widgetId, String adapterId, String deviceId) {
-		Intent intent = startDetailActivityIntent(context, adapterId, deviceId);
-		int requestNum = widgetId + adapterId.hashCode() + deviceId.hashCode();
+	public static PendingIntent startDetailActivityPendingIntent(Context context, int widgetId, String adapterId, String moduleId) {
+		Intent intent = startDetailActivityIntent(context, adapterId, moduleId);
+		int requestNum = widgetId + adapterId.hashCode() + moduleId.hashCode();
 		return PendingIntent.getActivity(context, requestNum, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
 
@@ -404,13 +404,13 @@ public abstract class WidgetData {
 	 * Is called in location widget cause he can setup pending intents directly
 	 * @param context
 	 * @param adapterId
-	 * @param deviceId
+	 * @param moduleId
 	 * @return
 	 */
-	public static Intent startDetailActivityIntent(Context context, String adapterId, String deviceId){
+	public static Intent startDetailActivityIntent(Context context, String adapterId, String moduleId){
 		Intent intent = new Intent(context, SensorDetailActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra(SensorDetailActivity.EXTRA_DEVICE_ID, deviceId);
+		intent.putExtra(SensorDetailActivity.EXTRA_MODULE_ID, moduleId);
 		intent.putExtra(SensorDetailActivity.EXTRA_ADAPTER_ID, adapterId);
 		return intent;
 	}

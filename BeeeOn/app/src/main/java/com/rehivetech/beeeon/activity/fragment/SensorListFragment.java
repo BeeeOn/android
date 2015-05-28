@@ -135,7 +135,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(TAG, "onActivityCreated()");
 
-		redrawDevices();
+		redrawModules();
 
 		// Init swipe-refreshig layout
 		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
@@ -173,7 +173,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	public boolean redrawDevices() {
+	public boolean redrawModules() {
 		if (isPaused) {
 			return false;
 		}
@@ -236,7 +236,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 							// (fragment?) first?
 		}
 
-		boolean haveDevices = modules.size() > 0;
+		boolean haveModules = modules.size() > 0;
 		boolean haveAdapters = mController.getAdaptersModel().getAdapters().size() > 0;
 
 		// Buttons in floating menu
@@ -268,7 +268,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 			
 		}
-		else if (!haveDevices) { // Have Adapter but any Devices
+		else if (!haveModules) { // Have Adapter but any Modules
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_sensor_cap);
@@ -374,15 +374,15 @@ public class SensorListFragment extends BaseApplicationFragment {
 		},ListListener);
 
 
-		if (haveDevices) {
+		if (haveModules) {
 			// Capture listview menu item click
 			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Module module = mSensorAdapter.getDevice(position);
+                    Module module = mSensorAdapter.getModule(position);
 					Bundle bundle = new Bundle();
 					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, module.getFacility().getAdapterId());
-					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, module.getId());
+					bundle.putString(SensorDetailActivity.EXTRA_MODULE_ID, module.getId());
 					Intent intent = new Intent(mActivity, SensorDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);
@@ -395,7 +395,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 							mMode =  mActivity.startSupportActionMode(new ActionModeEditSensors());
-                            mSelectedItem = mSensorAdapter.getDevice(position);
+                            mSelectedItem = mSensorAdapter.getModule(position);
                             mSelectedItemPos = position;
                             mSensorAdapter.getItem(mSelectedItemPos).setIsSelected();
 							return true;

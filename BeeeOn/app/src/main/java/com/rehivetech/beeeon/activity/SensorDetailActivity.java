@@ -37,9 +37,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private static final String TAG = SensorDetailActivity.class.getSimpleName();
 
-	public static final String EXTRA_DEVICE_ID = "device_id";
+	public static final String EXTRA_MODULE_ID = "module_id";
 	public static final String EXTRA_ADAPTER_ID = "adapter_id";
-	public static final String EXTRA_ACTIVE_POS = "act_device_pos";
+	public static final String EXTRA_ACTIVE_POS = "act_module_pos";
 
 	private Controller mController;
 	private List<Module> mModules;
@@ -48,8 +48,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	private ViewPager mPager;
 
 	private String mActiveAdapterId;
-	private String mActiveDeviceId;
-	private int mActiveDevicePosition;
+	private String mActiveModuleId;
+	private int mActiveModulePosition;
 
 	private ProgressDialog mProgress;
 
@@ -80,18 +80,18 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
-			mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
+			mActiveModuleId = bundle.getString(EXTRA_MODULE_ID);
 		}
 		if(savedInstanceState != null ){
 			bundle = savedInstanceState;
 			if (bundle != null) {
 				mActiveAdapterId = bundle.getString(EXTRA_ADAPTER_ID);
-				mActiveDeviceId = bundle.getString(EXTRA_DEVICE_ID);
-				mActiveDevicePosition = bundle.getInt(EXTRA_ACTIVE_POS);
+				mActiveModuleId = bundle.getString(EXTRA_MODULE_ID);
+				mActiveModulePosition = bundle.getInt(EXTRA_ACTIVE_POS);
 			}
 		}
 
-		if (mActiveAdapterId == null || mActiveDeviceId == null) {
+		if (mActiveAdapterId == null || mActiveModuleId == null) {
 			Toast.makeText(this, R.string.toast_wrong_or_no_device, Toast.LENGTH_LONG).show();
 			finish();
 			return;
@@ -137,7 +137,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				Module module = mController.getFacilitiesModel().getDevice(adapterId, mActiveDeviceId);
+				Module module = mController.getFacilitiesModel().getModule(adapterId, mActiveModuleId);
 				if (module == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
@@ -154,7 +154,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 				// Determine position of wanted module in this list
 				for (int i = 0; i < modules.size(); i++) {
 					if (modules.get(i).getId().equals(module.getId())) {
-						mActiveDevicePosition = i;
+						mActiveModulePosition = i;
 						break;
 					}
 				}
@@ -185,7 +185,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			fragment.setSensorID(mModules.get(position).getId());
 			fragment.setLocationID(mModules.get(position).getFacility().getLocationId());
 			fragment.setPosition(position);
-			fragment.setSelectedPosition(mActiveDevicePosition);
+			fragment.setSelectedPosition(mActiveModulePosition);
 			fragment.setAdapterID(mActiveAdapterId);
 			fragment.setFragmentAdapter(this);
 
@@ -206,8 +206,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				mActiveDevicePosition = position;
-				mActiveDeviceId = mModules.get(position).getId();
+				mActiveModulePosition = position;
+				mActiveModuleId = mModules.get(position).getId();
 				mActiveAdapterId = mModules.get(position).getFacility().getAdapterId();
 
 				// When changing pages, reset the action bar actions since they are dependent
@@ -220,7 +220,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		});
 		((CustomViewPager) mPager).setPagingEnabled(true);
 		mPager.setOffscreenPageLimit(mModules.size());
-		mPager.setCurrentItem(mActiveDevicePosition);
+		mPager.setCurrentItem(mActiveModulePosition);
 		//setBeeeOnProgressBarVisibility(false);
 		visibleAllElements();
 	}
@@ -237,7 +237,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	public void setCurrentViewPager() {
-		mPager.setCurrentItem(mActiveDevicePosition);
+		mPager.setCurrentItem(mActiveModulePosition);
 	}
 
 	public ViewPager getPager() {
@@ -247,8 +247,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(EXTRA_ADAPTER_ID, mActiveAdapterId);
-		savedInstanceState.putString(EXTRA_DEVICE_ID, mActiveDeviceId);
-		savedInstanceState.putInt(EXTRA_ACTIVE_POS,mActiveDevicePosition);
+		savedInstanceState.putString(EXTRA_MODULE_ID, mActiveModuleId);
+		savedInstanceState.putInt(EXTRA_ACTIVE_POS, mActiveModulePosition);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);

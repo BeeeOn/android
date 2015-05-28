@@ -19,7 +19,7 @@ public class GetModulesLogsTask extends CallbackTask<List<LogDataPair>> {
 
 		// Load log data for all devices if needed
 		for (LogDataPair pair : pairs) {
-			controller.getDeviceLogsModel().reloadDeviceLog(pair);
+			controller.getModuleLogsModel().reloadModuleLog(pair);
 		}
 
 		return true;

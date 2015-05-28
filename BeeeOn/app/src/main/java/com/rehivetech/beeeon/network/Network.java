@@ -12,7 +12,7 @@ import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
@@ -533,7 +533,7 @@ public class Network implements INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	@Override
-	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave){
+	public boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveModule> toSave){
 		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mBT, adapterID, facilities, toSave));
 
 		if (msg.getState() == State.TRUE)
@@ -543,7 +543,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevice(String adapterID, Module module, EnumSet<SaveDevice> toSave){
+	public boolean updateModule(String adapterID, Module module, EnumSet<Module.SaveModule> toSave){
 		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mBT, adapterID, module, toSave));
 
 		if (msg.getState() == State.TRUE)
@@ -604,7 +604,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveDevice> toSave) {
+	public boolean updateFacility(String adapterID, Facility facility, EnumSet<SaveModule> toSave) {
 
 		ArrayList<Facility> list = new ArrayList<>();
 		list.add(facility);

@@ -248,13 +248,13 @@ public class Facility implements IIdentifier {
 				mRefreshInterval.getInterval(), Integer.toString(mModules.size()));
 	}
 
-	public void addDevice(Module module) {
+	public void addModule(Module module) {
 		module.setFacility(this);
 		mModules.add(module);
 		mSorted = false;
 	}
 
-	public void clearDevices() {
+	public void clearModules() {
 		mModules.clear();
 	}
 
@@ -268,7 +268,7 @@ public class Facility implements IIdentifier {
 		return mModules;
 	}
 
-	public Module getDeviceByType(ModuleType type, int offset) {
+	public Module getModuleByType(ModuleType type, int offset) {
 		for (Module module : getModules()) {
 			if (module.getType().equals(type) && module.getOffset() == offset) {
 				return module;

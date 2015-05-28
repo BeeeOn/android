@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 
 import org.joda.time.DateTime;
@@ -57,8 +57,8 @@ public class WidgetClockData extends WidgetData {
 
 		// inside devices persistence data
 		widgetModules = new ArrayList<>();
-		widgetModules.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper, settings));
-		widgetModules.add(new WidgetDevicePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper, settings));
+		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container_inside_temp, unitsHelper, timeHelper, settings));
+		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 1, R.id.value_container_inside_humid, unitsHelper, timeHelper, settings));
 
 		// weather persistence data
 		weather = new WidgetWeatherPersistence(mContext, mWidgetId, mUnitsHelper, mTimeHelper, settings);
@@ -72,7 +72,7 @@ public class WidgetClockData extends WidgetData {
 	public void load() {
 		super.load();
 		weather.load();
-		WidgetDevicePersistence.loadAll(widgetModules);
+		WidgetModulePersistence.loadAll(widgetModules);
 	}
 
 	@Override
@@ -91,7 +91,7 @@ public class WidgetClockData extends WidgetData {
 		}
 
 		mFacilities.clear();
-		for(WidgetDevicePersistence dev : widgetModules){
+		for(WidgetModulePersistence dev : widgetModules){
 			if(dev.getId().isEmpty()){
 				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
 				continue;
@@ -103,7 +103,7 @@ public class WidgetClockData extends WidgetData {
 			facility.setAddress(ids[0]);
 			facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			facility.addDevice(Module.createFromDeviceTypeId(ids[1]));
+			facility.addModule(Module.createFromModuleTypeId(ids[1]));
 
 			mFacilities.add(facility);
 		}
@@ -116,7 +116,7 @@ public class WidgetClockData extends WidgetData {
 	public void save() {
 		super.save();
 		weather.save();
-		WidgetDevicePersistence.saveAll(widgetModules);
+		WidgetModulePersistence.saveAll(widgetModules);
 	}
 
 	// ----------------------------------------------------------- //
@@ -153,14 +153,14 @@ public class WidgetClockData extends WidgetData {
 		}
 
 		// updates all inside devices
-		for(WidgetDevicePersistence dev : widgetModules){
+		for(WidgetModulePersistence dev : widgetModules){
 			dev.renderView(mBuilder);
 			// detail activity
 			mBuilder.setOnClickListener(dev.getBoundView(), startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if(this.widgetLayout == R.layout.widget_clock_3x2) {
-				if(dev.containerType == WidgetDevicePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
+				if(dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
 			}
 			else if(this.widgetLayout == R.layout.widget_clock_2x2){
 				dev.setValueUnitSize(R.dimen.textsize_caption);
@@ -321,8 +321,8 @@ public class WidgetClockData extends WidgetData {
 		Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
 		if(adapter == null) return false;
 
-		for(WidgetDevicePersistence dev : widgetModules) {
-			Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+		for(WidgetModulePersistence dev : widgetModules) {
+			Module module = mController.getFacilitiesModel().getModule(widgetAdapterId, dev.getId());
 			if (module != null) {
 				if(!dev.locationId.isEmpty()){
 					Location location = mController.getLocationsModel().getLocation(widgetAdapterId, dev.locationId);

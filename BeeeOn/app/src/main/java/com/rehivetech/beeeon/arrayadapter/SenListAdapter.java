@@ -77,7 +77,7 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 		return convertView;
 	}
 
-	public Module getDevice(int position) {
+	public Module getModule(int position) {
 		return ((SensorListItem)mListItem.get(position)).getModule();
 	}
 

@@ -46,7 +46,7 @@ import java.util.SortedMap;
 
 public class CustomViewFragment extends BaseApplicationFragment {
 
-	private SparseArray<List<Module>> mDevices = new SparseArray<List<Module>>();
+	private SparseArray<List<Module>> mModules = new SparseArray<List<Module>>();
 	// private SparseArray<List<ModuleLog>> mLogs = new SparseArray<List<ModuleLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
 	private SparseArray<LegendView> mLegends = new SparseArray<>();
@@ -75,7 +75,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 		mLayout = (LinearLayout) view.findViewById(R.id.container);
 
-		prepareDevices();
+		prepareModules();
 		loadData();
 
 		return view;
@@ -165,7 +165,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	}
 
-	private void prepareDevices() {
+	private void prepareModules() {
 		Adapter adapter = mController.getActiveAdapter();
 		if (adapter == null)
 			return;
@@ -179,15 +179,15 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
 
 		for (Facility facility : mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId())) {
-			Log.d(TAG, String.format("Preparing facility with %d devices", facility.getModules().size()));
+			Log.d(TAG, String.format("Preparing facility with %d modules", facility.getModules().size()));
 
 			for (Module module : facility.getModules()) {
 				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getName(), module.getType().getTypeId()));
 
-				List<Module> modules = mDevices.get(module.getType().getTypeId());
+				List<Module> modules = mModules.get(module.getType().getTypeId());
 				if (modules == null) {
 					modules = new ArrayList<Module>();
-					mDevices.put(module.getType().getTypeId(), modules);
+					mModules.put(module.getType().getTypeId(), modules);
 					addGraph(module, unitsHelper, timeHelper, fmt);
 				}
 
@@ -200,11 +200,11 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusDays(3);// end.minusWeeks(1);
 
-		for (int i = 0; i < mDevices.size(); i++) {
+		for (int i = 0; i < mModules.size(); i++) {
 			// Prepare data for this graph
 			final List<LogDataPair> pairs = new ArrayList<>();
 
-			for (Module module : mDevices.valueAt(i)) {
+			for (Module module : mModules.valueAt(i)) {
 				LogDataPair pair = new LogDataPair( //
 						module, // module
 						new Interval(start, end), // interval from-to
@@ -214,7 +214,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 				pairs.add(pair);
 			}
 
-			// If devices list is empty, just continue
+			// If modules list is empty, just continue
 			if (pairs.isEmpty()) {
 				continue;
 			}
@@ -229,7 +229,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 					int typeId = pairs.get(0).module.getType().getTypeId();
 
 					for (LogDataPair pair : pairs) {
-						ModuleLog log = mController.getDeviceLogsModel().getDeviceLog(pair);
+						ModuleLog log = mController.getModuleLogsModel().getModuleLog(pair);
 						fillGraph(log, pair.module);
 					}
 

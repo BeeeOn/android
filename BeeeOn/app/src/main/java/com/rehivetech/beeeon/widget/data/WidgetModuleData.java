@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -21,8 +21,8 @@ import java.util.List;
 /**
  * Class for sensor app widget (1x1, 2x1, 3x1)
  */
-public class WidgetDeviceData extends WidgetData {
-    private static final String TAG = WidgetDeviceData.class.getSimpleName();
+public class WidgetModuleData extends WidgetData {
+    private static final String TAG = WidgetModuleData.class.getSimpleName();
 
     protected List<Object> mFacilities;
 
@@ -34,11 +34,11 @@ public class WidgetDeviceData extends WidgetData {
      * @param unitsHelper
      * @param timeHelper
      */
-    public WidgetDeviceData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
+    public WidgetModuleData(int widgetId, Context context, UnitsHelper unitsHelper, TimeHelper timeHelper) {
         super(widgetId, context, unitsHelper, timeHelper);
 
         widgetModules = new ArrayList<>();
-        widgetModules.add(new WidgetDevicePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
+        widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
 
         mFacilities = new ArrayList<>();
     }
@@ -50,13 +50,13 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public void load() {
         super.load();
-        WidgetDevicePersistence.loadAll(widgetModules);
+        WidgetModulePersistence.loadAll(widgetModules);
     }
 
     @Override
     public void init() {
         mFacilities.clear();
-        for(WidgetDevicePersistence dev : widgetModules){
+        for(WidgetModulePersistence dev : widgetModules){
             if(dev.getId().isEmpty()){
                 Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
                 continue;
@@ -68,7 +68,7 @@ public class WidgetDeviceData extends WidgetData {
             facility.setAddress(ids[0]);
             facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
             facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-            facility.addDevice(Module.createFromDeviceTypeId(ids[1]));
+            facility.addModule(Module.createFromModuleTypeId(ids[1]));
 
             mFacilities.add(facility);
         }
@@ -77,7 +77,7 @@ public class WidgetDeviceData extends WidgetData {
     @Override
     public void save() {
         super.save();
-        WidgetDevicePersistence.saveAll(widgetModules);
+        WidgetModulePersistence.saveAll(widgetModules);
     }
 
     // ----------------------------------------------------------- //
@@ -96,7 +96,7 @@ public class WidgetDeviceData extends WidgetData {
         // -------------------- render layout
         // updates all inside devices
         boolean isOnlyOne = true;
-        for(WidgetDevicePersistence dev : widgetModules){
+        for(WidgetModulePersistence dev : widgetModules){
             // detail activity
             mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
             mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
@@ -137,8 +137,8 @@ public class WidgetDeviceData extends WidgetData {
         Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
         if(adapter == null) return false;
 
-        for(WidgetDevicePersistence dev : widgetModules) {
-            Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+        for(WidgetModulePersistence dev : widgetModules) {
+            Module module = mController.getFacilitiesModel().getModule(widgetAdapterId, dev.getId());
             if(module != null) {
                 dev.configure(module, adapter);
             }
@@ -194,7 +194,7 @@ public class WidgetDeviceData extends WidgetData {
 
     @Override
     public String getClassName() {
-        return WidgetDeviceData.class.getName();
+        return WidgetModuleData.class.getName();
     }
 
 }

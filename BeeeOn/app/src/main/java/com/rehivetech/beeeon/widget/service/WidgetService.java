@@ -34,12 +34,12 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.data.WidgetData;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
-import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProvider;
-import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderLarge;
-import com.rehivetech.beeeon.widget.receivers.WidgetDeviceProviderMedium;
+import com.rehivetech.beeeon.widget.receivers.WidgetModuleProvider;
+import com.rehivetech.beeeon.widget.receivers.WidgetModuleProviderLarge;
+import com.rehivetech.beeeon.widget.receivers.WidgetModuleProviderMedium;
 import com.rehivetech.beeeon.widget.receivers.WidgetGraphProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetProvider;
@@ -342,7 +342,7 @@ public class WidgetService extends Service {
                     }
                     else if(refObj instanceof LogDataPair){
                         LogDataPair logPair = (LogDataPair) refObj;
-                        mController.getDeviceLogsModel().reloadDeviceLog(logPair);
+                        mController.getModuleLogsModel().reloadModuleLog(logPair);
                     }
                     else if(refObj instanceof WidgetWeatherPersistence){
                         // skips city with id which is already in used data
@@ -441,7 +441,7 @@ public class WidgetService extends Service {
         if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
         // ----- first get the module and change value
-        final Module module = mController.getFacilitiesModel().getDevice(adapterId, actorId);
+        final Module module = mController.getFacilitiesModel().getModule(adapterId, actorId);
         if(module == null || !module.getType().isActor()){
             Log.e(TAG, "MODULE NOT actor OR NOT FOUND --> probably need to refresh controller");
             return;
@@ -550,7 +550,7 @@ public class WidgetService extends Service {
 
             int updatedActors = 0;
             // go through all devices in that widget
-            for(WidgetDevicePersistence wDev : data.widgetModules){
+            for(WidgetModulePersistence wDev : data.widgetModules){
                 if(!adapterId.equals(wDev.getAdapterId()) || !actorId.equals(wDev.getId())) continue;
 
                 if(perform == UPDATE_LAYOUT){
@@ -766,9 +766,9 @@ public class WidgetService extends Service {
         // location list
         ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
         // module widget
-        ids.addAll(getWidgetIds(WidgetDeviceProvider.class));
-        ids.addAll(getWidgetIds(WidgetDeviceProviderMedium.class));
-        ids.addAll(getWidgetIds(WidgetDeviceProviderLarge.class));
+        ids.addAll(getWidgetIds(WidgetModuleProvider.class));
+        ids.addAll(getWidgetIds(WidgetModuleProviderMedium.class));
+        ids.addAll(getWidgetIds(WidgetModuleProviderLarge.class));
         // graph widget
         ids.addAll(getWidgetIds(WidgetGraphProvider.class));
 

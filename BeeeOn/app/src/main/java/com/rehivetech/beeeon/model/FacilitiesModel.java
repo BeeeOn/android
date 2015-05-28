@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.model;
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.network.INetwork;
@@ -48,7 +48,7 @@ public class FacilitiesModel extends BaseModel {
 	 * @param id
 	 * @return
 	 */
-	public Module getDevice(String adapterId, String id) {
+	public Module getModule(String adapterId, String id) {
 		String[] ids = id.split(Module.ID_SEPARATOR, 2);
 
 		Facility facility = getFacility(adapterId, ids[0]);
@@ -71,7 +71,7 @@ public class FacilitiesModel extends BaseModel {
 
 		ModuleType type = ModuleType.fromTypeId(iType);
 
-		return facility.getDeviceByType(type, offset);
+		return facility.getModuleByType(type, offset);
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class FacilitiesModel extends BaseModel {
 	 *            type of settings to save
 	 * @return true on success, false otherwise
 	 */
-	public boolean saveFacility(Facility facility, EnumSet<SaveDevice> what) throws AppException {
+	public boolean saveFacility(Facility facility, EnumSet<SaveModule> what) throws AppException {
 		mNetwork.updateFacility(facility.getAdapterId(), facility, what);
 		refreshFacility(facility, true);
 
@@ -217,10 +217,10 @@ public class FacilitiesModel extends BaseModel {
 	 *            type of settings to save
 	 * @return true on success, false otherwise
 	 */
-	public boolean saveDevice(Module module, EnumSet<SaveDevice> what) throws AppException {
+	public boolean saveModule(Module module, EnumSet<SaveModule> what) throws AppException {
 		Facility facility = module.getFacility();
 
-		mNetwork.updateDevice(facility.getAdapterId(), module, what);
+		mNetwork.updateModule(facility.getAdapterId(), module, what);
 		refreshFacility(facility, true);
 
 		return true;

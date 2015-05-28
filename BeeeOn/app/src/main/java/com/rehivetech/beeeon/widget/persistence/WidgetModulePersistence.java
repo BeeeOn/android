@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.widget.service.WidgetService;
 /**
  * Created by Tomáš on 26. 4. 2015.
  */
-public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
+public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	private static final String PREF_ICON = "icon";
 	private static final String PREF_TYPE = "type";
 	private static final String PREF_RAW_VALUE = "raw_value";
@@ -52,13 +52,13 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 
 	// generated data
 	private ModuleType mModuleType;
-	private BaseValue deviceValue;
-	private boolean deviceValueDisabled = false;
-	private boolean deviceValueChecked;
+	private BaseValue moduleValue;
+	private boolean moduleValueDisabled = false;
+	private boolean moduleValueChecked;
 
 	public int containerType;
 
-	public WidgetDevicePersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
+	public WidgetModulePersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, offset, boundView, unitsHelper, timeHelper, settings);
 	}
 
@@ -82,11 +82,11 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		refresh = mPrefs.getInt(getProperty(PREF_REFRESH), 0);
 
 		mModuleType = ModuleType.fromTypeId(type);
-		deviceValue = BaseValue.createFromDeviceType(mModuleType);
+		moduleValue = BaseValue.createFromModuleType(mModuleType);
 
 		// we don't set value when creating new widget
 		if(!rawValue.isEmpty()) {
-			deviceValue.setValue(rawValue);
+			moduleValue.setValue(rawValue);
 		}
 	}
 
@@ -112,7 +112,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 		mModuleType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)
 		rawValue = module.getValue().getRawValue();
-		deviceValue.setValue(module.getValue().getRawValue());
+		moduleValue.setValue(module.getValue().getRawValue());
 
 		// when user is logged in, save last known value as cached value
 		if(mUnitsHelper != null){
@@ -185,22 +185,22 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 
 		Controller controller = Controller.getInstance(mContext);
 
-		if(getType().isActor() && controller.isUserAllowed(mUserRole) && deviceValue instanceof BooleanValue){
+		if(getType().isActor() && controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue){
 			containerType = SWITCHCOMPAT;
 
 			mBuilder.loadRootView(R.layout.widget_include_switchcompat);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
-			deviceValueChecked = ((BooleanValue) deviceValue).isActiveValue(BooleanValue.TRUE);
+			moduleValueChecked = ((BooleanValue) moduleValue).isActiveValue(BooleanValue.TRUE);
 
 			if(mIsCached){
 				setSwitchDisabled(true, false);
 			}
 			else {
-				if (deviceValueDisabled) {
+				if (moduleValueDisabled) {
 					setSwitchDisabled(true);
 				} else {
 					setSwitchDisabled(false);
-					boolean isOn = ((BooleanValue) deviceValue).isActiveValue(BooleanValue.TRUE);
+					boolean isOn = ((BooleanValue) moduleValue).isActiveValue(BooleanValue.TRUE);
 					setSwitchChecked(isOn);
 				}
 			}
@@ -258,10 +258,10 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	 */
 	public void setSwitchChecked(boolean state){
 		// if this cannot be switched
-		if(containerType != SWITCHCOMPAT || !(deviceValue instanceof BooleanValue)) return;
+		if(containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
 
 		mBuilder.setSwitchChecked(state);
-		deviceValueChecked = state;
+		moduleValueChecked = state;
 	}
 
 	/**
@@ -271,19 +271,19 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	 */
 	public void setSwitchDisabled(boolean disabled, boolean prevent) {
 		// if this cannot be switched
-		if(containerType != SWITCHCOMPAT || !(deviceValue instanceof BooleanValue)) return;
+		if(containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
 
 		if(disabled == true){
-			mBuilder.setSwitchDisabled(true, deviceValueChecked);
+			mBuilder.setSwitchDisabled(true, moduleValueChecked);
 			WidgetService.cancelPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId);
 		}
 		else{
-			mBuilder.setSwitchDisabled(false, deviceValueChecked);
+			mBuilder.setSwitchDisabled(false, moduleValueChecked);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), adapterId));
 		}
 
 		// prevent from getting updated the value
-		if(prevent) deviceValueDisabled = disabled;
+		if(prevent) moduleValueDisabled = disabled;
 	}
 
 	public void setSwitchDisabled(boolean disabled){
@@ -304,7 +304,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	 */
 	public String getValueUnit(){
 		if(mUnitsHelper != null){
-			return mUnitsHelper.getStringValueUnit(deviceValue);
+			return mUnitsHelper.getStringValueUnit(moduleValue);
 		}
 
 		return String.format("%s %s", cachedValue, cachedUnit);
@@ -316,7 +316,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	 */
 	public String getValue(){
 		if(mUnitsHelper != null){
-			return mUnitsHelper.getStringValue(deviceValue);
+			return mUnitsHelper.getStringValue(moduleValue);
 		}
 
 		return cachedValue;
@@ -328,7 +328,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	 */
 	public String getUnit(){
 		if(mUnitsHelper != null){
-			return mUnitsHelper.getStringUnit(deviceValue);
+			return mUnitsHelper.getStringUnit(moduleValue);
 		}
 
 		return cachedUnit;

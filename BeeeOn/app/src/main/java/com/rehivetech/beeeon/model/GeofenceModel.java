@@ -210,7 +210,7 @@ public class GeofenceModel extends BaseModel
 	 * Control if actual user has the geofence registered.
 	 *
 	 * @param userId
-	 * @param geofenceId Geofence ID which is unique per user for all devices
+	 * @param geofenceId Geofence ID which is unique per user for all modules
 	 * @return <code>True</code> if actual user has geofence registered. <code>False</code> otherwise.
 	 */
 	public boolean exist(String userId, String geofenceId) {
@@ -265,7 +265,7 @@ public class GeofenceModel extends BaseModel
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param geofenceId Geofence ID which is unique per user for all devices
+	 * @param geofenceId Geofence ID which is unique per user for all modules
 	 * @param type
 	 */
 	public void setPassBorder(String geofenceId, TransitionType type) {

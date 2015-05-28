@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.pair;
 
-import com.rehivetech.beeeon.household.device.Module.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 
@@ -11,10 +11,10 @@ import java.util.EnumSet;
  */
 public class SaveFacilityWithNewLocPair {
 	public final Facility facility;
-	public final EnumSet<SaveDevice> what;
+	public final EnumSet<Module.SaveModule> what;
 	public final Location location;
 
-	public SaveFacilityWithNewLocPair(final Facility fac, final Location newLoc, final EnumSet<SaveDevice> what) {
+	public SaveFacilityWithNewLocPair(final Facility fac, final Location newLoc, final EnumSet<Module.SaveModule> what) {
 		this.facility = fac;
 		this.what = what;
 		this.location = newLoc;

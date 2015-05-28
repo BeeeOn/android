@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.asynctask;
 import java.util.EnumSet;
 
 import android.content.Context;
-import com.rehivetech.beeeon.household.device.Module.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.InitializeFacilityPair;
@@ -27,7 +27,7 @@ public class InitializeFacilityTask extends CallbackTask<InitializeFacilityPair>
 			pair.facility.setLocationId(newLocation.getId());
 		}
 
-		EnumSet<SaveDevice> what = EnumSet.of(SaveDevice.SAVE_LOCATION, SaveDevice.SAVE_NAME, SaveDevice.SAVE_INITIALIZED);
+		EnumSet<SaveModule> what = EnumSet.of(SaveModule.SAVE_LOCATION, SaveModule.SAVE_NAME, SaveModule.SAVE_INITIALIZED);
 
 		return controller.getFacilitiesModel().saveFacility(pair.facility, what);
 	}

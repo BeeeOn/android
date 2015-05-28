@@ -41,11 +41,11 @@ import java.util.Set;
 
 public class SensorEditActivity extends BaseApplicationActivity {
 
-	public static final String EXTRA_DEVICE_ID = "device_id";
+	public static final String EXTRA_MODULE_ID = "module_id";
 	private static final String TAG = SensorEditActivity.class.getSimpleName();
 
 	private Toolbar mToolbar;
-	private String mDeviceId;
+	private String mModuleId;
 	private SensorEditActivity mActivity;
 	private ProgressDialog mProgress;
 	private Controller mController;
@@ -60,12 +60,12 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			mToolbar.setTitle(R.string.title_activity_sensor_edit);
 			setSupportActionBar(mToolbar);
 		}
-		mDeviceId = getIntent().getStringExtra(Constants.GUI_EDIT_SENSOR_ID);
-		if(mDeviceId == null && savedInstanceState != null) {
-			mDeviceId = savedInstanceState.getString(EXTRA_DEVICE_ID);
+		mModuleId = getIntent().getStringExtra(Constants.GUI_EDIT_SENSOR_ID);
+		if(mModuleId == null && savedInstanceState != null) {
+			mModuleId = savedInstanceState.getString(EXTRA_MODULE_ID);
 		}
 		mFragment = new PlaceholderFragment();
-		mFragment.setDeviceID(mDeviceId);
+		mFragment.setModuleID(mModuleId);
 		if(savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.container, mFragment)
@@ -86,7 +86,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(EXTRA_DEVICE_ID, mDeviceId);
+		savedInstanceState.putString(EXTRA_MODULE_ID, mModuleId);
 
 		// Always call the superclass so it can save the view hierarchy state
 		super.onSaveInstanceState(savedInstanceState);
@@ -109,24 +109,24 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
-			Set<Module.SaveDevice> what = new HashSet<>() ;
+			Set<Module.SaveModule> what = new HashSet<>() ;
 			Adapter adapter = mController.getActiveAdapter();
 			if(adapter == null)
 				return  false;
-			Module module = mController.getFacilitiesModel().getDevice(adapter.getId(),mDeviceId);
+			Module module = mController.getFacilitiesModel().getModule(adapter.getId(), mModuleId);
 			Facility facility = module.getFacility();
 
 			if(!mFragment.getName().equals(module.getName())) {
-				what.add(Module.SaveDevice.SAVE_NAME);
+				what.add(Module.SaveModule.SAVE_NAME);
 				module.setName(mFragment.getName());
 			}
 
 			if(!mFragment.getRefreshTime().equals(facility.getRefresh())) {
-				what.add(Module.SaveDevice.SAVE_REFRESH);
+				what.add(Module.SaveModule.SAVE_REFRESH);
 				facility.setRefresh(mFragment.getRefreshTime());
 			}
 			if(!mFragment.getLocationId().equals(facility.getLocationId())) {
-				what.add(Module.SaveDevice.SAVE_LOCATION);
+				what.add(Module.SaveModule.SAVE_LOCATION);
 				if(mFragment.isSetNewRoom()) {
 					Location location;
 					if(mFragment.isSetNewCustomRoom()) {
@@ -239,7 +239,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		private static final String TAG = PlaceholderFragment.class.getSimpleName();
 
-		public static final String EXTRA_DEV_ID = "device_id";
+		public static final String EXTRA_DEV_ID = "module_id";
 		public static final String EXTRA_ACT_NAME ="EXTRA_ACT_NAME";
 		public static final String EXTRA_ACT_LOC = "EXTRA_ACT_LOC";
 		public static final String EXTRA_ACT_NEW_IC_LOC = "EXTRA_ACT_NEW_IC_LOC";
@@ -251,7 +251,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		private Spinner mSpinner;
 		private EditText mName;
 		private SeekBar mRefreshTime;
-		private String mDeviceID;
+		private String mModuleID;
 		private Controller mController;
 		private Module mModule;
 		private TextView mRefreshTimeVal;
@@ -275,7 +275,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
 			if(savedInstanceState != null) {
-				mDeviceID = savedInstanceState.getString(EXTRA_DEV_ID);
+				mModuleID = savedInstanceState.getString(EXTRA_DEV_ID);
 			}
 			// Get activity
 			mActivity = (SensorEditActivity) getActivity();
@@ -283,7 +283,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			mAdapter = mController.getActiveAdapter();
 			if(mAdapter == null)
 				return;
-			mModule = mController.getFacilitiesModel().getDevice(mAdapter.getId(), mDeviceID);
+			mModule = mController.getFacilitiesModel().getModule(mAdapter.getId(), mModuleID);
 			if(mModule == null)
 				return;
 			mFacility = mModule.getFacility();
@@ -299,8 +299,8 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		}
 		@Override
 		public void onSaveInstanceState(Bundle savedInstanceState) {
-			// DeviceId what I edit
-			savedInstanceState.putString(EXTRA_DEV_ID, mDeviceID);
+			// ModuleId what I edit
+			savedInstanceState.putString(EXTRA_DEV_ID, mModuleID);
 			// Actualy filled data
 			savedInstanceState.putString(EXTRA_ACT_NAME,mName.getText().toString());
 			savedInstanceState.putInt(EXTRA_ACT_LOC,mSpinner.getSelectedItemPosition());
@@ -402,8 +402,8 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			return index;
 		}
 
-		public void setDeviceID(String deviceId) {
-			mDeviceID = deviceId;
+		public void setModuleID(String moduleId) {
+			mModuleID = moduleId;
 		}
 
 		public RefreshInterval getRefreshTime() {

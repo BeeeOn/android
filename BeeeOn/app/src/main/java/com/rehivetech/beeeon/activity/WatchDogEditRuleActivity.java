@@ -23,10 +23,10 @@ import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.spinnerItem.DeviceSpinnerItem;
+import com.rehivetech.beeeon.activity.spinnerItem.ModuleSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.GeofenceSpinnerItem;
 import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
-import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
+import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.arrayadapter.SpinnerMultiAdapter;
 import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.asynctask.RemoveWatchdogTask;
@@ -65,10 +65,10 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
     public static final String EXTRA_IS_NEW ="rule_is_new";
     public static final String EXTRA_GEOFENCE_ID_PICKED = "geofence_id_picked";
 
-    // helper variables for getting devices from list
-    private static final int DEVICES_ALL = 0;
-    private static final int DEVICES_ACTORS = 1;
-    private static final int DEVICES_SENSORS = 2;
+    // helper variables for getting modules from list
+    private static final int MODULES_ALL = 0;
+    private static final int MODULES_ACTORS = 1;
+    private static final int MODULES_SENSORS = 2;
 
     // extras
     private String mActiveAdapterId;
@@ -231,13 +231,13 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
         // ----- prepare list of available module & geofences
         mSpinnerMultiAdapter = new SpinnerMultiAdapter(this);
 		boolean isAnyIfInput = false;
-        // devices
-		List<Module> moduleSensors = getDevicesArray(DEVICES_SENSORS);
+        // modules
+		List<Module> moduleSensors = getModulesArray(MODULES_SENSORS);
         if(!moduleSensors.isEmpty()) {
-			mSpinnerMultiAdapter.addHeader(getString(R.string.devices));
+			mSpinnerMultiAdapter.addHeader(getString(R.string.modules));
 			for (Module dev : moduleSensors) {
 				Location loc = Utils.getFromList(dev.getFacility().getLocationId(), mLocations);
-				mSpinnerMultiAdapter.addItem(new DeviceSpinnerItem(dev, loc, dev.getId(), this));
+				mSpinnerMultiAdapter.addItem(new ModuleSpinnerItem(dev, loc, dev.getId(), this));
 			}
 			isAnyIfInput = true;
 		}
@@ -327,7 +327,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
         }
 
         // ------- choose actor
-        final DeviceArrayAdapter actorAdapter = new DeviceArrayAdapter(this, R.layout.custom_spinner2_item, getDevicesArray(DEVICES_ACTORS), mLocations);
+        final ModuleArrayAdapter actorAdapter = new ModuleArrayAdapter(this, R.layout.custom_spinner2_item, getModulesArray(MODULES_ACTORS), mLocations);
         actorAdapter.setLayoutInflater(getLayoutInflater());
         actorAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
         mActorSpinner.setAdapter(actorAdapter);
@@ -350,7 +350,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 			if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.GEOFENCE));
 		}
 		else if(mWatchdog.getModules() != null && mWatchdog.getModules().size() > 0) {
-			int index = Utils.getObjectIndexFromList(mWatchdog.getModules().get(0), getDevicesArray(DEVICES_SENSORS));
+			int index = Utils.getObjectIndexFromList(mWatchdog.getModules().get(0), getModulesArray(MODULES_SENSORS));
 			if(index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.MODULE));
 		}
 
@@ -372,7 +372,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 
             case Watchdog.ACTION_ACTOR:
                 mActionType.check(R.id.watchdog_edit_actor);
-                int actorIndex = par_action_value == null ? -1 : Utils.getObjectIndexFromList(par_action_value, getDevicesArray(DEVICES_ACTORS));
+                int actorIndex = par_action_value == null ? -1 : Utils.getObjectIndexFromList(par_action_value, getModulesArray(MODULES_ACTORS));
                 if(actorIndex > -1) mActorSpinner.setSelection(actorIndex);
                 break;
         }
@@ -519,7 +519,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
                     return;
                 }
 
-                Module selectedActor = getDevicesArray(DEVICES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
+                Module selectedActor = getModulesArray(MODULES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
                 newParams.add(selectedActor.getId());
                 break;
         }
@@ -573,15 +573,15 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
     // ---------- HELPER FUNCTIONS ---------- //
 
     /**
-     * Helper function for getting type of devices from list of facilities
-     * @param type DEVICES_ALL | DEVICES_ACTORS | DEVICES_SENSORS
+     * Helper function for getting type of modules from list of facilities
+     * @param type MODULES_ALL | MODULES_ACTORS | MODULES_SENSORS
      * @return
      */
-    private List<Module> getDevicesArray(int type){
-        if(type == DEVICES_ACTORS && _actors != null) {
+    private List<Module> getModulesArray(int type){
+        if(type == MODULES_ACTORS && _actors != null) {
             return _actors;
         }
-        else if(type == DEVICES_SENSORS && _sensors != null) {
+        else if(type == MODULES_SENSORS && _sensors != null) {
             return _sensors;
         }
 
@@ -589,20 +589,20 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 
         for(Facility facility : mFacilities)
             for (Module module : facility.getModules()) {
-                if (type == DEVICES_ACTORS && !module.getType().isActor()) {
+                if (type == MODULES_ACTORS && !module.getType().isActor()) {
                     continue;
                 }
-                else if(type == DEVICES_SENSORS && module.getType().isActor()) {
+                else if(type == MODULES_SENSORS && module.getType().isActor()) {
                     continue;
                 }
 
                 modules.add(module);
             }
 
-        if(type == DEVICES_ACTORS) {
+        if(type == MODULES_ACTORS) {
             _actors = modules;
         }
-        else if(type == DEVICES_SENSORS) {
+        else if(type == MODULES_SENSORS) {
             _sensors = modules;
         }
 

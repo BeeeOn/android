@@ -241,7 +241,7 @@
 
 		<!-- sensor widget -->
 		<receiver
-			android:name=".widget.receivers.WidgetDeviceProvider"
+			android:name=".widget.receivers.WidgetModuleProvider"
 			android:label="@string/widget_sensor_title_small">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -252,7 +252,7 @@
 				android:resource="@xml/widget_device_1x1_info"/>
 		</receiver>
 		<receiver
-			android:name=".widget.receivers.WidgetDeviceProviderMedium"
+			android:name=".widget.receivers.WidgetModuleProviderMedium"
 			android:label="@string/widget_sensor_title_medium">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -263,7 +263,7 @@
 				android:resource="@xml/widget_device_2x1_info"/>
 		</receiver>
 		<receiver
-			android:name=".widget.receivers.WidgetDeviceProviderLarge"
+			android:name=".widget.receivers.WidgetModuleProviderLarge"
 			android:label="@string/widget_sensor_title_large">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>

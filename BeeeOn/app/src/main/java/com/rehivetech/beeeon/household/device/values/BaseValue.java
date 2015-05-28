@@ -42,7 +42,7 @@ public abstract class BaseValue {
 		return mRawValue != null;
 	}
 
-	public static BaseValue createFromDeviceType(ModuleType type) {
+	public static BaseValue createFromModuleType(ModuleType type) {
 		try {
 			// Try to create and return new BaseValue object
 			return type.getValueClass().newInstance();

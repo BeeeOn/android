@@ -16,13 +16,13 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.dialog.ILocationPickerDialogListener;
 import com.rehivetech.beeeon.activity.dialog.LocationPickerDialogFragment;
-import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
+import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.service.WeatherProvider;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
@@ -42,9 +42,9 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	protected WidgetClockData mWidgetData;
 
-	protected List<WidgetDevicePersistence> mWidgetDevices;
-	protected List<Spinner> mDeviceSpinners;
-	private LinearLayout mDeviceSpinnersWrapper;
+	protected List<WidgetModulePersistence> mWidgetModules;
+	protected List<Spinner> mModuleSpinners;
+	private LinearLayout mModuleSpinnersWrapper;
 
 	private RadioGroup mColorSchemeGroup;
 	private TextView mCityLabel;
@@ -63,8 +63,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mGeneralWidgetdata = new WidgetClockData(mActivity.getWidgetId(), mActivity, null, null);
 		mWidgetData = (WidgetClockData) mGeneralWidgetdata;
 
-		mWidgetDevices = mWidgetData.widgetModules;
-		mDeviceSpinners = new ArrayList<>();
+		mWidgetModules = mWidgetData.widgetModules;
+		mModuleSpinners = new ArrayList<>();
 
 		setRefreshBounds(WidgetService.UPDATE_INTERVAL_WEATHER_MIN);
 
@@ -86,14 +86,14 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		mDeviceSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
+		mModuleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
 		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		spinnerLayoutParams.setMargins(0, 0, 0, (int) mActivity.getResources().getDimension(R.dimen.widget_margin));
 
-		for(WidgetDevicePersistence wDev : mWidgetDevices){
-			Spinner deviceSpinner = new Spinner(mActivity);
-			mDeviceSpinnersWrapper.addView(deviceSpinner, spinnerLayoutParams);
-			mDeviceSpinners.add(deviceSpinner);
+		for(WidgetModulePersistence wDev : mWidgetModules){
+			Spinner moduleSpinner = new Spinner(mActivity);
+			mModuleSpinnersWrapper.addView(moduleSpinner, spinnerLayoutParams);
+			mModuleSpinners.add(moduleSpinner);
 		}
 
 		mColorSchemeGroup = (RadioGroup) mActivity.findViewById(R.id.widget_configuration_scheme);
@@ -223,13 +223,13 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
 
 		int index = 0;
-		for(WidgetDevicePersistence wDev : mWidgetDevices){
-			Spinner spinner = mDeviceSpinners.get(index);
+		for(WidgetModulePersistence wDev : mWidgetModules){
+			Spinner spinner = mModuleSpinners.get(index);
 			spinner.setAdapter(dataAdapter);
 
 			int foundIndex = Utils.getObjectIndexFromList(wDev.getId(), mModules);
@@ -248,8 +248,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}
 
 		int index = 0;
-		for(WidgetDevicePersistence wDev : mWidgetDevices) {
-			Spinner spinner = mDeviceSpinners.get(index);
+		for(WidgetModulePersistence wDev : mWidgetModules) {
+			Spinner spinner = mModuleSpinners.get(index);
 
 			Module module = (Module) spinner.getSelectedItem();
 			if (module == null) {

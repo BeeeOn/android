@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetLogDataPersistence;
 
@@ -45,7 +45,7 @@ import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
 
-public class WidgetGraphData extends WidgetDeviceData {
+public class WidgetGraphData extends WidgetModuleData {
     private static final String TAG = WidgetGraphData.class.getSimpleName();
 
 	private static final String GRAPH_FILE_NAME = "widget_%d_graph.png";
@@ -98,7 +98,7 @@ public class WidgetGraphData extends WidgetDeviceData {
 		// NOTE: we don't override base method here cause it would need to do similar work twice
 
         mFacilities.clear();
-        for(WidgetDevicePersistence dev : widgetModules){
+        for(WidgetModulePersistence dev : widgetModules){
             if(dev.getId().isEmpty()){
                 Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
                 continue;
@@ -111,8 +111,8 @@ public class WidgetGraphData extends WidgetDeviceData {
             facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
             facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
 
-            Module module = Module.createFromDeviceTypeId(ids[1]);
-            facility.addDevice(module);
+            Module module = Module.createFromModuleTypeId(ids[1]);
+            facility.addModule(module);
 
             mFacilities.add(facility);
             initGraph(module.getValue());
@@ -250,8 +250,8 @@ public class WidgetGraphData extends WidgetDeviceData {
         Adapter adapter = mController.getAdaptersModel().getAdapter(widgetAdapterId);
         if(adapter == null) return false;
 
-        for(WidgetDevicePersistence dev : widgetModules) {
-            Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+        for(WidgetModulePersistence dev : widgetModules) {
+            Module module = mController.getFacilitiesModel().getModule(widgetAdapterId, dev.getId());
             if(module == null) continue;
 
             Location location = mController.getLocationsModel().getLocation(dev.adapterId, module.getFacility().getLocationId());
@@ -268,7 +268,7 @@ public class WidgetGraphData extends WidgetDeviceData {
             widgetLastUpdate = getTimeNow();
             widgetAdapterId = adapter.getId();
 
-            ModuleLog log = mController.getDeviceLogsModel().getDeviceLog(mLogDataPair);
+            ModuleLog log = mController.getModuleLogsModel().getModuleLog(mLogDataPair);
             if(log != null) {
 				fillGraph(log);
 				mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);

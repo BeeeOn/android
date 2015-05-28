@@ -7,14 +7,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
+import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetGraphData;
-import com.rehivetech.beeeon.widget.persistence.WidgetDevicePersistence;
+import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -28,9 +28,9 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 
 	protected WidgetGraphData mWidgetData;
 
-	private WidgetDevicePersistence mWidgetDevice;
+	private WidgetModulePersistence mWidgetModule;
 
-	private Spinner mDeviceSpinner;
+	private Spinner mModuleSpinner;
 	private RadioGroup mGapGroup;
 	private RefreshInterval mWidgetRefreshInterval;
 
@@ -40,7 +40,7 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 
 		mGeneralWidgetdata = new WidgetGraphData(mActivity.getWidgetId(), mActivity, null, null);
 		mWidgetData = (WidgetGraphData) mGeneralWidgetdata;
-		mWidgetDevice = mWidgetData.widgetModules.get(0);
+		mWidgetModule = mWidgetData.widgetModules.get(0);
 	}
 
 	protected int getFragmentLayoutResource(){
@@ -54,7 +54,7 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mDeviceSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
+		mModuleSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
 		mGapGroup = (RadioGroup) mActivity.findViewById(R.id.widget_config_graph_gap);
 		mGapGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
@@ -97,13 +97,13 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
 
-		mDeviceSpinner.setAdapter(dataAdapter);
-		int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.getId(), mModules);
-		if(foundIndex != -1) mDeviceSpinner.setSelection(foundIndex);
+		mModuleSpinner.setAdapter(dataAdapter);
+		int foundIndex = Utils.getObjectIndexFromList(mWidgetModule.getId(), mModules);
+		if(foundIndex != -1) mModuleSpinner.setSelection(foundIndex);
 	}
 
 	@Override
@@ -114,13 +114,13 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-		Module module = (Module) mDeviceSpinner.getSelectedItem();
+		Module module = (Module) mModuleSpinner.getSelectedItem();
 		if (module == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
-		mWidgetDevice.configure(module, adapter);
+		mWidgetModule.configure(module, adapter);
 
 		//sets widgetdata
 		mWidgetData.configure(

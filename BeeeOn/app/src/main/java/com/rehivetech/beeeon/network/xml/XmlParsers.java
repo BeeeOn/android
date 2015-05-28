@@ -372,11 +372,11 @@ public class XmlParsers {
 			}
 
 			do { // go through parts (devices)
-				Module module = Module.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
+				Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
 				module.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
 				module.setName(getSecureAttrValue(Xconstants.NAME));
 				module.setValue(getSecureAttrValue(Xconstants.VALUE));
-				facility.addDevice(module);
+				facility.addModule(module);
 				mParser.nextTag(); // part endtag
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
 
@@ -663,7 +663,7 @@ public class XmlParsers {
 			Facility facility = null;
 			boolean facilityExists = false;
 
-			Module module = Module.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
+			Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
 
 			String id = getSecureAttrValue(Xconstants.ID);
 			for (Facility fac : result) {
@@ -681,7 +681,7 @@ public class XmlParsers {
 				facility.setAddress(id);
 			}
 
-			facility.addDevice(module);
+			facility.addModule(module);
 
 			if (!facilityExists)
 				result.add(facility);

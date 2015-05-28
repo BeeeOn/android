@@ -120,10 +120,10 @@ public class SimpleGeofence implements IIdentifier {
 	 */
 	private static String createGeofenceId(Context context) {
 		final String timestamp = String.valueOf(System.currentTimeMillis());
-		final String deviceId = Utils.getPhoneName();
+		final String moduleId = Utils.getPhoneName();
 		final String separator = "_";
 
-		return deviceId + separator + timestamp;
+		return moduleId + separator + timestamp;
 	}
 
 	/**

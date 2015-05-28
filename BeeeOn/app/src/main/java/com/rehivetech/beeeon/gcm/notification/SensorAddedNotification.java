@@ -32,14 +32,14 @@ public class SensorAddedNotification extends VisibleNotification {
 
 		try {
 			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
-			String deviceId = bundle.getString(Xconstants.DID);
+			String moduleId = bundle.getString(Xconstants.DID);
 
-			if (adapterId == null || deviceId == null) {
+			if (adapterId == null || moduleId == null) {
 				Log.d(TAG, "SensorAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new SensorAddedNotification(msgId, time, type, false, adapterId, deviceId);
+			instance = new SensorAddedNotification(msgId, time, type, false, adapterId, moduleId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -49,7 +49,7 @@ public class SensorAddedNotification extends VisibleNotification {
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
 		Integer adapterId = null;
-		String deviceId = null;
+		String moduleId = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -72,7 +72,7 @@ public class SensorAddedNotification extends VisibleNotification {
 					if (tagname.equalsIgnoreCase(Xconstants.AID)) {
 						adapterId = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
-						deviceId = text;
+						moduleId = text;
 					}
 					break;
 				default:
@@ -81,12 +81,12 @@ public class SensorAddedNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (adapterId == null || deviceId == null) {
+		if (adapterId == null || moduleId == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new SensorAddedNotification(msgId, time, type, isRead, adapterId, deviceId);
+		return new SensorAddedNotification(msgId, time, type, isRead, adapterId, moduleId);
 
 	}
 

@@ -9,11 +9,11 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 
-public class DeviceSpinnerItem extends AbstractSpinnerItem {
+public class ModuleSpinnerItem extends AbstractSpinnerItem {
 	private Module mModule;
 	private Location mLocation;
 
-	public DeviceSpinnerItem(Module module, Location location, String id, Context context) {
+	public ModuleSpinnerItem(Module module, Location location, String id, Context context) {
 		super(id, SpinnerItemType.MODULE);
 		mModule = module;
 		mLocation = location;

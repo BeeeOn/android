@@ -51,16 +51,16 @@ public class WatchdogNotification extends VisibleNotification {
 		try {
 			String message = bundle.getString(Xconstants.MESSAGE);
 			Integer adapterId = Integer.valueOf(bundle.getString(Xconstants.AID));
-			String deviceId = bundle.getString(Xconstants.DID);
+			String moduleId = bundle.getString(Xconstants.DID);
 			Integer deviceType = Integer.valueOf(bundle.getString(Xconstants.DTYPE));
 			Integer algId = Integer.valueOf(bundle.getString(Xconstants.ALGID));
 
-			if (message == null || adapterId == null || deviceId == null || deviceType == null || algId == null) {
+			if (message == null || adapterId == null || moduleId == null || deviceType == null || algId == null) {
 				Log.d(TAG, "Json: Some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new WatchdogNotification(msgId, time, type, false, message, adapterId, deviceId, deviceType, algId);
+			instance = new WatchdogNotification(msgId, time, type, false, message, adapterId, moduleId, deviceType, algId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return null;
 		}
@@ -71,7 +71,7 @@ public class WatchdogNotification extends VisibleNotification {
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
 		String message = null;
 		Integer adapterId = null;
-		String deviceId = null;
+		String moduleId = null;
 		Integer deviceType = null;
 		Integer algId = null;
 
@@ -98,7 +98,7 @@ public class WatchdogNotification extends VisibleNotification {
 					} else if (tagname.equalsIgnoreCase(Xconstants.AID)) {
 						adapterId = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
-						deviceId = text;
+						moduleId = text;
 					} else if (tagname.equalsIgnoreCase(Xconstants.DTYPE)) {
 						deviceType = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.ALGID)) {
@@ -111,12 +111,12 @@ public class WatchdogNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (message == null || adapterId == null || deviceId == null || deviceType == null || algId == null) {
+		if (message == null || adapterId == null || moduleId == null || deviceType == null || algId == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new WatchdogNotification(msgId, time, type, isRead, message, adapterId, deviceId, deviceType, algId);
+		return new WatchdogNotification(msgId, time, type, isRead, message, adapterId, moduleId, deviceType, algId);
 	}
 
 	@Override

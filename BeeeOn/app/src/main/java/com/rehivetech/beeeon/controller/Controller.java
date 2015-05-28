@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.model.AchievementsModel;
 import com.rehivetech.beeeon.model.AdaptersModel;
 import com.rehivetech.beeeon.model.BaseModel;
-import com.rehivetech.beeeon.model.DeviceLogsModel;
+import com.rehivetech.beeeon.model.ModuleLogsModel;
 import com.rehivetech.beeeon.model.FacilitiesModel;
 import com.rehivetech.beeeon.model.GcmModel;
 import com.rehivetech.beeeon.model.GeofenceModel;
@@ -225,8 +225,8 @@ public final class Controller {
 		return (UninitializedFacilitiesModel) getModelInstance(UninitializedFacilitiesModel.class);
 	}
 
-	public DeviceLogsModel getDeviceLogsModel() {
-		return (DeviceLogsModel) getModelInstance(DeviceLogsModel.class);
+	public ModuleLogsModel getModuleLogsModel() {
+		return (ModuleLogsModel) getModelInstance(ModuleLogsModel.class);
 	}
 
 	public WatchdogsModel getWatchdogsModel() {
