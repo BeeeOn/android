@@ -1,9 +1,10 @@
-package com.rehivetech.beeeon.asynctask;
+package com.rehivetech.beeeon.threading.task;
 
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.threading.CallbackTask;
 
 import java.util.List;
 

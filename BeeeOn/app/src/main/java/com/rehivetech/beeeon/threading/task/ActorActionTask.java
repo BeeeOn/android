@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.asynctask;
+package com.rehivetech.beeeon.threading.task;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.threading.CallbackTask;
 
 public class ActorActionTask extends CallbackTask<Module> {
 

@@ -15,8 +15,8 @@ import android.os.SystemClock;
 import android.util.SparseArray;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.asynctask.ActorActionTask;
-import com.rehivetech.beeeon.asynctask.CallbackTask;
+import com.rehivetech.beeeon.threading.task.ActorActionTask;
+import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;

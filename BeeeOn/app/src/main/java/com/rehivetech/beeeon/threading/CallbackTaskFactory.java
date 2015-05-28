@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.asynctask;
+package com.rehivetech.beeeon.threading;
 
 public interface CallbackTaskFactory<T> {
 

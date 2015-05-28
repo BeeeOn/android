@@ -2,8 +2,8 @@ package com.rehivetech.beeeon.gamification;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.ReloadGateDataTask;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 

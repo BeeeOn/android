@@ -7,8 +7,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.asynctask.CallbackTask;
-import com.rehivetech.beeeon.asynctask.UpdateAchievementTask;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.UpdateAchievementTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;

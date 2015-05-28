@@ -1,10 +1,11 @@
-package com.rehivetech.beeeon.asynctask;
+package com.rehivetech.beeeon.threading.task;
 
 import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.threading.CallbackTask;
 
 import java.util.Locale;
 import java.util.Vector;
