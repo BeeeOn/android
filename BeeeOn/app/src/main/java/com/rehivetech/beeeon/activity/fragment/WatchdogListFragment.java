@@ -29,7 +29,6 @@ import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
-import com.rehivetech.beeeon.pair.DelWatchdogPair;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
@@ -312,8 +311,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 * @param watchdog
 	 */
 	private void doRemoveWatchdogTask(Watchdog watchdog) {
-		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity, false);
-		DelWatchdogPair pair = new DelWatchdogPair(watchdog.getId(), watchdog.getGateId());
+		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity);
 
 		removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
@@ -326,7 +324,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(removeWatchdogTask, pair);
+		mActivity.callbackTaskManager.executeTask(removeWatchdogTask, watchdog);
 	}
 
 	// ----- HELPERS + ACTIONMODE ----- //

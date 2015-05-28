@@ -34,15 +34,14 @@ import com.rehivetech.beeeon.asynctask.SaveWatchdogTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.household.watchdog.WatchdogBaseType;
 import com.rehivetech.beeeon.household.watchdog.WatchdogGeofenceType;
 import com.rehivetech.beeeon.household.watchdog.WatchdogSensorType;
-import com.rehivetech.beeeon.pair.DelWatchdogPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
@@ -555,8 +554,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	 * Async task for deleting watchdog
 	 */
 	private void doRemoveWatchdogTask() {
-		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(this, false);
-		DelWatchdogPair pair = new DelWatchdogPair(mWatchdog.getId(), mWatchdog.getGateId());
+		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(this);
 
 		removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
 			@Override
@@ -567,7 +565,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(removeWatchdogTask, pair);
+		callbackTaskManager.executeTask(removeWatchdogTask, mWatchdog);
 	}
 
 	// ---------- HELPER FUNCTIONS ---------- //

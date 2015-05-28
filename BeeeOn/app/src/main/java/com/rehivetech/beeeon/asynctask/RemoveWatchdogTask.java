@@ -3,31 +3,18 @@ package com.rehivetech.beeeon.asynctask;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.pair.DelWatchdogPair;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 
-/**
- * Reloads devices by gate
- */
-public class RemoveWatchdogTask extends CallbackTask<DelWatchdogPair> {
+public class RemoveWatchdogTask extends CallbackTask<Watchdog> {
 
-	private final boolean mForceReload;
-
-	public RemoveWatchdogTask(Context context, boolean forceReload) {
+	public RemoveWatchdogTask(Context context) {
 		super(context);
-
-		mForceReload = forceReload;
 	}
 
 	@Override
-	protected Boolean doInBackground(DelWatchdogPair pair) {
+	protected Boolean doInBackground(Watchdog watchdog) {
 		Controller controller = Controller.getInstance(mContext);
 
-		Gate gate = controller.getActiveGate();
-		if (gate == null) {
-			return false;
-		}
-
-		return controller.getWatchdogsModel().deleteWatchdog(controller.getWatchdogsModel().getWatchdog(pair.gateId, pair.watchdogId));
+		return controller.getWatchdogsModel().deleteWatchdog(watchdog);
 	}
 }

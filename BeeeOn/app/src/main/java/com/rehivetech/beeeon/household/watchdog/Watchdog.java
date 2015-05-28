@@ -43,6 +43,11 @@ public class Watchdog implements INameIdentifier {
 	private ArrayList<String> mModules;
 	private ArrayList<String> mParams;
 
+	public Watchdog(String gateId, String id) {
+		mGateId = gateId;
+		mId = id;
+	}
+
 	public Watchdog(int type) {
 		setOperatorType(type);
 	}
