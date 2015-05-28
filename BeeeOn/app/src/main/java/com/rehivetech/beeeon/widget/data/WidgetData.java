@@ -387,7 +387,7 @@ public abstract class WidgetData {
 	}
 
 	/**
-	 * PendingIntent for opening detail of device
+	 * PendingIntent for opening detail of module
 	 * @param context
 	 * @param widgetId
 	 * @param adapterId

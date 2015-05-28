@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -105,16 +105,16 @@ public class WatchDogListAdapter extends BaseAdapter {
             case WatchDog.TYPE_SENSOR:
                 List<String> devicesIds = rule.getDevices();
                 if(devicesIds.size() > 0){
-                    Device deviceFirst = mController.getFacilitiesModel().getDevice(rule.getAdapterId(), devicesIds.get(0));
-                    if(deviceFirst == null) return convertView;
+                    Module moduleFirst = mController.getFacilitiesModel().getDevice(rule.getAdapterId(), devicesIds.get(0));
+                    if(moduleFirst == null) return convertView;
 
-                    holder.ItemIcon.setImageResource(deviceFirst.getIconResource());
-                    holder.ItemSubLabel.setText(deviceFirst.getName());
+                    holder.ItemIcon.setImageResource(moduleFirst.getIconResource());
+                    holder.ItemSubLabel.setText(moduleFirst.getName());
 
                     String par_treshold = rule.getParam(WatchDog.PAR_TRESHOLD);
                     if(par_treshold != null) {
                         if (mUnitsHelper != null) {
-                            BaseValue valueObj = BaseValue.createFromDeviceType(deviceFirst.getType());
+                            BaseValue valueObj = BaseValue.createFromDeviceType(moduleFirst.getType());
                             valueObj.setValue(par_treshold);
                             holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
                         } else {

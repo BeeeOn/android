@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.asynctask.SaveFacilityWithNewLocTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
@@ -109,24 +109,24 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
-			Set<Device.SaveDevice> what = new HashSet<>() ;
+			Set<Module.SaveDevice> what = new HashSet<>() ;
 			Adapter adapter = mController.getActiveAdapter();
 			if(adapter == null)
 				return  false;
-			Device device = mController.getFacilitiesModel().getDevice(adapter.getId(),mDeviceId);
-			Facility facility = device.getFacility();
+			Module module = mController.getFacilitiesModel().getDevice(adapter.getId(),mDeviceId);
+			Facility facility = module.getFacility();
 
-			if(!mFragment.getName().equals(device.getName())) {
-				what.add(Device.SaveDevice.SAVE_NAME);
-				device.setName(mFragment.getName());
+			if(!mFragment.getName().equals(module.getName())) {
+				what.add(Module.SaveDevice.SAVE_NAME);
+				module.setName(mFragment.getName());
 			}
 
 			if(!mFragment.getRefreshTime().equals(facility.getRefresh())) {
-				what.add(Device.SaveDevice.SAVE_REFRESH);
+				what.add(Module.SaveDevice.SAVE_REFRESH);
 				facility.setRefresh(mFragment.getRefreshTime());
 			}
 			if(!mFragment.getLocationId().equals(facility.getLocationId())) {
-				what.add(Device.SaveDevice.SAVE_LOCATION);
+				what.add(Module.SaveDevice.SAVE_LOCATION);
 				if(mFragment.isSetNewRoom()) {
 					Location location;
 					if(mFragment.isSetNewCustomRoom()) {
@@ -253,7 +253,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		private SeekBar mRefreshTime;
 		private String mDeviceID;
 		private Controller mController;
-		private Device mDevice;
+		private Module mModule;
 		private TextView mRefreshTimeVal;
 		private Facility mFacility;
 		private Adapter mAdapter;
@@ -283,10 +283,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			mAdapter = mController.getActiveAdapter();
 			if(mAdapter == null)
 				return;
-			mDevice = mController.getFacilitiesModel().getDevice(mAdapter.getId(), mDeviceID);
-			if(mDevice == null)
+			mModule = mController.getFacilitiesModel().getDevice(mAdapter.getId(), mDeviceID);
+			if(mModule == null)
 				return;
-			mFacility = mDevice.getFacility();
+			mFacility = mModule.getFacility();
 			mLocationId = mFacility.getLocationId();
 			initLayout();
 			if(savedInstanceState != null) {
@@ -358,7 +358,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 			mNewIconSpinner.setAdapter(iconAdapter);
 
-			mName.setText(mDevice.getName());
+			mName.setText(mModule.getName());
 			// Set Max value by length of array with values
 			mRefreshTime.setMax(RefreshInterval.values().length - 1);
 			mRefreshTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

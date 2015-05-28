@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 
 /**
  * @author mlyko
@@ -54,8 +54,8 @@ public class WatchDogSensorType extends WatchDogBaseType {
 		ruleTreshold.setInputType(InputType.TYPE_CLASS_NUMBER);
 
 		if(mUnitsHelper != null){
-			Device selectedDevice = (Device) selected.getObject();
-			ruleTresholdUnit.setText(mUnitsHelper.getStringUnit(selectedDevice.getValue()));
+			Module selectedModule = (Module) selected.getObject();
+			ruleTresholdUnit.setText(mUnitsHelper.getStringUnit(selectedModule.getValue()));
 		}
 	}
 

@@ -38,7 +38,7 @@ import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
 import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
@@ -97,7 +97,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	private TextView mBattery;
 	private TextView mSignal;
 
-	private Device mDevice;
+	private Module mModule;
 	private Adapter mAdapter;
 
 	private UnitsHelper mUnitsHelper;
@@ -152,10 +152,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 		}
 		Log.d(TAG, "OnActivityCreated");
-		mDevice = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
-		if (mDevice != null) {
-			Log.d(TAG, String.format("ID: %s, Name: %s", mDevice.getId(), mDevice.getName()));
-			initLayout(mDevice);
+		mModule = mController.getFacilitiesModel().getDevice(mAdapterId, mDeviceID);
+		if (mModule != null) {
+			Log.d(TAG, String.format("ID: %s, Name: %s", mModule.getId(), mModule.getName()));
+			initLayout(mModule);
 		}
 
 		Log.d(TAG, "Here 3 " + mCurPageNumber);
@@ -182,7 +182,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	}
 
-	private void initLayout(Device device) {
+	private void initLayout(Module module) {
 		Log.d(TAG,"INIT LAYOUT");
 		// Get View for sensor name
 		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
@@ -226,7 +226,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 
 		// Set name of sensor
-		mName.setText(device.getName());
+		mName.setText(module.getName());
 		mName.setBackgroundColor(Color.TRANSPARENT);
 		if(mController.isUserAllowed(mAdapter.getRole())) {
 
@@ -240,22 +240,22 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 				public void onClick(View v) {
 					// Disable button
 					mValueSwitch.setEnabled(false);
-					doActorAction(mDevice);
+					doActorAction(mModule);
 				}
 			});
 			final Fragment frg = this;
-			if(mDevice.getValue() instanceof TemperatureValue) {
+			if(mModule.getValue() instanceof TemperatureValue) {
 				// Set listner for dialog with NumberPicker
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Log.d(TAG, "SET TEMPERATURE");
-						NumberPickerDialogFragment.show(mActivity,mDevice,frg);
+						NumberPickerDialogFragment.show(mActivity, mModule,frg);
 					}
 				});
 
 			}
-			else if(mDevice.getValue() instanceof BoilerOperationTypeValue){
+			else if(mModule.getValue() instanceof BoilerOperationTypeValue){
 				// Set dialog for set Type of  BOILER
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
@@ -273,7 +273,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 								.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 								.setTitle(getString(R.string.dialog_title_set_bioler_type))
 								.setItems(tmp)
-								.setSelectedItem(((BoilerOperationTypeValue) mDevice.getValue()).getActive().getId())
+								.setSelectedItem(((BoilerOperationTypeValue) mModule.getValue()).getActive().getId())
 								.setRequestCode(REQUEST_BOILER_TYPE)
 								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
 								.setConfirmButtonText(R.string.dialog_set_boiler_setaction)
@@ -283,7 +283,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 					}
 				});
 			}
-			else if (mDevice.getValue() instanceof  BoilerOperationModeValue) {
+			else if (mModule.getValue() instanceof  BoilerOperationModeValue) {
 				// Set dialog for set Mode of Boiler
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
@@ -299,7 +299,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 								.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 								.setTitle(getString(R.string.dialog_title_set_bioler_mode))
 								.setItems(tmp)
-								.setSelectedItem(((BoilerOperationModeValue) mDevice.getValue()).getActive().getId())
+								.setSelectedItem(((BoilerOperationModeValue) mModule.getValue()).getActive().getId())
 								.setRequestCode(REQUEST_BOILER_MODE)
 								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
 								.setConfirmButtonText(R.string.dialog_set_boiler_setaction)
@@ -318,7 +318,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 			Adapter adapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 			if (adapter != null) {
-				location = mController.getLocationsModel().getLocation(adapter.getId(), device.getFacility().getLocationId());
+				location = mController.getLocationsModel().getLocation(adapter.getId(), module.getFacility().getLocationId());
 			}
 
 			if (location != null) {
@@ -330,10 +330,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		} else {
 			Log.e(TAG, "mController is null (this shouldn't happen)");
-			mLocation.setText(device.getFacility().getLocationId());
+			mLocation.setText(module.getFacility().getLocationId());
 		}
 
-		Facility facility = device.getFacility();
+		Facility facility = module.getFacility();
 		Adapter adapter = mController.getAdaptersModel().getAdapter(facility.getAdapterId());
 
 		// UserSettings can be null when user is not logged in!
@@ -344,15 +344,15 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Set value of sensor
 		if (mUnitsHelper != null) {
-			mValue.setText(mUnitsHelper.getStringValueUnit(device.getValue()));
-			BaseValue val = mDevice.getValue();
+			mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
+			BaseValue val = mModule.getValue();
 			if (val instanceof OnOffValue) {
 				mValueSwitch.setChecked(((BooleanValue) val).isActive());
 			}
 		}
 
 		// Set icon of sensor
-		mIcon.setImageResource(device.getIconResource());
+		mIcon.setImageResource(module.getIconResource());
 
 		// Set time of sensor
 		if (mTimeHelper != null) {
@@ -391,9 +391,9 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mView.findViewById(R.id.sen_sep_2).setVisibility(View.VISIBLE);
 
 
-		// Show some controls if this device is an actor
-		if (mDevice.getType().isActor() && mController.isUserAllowed(mAdapter.getRole())) {
-			BaseValue value = mDevice.getValue();
+		// Show some controls if this module is an actor
+		if (mModule.getType().isActor() && mController.isUserAllowed(mAdapter.getRole())) {
+			BaseValue value = mModule.getValue();
 			
 			// For actor values of type on/off, open/closed we show switch button
 			if (value instanceof OnOffValue || value instanceof OpenClosedValue ) {
@@ -422,9 +422,9 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
 		// Create and set graphView
-		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mDevice, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mModule, fmt, unitsHelper); // empty heading
 
-		if (mDevice.getValue() instanceof BaseEnumValue) {
+		if (mModule.getValue() instanceof BaseEnumValue) {
 			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1,1)});
 			((BarGraphSeries) mGraphSeries).setSpacing(30);
 			mGraphView.setDrawPointer(false);
@@ -536,13 +536,13 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	 * ================================= ASYNC TASK ===========================
 	 */
 
-	protected void doActorAction(final Device device) {
-		if (!device.getType().isActor()) {
+	protected void doActorAction(final Module module) {
+		if (!module.getType().isActor()) {
 			return;
 		}
 
 		// SET NEW VALUE
-		BaseValue value = device.getValue();
+		BaseValue value = module.getValue();
 		if (value instanceof BaseEnumValue) {
 			((BaseEnumValue)value).setNextValue();
 		} else {
@@ -555,20 +555,20 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 			@Override
 			public void onExecute(boolean success) {
-				// Get new device
-				mDevice = mController.getFacilitiesModel().getDevice(device.getFacility().getAdapterId(), device.getId());
+				// Get new module
+				mModule = mController.getFacilitiesModel().getDevice(module.getFacility().getAdapterId(), module.getId());
 
 				// Set icon of sensor
-				mIcon.setImageResource(mDevice.getIconResource());
+				mIcon.setImageResource(mModule.getIconResource());
 				// Enable button
 				mValueSwitch.setEnabled(true);
-				mValue.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
+				mValue.setText(mUnitsHelper.getStringValueUnit(mModule.getValue()));
 			}
 
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(actorActionTask, device);
+		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
 	}
 
 	protected void doReloadFacilitiesTask(final String adapterId, final boolean forceRefresh) {
@@ -586,12 +586,12 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mDevice = mController.getFacilitiesModel().getDevice(adapterId, mDeviceID);
-				if (mDevice == null) {
+				mModule = mController.getFacilitiesModel().getDevice(adapterId, mDeviceID);
+				if (mModule == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;
 				}
-				initLayout(mDevice);
+				initLayout(mModule);
 				doLoadGraphData();
 			}
 
@@ -610,10 +610,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		GetDeviceLogTask getDeviceLogTask = new GetDeviceLogTask(mActivity);
 		final LogDataPair pair = new LogDataPair( //
-				mDevice, // device
+				mModule, // module
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				(mDevice.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
+				(mModule.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
 
 		getDeviceLogTask.setListener(new CallbackTaskListener() {
 			@Override
@@ -626,33 +626,33 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mActivity.callbackTaskManager.executeTask(getDeviceLogTask, pair);
 	}
 
-	protected void doChangeStateDeviceTask(final Device device) {
+	protected void doChangeStateDeviceTask(final Module module) {
 		ActorActionTask changeStateDeviceTask = new ActorActionTask(mActivity);
 
 		changeStateDeviceTask.setListener(new CallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success)
-					mValue.setText(mUnitsHelper.getStringValueUnit(mDevice.getValue()));
+					mValue.setText(mUnitsHelper.getStringValueUnit(mModule.getValue()));
 			}
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(changeStateDeviceTask, device);
+		mActivity.callbackTaskManager.executeTask(changeStateDeviceTask, module);
 	}
 
 	@Override
 	public void onListItemSelected(CharSequence value, int number, int requestCode) {
 		if(requestCode == REQUEST_BOILER_MODE || requestCode == REQUEST_BOILER_TYPE) {
 			Log.d(TAG,"RESULT - SET BOILDER MODE or TYPE val:"+value+" number:"+number);
-			mDevice.setValue(String.valueOf(number));
-			doChangeStateDeviceTask(mDevice);
+			mModule.setValue(String.valueOf(number));
+			doChangeStateDeviceTask(mModule);
 		}
 	}
 
 	public void onSetTemperatureClick(Double value) {
 		Log.d(TAG, "SET TEMPERATURE DO TASK");
-		mDevice.setValue(String.valueOf(value));
-		doChangeStateDeviceTask(mDevice);
+		mModule.setValue(String.valueOf(value));
+		doChangeStateDeviceTask(mModule);
 	}
 }

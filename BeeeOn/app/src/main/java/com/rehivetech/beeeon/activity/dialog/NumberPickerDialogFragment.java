@@ -12,7 +12,7 @@ import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.activity.fragment.SensorDetailFragment;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
@@ -27,12 +27,12 @@ public class NumberPickerDialogFragment  extends SimpleDialogFragment{
 
 	public static String TAG = "jayne";
 
-	private static Device mDevice;
+	private static Module sMModule;
 	private static FragmentActivity mActivity;
 	private static Fragment mFragment;
 
-	public static void show(FragmentActivity activity, Device device,Fragment frg) {
-		mDevice = device;
+	public static void show(FragmentActivity activity, Module module,Fragment frg) {
+		sMModule = module;
 		mActivity = activity;
 		mFragment = frg;
 		new NumberPickerDialogFragment().show(activity.getSupportFragmentManager(), TAG);
@@ -46,7 +46,7 @@ public class NumberPickerDialogFragment  extends SimpleDialogFragment{
 
 		final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.beeeon_numberPicker);
 		TextView unitView = (TextView) view.findViewById(R.id.beeeon_numberpicker_unit);
-		double value = mDevice.getValue().getDoubleValue();
+		double value = sMModule.getValue().getDoubleValue();
 		final ArrayList<String> tmp = new ArrayList<>();
 		for(double i = value-40.0; i < value+40.0; i+=0.5) {
 			tmp.add(String.valueOf(i));
@@ -61,7 +61,7 @@ public class NumberPickerDialogFragment  extends SimpleDialogFragment{
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 
 		UnitsHelper mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
-		unitView.setText(mUnitsHelper.getStringUnit(mDevice.getValue()));
+		unitView.setText(mUnitsHelper.getStringUnit(sMModule.getValue()));
 
 		builder.setView(view);
 		builder.setPositiveButton(getString(R.string.dialog_set_boiler_setaction), new View.OnClickListener() {

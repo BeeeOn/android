@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.ErrorCode;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -440,15 +440,15 @@ public class WidgetService extends Service {
         Log.d(TAG, String.format("changeWidgetActorRequest(%s, %s)", adapterId, actorId));
         if(actorId == null || adapterId == null || actorId.isEmpty() || adapterId.isEmpty()) return;
 
-        // ----- first get the device and change value
-        final Device device = mController.getFacilitiesModel().getDevice(adapterId, actorId);
-        if(device == null || !device.getType().isActor()){
+        // ----- first get the module and change value
+        final Module module = mController.getFacilitiesModel().getDevice(adapterId, actorId);
+        if(module == null || !module.getType().isActor()){
             Log.e(TAG, "DEVICE NOT actor OR NOT FOUND --> probably need to refresh controller");
             return;
         }
 
         // ----- check if value is boolean
-        BaseValue value = device.getValue();
+        BaseValue value = module.getValue();
         if (!(value instanceof BooleanValue)) {
             Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
             return;
@@ -475,7 +475,7 @@ public class WidgetService extends Service {
                 }
             }
         });
-        actorActionTask.execute(device);
+        actorActionTask.execute(module);
     }
 
     /**
@@ -765,7 +765,7 @@ public class WidgetService extends Service {
         ids.addAll(getWidgetIds(WidgetClockProvider.class));
         // location list
         ids.addAll(getWidgetIds(WidgetLocationListProvider.class));
-        // device widget
+        // module widget
         ids.addAll(getWidgetIds(WidgetDeviceProvider.class));
         ids.addAll(getWidgetIds(WidgetDeviceProviderMedium.class));
         ids.addAll(getWidgetIds(WidgetDeviceProviderLarge.class));
@@ -1041,7 +1041,7 @@ public class WidgetService extends Service {
 					WidgetClockData.reloadWeekDays();
 					break;
 
-				// if any actor value was changed, tell the service to refresh widget with that device
+				// if any actor value was changed, tell the service to refresh widget with that module
 				case Constants.BROADCAST_ACTOR_CHANGED:
 					final String adapterId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ADAPTER_ID);
 					final String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);

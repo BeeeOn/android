@@ -11,7 +11,7 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -322,7 +322,7 @@ public class XmlParsers {
 	}
 
 	/**
-	 * Method parse inner part of Device message (old:Partial message (set of device's tag))
+	 * Method parse inner part of Module message (old:Partial message (set of module's tag))
 	 *
 	 * @return List of facilities
 	 * @throws XmlPullParserException
@@ -366,17 +366,17 @@ public class XmlParsers {
 
 			mParser.nextTag(); // part tag
 
-			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no device in facility -> error in DB on server
-				Log.e(TAG,"Missing device in facility: " + facility.getId());
+			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in facility -> error in DB on server
+				Log.e(TAG,"Missing module in facility: " + facility.getId());
 				continue;
 			}
 
 			do { // go through parts (devices)
-				Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
-				device.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
-				device.setName(getSecureAttrValue(Xconstants.NAME));
-				device.setValue(getSecureAttrValue(Xconstants.VALUE));
-				facility.addDevice(device);
+				Module module = Module.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
+				module.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
+				module.setName(getSecureAttrValue(Xconstants.NAME));
+				module.setValue(getSecureAttrValue(Xconstants.VALUE));
+				facility.addDevice(module);
 				mParser.nextTag(); // part endtag
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.DEVICE));
 
@@ -569,7 +569,7 @@ public class XmlParsers {
 				String position = getSecureAttrValue(Xconstants.POSITION);
 
 				if(mParser.getName().equals(Xconstants.DEVICE)){
-					String device = getSecureAttrValue(Xconstants.ID) + Device.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
+					String device = getSecureAttrValue(Xconstants.ID) + Module.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
 					tDevices.put(position, device);
 
 					mParser.nextTag();
@@ -663,7 +663,7 @@ public class XmlParsers {
 			Facility facility = null;
 			boolean facilityExists = false;
 
-			Device device = Device.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
+			Module module = Module.createFromDeviceTypeId(getSecureAttrValue(Xconstants.TYPE));
 
 			String id = getSecureAttrValue(Xconstants.ID);
 			for (Facility fac : result) {
@@ -681,7 +681,7 @@ public class XmlParsers {
 				facility.setAddress(id);
 			}
 
-			facility.addDevice(device);
+			facility.addDevice(module);
 
 			if (!facilityExists)
 				result.add(facility);

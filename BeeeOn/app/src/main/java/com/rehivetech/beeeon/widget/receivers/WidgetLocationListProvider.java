@@ -14,7 +14,7 @@ public class WidgetLocationListProvider extends WidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // open detail activity of chosen device from list
+        // open detail activity of chosen module from list
         if (intent.getAction().equals(WidgetLocationData.OPEN_DETAIL_ACTION)) {
             String deviceId = intent.getStringExtra(WidgetLocationData.EXTRA_ITEM_DEV_ID);
             String adapterId = intent.getStringExtra(WidgetLocationData.EXTRA_ITEM_ADAPTER_ID);

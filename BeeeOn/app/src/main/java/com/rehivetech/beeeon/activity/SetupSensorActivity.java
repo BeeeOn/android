@@ -132,7 +132,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				Facility newFacility = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mPairAdapter.getId()).get(0);
 
 				// Controll if Names arent empty
-				for (int i = 0; i < newFacility.getDevices().size(); i++) {
+				for (int i = 0; i < newFacility.getModules().size(); i++) {
 					// Get new names from EditText
 					String name = ((EditText) mListOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
@@ -141,7 +141,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 					// Set this new name to sensor
-					newFacility.getDevices().get(i).setName(name);
+					newFacility.getModules().get(i).setName(name);
 
 				}
 

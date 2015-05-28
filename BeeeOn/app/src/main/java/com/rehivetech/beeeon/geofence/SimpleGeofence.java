@@ -114,7 +114,7 @@ public class SimpleGeofence implements IIdentifier {
 	// Instance field getters
 
 	/**
-	 * Create geofence ID which is unique. It contains device ID and timestamp.
+	 * Create geofence ID which is unique. It contains module ID and timestamp.
 	 *
 	 * @return Unique geofence ID per user. Ex. deviceId_timestamp
 	 */

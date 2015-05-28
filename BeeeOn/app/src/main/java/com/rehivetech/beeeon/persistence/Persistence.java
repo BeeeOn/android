@@ -25,7 +25,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Persistence service that handles caching data on this device.
+ * Persistence service that handles caching data on this module.
  * 
  * @author Robyer
  */

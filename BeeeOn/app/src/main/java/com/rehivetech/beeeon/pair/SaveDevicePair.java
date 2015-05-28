@@ -2,18 +2,18 @@ package com.rehivetech.beeeon.pair;
 
 import java.util.EnumSet;
 
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.Module.SaveDevice;
 
 /**
- * Represents pair of device and location for saving it to server
+ * Represents pair of module and location for saving it to server
  */
 public class SaveDevicePair {
-	public final Device device;
+	public final Module mModule;
 	public final EnumSet<SaveDevice> what;
 
-	public SaveDevicePair(final Device device, final EnumSet<SaveDevice> what) {
-		this.device = device;
+	public SaveDevicePair(final Module module, final EnumSet<SaveDevice> what) {
+		this.mModule = module;
 		this.what = what;
 	}
 }

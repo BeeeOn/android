@@ -9,7 +9,7 @@ import java.util.TreeMap;
 import org.joda.time.Interval;
 
 /**
- * Represents history of values for device.
+ * Represents history of values for module.
  */
 public class DeviceLog {
 	private SortedMap<Long, Float> mValues = new TreeMap<Long, Float>();

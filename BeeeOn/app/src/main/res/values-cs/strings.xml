@@ -364,7 +364,7 @@
     <string name="action_done">Hotovo</string>
 
 	<string name="delete_geofence">Odstranit oblast</string>
-	<string name="devices">Zařízení</string>
+	<string name="modules">Zařízení</string>
 	<string name="name">Název</string>
 	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla</string>
 	<string name="title_activity_sensor_edit">Editace zařízení</string>

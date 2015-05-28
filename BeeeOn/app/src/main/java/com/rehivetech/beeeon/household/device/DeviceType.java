@@ -16,11 +16,11 @@ import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.device.values.UnknownValue;
 
 /**
- * Device's types
+ * Module's types
  */
 public enum DeviceType {
 
-	TYPE_UNKNOWN(-1, R.string.dev_unknown_type, false, UnknownValue.class), // unknown device
+	TYPE_UNKNOWN(-1, R.string.dev_unknown_type, false, UnknownValue.class), // unknown module
 
 	// =============== Sensors ===============
 	TYPE_HUMIDITY(0x01, R.string.dev_humidity_type, false, HumidityValue.class), // humidity meter

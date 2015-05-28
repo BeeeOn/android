@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
@@ -93,17 +93,17 @@ public class WidgetClockData extends WidgetData {
 		mFacilities.clear();
 		for(WidgetDevicePersistence dev : widgetDevices){
 			if(dev.getId().isEmpty()){
-				Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
+				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
 				continue;
 			}
 
-			String[] ids = dev.getId().split(Device.ID_SEPARATOR, 2);
+			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
 			Facility facility = new Facility();
 			facility.setAdapterId(widgetAdapterId);
 			facility.setAddress(ids[0]);
 			facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
+			facility.addDevice(Module.createFromDeviceTypeId(ids[1]));
 
 			mFacilities.add(facility);
 		}
@@ -322,14 +322,14 @@ public class WidgetClockData extends WidgetData {
 		if(adapter == null) return false;
 
 		for(WidgetDevicePersistence dev : widgetDevices) {
-			Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
-			if (device != null) {
+			Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+			if (module != null) {
 				if(!dev.locationId.isEmpty()){
 					Location location = mController.getLocationsModel().getLocation(widgetAdapterId, dev.locationId);
-					dev.configure(device, adapter, location);
+					dev.configure(module, adapter, location);
 				}
 				else {
-					dev.configure(device, adapter);
+					dev.configure(module, adapter);
 				}
 				updated++;
 			}

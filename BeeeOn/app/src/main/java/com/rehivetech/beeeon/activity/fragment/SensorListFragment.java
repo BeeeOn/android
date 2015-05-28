@@ -7,7 +7,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,7 +39,7 @@ import com.rehivetech.beeeon.asynctask.RemoveFacilityTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.DelFacilityPair;
@@ -85,7 +84,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	private boolean mFirstUseAddAdapter = true;
 	private boolean mFirstUseAddSensor = true;
 
-    private Device mSelectedItem;
+    private Module mSelectedItem;
     private int mSelectedItemPos;
 
 	public SensorListFragment() {
@@ -181,7 +180,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		List<Facility> facilities;
         List<Location> locations;
 
-		Log.d(TAG, "LifeCycle: redraw devices list start");
+		Log.d(TAG, "LifeCycle: redraw modules list start");
 
 		mView = getView();
 		// get UI elements
@@ -216,17 +215,17 @@ public class SensorListFragment extends BaseApplicationFragment {
         // All locations on adapter
         locations = mController.getLocationsModel().getLocationsByAdapter(mActiveAdapterId);
 
-        List<Device> devices = new ArrayList<Device>();
+        List<Module> modules = new ArrayList<Module>();
 		for (Location loc : locations) {
 			mSensorAdapter.addHeader(new LocationListItem(loc.getName(),loc.getIconResource(),loc.getId()));
             // all facilities from actual location
             facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mActiveAdapterId,loc.getId());
             for(Facility fac : facilities) {
-				for(int x = 0; x < fac.getDevices().size(); x++) {
-					Device dev = fac.getDevices().get(x);
-					mSensorAdapter.addItem(new SensorListItem(dev,dev.getId(),mActivity,(x==(fac.getDevices().size()-1))?true:false));
+				for(int x = 0; x < fac.getModules().size(); x++) {
+					Module dev = fac.getModules().get(x);
+					mSensorAdapter.addItem(new SensorListItem(dev,dev.getId(),mActivity,(x==(fac.getModules().size()-1))?true:false));
 				}
-				devices.addAll(fac.getDevices());
+				modules.addAll(fac.getModules());
 			}
 		}
 
@@ -237,7 +236,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 							// (fragment?) first?
 		}
 
-		boolean haveDevices = devices.size() > 0;
+		boolean haveDevices = modules.size() > 0;
 		boolean haveAdapters = mController.getAdaptersModel().getAdapters().size() > 0;
 
 		// Buttons in floating menu
@@ -294,7 +293,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 				}
 			}
 		}
-		else { // Have adapter and devices
+		else { // Have adapter and modules
 			noItem.setVisibility(View.GONE);
 			refreshBtn.setVisibility(View.GONE);
 			mSensorList.setVisibility(View.VISIBLE);
@@ -380,10 +379,10 @@ public class SensorListFragment extends BaseApplicationFragment {
 			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Device device = mSensorAdapter.getDevice(position);
+                    Module module = mSensorAdapter.getDevice(position);
 					Bundle bundle = new Bundle();
-					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, device.getFacility().getAdapterId());
-					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, device.getId());
+					bundle.putString(SensorDetailActivity.EXTRA_ADAPTER_ID, module.getFacility().getAdapterId());
+					bundle.putString(SensorDetailActivity.EXTRA_DEVICE_ID, module.getId());
 					Intent intent = new Intent(mActivity, SensorDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);

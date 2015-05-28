@@ -35,7 +35,7 @@ import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.watchdog.WatchDog;
@@ -89,8 +89,8 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
     private List<SimpleGeofence> mGeofences;
 
     // TODO??
-    private List<Device> _sensors;
-    private List<Device> _actors;
+    private List<Module> _sensors;
+    private List<Module> _actors;
 
     private WatchDog mWatchDog;
     private String mWatchDogAction;
@@ -228,14 +228,14 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
         mNotificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
         mActorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
 
-        // ----- prepare list of available device & geofences
+        // ----- prepare list of available module & geofences
         mSpinnerMultiAdapter = new SpinnerMultiAdapter(this);
 		boolean isAnyIfInput = false;
         // devices
-		List<Device> deviceSensors = getDevicesArray(DEVICES_SENSORS);
-        if(!deviceSensors.isEmpty()) {
+		List<Module> moduleSensors = getDevicesArray(DEVICES_SENSORS);
+        if(!moduleSensors.isEmpty()) {
 			mSpinnerMultiAdapter.addHeader(getString(R.string.devices));
-			for (Device dev : deviceSensors) {
+			for (Module dev : moduleSensors) {
 				Location loc = Utils.getFromList(dev.getFacility().getLocationId(), mLocations);
 				mSpinnerMultiAdapter.addItem(new DeviceSpinnerItem(dev, loc, dev.getId(), this));
 			}
@@ -478,9 +478,9 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             case DEVICE:
                 if(!validateInput(mRuleTreshold, "parseInt")) return;
 
-                Device selectedDevice = (Device) selected.getObject();
-                devsIds.add(selectedDevice.getId());
-                newParams.add(selectedDevice.getId());
+                Module selectedModule = (Module) selected.getObject();
+                devsIds.add(selectedModule.getId());
+                newParams.add(selectedModule.getId());
 
                 tresholdValue = mRuleTreshold.getText().toString();
             break;
@@ -519,7 +519,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
                     return;
                 }
 
-                Device selectedActor = getDevicesArray(DEVICES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
+                Module selectedActor = getDevicesArray(DEVICES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
                 newParams.add(selectedActor.getId());
                 break;
         }
@@ -577,7 +577,7 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
      * @param type DEVICES_ALL | DEVICES_ACTORS | DEVICES_SENSORS
      * @return
      */
-    private List<Device> getDevicesArray(int type){
+    private List<Module> getDevicesArray(int type){
         if(type == DEVICES_ACTORS && _actors != null) {
             return _actors;
         }
@@ -585,28 +585,28 @@ public class WatchDogEditRuleActivity extends BaseApplicationActivity {
             return _sensors;
         }
 
-        List<Device> devices = new ArrayList<Device>();
+        List<Module> modules = new ArrayList<Module>();
 
         for(Facility facility : mFacilities)
-            for (Device device : facility.getDevices()) {
-                if (type == DEVICES_ACTORS && !device.getType().isActor()) {
+            for (Module module : facility.getModules()) {
+                if (type == DEVICES_ACTORS && !module.getType().isActor()) {
                     continue;
                 }
-                else if(type == DEVICES_SENSORS && device.getType().isActor()) {
+                else if(type == DEVICES_SENSORS && module.getType().isActor()) {
                     continue;
                 }
 
-                devices.add(device);
+                modules.add(module);
             }
 
         if(type == DEVICES_ACTORS) {
-            _actors = devices;
+            _actors = modules;
         }
         else if(type == DEVICES_SENSORS) {
-            _sensors = devices;
+            _sensors = modules;
         }
 
-        return devices;
+        return modules;
     }
 
     /**

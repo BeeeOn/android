@@ -2,11 +2,10 @@ package com.rehivetech.beeeon.network;
 
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.Module.SaveDevice;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
@@ -164,23 +163,23 @@ public interface INetwork {
 	boolean updateFacilities(String adapterID, List<Facility> facilities, EnumSet<SaveDevice> toSave);
 
 	/**
-	 * Method send wanted fields of device to server
+	 * Method send wanted fields of module to server
 	 *
 	 * @param adapterID id of adapter
-	 * @param device    to save
+	 * @param module    to save
 	 * @param toSave    ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
 	 */
-	boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave);
+	boolean updateDevice(String adapterID, Module module, EnumSet<SaveDevice> toSave);
 
 	/**
 	 * Method toggle or set actor to new value
 	 *
 	 * @param adapterID
-	 * @param device
+	 * @param module
 	 * @return
 	 */
-	boolean switchState(String adapterID, Device device);
+	boolean switchState(String adapterID, Module module);
 
 	/**
 	 * Method make adapter to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
@@ -231,7 +230,7 @@ public interface INetwork {
 	 * @param pair data of log (from, to, type, interval)
 	 * @return list of rows with logged data
 	 */
-	DeviceLog getLog(String adapterID, Device device, LogDataPair pair);
+	DeviceLog getLog(String adapterID, Module module, LogDataPair pair);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ROOMS///////////////////////////////////////

@@ -12,7 +12,7 @@ import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -100,24 +100,24 @@ public class WidgetGraphData extends WidgetDeviceData {
         mFacilities.clear();
         for(WidgetDevicePersistence dev : widgetDevices){
             if(dev.getId().isEmpty()){
-                Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
+                Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
                 continue;
             }
 
-            String[] ids = dev.getId().split(Device.ID_SEPARATOR, 2);
+            String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
             Facility facility = new Facility();
             facility.setAdapterId(widgetAdapterId);
             facility.setAddress(ids[0]);
             facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
             facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
 
-            Device device = Device.createFromDeviceTypeId(ids[1]);
-            facility.addDevice(device);
+            Module module = Module.createFromDeviceTypeId(ids[1]);
+            facility.addDevice(module);
 
             mFacilities.add(facility);
-            initGraph(device.getValue());
+            initGraph(module.getValue());
             createLogDataPair();
-            break;          // only one device possible
+            break;          // only one module possible
         }
 
 		// if initialized and no graph bitmap - tries to load it
@@ -147,7 +147,7 @@ public class WidgetGraphData extends WidgetDeviceData {
     // ------------------------ RENDERING ------------------------ //
     // ----------------------------------------------------------- //
     /**
-     * Initialize graph and series which will be used base ond device type
+     * Initialize graph and series which will be used base ond module type
      * @param baseValue
      */
     private void initGraph(BaseValue baseValue) {
@@ -198,7 +198,7 @@ public class WidgetGraphData extends WidgetDeviceData {
         if(fac == null) return;
 
         mLogDataPair = new LogDataPair(
-            fac.getDevices().get(0),
+            fac.getModules().get(0),
             new Interval(widgetLogData.intervalStart, DateTime.now(DateTimeZone.UTC).getMillis()),
                     Utils.getEnumFromId(DeviceLog.DataType.class, widgetLogData.type),
                     DeviceLog.DataInterval.fromSeconds(widgetLogData.gap));
@@ -251,15 +251,15 @@ public class WidgetGraphData extends WidgetDeviceData {
         if(adapter == null) return false;
 
         for(WidgetDevicePersistence dev : widgetDevices) {
-            Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
-            if(device == null) continue;
+            Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+            if(module == null) continue;
 
-            Location location = mController.getLocationsModel().getLocation(dev.adapterId, device.getFacility().getLocationId());
+            Location location = mController.getLocationsModel().getLocation(dev.adapterId, module.getFacility().getLocationId());
             if(location != null){
                 widgetLocation.configure(location, adapter);
             }
 
-            dev.configure(device, adapter);
+            dev.configure(module, adapter);
             updated++;
         }
 

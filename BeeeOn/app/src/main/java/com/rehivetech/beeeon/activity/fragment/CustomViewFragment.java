@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.asynctask.GetDevicesLogsTask;
 import com.rehivetech.beeeon.base.BaseApplicationFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
 import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
@@ -46,7 +46,7 @@ import java.util.SortedMap;
 
 public class CustomViewFragment extends BaseApplicationFragment {
 
-	private SparseArray<List<Device>> mDevices = new SparseArray<List<Device>>();
+	private SparseArray<List<Module>> mDevices = new SparseArray<List<Module>>();
 	// private SparseArray<List<DeviceLog>> mLogs = new SparseArray<List<DeviceLog>>();
 	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
 	private SparseArray<LegendView> mLegends = new SparseArray<>();
@@ -81,31 +81,31 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		return view;
 	}
 
-	private void addGraph(final Device device, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
+	private void addGraph(final Module module, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
 		// Inflate layout
 		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 		// Create and set graphView
 		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
-		GraphViewHelper.prepareGraphView(graphView, mActivity, device, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(graphView, mActivity, module, fmt, unitsHelper); // empty heading
 		LegendView legend = (LegendView) row.findViewById(R.id.legend);
 		legend.setDrawBackground(true);
 		legend.setIconRound(10f);
 
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
-		tv.setText(getString(device.getType().getStringResource()));
+		tv.setText(getString(module.getType().getStringResource()));
 
-		mGraphs.put(device.getType().getTypeId(), graphView);
-		mLegends.put(device.getType().getTypeId(), legend);
+		mGraphs.put(module.getType().getTypeId(), graphView);
+		mLegends.put(module.getType().getTypeId(), legend);
 
 		// Add whole item to global layout
 		mLayout.addView(row);
 	}
 
-	private void fillGraph(DeviceLog log, Device device) {
+	private void fillGraph(DeviceLog log, Module module) {
 
-		GraphView graphView = mGraphs.get(device.getType().getTypeId());
+		GraphView graphView = mGraphs.get(module.getType().getTypeId());
 		if (graphView == null) {
 			return;
 		}
@@ -121,19 +121,19 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		// GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
 
 		BaseSeries<DataPoint> graphSeries;
-		if (device.getValue() instanceof BaseEnumValue) {
+		if (module.getValue() instanceof BaseEnumValue) {
 			graphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
 			graphView.setDrawPointer(false);
 		} else {
 			graphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
 			((LineGraphSeries)graphSeries).setThickness(4);
 		}
-		graphSeries.setTitle(device.getName());
+		graphSeries.setTitle(module.getName());
 		graphSeries.setColor(color);
 
 		graphView.addSeries(graphSeries);
 
-		LegendView legend = mLegends.get(device.getType().getTypeId());
+		LegendView legend = mLegends.get(module.getType().getTypeId());
 		legend.initLegendSeries(graphView.getSeries());
 		legend.setDrawBackground(false);
 		legend.setSeriesPosition(LegendView.SeriesPosition.VERTICAL);
@@ -179,19 +179,19 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		Log.d(TAG, String.format("Preparing custom view for adapter %s", adapter.getId()));
 
 		for (Facility facility : mController.getFacilitiesModel().getFacilitiesByAdapter(adapter.getId())) {
-			Log.d(TAG, String.format("Preparing facility with %d devices", facility.getDevices().size()));
+			Log.d(TAG, String.format("Preparing facility with %d devices", facility.getModules().size()));
 
-			for (Device device : facility.getDevices()) {
-				Log.d(TAG, String.format("Preparing device %s (type %d)", device.getName(), device.getType().getTypeId()));
+			for (Module module : facility.getModules()) {
+				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getName(), module.getType().getTypeId()));
 
-				List<Device> devices = mDevices.get(device.getType().getTypeId());
-				if (devices == null) {
-					devices = new ArrayList<Device>();
-					mDevices.put(device.getType().getTypeId(), devices);
-					addGraph(device, unitsHelper, timeHelper, fmt);
+				List<Module> modules = mDevices.get(module.getType().getTypeId());
+				if (modules == null) {
+					modules = new ArrayList<Module>();
+					mDevices.put(module.getType().getTypeId(), modules);
+					addGraph(module, unitsHelper, timeHelper, fmt);
 				}
 
-				devices.add(device);
+				modules.add(module);
 			}
 		}
 	}
@@ -204,9 +204,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			// Prepare data for this graph
 			final List<LogDataPair> pairs = new ArrayList<>();
 
-			for (Device device : mDevices.valueAt(i)) {
+			for (Module module : mDevices.valueAt(i)) {
 				LogDataPair pair = new LogDataPair( //
-						device, // device
+						module, // module
 						new Interval(start, end), // interval from-to
 						DataType.AVERAGE, // type
 						DataInterval.TEN_MINUTES); // interval
@@ -226,11 +226,11 @@ public class CustomViewFragment extends BaseApplicationFragment {
 				@Override
 				public void onExecute(boolean success) {
 					// Remember type of graph we're downloading data for
-					int typeId = pairs.get(0).device.getType().getTypeId();
+					int typeId = pairs.get(0).module.getType().getTypeId();
 
 					for (LogDataPair pair : pairs) {
 						DeviceLog log = mController.getDeviceLogsModel().getDeviceLog(pair);
-						fillGraph(log, pair.device);
+						fillGraph(log, pair.module);
 					}
 
 					// Hide loading label for this graph

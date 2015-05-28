@@ -27,7 +27,7 @@ public class Facility implements IIdentifier {
 	protected DateTime mInvolveTime;
 	protected int mNetworkQuality;
 	protected DateTime mLastUpdate;
-	protected final List<Device> mDevices = new ArrayList<Device>();
+	protected final List<Module> mModules = new ArrayList<Module>();
 
 	private boolean mSorted; // optimization to sort values only when needed
 
@@ -245,33 +245,33 @@ public class Facility implements IIdentifier {
 	 */
 	public String toDebugString() {
 		return String.format("Id: %s\nAdapter: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mAdapterId, mLocationId, mInitialized, mBattery,
-				mRefreshInterval.getInterval(), Integer.toString(mDevices.size()));
+				mRefreshInterval.getInterval(), Integer.toString(mModules.size()));
 	}
 
-	public void addDevice(Device device) {
-		device.setFacility(this);
-		mDevices.add(device);
+	public void addDevice(Module module) {
+		module.setFacility(this);
+		mModules.add(module);
 		mSorted = false;
 	}
 
 	public void clearDevices() {
-		mDevices.clear();
+		mModules.clear();
 	}
 
-	public List<Device> getDevices() {
+	public List<Module> getModules() {
 		if (!mSorted) {
 			mSorted = true;
 			// Sort devices by offset (= by id, which is combined from mac address + raw type, where type is type id + offset)
-			Collections.sort(mDevices, new IdentifierComparator());
+			Collections.sort(mModules, new IdentifierComparator());
 		}
 
-		return mDevices;
+		return mModules;
 	}
 
-	public Device getDeviceByType(DeviceType type, int offset) {
-		for (Device device : getDevices()) {
-			if (device.getType().equals(type) && device.getOffset() == offset) {
-				return device;
+	public Module getDeviceByType(DeviceType type, int offset) {
+		for (Module module : getModules()) {
+			if (module.getType().equals(type) && module.getOffset() == offset) {
+				return module;
 			}
 		}
 

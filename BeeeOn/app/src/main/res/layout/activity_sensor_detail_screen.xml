@@ -37,7 +37,7 @@
 					android:layout_alignParentLeft="true"
 					android:layout_alignParentBottom="true"
 					android:src="@drawable/dev_unknown"
-					android:contentDescription="Icon of device"
+					android:contentDescription="Icon of module"
 					/>
 				<!-- VALUE OF SENSOR  or  SWITCH FOR ACTOR -->
 				<LinearLayout

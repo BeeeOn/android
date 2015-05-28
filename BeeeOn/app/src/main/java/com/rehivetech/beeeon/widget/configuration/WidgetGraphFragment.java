@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Utils;
@@ -97,12 +97,12 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mDevices, mLocations);
+		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
 
 		mDeviceSpinner.setAdapter(dataAdapter);
-		int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.getId(), mDevices);
+		int foundIndex = Utils.getObjectIndexFromList(mWidgetDevice.getId(), mModules);
 		if(foundIndex != -1) mDeviceSpinner.setSelection(foundIndex);
 	}
 
@@ -114,13 +114,13 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 			return false;
 		}
 
-		Device device = (Device) mDeviceSpinner.getSelectedItem();
-		if (device == null) {
+		Module module = (Module) mDeviceSpinner.getSelectedItem();
+		if (module == null) {
 			Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
-		mWidgetDevice.configure(device, adapter);
+		mWidgetDevice.configure(module, adapter);
 
 		//sets widgetdata
 		mWidgetData.configure(

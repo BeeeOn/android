@@ -18,7 +18,7 @@ import com.rehivetech.beeeon.activity.dialog.ILocationPickerDialogListener;
 import com.rehivetech.beeeon.activity.dialog.LocationPickerDialogFragment;
 import com.rehivetech.beeeon.arrayadapter.DeviceArrayAdapter;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
@@ -223,7 +223,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mDevices, mLocations);
+		DeviceArrayAdapter dataAdapter = new DeviceArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
 		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
 
@@ -232,7 +232,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 			Spinner spinner = mDeviceSpinners.get(index);
 			spinner.setAdapter(dataAdapter);
 
-			int foundIndex = Utils.getObjectIndexFromList(wDev.getId(), mDevices);
+			int foundIndex = Utils.getObjectIndexFromList(wDev.getId(), mModules);
 			if(foundIndex != -1) spinner.setSelection(foundIndex);
 
 			index++;
@@ -251,18 +251,18 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		for(WidgetDevicePersistence wDev : mWidgetDevices) {
 			Spinner spinner = mDeviceSpinners.get(index);
 
-			Device device = (Device) spinner.getSelectedItem();
-			if (device == null) {
+			Module module = (Module) spinner.getSelectedItem();
+			if (module == null) {
 				Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
 				return false;
 			}
 
-			Location location = Utils.getFromList(device.getFacility().getLocationId(), mLocations);
+			Location location = Utils.getFromList(module.getFacility().getLocationId(), mLocations);
 			if(location != null) {
-				wDev.configure(device, adapter, location);
+				wDev.configure(module, adapter, location);
 			}
 			else{
-				wDev.configure(device, adapter);
+				wDev.configure(module, adapter);
 			}
 
 			index++;

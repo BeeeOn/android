@@ -2,8 +2,8 @@ package com.rehivetech.beeeon.model;
 
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.Module.SaveDevice;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.network.INetwork;
@@ -42,14 +42,14 @@ public class FacilitiesModel extends BaseModel {
 	}
 
 	/**
-	 * Return device by ID
+	 * Return module by ID
 	 *
 	 * @param adapterId
 	 * @param id
 	 * @return
 	 */
-	public Device getDevice(String adapterId, String id) {
-		String[] ids = id.split(Device.ID_SEPARATOR, 2);
+	public Module getDevice(String adapterId, String id) {
+		String[] ids = id.split(Module.ID_SEPARATOR, 2);
 
 		Facility facility = getFacility(adapterId, ids[0]);
 		if (facility == null)
@@ -208,19 +208,19 @@ public class FacilitiesModel extends BaseModel {
     }
 
 	/**
-	 * Save specified settings of device to server.
+	 * Save specified settings of module to server.
 	 *
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param device
+	 * @param module
 	 * @param what
 	 *            type of settings to save
 	 * @return true on success, false otherwise
 	 */
-	public boolean saveDevice(Device device, EnumSet<SaveDevice> what) throws AppException {
-		Facility facility = device.getFacility();
+	public boolean saveDevice(Module module, EnumSet<SaveDevice> what) throws AppException {
+		Facility facility = module.getFacility();
 
-		mNetwork.updateDevice(facility.getAdapterId(), device, what);
+		mNetwork.updateDevice(facility.getAdapterId(), module, what);
 		refreshFacility(facility, true);
 
 		return true;
@@ -231,19 +231,19 @@ public class FacilitiesModel extends BaseModel {
 	 *
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param device
-	 *            DeviceType of this device must be actor, i.e., device.getType().isActor() must return true.
+	 * @param module
+	 *            DeviceType of this module must be actor, i.e., module.getType().isActor() must return true.
 	 * @return true on success, false otherwise
 	 */
-	public boolean switchActor(Device device) throws AppException {
-		if (!device.getType().isActor()) {
-			Log.e(TAG, String.format("Tried to switch NOT-actor device '%s'", device.getName()));
+	public boolean switchActor(Module module) throws AppException {
+		if (!module.getType().isActor()) {
+			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getName()));
 			return false;
 		}
 		
-		Facility facility = device.getFacility();
+		Facility facility = module.getFacility();
 
-		mNetwork.switchState(device.getFacility().getAdapterId(), device);
+		mNetwork.switchState(module.getFacility().getAdapterId(), module);
 		refreshFacility(facility, true);
 
 		return true;

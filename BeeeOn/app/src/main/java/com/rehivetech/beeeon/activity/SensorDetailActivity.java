@@ -19,7 +19,7 @@ import com.rehivetech.beeeon.asynctask.CallbackTask.CallbackTaskListener;
 import com.rehivetech.beeeon.asynctask.ReloadAdapterDataTask;
 import com.rehivetech.beeeon.base.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.view.CustomViewPager;
@@ -42,7 +42,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	public static final String EXTRA_ACTIVE_POS = "act_device_pos";
 
 	private Controller mController;
-	private List<Device> mDevices;
+	private List<Module> mModules;
 
 	private PagerAdapter mPagerAdapter;
 	private ViewPager mPager;
@@ -137,29 +137,29 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				Device device = mController.getFacilitiesModel().getDevice(adapterId, mActiveDeviceId);
-				if (device == null) {
+				Module module = mController.getFacilitiesModel().getDevice(adapterId, mActiveDeviceId);
+				if (module == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
 				}
 
-				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, device.getFacility().getLocationId());
+				List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, module.getFacility().getLocationId());
 
-				List<Device> devices = new ArrayList<Device>();
+				List<Module> modules = new ArrayList<Module>();
 				for (Facility facility : facilities) {
-					devices.addAll(facility.getDevices());
+					modules.addAll(facility.getModules());
 				}
-				mDevices = devices;
+				mModules = modules;
 
-				// Determine position of wanted device in this list
-				for (int i = 0; i < devices.size(); i++) {
-					if (devices.get(i).getId().equals(device.getId())) {
+				// Determine position of wanted module in this list
+				for (int i = 0; i < modules.size(); i++) {
+					if (modules.get(i).getId().equals(module.getId())) {
 						mActiveDevicePosition = i;
 						break;
 					}
 				}
 
-				Log.d(TAG, String.format("String: %s, Size: %d", mDevices.toString(), mDevices.size()));
+				Log.d(TAG, String.format("String: %s, Size: %d", mModules.toString(), mModules.size()));
 				initLayouts();
 			}
 
@@ -182,8 +182,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		public android.support.v4.app.Fragment getItem(int position) {
 			Log.d(TAG, "Here 2 " + position);
 			SensorDetailFragment fragment = new SensorDetailFragment();
-			fragment.setSensorID(mDevices.get(position).getId());
-			fragment.setLocationID(mDevices.get(position).getFacility().getLocationId());
+			fragment.setSensorID(mModules.get(position).getId());
+			fragment.setLocationID(mModules.get(position).getFacility().getLocationId());
 			fragment.setPosition(position);
 			fragment.setSelectedPosition(mActiveDevicePosition);
 			fragment.setAdapterID(mActiveAdapterId);
@@ -194,7 +194,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		@Override
 		public int getCount() {
-			return mDevices.size();
+			return mModules.size();
 		}
 	}
 
@@ -207,8 +207,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			@Override
 			public void onPageSelected(int position) {
 				mActiveDevicePosition = position;
-				mActiveDeviceId = mDevices.get(position).getId();
-				mActiveAdapterId = mDevices.get(position).getFacility().getAdapterId();
+				mActiveDeviceId = mModules.get(position).getId();
+				mActiveAdapterId = mModules.get(position).getFacility().getAdapterId();
 
 				// When changing pages, reset the action bar actions since they are dependent
 				// on which page is currently active. An alternative approach is to have each
@@ -219,7 +219,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			}
 		});
 		((CustomViewPager) mPager).setPagingEnabled(true);
-		mPager.setOffscreenPageLimit(mDevices.size());
+		mPager.setOffscreenPageLimit(mModules.size());
 		mPager.setCurrentItem(mActiveDevicePosition);
 		//setBeeeOnProgressBarVisibility(false);
 		visibleAllElements();

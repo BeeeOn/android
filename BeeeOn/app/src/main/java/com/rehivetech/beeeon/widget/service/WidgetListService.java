@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -37,7 +37,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = ListRemoteViewsFactory.class.getSimpleName();
 
     private List<Facility> mFacilities;
-    private List<Device> mDevices;
+    private List<Module> mModules;
 
     private TimeHelper mTimeHelper;
     private UnitsHelper mUnitsHelper;
@@ -52,7 +52,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     public ListRemoteViewsFactory(Context context, Intent intent) {
         mContext = context.getApplicationContext();
         mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        mDevices = new ArrayList<>();
+        mModules = new ArrayList<>();
 
         mLocationId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ID);
         mLocationAdapterId = intent.getStringExtra(WidgetLocationData.EXTRA_LOCATION_ADAPTER_ID);
@@ -76,7 +76,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     }
 
     public int getCount() {
-        return mDevices.size();
+        return mModules.size();
     }
 
     public RemoteViews getViewAt(int position) {
@@ -85,7 +85,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
         // We construct a remote views item based on our widget item xml file, and set the  text based on the position.
         RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_location_list_item);
 
-        Device dev = mDevices.get(position);
+        Module dev = mModules.get(position);
         if(dev == null){
             Log.d(TAG, "NOT FOUND DEVICE BY POS");
             return rv;
@@ -150,12 +150,12 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 
         Log.d(TAG, String.format("mfacit length = %d", mFacilities.size()));
-        mDevices.clear();
+        mModules.clear();
         for(Facility fac : mFacilities){
             if(fac == null) continue;
 
-            Log.d("FAC: ", fac.getDevices().get(0).getName());
-            mDevices.addAll(fac.getDevices());
+            Log.d("FAC: ", fac.getModules().get(0).getName());
+            mModules.addAll(fac.getModules());
         }
     }
 }

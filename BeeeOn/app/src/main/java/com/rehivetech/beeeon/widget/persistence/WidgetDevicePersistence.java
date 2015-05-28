@@ -5,7 +5,7 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
@@ -94,36 +94,36 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 	public void configure(Object obj1, Object obj2) {
 		super.configure(obj1, obj2);
 
-		if (!(obj1 instanceof Device) || !(obj2 instanceof Adapter) || obj1 == null || obj2 == null) return;
-		Device device = (Device) obj1;
+		if (!(obj1 instanceof Module) || !(obj2 instanceof Adapter) || obj1 == null || obj2 == null) return;
+		Module module = (Module) obj1;
 		Adapter adapter = (Adapter) obj2;
 
-		id = device.getId();
-		name = device.getName();
-		icon = device.getIconResource();
+		id = module.getId();
+		name = module.getName();
+		icon = module.getIconResource();
 		adapterId = adapter.getId();
 		adapterRole = adapter.getRole().getId();
-		type = device.getType().getTypeId();
+		type = module.getType().getTypeId();
 
 		mUserRole = Utils.getEnumFromId(User.Role.class, adapterRole, User.Role.Guest);
-		lastUpdateTime = device.getFacility().getLastUpdate().getMillis();
-		refresh = device.getFacility().getRefresh().getInterval();
+		lastUpdateTime = module.getFacility().getLastUpdate().getMillis();
+		refresh = module.getFacility().getRefresh().getInterval();
 
-		deviceType = device.getType();
+		deviceType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)
-		rawValue = device.getValue().getRawValue();
-		deviceValue.setValue(device.getValue().getRawValue());
+		rawValue = module.getValue().getRawValue();
+		deviceValue.setValue(module.getValue().getRawValue());
 
 		// when user is logged in, save last known value as cached value
 		if(mUnitsHelper != null){
-			cachedValue = mUnitsHelper.getStringValue(device.getValue());
-			cachedUnit = mUnitsHelper.getStringUnit(device.getValue());
+			cachedValue = mUnitsHelper.getStringValue(module.getValue());
+			cachedUnit = mUnitsHelper.getStringUnit(module.getValue());
 		}
 
-		// Check if we can format device's last update (timeHelper is null when user is not logged in)
+		// Check if we can format module's last update (timeHelper is null when user is not logged in)
 		if (mTimeHelper != null) {
 			// NOTE: This should use always absolute time, because widgets aren't updated so often
-			lastUpdateText = mTimeHelper.formatLastUpdate(device.getFacility().getLastUpdate(), adapter);
+			lastUpdateText = mTimeHelper.formatLastUpdate(module.getFacility().getLastUpdate(), adapter);
 		}
 	}
 
@@ -228,7 +228,7 @@ public class WidgetDevicePersistence extends WidgetBeeeOnPersistence {
 
 	@Override
 	public String getPropertyPrefix() {
-		return "device";
+		return "module";
 	}
 
 	// ----------------------------------------------------------- //

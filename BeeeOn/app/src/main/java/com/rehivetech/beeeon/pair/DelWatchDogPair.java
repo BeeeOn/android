@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.pair;
 
 /**
- * Represents pair of device and location for saving it to server
+ * Represents pair of module and location for saving it to server
  */
 public class DelWatchDogPair {
 	public final String watchdogID;

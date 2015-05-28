@@ -1,13 +1,13 @@
 package com.rehivetech.beeeon.pair;
 
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module.SaveDevice;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.EnumSet;
 
 /**
- * Represents pair of device and location for saving it to server
+ * Represents pair of module and location for saving it to server
  */
 public class SaveFacilityWithNewLocPair {
 	public final Facility facility;

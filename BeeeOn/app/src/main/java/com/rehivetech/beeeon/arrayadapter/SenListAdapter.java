@@ -9,7 +9,7 @@ import android.widget.SectionIndexer;
 
 import com.rehivetech.beeeon.activity.listItem.ListItem;
 import com.rehivetech.beeeon.activity.listItem.SensorListItem;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -77,8 +77,8 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 		return convertView;
 	}
 
-	public Device getDevice(int position) {
-		return ((SensorListItem)mListItem.get(position)).getDevice();
+	public Module getDevice(int position) {
+		return ((SensorListItem)mListItem.get(position)).getModule();
 	}
 
 	@Override

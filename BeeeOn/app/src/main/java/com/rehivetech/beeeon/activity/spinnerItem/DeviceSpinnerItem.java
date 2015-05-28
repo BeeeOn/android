@@ -6,22 +6,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 
 public class DeviceSpinnerItem extends AbstractSpinnerItem {
-	private Device mDevice;
+	private Module mModule;
 	private Location mLocation;
 
-	public DeviceSpinnerItem(Device device, Location location, String id, Context context) {
+	public DeviceSpinnerItem(Module module, Location location, String id, Context context) {
 		super(id, SpinnerItemType.DEVICE);
-		mDevice = device;
+		mModule = module;
 		mLocation = location;
 	}
 
 	@Override
-	public Device getObject() {
-		return mDevice;
+	public Module getObject() {
+		return mModule;
 	}
 
 	@Override
@@ -32,14 +32,14 @@ public class DeviceSpinnerItem extends AbstractSpinnerItem {
 		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.custom_spinner2_icon);
 
 		// Set the results into TextViews
-		ItemLabel.setText(mDevice.getName());
+		ItemLabel.setText(mModule.getName());
 
 		if(mLocation != null) {
 			ItemSubLabel.setText(mLocation.getName());
 		}
 
 		// Set the results into ImageView
-		ItemIcon.setImageResource(mDevice.getIconResource());
+		ItemIcon.setImageResource(mModule.getIconResource());
 	}
 
 	@Override
@@ -54,14 +54,14 @@ public class DeviceSpinnerItem extends AbstractSpinnerItem {
 		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.custom_spinner2_dropdown_icon);
 
 		// Set the results into TextViews
-		ItemLabel.setText(mDevice.getName());
+		ItemLabel.setText(mModule.getName());
 
 		if(mLocation != null) {
 			ItemSubLabel.setText(mLocation.getName());
 		}
 
 		// Set the results into ImageView
-		ItemIcon.setImageResource(mDevice.getIconResource());
+		ItemIcon.setImageResource(mModule.getIconResource());
 
 		setMView(convertView);
 	}

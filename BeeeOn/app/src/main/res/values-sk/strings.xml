@@ -336,7 +336,7 @@
 	<string name="dialog_register_new_account_title">Nemáte účet</string>
 	<string name="dialog_register_new_account_message">Ešte nemáte vytvorený BeeeOn účet, prajete si ho teraz vytvoriť?</string>
 	<string name="dialog_choose_provider_title">Vyberte poskytovateľa účtu</string>
-	<string name="devices">Zariadenie</string>
+	<string name="modules">Zariadenie</string>
 	<string name="delete_geofence">Odstrániť oblasť</string>
 	<string name="add_new_geofence_area">Pridať novú oblasť</string>
     <string name="logout_success">Odhlásenie prebehlo úspešne</string>

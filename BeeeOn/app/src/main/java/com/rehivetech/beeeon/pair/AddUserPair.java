@@ -4,7 +4,7 @@ import com.rehivetech.beeeon.household.adapter.Adapter;
 import com.rehivetech.beeeon.household.user.User;
 
 /**
- * Represents pair of device and location for saving it to server
+ * Represents pair of module and location for saving it to server
  */
 public class AddUserPair {
 	public final Adapter adapter;

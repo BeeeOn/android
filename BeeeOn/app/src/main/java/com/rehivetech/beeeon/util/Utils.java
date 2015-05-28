@@ -225,8 +225,8 @@ final public class Utils {
 	}
 
 	/**
-	 * Checks if Google Play Services are available on this device.
-	 * Automatically return false if this device is running BlackBerry.
+	 * Checks if Google Play Services are available on this module.
+	 * Automatically return false if this module is running BlackBerry.
 	 *
 	 * @param context
 	 * @return true if available, false otherwise
@@ -273,7 +273,7 @@ final public class Utils {
 	}
 
 	/**
-	 * Returns the consumer friendly device name.
+	 * Returns the consumer friendly module name.
 	 * Taken from https://stackoverflow.com/questions/1995439/get-android-phone-model-programmatically/26117427#26117427
 	 */
 	public static String getPhoneName() {

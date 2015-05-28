@@ -8,8 +8,8 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.Module.SaveDevice;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.DeviceLog.DataInterval;
 import com.rehivetech.beeeon.household.device.DeviceLog.DataType;
@@ -99,22 +99,22 @@ public class DemoNetwork implements INetwork {
 		return rand;
 	}
 
-	private void setNewValue(Device device) {
+	private void setNewValue(Module module) {
 		// Don't set new values for actors (unless it's the first value to be set during initialization)
-		if (device.getType().isActor() && device.getValue().hasValue())
+		if (module.getType().isActor() && module.getValue().hasValue())
 			return;
 
-		Random rand = getRandomForAdapter(device.getFacility().getAdapterId());
+		Random rand = getRandomForAdapter(module.getFacility().getAdapterId());
 		
-		if (device.getValue() instanceof BaseEnumValue) {
-			BaseEnumValue value = (BaseEnumValue)device.getValue();
+		if (module.getValue() instanceof BaseEnumValue) {
+			BaseEnumValue value = (BaseEnumValue) module.getValue();
 			List<Item> items = value.getEnumItems();
 			Item item = items.get(rand.nextInt(items.size()));
 			
-			device.setValue(item.getValue());
+			module.setValue(item.getValue());
 		} else {
-			double lastValue = device.getValue().getDoubleValue();
-			double range = 2 + Math.log(device.getFacility().getRefresh().getInterval());
+			double lastValue = module.getValue().getDoubleValue();
+			double range = 2 + Math.log(module.getFacility().getRefresh().getInterval());
 
 			if (Double.isNaN(lastValue)) {
 				lastValue = rand.nextDouble() * 1000;
@@ -124,7 +124,7 @@ public class DemoNetwork implements INetwork {
 			boolean plus = rand.nextBoolean();
 			lastValue = lastValue + addvalue * (plus ? 1 : -1);
 			
-			device.setValue(String.valueOf((int)lastValue));
+			module.setValue(String.valueOf((int)lastValue));
 		}
 	}
 
@@ -276,8 +276,8 @@ public class DemoNetwork implements INetwork {
 				facility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 				facility.setNetworkQuality(rand.nextInt(101));
 
-				for (Device device : facility.getDevices()) {
-					setNewValue(device);
+				for (Module module : facility.getModules()) {
+					setNewValue(module);
 				}
 			}
 		}
@@ -311,13 +311,13 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevice(String adapterId, Device device, EnumSet<SaveDevice> toSave) {
-		// NOTE: this replaces (or add) whole facility, not only device's fields marked as toSave
-		return updateFacility(adapterId, device.getFacility(), toSave);
+	public boolean updateDevice(String adapterId, Module module, EnumSet<SaveDevice> toSave) {
+		// NOTE: this replaces (or add) whole facility, not only module's fields marked as toSave
+		return updateFacility(adapterId, module.getFacility(), toSave);
 	}
 
 	@Override
-	public boolean switchState(String adapterId, Device device) {
+	public boolean switchState(String adapterId, Module module) {
 		return true;
 	}
 
@@ -357,8 +357,8 @@ public class DemoNetwork implements INetwork {
 			newFacility.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			newFacility.setNetworkQuality(rand.nextInt(101));
 
-			for (Device device : newFacility.getDevices()) {
-				setNewValue(device);
+			for (Module module : newFacility.getModules()) {
+				setNewValue(module);
 			}
 		}
 
@@ -407,31 +407,31 @@ public class DemoNetwork implements INetwork {
 			// add random number of devices (max. 5)
 			int count = rand.nextInt(5);
 			do {
-				// Get random device type
+				// Get random module type
 				DeviceType[] types = DeviceType.values();
 				DeviceType randType = types[rand.nextInt(types.length)];
 
 				// Determine offset (number of existing devices with this type in the facility)
 				int offset = 0;
-				for (Device device : facility.getDevices()) {
-					if (device.getType() == randType) {
+				for (Module module : facility.getModules()) {
+					if (module.getType() == randType) {
 						offset++;
 					}
 				}
 
-				// Create combined device type
+				// Create combined module type
 				String typeId = String.valueOf(offset * 256 + randType.getTypeId());
 
 				// Create default name
 				String defaultName = String.format("%s %d", mContext.getString(randType.getStringResource()), offset + 1);
 
-				Device device = Device.createFromDeviceTypeId(typeId);
-				device.setFacility(facility);
-				device.setName(defaultName);
-				device.setVisibility(true);
-				setNewValue(device);
+				Module module = Module.createFromDeviceTypeId(typeId);
+				module.setFacility(facility);
+				module.setName(defaultName);
+				module.setVisibility(true);
+				setNewValue(module);
 
-				facility.addDevice(device);
+				facility.addDevice(module);
 			} while (--count >= 0);
 
 			// Add new facility to global holder
@@ -445,12 +445,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public DeviceLog getLog(String adapterId, Device device, LogDataPair pair) {
+	public DeviceLog getLog(String adapterId, Module module, LogDataPair pair) {
 		// Generate random values for log in demo mode
 		DeviceLog log = new DeviceLog(DataType.AVERAGE, DataInterval.RAW);
 
-		double lastValue = pair.device.getValue().getDoubleValue();
-		double range = 2 + Math.log(device.getFacility().getRefresh().getInterval());
+		double lastValue = pair.module.getValue().getDoubleValue();
+		double range = 2 + Math.log(module.getFacility().getRefresh().getInterval());
 
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
@@ -461,9 +461,9 @@ public class DemoNetwork implements INetwork {
 			lastValue = rand.nextDouble() * 1000;
 		}
 
-		int everyMsecs = Math.max(pair.gap.getSeconds(), device.getFacility().getRefresh().getInterval()) * 1000;
+		int everyMsecs = Math.max(pair.gap.getSeconds(), module.getFacility().getRefresh().getInterval()) * 1000;
 
-		boolean isEnum = (device.getValue() instanceof BaseEnumValue);
+		boolean isEnum = (module.getValue() instanceof BaseEnumValue);
 
 		if (isEnum) {
 			// For enums we want fixed number of steps (because application surely wants raw values)
@@ -472,7 +472,7 @@ public class DemoNetwork implements INetwork {
 
 		while (start < end) {
 			if (isEnum) {
-				BaseEnumValue value = (BaseEnumValue)device.getValue();
+				BaseEnumValue value = (BaseEnumValue) module.getValue();
 				List<Item> items = value.getEnumItems();
 				
 				int pos = 0;

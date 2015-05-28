@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.util.Log;
@@ -58,17 +58,17 @@ public class WidgetDeviceData extends WidgetData {
         mFacilities.clear();
         for(WidgetDevicePersistence dev : widgetDevices){
             if(dev.getId().isEmpty()){
-                Log.i(TAG, "Could not retrieve device from widget " + String.valueOf(mWidgetId));
+                Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
                 continue;
             }
 
-            String[] ids = dev.getId().split(Device.ID_SEPARATOR, 2);
+            String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
             Facility facility = new Facility();
             facility.setAdapterId(widgetAdapterId);
             facility.setAddress(ids[0]);
             facility.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
             facility.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-            facility.addDevice(Device.createFromDeviceTypeId(ids[1]));
+            facility.addDevice(Module.createFromDeviceTypeId(ids[1]));
 
             mFacilities.add(facility);
         }
@@ -101,7 +101,7 @@ public class WidgetDeviceData extends WidgetData {
             mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
             mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetAdapterId, dev.getId()));
 
-            // when only 1 device is in the widget - we assume that we need icon and name
+            // when only 1 module is in the widget - we assume that we need icon and name
             if(isOnlyOne){
                 mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.dev_unknown : dev.icon);
                 mBuilder.setTextViewText(R.id.name, dev.getName());
@@ -138,9 +138,9 @@ public class WidgetDeviceData extends WidgetData {
         if(adapter == null) return false;
 
         for(WidgetDevicePersistence dev : widgetDevices) {
-            Device device = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
-            if(device != null) {
-                dev.configure(device, adapter);
+            Module module = mController.getFacilitiesModel().getDevice(widgetAdapterId, dev.getId());
+            if(module != null) {
+                dev.configure(module, adapter);
             }
             updated++;
         }

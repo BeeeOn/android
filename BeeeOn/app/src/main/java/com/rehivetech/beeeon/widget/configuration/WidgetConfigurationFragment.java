@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
@@ -43,7 +43,7 @@ import java.util.List;
 public abstract class WidgetConfigurationFragment extends Fragment {
 	private static final String TAG = WidgetConfigurationFragment.class.getSimpleName();
 
-	protected List<Device> mDevices = new ArrayList<Device>();
+	protected List<Module> mModules = new ArrayList<Module>();
 	protected List<Location> mLocations = new ArrayList<Location>();
 
 	protected WidgetConfigurationActivity mActivity;
@@ -240,11 +240,11 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		mLocations = mController.getLocationsModel().getLocationsByAdapter(adapterId);
 
 		// get all devices by locations (avoiding facility without location)
-		mDevices.clear();
+		mModules.clear();
 		for(Location loc : mLocations){
 			List<Facility> tempFac = mController.getFacilitiesModel().getFacilitiesByLocation(adapterId, loc.getId());
 			for (Facility facility : tempFac) {
-				mDevices.addAll(facility.getDevices());
+				mModules.addAll(facility.getModules());
 			}
 		}
 	}

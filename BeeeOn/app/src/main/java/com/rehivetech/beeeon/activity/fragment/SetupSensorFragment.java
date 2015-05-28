@@ -71,8 +71,8 @@ public class SetupSensorFragment extends TrackFragment {
 		}
 		mNewFacilities = mController.getUninitializedFacilitiesModel().getUninitializedFacilitiesByAdapter(mAdapter.getId());
 
-		// TODO: sent as parameter if we want first uninitialized device or some
-		// device with particular id
+		// TODO: sent as parameter if we want first uninitialized module or some
+		// module with particular id
 
 
 		// Create the AlertDialog object and return it
@@ -164,7 +164,7 @@ public class SetupSensorFragment extends TrackFragment {
 		mSpinner.setAdapter(dataAdapter);
 		// Set listview height, for all 
 		float scale = mActivity.getResources().getDisplayMetrics().density;
-		mListOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale*NAME_ITEM_HEIGHT*mNewFacilities.get(0).getDevices().size())));
+		mListOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale*NAME_ITEM_HEIGHT*mNewFacilities.get(0).getModules().size())));
 	}
 
 	/**

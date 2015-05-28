@@ -11,8 +11,8 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Device.SaveDevice;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.Module.SaveDevice;
 import com.rehivetech.beeeon.household.device.DeviceLog;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.household.location.Location;
@@ -543,8 +543,8 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevice(String adapterID, Device device, EnumSet<SaveDevice> toSave){
-		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mBT, adapterID, device, toSave));
+	public boolean updateDevice(String adapterID, Module module, EnumSet<SaveDevice> toSave){
+		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mBT, adapterID, module, toSave));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -553,8 +553,8 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean switchState(String adapterID, Device device){
-		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mBT, adapterID, device));
+	public boolean switchState(String adapterID, Module module){
+		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mBT, adapterID, module));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -625,8 +625,8 @@ public class Network implements INetwork {
 
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
-	public DeviceLog getLog(String adapterID, Device device, LogDataPair pair){
-		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, device.getFacility().getAddress(), device.getRawTypeId(),
+	public DeviceLog getLog(String adapterID, Module module, LogDataPair pair){
+		String msgToSend = XmlCreator.createGetLog(mBT, adapterID, module.getFacility().getAddress(), module.getRawTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getId(), pair.gap.getSeconds());
 
@@ -804,7 +804,7 @@ public class Network implements INetwork {
 	 * Method delete old gcmid to avoid fake notifications
 	 *
 	 * @param userId
-	 *            of old/last user of gcmid (app+device id)
+	 *            of old/last user of gcmid (app+module id)
 	 * @param gcmID
 	 *            - google cloud message id
 	 * @return true if id has been deleted, false otherwise

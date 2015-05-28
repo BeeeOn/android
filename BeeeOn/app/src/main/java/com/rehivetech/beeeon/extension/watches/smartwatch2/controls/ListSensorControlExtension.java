@@ -40,13 +40,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.rehivetech.beeeon.household.device.Module;
 import com.sonyericsson.extras.liveware.aef.control.Control;
 import com.sonyericsson.extras.liveware.extension.util.ExtensionUtils;
 import com.sonyericsson.extras.liveware.extension.util.control.ControlListItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.adapter.Adapter;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Facility;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.util.Log;
@@ -60,7 +60,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 	public static final String EXTRA_ADAPTER_ID = "ADAPTER_ID";
 	public static final String EXTRA_LOCATION_NAME = "LOCATION_NAME";
 
-	private List<Device> mDevices;
+	private List<Module> mModules;
 	private String mLocationStr;
 	private Adapter mAdapter;
 	private String mAdapterId;
@@ -86,7 +86,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		mDevices = new ArrayList<Device>();
+		mModules = new ArrayList<Module>();
 		actualize();
 	}
 
@@ -109,7 +109,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			return;
 		}
 
-		sendListCount(R.id.listView, mDevices.size());
+		sendListCount(R.id.listView, mModules.size());
 
 		// If requested, move to the correct position in the list.
 		int startPosition = getIntent().getIntExtra(GalleryControlExtension.EXTRA_INITIAL_POSITION, 0);
@@ -207,11 +207,11 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		// Icon data
 		Bundle iconBundle = new Bundle();
 		iconBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.thumbnail);
-		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, mDevices.get(position).getIconResource()));
+		iconBundle.putString(Control.Intents.EXTRA_DATA_URI, ExtensionUtils.getUriString(mContext, mModules.get(position).getIconResource()));
 
 		Bundle headerBundle = new Bundle();
 		headerBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.title);
-		headerBundle.putString(Control.Intents.EXTRA_TEXT, mDevices.get(position).getName());
+		headerBundle.putString(Control.Intents.EXTRA_TEXT, mModules.get(position).getName());
 
 		Bundle valueBundle = new Bundle();
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
@@ -220,7 +220,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		SharedPreferences prefs = mController.getUserSettings();
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 		if (unitsHelper != null) {
-			valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mDevices.get(position).getValue()));
+			valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mModules.get(position).getValue()));
 		}
 
 		item.layoutData = new Bundle[3];
@@ -239,15 +239,15 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 				mController.getAdaptersModel().reloadAdapters(true);
 				mAdapter = mController.getAdaptersModel().getAdapter(mAdapterId);
 				if (mAdapter != null) {
-					mDevices = new ArrayList<Device>();
+					mModules = new ArrayList<Module>();
 
 					mController.getFacilitiesModel().reloadFacilitiesByAdapter(mAdapterId, true);
 					List<Facility> facilities = mController.getFacilitiesModel().getFacilitiesByLocation(mAdapter.getId(), mLocationStr);
 					for (Facility facility : facilities) {
-						mDevices.addAll(facility.getDevices());
+						mModules.addAll(facility.getModules());
 					}
 
-					if (mDevices != null) {
+					if (mModules != null) {
 						resume();
 					}
 				}

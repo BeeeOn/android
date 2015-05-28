@@ -9,24 +9,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.List;
 
-public class DeviceArrayAdapter extends ArrayAdapter<Device> {
+public class DeviceArrayAdapter extends ArrayAdapter<Module> {
 
     private final List<Location> mLocations;
-    private List<Device> mDevices;
+    private List<Module> mModules;
 	private int mLayoutResource;
 	private int mDropDownLayoutResource;
 
 	private LayoutInflater mInflater;
 
-	public DeviceArrayAdapter(Context context, int resource, List<Device> objects, List<Location> locations) {
+	public DeviceArrayAdapter(Context context, int resource, List<Module> objects, List<Location> locations) {
 		super(context, resource, objects);
 		mLayoutResource = resource;
-        mDevices = objects;
+        mModules = objects;
         mLocations = locations;
 	}
 
@@ -58,11 +58,11 @@ public class DeviceArrayAdapter extends ArrayAdapter<Device> {
             holder = (DropDownHolder) convertView.getTag();
         }
 
-        Device device = mDevices.get(position);
+        Module module = mModules.get(position);
 
-		holder.ItemLabel.setText(device.getName());
-        holder.ItemIcon.setImageResource(device.getIconResource());
-        holder.ItemLocation.setText(mLocations.get(getLocationsIndexFromArray(device.getFacility().getLocationId())).getName());
+		holder.ItemLabel.setText(module.getName());
+        holder.ItemIcon.setImageResource(module.getIconResource());
+        holder.ItemLocation.setText(mLocations.get(getLocationsIndexFromArray(module.getFacility().getLocationId())).getName());
 
 		return convertView;
 	}
@@ -71,16 +71,16 @@ public class DeviceArrayAdapter extends ArrayAdapter<Device> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View row = mInflater.inflate(mLayoutResource, parent, false);
 
-        Device device = mDevices.get(position);
+        Module module = mModules.get(position);
 
         TextView label = (TextView) row.findViewById(R.id.custom_spinner2_label);
-		label.setText(device.getName());
+		label.setText(module.getName());
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner2_icon);
-		icon.setImageResource(device.getIconResource());
+		icon.setImageResource(module.getIconResource());
 
         TextView sublabel = (TextView) row.findViewById(R.id.custom_spinner2_sublabel);
-        sublabel.setText(mLocations.get(getLocationsIndexFromArray(device.getFacility().getLocationId())).getName());
+        sublabel.setText(mLocations.get(getLocationsIndexFromArray(module.getFacility().getLocationId())).getName());
 
 		return row;
 	}
