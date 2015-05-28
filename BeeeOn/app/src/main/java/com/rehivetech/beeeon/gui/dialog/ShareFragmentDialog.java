@@ -12,10 +12,10 @@ import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.achievement.GeneralAchievement;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnGooglePlus;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
+import com.rehivetech.beeeon.gamification.social.BeeeOnFacebook;
+import com.rehivetech.beeeon.gamification.social.BeeeOnGooglePlus;
+import com.rehivetech.beeeon.gamification.social.BeeeOnTwitter;
+import com.rehivetech.beeeon.gamification.social.BeeeOnVKontakte;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.socialNetworks;
+package com.rehivetech.beeeon.gamification.social;
 
 import android.app.Activity;
 import android.content.Context;

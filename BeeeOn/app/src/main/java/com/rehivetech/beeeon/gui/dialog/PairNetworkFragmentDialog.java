@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnFacebook;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnTwitter;
-import com.rehivetech.beeeon.socialNetworks.BeeeOnVKontakte;
+import com.rehivetech.beeeon.gamification.social.BeeeOnFacebook;
+import com.rehivetech.beeeon.gamification.social.BeeeOnTwitter;
+import com.rehivetech.beeeon.gamification.social.BeeeOnVKontakte;
 
 import java.util.ArrayList;
 
