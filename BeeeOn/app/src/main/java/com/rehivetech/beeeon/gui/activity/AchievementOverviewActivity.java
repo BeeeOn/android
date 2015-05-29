@@ -11,11 +11,10 @@ import com.facebook.CallbackManager;
 import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gamification.achievement.GeneralAchievement;
-import com.rehivetech.beeeon.gui.dialog.ShareFragmentDialog;
-import com.rehivetech.beeeon.gui.adapter.AchievementListAdapter;
 import com.rehivetech.beeeon.gamification.AchievementList;
-import com.rehivetech.beeeon.gamification.IAchievementListOnClickListener;
+import com.rehivetech.beeeon.gamification.achievement.GeneralAchievement;
+import com.rehivetech.beeeon.gui.adapter.AchievementListAdapter;
+import com.rehivetech.beeeon.gui.dialog.ShareFragmentDialog;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -23,7 +22,7 @@ import java.util.Observer;
 /**
  * @author Jan Lamacz
  */
-public class AchievementOverviewActivity extends BaseApplicationActivity implements IAchievementListOnClickListener, Observer {
+public class AchievementOverviewActivity extends BaseApplicationActivity implements AchievementList.IAchievementListOnClickListener, Observer {
 	private static final String TAG = AchievementOverviewActivity.class.getSimpleName();
 
 	// extras
@@ -125,7 +124,7 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 	 * share an achievement via.
 	 */
 	@Override
-	public void OnAchievementClick(View aView, int position) {
+	public void onAchievementClick(View view, int position) {
 //		AchievementListItem achievementItem = mAchievementListAdapter.getItem(position);
 		new ShareFragmentDialog().show(getSupportFragmentManager(), TAG);
 	}

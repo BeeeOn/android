@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gamification;
 
 import android.content.Context;
+import android.view.View;
 
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
@@ -175,5 +176,13 @@ public class AchievementList extends Observable {
 				mComplete[Integer.parseInt(achievement.getCategory())] += achievement.getLevelCount();
 			}
 		}
+	}
+
+	/**
+	 * @author Jan Lamacz
+	 *         from http://milesburton.com/Android_-_Building_a_ListView_with_an_OnClick_Position
+	 */
+	public interface IAchievementListOnClickListener {
+		void onAchievementClick(View view, int position);
 	}
 }

@@ -15,9 +15,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gamification.AchievementListClickListener;
+import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
-import com.rehivetech.beeeon.gamification.IAchievementListOnClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,9 +32,9 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 
 	private List<AchievementListItem> mAchievementList;
 	private List<AchievementListItem> mFilteredList;
-	private IAchievementListOnClickListener mCallback;
+	private AchievementList.IAchievementListOnClickListener mCallback;
 
-	public AchievementListAdapter(LayoutInflater inflater, String categoryId, IAchievementListOnClickListener callback, List<AchievementListItem> achievements, Context context) {
+	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementList.IAchievementListOnClickListener callback, List<AchievementListItem> achievements, Context context) {
 		mInflater = inflater;
 		mCallback = callback;
 		mAchievementList = achievements;
@@ -47,7 +46,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 
 		if (convertView == null) {
@@ -93,7 +92,12 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 			holder.achievementProgressText.setVisibility(View.GONE);
 			holder.achievementProgressLayout.setVisibility(View.GONE);
 			holder.achievementLayout.getLayoutParams().height = 100 * mDisplayPixel;
-			holder.achievementShare.setOnClickListener(new AchievementListClickListener(mCallback, position));
+			holder.achievementShare.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					mCallback.onAchievementClick(v, position);
+				}
+			});
 		} else if (achievement.isVisible()) {
 			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
