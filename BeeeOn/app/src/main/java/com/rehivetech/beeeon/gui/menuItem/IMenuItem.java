@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.gui.menuItem;
 
 import android.view.View;
 
-public interface MenuItem {
+public interface IMenuItem {
 	public static final String ID_SETTINGS = "id_settings";
 	public static final String ID_ABOUT = "id_about";
 	public static final String ID_LOGOUT = "id_logout";

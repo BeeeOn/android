@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.gui.spinnerItem;
 
 import android.view.View;
 
-public interface SpinnerItem {
+public interface ISpinnerItem {
 	public static final String ID_UNDEFINED = "id_undefined";
 
 	public enum SpinnerItemType {

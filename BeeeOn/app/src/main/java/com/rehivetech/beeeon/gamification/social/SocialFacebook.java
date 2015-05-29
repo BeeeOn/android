@@ -33,7 +33,7 @@ import java.util.Observable;
  *
  * @author Jan Lamacz
  */
-public class SocialFacebook extends Observable implements SocialNetwork {
+public class SocialFacebook extends Observable implements ISocialNetwork {
 	private static final String TAG = SocialFacebook.class.getSimpleName();
 	private static final String NAME = "Facebook";
 

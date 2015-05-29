@@ -24,7 +24,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
-import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.EditUserTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveUserTask;
@@ -162,7 +162,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 	private void doReloadGateUsersTask(final String gateId, boolean forceReload) {
 		ReloadGateDataTask reloadUsersTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.USERS);
 
-		reloadUsersTask.setListener(new CallbackTaskListener() {
+		reloadUsersTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -182,7 +182,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		RemoveUserTask removeUserTask = new RemoveUserTask(this);
 		SaveUserPair pair = new SaveUserPair(user, mGate.getId());
 
-		removeUserTask.setListener(new CallbackTaskListener() {
+		removeUserTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				// Get all users for gate
@@ -201,7 +201,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		EditUserTask editUserTask = new EditUserTask(this);
 		SaveUserPair pair = new SaveUserPair(user, mGate.getId());
 
-		editUserTask.setListener(new CallbackTaskListener() {
+		editUserTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				// Get all users for gate

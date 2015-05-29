@@ -56,7 +56,7 @@ public class AchievementList extends Observable {
 	public void doReloadAchievementsTask(final String gateId, boolean forceReload) {
 		ReloadGateDataTask reloadAchievementsTask = new ReloadGateDataTask(mContext, forceReload, ReloadGateDataTask.ReloadWhat.ACHIEVEMENTS);
 
-		reloadAchievementsTask.setListener(new CallbackTask.CallbackTaskListener() {
+		reloadAchievementsTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "successfully downloaded data");

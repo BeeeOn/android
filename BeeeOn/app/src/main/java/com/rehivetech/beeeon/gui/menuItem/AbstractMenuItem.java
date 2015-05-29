@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.gui.menuItem;
 
 import android.view.View;
 
-public abstract class AbstractMenuItem implements MenuItem {
+public abstract class AbstractMenuItem implements IMenuItem {
 	private String mId = ID_UNDEFINED;
 	private MenuItemType mType;
 	private View mMView;

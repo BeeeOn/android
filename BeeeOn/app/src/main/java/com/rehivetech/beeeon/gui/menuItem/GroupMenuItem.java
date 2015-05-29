@@ -9,12 +9,12 @@ public class GroupMenuItem extends AbstractMenuItem {
 	private String mName;
 
 	protected GroupMenuItem(String name, MenuItemType type) {
-		super(MenuItem.ID_UNDEFINED, type);
+		super(IMenuItem.ID_UNDEFINED, type);
 		mName = name;
 	}
 
 	public GroupMenuItem(String name) {
-		super(MenuItem.ID_UNDEFINED, MenuItemType.GROUP);
+		super(IMenuItem.ID_UNDEFINED, MenuItemType.GROUP);
 		mName = name;
 	}
 

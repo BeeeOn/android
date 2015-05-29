@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by Martin on 26. 4. 2015.
  */
-public interface GcmNotification {
+public interface IGcmNotification {
 
 	int getId();
 

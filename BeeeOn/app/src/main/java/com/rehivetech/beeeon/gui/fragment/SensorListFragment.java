@@ -33,7 +33,7 @@ import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.gui.listItem.LocationListItem;
 import com.rehivetech.beeeon.gui.listItem.SensorListItem;
 import com.rehivetech.beeeon.gui.adapter.SenListAdapter;
-import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -431,7 +431,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
 		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
 
-		reloadDevicesTask.setListener(new CallbackTaskListener() {
+		reloadDevicesTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -450,7 +450,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	private void doFullReloadTask(boolean forceRefresh) {
 		ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
 
-		fullReloadTask.setListener(new CallbackTaskListener() {
+		fullReloadTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success)
@@ -467,7 +467,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	private void doRemoveDeviceTask(Device device) {
 		RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
 
-		removeDeviceTask.setListener(new CallbackTaskListener() {
+		removeDeviceTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				mActivity.redraw();

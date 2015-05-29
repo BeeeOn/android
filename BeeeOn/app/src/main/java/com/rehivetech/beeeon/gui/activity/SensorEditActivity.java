@@ -179,7 +179,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		mProgress.show();
 		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 
-		saveDeviceTask.setListener(new CallbackTask.CallbackTaskListener() {
+		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)
@@ -205,7 +205,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		mProgress.show();
 		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 
-		saveDeviceTask.setListener(new CallbackTask.CallbackTaskListener() {
+		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mActivity.getProgressDialog() != null)

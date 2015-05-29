@@ -32,7 +32,7 @@ import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.gui.activity.SensorEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -547,7 +547,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		ActorActionTask actorActionTask = new ActorActionTask(mActivity);
-		actorActionTask.setListener(new CallbackTaskListener() {
+		actorActionTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -570,7 +570,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
 		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
 
-		reloadDevicesTask.setListener(new CallbackTaskListener() {
+		reloadDevicesTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -611,7 +611,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 				DataType.AVERAGE, // type
 				(mModule.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
 
-		getModuleLogTask.setListener(new CallbackTaskListener() {
+		getModuleLogTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				fillGraph(mController.getModuleLogsModel().getModuleLog(pair));
@@ -625,7 +625,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	protected void doChangeStateModuleTask(final Module module) {
 		ActorActionTask changeStateModuleTask = new ActorActionTask(mActivity);
 
-		changeStateModuleTask.setListener(new CallbackTaskListener() {
+		changeStateModuleTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success)

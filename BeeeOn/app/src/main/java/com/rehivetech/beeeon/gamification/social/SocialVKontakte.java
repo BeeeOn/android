@@ -27,7 +27,7 @@ import java.util.Observable;
 /**
  * @author Jan Lamacz
  */
-public class SocialVKontakte extends Observable implements SocialNetwork {
+public class SocialVKontakte extends Observable implements ISocialNetwork {
 	private static final String TAG = SocialVKontakte.class.getSimpleName();
 	private static final String NAME = "Vkontakte";
 

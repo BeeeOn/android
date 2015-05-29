@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.exception;
 
 import com.rehivetech.beeeon.IIdentifier;
 
-public interface ErrorCode extends IIdentifier {
+public interface IErrorCode extends IIdentifier {
 
 	/**
 	 * @return identification number of this error

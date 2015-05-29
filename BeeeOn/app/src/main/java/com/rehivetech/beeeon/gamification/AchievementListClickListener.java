@@ -8,10 +8,10 @@ import android.view.View;
  */
 public class AchievementListClickListener implements View.OnClickListener {
 	private int position;
-	private AchievementListOnClickListener callback;
+	private IAchievementListOnClickListener callback;
 
 	// Pass in the callback (this'll be the activity) and the row position
-	public AchievementListClickListener(AchievementListOnClickListener callback, int pos) {
+	public AchievementListClickListener(IAchievementListOnClickListener callback, int pos) {
 		position = pos;
 		this.callback = callback;
 	}

@@ -9,7 +9,7 @@ public class EmptyMenuItem extends AbstractMenuItem {
 	private String mName;
 
 	public EmptyMenuItem(String name) {
-		super(MenuItem.ID_UNDEFINED, MenuItemType.EMPTY);
+		super(IMenuItem.ID_UNDEFINED, MenuItemType.EMPTY);
 		mName = name;
 	}
 

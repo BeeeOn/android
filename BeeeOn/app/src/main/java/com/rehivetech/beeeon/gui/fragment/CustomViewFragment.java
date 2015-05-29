@@ -221,7 +221,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			// Prepare and run the reload logs task
 			GetModulesLogsTask getModulesLogsTask = new GetModulesLogsTask(mActivity);
 
-			getModulesLogsTask.setListener(new CallbackTask.CallbackTaskListener() {
+			getModulesLogsTask.setListener(new CallbackTask.ICallbackTaskListener() {
 				@Override
 				public void onExecute(boolean success) {
 					// Remember type of graph we're downloading data for

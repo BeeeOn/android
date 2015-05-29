@@ -25,7 +25,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.spinnerItem.GeofenceSpinnerItem;
 import com.rehivetech.beeeon.gui.spinnerItem.ModuleSpinnerItem;
-import com.rehivetech.beeeon.gui.spinnerItem.SpinnerItem;
+import com.rehivetech.beeeon.gui.spinnerItem.ISpinnerItem;
 import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.SpinnerMultiAdapter;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -258,7 +258,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		mIfItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				SpinnerItem selected = mSpinnerMultiAdapter.getItem(position);
+				ISpinnerItem selected = mSpinnerMultiAdapter.getItem(position);
 
 				switch (selected.getType()) {
 					case MODULE:
@@ -344,10 +344,10 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// set spinner in the "IF" section
 		if (!geoId.isEmpty()) {
 			int index = Utils.getObjectIndexFromList(geoId, mGeofences);
-			if (index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.GEOFENCE));
+			if (index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, ISpinnerItem.SpinnerItemType.GEOFENCE));
 		} else if (mWatchdog.getModules() != null && mWatchdog.getModules().size() > 0) {
 			int index = Utils.getObjectIndexFromList(mWatchdog.getModules().get(0), getModulesArray(MODULES_SENSORS));
-			if (index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, SpinnerItem.SpinnerItemType.MODULE));
+			if (index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, ISpinnerItem.SpinnerItemType.MODULE));
 		}
 
 		// if this is new watchdog, we don't set anything
@@ -471,7 +471,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// FIXME: must be because network sends short tag if empty
 		String tresholdValue = "_";
 
-		SpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
+		ISpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
 		switch (selected.getType()) {
 			case MODULE:
 				if (!validateInput(mRuleTreshold, "parseInt")) return;
@@ -534,7 +534,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// TODO check if data were changed ???
 		SaveWatchdogTask saveWatchdogTask = new SaveWatchdogTask(this);
 
-		saveWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+		saveWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (mProgress != null) mProgress.dismiss();
@@ -555,7 +555,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private void doRemoveWatchdogTask() {
 		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(this);
 
-		removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+		removeWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				Toast.makeText(WatchdogEditRuleActivity.this, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();

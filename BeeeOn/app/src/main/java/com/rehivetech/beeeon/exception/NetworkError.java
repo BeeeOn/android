@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.exception;
 
 import com.rehivetech.beeeon.IIdentifier;
 
-public enum NetworkError implements ErrorCode, IIdentifier {
+public enum NetworkError implements IErrorCode, IIdentifier {
 	UNKNOWN(0),
 
 	COM_VER_MISMATCH(1),

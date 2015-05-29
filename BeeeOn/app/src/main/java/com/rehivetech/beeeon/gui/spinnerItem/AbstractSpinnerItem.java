@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.gui.spinnerItem;
 
 import android.view.View;
 
-public abstract class AbstractSpinnerItem implements SpinnerItem {
+public abstract class AbstractSpinnerItem implements ISpinnerItem {
 	private String mId = ID_UNDEFINED;
 	private SpinnerItemType mType;
 	private View mMView;

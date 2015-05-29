@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.threading.task.AddUserTask;
-import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
@@ -121,7 +121,7 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 	protected void doAddGateUserTask(SaveUserPair pair) {
 		AddUserTask addUserTask = new AddUserTask(mActivity);
 
-		addUserTask.setListener(new CallbackTaskListener() {
+		addUserTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {

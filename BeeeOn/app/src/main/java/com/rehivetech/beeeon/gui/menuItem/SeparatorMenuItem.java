@@ -7,7 +7,7 @@ import com.rehivetech.beeeon.R;
 public class SeparatorMenuItem extends AbstractMenuItem {
 
 	public SeparatorMenuItem() {
-		super(MenuItem.ID_UNDEFINED, MenuItemType.SEPARATOR);
+		super(IMenuItem.ID_UNDEFINED, MenuItemType.SEPARATOR);
 	}
 
 	@Override

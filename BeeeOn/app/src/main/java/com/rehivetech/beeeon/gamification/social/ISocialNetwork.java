@@ -5,7 +5,7 @@ import android.app.Activity;
 /**
  * @author Jan Lamacz
  */
-public interface SocialNetwork {
+public interface ISocialNetwork {
 	public void logIn(Activity activity);
 
 	public void logOut();

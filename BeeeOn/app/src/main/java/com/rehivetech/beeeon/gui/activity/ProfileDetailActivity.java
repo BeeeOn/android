@@ -32,7 +32,7 @@ import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.gamification.social.SocialFacebook;
-import com.rehivetech.beeeon.gamification.social.SocialNetwork;
+import com.rehivetech.beeeon.gamification.social.ISocialNetwork;
 import com.rehivetech.beeeon.gamification.social.SocialTwitter;
 import com.rehivetech.beeeon.gamification.social.SocialVKontakte;
 import com.rehivetech.beeeon.util.BetterProgressDialog;
@@ -293,7 +293,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mMoreArrow.startAnimation(rotateAnim);
 	}
 
-	private void setOnClickLogout(final SocialNetwork network, final TextView textView) {
+	private void setOnClickLogout(final ISocialNetwork network, final TextView textView) {
 		if (!network.isPaired() || network.getUserName() == null) return;
 		textView.setText(network.getUserName());
 		textView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -306,7 +306,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		});
 	}
 
-	private void setOnClickLogin(final SocialNetwork network, TextView textView) {
+	private void setOnClickLogin(final ISocialNetwork network, TextView textView) {
 		textView.setText(getResources().getString(R.string.login_login));
 		textView.setOnClickListener(new View.OnClickListener() {
 			@Override

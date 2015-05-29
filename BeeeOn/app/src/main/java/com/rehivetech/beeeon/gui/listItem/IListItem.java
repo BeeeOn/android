@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.gui.listItem;
 
 import android.view.View;
 
-public interface ListItem {
+public interface IListItem {
 	public static final String ID_UNDEFINED = "id_undefined";
 
 	// TODO test pryc -> presunout do sekce Applications

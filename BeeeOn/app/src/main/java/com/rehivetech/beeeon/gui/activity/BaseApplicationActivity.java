@@ -9,7 +9,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.notification.GcmNotification;
+import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.util.Log;
 
 /**
@@ -116,7 +116,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	/**
 	 * Method that receives Notifications.
 	 */
-	public boolean receiveNotification(final GcmNotification notification) {
+	public boolean receiveNotification(final IGcmNotification notification) {
 		// FIXME: Leo (or someone else?) should implement correct handling of notifications (showing somewhere in activity or something like that?)
 
 		return false;

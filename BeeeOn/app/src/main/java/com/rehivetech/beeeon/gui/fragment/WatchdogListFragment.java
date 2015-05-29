@@ -267,7 +267,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		watchdog.setEnabled(sw.isChecked());
 
 		SaveWatchdogTask saveWatchdogTask = new SaveWatchdogTask(mActivity);
-		saveWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+		saveWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				//Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
@@ -291,7 +291,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 		ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, forceReload, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
 
-		reloadWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+		reloadWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				redrawRules();
@@ -312,7 +312,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	private void doRemoveWatchdogTask(Watchdog watchdog) {
 		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity);
 
-		removeWatchdogTask.setListener(new CallbackTask.CallbackTaskListener() {
+		removeWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();

@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.ErrorCode;
+import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
@@ -143,12 +143,12 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 		// reloads all gateways and actual one
 		mReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
-		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+		mReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success) {
 					AppException e = mReloadTask.getException();
-					ErrorCode errCode = e != null ? e.getErrorCode() : null;
+					IErrorCode errCode = e != null ? e.getErrorCode() : null;
 					if (errCode != null) {
 						if (errCode instanceof NetworkError && errCode == NetworkError.BAD_BT) {
 							BaseApplicationActivity.redirectToLogin(mActivity);
@@ -265,7 +265,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		}
 
 		mReloadTask = new ReloadGateDataTask(mActivity, false, whatToReload);
-		mReloadTask.setListener(new CallbackTask.CallbackTaskListener() {
+		mReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				selectGate(gateId);

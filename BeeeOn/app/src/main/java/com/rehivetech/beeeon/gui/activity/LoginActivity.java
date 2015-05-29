@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.ErrorCode;
+import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
@@ -321,7 +321,7 @@ public class LoginActivity extends BaseActivity {
 
 					Log.i(TAG, "Login finished");
 				} catch (AppException e) {
-					ErrorCode errorCode = e.getErrorCode();
+					IErrorCode errorCode = e.getErrorCode();
 
 					if (errorCode instanceof NetworkError) {
 						switch ((NetworkError) errorCode) {
@@ -394,7 +394,7 @@ public class LoginActivity extends BaseActivity {
 						return;
 					}
 				} catch (AppException e) {
-					ErrorCode errorCode = e.getErrorCode();
+					IErrorCode errorCode = e.getErrorCode();
 
 					// TODO: handle some known exceptions
 

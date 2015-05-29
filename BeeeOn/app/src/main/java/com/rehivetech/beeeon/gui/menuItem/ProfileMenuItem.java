@@ -15,7 +15,7 @@ public class ProfileMenuItem extends AbstractMenuItem {
 	private View.OnClickListener mListener;
 
 	public ProfileMenuItem(String name, String email, Bitmap icon, View.OnClickListener listener) {
-		super(MenuItem.ID_UNDEFINED, MenuItemType.PROFILE);
+		super(IMenuItem.ID_UNDEFINED, MenuItemType.PROFILE);
 		mName = name;
 		mEmail = email;
 		mIcon = icon;

@@ -59,7 +59,7 @@ public abstract class Achievement implements Observer {
 		if (!mSendUpdate && mData.isDone()) return; // if is done and should not be send, skip it
 
 		mUpdateAchievementTask = new UpdateAchievementTask(mContext);
-		mUpdateAchievementTask.setListener(new CallbackTask.CallbackTaskListener() {
+		mUpdateAchievementTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				List<String> idList = mUpdateAchievementTask.getAchievementId();

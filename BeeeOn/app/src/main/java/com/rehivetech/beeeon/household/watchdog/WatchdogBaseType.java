@@ -6,7 +6,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.rehivetech.beeeon.gui.spinnerItem.SpinnerItem;
+import com.rehivetech.beeeon.gui.spinnerItem.ISpinnerItem;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.Arrays;
@@ -81,7 +81,7 @@ public abstract class WatchdogBaseType {
 		return getAllIcons()[index];
 	}
 
-	public void setupGUI(SpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit) {
+	public void setupGUI(ISpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit) {
 		// sets default icon for this type
 		operatorButton.setImageResource(getIconResource());
 

@@ -26,13 +26,13 @@ import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.gui.menuItem.GateMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GroupMenuItem;
+import com.rehivetech.beeeon.gui.menuItem.IMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.LocationMenuItem;
-import com.rehivetech.beeeon.gui.menuItem.MenuItem;
 import com.rehivetech.beeeon.gui.menuItem.ProfileMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.SeparatorMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.SettingMenuItem;
 import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
-import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.SwitchGateTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -66,7 +66,7 @@ public class NavDrawerMenu {
 
 	//
 	private ActionMode mMode;
-	private MenuItem mSelectedMenuItem;
+	private IMenuItem mSelectedMenuItem;
 	private RelativeLayout mDrawerRelLay;
 
 	public NavDrawerMenu(MainActivity activity, Toolbar toolbar) {
@@ -97,7 +97,7 @@ public class NavDrawerMenu {
 		mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
+				mSelectedMenuItem = (IMenuItem) mMenuAdapter.getItem(position);
 				Gate gate = mController.getActiveGate();
 				switch (mSelectedMenuItem.getType()) {
 					case GATE:
@@ -117,13 +117,13 @@ public class NavDrawerMenu {
 						break;
 
 					case SETTING:
-						if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_ABOUT)) {
+						if (mSelectedMenuItem.getId().equals(IMenuItem.ID_ABOUT)) {
 							InfoDialogFragment dialog = new InfoDialogFragment();
 							dialog.show(mActivity.getSupportFragmentManager(), TAG_INFO);
-						} else if (mSelectedMenuItem.getId().equals(com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_SETTINGS)) {
+						} else if (mSelectedMenuItem.getId().equals(IMenuItem.ID_SETTINGS)) {
 							Intent intent = new Intent(mActivity, SettingsMainActivity.class);
 							mActivity.startActivity(intent);
-						} else if (mSelectedMenuItem.getId().equals(MenuItem.ID_LOGOUT)) {
+						} else if (mSelectedMenuItem.getId().equals(IMenuItem.ID_LOGOUT)) {
 							mActivity.logout();
 						}
 						break;
@@ -145,7 +145,7 @@ public class NavDrawerMenu {
 				}
 
 				Log.d(TAG, "Item Long press");
-				mSelectedMenuItem = (MenuItem) mMenuAdapter.getItem(position);
+				mSelectedMenuItem = (IMenuItem) mMenuAdapter.getItem(position);
 				switch (mSelectedMenuItem.getType()) {
 					case LOCATION:
 
@@ -251,7 +251,7 @@ public class NavDrawerMenu {
 	private void doSwitchGateTask(String gateId) {
 		SwitchGateTask switchGateTask = new SwitchGateTask(mActivity, false);
 
-		switchGateTask.setListener(new CallbackTaskListener() {
+		switchGateTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -270,7 +270,7 @@ public class NavDrawerMenu {
 	private void doUnregisterGateTask(String gateId) {
 		UnregisterGateTask unregisterGateTask = new UnregisterGateTask(mActivity);
 
-		unregisterGateTask.setListener(new CallbackTaskListener() {
+		unregisterGateTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -343,9 +343,9 @@ public class NavDrawerMenu {
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding settings, about etc.
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_SETTINGS));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, com.rehivetech.beeeon.gui.menuItem.MenuItem.ID_ABOUT));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.logout, MenuItem.ID_LOGOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, IMenuItem.ID_SETTINGS));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, IMenuItem.ID_ABOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.logout, IMenuItem.ID_LOGOUT));
 		return mMenuAdapter;
 	}
 

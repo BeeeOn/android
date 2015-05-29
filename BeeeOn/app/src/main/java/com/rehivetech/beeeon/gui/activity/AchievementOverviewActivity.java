@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.gamification.achievement.GeneralAchievement;
 import com.rehivetech.beeeon.gui.dialog.ShareFragmentDialog;
 import com.rehivetech.beeeon.gui.adapter.AchievementListAdapter;
 import com.rehivetech.beeeon.gamification.AchievementList;
-import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
+import com.rehivetech.beeeon.gamification.IAchievementListOnClickListener;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -23,7 +23,7 @@ import java.util.Observer;
 /**
  * @author Jan Lamacz
  */
-public class AchievementOverviewActivity extends BaseApplicationActivity implements AchievementListOnClickListener, Observer {
+public class AchievementOverviewActivity extends BaseApplicationActivity implements IAchievementListOnClickListener, Observer {
 	private static final String TAG = AchievementOverviewActivity.class.getSimpleName();
 
 	// extras

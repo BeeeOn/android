@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.gui.listItem;
 
 import android.view.View;
 
-public abstract class AbstractListItem implements ListItem {
+public abstract class AbstractListItem implements IListItem {
 	private String mId = ID_UNDEFINED;
 	private ListItemType mType;
 	private View mMView;

@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.threading;
 
-public interface CallbackTaskFactory<T> {
+public interface ICallbackTaskFactory<T> {
 
 	/**
 	 * Factory method for creating tasks.

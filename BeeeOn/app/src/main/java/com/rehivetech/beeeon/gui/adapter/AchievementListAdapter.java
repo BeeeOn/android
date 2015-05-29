@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.AchievementListClickListener;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
-import com.rehivetech.beeeon.gamification.AchievementListOnClickListener;
+import com.rehivetech.beeeon.gamification.IAchievementListOnClickListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,9 +33,9 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 
 	private List<AchievementListItem> mAchievementList;
 	private List<AchievementListItem> mFilteredList;
-	private AchievementListOnClickListener mCallback;
+	private IAchievementListOnClickListener mCallback;
 
-	public AchievementListAdapter(LayoutInflater inflater, String categoryId, AchievementListOnClickListener callback, List<AchievementListItem> achievements, Context context) {
+	public AchievementListAdapter(LayoutInflater inflater, String categoryId, IAchievementListOnClickListener callback, List<AchievementListItem> achievements, Context context) {
 		mInflater = inflater;
 		mCallback = callback;
 		mAchievementList = achievements;

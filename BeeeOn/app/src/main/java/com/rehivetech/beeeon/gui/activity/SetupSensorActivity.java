@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
-import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
@@ -202,7 +202,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	private void doInitializeDeviceTask(final SaveDevicePair pair) {
 		SaveDeviceTask initializeDeviceTask = new SaveDeviceTask(this);
 
-		initializeDeviceTask.setListener(new CallbackTaskListener() {
+		initializeDeviceTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {

@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
-import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class CallbackTaskManager {
 	 * @param id
 	 * @param everySecs
 	 */
-	public <T> void executeTaskEvery(final CallbackTaskFactory<T> taskFactory, final String id, final int everySecs) {
+	public <T> void executeTaskEvery(final ICallbackTaskFactory<T> taskFactory, final String id, final int everySecs) {
 		if (mTimer == null) {
 			mTimer = new Timer();
 		}
@@ -149,8 +149,8 @@ public class CallbackTaskManager {
 	 * @param showProgressBar whether this task should show progressbar during its running
 	 */
 	private void prepareTaskListeners(final CallbackTask task, final boolean showProgressBar) {
-		final CallbackTask.CallbackTaskPreExecuteListener origPreListener = task.getPreExecuteListener();
-		task.setPreExecuteListener(new CallbackTask.CallbackTaskPreExecuteListener() {
+		final CallbackTask.ICallbackTaskPreExecuteListener origPreListener = task.getPreExecuteListener();
+		task.setPreExecuteListener(new CallbackTask.ICallbackTaskPreExecuteListener() {
 			@Override
 			public void onPreExecute() {
 				// Show progress bar in activity
@@ -165,8 +165,8 @@ public class CallbackTaskManager {
 			}
 		});
 
-		final CallbackTask.CallbackTaskListener origListener = task.getListener();
-		task.setListener(new CallbackTask.CallbackTaskListener() {
+		final CallbackTask.ICallbackTaskListener origListener = task.getListener();
+		task.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				// Remove task from remembered tasks
@@ -188,7 +188,7 @@ public class CallbackTaskManager {
 				if (exception != null && !task.isCancelled()) {
 
 					// Handle specific error codes
-					ErrorCode errCode = exception.getErrorCode();
+					IErrorCode errCode = exception.getErrorCode();
 					if (errCode != null) {
 						if (errCode instanceof NetworkError) {
 							switch ((NetworkError) errCode) {

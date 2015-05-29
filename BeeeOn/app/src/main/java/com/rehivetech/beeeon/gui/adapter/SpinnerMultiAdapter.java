@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.rehivetech.beeeon.gui.spinnerItem.HeaderSpinnerItem;
-import com.rehivetech.beeeon.gui.spinnerItem.SpinnerItem;
+import com.rehivetech.beeeon.gui.spinnerItem.ISpinnerItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class SpinnerMultiAdapter extends BaseAdapter {
 
 	private final Context mContext;
 	private LayoutInflater mInflater;
-	private List<SpinnerItem> mSpinnerItems;
+	private List<ISpinnerItem> mSpinnerItems;
 	private TreeSet<Integer> mHeaderSet = new TreeSet<Integer>();
 
 
@@ -32,7 +32,7 @@ public class SpinnerMultiAdapter extends BaseAdapter {
 		mSpinnerItems = new ArrayList<>();
 	}
 
-	public void addItem(SpinnerItem item) {
+	public void addItem(ISpinnerItem item) {
 		mSpinnerItems.add(item);
 	}
 
@@ -47,7 +47,7 @@ public class SpinnerMultiAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public SpinnerItem getItem(int position) {
+	public ISpinnerItem getItem(int position) {
 		if (position < 0) {
 			position = 0;
 		} else if (position > mSpinnerItems.size() - 1) {
@@ -83,13 +83,13 @@ public class SpinnerMultiAdapter extends BaseAdapter {
 	 * @param position
 	 * @return real item position
 	 */
-	public int getRealPosition(int position, SpinnerItem.SpinnerItemType itemType) {
+	public int getRealPosition(int position, ISpinnerItem.SpinnerItemType itemType) {
 		int tempPos = 0, resultPos;
 		for (resultPos = 0; resultPos < mSpinnerItems.size(); resultPos++) {
-			SpinnerItem.SpinnerItemType tempType = getItem(resultPos).getType();
+			ISpinnerItem.SpinnerItemType tempType = getItem(resultPos).getType();
 
 			// if type (is ANY and is header) or does not match
-			if (itemType == null && tempType == SpinnerItem.SpinnerItemType.HEADER)
+			if (itemType == null && tempType == ISpinnerItem.SpinnerItemType.HEADER)
 				continue;
 			else if (itemType != null && tempType != itemType)
 				continue;

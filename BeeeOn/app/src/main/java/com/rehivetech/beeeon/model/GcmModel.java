@@ -5,7 +5,7 @@ import android.content.Context;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
-import com.rehivetech.beeeon.gcm.notification.GcmNotification;
+import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.DemoNetwork;
@@ -197,7 +197,7 @@ public class GcmModel extends BaseModel {
 	 * @param notification
 	 * @return True if notification was handled by any of listener.
 	 */
-	public boolean receiveNotification(GcmNotification notification) {
+	public boolean receiveNotification(IGcmNotification notification) {
 		boolean isHandled = false;
 		for (INotificationReceiver receiver : mNotificationReceivers.keySet()) {
 			if (receiver.receiveNotification(notification)) {

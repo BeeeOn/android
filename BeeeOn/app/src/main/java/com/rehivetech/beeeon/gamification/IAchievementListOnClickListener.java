@@ -5,6 +5,6 @@ import android.view.View;
 /**
  * @author Jan Lamacz
  */
-public interface AchievementListOnClickListener {
+public interface IAchievementListOnClickListener {
 	public void OnAchievementClick(View aView, int position);
 }

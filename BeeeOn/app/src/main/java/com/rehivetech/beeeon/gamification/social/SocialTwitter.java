@@ -31,7 +31,7 @@ import io.fabric.sdk.android.Fabric;
  *
  * @author Jan Lamacz
  */
-public class SocialTwitter extends Observable implements SocialNetwork {
+public class SocialTwitter extends Observable implements ISocialNetwork {
 	private static final String TAG = SocialTwitter.class.getSimpleName();
 	private static final String NAME = "Twitter";
 

@@ -41,7 +41,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 	private EditText mName, mRadius;
 	private TextView mRadiusTitle;
 	private double mLong, mLat;
-	private GeofenceCrateCallback mCallback;
+	private IGeofenceCreateCallback mCallback;
 	private Button mPositiveButton;
 
 	public GeofenceDialogFragment() {
@@ -70,9 +70,9 @@ public class GeofenceDialogFragment extends DialogFragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			this.mCallback = (GeofenceCrateCallback) activity;
+			this.mCallback = (IGeofenceCreateCallback) activity;
 		} catch (final ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement GeofenceCrateCallback");
+			throw new ClassCastException(activity.toString() + " must implement IGeofenceCreateCallback");
 		}
 	}
 
@@ -213,7 +213,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 
 	}
 
-	public interface GeofenceCrateCallback {
+	public interface IGeofenceCreateCallback {
 		void onCreateGeofence(String name, int radius, double lat, double lon);
 	}
 }

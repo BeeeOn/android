@@ -11,7 +11,7 @@ import com.rehivetech.beeeon.controller.Controller;
 /**
  * @author Jan Lamacz
  */
-public class SocialGooglePlus implements SocialNetwork {
+public class SocialGooglePlus implements ISocialNetwork {
 	private static final String TAG = SocialGooglePlus.class.getSimpleName();
 	private static final String NAME = "Google Plus";
 

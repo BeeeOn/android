@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.gui.adapter.AddSensorFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
-import com.rehivetech.beeeon.threading.CallbackTask.CallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.PairRequestTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.controller.Controller;
@@ -172,7 +172,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	public void doReloadUninitializedDevicesTask(String gateId, boolean forceReload) {
 		ReloadGateDataTask reloadUninitializedDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
 
-		reloadUninitializedDevicesTask.setListener(new CallbackTaskListener() {
+		reloadUninitializedDevicesTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {
@@ -208,7 +208,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		// Send First automatic pair request
 		PairRequestTask pairRequestTask = new PairRequestTask(this);
 
-		pairRequestTask.setListener(new CallbackTaskListener() {
+		pairRequestTask.setListener(new ICallbackTaskListener() {
 
 			@Override
 			public void onExecute(boolean success) {

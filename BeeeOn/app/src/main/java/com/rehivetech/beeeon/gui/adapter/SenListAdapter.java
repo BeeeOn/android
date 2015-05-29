@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.rehivetech.beeeon.gui.listItem.ListItem;
+import com.rehivetech.beeeon.gui.listItem.IListItem;
 import com.rehivetech.beeeon.gui.listItem.SensorListItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
@@ -27,25 +27,25 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 
 	private LayoutInflater mInflater;
 
-	private List<ListItem> mListItem;
+	private List<IListItem> mListItem;
 
-	private List<ListItem> mListHeader;
+	private List<IListItem> mListHeader;
 
 	private List<Integer> mListHeaderPos;
 
 	public SenListAdapter(Context context) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
-		mListHeader = new ArrayList<ListItem>();
-		mListItem = new ArrayList<ListItem>();
+		mListHeader = new ArrayList<IListItem>();
+		mListItem = new ArrayList<IListItem>();
 		mListHeaderPos = new ArrayList<Integer>();
 	}
 
-	public void addItem(ListItem item) {
+	public void addItem(IListItem item) {
 		mListItem.add(item);
 	}
 
-	public void addHeader(ListItem item) {
+	public void addHeader(IListItem item) {
 		mListHeader.add(item);
 		mListHeaderPos.add(mListItem.size());
 	}
@@ -56,7 +56,7 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 	}
 
 	@Override
-	public ListItem getItem(int position) {
+	public IListItem getItem(int position) {
 		if (position < 0) {
 			position = 0;
 		} else if (position > mListItem.size() - 1) {
@@ -95,7 +95,7 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 
 	@Override
 	public Object[] getSections() {
-		return mListHeader.toArray(new ListItem[mListHeader.size()]);
+		return mListHeader.toArray(new IListItem[mListHeader.size()]);
 	}
 
 	@Override

@@ -13,8 +13,8 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 
 	private static final String TAG = CallbackTask.class.getSimpleName();
 
-	private CallbackTaskListener mListener;
-	private CallbackTaskPreExecuteListener mPreExecuteListener;
+	private ICallbackTaskListener mListener;
+	private ICallbackTaskPreExecuteListener mPreExecuteListener;
 
 	protected final Context mContext;
 
@@ -26,21 +26,21 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 		mContext = context.getApplicationContext();
 	}
 
-	public final void setListener(@Nullable CallbackTaskListener listener) {
+	public final void setListener(@Nullable ICallbackTaskListener listener) {
 		mListener = listener;
 	}
 
 	@Nullable
-	public final CallbackTaskListener getListener() {
+	public final ICallbackTaskListener getListener() {
 		return mListener;
 	}
 
-	public final void setPreExecuteListener(@Nullable CallbackTaskPreExecuteListener listener) {
+	public final void setPreExecuteListener(@Nullable ICallbackTaskPreExecuteListener listener) {
 		mPreExecuteListener = listener;
 	}
 
 	@Nullable
-	public final CallbackTaskPreExecuteListener getPreExecuteListener() {
+	public final ICallbackTaskPreExecuteListener getPreExecuteListener() {
 		return mPreExecuteListener;
 	}
 
@@ -113,7 +113,7 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 		return mException;
 	}
 
-	public interface CallbackTaskListener {
+	public interface ICallbackTaskListener {
 		/**
 		 * This is executed on UI thread in onPostExecute method.
 		 *
@@ -122,7 +122,7 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 		void onExecute(boolean success);
 	}
 
-	public interface CallbackTaskPreExecuteListener {
+	public interface ICallbackTaskPreExecuteListener {
 		/**
 		 * This is executed on background thread in doInBackground method.
 		 */

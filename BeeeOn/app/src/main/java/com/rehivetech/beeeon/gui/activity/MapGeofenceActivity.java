@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MapGeofenceActivity extends BaseApplicationActivity implements ResultCallback<Status>, OnMapLongClickListener,
-		OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GeofenceDialogFragment.GeofenceCrateCallback {
+		OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GeofenceDialogFragment.IGeofenceCreateCallback {
 
 	private static final String TAG = MapGeofenceActivity.class.getSimpleName();
 

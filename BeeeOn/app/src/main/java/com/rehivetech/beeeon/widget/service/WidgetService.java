@@ -15,12 +15,12 @@ import android.os.SystemClock;
 import android.util.SparseArray;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
-import com.rehivetech.beeeon.exception.ErrorCode;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -375,7 +375,7 @@ public class WidgetService extends Service {
 
 			isCached = false;
 		} catch (AppException e) {
-			ErrorCode errCode = e.getErrorCode();
+			IErrorCode errCode = e.getErrorCode();
 			if (errCode != null) {
 				Log.e(TAG, e.getSimpleErrorMessage());
 				setAllWidgetsCached();
@@ -470,7 +470,7 @@ public class WidgetService extends Service {
 
 		// ----- and finally run asyncTask
 		final ActorActionTask actorActionTask = new ActorActionTask(mContext);
-		actorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
+		actorActionTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				// NOTE: we don't have any response here, cause that manages received broadcast

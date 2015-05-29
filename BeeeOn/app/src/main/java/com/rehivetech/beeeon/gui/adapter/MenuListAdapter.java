@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
-import com.rehivetech.beeeon.gui.menuItem.MenuItem;
+import com.rehivetech.beeeon.gui.menuItem.IMenuItem;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
@@ -25,29 +25,29 @@ public class MenuListAdapter extends BaseAdapter implements StickyListHeadersAda
 
 	private LayoutInflater mInflater;
 
-	private List<MenuItem> mListItem;
+	private List<IMenuItem> mListItem;
 
-	private List<MenuItem> mListHeader;
+	private List<IMenuItem> mListHeader;
 
 	private List<Integer> mListHeaderPos;
 
-	// private List<MenuItem> mListAllItems;
+	// private List<IMenuItem> mListAllItems;
 
 	public MenuListAdapter(Context context) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
-		mListHeader = new ArrayList<MenuItem>();
-		mListItem = new ArrayList<MenuItem>();
+		mListHeader = new ArrayList<IMenuItem>();
+		mListItem = new ArrayList<IMenuItem>();
 		mListHeaderPos = new ArrayList<Integer>();
-		// mListAllItems = new ArrayList<MenuItem>();
+		// mListAllItems = new ArrayList<IMenuItem>();
 	}
 
-	public void addItem(MenuItem item) {
+	public void addItem(IMenuItem item) {
 		mListItem.add(item);
 		// mListAllItems.add(item);
 	}
 
-	public void addHeader(MenuItem item) {
+	public void addHeader(IMenuItem item) {
 		mListHeader.add(item);
 		// mListAllItems.add(item);
 		mListHeaderPos.add(mListItem.size());
@@ -95,7 +95,7 @@ public class MenuListAdapter extends BaseAdapter implements StickyListHeadersAda
 
 	@Override
 	public Object[] getSections() {
-		return mListHeader.toArray(new MenuItem[mListHeader.size()]);
+		return mListHeader.toArray(new IMenuItem[mListHeader.size()]);
 	}
 
 	@Override
