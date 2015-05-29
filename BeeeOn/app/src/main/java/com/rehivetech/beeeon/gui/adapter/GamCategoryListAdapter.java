@@ -14,6 +14,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
+import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
@@ -73,22 +74,9 @@ public class GamCategoryListAdapter extends BaseAdapter {
 
 		// colors stars with pink gained in concrete category (0-3)
 		for (int i = 1; i <= mAchievementList.getStarsCount(category.getId()); i++)
-			setBg(holder.categoryStars[i], convertView.getResources().getDrawable(R.drawable.star_pink));
+			Compatibility.setBackground(holder.categoryStars[i], convertView.getResources().getDrawable(R.drawable.star_pink));
 
 		return convertView;
-	}
-
-	/**
-	 * Sets background from Java.
-	 * Made bcs setBackground works from API 16 and higher
-	 * and setBackgroundDrawable is marked as deprecated.
-	 */
-	@SuppressWarnings("deprecation")
-	private static void setBg(ImageView view, Drawable image) {
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
-			view.setBackgroundDrawable(image);
-		else
-			view.setBackground(image);
 	}
 
 	@Override

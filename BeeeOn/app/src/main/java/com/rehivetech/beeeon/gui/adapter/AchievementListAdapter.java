@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.util.Compatibility;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,11 +77,11 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 		holder.achievementPoints.setText(String.valueOf(achievement.getPoints()));
 		if (achievement.isDone()) {
 			if (achievement.getLevel() >= 3)
-				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan3));
+				Compatibility.setBackground(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan3));
 			else if (achievement.getLevel() == 2)
-				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan2));
+				Compatibility.setBackground(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan2));
 			else
-				setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan1));
+				Compatibility.setBackground(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_cyan1));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_primary_cyan));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_secundary_pink));
 			holder.achievementDate.setText(achievement.getDate());
@@ -99,7 +100,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 				}
 			});
 		} else if (achievement.isVisible()) {
-			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
+			Compatibility.setBackground(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_gray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
 			holder.achievementDescription.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_hint));
 			holder.achievementDate.setVisibility(View.INVISIBLE);
@@ -119,7 +120,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 				holder.achievementProgressText.setVisibility(View.GONE);
 			}
 		} else {
-			setBg(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_lightgray));
+			Compatibility.setBackground(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_lightgray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_separator));
 			holder.achievementShare.setOnClickListener(null);
 			holder.achievementLayout.getLayoutParams().height = 75 * mDisplayPixel;
@@ -133,19 +134,6 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 		}
 
 		return convertView;
-	}
-
-	/**
-	 * Sets background from Java.
-	 * Made bcs setBackground works from API 16 and higher
-	 * and setBackgroundDrawable is marked as deprecated.
-	 */
-	@SuppressWarnings("deprecation")
-	private static void setBg(TextView view, Drawable image) {
-		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN)
-			view.setBackgroundDrawable(image);
-		else
-			view.setBackground(image);
 	}
 
 	@Override
