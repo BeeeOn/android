@@ -3,11 +3,11 @@ package com.rehivetech.beeeon.network;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -166,8 +166,8 @@ public interface INetwork {
 	 * Method send wanted fields of module to server
 	 *
 	 * @param gateID id of gate
-	 * @param module    to save
-	 * @param toSave    ENUMSET specified fields to save
+	 * @param module to save
+	 * @param toSave ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
 	 */
 	boolean updateModule(String gateID, Module module, EnumSet<SaveModule> toSave);

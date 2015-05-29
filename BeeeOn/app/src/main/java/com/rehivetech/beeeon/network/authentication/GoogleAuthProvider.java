@@ -15,9 +15,9 @@ import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
 import com.rehivetech.beeeon.gui.activity.WebAuthActivity;
-import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 

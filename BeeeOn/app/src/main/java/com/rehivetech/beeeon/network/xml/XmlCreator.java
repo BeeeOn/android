@@ -236,8 +236,8 @@ public class XmlCreator {
 	/**
 	 * Method create XML for AddGate message
 	 *
-	 * @param bt          userID of user
-	 * @param aid         gateId of actual gate
+	 * @param bt       userID of user
+	 * @param aid      gateId of actual gate
 	 * @param gateName name of gate
 	 * @return AddGate message
 	 * @since 2.2
@@ -260,7 +260,7 @@ public class XmlCreator {
 	/**
 	 * Method create XML for ReInit message
 	 *
-	 * @param bt           userID of user
+	 * @param bt        userID of user
 	 * @param gateIdOld old id of gate
 	 * @param gateIdNew new id of gate
 	 * @return ReInit message

@@ -14,14 +14,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.gui.adapter.AddGateFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.adapter.AddGateFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 

@@ -12,11 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.adapter.NotificationAdapter;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
+import com.rehivetech.beeeon.gui.adapter.NotificationAdapter;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;

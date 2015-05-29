@@ -6,10 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.util.Log;
 
 /**

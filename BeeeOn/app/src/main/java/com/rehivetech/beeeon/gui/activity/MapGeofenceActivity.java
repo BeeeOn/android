@@ -40,10 +40,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.dialog.GeofenceDialogFragment;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.GeofenceHelper;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
+import com.rehivetech.beeeon.gui.dialog.GeofenceDialogFragment;
 import com.rehivetech.beeeon.util.Log;
 
 import java.io.IOException;

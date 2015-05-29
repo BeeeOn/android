@@ -14,9 +14,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Log;
 
 public class AddGateFragment extends TrackFragment {

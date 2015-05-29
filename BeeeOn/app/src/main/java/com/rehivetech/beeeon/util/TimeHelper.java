@@ -47,7 +47,7 @@ public class TimeHelper {
 	 * Return string with formatted time (if it is 23 hours ago, it show only date)
 	 *
 	 * @param lastUpdate
-	 * @param gate    If null, then it will use local timezone
+	 * @param gate       If null, then it will use local timezone
 	 * @return
 	 */
 	public String formatLastUpdate(DateTime lastUpdate, Gate gate) {

@@ -16,12 +16,12 @@ import android.widget.Spinner;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.threading.task.AddUserTask;
-import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.pair.SaveUserPair;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
+import com.rehivetech.beeeon.threading.task.AddUserTask;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -19,16 +19,16 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.SetupSensorFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
-import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
-import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.pair.SaveDevicePair;
+import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
+import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 

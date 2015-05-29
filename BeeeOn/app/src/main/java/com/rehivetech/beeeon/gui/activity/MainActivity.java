@@ -21,15 +21,15 @@ import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
+import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.util.Log;
 
 public class MainActivity extends BaseApplicationActivity implements IListDialogListener {

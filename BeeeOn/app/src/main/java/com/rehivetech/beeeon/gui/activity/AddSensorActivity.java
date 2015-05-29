@@ -11,16 +11,16 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
-import com.rehivetech.beeeon.gui.adapter.AddSensorFragmentAdapter;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.adapter.AddSensorFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.PairRequestTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 

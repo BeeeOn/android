@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.fragment.NotificationFragment;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
+import com.rehivetech.beeeon.gui.fragment.NotificationFragment;
 
 import java.util.List;
 

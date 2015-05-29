@@ -4,11 +4,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.exception.IErrorCode;
-import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
+import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;

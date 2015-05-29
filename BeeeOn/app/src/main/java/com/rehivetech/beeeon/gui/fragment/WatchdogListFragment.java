@@ -19,15 +19,15 @@ import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.WatchdogEditRuleActivity;
 import com.rehivetech.beeeon.gui.adapter.WatchdogListAdapter;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveWatchdogTask;
 import com.rehivetech.beeeon.threading.task.SaveWatchdogTask;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
