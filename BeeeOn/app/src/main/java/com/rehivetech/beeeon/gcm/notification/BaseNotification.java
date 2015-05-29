@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.util.Log;
 
 import java.util.Calendar;
 
-public abstract class BaseNotification implements GcmNotification, Comparable<BaseNotification> {
+public abstract class BaseNotification implements IGcmNotification, Comparable<BaseNotification> {
 
 	public static final String TAG = BaseNotification.class.getSimpleName();
 
@@ -42,7 +42,7 @@ public abstract class BaseNotification implements GcmNotification, Comparable<Ba
 		mId = msgid;
 	}
 
-	public static GcmNotification parseBundle(Context context, Bundle bundle) {
+	public static IGcmNotification parseBundle(Context context, Bundle bundle) {
 		if (bundle == null) {
 			return null;
 		}

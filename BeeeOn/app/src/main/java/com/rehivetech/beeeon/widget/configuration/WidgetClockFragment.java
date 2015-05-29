@@ -14,11 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.dialog.ILocationPickerDialogListener;
-import com.rehivetech.beeeon.activity.dialog.LocationPickerDialogFragment;
-import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
-import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
+import com.rehivetech.beeeon.gui.dialog.LocationPickerDialogFragment;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
@@ -34,7 +33,7 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public class WidgetClockFragment extends WidgetConfigurationFragment implements ILocationPickerDialogListener {
+public class WidgetClockFragment extends WidgetConfigurationFragment implements LocationPickerDialogFragment.ILocationPickerDialogListener {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	private static final int REQUEST_LOCATION_DIALOG = 1;
 

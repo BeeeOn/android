@@ -7,11 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.AchievementOverviewActivity;
-import com.rehivetech.beeeon.activity.NotificationActivity;
-import com.rehivetech.beeeon.activity.ProfileDetailActivity;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
+import com.rehivetech.beeeon.gui.activity.AchievementOverviewActivity;
+import com.rehivetech.beeeon.gui.activity.NotificationActivity;
+import com.rehivetech.beeeon.gui.activity.ProfileDetailActivity;
 import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 

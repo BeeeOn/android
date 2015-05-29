@@ -6,7 +6,6 @@ import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Log;
 
 import org.joda.time.Interval;
@@ -45,7 +44,7 @@ public class ModuleLogsModel extends BaseModel {
 		}
 	}
 
-	private List<Interval> getMissingIntervals(LogDataPair pair) {
+	private List<Interval> getMissingIntervals(ModuleLog.DataPair pair) {
 		List<Interval> downloadIntervals = new ArrayList<Interval>();
 		Interval interval = pair.interval;
 		String moduleName = pair.module.getName();
@@ -117,7 +116,7 @@ public class ModuleLogsModel extends BaseModel {
 	 * @param pair
 	 * @return
 	 */
-	public ModuleLog getModuleLog(LogDataPair pair) {
+	public ModuleLog getModuleLog(ModuleLog.DataPair pair) {
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
 		if (mModulesLogs.containsKey(pair.module.getId())) {
@@ -137,7 +136,7 @@ public class ModuleLogsModel extends BaseModel {
 	 * @param pair
 	 * @return
 	 */
-	public synchronized boolean reloadModuleLog(LogDataPair pair) throws AppException {
+	public synchronized boolean reloadModuleLog(ModuleLog.DataPair pair) throws AppException {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
 
 		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), pair.module.getName()));
@@ -149,7 +148,7 @@ public class ModuleLogsModel extends BaseModel {
 		try {
 			for (Interval downloadInterval : downloadIntervals) {
 				// Download selected partial log
-				LogDataPair downPair = new LogDataPair(pair.module, downloadInterval, pair.type, pair.gap);
+				ModuleLog.DataPair downPair = new ModuleLog.DataPair(pair.module, downloadInterval, pair.type, pair.gap);
 				ModuleLog log = mNetwork.getLog(downPair.module.getDevice().getGateId(), downPair.module, downPair);
 
 				// Save it

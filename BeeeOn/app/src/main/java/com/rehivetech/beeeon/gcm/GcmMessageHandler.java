@@ -7,7 +7,7 @@ import android.os.Handler;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
-import com.rehivetech.beeeon.gcm.notification.GcmNotification;
+import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.util.Log;
 
 public class GcmMessageHandler extends IntentService {
@@ -55,7 +55,7 @@ public class GcmMessageHandler extends IntentService {
 	}
 
 	private void handleNotification(Intent intent) {
-		final GcmNotification notification = BaseNotification.parseBundle(this, intent.getExtras());
+		final IGcmNotification notification = BaseNotification.parseBundle(this, intent.getExtras());
 
 		// control if message was valid
 		if (notification == null) {

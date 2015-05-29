@@ -7,7 +7,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.arrayadapter.LocationArrayAdapter;
+import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;

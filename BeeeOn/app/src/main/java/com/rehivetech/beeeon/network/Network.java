@@ -10,11 +10,11 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -24,7 +24,6 @@ import com.rehivetech.beeeon.network.xml.ParsedMessage;
 import com.rehivetech.beeeon.network.xml.XmlCreator;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.XmlParsers.State;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -625,7 +624,7 @@ public class Network implements INetwork {
 
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
-	public ModuleLog getLog(String gateId, Module module, LogDataPair pair) {
+	public ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair) {
 		String msgToSend = XmlCreator.createGetLog(mBT, gateId, module.getDevice().getAddress(), module.getRawTypeId(),
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getId(), pair.gap.getSeconds());

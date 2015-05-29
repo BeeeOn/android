@@ -13,7 +13,7 @@ public class AppException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public static AppException wrap(Throwable exception, ErrorCode errorCode) {
+	public static AppException wrap(Throwable exception, IErrorCode errorCode) {
 		if (exception instanceof AppException) {
 			AppException se = (AppException) exception;
 			if (errorCode != null && errorCode != se.getErrorCode()) {
@@ -29,33 +29,33 @@ public class AppException extends RuntimeException {
 		return wrap(exception, null);
 	}
 
-	private ErrorCode mErrorCode;
+	private IErrorCode mErrorCode;
 	private final Map<String, Object> mProperties = new TreeMap<String, Object>();
 
-	public AppException(ErrorCode errorCode) {
+	public AppException(IErrorCode errorCode) {
 		mErrorCode = errorCode;
 	}
 
-	public AppException(String message, ErrorCode errorCode) {
+	public AppException(String message, IErrorCode errorCode) {
 		super(message);
 		mErrorCode = errorCode;
 	}
 
-	public AppException(Throwable cause, ErrorCode errorCode) {
+	public AppException(Throwable cause, IErrorCode errorCode) {
 		super(cause);
 		mErrorCode = errorCode;
 	}
 
-	public AppException(String message, Throwable cause, ErrorCode errorCode) {
+	public AppException(String message, Throwable cause, IErrorCode errorCode) {
 		super(message, cause);
 		mErrorCode = errorCode;
 	}
 
-	public ErrorCode getErrorCode() {
+	public IErrorCode getErrorCode() {
 		return mErrorCode;
 	}
 
-	public AppException setErrorCode(ErrorCode errorCode) {
+	public AppException setErrorCode(IErrorCode errorCode) {
 		mErrorCode = errorCode;
 		return this;
 	}
@@ -107,7 +107,7 @@ public class AppException extends RuntimeException {
 	public String getSimpleErrorMessage() {
 		StringBuilder builder = new StringBuilder();
 
-		// ErrorCode type, number and class simple name (if present)
+		// IErrorCode type, number and class simple name (if present)
 		if (mErrorCode != null) {
 			builder.append(mErrorCode + "(" + mErrorCode.getNumber() + "):" + mErrorCode.getClass().getSimpleName() + ":");
 		}

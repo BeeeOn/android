@@ -186,4 +186,17 @@ public class User implements INameIdentifier {
 		return String.format("Id: %s\nEmail: %s\nRole: %s\nName: %s\nGender: %s", mId, mEmail, mRole, mName, mGender);
 	}
 
+	/**
+	 * Represents pair of user and gate for saving it to server
+	 */
+	public static class DataPair {
+		public final User user;
+		public final String gateId;
+
+		public DataPair(final User user, final String gateId) {
+			this.user = user;
+			this.gateId = gateId;
+		}
+	}
+
 }

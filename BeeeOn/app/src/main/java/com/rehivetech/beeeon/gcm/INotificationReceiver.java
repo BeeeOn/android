@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gcm;
 
-import com.rehivetech.beeeon.gcm.notification.GcmNotification;
+import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 
 public interface INotificationReceiver {
 
@@ -9,6 +9,6 @@ public interface INotificationReceiver {
 	 *
 	 * @param notification
 	 */
-	boolean receiveNotification(GcmNotification notification);
+	boolean receiveNotification(IGcmNotification notification);
 
 }

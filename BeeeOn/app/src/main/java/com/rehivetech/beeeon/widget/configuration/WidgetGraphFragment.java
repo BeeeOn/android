@@ -7,11 +7,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.arrayadapter.ModuleArrayAdapter;
-import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.widget.data.WidgetGraphData;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;

@@ -2,7 +2,7 @@ package com.rehivetech.beeeon.exception;
 
 import com.rehivetech.beeeon.IIdentifier;
 
-public enum ClientError implements ErrorCode, IIdentifier {
+public enum ClientError implements IErrorCode, IIdentifier {
 	UNKNOWN(0),
 
 	INTERNET_CONNECTION(1),

@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.spinnerItem.SpinnerItem;
+import com.rehivetech.beeeon.gui.spinnerItem.ISpinnerItem;
 import com.rehivetech.beeeon.household.device.Module;
 
 /**
@@ -43,7 +43,7 @@ public class WatchdogSensorType extends WatchdogBaseType {
 	}
 
 	@Override
-	public void setupGUI(SpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit) {
+	public void setupGUI(ISpinnerItem selected, FloatingActionButton operatorButton, EditText ruleTreshold, TextView ruleTresholdUnit) {
 		super.setupGUI(selected, operatorButton, ruleTreshold, ruleTresholdUnit);
 
 		// shows necessary gui elements

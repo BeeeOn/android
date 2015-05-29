@@ -9,8 +9,8 @@ import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.activity.LoginActivity;
-import com.rehivetech.beeeon.activity.MainActivity;
+import com.rehivetech.beeeon.gui.activity.LoginActivity;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
 
 public class TutorialHelper {
 	private static final String TAG = TutorialHelper.class.getSimpleName();

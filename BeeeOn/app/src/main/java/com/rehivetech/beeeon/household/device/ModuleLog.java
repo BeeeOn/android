@@ -19,30 +19,6 @@ public class ModuleLog {
 	private float mMinValue;
 	private float mMaxValue;
 
-	/*public static class EnumWrapper<E extends Enum<E> & IIdentifier> {
-
-		private Class<E> mEnumClass;
-
-		private E mValue;
-
-		public EnumWrapper(Class<E> enumClass) {
-			mEnumClass = enumClass;
-		}
-
-		public E[] values() {
-			return mEnumClass.getEnumConstants();
-		}
-
-		public void setValue(String value) {
-			for (E item : mEnumClass.getEnumConstants()) {
-				if (item.getId().equalsIgnoreCase(value))
-					mValue = item;
-			}
-
-			mValue = null;
-		}
-	}*/
-
 	public enum DataType implements IIdentifier {
 		MINIMUM("min"), //
 		AVERAGE("avg"), //
@@ -179,7 +155,8 @@ public class ModuleLog {
 	/**
 	 * Add single value.
 	 *
-	 * @param row
+	 * @param dateMillis
+	 * @param value
 	 */
 	public void addValue(Long dateMillis, Float value) {
 		mValues.put(dateMillis, value);
@@ -233,6 +210,23 @@ public class ModuleLog {
 		mValues.clear();
 		mMinValue = Float.POSITIVE_INFINITY;
 		mMaxValue = Float.NEGATIVE_INFINITY;
+	}
+
+	/**
+	 * Represents "pair" of data required for get module log
+	 */
+	public static class DataPair {
+		public final Module module;
+		public final Interval interval;
+		public final DataType type;
+		public final DataInterval gap;
+
+		public DataPair(final Module module, final Interval interval, final DataType type, final DataInterval gap) {
+			this.module = module;
+			this.interval = interval;
+			this.type = type;
+			this.gap = gap;
+		}
 	}
 
 }

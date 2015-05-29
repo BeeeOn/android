@@ -11,15 +11,14 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.GraphViewHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -60,7 +59,7 @@ public class WidgetGraphData extends WidgetModuleData {
 	public WidgetLogDataPersistence widgetLogData;
 	public WidgetLocationPersistence widgetLocation;
 
-	private LogDataPair mLogDataPair;
+	private ModuleLog.DataPair mLogDataPair;
 
 	/**
 	 * Constructing object holding information about widget (instantiating in config activity and then in service)
@@ -199,7 +198,7 @@ public class WidgetGraphData extends WidgetModuleData {
 		Device fac = (Device) mDevices.get(0);
 		if (fac == null) return;
 
-		mLogDataPair = new LogDataPair(
+		mLogDataPair = new ModuleLog.DataPair(
 				fac.getModules().get(0),
 				new Interval(widgetLogData.intervalStart, DateTime.now(DateTimeZone.UTC).getMillis()),
 				Utils.getEnumFromId(ModuleLog.DataType.class, widgetLogData.type),

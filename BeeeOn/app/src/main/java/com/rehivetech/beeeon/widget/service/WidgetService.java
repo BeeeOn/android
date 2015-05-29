@@ -15,19 +15,19 @@ import android.os.SystemClock;
 import android.util.SparseArray;
 
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.asynctask.ActorActionTask;
-import com.rehivetech.beeeon.asynctask.CallbackTask;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
-import com.rehivetech.beeeon.exception.ErrorCode;
+import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.LogDataPair;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -343,8 +343,8 @@ public class WidgetService extends Service {
 					} else if (refObj instanceof Location) {
 						Location loc = (Location) refObj;
 						mController.getLocationsModel().reloadLocationsByGate(loc.getGateId(), false); // TODO load only necessary locations
-					} else if (refObj instanceof LogDataPair) {
-						LogDataPair logPair = (LogDataPair) refObj;
+					} else if (refObj instanceof ModuleLog.DataPair) {
+						ModuleLog.DataPair logPair = (ModuleLog.DataPair) refObj;
 						mController.getModuleLogsModel().reloadModuleLog(logPair);
 					} else if (refObj instanceof WidgetWeatherPersistence) {
 						// skips city with id which is already in used data
@@ -375,7 +375,7 @@ public class WidgetService extends Service {
 
 			isCached = false;
 		} catch (AppException e) {
-			ErrorCode errCode = e.getErrorCode();
+			IErrorCode errCode = e.getErrorCode();
 			if (errCode != null) {
 				Log.e(TAG, e.getSimpleErrorMessage());
 				setAllWidgetsCached();
@@ -470,7 +470,7 @@ public class WidgetService extends Service {
 
 		// ----- and finally run asyncTask
 		final ActorActionTask actorActionTask = new ActorActionTask(mContext);
-		actorActionTask.setListener(new CallbackTask.CallbackTaskListener() {
+		actorActionTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				// NOTE: we don't have any response here, cause that manages received broadcast
