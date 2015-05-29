@@ -35,7 +35,7 @@ import com.rehivetech.beeeon.gamification.social.SocialVKontakte;
 import com.rehivetech.beeeon.gui.adapter.GamCategoryListAdapter;
 import com.rehivetech.beeeon.gui.dialog.PairNetworkFragmentDialog;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.util.BetterProgressDialog;
+import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.vk.sdk.VKAccessToken;

@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.util;
+package com.rehivetech.beeeon.gui.dialog;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
