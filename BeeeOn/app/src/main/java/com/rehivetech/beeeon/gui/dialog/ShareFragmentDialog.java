@@ -12,10 +12,10 @@ import com.facebook.share.widget.ShareDialog;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.achievement.GeneralAchievement;
-import com.rehivetech.beeeon.gamification.social.BeeeOnFacebook;
-import com.rehivetech.beeeon.gamification.social.BeeeOnGooglePlus;
-import com.rehivetech.beeeon.gamification.social.BeeeOnTwitter;
-import com.rehivetech.beeeon.gamification.social.BeeeOnVKontakte;
+import com.rehivetech.beeeon.gamification.social.SocialFacebook;
+import com.rehivetech.beeeon.gamification.social.SocialGooglePlus;
+import com.rehivetech.beeeon.gamification.social.SocialTwitter;
+import com.rehivetech.beeeon.gamification.social.SocialVKontakte;
 
 import java.util.ArrayList;
 
@@ -30,10 +30,10 @@ public class ShareFragmentDialog extends DialogFragment {
 	private String name;
 	private String date;
 
-	private BeeeOnFacebook mFb;
-	private BeeeOnTwitter mTw;
-	private BeeeOnGooglePlus mGp;
-	private BeeeOnVKontakte mVk;
+	private SocialFacebook mFb;
+	private SocialTwitter mTw;
+	private SocialGooglePlus mGp;
+	private SocialVKontakte mVk;
 	private ArrayList<CharSequence> socialNetworks = new ArrayList<>();
 
 	public ShareFragmentDialog() {
@@ -42,10 +42,10 @@ public class ShareFragmentDialog extends DialogFragment {
 //		this.name = item.getName();
 //		this.date = item.getDate();
 
-		mFb = BeeeOnFacebook.getInstance(getActivity());
-		mTw = BeeeOnTwitter.getInstance(getActivity());
-		mGp = BeeeOnGooglePlus.getInstance(getActivity());
-		mVk = BeeeOnVKontakte.getInstance(getActivity());
+		mFb = SocialFacebook.getInstance(getActivity());
+		mTw = SocialTwitter.getInstance(getActivity());
+		mGp = SocialGooglePlus.getInstance(getActivity());
+		mVk = SocialVKontakte.getInstance(getActivity());
 
 		socialNetworks.add(mGp.getName());
 		if (mFb.isPaired()) socialNetworks.add(mFb.getName());

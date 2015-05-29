@@ -11,20 +11,20 @@ import com.rehivetech.beeeon.controller.Controller;
 /**
  * @author Jan Lamacz
  */
-public class BeeeOnGooglePlus implements BeeeOnSocialNetwork {
-	private static final String TAG = BeeeOnGooglePlus.class.getSimpleName();
+public class SocialGooglePlus implements SocialNetwork {
+	private static final String TAG = SocialGooglePlus.class.getSimpleName();
 	private static final String NAME = "Google Plus";
 
-	private static BeeeOnGooglePlus mInstance;
+	private static SocialGooglePlus mInstance;
 	private Context mContext;
 
-	private BeeeOnGooglePlus(Context context) {
+	private SocialGooglePlus(Context context) {
 		mContext = context;
 	}
 
-	public static BeeeOnGooglePlus getInstance(Context context) {
+	public static SocialGooglePlus getInstance(Context context) {
 		if (mInstance == null) {
-			mInstance = new BeeeOnGooglePlus(context);
+			mInstance = new SocialGooglePlus(context);
 		}
 		return mInstance;
 	}

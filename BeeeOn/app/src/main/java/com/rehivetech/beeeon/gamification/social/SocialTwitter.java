@@ -31,11 +31,11 @@ import io.fabric.sdk.android.Fabric;
  *
  * @author Jan Lamacz
  */
-public class BeeeOnTwitter extends Observable implements BeeeOnSocialNetwork {
-	private static final String TAG = BeeeOnTwitter.class.getSimpleName();
+public class SocialTwitter extends Observable implements SocialNetwork {
+	private static final String TAG = SocialTwitter.class.getSimpleName();
 	private static final String NAME = "Twitter";
 
-	private static BeeeOnTwitter mInstance;
+	private static SocialTwitter mInstance;
 	private SharedPreferences mPrefs;
 	private Context mContext;
 	private Twitter mTwitter;
@@ -45,7 +45,7 @@ public class BeeeOnTwitter extends Observable implements BeeeOnSocialNetwork {
 	private String mUserName;
 	private String mAccessToken;
 
-	private BeeeOnTwitter(Context context) {
+	private SocialTwitter(Context context) {
 		mContext = context;
 		mPrefs = Controller.getInstance(mContext).getUserSettings();
 		mAccessToken = mPrefs.getString(Constants.PERSISTENCE_PREF_LOGIN_TWITTER, null);
@@ -57,9 +57,9 @@ public class BeeeOnTwitter extends Observable implements BeeeOnSocialNetwork {
 		mCore = mTwitter.core;
 	}
 
-	public static BeeeOnTwitter getInstance(Context context) {
+	public static SocialTwitter getInstance(Context context) {
 		if (mInstance == null) {
-			mInstance = new BeeeOnTwitter(context);
+			mInstance = new SocialTwitter(context);
 		}
 		return mInstance;
 	}

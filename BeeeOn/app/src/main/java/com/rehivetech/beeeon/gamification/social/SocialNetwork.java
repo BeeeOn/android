@@ -5,7 +5,7 @@ import android.app.Activity;
 /**
  * @author Jan Lamacz
  */
-public interface BeeeOnSocialNetwork {
+public interface SocialNetwork {
 	public void logIn(Activity activity);
 
 	public void logOut();

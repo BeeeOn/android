@@ -27,26 +27,26 @@ import java.util.Observable;
 /**
  * @author Jan Lamacz
  */
-public class BeeeOnVKontakte extends Observable implements BeeeOnSocialNetwork {
-	private static final String TAG = BeeeOnVKontakte.class.getSimpleName();
+public class SocialVKontakte extends Observable implements SocialNetwork {
+	private static final String TAG = SocialVKontakte.class.getSimpleName();
 	private static final String NAME = "Vkontakte";
 
-	private static BeeeOnVKontakte mInstance;
+	private static SocialVKontakte mInstance;
 	private Context mContext;
 
 	// user variables
 	private String mUserName;
 	private String mAccessToken;
 
-	private BeeeOnVKontakte(Context context) {
+	private SocialVKontakte(Context context) {
 		mContext = context.getApplicationContext();
 		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
 		mAccessToken = prefs.getString(Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE, null);
 	}
 
-	public static BeeeOnVKontakte getInstance(Context context) {
+	public static SocialVKontakte getInstance(Context context) {
 		if (mInstance == null) {
-			mInstance = new BeeeOnVKontakte(context);
+			mInstance = new SocialVKontakte(context);
 		}
 		return mInstance;
 	}

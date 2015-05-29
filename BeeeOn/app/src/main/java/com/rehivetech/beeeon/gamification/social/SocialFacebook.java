@@ -33,26 +33,26 @@ import java.util.Observable;
  *
  * @author Jan Lamacz
  */
-public class BeeeOnFacebook extends Observable implements BeeeOnSocialNetwork {
-	private static final String TAG = BeeeOnFacebook.class.getSimpleName();
+public class SocialFacebook extends Observable implements SocialNetwork {
+	private static final String TAG = SocialFacebook.class.getSimpleName();
 	private static final String NAME = "Facebook";
 
-	private static BeeeOnFacebook mInstance;
+	private static SocialFacebook mInstance;
 	private Context mContext;
 
 	// Facebook user variables
 	private String mUserName;
 	private String mAccessToken;
 
-	private BeeeOnFacebook(Context context) {
+	private SocialFacebook(Context context) {
 		mContext = context.getApplicationContext();
 		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
 		mAccessToken = prefs.getString(Constants.PERSISTENCE_PREF_LOGIN_FACEBOOK, null);
 	}
 
-	public static BeeeOnFacebook getInstance(Context context) {
+	public static SocialFacebook getInstance(Context context) {
 		if (mInstance == null) {
-			mInstance = new BeeeOnFacebook(context);
+			mInstance = new SocialFacebook(context);
 		}
 		return mInstance;
 	}

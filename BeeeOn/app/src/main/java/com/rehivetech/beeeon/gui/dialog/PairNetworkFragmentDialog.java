@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gamification.social.BeeeOnFacebook;
-import com.rehivetech.beeeon.gamification.social.BeeeOnTwitter;
-import com.rehivetech.beeeon.gamification.social.BeeeOnVKontakte;
+import com.rehivetech.beeeon.gamification.social.SocialFacebook;
+import com.rehivetech.beeeon.gamification.social.SocialTwitter;
+import com.rehivetech.beeeon.gamification.social.SocialVKontakte;
 
 import java.util.ArrayList;
 
@@ -23,14 +23,14 @@ import java.util.ArrayList;
 public class PairNetworkFragmentDialog extends DialogFragment {
 	private ArrayList<CharSequence> mSocialNetworks = new ArrayList<>();
 
-	private BeeeOnFacebook mFb;
-	private BeeeOnTwitter mTw;
-	private BeeeOnVKontakte mVk;
+	private SocialFacebook mFb;
+	private SocialTwitter mTw;
+	private SocialVKontakte mVk;
 
 	public PairNetworkFragmentDialog() {
-		mFb = BeeeOnFacebook.getInstance(getActivity());
-		mTw = BeeeOnTwitter.getInstance(getActivity());
-		mVk = BeeeOnVKontakte.getInstance(getActivity());
+		mFb = SocialFacebook.getInstance(getActivity());
+		mTw = SocialTwitter.getInstance(getActivity());
+		mVk = SocialVKontakte.getInstance(getActivity());
 
 		if (!mFb.isPaired()) mSocialNetworks.add(mFb.getName());
 		if (!mTw.isPaired()) mSocialNetworks.add(mTw.getName());

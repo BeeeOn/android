@@ -31,10 +31,10 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.GamificationCategory;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.gamification.social.BeeeOnFacebook;
-import com.rehivetech.beeeon.gamification.social.BeeeOnSocialNetwork;
-import com.rehivetech.beeeon.gamification.social.BeeeOnTwitter;
-import com.rehivetech.beeeon.gamification.social.BeeeOnVKontakte;
+import com.rehivetech.beeeon.gamification.social.SocialFacebook;
+import com.rehivetech.beeeon.gamification.social.SocialNetwork;
+import com.rehivetech.beeeon.gamification.social.SocialTwitter;
+import com.rehivetech.beeeon.gamification.social.SocialVKontakte;
 import com.rehivetech.beeeon.util.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
@@ -74,9 +74,9 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	private boolean showMoreAccounts = false;
 	private final int totalNetworks = 3;
 	private int unconnectedNetworks = 0;
-	private BeeeOnFacebook mFb;
-	private BeeeOnTwitter mTw;
-	private BeeeOnVKontakte mVk;
+	private SocialFacebook mFb;
+	private SocialTwitter mTw;
+	private SocialVKontakte mVk;
 	private TextView mFbName;
 	private TextView mTwName;
 	private TextView mVkName;
@@ -140,9 +140,9 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 			mAchievementList.addObserver(this);
 		}
 
-		mFb = BeeeOnFacebook.getInstance(mContext);
-		mTw = BeeeOnTwitter.getInstance(mContext);
-		mVk = BeeeOnVKontakte.getInstance(mContext);
+		mFb = SocialFacebook.getInstance(mContext);
+		mTw = SocialTwitter.getInstance(mContext);
+		mVk = SocialVKontakte.getInstance(mContext);
 
 		// Facebook sdk needs to be initialised in Activity, but its used in Profile Fragment
 		// Registering callback for facebook log in
@@ -150,9 +150,9 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mFacebookCallbackManager = CallbackManager.Factory.create();
 		LoginManager.getInstance().registerCallback(
 				mFacebookCallbackManager,
-				BeeeOnFacebook.getInstance(this).getListener());
+				SocialFacebook.getInstance(this).getListener());
 		VKSdk.initialize(
-				BeeeOnVKontakte.getInstance(this).getListener(),
+				SocialVKontakte.getInstance(this).getListener(),
 				getString(R.string.vkontakte_app_id),
 				VKAccessToken.tokenFromSharedPreferences(this, Constants.PERSISTENCE_PREF_LOGIN_VKONTAKTE)
 		);
@@ -293,7 +293,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mMoreArrow.startAnimation(rotateAnim);
 	}
 
-	private void setOnClickLogout(final BeeeOnSocialNetwork network, final TextView textView) {
+	private void setOnClickLogout(final SocialNetwork network, final TextView textView) {
 		if (!network.isPaired() || network.getUserName() == null) return;
 		textView.setText(network.getUserName());
 		textView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -306,7 +306,7 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		});
 	}
 
-	private void setOnClickLogin(final BeeeOnSocialNetwork network, TextView textView) {
+	private void setOnClickLogin(final SocialNetwork network, TextView textView) {
 		textView.setText(getResources().getString(R.string.login_login));
 		textView.setOnClickListener(new View.OnClickListener() {
 			@Override
