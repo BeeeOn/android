@@ -12,7 +12,6 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.pair.LogDataPair;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -230,7 +229,7 @@ public interface INetwork {
 	 * @param pair data of log (from, to, type, interval)
 	 * @return list of rows with logged data
 	 */
-	ModuleLog getLog(String gateID, Module module, LogDataPair pair);
+	ModuleLog getLog(String gateID, Module module, ModuleLog.DataPair pair);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ROOMS///////////////////////////////////////

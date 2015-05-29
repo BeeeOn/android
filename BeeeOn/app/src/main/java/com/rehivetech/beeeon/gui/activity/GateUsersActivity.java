@@ -27,7 +27,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.pair.SaveUserPair;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.EditUserTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
@@ -180,7 +179,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 	private void doRemoveUserTask(User user) {
 		RemoveUserTask removeUserTask = new RemoveUserTask(this);
-		SaveUserPair pair = new SaveUserPair(user, mGate.getId());
+		User.DataPair pair = new User.DataPair(user, mGate.getId());
 
 		removeUserTask.setListener(new ICallbackTaskListener() {
 			@Override
@@ -199,7 +198,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 	private void doEditUserTask(User user) {
 		EditUserTask editUserTask = new EditUserTask(this);
-		SaveUserPair pair = new SaveUserPair(user, mGate.getId());
+		User.DataPair pair = new User.DataPair(user, mGate.getId());
 
 		editUserTask.setListener(new ICallbackTaskListener() {
 			@Override

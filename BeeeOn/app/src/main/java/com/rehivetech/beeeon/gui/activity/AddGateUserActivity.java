@@ -19,7 +19,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.pair.SaveUserPair;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.AddUserTask;
 
@@ -111,14 +110,14 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 				newUser.setEmail(mEmail.getText().toString());
 				newUser.setRole(User.Role.values()[mRole.getSelectedItemPosition()]);
 
-				SaveUserPair pair = new SaveUserPair(newUser, mGate.getId());
+				User.DataPair pair = new User.DataPair(newUser, mGate.getId());
 
 				doAddGateUserTask(pair);
 			}
 		});
 	}
 
-	protected void doAddGateUserTask(SaveUserPair pair) {
+	protected void doAddGateUserTask(User.DataPair pair) {
 		AddUserTask addUserTask = new AddUserTask(mActivity);
 
 		addUserTask.setListener(new ICallbackTaskListener() {

@@ -25,7 +25,6 @@ import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
@@ -445,7 +444,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public ModuleLog getLog(String gateId, Module module, LogDataPair pair) {
+	public ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair) {
 		// Generate random values for log in demo mode
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 

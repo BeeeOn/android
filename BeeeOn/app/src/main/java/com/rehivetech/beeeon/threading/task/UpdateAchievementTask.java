@@ -3,7 +3,7 @@ package com.rehivetech.beeeon.threading.task;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.pair.AchievementPair;
+import com.rehivetech.beeeon.gamification.achievement.Achievement;
 import com.rehivetech.beeeon.threading.CallbackTask;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author Jan Lamacz
  */
-public class UpdateAchievementTask extends CallbackTask<AchievementPair> {
+public class UpdateAchievementTask extends CallbackTask<Achievement.DataPair> {
 	private List<String> mAchievementId;
 
 	public UpdateAchievementTask(Context context) {
@@ -19,7 +19,7 @@ public class UpdateAchievementTask extends CallbackTask<AchievementPair> {
 	}
 
 	@Override
-	protected Boolean doInBackground(AchievementPair pair) {
+	protected Boolean doInBackground(Achievement.DataPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
 		mAchievementId = controller.getAchievementsModel().updateAchievement(pair.gateId, pair.achievement);

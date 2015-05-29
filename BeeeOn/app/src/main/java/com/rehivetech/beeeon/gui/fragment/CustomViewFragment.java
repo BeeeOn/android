@@ -24,7 +24,6 @@ import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.GetModulesLogsTask;
 import com.rehivetech.beeeon.util.GraphViewHelper;
@@ -201,10 +200,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 		for (int i = 0; i < mModules.size(); i++) {
 			// Prepare data for this graph
-			final List<LogDataPair> pairs = new ArrayList<>();
+			final List<ModuleLog.DataPair> pairs = new ArrayList<>();
 
 			for (Module module : mModules.valueAt(i)) {
-				LogDataPair pair = new LogDataPair( //
+				ModuleLog.DataPair pair = new ModuleLog.DataPair( //
 						module, // module
 						new Interval(start, end), // interval from-to
 						DataType.AVERAGE, // type
@@ -227,7 +226,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 					// Remember type of graph we're downloading data for
 					int typeId = pairs.get(0).module.getType().getTypeId();
 
-					for (LogDataPair pair : pairs) {
+					for (ModuleLog.DataPair pair : pairs) {
 						ModuleLog log = mController.getModuleLogsModel().getModuleLog(pair);
 						fillGraph(log, pair.module);
 					}

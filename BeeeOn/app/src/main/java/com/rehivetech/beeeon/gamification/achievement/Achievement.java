@@ -10,7 +10,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
-import com.rehivetech.beeeon.pair.AchievementPair;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.UpdateAchievementTask;
 import com.rehivetech.beeeon.util.Log;
@@ -50,12 +49,12 @@ public abstract class Achievement implements Observer {
 		mAchievementList = AchievementList.getInstance(mContext);
 		if (mAchievementList.isDownloaded()) {
 			mData = mAchievementList.getItem(achievement_id);
-			doAddUpdateAchievementTask(new AchievementPair(mGateId, mAchievementId));
+			doAddUpdateAchievementTask(new DataPair(mGateId, mAchievementId));
 		} else
 			mAchievementList.addObserver(this);
 	}
 
-	protected void doAddUpdateAchievementTask(AchievementPair pair) {
+	protected void doAddUpdateAchievementTask(DataPair pair) {
 		if (!mSendUpdate && mData.isDone()) return; // if is done and should not be send, skip it
 
 		mUpdateAchievementTask = new UpdateAchievementTask(mContext);
@@ -98,6 +97,16 @@ public abstract class Achievement implements Observer {
 	@Override
 	public void update(Observable observable, Object o) {
 		if (o.toString().equals("achievements"))
-			doAddUpdateAchievementTask(new AchievementPair(mGateId, mAchievementId));
+			doAddUpdateAchievementTask(new DataPair(mGateId, mAchievementId));
+	}
+
+	public static class DataPair {
+		public final String gateId;
+		public final String achievement;
+
+		public DataPair(final String gateId, final String achievement) {
+			this.gateId = gateId;
+			this.achievement = achievement;
+		}
 	}
 }

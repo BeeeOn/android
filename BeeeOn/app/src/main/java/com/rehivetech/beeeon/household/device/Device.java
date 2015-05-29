@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -278,4 +279,19 @@ public class Device implements IIdentifier {
 		return null;
 	}
 
+	public static class DataPair {
+		public final Device mDevice;
+		public final EnumSet<Module.SaveModule> what;
+		public final Location location;
+
+		public DataPair(final Device device, final EnumSet<Module.SaveModule> what) {
+			this(device, null, what);
+		}
+
+		public DataPair(final Device device, final Location newLoc, final EnumSet<Module.SaveModule> what) {
+			this.mDevice = device;
+			this.what = what;
+			this.location = newLoc;
+		}
+	}
 }

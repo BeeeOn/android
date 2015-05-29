@@ -26,7 +26,6 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.util.Log;
@@ -137,7 +136,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 						location = mFragment.getLocation();
 					}
 					// Send request for new loc ..
-					doSaveDeviceWithNewLocation(new SaveDevicePair(device, location, EnumSet.copyOf(what)));
+					doSaveDeviceWithNewLocation(new Device.DataPair(device, location, EnumSet.copyOf(what)));
 					return true;
 				} else {
 					device.setLocationId(mFragment.getLocationId());
@@ -150,7 +149,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			}
 
 			if (!mFragment.isSetNewRoom())
-				doSaveDeviceTask(new SaveDevicePair(device, EnumSet.copyOf(what)));
+				doSaveDeviceTask(new Device.DataPair(device, EnumSet.copyOf(what)));
 
 			return true;
 		} else if (id == android.R.id.home) {
@@ -175,7 +174,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	 * ASYNC TASK - SAVE
 	 */
 
-	private void doSaveDeviceWithNewLocation(SaveDevicePair pair) {
+	private void doSaveDeviceWithNewLocation(Device.DataPair pair) {
 		mProgress.show();
 		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 
@@ -201,7 +200,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		callbackTaskManager.executeTask(saveDeviceTask, pair, false);
 	}
 
-	public void doSaveDeviceTask(SaveDevicePair pair) {
+	public void doSaveDeviceTask(Device.DataPair pair) {
 		mProgress.show();
 		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 

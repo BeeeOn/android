@@ -21,11 +21,11 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.util.Log;
@@ -343,8 +343,8 @@ public class WidgetService extends Service {
 					} else if (refObj instanceof Location) {
 						Location loc = (Location) refObj;
 						mController.getLocationsModel().reloadLocationsByGate(loc.getGateId(), false); // TODO load only necessary locations
-					} else if (refObj instanceof LogDataPair) {
-						LogDataPair logPair = (LogDataPair) refObj;
+					} else if (refObj instanceof ModuleLog.DataPair) {
+						ModuleLog.DataPair logPair = (ModuleLog.DataPair) refObj;
 						mController.getModuleLogsModel().reloadModuleLog(logPair);
 					} else if (refObj instanceof WidgetWeatherPersistence) {
 						// skips city with id which is already in used data

@@ -3,18 +3,18 @@ package com.rehivetech.beeeon.threading.task;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.SaveDevicePair;
 import com.rehivetech.beeeon.threading.CallbackTask;
 
-public class SaveDeviceTask extends CallbackTask<SaveDevicePair> {
+public class SaveDeviceTask extends CallbackTask<Device.DataPair> {
 
 	public SaveDeviceTask(Context context) {
 		super(context);
 	}
 
 	@Override
-	protected Boolean doInBackground(SaveDevicePair pair) {
+	protected Boolean doInBackground(Device.DataPair pair) {
 		Controller controller = Controller.getInstance(mContext);
 
 		if (pair.location != null && pair.location.getId().equals(Location.NEW_LOCATION_ID)) {

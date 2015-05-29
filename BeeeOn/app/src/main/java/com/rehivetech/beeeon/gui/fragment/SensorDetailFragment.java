@@ -47,7 +47,6 @@ import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.pair.LogDataPair;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
@@ -605,7 +604,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		Log.d(TAG, String.format("Loading graph data from %s to %s.", fmt.print(start), fmt.print(end)));
 
 		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(mActivity);
-		final LogDataPair pair = new LogDataPair( //
+		final ModuleLog.DataPair pair = new ModuleLog.DataPair( //
 				mModule, // module
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
