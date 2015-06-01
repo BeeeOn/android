@@ -48,7 +48,7 @@ public class AddGateFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.activity_add_gate_activity_dialog, container, false);
+		mView = inflater.inflate(R.layout.fragment_add_gate_dialog, container, false);
 
 		mLayout = (LinearLayout) mView.findViewById(R.id.container);
 
@@ -110,11 +110,12 @@ public class AddGateFragment extends TrackFragment {
 
 		if (matcher.find()) {
 			String id = matcher.group(1);
-			Log.d(TAG, String.format("Found code: %s", id));
 
 			// Fill scanned data into edit text
 			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
 			serialNumberEdit.setText(id);
+
+
 		} else {
 			Toast.makeText(getActivity(), R.string.toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
 		}
