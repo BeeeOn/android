@@ -21,6 +21,9 @@ import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.util.Log;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class AddGateFragment extends TrackFragment {
 
 	private static final String TAG = AddGateFragment.class.getSimpleName();
@@ -97,12 +100,24 @@ public class AddGateFragment extends TrackFragment {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == SCAN_REQUEST && resultCode == MainActivity.RESULT_OK) {
-			// Fill scanned code into edit text
-			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
-			serialNumberEdit.setText(data.getStringExtra("SCAN_RESULT"));
-
-			//TODO: And click positive button
+			onScanQRCode(data.getStringExtra("SCAN_RESULT"));
 		}
+	}
+
+	private void onScanQRCode(String data) {
+		// Fill scanned data into edit text
+		EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
+		serialNumberEdit.setText(data);
+
+		Pattern pattern = Pattern.compile("id=(\\d+)");
+
+		Matcher matcher = pattern.matcher(data);
+
+		if (matcher.find()) {
+			Log.d(TAG,String.format("Found code: %s", matcher.group(1)));
+		}
+
+		//TODO: And click positive button
 	}
 
 	public String getGateName() {
