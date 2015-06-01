@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
@@ -11,31 +12,32 @@ import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
 public class AddGateFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
-	protected static final String[] CONTENT = new String[]{"Welcome", "to", "BeeeOn", "Test",};
 	protected static final int[] ICONS = new int[]{
 			R.drawable.loc_bath_room,
 			R.drawable.loc_garden,
 			R.drawable.loc_wc,
 			R.drawable.loc_dinner_room
 	};
-	private final Context mActivity;
+	private final Context mContext;
 
-	private int mCount = 4;
+	private static final int PAGES_COUNT = 4;
+
+	private AddGateFragment mAddGateFragment;
 
 	public AddGateFragmentAdapter(FragmentManager fm, Context context) {
 		super(fm);
-		mActivity = context;
+		mContext = context;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step, mActivity.getString(R.string.tut_add_gate_text_1));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step, mContext.getString(R.string.tut_add_gate_text_1));
 			case 1:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step, mActivity.getString(R.string.tut_add_gate_text_2));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step, mContext.getString(R.string.tut_add_gate_text_2));
 			case 2:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step, mActivity.getString(R.string.tut_add_gate_text_3));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step, mContext.getString(R.string.tut_add_gate_text_3));
 			case 3:
 				return new AddGateFragment();
 		}
@@ -43,13 +45,17 @@ public class AddGateFragmentAdapter extends FragmentPagerAdapter implements Icon
 	}
 
 	@Override
-	public int getCount() {
-		return mCount;
+	public Object instantiateItem(ViewGroup container, int position) {
+		Fragment fragment = (Fragment) super.instantiateItem(container, position);
+		if (position == PAGES_COUNT - 1) {
+			mAddGateFragment = (AddGateFragment) fragment;
+		}
+		return fragment;
 	}
 
 	@Override
-	public CharSequence getPageTitle(int position) {
-		return AddGateFragmentAdapter.CONTENT[position % CONTENT.length];
+	public int getCount() {
+		return PAGES_COUNT;
 	}
 
 	@Override
@@ -57,10 +63,7 @@ public class AddGateFragmentAdapter extends FragmentPagerAdapter implements Icon
 		return ICONS[index % ICONS.length];
 	}
 
-	public void setCount(int count) {
-		if (count > 0 && count <= 10) {
-			mCount = count;
-			notifyDataSetChanged();
-		}
+	public AddGateFragment getAddGateFragment() {
+		return mAddGateFragment;
 	}
 }

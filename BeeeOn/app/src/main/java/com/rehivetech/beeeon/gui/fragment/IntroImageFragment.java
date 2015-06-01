@@ -72,9 +72,6 @@ public final class IntroImageFragment extends Fragment {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			Context mActivity = getActivity();
-			if (mActivity instanceof AddGateActivity) {
-				((AddGateActivity) mActivity).resetBtn();
-			}
 			if (mActivity instanceof AddSensorActivity) {
 				((AddSensorActivity) mActivity).resetBtn();
 			} else if (mActivity instanceof IntroActivity) {

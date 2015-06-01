@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -25,16 +26,14 @@ import com.rehivetech.beeeon.threading.task.RegisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class AddGateActivity extends BaseApplicationActivity {
+public class AddGateActivity extends BaseApplicationActivity implements AddGateFragment.OnAddGateListener {
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 
 	private Controller mController;
 
-	private AddGateFragmentAdapter mGate;
+	private AddGateFragmentAdapter mPagerAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
-
-	private AddGateFragment mFragment;
 
 	private Button mSkip;
 	private Button mCancel;
@@ -43,7 +42,6 @@ public class AddGateActivity extends BaseApplicationActivity {
 
 	private ProgressDialog mProgress;
 
-	private Activity mActivity;
 	private Toolbar mToolbar;
 
 	@Override
@@ -61,17 +59,36 @@ public class AddGateActivity extends BaseApplicationActivity {
 		// Get controller
 		mController = Controller.getInstance(this);
 
-		mActivity = this;
-
-		mGate = new AddGateFragmentAdapter(getSupportFragmentManager(), mActivity);
-
+		mPagerAdapter = new AddGateFragmentAdapter(getSupportFragmentManager(), this);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
-		mPager.setAdapter(mGate);
-		mPager.setOffscreenPageLimit(mGate.getCount());
+		mPager.setAdapter(mPagerAdapter);
+		mPager.setOffscreenPageLimit(mPagerAdapter.getCount());
 
 		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
+		mIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				if (position == mPagerAdapter.getCount() - 1) {
+					mSkip.setVisibility(View.INVISIBLE);
+					mNext.setText(AddGateActivity.this.getString(R.string.tutorial_add));
+					InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+				} else {
+					mSkip.setVisibility(View.VISIBLE);
+					mNext.setText(AddGateActivity.this.getString(R.string.tutorial_next));
+				}
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+			}
+		});
 
 		mIndicator.setPageColor(0x88FFFFFF);
 		mIndicator.setFillColor(0xFFFFFFFF);
@@ -80,7 +97,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 		initButtons();
 
 		// Prepare progress dialog
-		mProgress = new ProgressDialog(mActivity);
+		mProgress = new ProgressDialog(this);
 		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -96,7 +113,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onClick(View v) {
-				mPager.setCurrentItem(mGate.getCount() - 1);
+				mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
 			}
 		});
 
@@ -109,7 +126,7 @@ public class AddGateActivity extends BaseApplicationActivity {
 					prefs.edit().putBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_GATE, true).apply();
 				}
 				setResult(Constants.ADD_GATE_CANCELED);
-				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				InputMethodManager imm = (InputMethodManager) AddGateActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				finish();
 			}
@@ -119,34 +136,15 @@ public class AddGateActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (mNext.getText().equals(mActivity.getString(R.string.tutorial_next))) {
+				if (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1) {
+					registerGate();
+				} else {
 					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-				} else if (mNext.getText().equals(mActivity.getString(R.string.tutorial_add))) {
-					String gateName = mFragment.getGateName();
-					String gateCode = mFragment.getGateCode();
-					Log.d(TAG, "adaName: " + gateName + " adaCode: " + gateCode);
-
-					if (gateCode.isEmpty()) {
-						// TODO: Please fill AdapterCode
-						Toast.makeText(mActivity, R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
-					} else {
-						// Show progress bar for saving
-						mProgress.show();
-						Gate gate = new Gate();
-						gate.setId(gateCode);
-						gate.setName(gateName);
-						doRegisterGateTask(gate);
-					}
 				}
 			}
 		});
 
 
-	}
-
-	public void setBtnLastPage() {
-		mSkip.setVisibility(View.INVISIBLE);
-		mNext.setText(mActivity.getString(R.string.tutorial_add));
 	}
 
 	@Override
@@ -165,17 +163,6 @@ public class AddGateActivity extends BaseApplicationActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-
-	public void resetBtn() {
-		mSkip.setVisibility(View.VISIBLE);
-		mNext.setText(mActivity.getString(R.string.tutorial_next));
-	}
-
-
-	public void setFragment(AddGateFragment addGateFragment) {
-		mFragment = addGateFragment;
-	}
-
 	public void doRegisterGateTask(Gate gate) {
 		RegisterGateTask registerGateTask = new RegisterGateTask(this);
 
@@ -186,10 +173,10 @@ public class AddGateActivity extends BaseApplicationActivity {
 				mProgress.cancel();
 
 				if (success) {
-					Toast.makeText(mActivity, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
 
 					setResult(Constants.ADD_GATE_SUCCESS);
-					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager imm = (InputMethodManager) AddGateActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					finish();
 				}
@@ -200,4 +187,31 @@ public class AddGateActivity extends BaseApplicationActivity {
 		callbackTaskManager.executeTask(registerGateTask, gate);
 	}
 
+	@Override
+	public void onCodeScanned() {
+		// automatically clicks the next button
+		registerGate();
+	}
+
+	public void registerGate() {
+		AddGateFragment fragment = mPagerAdapter.getAddGateFragment();
+		if (fragment == null) {
+			return;
+		}
+
+		String gateName = fragment.getGateName();
+		String gateCode = fragment.getGateCode();
+		Log.d(TAG, String.format("Name: %s Code: %s", gateName, gateCode));
+
+		if (gateCode.isEmpty()) {
+			Toast.makeText(this, R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
+		} else {
+			// Show progress bar for saving
+			mProgress.show();
+			Gate gate = new Gate();
+			gate.setId(gateCode);
+			gate.setName(gateName);
+			doRegisterGateTask(gate);
+		}
+	}
 }
