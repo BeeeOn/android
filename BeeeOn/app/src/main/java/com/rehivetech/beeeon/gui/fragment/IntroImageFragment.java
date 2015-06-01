@@ -13,7 +13,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.AddSensorActivity;
 import com.rehivetech.beeeon.gui.activity.IntroActivity;
 
@@ -24,23 +23,23 @@ public final class IntroImageFragment extends Fragment {
 	public static IntroImageFragment newInstance(int resourceImg, String text) {
 		IntroImageFragment fragment = new IntroImageFragment();
 
-		fragment.mContent = resourceImg;
-		fragment.mText = text;
+		Bundle args = new Bundle();
+		args.putInt(KEY_CONTENT, resourceImg);
+		args.putString(KEY_TEXT, text);
+		fragment.setArguments(args);
 
 		return fragment;
 	}
 
-	private int mContent = 0;
-	private String mText = "";
+	private int mImageRes;
+	private String mText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if ((savedInstanceState != null) && savedInstanceState.containsKey(KEY_CONTENT)) {
-			mContent = savedInstanceState.getInt(KEY_CONTENT);
-			mText = savedInstanceState.getString(KEY_TEXT);
-		}
+		mImageRes = getArguments().getInt(KEY_CONTENT);
+		mText = getArguments().getString(KEY_TEXT);
 	}
 
 	@Override
@@ -53,7 +52,7 @@ public final class IntroImageFragment extends Fragment {
 		text.setTextColor(getResources().getColor(R.color.white));
 
 		ImageView image = new ImageView(getActivity());
-		image.setImageResource(mContent);
+		image.setImageResource(mImageRes);
 		image.setPadding(20, 20, 20, 20);
 
 
@@ -85,10 +84,4 @@ public final class IntroImageFragment extends Fragment {
 
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(KEY_CONTENT, mContent);
-		outState.putString(KEY_TEXT, mText);
-	}
 }
