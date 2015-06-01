@@ -119,6 +119,8 @@
 	<string name="toast_achievement_title">Achievement unlocked!</string>
     <string name="toast_field_must_be_filled">This field must be filled!</string>
     <string name="toast_field_must_be_number">This field must be number!</string>
+    <string name="toast_error_no_qr_reader">Failed to open Google Play</string>
+    <string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
 
     <!-- Progress -->
 	<string name="progress_signing">Logging in&#8230;</string>
@@ -398,7 +400,5 @@
     <string name="notification_name_link">Link</string>
     <string name="widget_location_list_title">BeeeOn location</string>
     <string name="toast_device_not_available">Device is not available</string>
-    <string name="error_no_qr_reader">Failed to open Google Play</string>
-
 
 </resources>

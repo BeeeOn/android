@@ -84,7 +84,7 @@ public class AddGateFragment extends TrackFragment {
 						Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
 						startActivity(marketIntent);
 					} catch (ActivityNotFoundException e1) {
-						Toast.makeText(getActivity(),R.string.error_no_qr_reader, Toast.LENGTH_LONG).show();
+						Toast.makeText(getActivity(), R.string.toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
 					}
 				}
 			}
@@ -105,16 +105,18 @@ public class AddGateFragment extends TrackFragment {
 	}
 
 	private void onScanQRCode(String data) {
-		// Fill scanned data into edit text
-		EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
-		serialNumberEdit.setText(data);
-
 		Pattern pattern = Pattern.compile("id=(\\d+)");
-
 		Matcher matcher = pattern.matcher(data);
 
 		if (matcher.find()) {
-			Log.d(TAG,String.format("Found code: %s", matcher.group(1)));
+			String id = matcher.group(1);
+			Log.d(TAG, String.format("Found code: %s", id));
+
+			// Fill scanned data into edit text
+			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
+			serialNumberEdit.setText(id);
+		} else {
+			Toast.makeText(getActivity(), R.string.toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
 		}
 
 		//TODO: And click positive button
