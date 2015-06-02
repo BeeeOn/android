@@ -1,11 +1,10 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.Activity;
+import android.support.v4.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -18,7 +17,8 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.AddGateFragmentAdapter;
+import com.rehivetech.beeeon.gui.adapter.AddingUniversalFragment;
+import com.rehivetech.beeeon.gui.adapter.ImageTextPair;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -26,12 +26,15 @@ import com.rehivetech.beeeon.threading.task.RegisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddGateActivity extends BaseApplicationActivity implements AddGateFragment.OnAddGateListener {
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 
 	private Controller mController;
 
-	private AddGateFragmentAdapter mPagerAdapter;
+	private AddingUniversalFragment mPagerAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
 
@@ -59,7 +62,13 @@ public class AddGateActivity extends BaseApplicationActivity implements AddGateF
 		// Get controller
 		mController = Controller.getInstance(this);
 
-		mPagerAdapter = new AddGateFragmentAdapter(getSupportFragmentManager(), this);
+		List<ImageTextPair> pairs = new ArrayList<ImageTextPair>();
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, getResources().getString(R.string.tut_add_gate_text_1)));
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step,getResources().getString(R.string.tut_add_gate_text_2)));
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_third_step,getResources().getString(R.string.tut_add_gate_text_3)));
+
+		FragmentManager fm = getSupportFragmentManager();
+		mPagerAdapter = new AddingUniversalFragment(fm,pairs,new AddGateFragment());
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mPagerAdapter);
