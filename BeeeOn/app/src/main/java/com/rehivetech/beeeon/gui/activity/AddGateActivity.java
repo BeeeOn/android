@@ -62,11 +62,13 @@ public class AddGateActivity extends BaseApplicationActivity implements AddGateF
 		// Get controller
 		mController = Controller.getInstance(this);
 
+		//creating list of objects that will be used as params for the constructor of AddingUniversalFragment
 		List<ImageTextPair> pairs = new ArrayList<ImageTextPair>();
 		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, getResources().getString(R.string.tut_add_gate_text_1)));
 		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step,getResources().getString(R.string.tut_add_gate_text_2)));
 		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_third_step,getResources().getString(R.string.tut_add_gate_text_3)));
 
+		//FragmentManager object is necessary for the contructor of Adding....
 		FragmentManager fm = getSupportFragmentManager();
 		mPagerAdapter = new AddingUniversalFragment(fm,pairs,new AddGateFragment());
 
@@ -122,7 +124,7 @@ public class AddGateActivity extends BaseApplicationActivity implements AddGateF
 
 			@Override
 			public void onClick(View v) {
-				mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
+				mPager.setCurrentItem(mPagerAdapter.getCount());
 			}
 		});
 
@@ -203,7 +205,7 @@ public class AddGateActivity extends BaseApplicationActivity implements AddGateF
 	}
 
 	public void registerGate() {
-		AddGateFragment fragment = mPagerAdapter.getAddGateFragment();
+		AddGateFragment fragment = (AddGateFragment) mPagerAdapter.getFinalFragment();
 		if (fragment == null) {
 			return;
 		}
