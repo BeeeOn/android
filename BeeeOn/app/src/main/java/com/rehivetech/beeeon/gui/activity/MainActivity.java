@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -201,9 +202,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		Log.d(TAG, "Request code " + requestCode);
 		if (requestCode == Constants.ADD_GATE_REQUEST_CODE) {
 			Log.d(TAG, "Return from add gate activity");
-			if (resultCode == Constants.ADD_GATE_CANCELED) {
+			if (resultCode == Activity.RESULT_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			} else if (resultCode == Constants.ADD_GATE_SUCCESS) {
+			} else if (resultCode == Activity.RESULT_OK) {
 				// Succes of add gate -> setActive gate a redraw ALL
 				Log.d(TAG, "Add gate succes");
 				setActiveGateAndMenu();
@@ -211,7 +212,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			}
 		} else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
 			Log.d(TAG, "Return from add sensor activity");
-			if (resultCode == Constants.ADD_SENSOR_SUCCESS) {
+			if (resultCode == Activity.RESULT_OK) {
 				// Set active location
 				String res = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
 				Log.d(TAG, "Active locID: " + res + " gateID: " + mActiveGateId);

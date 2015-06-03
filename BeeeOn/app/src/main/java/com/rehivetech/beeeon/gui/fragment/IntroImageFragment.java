@@ -71,9 +71,7 @@ public final class IntroImageFragment extends Fragment {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			Context mActivity = getActivity();
-			if (mActivity instanceof AddSensorActivity) {
-				((AddSensorActivity) mActivity).resetBtn();
-			} else if (mActivity instanceof IntroActivity) {
+			if (mActivity instanceof IntroActivity) {
 				if (((IntroActivity) mActivity).isLastFragment()) {
 					((IntroActivity) mActivity).setLastFragmentBtn();
 				} else {
