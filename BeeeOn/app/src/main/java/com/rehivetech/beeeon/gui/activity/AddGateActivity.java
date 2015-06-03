@@ -6,9 +6,9 @@ import android.support.v4.app.FragmentManager;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.ImageTextPair;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
+import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,10 +33,10 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	@Override
 	protected IntroFragmentPagerAdapter initPagerAdapter() {
 		// creating list of objects that will be used as params for the constructor of AddingUniversalFragment
-		List<ImageTextPair> pairs = Arrays.asList(
-				new ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step,getResources().getString(R.string.tut_add_gate_text_1)),
-				new ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step, getResources().getString(R.string.tut_add_gate_text_2)),
-				new ImageTextPair(R.drawable.beeeon_tutorial_aa_third_step, getResources().getString(R.string.tut_add_gate_text_3))
+		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step, R.string.tut_add_gate_text_1),
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, R.string.tut_add_gate_text_2),
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_third_step, R.string.tut_add_gate_text_3)
 		);
 		// FragmentManager object is necessary for the contructor of Adding....
 		FragmentManager fm = getSupportFragmentManager();

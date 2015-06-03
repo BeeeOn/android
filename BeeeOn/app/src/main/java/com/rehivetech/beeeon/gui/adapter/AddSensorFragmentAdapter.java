@@ -32,10 +32,10 @@ public class AddSensorFragmentAdapter extends FragmentPagerAdapter implements Ic
 		switch (position) {
 			case 0:
 				// Prepare your sensor
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_first_step, mActivity.getString(R.string.tut_add_sensor_text_1));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_first_step, R.string.tut_add_sensor_text_1);
 			case 1:
 				// After start timer ,
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_second_step, mActivity.getString(R.string.tut_add_sensor_text_2));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_as_second_step, R.string.tut_add_sensor_text_2);
 			case 2:
 				// circle timer
 				return new AddSensorFragment();

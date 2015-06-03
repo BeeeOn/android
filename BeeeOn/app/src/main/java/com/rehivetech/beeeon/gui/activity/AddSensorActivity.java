@@ -6,9 +6,9 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.ImageTextPair;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
+import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 
 import java.util.Arrays;
@@ -35,9 +35,9 @@ public class AddSensorActivity extends BaseGuideActivity implements AddSensorFra
 		}
 
 		//the List and the FragmentManager objects are needed as arguments for the constructor
-		List<ImageTextPair> pairs = Arrays.asList(
-				new ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, getResources().getString(R.string.tut_add_sensor_text_1)),
-				new ImageTextPair(R.drawable.beeeon_tutorial_as_second_step, getResources().getString(R.string.tut_add_sensor_text_2))
+		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.tut_add_sensor_text_1),
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_second_step, R.string.tut_add_sensor_text_2)
 		);
 		FragmentManager fm = getSupportFragmentManager();
 
@@ -47,7 +47,9 @@ public class AddSensorActivity extends BaseGuideActivity implements AddSensorFra
 	@Override
 	public void onAddSensor(boolean success) {
 		setResult(success ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
-		finish();
+		if (success) {
+			finish();
+		}
 	}
 
 	@Override

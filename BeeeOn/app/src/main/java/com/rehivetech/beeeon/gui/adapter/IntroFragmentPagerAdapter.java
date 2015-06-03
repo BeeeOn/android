@@ -13,10 +13,10 @@ import java.util.List;
  */
 public class IntroFragmentPagerAdapter extends FragmentPagerAdapter {
 
-	private final List<ImageTextPair> mPairs;
+	private final List<IntroImageFragment.ImageTextPair> mPairs;
 	private final Fragment mFragment;
 
-	public IntroFragmentPagerAdapter(FragmentManager fm, List<ImageTextPair> pairs, Fragment fragment) {
+	public IntroFragmentPagerAdapter(FragmentManager fm, List<IntroImageFragment.ImageTextPair> pairs, Fragment fragment) {
 		super(fm);
 		this.mPairs = pairs;
 		this.mFragment = fragment;

@@ -7,7 +7,7 @@ import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.rehivetech.beeeon.Constants;
@@ -29,25 +29,16 @@ public class AddSensorFragment extends TrackFragment {
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
 	// private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
-
-	private View mView;
+	private static final int TIMER_SEC_COUNT = 30;
+	private static final int CHECK_EVERY_X_SECONDS = 2;
 
 	private OnAddSensorListener mCallback;
 
 	private String mGateId;
 
-
-	// GUI elements
-	private DonutProgress mTime;
+	private View mView;
+	private DonutProgress mDonutProgress;
 	private CountDownTimer mCountDownTimer;
-	private boolean mTimerDone = false;
-	private boolean mTimerPause = false;
-	private int mTimerButtonSec = 30;
-	private int mIntervalToCheckUninitSensor = 2;
-	private int mTimerValue = 0;
-	private int mTimeOldValProgress = 100;
-	private int mTimeNewValProgress = 0;
-
 
 	public static AddSensorFragment newInstance(String gateId) {
 		AddSensorFragment fragment = new AddSensorFragment();
@@ -62,11 +53,6 @@ public class AddSensorFragment extends TrackFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		if (savedInstanceState != null) {
-			mTimerButtonSec = savedInstanceState.getInt(TIMER_VALUE_PAUSE);
-			Log.d(TAG, "Timer value: " + mTimerButtonSec);
-		}
 
 		mGateId = getArguments().getString(KEY_GATE_ID);
 	}
@@ -87,6 +73,13 @@ public class AddSensorFragment extends TrackFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.activity_add_sensor_activity_dialog, container, false);
+
+		mDonutProgress = (DonutProgress) mView.findViewById(R.id.progress);
+		mDonutProgress.setProgress(TIMER_SEC_COUNT);
+		mDonutProgress.setMax(TIMER_SEC_COUNT);
+		mDonutProgress.setInnerBottomText("Waiting for start");
+		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
+
 		return mView;
 	}
 
@@ -94,115 +87,70 @@ public class AddSensorFragment extends TrackFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.SETUP_SENSOR_REQUEST_CODE) {
+			mCallback.setNextButtonEnabled(true);
+			mDonutProgress.setProgress(TIMER_SEC_COUNT);
+			mDonutProgress.setInnerBottomText("TODO: Waiting for start");
 			mCallback.onAddSensor(resultCode == Activity.RESULT_OK);
 		}
 	}
-/*
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if (isVisibleToUser) {
-			Log.d(TAG, "ADD Sensor fragment is visible");
-			//mTimeText = (TextView) mView.findViewById(R.id.add_sensor_time);
-			//startTimer();
-			checkUnInitSensor();
-
-			mTime = (DonutProgress) mView.findViewById(R.id.progress);
-			mTime.setMax(mTimerButtonSec);
-			mTime.setInnerBottomText(getString(R.string.addsensor_sending_request));
-			mTime.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
-			//mTime.setTitle(" ");
-			/*
-			NumberPicker np = (NumberPicker) mView.findViewById(R.id.numberPicker);
-			np.setMaxValue(20);
-			np.setMinValue(0);
-			np.setFocusable(true);
-			np.setFocusableInTouchMode(true);
-			*/
-	/*	} else {
-			stopTimer();
-		}
-	}**/
-
 
 	@Override
 	public void onPause() {
 		super.onPause();
 		Log.d(TAG, "OnPause AddSensorDialog !!");
-		mTimerDone = true;
+		//mTimerDone = true;
 		if (mCountDownTimer != null)
 			mCountDownTimer.cancel();
-		if (mTime != null) {
-			mTime.setInnerBottomText(getString(R.string.addsensor_stoped));
-			//mTime.setTitle(" ");
-		}
+		/*if (mDonutProgress != null) {
+			mDonutProgress.setInnerBottomText(getString(R.string.addsensor_stoped));
+			//mDonutProgress.setTitle(" ");
+		}*/
 	}
-
+/*
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(TIMER_VALUE_PAUSE, mTimerValue);
 		// outState.putBoolean(TIMER_BOOL_PAUSE, true);
 	}
+	*/
 /*
 	public void resetPairButton() {
 		//mTimeText.setText("Time is out");
-		if (mTime != null) {
-			//mTime.setTitle(" ");
-			mTime.setInnerBottomText("Time is out");
+		if (mDonutProgress != null) {
+			//mDonutProgress.setTitle(" ");
+			mDonutProgress.setInnerBottomText("Time is out");
 		}
 		resetBtnPair();
 	}
 */
 	public void startTimer() {
-		mTimerDone = false;
-		if (mTime != null) {
-			//mTime.setTitle(String.valueOf(mTimerButtonSec));
-			mTime.setInnerBottomText("seconds");
-		}
-		mCountDownTimer = new CountDownTimer(mTimerButtonSec * 1000, 1000) {
+		mCallback.setNextButtonEnabled(false);
+		mDonutProgress.setProgress(TIMER_SEC_COUNT);
+		mDonutProgress.setInnerBottomText("seconds");
+
+		mCountDownTimer = new CountDownTimer(TIMER_SEC_COUNT * 1000, 1000) {
 
 			public void onTick(long millisUntilFinished) {
-				if (mTimerDone)
-					return;
+				int timerValue = (int) (millisUntilFinished / 1000);
+				mDonutProgress.setProgress(timerValue);
 
-				mTimerValue = (int) (millisUntilFinished / 1000);
-
-				//mTimeText.setText(getResources().getString(R.string.addsensor_active_pair) + " 0:" + ((mTimerValue < 10) ? "0" : "") + mTimerValue);
-				//mTime.setTitle(String.valueOf(mTimerValue));
-				//mTimeNewValProgress = mTimerValue*100/mTimerButtonSec;
-				Log.d(TAG, "actual progress: " + mTimeNewValProgress);
-				mTime.setProgress(mTimerValue);
-				//mTime.animateProgressTo(mTimeOldValProgress,mTimeNewValProgress,null);
-				//mTimeOldValProgress = mTimeNewValProgress;
-				if ((millisUntilFinished / 1000) % mIntervalToCheckUninitSensor == 0) {
-					// check if are new uninit sensor
-					Log.d(TAG, "PAIR - check if some uninit sensor");
-					checkUnInitSensor();
+				if (timerValue % CHECK_EVERY_X_SECONDS == 0) {
+					// check new uninitialized devices
+					doReloadUninitializedDevicesTask(mGateId, true);
 				}
 			}
 
 			public void onFinish() {
-				// mButton.setText("done!");
-				mTime.setProgress(0);
-				//resetPairButton();
+
+				Toast.makeText(getActivity(),"TODO: Neuspesne...dodelat....",Toast.LENGTH_LONG).show();
+				mDonutProgress.setProgress(TIMER_SEC_COUNT);
+				mDonutProgress.setInnerBottomText("Wating for start");
+				mCallback.setNextButtonEnabled(true);
 			}
+
 		}.start();
 
-	}
-
-	public void checkUninitSensors() {
-		startTimer();
-	}
-
-	public void stopTimer() {
-		mTimerDone = true;
-		if (mCountDownTimer != null)
-			mCountDownTimer.cancel();
-		if (mTime != null) {
-			//mTime.setSubTitle(getString(R.string.addsensor_stoped));
-			//mTime.setTitle(" ");
-		}
 	}
 
 	public void doReloadUninitializedDevicesTask(String gateId, boolean forceReload) {
@@ -219,8 +167,10 @@ public class AddSensorFragment extends TrackFragment {
 				List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 
 				if (devices.size() > 0) {
-					Log.d(TAG, "Nasel jsem neinicializovane zarizeni !!!!");
-					stopTimer();
+					Toast.makeText(getActivity(),"TODO: Nalezeno...dodelat....",Toast.LENGTH_LONG).show();
+
+					mCountDownTimer.cancel();
+
 					// go to setup uninit sensor
 					Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
 					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
@@ -241,6 +191,7 @@ public class AddSensorFragment extends TrackFragment {
 
 	private void doPairRequestTask(String gateId) {
 		mCallback.setNextButtonEnabled(false);
+		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_sending_request));
 		// Send First automatic pair request
 		PairRequestTask pairRequestTask = new PairRequestTask(getActivity());
 
@@ -249,6 +200,7 @@ public class AddSensorFragment extends TrackFragment {
 			@Override
 			public void onExecute(boolean success) {
 				mCallback.setNextButtonEnabled(true);
+				mDonutProgress.setInnerBottomText("");
 				if (success) {
 					// Request was successfully sent
 					startTimer();
@@ -264,13 +216,8 @@ public class AddSensorFragment extends TrackFragment {
 		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairRequestTask, gateId);
 	}
 
-	public void checkUnInitSensor() {
-		Log.d(TAG, "Send if some uninit mDevice");
-		doReloadUninitializedDevicesTask(mGateId, true);
-	}
-
-	public void doAction () {
-		doPairRequestTask(mGateId);
+	public void doAction() {
+		startTimer();
 	}
 
 	public interface OnAddSensorListener {

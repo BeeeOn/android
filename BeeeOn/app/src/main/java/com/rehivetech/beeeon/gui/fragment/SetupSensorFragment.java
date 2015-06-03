@@ -90,13 +90,6 @@ public class SetupSensorFragment extends TrackFragment {
 	}
 
 	@Override
-	public void onStart() {
-		super.onStart();
-
-	}
-
-
-	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {

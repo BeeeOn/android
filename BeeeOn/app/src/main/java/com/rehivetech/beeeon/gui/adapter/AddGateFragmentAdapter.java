@@ -33,11 +33,11 @@ public class AddGateFragmentAdapter extends FragmentPagerAdapter implements Icon
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step, mContext.getString(R.string.tut_add_gate_text_1));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step, R.string.tut_add_gate_text_1);
 			case 1:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_first_step, mContext.getString(R.string.tut_add_gate_text_2));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_second_step, R.string.tut_add_gate_text_2);
 			case 2:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step, mContext.getString(R.string.tut_add_gate_text_3));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_aa_third_step, R.string.tut_add_gate_text_3);
 			case 3:
 				return new AddGateFragment();
 		}

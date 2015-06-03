@@ -23,18 +23,19 @@ public class IntroFragmentAdapter extends FragmentPagerAdapter implements IconPa
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_logo_white_icons, mActivity.getString(R.string.tut_intro_text_1));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_logo_white_icons, R.string.tut_intro_text_1);
 			case 1:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_2, mActivity.getString(R.string.tut_intro_text_2));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_2, R.string.tut_intro_text_2);
 			case 2:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_3, mActivity.getString(R.string.tut_intro_text_3));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_3, R.string.tut_intro_text_3);
 			case 3:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_4, mActivity.getString(R.string.tut_intro_text_4));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_4, R.string.tut_intro_text_4);
 			case 4:
-				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_5, mActivity.getString(R.string.tut_intro_text_5));
+				return IntroImageFragment.newInstance(R.drawable.beeeon_tutorial_intro_5, R.string.tut_intro_text_5);
+			default:
+				return null;
 
 		}
-		return null;
 	}
 
 	@Override

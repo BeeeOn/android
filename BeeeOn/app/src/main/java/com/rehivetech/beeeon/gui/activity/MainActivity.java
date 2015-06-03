@@ -199,24 +199,21 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		Log.d(TAG, "Request code " + requestCode);
-		if (requestCode == Constants.ADD_GATE_REQUEST_CODE) {
-			Log.d(TAG, "Return from add gate activity");
-			if (resultCode == Activity.RESULT_CANCELED) {
-				Log.d(TAG, "Activity was canceled");
-			} else if (resultCode == Activity.RESULT_OK) {
+		if (resultCode != Activity.RESULT_OK)
+			return;
+
+		switch (requestCode) {
+			case Constants.ADD_GATE_REQUEST_CODE:
+			{
 				// Succes of add gate -> setActive gate a redraw ALL
-				Log.d(TAG, "Add gate succes");
 				setActiveGateAndMenu();
 				doRedraw = false;
+				break;
 			}
-		} else if (requestCode == Constants.ADD_SENSOR_REQUEST_CODE) {
-			Log.d(TAG, "Return from add sensor activity");
-			if (resultCode == Activity.RESULT_OK) {
-				// Set active location
-				String res = data.getExtras().getString(Constants.SETUP_SENSOR_ACT_LOC);
-				Log.d(TAG, "Active locID: " + res + " gateID: " + mActiveGateId);
+			case Constants.ADD_SENSOR_REQUEST_CODE:
+			{
 				redraw();
+				break;
 			}
 		}
 	}

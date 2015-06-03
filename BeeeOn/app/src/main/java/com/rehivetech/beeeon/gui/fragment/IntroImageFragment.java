@@ -13,40 +13,39 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.AddSensorActivity;
 import com.rehivetech.beeeon.gui.activity.IntroActivity;
 
 public final class IntroImageFragment extends Fragment {
-	private static final String KEY_CONTENT = "TestFragment:Content";
-	private static final String KEY_TEXT = "TestFragment:Text";
+	private static final String KEY_IMAGE_RES = "ImageRes";
+	private static final String KEY_TEXT_RES = "TextRes";
 
-	public static IntroImageFragment newInstance(int resourceImg, String text) {
+	public static IntroImageFragment newInstance(int resourceImg, int textRes) {
 		IntroImageFragment fragment = new IntroImageFragment();
 
 		Bundle args = new Bundle();
-		args.putInt(KEY_CONTENT, resourceImg);
-		args.putString(KEY_TEXT, text);
+		args.putInt(KEY_IMAGE_RES, resourceImg);
+		args.putInt(KEY_TEXT_RES, textRes);
 		fragment.setArguments(args);
 
 		return fragment;
 	}
 
 	private int mImageRes;
-	private String mText;
+	private int mTextRes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mImageRes = getArguments().getInt(KEY_CONTENT);
-		mText = getArguments().getString(KEY_TEXT);
+		mImageRes = getArguments().getInt(KEY_IMAGE_RES);
+		mTextRes = getArguments().getInt(KEY_TEXT_RES);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		TextView text = new TextView(getActivity());
 		text.setPadding(20, 20, 20, 20);
-		text.setText(mText);
+		text.setText(mTextRes);
 		text.setGravity(Gravity.CENTER_HORIZONTAL);
 		text.setTextSize(20);
 		text.setTextColor(getResources().getColor(R.color.white));
@@ -80,6 +79,16 @@ public final class IntroImageFragment extends Fragment {
 			}
 		}
 
+	}
+
+	public static class ImageTextPair {
+		public final int imageRes;
+		public final int textRes;
+
+		public ImageTextPair(int imageRes, int textRes) {
+			this.imageRes = imageRes;
+			this.textRes = textRes;
+		}
 	}
 
 }
