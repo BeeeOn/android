@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.AddingUniversalFragment;
+import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.adapter.ImageTextPair;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -34,7 +34,7 @@ public class AddGateActivity extends BaseApplicationActivity implements AddGateF
 
 	private Controller mController;
 
-	private AddingUniversalFragment mPagerAdapter;
+	private IntroFragmentPagerAdapter mPagerAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
 
@@ -62,15 +62,15 @@ public class AddGateActivity extends BaseApplicationActivity implements AddGateF
 		// Get controller
 		mController = Controller.getInstance(this);
 
-		//creating list of objects that will be used as params for the constructor of AddingUniversalFragment
+		// creating list of objects that will be used as params for the constructor of AddingUniversalFragment
 		List<ImageTextPair> pairs = new ArrayList<ImageTextPair>();
-		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, getResources().getString(R.string.tut_add_gate_text_1)));
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step,getResources().getString(R.string.tut_add_gate_text_1)));
 		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step,getResources().getString(R.string.tut_add_gate_text_2)));
 		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_aa_third_step,getResources().getString(R.string.tut_add_gate_text_3)));
 
-		//FragmentManager object is necessary for the contructor of Adding....
+		// FragmentManager object is necessary for the contructor of Adding....
 		FragmentManager fm = getSupportFragmentManager();
-		mPagerAdapter = new AddingUniversalFragment(fm,pairs,new AddGateFragment());
+		mPagerAdapter = new IntroFragmentPagerAdapter(fm,pairs,new AddGateFragment());
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mPagerAdapter);

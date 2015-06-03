@@ -5,10 +5,10 @@ package com.rehivetech.beeeon.gui.adapter;
  */
 public class ImageTextPair {
 	public final int imageRes;
-	public final String text;
+	public final String textRes;
 
-	public ImageTextPair(int imageRes, String text) {
+	public ImageTextPair(int imageRes, String textRes) {
 		this.imageRes = imageRes;
-		this.text = text;
+		this.textRes = textRes;
 	}
 }

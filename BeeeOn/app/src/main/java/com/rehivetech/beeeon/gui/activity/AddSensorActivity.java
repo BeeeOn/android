@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -14,7 +15,8 @@ import android.widget.Button;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.AddSensorFragmentAdapter;
+import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
+import com.rehivetech.beeeon.gui.adapter.ImageTextPair;
 import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -24,6 +26,7 @@ import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddSensorActivity extends BaseApplicationActivity {
@@ -32,7 +35,7 @@ public class AddSensorActivity extends BaseApplicationActivity {
 	private Controller mController;
 	private Gate mPairGate;
 
-	private AddSensorFragmentAdapter mAdapter;
+	private IntroFragmentPagerAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
 
@@ -62,7 +65,12 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		mController = Controller.getInstance(this);
 		mPairGate = mController.getActiveGate();
 
-		mAdapter = new AddSensorFragmentAdapter(getSupportFragmentManager(), this);
+		//the List and the FragmentManager objects are needed as arguments for the constructor
+		List<ImageTextPair> pairs = new ArrayList<>();
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_as_first_step,getResources().getString(R.string.tut_add_sensor_text_1)));
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_as_second_step,getResources().getString(R.string.tut_add_sensor_text_2)));
+		FragmentManager fm = getSupportFragmentManager();
+		mAdapter = new IntroFragmentPagerAdapter(fm,pairs,new AddSensorFragment());
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
