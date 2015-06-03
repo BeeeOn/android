@@ -4,19 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.adapter.ImageTextPair;
+import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -24,36 +22,26 @@ import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.PairRequestTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Log;
-import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddSensorActivity extends BaseApplicationActivity {
+public class AddSensorActivity extends AddGadgetActivity {
 	private static final String TAG = AddSensorActivity.class.getSimpleName();
-
-	private Controller mController;
 	private Gate mPairGate;
-
-	private IntroFragmentPagerAdapter mAdapter;
-	private ViewPager mPager;
-	private CirclePageIndicator mIndicator;
-
 	private AddSensorFragment mFragment;
-
-	private Button mSkip;
-	private Button mCancel;
-	private Button mNext;
-
-
 	private boolean mFirstUse = true;
-
-	private Toolbar mToolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		//the List and the FragmentManager objects are needed as arguments for the constructor
+		List<ImageTextPair> pairs = new ArrayList<>();
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_as_first_step,getResources().getString(R.string.tut_add_sensor_text_1)));
+		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_as_second_step,getResources().getString(R.string.tut_add_sensor_text_2)));
+		FragmentManager fm = getSupportFragmentManager();
+		mPagerAdapter = new IntroFragmentPagerAdapter(fm,pairs,new AddSensorFragment());
+
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_intro);
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (mToolbar != null) {
@@ -65,26 +53,8 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		mController = Controller.getInstance(this);
 		mPairGate = mController.getActiveGate();
 
-		//the List and the FragmentManager objects are needed as arguments for the constructor
-		List<ImageTextPair> pairs = new ArrayList<>();
-		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_as_first_step,getResources().getString(R.string.tut_add_sensor_text_1)));
-		pairs.add(new ImageTextPair(R.drawable.beeeon_tutorial_as_second_step,getResources().getString(R.string.tut_add_sensor_text_2)));
-		FragmentManager fm = getSupportFragmentManager();
-		mAdapter = new IntroFragmentPagerAdapter(fm,pairs,new AddSensorFragment());
-
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		mPager = (ViewPager) findViewById(R.id.intro_pager);
-		mPager.setAdapter(mAdapter);
-		mPager.setOffscreenPageLimit(mAdapter.getCount());
-
-		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
-		mIndicator.setViewPager(mPager);
-
-		mIndicator.setPageColor(0x88FFFFFF);
-		mIndicator.setFillColor(0xFFFFFFFF);
-		mIndicator.setStrokeColor(0x88FFFFFF);
 
 		initButtons();
 	}
@@ -106,21 +76,11 @@ public class AddSensorActivity extends BaseApplicationActivity {
 		}
 	}
 
+	@Override
+	protected void initButtons() {
+		super.initButtons();
 
-	private void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_gate_skip);
-		mCancel = (Button) findViewById(R.id.add_gate_cancel);
-		mNext = (Button) findViewById(R.id.add_gate_next);
-
-		mSkip.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mPager.setCurrentItem(mAdapter.getCount() - 1);
-			}
-		});
-
-		mCancel.setOnClickListener(new OnClickListener() {
+		Cancel.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
