@@ -17,12 +17,13 @@
 		android:layout_height="250dp"
 		android:layout_gravity="center"
 		circular:donut_progress="30"
-		circular:donut_text_color="@color/beeeon_secundary_pink"
+		circular:donut_text_color="@color/beeeon_drawer_bg"
+		circular:donut_inner_bottom_text_color="@color/beeeon_drawer_bg"
 		circular:donut_text_size="40sp"
 		circular:donut_prefix_text=" "
 		circular:donut_suffix_text=" "
-		circular:donut_finished_color="@color/beeeon_text_hint"
-		circular:donut_unfinished_color="@color/beeeon_drawer_bg"
+		circular:donut_finished_color="@color/beeeon_drawer_bg"
+		circular:donut_unfinished_color="@color/beeeon_text_hint"
 		/>
 
 </LinearLayout>
