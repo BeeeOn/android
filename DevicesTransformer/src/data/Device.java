@@ -60,6 +60,7 @@ public class Device {
 		mManufacturer = manufacturer;
 	}
 
+	@Nullable
 	public Features getFeatures() {
 		return mFeatures;
 	}

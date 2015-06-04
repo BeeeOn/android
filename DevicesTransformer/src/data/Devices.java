@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -75,17 +76,67 @@ public class Devices {
 	}
 
 	public void printDevicesJava(PrintWriter writer) {
-	    /*writer.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        writer.println("<resources>");
+		writer.println("/** BEGIN OF GENERATED CONTENT **/");
 
-        for (data.Devices.Item item : mItems) {
-            String name = item.key;
-            String value = item.value;
+		Iterator<Device> it = mDevices.iterator();
+		while (it.hasNext()) {
+			Device device = it.next();
 
-            writer.println(String.format("\t<string name=\"%s\">%s</string>", name, value));
-        }
+			Device.Features features = device.getFeatures();
+			if (features == null) {
+				features = new Device.Features();
+			}
 
-        writer.println("</resources>");*/
+			// Begin of type definition
+			writer.println(String.format("TYPE_%d(\"%d\", \"%s\", %s, %s, new DeviceFeatures(%s, %s, %s)) {",
+							device.getTypeId(),
+							device.getTypeId(),
+							device.getTypeName(),
+							device.getName().getResourceIds()[0],
+							device.getManufacturer().getResourceIds()[0],
+							features.hasRefresh() ? features.getDefaultRefresh().toString() : "null",
+							features.hasLed() ? "true" : "false",
+							features.hasBattery() ? "true" : "false"));
+
+				// Begin of createModules() method
+				writer.println("\t@Override\n\tprotected List<Module> createModules(Device device) {");
+
+					// Begin of modules array
+					writer.println("\t\treturn Arrays.asList(");
+
+						Iterator<Module> itModule = device.getModules().iterator();
+						while (itModule.hasNext()) {
+							Module module = itModule.next();
+							Translation tgroup = module.getGroup();
+							String group = tgroup != null ? tgroup.getResourceIds()[0] : "null";
+
+							Translation tname = module.getName();
+							String name = tname != null ? tname.getResourceIds()[0] : "null";
+
+							writer.print(String.format("\t\t\t\tnew Module(device, \"%d\", %s, %d, %s, %s, %s, %b)",
+									module.getId(),
+									module.getType(),
+									module.getOffset(),
+									module.getOrder(),
+									group,
+									name,
+									module.isActuator()));
+
+							writer.println(itModule.hasNext() ? "," : "");
+						}
+
+					writer.println("\t\t);");
+					// End of modules array
+
+
+				writer.println("\t}");
+				// End of createModules() method
+
+			writer.println(it.hasNext() ? "}," : "};");
+			// End of type definition
+		}
+
+		writer.println("/** END OF GENERATED CONTENT **/");
 	}
 
 }

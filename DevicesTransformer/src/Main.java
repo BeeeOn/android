@@ -14,7 +14,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		processDevices();
-		//processLanguages();
+		processLanguages();
 	}
 
 
@@ -25,8 +25,6 @@ public class Main {
 			System.out.println(String.format("Loading devices specification from '%s'", file.getAbsolutePath()));
 
 			Devices devices = DevicesParser.parse(file);
-
-			devices.printLog(System.out);
 
 			File dir = new File("export/objects/");
 			dir.mkdirs();
