@@ -87,9 +87,4 @@ public enum DeviceType implements IIdentifier {
 	public DeviceFeatures getFeatures() {
 		return mFeatures;
 	}
-
-	public static final Device createDeviceById(String id, String gateId, String address) {
-		DeviceType type = Utils.getEnumFromId(DeviceType.class, id, TYPE_UNKNOWN);
-		return new Device(type, gateId, address);
-	}
 }

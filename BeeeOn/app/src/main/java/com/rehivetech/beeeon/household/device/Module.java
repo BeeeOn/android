@@ -32,12 +32,12 @@ public final class Module implements IOrderIdentifier {
 	private final BaseValue mValue;
 
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, int groupRes, int nameRes, boolean isActuator) {
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator) {
 		mDevice = device;
 		mId = id;
 		mSort = sort;
-		mGroupRes = groupRes;
-		mNameRes = nameRes;
+		mGroupRes = groupRes != null ? groupRes : 0;
+		mNameRes = nameRes != null ? nameRes : 0;
 		mIsActuator = isActuator;
 		mOffset = offset;
 
@@ -45,12 +45,12 @@ public final class Module implements IOrderIdentifier {
 		mValue = BaseValue.createFromModuleType(mType);
 	}
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, int groupRes, int nameRes, boolean isActuator, List<EnumValue.Item> enumValues) {
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<EnumValue.Item> enumValues) {
 		mDevice = device;
 		mId = id;
 		mSort = sort;
-		mGroupRes = groupRes;
-		mNameRes = nameRes;
+		mGroupRes = groupRes != null ? groupRes : 0;
+		mNameRes = nameRes != null ? nameRes : 0;
 		mIsActuator = isActuator;
 		mOffset = offset;
 

@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.household.device;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 
@@ -51,16 +52,16 @@ public final class Device implements IIdentifier {
 	/**
 	 * Factory method for creating new Device objects.
 	 *
-	 * @param type
+	 * @param typeId
+	 * @param gateId
 	 * @param address
 	 * @return
 	 */
-	public static final Device createDeviceByType(int type, String address) {
-		// FIXME: implement this somehow
-		/*Device device = new Device();
-		device.setAddress(address);
-		return device;*/
-		throw new IllegalArgumentException(String.format("Unknown device type: %d", type));
+	public static final Device createDeviceByType(String typeId, String gateId, String address) {
+		DeviceType type = Utils.getEnumFromId(DeviceType.class, typeId, DeviceType.TYPE_UNKNOWN);
+		return new Device(type, gateId, address);
+
+		//throw new IllegalArgumentException(String.format("Unknown device type: %d", typeId));
 	}
 
 	/**
