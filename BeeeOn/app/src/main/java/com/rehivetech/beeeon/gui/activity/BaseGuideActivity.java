@@ -23,7 +23,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 	protected IntroFragmentPagerAdapter mPagerAdapter;
 	protected ViewPager mPager;
 	protected CirclePageIndicator mIndicator;
-	protected Toolbar mToolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceData) {
@@ -36,13 +35,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setOffscreenPageLimit(mPagerAdapter.getCount());
-
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			setSupportActionBar(mToolbar);
-			getSupportActionBar().setHomeButtonEnabled(true);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
 
 		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
@@ -109,16 +101,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 				}
 			}
 		});
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				closeActivity();
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	protected void closeActivity() {
