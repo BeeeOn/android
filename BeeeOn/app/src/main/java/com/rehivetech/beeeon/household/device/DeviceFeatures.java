@@ -39,8 +39,11 @@ public class DeviceFeatures {
 
 	@Nullable
 	public RefreshInterval getActualRefresh() {
-		if (!hasRefresh())
-			return null;
+		if (!hasRefresh()) {
+			return RefreshInterval.SEC_1;
+			// FIXME: should return null, but need to adapt rest of code first
+			//return null;
+		}
 
 		return mRefresh.actualInterval != null ? mRefresh.actualInterval : mRefresh.defaultInterval;
 	}
