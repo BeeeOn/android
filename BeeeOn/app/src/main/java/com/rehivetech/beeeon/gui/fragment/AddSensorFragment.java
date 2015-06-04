@@ -77,7 +77,7 @@ public class AddSensorFragment extends TrackFragment {
 		mDonutProgress = (DonutProgress) mView.findViewById(R.id.progress);
 		mDonutProgress.setProgress(TIMER_SEC_COUNT);
 		mDonutProgress.setMax(TIMER_SEC_COUNT);
-		mDonutProgress.setInnerBottomText("Waiting for start");
+		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
 		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
 
 		return mView;
@@ -89,7 +89,7 @@ public class AddSensorFragment extends TrackFragment {
 		if (requestCode == Constants.SETUP_SENSOR_REQUEST_CODE) {
 			mCallback.setNextButtonEnabled(true);
 			mDonutProgress.setProgress(TIMER_SEC_COUNT);
-			mDonutProgress.setInnerBottomText("TODO: Waiting for start");
+			mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
 			mCallback.onAddSensor(resultCode == Activity.RESULT_OK);
 		}
 	}
@@ -127,7 +127,7 @@ public class AddSensorFragment extends TrackFragment {
 	public void startTimer() {
 		mCallback.setNextButtonEnabled(false);
 		mDonutProgress.setProgress(TIMER_SEC_COUNT);
-		mDonutProgress.setInnerBottomText("seconds");
+		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
 
 		mCountDownTimer = new CountDownTimer(TIMER_SEC_COUNT * 1000, 1000) {
 
@@ -143,9 +143,9 @@ public class AddSensorFragment extends TrackFragment {
 
 			public void onFinish() {
 
-				Toast.makeText(getActivity(),"TODO: Neuspesne...dodelat....",Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(),R.string.addsensor_device_not_found_in_time,Toast.LENGTH_LONG).show();
 				mDonutProgress.setProgress(TIMER_SEC_COUNT);
-				mDonutProgress.setInnerBottomText("Wating for start");
+				mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
 				mCallback.setNextButtonEnabled(true);
 			}
 
@@ -167,7 +167,7 @@ public class AddSensorFragment extends TrackFragment {
 				List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 
 				if (devices.size() > 0) {
-					Toast.makeText(getActivity(),"TODO: Nalezeno...dodelat....",Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(),R.string.addsensor_device_found,Toast.LENGTH_LONG).show();
 
 					mCountDownTimer.cancel();
 
