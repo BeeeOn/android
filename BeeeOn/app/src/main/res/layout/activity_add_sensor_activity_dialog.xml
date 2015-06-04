@@ -7,7 +7,7 @@
     android:layout_height="fill_parent"
     android:minWidth="270dp"
     android:minHeight="200dp"
-    android:background="@color/light_gray"
+    android:background="@color/beeeon_primary_cyan"
     >
 
 	<com.github.lzyzsd.circleprogress.DonutProgress
@@ -21,8 +21,8 @@
 		circular:donut_text_size="40sp"
 		circular:donut_prefix_text=" "
 		circular:donut_suffix_text=" "
-		circular:donut_finished_color="@color/beeeon_primary_cyan"
-		circular:donut_unfinished_color="@color/beeeon_text_hint"
+		circular:donut_finished_color="@color/beeeon_text_hint"
+		circular:donut_unfinished_color="@color/beeeon_drawer_bg"
 		/>
 
 </LinearLayout>
