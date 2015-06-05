@@ -91,16 +91,6 @@ public final class Constants {
 	public static final int ADD_SENSOR_REQUEST_CODE = 1002;
 	public static final int SETUP_SENSOR_REQUEST_CODE = 1003;
 
-	public static final int ADD_GATE_SUCCESS = 1020;
-	public static final int SETUP_SENSOR_SUCCESS = 1021;
-	public static final int ADD_SENSOR_SUCCESS = 1022;
-	public static final int EDIT_SENSOR_SUCCESS = 1023;
-
-	public static final int ADD_GATE_CANCELED = 1040;
-	public static final int ADD_SENSOR_CANCELED = 1041;
-	public static final int SETUP_SENSOR_CANCELED = 1042;
-	public static final int EDIT_SENSOR_CANCELED = 1043;
-
 	public static final int SHARE_TWITTER = 1050;
 	public static final int SHARE_GOOGLE = 1051;
 	public static final int SHARE_VKONTAKTE = 1052;

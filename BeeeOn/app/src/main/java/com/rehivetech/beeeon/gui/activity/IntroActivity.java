@@ -1,16 +1,21 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.adapter.IntroFragmentAdapter;
+import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
+import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IntroActivity extends BaseActivity {
-	private IntroFragmentAdapter mAdapter;
+	private IntroFragmentPagerAdapter mAdapter;
 	private ViewPager mPager;
 	private CirclePageIndicator mIndicator;
 	private Button mSkip;
@@ -22,7 +27,15 @@ public class IntroActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_intro);
 
-		mAdapter = new IntroFragmentAdapter(getSupportFragmentManager(), this);
+		List<IntroImageFragment.ImageTextPair> pairs = new ArrayList<>();
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_icons,R.string.tut_intro_text_1));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.tut_intro_text_2));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.tut_intro_text_3));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4,R.string.tut_intro_text_4));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5,R.string.tut_intro_text_5));
+
+		FragmentManager fm = getSupportFragmentManager();
+		mAdapter = new IntroFragmentPagerAdapter(fm,pairs,null);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);

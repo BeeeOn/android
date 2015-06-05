@@ -116,7 +116,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 			public void onClick(View v) {
 				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-				setResult(Constants.ADD_SENSOR_CANCELED);
+				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 		});
@@ -212,7 +212,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 					Intent intent = new Intent();
 					intent.putExtra(Constants.SETUP_SENSOR_ACT_LOC, pair.location.getId());
-					setResult(Constants.SETUP_SENSOR_SUCCESS, intent);
+					setResult(Activity.RESULT_OK, intent);
 					//HIDE keyboard
 					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);

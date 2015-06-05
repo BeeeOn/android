@@ -13,47 +13,45 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.AddGateActivity;
-import com.rehivetech.beeeon.gui.activity.AddSensorActivity;
 import com.rehivetech.beeeon.gui.activity.IntroActivity;
 
 public final class IntroImageFragment extends Fragment {
-	private static final String KEY_CONTENT = "TestFragment:Content";
-	private static final String KEY_TEXT = "TestFragment:Text";
+	private static final String KEY_IMAGE_RES = "ImageRes";
+	private static final String KEY_TEXT_RES = "TextRes";
 
-	public static IntroImageFragment newInstance(int resourceImg, String text) {
+	public static IntroImageFragment newInstance(int resourceImg, int textRes) {
 		IntroImageFragment fragment = new IntroImageFragment();
 
-		fragment.mContent = resourceImg;
-		fragment.mText = text;
+		Bundle args = new Bundle();
+		args.putInt(KEY_IMAGE_RES, resourceImg);
+		args.putInt(KEY_TEXT_RES, textRes);
+		fragment.setArguments(args);
 
 		return fragment;
 	}
 
-	private int mContent = 0;
-	private String mText = "";
+	private int mImageRes;
+	private int mTextRes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if ((savedInstanceState != null) && savedInstanceState.containsKey(KEY_CONTENT)) {
-			mContent = savedInstanceState.getInt(KEY_CONTENT);
-			mText = savedInstanceState.getString(KEY_TEXT);
-		}
+		mImageRes = getArguments().getInt(KEY_IMAGE_RES);
+		mTextRes = getArguments().getInt(KEY_TEXT_RES);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		TextView text = new TextView(getActivity());
 		text.setPadding(20, 20, 20, 20);
-		text.setText(mText);
+		text.setText(mTextRes);
 		text.setGravity(Gravity.CENTER_HORIZONTAL);
 		text.setTextSize(20);
 		text.setTextColor(getResources().getColor(R.color.white));
 
 		ImageView image = new ImageView(getActivity());
-		image.setImageResource(mContent);
+		image.setImageResource(mImageRes);
 		image.setPadding(20, 20, 20, 20);
 
 
@@ -72,12 +70,7 @@ public final class IntroImageFragment extends Fragment {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			Context mActivity = getActivity();
-			if (mActivity instanceof AddGateActivity) {
-				((AddGateActivity) mActivity).resetBtn();
-			}
-			if (mActivity instanceof AddSensorActivity) {
-				((AddSensorActivity) mActivity).resetBtn();
-			} else if (mActivity instanceof IntroActivity) {
+			if (mActivity instanceof IntroActivity) {
 				if (((IntroActivity) mActivity).isLastFragment()) {
 					((IntroActivity) mActivity).setLastFragmentBtn();
 				} else {
@@ -88,10 +81,14 @@ public final class IntroImageFragment extends Fragment {
 
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(KEY_CONTENT, mContent);
-		outState.putString(KEY_TEXT, mText);
+	public static class ImageTextPair {
+		public final int imageRes;
+		public final int textRes;
+
+		public ImageTextPair(int imageRes, int textRes) {
+			this.imageRes = imageRes;
+			this.textRes = textRes;
+		}
 	}
+
 }

@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -100,9 +101,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.EDIT_SENSOR_REQUEST_CODE) {
 			Log.d(TAG, "Return from add gate activity");
-			if (resultCode == Constants.EDIT_SENSOR_CANCELED) {
+			if (resultCode == Activity.RESULT_CANCELED) {
 				Log.d(TAG, "Activity was canceled");
-			} else if (resultCode == Constants.EDIT_SENSOR_SUCCESS) {
+			} else if (resultCode == Activity.RESULT_OK) {
 				Log.d(TAG, "Edit sensor succes");
 				doReloadDevicesTask(mActiveGateId, false);
 			}

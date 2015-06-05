@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -143,7 +144,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				}
 			}
 			if (what.isEmpty()) { // nothing change
-				setResult(Constants.EDIT_SENSOR_SUCCESS);
+				setResult(Activity.RESULT_OK);
 				finish();
 				return true;
 			}
@@ -153,7 +154,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 			return true;
 		} else if (id == android.R.id.home) {
-			setResult(Constants.EDIT_SENSOR_CANCELED);
+			setResult(Activity.RESULT_CANCELED);
 			finish();
 		}
 
@@ -186,7 +187,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				if (success) {
 					Log.d(TAG, "Success save to server");
 					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-					setResult(Constants.EDIT_SENSOR_SUCCESS);
+					setResult(Activity.RESULT_OK);
 					finish();
 				} else {
 					Log.d(TAG, "Fail save to server");
@@ -212,7 +213,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				if (success) {
 					Log.d(TAG, "Success save to server");
 					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-					setResult(Constants.EDIT_SENSOR_SUCCESS);
+					setResult(Activity.RESULT_OK);
 					finish();
 				} else {
 					Log.d(TAG, "Fail save to server");

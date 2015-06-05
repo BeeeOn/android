@@ -1,7 +1,8 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,16 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
+import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.RegisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.regex.Matcher;
@@ -29,49 +30,41 @@ public class AddGateFragment extends TrackFragment {
 	private static final String TAG = AddGateFragment.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 
-	public AddGateActivity mActivity;
-	private LinearLayout mLayout;
-	private View mView;
-	private Controller mController;
+	private ProgressDialog mProgress;
 
-	private EditText mGateCode;
-	private EditText mGateName;
+	public OnAddGateListener mCallback;
+	private View mView;
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Get activity and controller
-		mActivity = (AddGateActivity) getActivity();
-		mController = Controller.getInstance(mActivity);
+		// Prepare progress dialog
+		mProgress = new ProgressDialog(getActivity());
+		mProgress.setMessage(getString(R.string.progress_saving_data));
+		mProgress.setCancelable(false);
+		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.activity_add_gate_activity_dialog, container, false);
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
-		mLayout = (LinearLayout) mView.findViewById(R.id.container);
-
-		initLayout();
-
-		return mView;
-	}
-
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if (isVisibleToUser) {
-			Log.d(TAG, "ADD GATE fragment is visible");
-			mActivity.setBtnLastPage();
-			mActivity.setFragment(this);
-			InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+		try {
+			// Get activity and controller
+			mCallback = (AddGateActivity) getActivity();
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format("%s must implement OnAddGateListener",activity.toString()));
 		}
 
 	}
 
-	private void initLayout() {
-		((ImageButton) mView.findViewById(R.id.addgate_qrcode_button)).setOnClickListener(new OnClickListener() {
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		mView = inflater.inflate(R.layout.fragment_add_gate_dialog, container, false);
+
+		mView.findViewById(R.id.addgate_qrcode_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -90,10 +83,8 @@ public class AddGateFragment extends TrackFragment {
 			}
 		});
 
-		mGateCode = (EditText) mView.findViewById(R.id.addgate_ser_num);
-		mGateName = (EditText) mView.findViewById(R.id.addgate_text_name);
+		return mView;
 	}
-
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -110,24 +101,73 @@ public class AddGateFragment extends TrackFragment {
 
 		if (matcher.find()) {
 			String id = matcher.group(1);
-			Log.d(TAG, String.format("Found code: %s", id));
 
 			// Fill scanned data into edit text
 			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
 			serialNumberEdit.setText(id);
+
+			mCallback.onCodeScanned();
 		} else {
 			Toast.makeText(getActivity(), R.string.toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
 		}
-
-		//TODO: And click positive button
 	}
 
 	public String getGateName() {
-		return mGateName.getText().toString();
+		EditText gateName = (EditText) mView.findViewById(R.id.addgate_text_name);
+		return gateName.getText().toString();
 	}
 
 	public String getGateCode() {
-		return mGateCode.getText().toString();
+		EditText gateCode = (EditText) mView.findViewById(R.id.addgate_ser_num);
+		return gateCode.getText().toString();
 	}
 
+	public interface OnAddGateListener {
+		/**
+		 * This is called after user scans the QR code
+		 */
+		void onCodeScanned();
+	}
+
+	public void doRegisterGateTask(Gate gate) {
+		RegisterGateTask registerGateTask = new RegisterGateTask(getActivity());
+
+		registerGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				mProgress.cancel();
+
+				if (success) {
+					Toast.makeText(getActivity(), R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+
+					getActivity().setResult(Activity.RESULT_OK);
+					//InputMethodManager imm = (InputMethodManager) AddGateActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+					//imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+					getActivity().finish();
+				}
+			}
+		});
+
+		// Execute and remember task so it can be stopped automatically
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(registerGateTask, gate);
+	}
+
+	public void doAction() {
+
+		String gateName = getGateName();
+		String gateCode = getGateCode();
+		Log.d(TAG, String.format("Name: %s Code: %s", gateName, gateCode));
+
+		if (gateCode.isEmpty()) {
+			Toast.makeText(getActivity(), R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
+		} else {
+			// Show progress bar for saving
+			mProgress.show();
+			Gate gate = new Gate();
+			gate.setId(gateCode);
+			gate.setName(gateName);
+			doRegisterGateTask(gate);
+		}
+	}
 }
