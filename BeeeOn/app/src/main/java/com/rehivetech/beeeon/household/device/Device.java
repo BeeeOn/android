@@ -21,7 +21,7 @@ import java.util.List;
 public class Device implements IIdentifier {
 	protected String mAddress;
 	protected String mGateId;
-	protected String mLocationId;
+	protected String mLocationId = Location.NO_LOCATION_ID;
 	protected boolean mInitialized;
 	protected RefreshInterval mRefreshInterval;
 	protected int mBattery;
