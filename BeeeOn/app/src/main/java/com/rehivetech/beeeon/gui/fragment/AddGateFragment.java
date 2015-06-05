@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -19,9 +21,13 @@ import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.util.Log;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class AddGateFragment extends TrackFragment {
 
 	private static final String TAG = AddGateFragment.class.getSimpleName();
+	private static final int SCAN_REQUEST = 0;
 
 	public AddGateActivity mActivity;
 	private LinearLayout mLayout;
@@ -71,11 +77,15 @@ public class AddGateFragment extends TrackFragment {
 				try {
 					Intent intent = new Intent("com.google.zxing.client.android.SCAN");
 					intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // PRODUCT_MODE for bar codes
-					startActivityForResult(intent, 0);
-				} catch (Exception e) {
-					Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
-					Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
-					startActivity(marketIntent);
+					startActivityForResult(intent, SCAN_REQUEST);
+				} catch (ActivityNotFoundException e) {
+					try {
+						Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
+						Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+						startActivity(marketIntent);
+					} catch (ActivityNotFoundException e1) {
+						Toast.makeText(getActivity(), R.string.toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
+					}
 				}
 			}
 		});
@@ -89,13 +99,27 @@ public class AddGateFragment extends TrackFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == 0 && resultCode == MainActivity.RESULT_OK) {
-			// Fill scanned code into edit text
-			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
-			serialNumberEdit.setText(data.getStringExtra("SCAN_RESULT"));
-
-			//TODO: And click positive button
+		if (requestCode == SCAN_REQUEST && resultCode == MainActivity.RESULT_OK) {
+			onScanQRCode(data.getStringExtra("SCAN_RESULT"));
 		}
+	}
+
+	private void onScanQRCode(String data) {
+		Pattern pattern = Pattern.compile("id=(\\d+)");
+		Matcher matcher = pattern.matcher(data);
+
+		if (matcher.find()) {
+			String id = matcher.group(1);
+			Log.d(TAG, String.format("Found code: %s", id));
+
+			// Fill scanned data into edit text
+			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
+			serialNumberEdit.setText(id);
+		} else {
+			Toast.makeText(getActivity(), R.string.toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
+		}
+
+		//TODO: And click positive button
 	}
 
 	public String getGateName() {
