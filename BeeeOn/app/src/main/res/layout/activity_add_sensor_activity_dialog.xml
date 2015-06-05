@@ -23,7 +23,9 @@
 		circular:donut_prefix_text=" "
 		circular:donut_suffix_text=" "
 		circular:donut_finished_color="@color/beeeon_drawer_bg"
-		circular:donut_unfinished_color="@color/beeeon_text_hint"
+		circular:donut_unfinished_color="@color/beeeon_secundary_pink"
 		/>
 
 </LinearLayout>
+
+	<!-- @color/beeeon_drawer_bg-->
