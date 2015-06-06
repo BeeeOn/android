@@ -37,9 +37,10 @@ public class Devices {
 					device.getTypeName()));
 
 			stream.println(String.format("\tManufacturer: %s\n\tName: %s\n\tFeatures: %s",
-					Arrays.toString(device.getManufacturer().getTranslationIds()),
-					Arrays.toString(device.getName().getTranslationIds()),
-					getFeaturesString(device.getFeatures())));
+					device.getManufacturer().getTranslationId(),
+					device.getName().getTranslationId(),
+					getFeaturesString(device.getFeatures())
+			));
 
 			stream.println("\tDevices:");
 			for (Module module : device.getModules()) {
@@ -51,9 +52,9 @@ public class Devices {
 				));
 
 				stream.println(String.format("\t\t\t\tName: %s%s\t",
-						module.getGroup() != null ? Arrays.toString(module.getGroup().getTranslationIds()) : "",
-						Arrays.toString(module.getName().getTranslationIds())
-						));
+						module.getGroup() != null ? module.getGroup().getTranslationId() : "",
+						module.getName().getTranslationId()
+				));
 			}
 
 			stream.println("------");
@@ -89,14 +90,15 @@ public class Devices {
 
 			// Begin of type definition
 			writer.println(String.format("TYPE_%d(\"%d\", \"%s\", %s, %s, new DeviceFeatures(%s, %s, %s)) {",
-							device.getTypeId(),
-							device.getTypeId(),
-							device.getTypeName(),
-							device.getName().getResourceIds()[0],
-							device.getManufacturer().getResourceIds()[0],
-							features.hasRefresh() ? features.getDefaultRefresh().toString() : "null",
-							features.hasLed() ? "true" : "false",
-							features.hasBattery() ? "true" : "false"));
+					device.getTypeId(),
+					device.getTypeId(),
+					device.getTypeName(),
+					device.getName().getResourceId(),
+					device.getManufacturer().getResourceId(),
+					features.hasRefresh() ? features.getDefaultRefresh().toString() : "null",
+					features.hasLed() ? "true" : "false",
+					features.hasBattery() ? "true" : "false"
+			));
 
 				// Begin of createModules() method
 				writer.println("\t@Override\n\tpublic List<Module> createModules(Device device) {");
@@ -108,10 +110,10 @@ public class Devices {
 						while (itModule.hasNext()) {
 							Module module = itModule.next();
 							Translation tgroup = module.getGroup();
-							String group = tgroup != null ? tgroup.getResourceIds()[0] : "null";
+							String group = tgroup != null ? tgroup.getResourceId() : "null";
 
 							Translation tname = module.getName();
-							String name = tname != null ? tname.getResourceIds()[0] : "null";
+							String name = tname != null ? tname.getResourceId() : "null";
 
 							writer.print(String.format("\t\t\t\tnew Module(device, \"%d\", %s, %d, %s, %s, %s, %b",
 									module.getId(),
@@ -120,7 +122,8 @@ public class Devices {
 									module.getOrder(),
 									group,
 									name,
-									module.isActuator()));
+									module.isActuator())
+							);
 
 							if (!module.getValues().isEmpty()) {
 								writer.println(", Arrays.asList(");
@@ -133,8 +136,9 @@ public class Devices {
 											value.id,
 											value.id,
 											"0", // icon resource
-											value.translation.getResourceIds()[0], // value name resource
-											"0")); // color resource
+											value.translation.getResourceId(), // value name resource
+											"0" // color resource
+									));
 
 									writer.println(itValue.hasNext() ? "," : "");
 								}

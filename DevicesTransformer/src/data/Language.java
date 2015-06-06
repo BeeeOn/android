@@ -77,7 +77,7 @@ public class Language {
 		}
 
 		public Item(String prefix, String key, String value) {
-			this.key = prefix + VALUES_SEPARATOR + key;
+			this.key = TRANSLATION_PREFIX + prefix + VALUES_SEPARATOR + key;
 			this.value = value;
 		}
 	}

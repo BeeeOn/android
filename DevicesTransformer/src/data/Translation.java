@@ -6,41 +6,28 @@ package data;
 public class Translation {
 	private static final String RESOURCE_STRING = "R.string." + Language.TRANSLATION_PREFIX + "%s";
 
-	private final String[] mTranslationsIds;
+	private final String mTranslationId;
 
 	public Translation(String translation) {
 		String[] parts = translation.split(":");
 
-		if (parts.length < 2) {
-			throw new IllegalArgumentException(String.format("data.Translation string must have at least 2 parts. Given '%s'.", translation));
+		if (parts.length != 2) {
+			throw new IllegalArgumentException(String.format("data.Translation string must have 2 parts (separated by ':'). Given '%s'.", translation));
 		}
 
 		if (!parts[0].equals("T")) {
 			throw new IllegalArgumentException(String.format("data.Translation string must start with 'T:'. Given '%s'.", translation));
 		}
 
-		mTranslationsIds = new String[parts.length - 1];
-		for (int i = 1; i < parts.length; i++) {
-			mTranslationsIds[i - 1] = parts[i];
-		}
+		mTranslationId = parts[1];
 	}
 
-	public Translation(String[] translationIds) {
-		mTranslationsIds = translationIds;
+	public String getTranslationId() {
+		return mTranslationId;
 	}
 
-	public String[] getTranslationIds() {
-		return mTranslationsIds;
-	}
-
-	public String[] getResourceIds() {
-		String[] resourceIds = new String[mTranslationsIds.length];
-
-		for (int i = 0; i < mTranslationsIds.length; i++) {
-			resourceIds[i] = String.format(RESOURCE_STRING, mTranslationsIds[i].toLowerCase());
-		}
-
-		return resourceIds;
+	public String getResourceId() {
+		return String.format(RESOURCE_STRING, mTranslationId.toLowerCase());
 	}
 
 }

@@ -3,7 +3,6 @@ package data;
 import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -73,17 +72,10 @@ public class Module {
 	public void setValues(Translation name, List<Value> values) {
 		mValues.clear();
 		for (Value value : values) {
-			String prefix = "";
-			for (String id : name.getTranslationIds()) {
-				prefix += id + PREFIX_VALUE_SEPARATOR;
-			}
-
-			// Append value translation
-			List<String> translationIds = new LinkedList<>();
-			for (String id : name.getTranslationIds()) {
-				translationIds.add(prefix + PREFIX_VALUE_SEPARATOR + id);
-			}
-			Translation translation = new Translation(translationIds.toArray(new String[translationIds.size()]));
+			Translation translation = new Translation(String.format("T:%s%s%s",
+					name.getTranslationId(),
+					PREFIX_VALUE_SEPARATOR,
+					value.translation.getTranslationId()));
 
 			mValues.add(new Value(value.id, translation));
 		}
