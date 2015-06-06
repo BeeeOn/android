@@ -223,7 +223,7 @@ public final class Device implements IIdentifier {
 			if (!mModules.hasObject(id)) {
 				if (!isUnknownType()) {
 					// TODO: have it here this way? It could be possible to support such circumstances without a crash - but on other hand, such situation shouldn't happen when everything is regard our specifications.
-					throw new IllegalStateException(String.format("Module #%d doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId()));
+					throw new IllegalStateException(String.format("Module #%s doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId()));
 				}
 
 				// Automatically create new unknown module for this device
