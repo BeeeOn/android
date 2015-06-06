@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.household.device;
 
+import android.support.annotation.Nullable;
+
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
@@ -28,7 +30,7 @@ public final class Device implements IIdentifier {
 
 	private String mLocationId;
 	private boolean mInitialized;
-	private DateTime mInvolveTime;
+	private DateTime mPairedTime;
 	private int mNetworkQuality;
 	private DateTime mLastUpdate;
 
@@ -59,37 +61,37 @@ public final class Device implements IIdentifier {
 	 * @param typeId
 	 * @param gateId
 	 * @param address
-	 * @return
+	 * @return Properly initialized new instance of Device.
 	 */
 	public static final Device createDeviceByType(String typeId, String gateId, String address) {
 		DeviceType type = Utils.getEnumFromId(DeviceType.class, typeId, DeviceType.TYPE_UNKNOWN);
 		return new Device(type, gateId, address);
-
-		//throw new IllegalArgumentException(String.format("Unknown device type: %d", typeId));
 	}
 
+	/**
+	 * @return True if this device has unknown type, false otherwise.
+	 */
 	public boolean isUnknownType() {
 		return mType == DeviceType.TYPE_UNKNOWN;
 	}
 
 	/**
-	 * @return time of last update
+	 * @return Time of last update.
 	 */
+	@Nullable
 	public DateTime getLastUpdate() {
 		return mLastUpdate;
 	}
 
 	/**
-	 * @param lastUpdate time of last update
+	 * @param lastUpdate Time of last update.
 	 */
-	public void setLastUpdate(DateTime lastUpdate) {
+	public void setLastUpdate(@Nullable DateTime lastUpdate) {
 		mLastUpdate = lastUpdate;
 	}
 
 	/**
-	 * Check if actual value of this sensor is expired
-	 *
-	 * @return true when refresh interval since last update expired
+	 * @return True when refresh interval since last update has expired, false otherwise.
 	 */
 	public boolean isExpired() {
 		DeviceFeatures features = mType.getFeatures();
@@ -99,25 +101,29 @@ public final class Device implements IIdentifier {
 		return mLastUpdate.plusSeconds(features.getActualRefresh().getInterval()).isBeforeNow();
 	}
 
+	/**
+	 * @return Unique identifier of this device. Currently is used device address.
+	 */
 	public String getId() {
 		return mAddress;
 	}
 
+	/**
+	 * @return Object representing type of this device from specification.
+	 */
 	public DeviceType getType() {
 		return mType;
 	}
 
 	/**
-	 * @return location id of device
+	 * @return Id of location where this device is placed.
 	 */
 	public String getLocationId() {
 		return mLocationId;
 	}
 
 	/**
-	 * Setting location of device
-	 *
-	 * @param locationId
+	 * @param locationId Id of location where this device is placed.
 	 */
 	public void setLocationId(String locationId) {
 		// From server we've got "", but internally we need to use Location.NO_LOCATION_ID
@@ -128,39 +134,31 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
-	 * Get gate id of device
-	 *
-	 * @return gate id
+	 * @return Id of parent gate of this device.
 	 */
 	public String getGateId() {
 		return mGateId;
 	}
 
 	/**
-	 * Returning flag if mDevice has been initialized yet
-	 *
-	 * @return
+	 * @return True if this device has been initialized already, false otherwise.
 	 */
 	public boolean isInitialized() {
 		return mInitialized;
 	}
 
 	/**
-	 * Setting flag for mDevice initialization state
-	 *
-	 * @param initialized
+	 * @param initialized State of initialization of this device.
 	 */
 	public void setInitialized(boolean initialized) {
 		mInitialized = initialized;
 	}
 
 	/**
-	 * Get time of setting of device to system
-	 *
-	 * @return involve time
+	 * @return Time when device was paired to gate
 	 */
-	public DateTime getInvolveTime() {
-		return mInvolveTime;
+	public DateTime getPairedTime() {
+		return mPairedTime;
 	}
 
 	/**
@@ -171,36 +169,38 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
-	 * Get MAC address of device
-	 *
-	 * @return address
+	 * @return unique (mac) address of this device
 	 */
 	public String getAddress() {
 		return mAddress;
 	}
 
 	/**
-	 * Get value of signal quality
-	 *
-	 * @return quality
+	 * @return quality of network signal in percents (0-100%)
 	 */
 	public int getNetworkQuality() {
 		return mNetworkQuality;
 	}
 
 	/**
-	 * Setting quality
-	 *
-	 * @param networkQuality
+	 * @param networkQuality quality of network signal in percents (0-100%)
 	 */
 	public void setNetworkQuality(int networkQuality) {
 		mNetworkQuality = networkQuality;
 	}
 
+	/**
+	 * @return List of modules this device contains.
+	 */
 	public List<Module> getModules() {
 		return mModules.getObjects();
 	}
 
+	/**
+	 * @param type
+	 * @param offset
+	 * @return Module from this device with specified type and offset.
+	 */
 	// TODO: Remove this method, ideally
 	public Module getModuleByType(ModuleType type, int offset) {
 		for (Module module : getModules()) {
@@ -212,11 +212,23 @@ public final class Device implements IIdentifier {
 		return null;
 	}
 
+	/**
+	 * @param id
+	 * @return Module from this device with specified id.
+	 */
 	public Module getModuleById(String id) {
 		return mModules.getObject(id);
 	}
 
-	public void setModuleValue(String id, String value) {
+	/**
+	 * Set value of module from this device, specified by id.
+	 * If module with specified id doesn't exists, for Devices with unknown type is new unknown module automatically created and its value set.
+	 *
+	 * @param id
+	 * @param value
+	 * @throws IllegalStateException When module with specified id doesn't exists and this device has not unknown type.
+	 */
+	public void setModuleValue(String id, String value) throws IllegalStateException {
 		synchronized (mModules) {
 			if (!mModules.hasObject(id)) {
 				if (!isUnknownType()) {
@@ -234,6 +246,9 @@ public final class Device implements IIdentifier {
 		}
 	}
 
+	/**
+	 * Data holder used for saving device data to server.
+	 */
 	public static class DataPair {
 		public final Device mDevice;
 		public final EnumSet<Module.SaveModule> what;
