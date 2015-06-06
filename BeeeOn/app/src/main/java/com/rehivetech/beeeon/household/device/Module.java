@@ -123,15 +123,32 @@ public final class Module implements IOrderIdentifier {
 		return mOffset;
 	}
 
+	/**
+	 * @param context
+	 * @return name of group
+	 */
 	public String getGroupName(Context context) {
 		return mGroupRes > 0 ? context.getString(mGroupRes) : "";
 	}
 
 	/**
+	 * @param context
+	 * @param withGroup
+	 * @return name of module, optionally prefixed with name of group
+	 */
+	public String getName(Context context, boolean withGroup) {
+		String group = mGroupRes > 0 ? context.getString(mGroupRes) : "";
+		String name = mNameRes > 0 ? context.getString(mNameRes) : "";
+
+		return withGroup ? String.format("%s %s", group, name).trim() : name;
+	}
+
+	/**
+	 * @param context
 	 * @return name of module
 	 */
 	public String getName(Context context) {
-		return mNameRes > 0 ? context.getString(mNameRes) : "";
+		return getName(context, false);
 	}
 
 	/**
