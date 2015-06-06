@@ -45,6 +45,9 @@ public final class Module implements IOrderIdentifier {
 		mOffset = offset;
 
 		mType = ModuleType.fromTypeId(typeId);
+		if (mType.getValueClass() == EnumValue.class) {
+			throw new IllegalArgumentException("ValueClass received from ModuleType is EnumValue, but constructor was called without enumValues.");
+		}
 		mValue = BaseValue.createFromModuleType(mType);
 	}
 
@@ -59,7 +62,7 @@ public final class Module implements IOrderIdentifier {
 
 		mType = ModuleType.fromTypeId(typeId);
 		if (mType.getValueClass() != EnumValue.class) {
-			throw new IllegalStateException("ValueClass received from ModuleType is not EnumValue, but constructor was called with enumValues.");
+			throw new IllegalArgumentException("ValueClass received from ModuleType is not EnumValue, but constructor was called with enumValues.");
 		}
 		mValue = new EnumValue(enumValues);
 	}
