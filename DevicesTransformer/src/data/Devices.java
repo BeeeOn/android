@@ -99,7 +99,7 @@ public class Devices {
 							features.hasBattery() ? "true" : "false"));
 
 				// Begin of createModules() method
-				writer.println("\t@Override\n\tprotected List<Module> createModules(Device device) {");
+				writer.println("\t@Override\n\tpublic List<Module> createModules(Device device) {");
 
 					// Begin of modules array
 					writer.println("\t\treturn Arrays.asList(");
@@ -113,7 +113,7 @@ public class Devices {
 							Translation tname = module.getName();
 							String name = tname != null ? tname.getResourceIds()[0] : "null";
 
-							writer.print(String.format("\t\t\t\tnew Module(device, \"%d\", %s, %d, %s, %s, %s, %b)",
+							writer.print(String.format("\t\t\t\tnew Module(device, \"%d\", %s, %d, %s, %s, %s, %b",
 									module.getId(),
 									module.getType(),
 									module.getOffset(),
@@ -122,7 +122,27 @@ public class Devices {
 									name,
 									module.isActuator()));
 
-							writer.println(itModule.hasNext() ? "," : "");
+							if (!module.getValues().isEmpty()) {
+								writer.println(", Arrays.asList(");
+
+								Iterator<Module.Value> itValue = module.getValues().iterator();
+								while (itValue.hasNext()) {
+									Module.Value value = itValue.next();
+
+									writer.print(String.format("\t\t\t\t\tnew EnumValue.Item(%d, \"%d\", %s, %s, %s)",
+											value.id,
+											value.id,
+											"0", // icon resource
+											value.translation.getResourceIds()[0], // value name resource
+											"0")); // color resource
+
+									writer.println(itValue.hasNext() ? "," : "");
+								}
+
+								writer.print("\t\t\t\t)");
+							}
+
+							writer.println(itModule.hasNext() ? ")," : ")");
 						}
 
 					writer.println("\t\t);");
