@@ -420,7 +420,7 @@ public class DemoNetwork implements INetwork {
 
 			// device.setBattery(rand.nextInt(101));
 			device.setInitialized(rand.nextBoolean());
-			device.setInvolveTime(DateTime.now(DateTimeZone.UTC));
+			device.setPairedTime(DateTime.now(DateTimeZone.UTC));
 			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			// mDevice.setLocationId(locationId); // uninitialized mDevice has no location
 			device.setNetworkQuality(rand.nextInt(101));

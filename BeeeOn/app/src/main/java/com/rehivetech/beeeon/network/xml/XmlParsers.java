@@ -376,7 +376,7 @@ public class XmlParsers {
 			device.setInitialized(init);
 			device.setLocationId(getSecureAttrValue(Xconstants.LID));
 			device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
-			device.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
+			device.setPairedTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
 			device.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
 			// FIXME: support for refresh/battery and other features

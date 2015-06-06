@@ -164,12 +164,10 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
-	 * Setting involve time
-	 *
-	 * @param involved
+	 * @param pairedTime Time when device was paired to gate
 	 */
-	public void setInvolveTime(DateTime involved) {
-		mInvolveTime = involved;
+	public void setPairedTime(DateTime pairedTime) {
+		mPairedTime = pairedTime;
 	}
 
 	/**

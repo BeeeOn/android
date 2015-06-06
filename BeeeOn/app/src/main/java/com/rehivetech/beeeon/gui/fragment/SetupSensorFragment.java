@@ -144,7 +144,7 @@ public class SetupSensorFragment extends TrackFragment {
 		if (timeHelper != null) {
 			Device device = mNewDevices.get(0);
 			Gate gate = controller.getGatesModel().getGate(device.getGateId());
-			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getInvolveTime(), gate)));
+			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getPairedTime(), gate)));
 		}
 
 		// Set involved time of mDevice
