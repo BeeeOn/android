@@ -62,9 +62,9 @@ public class AddGateFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_add_gate_dialog, container, false);
+		mView = inflater.inflate(R.layout.fragment_add_gate_dialog_new, container, false);
 
-		mView.findViewById(R.id.addgate_qrcode_button).setOnClickListener(new OnClickListener() {
+		mView.findViewById(R.id.add_gate_qr_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				try {
@@ -82,6 +82,14 @@ public class AddGateFragment extends TrackFragment {
 				}
 			}
 		});
+
+		mView.findViewById(R.id.add_gate_write_it_button).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// overlay dialog must popup here
+			}
+		});
+
 
 		return mView;
 	}

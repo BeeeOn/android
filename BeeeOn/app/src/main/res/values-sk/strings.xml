@@ -129,7 +129,7 @@
     <string name="addsensor_active_pair">Párovací režim je aktívny </string>
     <string name="addadapter_textview_name">Názov</string>
     <string name="addadapter_view_setname">Nastavte názov brány, napr. Doma</string>
-    <string name="addadapter_textview_code">QR kód</string>
+    <string name="addadapter_qr_button">QR kód</string>
     <string name="addsensor_send_pair">SPUSTIŤ PÁROVÁNIE</string>
 
     <!-- Others -->

@@ -64,7 +64,7 @@
 				    android:id="@+id/addadapter_textview_code"
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
-				    android:text="@string/addadapter_textview_code"
+				    android:text="@string/add_textview_code"
 				    android:textColor="@color/beeeon_drawer_bg"
 				    android:layout_gravity="left"
 				    android:textIsSelectable="false"
