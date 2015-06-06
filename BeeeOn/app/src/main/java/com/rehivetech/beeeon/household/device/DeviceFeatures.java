@@ -75,7 +75,7 @@ public class DeviceFeatures {
 	}
 
 	public int getBatteryValue() {
-		return mBattery.actualValue;
+		return mBattery != null ? mBattery.actualValue : -1;
 	}
 
 	private static class Refresh {
