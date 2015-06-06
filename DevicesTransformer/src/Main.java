@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 
 public class Main {
 
+	public static final String DEFAULT_LANG_CODE = "en";
+
 	public static void main(String[] args) {
 		processDevices();
 		processLanguages();
@@ -61,7 +63,9 @@ public class Main {
 
 				Language language = LanguageParser.parse(file);
 
-				File dir = new File(String.format("export/values-%s/", language.getCode()));
+				String path = language.getCode().equalsIgnoreCase(DEFAULT_LANG_CODE) ? "export/values/" : String.format("export/values-%s/", language.getCode());
+
+				File dir = new File(path);
 				dir.mkdirs();
 
 				String name = "generated_strings_devices.xml";
