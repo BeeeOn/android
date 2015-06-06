@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -18,13 +19,15 @@ import com.rehivetech.beeeon.gui.activity.IntroActivity;
 public final class IntroImageFragment extends Fragment {
 	private static final String KEY_IMAGE_RES = "ImageRes";
 	private static final String KEY_TEXT_RES = "TextRes";
+	private static final String KEY_TITLE_RES = "TitleRes";
 
-	public static IntroImageFragment newInstance(int resourceImg, int textRes) {
+	public static IntroImageFragment newInstance(int resourceImg, int textRes, int titleRes) {
 		IntroImageFragment fragment = new IntroImageFragment();
 
 		Bundle args = new Bundle();
 		args.putInt(KEY_IMAGE_RES, resourceImg);
 		args.putInt(KEY_TEXT_RES, textRes);
+		args.putInt(KEY_TITLE_RES,titleRes);
 		fragment.setArguments(args);
 
 		return fragment;
@@ -32,6 +35,7 @@ public final class IntroImageFragment extends Fragment {
 
 	private int mImageRes;
 	private int mTextRes;
+	private int mTitleRes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public final class IntroImageFragment extends Fragment {
 
 		mImageRes = getArguments().getInt(KEY_IMAGE_RES);
 		mTextRes = getArguments().getInt(KEY_TEXT_RES);
+		mTitleRes = getArguments().getInt(KEY_TITLE_RES);
 	}
 
 	@Override
@@ -59,6 +64,19 @@ public final class IntroImageFragment extends Fragment {
 		layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		layout.setGravity(Gravity.CENTER);
 		layout.setOrientation(LinearLayout.VERTICAL);
+
+		if (mTitleRes != 0) {
+			// 0 is sent from intro Activity, there is no title needed
+			TextView title = new TextView(getActivity());
+			title.setText(mTitleRes);
+			title.setTextSize(35);
+			title.setTypeface(null,Typeface.BOLD);
+			title.setGravity(Gravity.CENTER_HORIZONTAL);
+			title.setPadding(0,0,0,0);
+			title.setTextColor(getResources().getColor(R.color.white));
+			layout.addView(title);
+		}
+
 		layout.addView(text);
 		layout.addView(image);
 
@@ -84,10 +102,12 @@ public final class IntroImageFragment extends Fragment {
 	public static class ImageTextPair {
 		public final int imageRes;
 		public final int textRes;
+		public final int titleRes;
 
-		public ImageTextPair(int imageRes, int textRes) {
+		public ImageTextPair(int imageRes, int textRes, int titleRes) {
 			this.imageRes = imageRes;
 			this.textRes = textRes;
+			this.titleRes = titleRes;
 		}
 	}
 

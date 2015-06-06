@@ -28,14 +28,13 @@ public class IntroActivity extends BaseActivity {
 		setContentView(R.layout.activity_intro);
 
 		List<IntroImageFragment.ImageTextPair> pairs = new ArrayList<>();
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_icons,R.string.tut_intro_text_1));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.tut_intro_text_2));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.tut_intro_text_3));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4,R.string.tut_intro_text_4));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5,R.string.tut_intro_text_5));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_icons,R.string.tut_intro_text_1,0));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.tut_intro_text_2,0));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.tut_intro_text_3,0));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4,R.string.tut_intro_text_4,0));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5,R.string.tut_intro_text_5,0));
 
-		FragmentManager fm = getSupportFragmentManager();
-		mAdapter = new IntroFragmentPagerAdapter(fm,pairs,null);
+		mAdapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,null);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);

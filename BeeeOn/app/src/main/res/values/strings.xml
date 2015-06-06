@@ -164,6 +164,8 @@
 	<string name="addsensor_device_not_found_in_time">The device was not found, please check if it is really switched on and try it again</string>
 	<string name="addsensor_device_found">The device was found</string>
     <string name="addsensor_request_task_not_successful">Request task was not successful, please, try it again</string>
+    <string name="addsensor_title">Adding new sensor</string>
+    <string name="addadapter_title">Adding new gate</string>
 
     <!-- Others -->
     <string name="action_settings">Settings</string>
