@@ -132,12 +132,10 @@ public class Devices {
 								while (itValue.hasNext()) {
 									Module.Value value = itValue.next();
 
-									writer.print(String.format("\t\t\t\t\tnew EnumValue.Item(%d, \"%d\", %s, %s, %s)",
+									writer.print(String.format("\t\t\t\t\tnew EnumValue.Item(%d, \"%d\", %s)",
 											value.id,
 											value.id,
-											"0", // icon resource
-											value.translation.getResourceId(), // value name resource
-											"0" // color resource
+											value.translation.getResourceId() // value name resource
 									));
 
 									writer.println(itValue.hasNext() ? "," : "");
