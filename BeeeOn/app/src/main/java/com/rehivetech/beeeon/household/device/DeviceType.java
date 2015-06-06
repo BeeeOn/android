@@ -12,12 +12,10 @@ import java.util.List;
 
 public enum DeviceType implements IIdentifier {
 	// FIXME: Features now share the object... It could have the default refresh but cannot hold the real value. So maybe rework it to enum and mark only exists/not exists? .. hm, but then how to save the default timeout?
-	// FIXME: There is another possibility to not use these enums at all. And create everything on runtime and separate it amongst every instances of the Device object. But probably keep it this way. It will be better to have only one instance of DeviceType.
 
 	TYPE_UNKNOWN("", "???", R.string.unknown_device, R.string.unknown_manufacturer, new DeviceFeatures(null, false, false)) {
 		@Override
 		public List<Module> createModules(Device device) {
-			// TODO: What return here? Support unknown types at all?
 			return new ArrayList<>();
 		}
 	},

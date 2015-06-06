@@ -197,22 +197,6 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
-	 * @param type
-	 * @param offset
-	 * @return Module from this device with specified type and offset.
-	 */
-	// TODO: Remove this method, ideally
-	public Module getModuleByType(ModuleType type, int offset) {
-		for (Module module : getModules()) {
-			if (module.getType().equals(type) && module.getOffset() == offset) {
-				return module;
-			}
-		}
-
-		return null;
-	}
-
-	/**
 	 * @param id
 	 * @return Module from this device with specified id.
 	 */
