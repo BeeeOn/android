@@ -33,6 +33,7 @@ public final class IntroImageFragment extends Fragment {
 		return fragment;
 	}
 
+	private View mView;
 	private int mImageRes;
 	private int mTextRes;
 	private int mTitleRes;
@@ -48,39 +49,13 @@ public final class IntroImageFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		TextView text = new TextView(getActivity());
-		text.setPadding(20, 20, 20, 20);
-		text.setText(mTextRes);
-		text.setGravity(Gravity.CENTER_HORIZONTAL);
-		text.setTextSize(20);
-		text.setTextColor(getResources().getColor(R.color.white));
+		mView = inflater.inflate(R.layout.fragment_intro_image,container,false);
 
-		ImageView image = new ImageView(getActivity());
-		image.setImageResource(mImageRes);
-		image.setPadding(20, 20, 20, 20);
+		((TextView) mView.findViewById(R.id.intro_image_title)).setText(mTitleRes);
+		((TextView) mView.findViewById(R.id.intro_image_text)).setText(mTextRes);
+		((ImageView) mView.findViewById(R.id.intro_image_image)).setImageResource(mImageRes);
 
-
-		LinearLayout layout = new LinearLayout(getActivity());
-		layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		layout.setGravity(Gravity.CENTER);
-		layout.setOrientation(LinearLayout.VERTICAL);
-
-		if (mTitleRes != 0) {
-			// 0 is sent from intro Activity, there is no title needed
-			TextView title = new TextView(getActivity());
-			title.setText(mTitleRes);
-			title.setTextSize(35);
-			title.setTypeface(null,Typeface.BOLD);
-			title.setGravity(Gravity.CENTER_HORIZONTAL);
-			title.setPadding(0,0,0,0);
-			title.setTextColor(getResources().getColor(R.color.white));
-			layout.addView(title);
-		}
-
-		layout.addView(text);
-		layout.addView(image);
-
-		return layout;
+		return mView;
 	}
 
 	@Override
