@@ -17,16 +17,16 @@ public enum DeviceType implements IIdentifier {
 
 	TYPE_UNKNOWN("", "???", R.string.unknown_device, R.string.unknown_manufacturer, new DeviceFeatures(null, false, false)) {
 		@Override
-		protected List<Module> createModules(Device device) {
+		public List<Module> createModules(Device device) {
 			// TODO: What return here? Support unknown types at all?
-			return new ArrayList<Module>();
+			return new ArrayList<>();
 		}
 	},
 
 	/** BEGIN OF GENERATED CONTENT **/
 	TYPE_0("0", "BeeeOn v1.0", R.string.devices__dev_temperature_humidity, R.string.devices__manufacturer_but, new DeviceFeatures(30, true, true)) {
 		@Override
-		protected List<Module> createModules(Device device) {
+		public List<Module> createModules(Device device) {
 			return Arrays.asList(
 					new Module(device, "0", 0x02, 0, null, null, R.string.devices__mod_room_temperature, false),
 					new Module(device, "1", 0x02, 1, null, null, R.string.devices__mod_outside_temperature, false),
@@ -36,7 +36,7 @@ public enum DeviceType implements IIdentifier {
 	},
 	TYPE_1("1", "Regulator VPT v1.0", R.string.devices__dev_regulator_vpt, R.string.devices__manufacturer_thermona, new DeviceFeatures(null, false, false)) {
 		@Override
-		protected List<Module> createModules(Device device) {
+		public List<Module> createModules(Device device) {
 			return Arrays.asList(
 					new Module(device, "0", 0x01, 0, null, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new EnumValue.Item(0, "0", 0, 0, 0),
@@ -128,7 +128,7 @@ public enum DeviceType implements IIdentifier {
 		mFeatures = features;
 	}
 
-	protected abstract List<Module> createModules(Device device);
+	public abstract List<Module> createModules(Device device);
 
 	@Override
 	public String getId() {
