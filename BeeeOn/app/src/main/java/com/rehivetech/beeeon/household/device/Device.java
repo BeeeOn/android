@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.household.device;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.SimpleDataHolder;
 import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
@@ -17,7 +18,7 @@ public final class Device implements IIdentifier {
 	 * Properties inherited from device's specification table.
 	 */
 	private final DeviceType mType;
-	private final List<Module> mModules;
+	private final SimpleDataHolder<Module> mModules = new SimpleDataHolder<>();
 
 	/**
 	 * Properties belonging to real device.
@@ -32,21 +33,24 @@ public final class Device implements IIdentifier {
 	private DateTime mLastUpdate;
 
 	/**
-	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(int, String)}.
+	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
 	 *
 	 * @param type
+	 * @param gateId
+	 * @param address
 	 */
-	public Device(DeviceType type, String gateId, String address) {
+	private Device(DeviceType type, String gateId, String address) {
 		mType = type;
 		mGateId = gateId;
 		mAddress = address;
 
 		// Create modules list
 		List<Module> modules = type.createModules(this);
-		// And sort them by order and id
+		// Sort them by order, id
 		Collections.sort(modules, new OrderIdentifierComparator());
-		// Them make it immutable
-		mModules = Collections.unmodifiableList(modules);
+
+		// Then set the modules holder
+		mModules.setObjects(modules);
 	}
 
 	/**
@@ -62,6 +66,10 @@ public final class Device implements IIdentifier {
 		return new Device(type, gateId, address);
 
 		//throw new IllegalArgumentException(String.format("Unknown device type: %d", typeId));
+	}
+
+	public boolean isUnknownType() {
+		return mType == DeviceType.TYPE_UNKNOWN;
 	}
 
 	/**
@@ -192,9 +200,10 @@ public final class Device implements IIdentifier {
 	}
 
 	public List<Module> getModules() {
-		return mModules;
+		return mModules.getObjects();
 	}
 
+	// TODO: Remove this method, ideally
 	public Module getModuleByType(ModuleType type, int offset) {
 		for (Module module : getModules()) {
 			if (module.getType().equals(type) && module.getOffset() == offset) {
@@ -203,6 +212,28 @@ public final class Device implements IIdentifier {
 		}
 
 		return null;
+	}
+
+	public Module getModuleById(String id) {
+		return mModules.getObject(id);
+	}
+
+	public void setModuleValue(String id, String value) {
+		synchronized (mModules) {
+			if (!mModules.hasObject(id)) {
+				if (!isUnknownType()) {
+					// TODO: have it here this way? It could be possible to support such circumstances without a crash - but on other hand, such situation shouldn't happen when everything is regard our specifications.
+					throw new IllegalStateException(String.format("Module #%d doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId()));
+				}
+
+				// Automatically create new unknown module for this device
+				mModules.addObject(Module.createUnknownModule(this, id));
+			}
+
+			// At this moment module will surely exist in data holder
+			Module module = mModules.getObject(id);
+			module.setValue(value);
+		}
 	}
 
 	public static class DataPair {

@@ -375,7 +375,7 @@ public class XmlParsers {
 
 			Device device = Device.createDeviceByType(type, aid, address);
 
-			// mDevice.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
+			// device.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
 			device.setInitialized(init);
 			device.setLocationId(getSecureAttrValue(Xconstants.LID));
 			device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
@@ -393,18 +393,16 @@ public class XmlParsers {
 				continue;
 			}
 
-			// FIXME: support for modules
+			// Load modules values
 			do { // go through modules
-				/*Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
-				module.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
-				module.setName(getSecureAttrValue(Xconstants.NAME));
-				module.setValue(getSecureAttrValue(Xconstants.VALUE));
-				device.addModule(module);*/
+				String moduleId = getSecureAttrValue(Xconstants.ID);
+				String moduleValue = getSecureAttrValue(Xconstants.VALUE);
+				device.setModuleValue(moduleId, moduleValue);
+
 				mParser.nextTag(); // module endtag
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
 
 			result.add(device);
-
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
 				&& (!mParser.getName().equals(Xconstants.GATE) || !mParser.getName().equals(Xconstants.COM_ROOT)));
 	}

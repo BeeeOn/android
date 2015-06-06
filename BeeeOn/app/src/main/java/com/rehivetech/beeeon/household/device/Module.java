@@ -31,6 +31,9 @@ public final class Module implements IOrderIdentifier {
 	private final Device mDevice; // parent device
 	private final BaseValue mValue;
 
+	public static Module createUnknownModule(Device device, String id) {
+		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), 0, null, null, null, false);
+	}
 
 	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator) {
 		mDevice = device;
