@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.household.user;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
@@ -174,11 +175,12 @@ public class User implements INameIdentifier {
 	/**
 	 * @return user picture bitmap or null
 	 */
+	@Nullable
 	public Bitmap getPicture() {
 		return mPicture;
 	}
 
-	public void setPicture(Bitmap picture) {
+	public void setPicture(@Nullable Bitmap picture) {
 		mPicture = Utils.getRoundedShape(picture);
 	}
 

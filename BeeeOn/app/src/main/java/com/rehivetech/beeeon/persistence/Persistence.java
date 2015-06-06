@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.household.device.units.NoiseUnit;
@@ -152,9 +153,10 @@ public class Persistence {
 		}
 	}
 
+	@Nullable
 	private Bitmap loadBitmap(String filename) {
 		File file = new File(getCacheDir(), filename + ".jpg");
-		return BitmapFactory.decodeFile(file.getAbsolutePath());
+		return file.exists() ? BitmapFactory.decodeFile(file.getAbsolutePath()) : null;
 	}
 
 	/**
