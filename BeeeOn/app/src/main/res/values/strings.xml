@@ -332,6 +332,7 @@
 	<string name="tut_intro_text_3">Sensor measures values such as temperature, actuator controls module such as ON/OFF switch.</string>
 	<string name="tut_intro_text_4">Gateway collects data from wireless modules.</string>
 	<string name="tut_intro_text_5">Mobile app provides monitoring and control from anywhere, anytime.</string>
+    <string name="tut_intro_title">Beeeon Introduction</string>
     
     <string name="tutorial_next">NEXT</string>
     <string name="tutorial_add">ADD</string>
