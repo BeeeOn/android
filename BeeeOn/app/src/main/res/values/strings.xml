@@ -47,7 +47,7 @@
 
     <!-- Labels -->
     <string name="login_app_name">BeeeOn</string>
-    <string name="login_or_use">or use</string>
+    <string name="login_app_slogan">Home under your control.</string>
     <string name="addsensor_add_sensor">Add module</string>
     <string name="addsensor_setup_sensor">Setup module</string>
     <string name="addsensor_or">or</string>

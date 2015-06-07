@@ -1,89 +1,88 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".LoginActivity" >
+			  xmlns:tools="http://schemas.android.com/tools"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  tools:context=".LoginActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_weight="0.5"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        android:layout_height="0dp" >
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="0.5"
+		android:gravity="center_vertical"
+		android:orientation="vertical">
 
-        	
-       <LinearLayout 
-           android:layout_width="fill_parent"
-           android:layout_height="0dp"
-           android:layout_weight="0.6"
-           android:layout_gravity="center_horizontal"
-           android:orientation="horizontal"
-           android:layout_marginTop="20dp"
-           >
-           <ImageView
-            android:id="@+id/login_app_name"
-            android:layout_width="match_parent"    
-            android:layout_height="match_parent"
-            android:src="@drawable/beeeon_logo" />
-       </LinearLayout>
-        
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_text_color"
+			android:layout_gravity="center_horizontal"
+			android:text="@string/login_app_name"
+			android:textSize="@dimen/activity_login_app_name_size"
+			android:layout_marginTop="10dp"/>
 
-        <TextView
-            android:id="@+id/setup_sensor_header_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:textColor="@color/beeeon_text_color"
-            android:layout_gravity="center_vertical|center_horizontal"
-            android:text="@string/login_app_name"
-            android:textSize="20sp" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_text_color"
+			android:layout_gravity="center_horizontal"
+			android:text="@string/login_app_slogan"
+			android:textSize="@dimen/activity_login_app_slogan_size"
+			android:layout_marginBottom="10dp"
+			android:singleLine="false"/>
 
-    </LinearLayout>
+		<ImageView
+			android:layout_width="@dimen/activity_login_logo_size"
+			android:layout_height="@dimen/activity_login_logo_size"
+			android:layout_gravity="center_horizontal"
+			android:orientation="horizontal"
+			android:paddingBottom="10dp"
+			android:src="@drawable/beeeon_logo"/>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"
-        android:background="@color/beeeon_primary_cyan"
-        android:gravity="center_vertical|center_horizontal" >
+	</LinearLayout>
 
-        <ImageButton
-            android:id="@+id/login_btn_google"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_alignParentLeft="true"
-            android:background="@null"
-            android:layout_marginBottom="15dp"
-            android:contentDescription="TODO"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_g_log" />
+	<RelativeLayout
+		android:id="@+id/relativeLayout1"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="0.5"
+		android:background="@color/beeeon_primary_cyan"
+		android:gravity="center_vertical|center_horizontal">
 
-        
-        <ImageButton
-            android:id="@+id/login_btn_mojeid"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_alignLeft="@+id/login_btn_google"
-            android:layout_below="@+id/login_btn_google"
-            android:background="@null"
-            android:layout_marginBottom="15dp"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_mid_log" />
+		<ImageButton
+			android:id="@+id/login_btn_google"
+			android:layout_width="match_parent"
+			android:layout_height="55dp"
+			android:layout_alignParentLeft="true"
+			android:background="@null"
+			android:layout_marginBottom="15dp"
+			android:contentDescription="TODO"
+			android:scaleType="centerInside"
+			android:src="@drawable/ic_g_log"/>
 
-        <ImageButton
-            android:id="@+id/login_btn_demo"
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_below="@+id/login_btn_mojeid"
-            android:layout_alignLeft="@+id/login_btn_mojeid"
-            android:background="@null"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_demo_log" />
-        
-       
 
-    </RelativeLayout>
+		<ImageButton
+			android:id="@+id/login_btn_mojeid"
+			android:layout_width="match_parent"
+			android:layout_height="54dp"
+			android:layout_alignLeft="@+id/login_btn_google"
+			android:layout_below="@+id/login_btn_google"
+			android:background="@null"
+			android:layout_marginBottom="15dp"
+			android:scaleType="centerInside"
+			android:src="@drawable/ic_mid_log"/>
+
+		<ImageButton
+			android:id="@+id/login_btn_demo"
+			android:layout_width="match_parent"
+			android:layout_height="54dp"
+			android:layout_below="@+id/login_btn_mojeid"
+			android:layout_alignLeft="@+id/login_btn_mojeid"
+			android:background="@null"
+			android:scaleType="centerInside"
+			android:src="@drawable/ic_demo_log"/>
+
+
+	</RelativeLayout>
 
 </LinearLayout>

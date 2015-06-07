@@ -39,7 +39,7 @@
 
     <!-- Labels -->
     <string name="login_app_name">BeeeOn</string>
-    <string name="login_or_use">nebo použijte</string>
+    <string name="login_app_slogan">Dům pod vaší kontrolou.</string>
     <string name="addsensor_add_sensor">Přidat zařízení</string>
     <string name="addsensor_setup_sensor">Nastavte zařízení</string>
     <string name="addsensor_or">nebo</string>

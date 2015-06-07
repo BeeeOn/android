@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="activity_login_logo_size">250dp</dimen>
+    <dimen name="activity_login_app_name_size">36sp</dimen>
+    <dimen name="activity_login_app_slogan_size">22sp</dimen>
+</resources>
