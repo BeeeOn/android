@@ -15,7 +15,7 @@ import com.rehivetech.beeeon.gui.activity.MainActivity;
 public class TutorialHelper {
 	private static final String TAG = TutorialHelper.class.getSimpleName();
 
-	private static int mLoginTutorialClick = 0;
+	/*private static int mLoginTutorialClick = 0;
 
 	public static void showLoginTutorial(final LoginActivity activity) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -101,7 +101,7 @@ public class TutorialHelper {
 				Log.d(TAG, "Showcase click");
 			}
 		});
-	}
+	}*/
 
 	public static void showAddSensorTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

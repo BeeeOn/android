@@ -8,7 +8,7 @@
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_weight="0.5"
+		android:layout_weight="0.4"
 		android:gravity="center_vertical"
 		android:orientation="vertical">
 
@@ -29,7 +29,7 @@
 			android:text="@string/login_app_slogan"
 			android:textSize="@dimen/activity_login_app_slogan_size"
 			android:layout_marginBottom="10dp"
-			android:singleLine="false"/>
+			android:singleLine="true"/>
 
 		<ImageView
 			android:layout_width="@dimen/activity_login_logo_size"
@@ -41,48 +41,106 @@
 
 	</LinearLayout>
 
-	<RelativeLayout
-		android:id="@+id/relativeLayout1"
-		android:layout_width="match_parent"
+	<LinearLayout
 		android:layout_height="0dp"
 		android:layout_weight="0.5"
-		android:background="@color/beeeon_primary_cyan"
-		android:gravity="center_vertical|center_horizontal">
+		android:layout_width="match_parent"
+		android:paddingTop="10dp"
+		android:paddingLeft="5dp"
+		android:paddingRight="5dp"
+		android:paddingBottom="5dp"
+		android:gravity="center_horizontal|top"
+		android:orientation="vertical"
+		android:background="@color/beeeon_primary_cyan">
 
-		<ImageButton
-			android:id="@+id/login_btn_google"
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_text_color"
+			android:layout_gravity="start"
+			android:text="Login or register to BeeeOn with:"
+			android:textSize="15dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginBottom="10dp"
+			android:singleLine="true"/>
+
+		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="55dp"
-			android:layout_alignParentLeft="true"
-			android:background="@null"
-			android:layout_marginBottom="15dp"
-			android:contentDescription="TODO"
-			android:scaleType="centerInside"
-			android:src="@drawable/ic_g_log"/>
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp"
+			android:gravity="center"
+			android:orientation="horizontal">
 
+			<Button
+				android:id="@+id/login_btn_google"
+				android:layout_weight="0.3"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="top"
+				android:drawableTop="@drawable/login_btn_google"
+				android:drawablePadding="8dp"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:text="Google" />
 
-		<ImageButton
-			android:id="@+id/login_btn_mojeid"
+			<Button
+				android:id="@+id/login_btn_facebook"
+				android:layout_weight="0.3"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_gravity="top"
+				android:drawableTop="@drawable/login_btn_facebook"
+				android:drawablePadding="8dp"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:text="Facebook" />
+
+			<Button
+				android:id="@+id/login_btn_choose"
+				android:layout_weight="0.3"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_gravity="top"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:text="Choose other service" />
+
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_text_color"
+			android:layout_gravity="start"
+			android:text="Or you can work without server:"
+			android:textSize="15dp"
+			android:layout_marginLeft="10dp"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="10dp"
+			android:singleLine="true"/>
+
+		<LinearLayout
 			android:layout_width="match_parent"
-			android:layout_height="54dp"
-			android:layout_alignLeft="@+id/login_btn_google"
-			android:layout_below="@+id/login_btn_google"
-			android:background="@null"
-			android:layout_marginBottom="15dp"
-			android:scaleType="centerInside"
-			android:src="@drawable/ic_mid_log"/>
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="10dp"
+			android:gravity="center"
+			android:orientation="horizontal">
 
-		<ImageButton
-			android:id="@+id/login_btn_demo"
-			android:layout_width="match_parent"
-			android:layout_height="54dp"
-			android:layout_below="@+id/login_btn_mojeid"
-			android:layout_alignLeft="@+id/login_btn_mojeid"
-			android:background="@null"
-			android:scaleType="centerInside"
-			android:src="@drawable/ic_demo_log"/>
+			<Button
+				android:id="@+id/login_btn_direct"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0.5"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:text="Direct connect to gateway" />
 
+			<Button
+				android:id="@+id/login_btn_demo"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0.5"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:text="Start in\ndemo mode" />
 
-	</RelativeLayout>
+		</LinearLayout>
+
+	</LinearLayout>
 
 </LinearLayout>

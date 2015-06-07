@@ -68,7 +68,6 @@ public class LoginActivity extends BaseActivity {
 		// Get controller
 		Controller controller = Controller.getInstance(this);
 
-
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
 		mProgress.setCancelable(true);
@@ -81,8 +80,8 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
-		// Demo button
-		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
+		// Set buttons listeners
+		findViewById(R.id.login_btn_demo).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mProgress.setMessageResource(R.string.progress_loading_demo);
@@ -90,34 +89,39 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
-		// Get btn for login
-		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
-		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_btn_mojeid);
+		findViewById(R.id.login_btn_direct).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
+			}
+		});
 
-		// Set onClickListener
-		btnGoogle.setOnClickListener(new OnClickListener() {
+		findViewById(R.id.login_btn_google).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				prepareLogin(new GoogleAuthProvider());
 			}
 		});
-		btnMojeID.setOnClickListener(new OnClickListener() {
+
+		findViewById(R.id.login_btn_facebook).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// FIXME: use MojeId correctly or rework the button image and this selection dialog
+				prepareLogin(new FacebookAuthProvider());
+			}
+		});
 
+		findViewById(R.id.login_btn_choose).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
 				// Show choose dialog for other providers
 				AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
 				builder.setTitle(R.string.dialog_choose_provider_title);
-				builder.setItems(new String[]{"Facebook", "MojeID"}, new DialogInterface.OnClickListener() {
+				builder.setItems(new String[]{"MojeID"}, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (which == 0) {
-							// Facebook
-							prepareLogin(new FacebookAuthProvider());
-						} else {
 							// MojeID
-							Toast.makeText(LoginActivity.this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
+							Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
 							// prepareLogin(new MojeIdAuthProvider());
 						}
 					}

@@ -123,6 +123,7 @@
     <string name="toast_error_no_google_play">Failed to open Google Play</string>
     <string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
     <string name="toast_not_specified_gate">Not specified Gateway</string>
+    <string name="toast_error_not_supported_yet">This is not supported yet.</string>
 
     <!-- Progress -->
 	<string name="progress_signing">Logging in&#8230;</string>
