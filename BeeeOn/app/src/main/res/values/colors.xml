@@ -17,6 +17,7 @@
     <color name="alpha_blue">#7d00bcd4</color>
     <color name="beeeon_primary_cyan">#00bcd4</color>
     <color name="beeeon_primary_cyan_dark">#0097A7</color>
+    <color name="beeeon_primary_cyan_medium">#00ADBC</color>
     <color name="beeeon_primary_cyan_light">#B2EBF2</color>
     <color name="beeeon_primary_cyan_lighter">#32b9f3fa</color>
     <color name="beeeon_secundary_pink">#ff4081</color>

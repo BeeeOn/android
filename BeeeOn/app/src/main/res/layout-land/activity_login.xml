@@ -1,139 +1,168 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  xmlns:tools="http://schemas.android.com/tools"
+			  android:orientation="horizontal"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
-			  android:orientation="horizontal"
 			  tools:context=".LoginActivity">
 
-	<LinearLayout
+	<RelativeLayout
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
-		android:layout_weight="0.4"
-		android:gravity="center_vertical"
-		android:orientation="vertical">
+		android:background="@color/beeeon_primary_cyan_dark"
+		android:padding="10dp"
+		android:layout_weight="0.5">
 
 		<TextView
-			android:layout_width="wrap_content"
+			android:id="@+id/name"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textColor="@color/beeeon_text_color"
-			android:layout_gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:gravity="center_horizontal"
 			android:text="@string/login_app_name"
-			android:textSize="@dimen/activity_login_app_name_size"/>
+			android:textSize="@dimen/activity_login_app_name_size"
+			android:layout_alignParentTop="true"
+			android:layout_marginTop="15dp"
+			android:layout_marginBottom="5dp"/>
 
 		<TextView
-			android:layout_width="wrap_content"
+			android:id="@+id/slogan"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textColor="@color/beeeon_text_color"
-			android:layout_gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:gravity="center_horizontal"
 			android:text="@string/login_app_slogan"
 			android:textSize="@dimen/activity_login_app_slogan_size"
-			android:layout_marginBottom="10dp"
-			android:singleLine="true"/>
+			android:layout_below="@+id/name" />
 
 		<ImageView
-			android:layout_width="@dimen/activity_login_logo_size"
-			android:layout_height="@dimen/activity_login_logo_size"
-			android:layout_gravity="center_horizontal"
-			android:orientation="horizontal"
-			android:src="@drawable/beeeon_logo"
-			android:paddingBottom="10dp"/>
+			android:id="@+id/logo"
+			android:layout_width="120dp"
+			android:layout_height="120dp"
+			android:layout_gravity="center"
+			android:orientation="vertical"
+			android:padding="10dp"
+			android:src="@drawable/beeeon_logo_white_icons_transparent"
+			android:layout_centerHorizontal="true"
+			android:layout_marginTop="20dp"
+			android:layout_below="@id/slogan"
+			android:contentDescription="@string/login_image_description_logo"/>
 
-	</LinearLayout>
+	</RelativeLayout>
 
 	<LinearLayout
 		android:layout_width="0dp"
-		android:layout_weight="0.5"
 		android:layout_height="match_parent"
-		android:padding="5dp"
-		android:gravity="center_vertical"
 		android:orientation="vertical"
-		android:background="@color/beeeon_primary_cyan">
+		android:layout_weight="1">
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textColor="@color/beeeon_text_color"
-			android:layout_gravity="start"
-			android:text="Login or register to BeeeOn with:"
-			android:textSize="15dp"
-			android:layout_marginLeft="10dp"
-			android:layout_marginBottom="10dp"
-			android:singleLine="true"/>
-
-		<LinearLayout
+		<RelativeLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="10dp"
-			android:gravity="center"
-			android:orientation="horizontal">
+			android:layout_height="0dp"
+			android:layout_weight="1"
+			android:padding="5dp">
 
-			<Button
-				android:id="@+id/login_btn_google"
+			<TextView
+				android:id="@+id/label_login_or_register"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_gravity="top"
-				android:drawableTop="@drawable/login_btn_google"
-				android:drawablePadding="8dp"
-				style="@style/Widget.AppCompat.Button.Borderless"
-				android:text="Google" />
+				android:textColor="@android:color/secondary_text_light"
+				android:layout_gravity="start"
+				android:text="@string/login_label_login_or_register"
+				android:textSize="14sp"
+				android:layout_marginTop="15dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp"
+				android:layout_marginBottom="5dp"/>
 
-			<Button
-				android:id="@+id/login_btn_facebook"
-				android:layout_width="wrap_content"
+			<LinearLayout
+				android:id="@+id/login_buttons"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_gravity="top"
-				android:drawableTop="@drawable/login_btn_facebook"
-				android:drawablePadding="8dp"
-				style="@style/Widget.AppCompat.Button.Borderless"
-				android:text="Facebook" />
+				android:layout_below="@id/label_login_or_register"
+				android:gravity="center"
+				android:orientation="horizontal">
 
-			<Button
-				android:id="@+id/login_btn_choose"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:layout_gravity="top"
-				style="@style/Widget.AppCompat.Button.Borderless"
-				android:text="Choose other service" />
+				<Button
+					android:id="@+id/login_btn_google"
+					android:layout_weight="0.3"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="top"
+					android:drawableTop="@drawable/login_btn_google"
+					android:drawablePadding="8dp"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:text="@string/login_provider_google"/>
 
-		</LinearLayout>
+				<Button
+					android:id="@+id/login_btn_facebook"
+					android:layout_weight="0.3"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_gravity="top"
+					android:drawableTop="@drawable/login_btn_facebook"
+					android:drawablePadding="8dp"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:text="@string/login_provider_facebook"/>
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textColor="@color/beeeon_text_color"
-			android:layout_gravity="start"
-			android:text="Or you can work without server:"
-			android:textSize="15dp"
-			android:layout_marginLeft="10dp"
-			android:layout_marginTop="15dp"
-			android:layout_marginBottom="10dp"
-			android:singleLine="true"/>
+				<Button
+					android:id="@+id/login_btn_choose"
+					android:layout_weight="0.3"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_gravity="top"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:text="@string/login_provider_choose_other"/>
 
-		<LinearLayout
+			</LinearLayout>
+		</RelativeLayout>
+
+		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="10dp"
-			android:gravity="center"
-			android:orientation="horizontal">
+			android:background="@color/beeeon_primary_cyan_medium"
+			android:padding="5dp">
 
-			<Button
-				android:id="@+id/login_btn_direct"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="0.5"
-				style="@style/Widget.AppCompat.Button.Borderless"
-				android:text="Direct connect to gateway" />
+			<TextView
+				android:id="@+id/label_work_offline"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textColor="@color/white"
+				android:layout_gravity="start"
+				android:text="@string/login_label_work_offline"
+				android:textSize="14sp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginTop="10dp"
+				android:layout_marginBottom="5dp"
+				android:layout_marginRight="10dp"/>
 
-			<Button
-				android:id="@+id/login_btn_demo"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="0.5"
-				style="@style/Widget.AppCompat.Button.Borderless"
-				android:text="Start with\ndemo mode" />
+			<LinearLayout
+				android:layout_below="@id/label_work_offline"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:orientation="horizontal">
 
-		</LinearLayout>
+				<Button
+					android:id="@+id/login_btn_direct"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="0.5"
+					android:textColor="@color/white"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:text="@string/login_btn_direct_connect"
+					android:visibility="visible"/>
 
+				<Button
+					android:id="@+id/login_btn_demo"
+					android:layout_width="0dp"
+					android:layout_height="match_parent"
+					android:layout_weight="0.5"
+					android:textColor="@color/white"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:text="@string/login_btn_demo_mode"/>
+
+			</LinearLayout>
+		</RelativeLayout>
 	</LinearLayout>
 
 </LinearLayout>
