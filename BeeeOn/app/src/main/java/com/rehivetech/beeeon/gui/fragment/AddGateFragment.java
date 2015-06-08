@@ -176,10 +176,51 @@ public class AddGateFragment extends TrackFragment {
 		} else {
 			// Show progress bar for saving
 			mProgress.show();
-			Gate gate = new Gate();
-			gate.setId(gateCode);
-			gate.setName(gateName);
-			doRegisterGateTask(gate);
+			doRegisterGateTask(gateCode,true);
 		}
+	}
+
+	public void doRegisterGateTask(String id, final boolean fromQR) {
+		// TODO: finish
+		Gate gate = new Gate();
+		gate.setId(id);
+		gate.setName("");
+
+		RegisterGateTask registerGateTask = new RegisterGateTask(getActivity());
+		registerGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				mProgress.cancel();
+
+				if (success) {
+					Toast.makeText(getActivity(), R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+
+					getActivity().setResult(Activity.RESULT_OK);
+					//InputMethodManager imm = (InputMethodManager) AddGateActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+					//imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+					getActivity().finish();
+				} else {
+					if(fromQR) {
+						// QR scanning again, make it a function?
+						try {
+							Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+							intent.putExtra("SCAN_MODE", "QR_CODE_MODE"); // PRODUCT_MODE for bar codes
+							startActivityForResult(intent, SCAN_REQUEST);
+						} catch (ActivityNotFoundException e) {
+							try {
+								Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
+								Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+								startActivity(marketIntent);
+							} catch (ActivityNotFoundException e1) {
+								Toast.makeText(getActivity(), R.string.toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
+							}
+						}
+					} else {
+						mCallback.onWriteManuallyClicked();
+					}
+				}
+			}
+		});
 	}
 }

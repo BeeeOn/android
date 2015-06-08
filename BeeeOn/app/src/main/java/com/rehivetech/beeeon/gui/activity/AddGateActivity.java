@@ -64,6 +64,12 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	@Override
 	public void onPositiveButtonClick(AddGateDialogFragment addGateDialogFragment, String id) {
 		Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+
+		AddGateFragment fragment = (AddGateFragment) mPagerAdapter.getFinalFragment();
+		if (fragment == null) {
+			return;
+		}
+		fragment.doRegisterGateTask(id,false);
 	}
 
 	@Override

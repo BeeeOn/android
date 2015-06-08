@@ -34,6 +34,7 @@ public class AddGateDialogFragment extends DialogFragment {
 				EditText editText = (EditText) view.findViewById(R.id.add_gate_overlay_dialog_edit_text);
 				String identifier = editText.getText().toString();
 				if(identifier.length() == 0) {
+					// FIXME: this condition is not working, always flase, the same with identifier.isEmpty()
 					Toast.makeText(getActivity(),R.string.toast_field_must_be_filled,Toast.LENGTH_LONG);
 				} else {
 					mCallback.onPositiveButtonClick(AddGateDialogFragment.this, identifier);
