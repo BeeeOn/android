@@ -61,6 +61,33 @@
 			android:layout_weight="1"
 			android:padding="5dp">
 
+			<LinearLayout
+				android:id="@+id/select_server"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="10dp"
+				android:layout_marginRight="10dp">
+
+				<TextView
+					android:id="@+id/label_select_server"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent"
+					android:layout_marginRight="10dp"
+					android:textColor="@android:color/secondary_text_light"
+					android:gravity="center_vertical"
+					android:text="@string/login_label_server"
+					android:textSize="14sp" />
+
+				<Spinner
+					android:id="@+id/spinner_select_server"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:gravity="center_vertical"
+					android:entries="@array/login_servers"/>
+			</LinearLayout>
+
 			<TextView
 				android:id="@+id/label_login_or_register"
 				android:layout_width="wrap_content"
@@ -69,7 +96,8 @@
 				android:layout_gravity="start"
 				android:text="@string/login_label_login_or_register"
 				android:textSize="14sp"
-				android:layout_marginTop="15dp"
+				android:layout_below="@id/select_server"
+				android:layout_marginTop="10dp"
 				android:layout_marginLeft="10dp"
 				android:layout_marginRight="10dp"
 				android:layout_marginBottom="5dp"/>

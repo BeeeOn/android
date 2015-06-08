@@ -38,10 +38,21 @@
     <string name="login_app_name">BeeeOn</string>
     <string name="login_app_slogan">Home under your control.</string>
 
+    <string name="action_choose_server_manually">Choose BeeeOn server manually</string>
+    <string name="login_label_server">Select BeeeOn server:</string>
+    <string-array name="login_servers">
+        <item>Default</item>
+        <item>BeeeOn Europe</item>
+        <item>BeeeOn America</item>
+        <item>BeeeOn Asia</item>
+        <item>Ant-2 server (alpha)</item>
+        <item>IOTPro server (beta)</item>
+    </string-array>
+
     <string name="login_label_login_or_register">Login or register with:</string>
     <string name="login_provider_google">Google</string>
     <string name="login_provider_facebook">Facebook</string>
-    <string name="login_provider_choose_other">Choose other service</string>
+    <string name="login_provider_choose_other">Use other service</string>
 
     <string name="login_label_work_offline">Or you can work offline:</string>
     <string name="login_btn_direct_connect">Direct connect to gateway</string>

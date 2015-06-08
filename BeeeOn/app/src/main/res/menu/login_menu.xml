@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+		android:id="@+id/action_about"
+		android:icon="@android:drawable/ic_menu_info_details"
+		android:title="@string/action_about"/>
+
+	<item
+		android:id="@+id/action_choose_server_manually"
+		android:icon="@android:drawable/ic_menu_manage"
+		android:title="@string/action_choose_server_manually"
+		android:checkable="true"/>
+</menu>

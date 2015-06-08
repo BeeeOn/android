@@ -8,9 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -19,12 +21,13 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
+import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.twitter.sdk.android.Twitter;
@@ -47,8 +50,12 @@ public class LoginActivity extends BaseActivity {
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 
+	private static final String TAG_DIALOG = "about_dialog";
+
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	private BetterProgressDialog mProgress;
+
+	private View mSelectServer;
 
 	private boolean mLoginCancel = false;
 
@@ -82,6 +89,10 @@ public class LoginActivity extends BaseActivity {
 
 		// Set buttons listeners
 		prepareLoginButtons();
+
+		// Set choose server visibility
+		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		setSelectServerVisibility(chooseServerEnabled);
 
 		// Intro to app
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
@@ -251,6 +262,50 @@ public class LoginActivity extends BaseActivity {
 	public void onBackPressed() {
 		super.onBackPressed();
 		finish();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.login_menu, menu);
+
+		// Set choose server item (un)checked
+		boolean checked = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		MenuItem item = menu.findItem(R.id.action_choose_server_manually);
+		item.setChecked(checked);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+
+		switch (item.getItemId()) {
+			case R.id.action_choose_server_manually:
+			{
+				boolean checked = !item.isChecked();
+				item.setChecked(checked);
+				Controller.getInstance(this).getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
+				setSelectServerVisibility(checked);
+				return true;
+			}
+			case R.id.action_about:
+			{
+				InfoDialogFragment dialog = new InfoDialogFragment();
+				dialog.show(getSupportFragmentManager(), TAG_DIALOG);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void setSelectServerVisibility(boolean visible) {
+		if (mSelectServer == null) {
+			mSelectServer = findViewById(R.id.select_server);
+		}
+		mSelectServer.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
