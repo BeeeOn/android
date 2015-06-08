@@ -81,54 +81,7 @@ public class LoginActivity extends BaseActivity {
 		});
 
 		// Set buttons listeners
-		findViewById(R.id.login_btn_demo).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mProgress.setMessageResource(R.string.progress_loading_demo);
-				prepareLogin(new DemoAuthProvider());
-			}
-		});
-
-		findViewById(R.id.login_btn_direct).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		findViewById(R.id.login_btn_google).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prepareLogin(new GoogleAuthProvider());
-			}
-		});
-
-		findViewById(R.id.login_btn_facebook).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prepareLogin(new FacebookAuthProvider());
-			}
-		});
-
-		findViewById(R.id.login_btn_choose).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// Show choose dialog for other providers
-				AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-				builder.setTitle(R.string.dialog_choose_provider_title);
-				builder.setItems(new String[]{"MojeID"}, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if (which == 0) {
-							// MojeID
-							Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
-							// prepareLogin(new MojeIdAuthProvider());
-						}
-					}
-				});
-				builder.show();
-			}
-		});
+		prepareLoginButtons();
 
 		// Intro to app
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
@@ -154,6 +107,60 @@ public class LoginActivity extends BaseActivity {
 			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", lastAuthProvider.getProviderName(), lastAuthProvider.getPrimaryParameter()));
 			prepareLogin(lastAuthProvider);
 		}
+	}
+
+	private void prepareLoginButtons() {
+		OnClickListener onClickListener = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				switch (v.getId()) {
+					case R.id.login_btn_demo:
+					{
+						mProgress.setMessageResource(R.string.progress_loading_demo);
+						prepareLogin(new DemoAuthProvider());
+						return;
+					}
+					case R.id.login_btn_google:
+					{
+						prepareLogin(new GoogleAuthProvider());
+						return;
+					}
+					case R.id.login_btn_facebook:
+					{
+						prepareLogin(new FacebookAuthProvider());
+						return;
+					}
+					case R.id.login_btn_direct:
+					{
+						Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
+						return;
+					}
+					case R.id.login_btn_choose:
+					{
+						// Show choose dialog for other providers
+						AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+						builder.setTitle(R.string.dialog_choose_provider_title);
+						builder.setItems(new String[]{"MojeID"}, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if (which == 0) {
+									// MojeID
+									Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
+									// prepareLogin(new MojeIdAuthProvider());
+								}
+							}
+						});
+						builder.show();
+					}
+				}
+			}
+		};
+
+		findViewById(R.id.login_btn_demo).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_direct).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_google).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_facebook).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_choose).setOnClickListener(onClickListener);
 	}
 
 	@Override
