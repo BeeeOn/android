@@ -4,48 +4,66 @@
 			  android:gravity="center"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
+	<!-- content of both textviews and imageview is set in java code -->
 
-	<TextView
-		android:id="@+id/intro_image_title"
+	<ScrollView
 		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:paddingRight="20dp"
-		android:paddingLeft="20dp"
-		android:paddingTop="20dp"
-		android:paddingBottom="20dp"
-		android:textSize="35dip"
-		android:textStyle="bold"
-		android:gravity="center_horizontal"
-		android:textColor="@color/white"/>
+		android:layout_height="wrap_content">
 
-	<LinearLayout
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:gravity="center">
-
-		<TextView
-			android:id="@+id/intro_image_text"
+		<LinearLayout
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:paddingRight="20dp"
-			android:paddingLeft="20dp"
-			android:paddingTop="20dp"
-			android:paddingBottom="20dp"
-			android:maxEms="25"
-			android:textSize="15dip"
-			android:textStyle="bold"
-			android:gravity="center_horizontal"
-			android:textColor="@color/white"/>
+			android:orientation="vertical"
+			android:gravity="center">
 
-		<ImageView
-			android:id="@+id/intro_image_image"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:paddingRight="10dp"
-			android:paddingLeft="20dp"
-			android:paddingTop="20dp"
-			android:paddingBottom="20dp"/>
+			<TextView
+				android:id="@+id/intro_image_title"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingRight="0dp"
+				android:paddingLeft="0dp"
+				android:paddingTop="0dp"
+				android:paddingBottom="0dp"
+				android:textSize="35dip"
+				android:textStyle="bold"
+				android:gravity="center_horizontal"
+				android:textColor="@color/white"/>
 
-	</LinearLayout>
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:gravity="center">
+
+				<TextView
+					android:id="@+id/intro_image_text"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingRight="0dp"
+					android:paddingLeft="0dp"
+					android:paddingTop="0dp"
+					android:paddingBottom="0dp"
+					android:maxEms="25"
+					android:textSize="15dip"
+					android:textStyle="bold"
+					android:gravity="center_horizontal"
+					android:textColor="@color/white"/>
+
+				<ImageView
+					android:id="@+id/intro_image_image"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingRight="0dp"
+					android:paddingLeft="0dp"
+					android:paddingTop="0dp"
+					android:paddingBottom="0dp"
+					android:maxHeight="250dp"
+					android:maxWidth="250dp"
+					android:minHeight="250dp"
+					android:minWidth="250dp"
+					android:adjustViewBounds="true"/>
+
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
 </LinearLayout>
