@@ -8,9 +8,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -19,12 +25,15 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
+import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.network.NetworkServer;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
+import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.twitter.sdk.android.Twitter;
@@ -33,10 +42,8 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
 
 /**
- * First sign in class, controls first activity
+ * Default application activity, handles login or automatic redirect to MainActivity.
  *
- * @author ThinkDeep
- * @author Leopold Podmolik
  * @author Robyer
  */
 public class LoginActivity extends BaseActivity {
@@ -47,8 +54,12 @@ public class LoginActivity extends BaseActivity {
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 
+	private static final String TAG_DIALOG = "about_dialog";
+
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	private BetterProgressDialog mProgress;
+
+	private View mSelectServer;
 
 	private boolean mLoginCancel = false;
 
@@ -80,8 +91,23 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
-		// Set buttons listeners
+		// Set login buttons listeners
 		prepareLoginButtons();
+
+		// Initialize server related views
+		prepareServerSpinner();
+
+		// Set logo on click listener to show about dialog
+		findViewById(R.id.logo).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showAboutDialog();
+			}
+		});
+
+		// Set choose server visibility
+		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		setSelectServerVisibility(chooseServerEnabled);
 
 		// Intro to app
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
@@ -161,6 +187,41 @@ public class LoginActivity extends BaseActivity {
 		findViewById(R.id.login_btn_google).setOnClickListener(onClickListener);
 		findViewById(R.id.login_btn_facebook).setOnClickListener(onClickListener);
 		findViewById(R.id.login_btn_choose).setOnClickListener(onClickListener);
+	}
+
+	private void prepareServerSpinner() {
+		// Set server spinner items
+		Spinner spinner = (Spinner) findViewById(R.id.spinner_select_server);
+
+		// TODO: This is a bit dirty way to set the name. Use own adapter to have translated "(default)" sufix (and perhaps also server names itself) properly
+		ArrayAdapter adapter = new ArrayAdapter<NetworkServer>(this, android.R.layout.simple_spinner_item, NetworkServer.values()) {
+			private View changeText(View view, int position) {
+				NetworkServer item = getItem(position);
+				String name = item.getTranslatedName(LoginActivity.this);
+				((TextView) view).setText(name);
+				return view;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				return changeText(super.getView(position, convertView, parent), position);
+			}
+
+			@Override
+			public View getDropDownView(int position, View convertView, ViewGroup parent) {
+				return changeText(super.getDropDownView(position, convertView, parent), position);
+			}
+		};
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+
+		String serverId = Persistence.loadLoginServerId(this);
+		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
+		spinner.setSelection(server.ordinal());
+
+		// Set choose server visibility
+		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		setSelectServerVisibility(chooseServerEnabled);
 	}
 
 	@Override
@@ -253,6 +314,54 @@ public class LoginActivity extends BaseActivity {
 		finish();
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.login_menu, menu);
+
+		// Set choose server item (un)checked
+		boolean checked = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		MenuItem item = menu.findItem(R.id.action_choose_server_manually);
+		item.setChecked(checked);
+
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+
+		switch (item.getItemId()) {
+			case R.id.action_choose_server_manually:
+			{
+				boolean checked = !item.isChecked();
+				item.setChecked(checked);
+				Controller.getInstance(this).getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
+				setSelectServerVisibility(checked);
+				return true;
+			}
+			case R.id.action_about:
+			{
+				showAboutDialog();
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void setSelectServerVisibility(boolean visible) {
+		if (mSelectServer == null) {
+			mSelectServer = findViewById(R.id.select_server);
+		}
+		mSelectServer.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
+
+	private void showAboutDialog() {
+		InfoDialogFragment dialog = new InfoDialogFragment();
+		dialog.show(getSupportFragmentManager(), TAG_DIALOG);
+	}
+
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Custom METHODS
 	// ////////////////////////////////////////////////////////////////////////////////////
@@ -264,8 +373,16 @@ public class LoginActivity extends BaseActivity {
 	 * @param demoMode
 	 */
 	protected void setDemoMode(boolean demoMode) {
+		// Get selected server
+		String serverId = "";
+		if (mSelectServer.getVisibility() == View.VISIBLE) {
+			Spinner spinner = (Spinner) mSelectServer.findViewById(R.id.spinner_select_server);
+			NetworkServer server = (NetworkServer) spinner.getSelectedItem();
+			serverId = server != null ? server.getId() : "";
+		}
+
 		// After changing demo mode must be controller reloaded
-		Controller.setDemoMode(this, demoMode);
+		Controller.setDemoMode(this, demoMode, serverId);
 	}
 
 	/**

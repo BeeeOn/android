@@ -2,6 +2,8 @@
 <resources>
     <string name="demo_mode">DEMO REŽIM</string>
 
+    <string name="sufix_default"> (výchozí)</string>
+
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notifikace</string>
@@ -30,10 +32,13 @@
     <string name="login_app_name">BeeeOn</string>
     <string name="login_app_slogan">Dům pod vaší kontrolou.</string>
 
+    <string name="action_choose_server_manually">Zvolit server ručně</string>
+    <string name="login_label_server">Zvolte server:</string>
+
     <string name="login_label_login_or_register">Přihlaste se nebo se zaregistrujte pomocí:</string>
     <string name="login_provider_google">Google</string>
     <string name="login_provider_facebook">Facebook</string>
-    <string name="login_provider_choose_other">Zvolit jinou službu</string>
+    <string name="login_provider_choose_other">Použít jinou službu</string>
 
     <string name="login_label_work_offline">Nebo můžete pracovat offline:</string>
     <string name="login_btn_direct_connect">Přímé připojení k bráně</string>

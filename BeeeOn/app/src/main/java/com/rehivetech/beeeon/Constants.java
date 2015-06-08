@@ -60,6 +60,9 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LOGIN_TWITTER = "login_twitter";
 	public static final String PERSISTENCE_PREF_LOGIN_VKONTAKTE = "login_vkontakte";
 
+	public static final String PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY = "login_choose_server_manually";
+	public static final String PERSISTENCE_PREF_LOGIN_SERVER = "login_server";
+
 	public static final String PERSISTENCE_APP_IMAGE_DIR = "image_dir";
 
 	public static final String KEY_UNITS = "key_units";
