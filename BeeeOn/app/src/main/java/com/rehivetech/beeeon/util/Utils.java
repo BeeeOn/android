@@ -401,14 +401,13 @@ final public class Utils {
 	}
 
 	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id, T defaultItem) {
-		T item;
-		try {
-			item = getEnumFromId(enumClass, id);
-		} catch (IllegalArgumentException e) {
-			item = defaultItem;
+		for (T item : enumClass.getEnumConstants()) {
+			if (item.getId().equalsIgnoreCase(id)) {
+				return item;
+			}
 		}
 
-		return item;
+		return defaultItem;
 	}
 
 	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id) throws AppException {
