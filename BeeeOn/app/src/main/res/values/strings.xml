@@ -105,7 +105,7 @@
     <string name="toast_login_failed">Login failed</string>
 	<string name="toast_registration_failed">Registration failed</string>
 	<string name="toast_auth_provider_error">Error during authorization process</string>
-    <string name="toast_adapter_activate_failed">Failed to activate gateway</string>
+    <string name="toast_adapter_activate_failed">Failed to activate gateway,please try it again</string>
     <string name="toast_adapter_activated">Gateway has been activated</string>
     <string name="toast_gate_removed">Gateway has been removed</string>
     <string name="toast_no_adapter">You have no registered gateway</string>
@@ -159,7 +159,7 @@
     <string name="addadapter_view_setname">Set gateway name, e.g. Home</string>
     <string name="addadapter_qr_button"> Scan QR code </string>
     <string name="addadapter_manual_edit">Write it manually</string>
-    <string name="adddapter_overlay_dialog_title">Please write the code</string>
+    <string name="adddapter_overlay_dialog_title">Please write the ID number</string>
     <string name="addsensor_send_pair">SEND PAIR</string>
     <string name="addsensor_waiting">Waiting for start</string>
 	<string name="addsensor_time_left_unit">seconds</string>
