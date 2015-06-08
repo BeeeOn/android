@@ -90,6 +90,14 @@ public class LoginActivity extends BaseActivity {
 		// Set buttons listeners
 		prepareLoginButtons();
 
+		// Set logo on click listener to show about dialog
+		findViewById(R.id.logo).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showAboutDialog();
+			}
+		});
+
 		// Set choose server visibility
 		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
 		setSelectServerVisibility(chooseServerEnabled);
@@ -292,8 +300,7 @@ public class LoginActivity extends BaseActivity {
 			}
 			case R.id.action_about:
 			{
-				InfoDialogFragment dialog = new InfoDialogFragment();
-				dialog.show(getSupportFragmentManager(), TAG_DIALOG);
+				showAboutDialog();
 				return true;
 			}
 		}
@@ -306,6 +313,11 @@ public class LoginActivity extends BaseActivity {
 			mSelectServer = findViewById(R.id.select_server);
 		}
 		mSelectServer.setVisibility(visible ? View.VISIBLE : View.GONE);
+	}
+
+	private void showAboutDialog() {
+		InfoDialogFragment dialog = new InfoDialogFragment();
+		dialog.show(getSupportFragmentManager(), TAG_DIALOG);
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
