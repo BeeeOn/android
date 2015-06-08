@@ -82,9 +82,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 		mAdapter = new SetupSensorFragmentAdapter(getSupportFragmentManager());
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(mAdapter.getCount());
