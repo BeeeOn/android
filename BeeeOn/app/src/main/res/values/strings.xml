@@ -3,6 +3,8 @@
     <string name="blank" translatable="false" />
     <string name="demo_mode">DEMO MODE</string>
 
+    <string name="sufix_default"> (default)</string>
+
 	<string name="facebook_app_id" translatable="false">868028889921254</string>
 	<string name="twitter_app_id" translatable="false">WuuLjLlhpAM4U7ex50wWECO2x</string>
 	<string name="twitter_app_secret" translatable="false">DhvEzUtURDqVGxVoxIaAXEKE6FxT7AfPYVmTDhcy4oXqPfDFlP</string>
@@ -40,14 +42,6 @@
 
     <string name="action_choose_server_manually">Choose BeeeOn server manually</string>
     <string name="login_label_server">Select BeeeOn server:</string>
-    <string-array name="login_servers">
-        <item>Default</item>
-        <item>BeeeOn Europe</item>
-        <item>BeeeOn America</item>
-        <item>BeeeOn Asia</item>
-        <item>Ant-2 server (alpha)</item>
-        <item>IOTPro server (beta)</item>
-    </string-array>
 
     <string name="login_label_login_or_register">Login or register with:</string>
     <string name="login_provider_google">Google</string>

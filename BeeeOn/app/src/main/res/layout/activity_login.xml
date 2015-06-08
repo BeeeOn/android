@@ -81,8 +81,7 @@
 				android:id="@+id/spinner_select_server"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:gravity="center_vertical"
-				android:entries="@array/login_servers"/>
+				android:gravity="center_vertical"/>
 		</LinearLayout>
 
 		<TextView

@@ -179,6 +179,22 @@ public class Persistence {
 		editor.commit();
 	}
 
+	// Last server
+	public static String loadLoginServerId(Context context) {
+		return getSettings(context, GLOBAL).getString(Constants.PERSISTENCE_PREF_LOGIN_SERVER, "");
+	}
+
+	public static void saveLoginServerId(Context context, String server) {
+		SharedPreferences.Editor editor = getSettings(context, GLOBAL).edit();
+
+		if (server == null)
+			editor.remove(Constants.PERSISTENCE_PREF_LOGIN_SERVER);
+		else
+			editor.putString(Constants.PERSISTENCE_PREF_LOGIN_SERVER, server);
+
+		editor.commit();
+	}
+
 	// Last user
 
 	public void saveLastUserId(String userId) {

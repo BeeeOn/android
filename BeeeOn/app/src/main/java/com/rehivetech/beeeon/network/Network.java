@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.rehivetech.beeeon.BuildConfig;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
@@ -68,59 +67,29 @@ public class Network implements INetwork {
 
 	private static final String TAG = Network.class.getSimpleName();
 
-	/**
-	 * Number of retries when we receive no response from server (e.g. because persistent connection expires from server side).
-	 */
+	/** Number of retries when we receive no response from server (e.g. because persistent connection expires from server side) */
 	private static final int RETRIES_COUNT = 2;
 
-	/**
-	 * Name of CA certificate located in assets
-	 */
-	private static final String ASSEST_CA_CERT = "cacert.crt";
-
-	/**
-	 * Alias (tag) for CA certificate
-	 */
+	/** Alias (tag) for CA certificate */
 	private static final String ALIAS_CA_CERT = "ca";
 
-	/**
-	 * Address and port of debug server
-	 */
-	private static final String SERVER_ADDR_DEBUG = "ant-2.fit.vutbr.cz";
-	private static final int SERVER_PORT_DEBUG = 4566;
-
-	/**
-	 * Address and port of production server
-	 */
-	private static final String SERVER_ADDR_PRODUCTION = "iotpro.fit.vutbr.cz";
-	private static final int SERVER_PORT_PRODUCTION = 4565;
-
-	/**
-	 * CN value to be verified in server certificate
-	 */
-	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
-
-	/**
-	 * Marks end of communication messages
-	 */
+	/** Marks end of communication messages */
 	private static final String EOF = "</com>";
 
+	private static final int SSL_TIMEOUT = 35000;
+
 	private final Context mContext;
+	private final NetworkServer mServer;
 	private String mBT = "";
-	private static final int SSLTIMEOUT = 35000;
 
 	private final Object mSocketLock = new Object();
 	private SSLSocket mSocket = null;
 	private PrintWriter mSocketWriter = null;
 	private BufferedReader mSocketReader = null;
 
-	/**
-	 * Constructor.
-	 *
-	 * @param context of app
-	 */
-	public Network(Context context) {
+	public Network(Context context, NetworkServer server) {
 		mContext = context;
+		mServer = server;
 	}
 
 	/**
@@ -169,16 +138,6 @@ public class Network implements INetwork {
 		return response.toString();
 	}
 
-	private SSLSocket createSocket(SSLContext sslContext) throws IOException {
-		if (BuildConfig.BUILD_TYPE.equals("debug") || BuildConfig.BUILD_TYPE.equals("alpha")) {
-			return (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_DEBUG);
-		} else if (BuildConfig.BUILD_TYPE.equals("beta_ant2")) {
-			return (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_DEBUG, SERVER_PORT_PRODUCTION);
-		} else {
-			return (SSLSocket) sslContext.getSocketFactory().createSocket(SERVER_ADDR_PRODUCTION, SERVER_PORT_PRODUCTION);
-		}
-	}
-
 	/**
 	 * Method for initializing socket for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
 	 * certificates. CA certificated must be located in assets folder.
@@ -189,7 +148,7 @@ public class Network implements INetwork {
 	private SSLSocket initSocket() {
 		try {
 			// Open CA certificate from assets
-			InputStream inStreamCertTmp = mContext.getAssets().open(ASSEST_CA_CERT);
+			InputStream inStreamCertTmp = mContext.getAssets().open(mServer.certAssetsFilename);
 			InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
 			Certificate ca;
 			try {
@@ -214,21 +173,20 @@ public class Network implements INetwork {
 			sslContext.init(null, tmf.getTrustManagers(), null);
 
 			// Open SSLSocket directly to server
-			SSLSocket socket = createSocket(sslContext);
-
+			SSLSocket socket = (SSLSocket) sslContext.getSocketFactory().createSocket(mServer.address, mServer.port);
 
 			HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
 			//socket.setKeepAlive(true);
-			socket.setSoTimeout(SSLTIMEOUT);
+			socket.setSoTimeout(SSL_TIMEOUT);
 			SSLSession s = socket.getSession();
 			if (!s.isValid())
 				Log.e(TAG, "Socket is not valid! TLS handshake failed.");
 
 			// Verify that the certificate hostName
 			// This is due to lack of SNI support in the current SSLSocket.
-			if (!hv.verify(SERVER_CN_CERTIFICATE, s)) {
+			if (!hv.verify(mServer.certVerifyUrl, s)) {
 				throw new AppException("Certificate is not verified!", ClientError.CERTIFICATE)
-						.set("Expected CN", SERVER_CN_CERTIFICATE)
+						.set("Expected CN", mServer.certVerifyUrl)
 						.set("Found CN", s.getPeerPrincipal());
 			}
 			return socket;

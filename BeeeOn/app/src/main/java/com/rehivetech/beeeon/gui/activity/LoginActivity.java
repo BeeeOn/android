@@ -13,6 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -24,10 +28,12 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.network.NetworkServer;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 import com.twitter.sdk.android.Twitter;
@@ -36,10 +42,8 @@ import com.twitter.sdk.android.core.TwitterAuthConfig;
 import io.fabric.sdk.android.Fabric;
 
 /**
- * First sign in class, controls first activity
+ * Default application activity, handles login or automatic redirect to MainActivity.
  *
- * @author ThinkDeep
- * @author Leopold Podmolik
  * @author Robyer
  */
 public class LoginActivity extends BaseActivity {
@@ -87,8 +91,11 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
-		// Set buttons listeners
+		// Set login buttons listeners
 		prepareLoginButtons();
+
+		// Initialize server related views
+		prepareServerSpinner();
 
 		// Set logo on click listener to show about dialog
 		findViewById(R.id.logo).setOnClickListener(new OnClickListener() {
@@ -180,6 +187,41 @@ public class LoginActivity extends BaseActivity {
 		findViewById(R.id.login_btn_google).setOnClickListener(onClickListener);
 		findViewById(R.id.login_btn_facebook).setOnClickListener(onClickListener);
 		findViewById(R.id.login_btn_choose).setOnClickListener(onClickListener);
+	}
+
+	private void prepareServerSpinner() {
+		// Set server spinner items
+		Spinner spinner = (Spinner) findViewById(R.id.spinner_select_server);
+
+		// TODO: This is a bit dirty way to set the name. Use own adapter to have translated "(default)" sufix (and perhaps also server names itself) properly
+		ArrayAdapter adapter = new ArrayAdapter<NetworkServer>(this, android.R.layout.simple_spinner_item, NetworkServer.values()) {
+			private View changeText(View view, int position) {
+				NetworkServer item = getItem(position);
+				String name = item.getTranslatedName(LoginActivity.this);
+				((TextView) view).setText(name);
+				return view;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				return changeText(super.getView(position, convertView, parent), position);
+			}
+
+			@Override
+			public View getDropDownView(int position, View convertView, ViewGroup parent) {
+				return changeText(super.getDropDownView(position, convertView, parent), position);
+			}
+		};
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+
+		String serverId = Persistence.loadLoginServerId(this);
+		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
+		spinner.setSelection(server.ordinal());
+
+		// Set choose server visibility
+		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		setSelectServerVisibility(chooseServerEnabled);
 	}
 
 	@Override
@@ -331,8 +373,16 @@ public class LoginActivity extends BaseActivity {
 	 * @param demoMode
 	 */
 	protected void setDemoMode(boolean demoMode) {
+		// Get selected server
+		String serverId = "";
+		if (mSelectServer.getVisibility() == View.VISIBLE) {
+			Spinner spinner = (Spinner) mSelectServer.findViewById(R.id.spinner_select_server);
+			NetworkServer server = (NetworkServer) spinner.getSelectedItem();
+			serverId = server != null ? server.getId() : "";
+		}
+
 		// After changing demo mode must be controller reloaded
-		Controller.setDemoMode(this, demoMode);
+		Controller.setDemoMode(this, demoMode, serverId);
 	}
 
 	/**
