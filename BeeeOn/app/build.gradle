@@ -20,8 +20,8 @@ android {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 54
-        versionName "4.0.2"
+        versionCode 60
+        versionName "5.0.0"
         signingConfig signingConfigs.debug
     }
 
