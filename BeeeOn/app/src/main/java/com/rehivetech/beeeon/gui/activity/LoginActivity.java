@@ -68,7 +68,6 @@ public class LoginActivity extends BaseActivity {
 		// Get controller
 		Controller controller = Controller.getInstance(this);
 
-
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
 		mProgress.setCancelable(true);
@@ -81,50 +80,8 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 
-		// Demo button
-		((ImageButton) findViewById(R.id.login_btn_demo)).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mProgress.setMessageResource(R.string.progress_loading_demo);
-				prepareLogin(new DemoAuthProvider());
-			}
-		});
-
-		// Get btn for login
-		ImageButton btnGoogle = (ImageButton) findViewById(R.id.login_btn_google);
-		ImageButton btnMojeID = (ImageButton) findViewById(R.id.login_btn_mojeid);
-
-		// Set onClickListener
-		btnGoogle.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				prepareLogin(new GoogleAuthProvider());
-			}
-		});
-		btnMojeID.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// FIXME: use MojeId correctly or rework the button image and this selection dialog
-
-				// Show choose dialog for other providers
-				AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-				builder.setTitle(R.string.dialog_choose_provider_title);
-				builder.setItems(new String[]{"Facebook", "MojeID"}, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						if (which == 0) {
-							// Facebook
-							prepareLogin(new FacebookAuthProvider());
-						} else {
-							// MojeID
-							Toast.makeText(LoginActivity.this, "Not implemented yet.", Toast.LENGTH_SHORT).show();
-							// prepareLogin(new MojeIdAuthProvider());
-						}
-					}
-				});
-				builder.show();
-			}
-		});
+		// Set buttons listeners
+		prepareLoginButtons();
 
 		// Intro to app
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
@@ -150,6 +107,60 @@ public class LoginActivity extends BaseActivity {
 			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", lastAuthProvider.getProviderName(), lastAuthProvider.getPrimaryParameter()));
 			prepareLogin(lastAuthProvider);
 		}
+	}
+
+	private void prepareLoginButtons() {
+		OnClickListener onClickListener = new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				switch (v.getId()) {
+					case R.id.login_btn_demo:
+					{
+						mProgress.setMessageResource(R.string.progress_loading_demo);
+						prepareLogin(new DemoAuthProvider());
+						return;
+					}
+					case R.id.login_btn_google:
+					{
+						prepareLogin(new GoogleAuthProvider());
+						return;
+					}
+					case R.id.login_btn_facebook:
+					{
+						prepareLogin(new FacebookAuthProvider());
+						return;
+					}
+					case R.id.login_btn_direct:
+					{
+						Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
+						return;
+					}
+					case R.id.login_btn_choose:
+					{
+						// Show choose dialog for other providers
+						AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+						builder.setTitle(R.string.dialog_choose_provider_title);
+						builder.setItems(new String[]{"MojeID"}, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if (which == 0) {
+									// MojeID
+									Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
+									// prepareLogin(new MojeIdAuthProvider());
+								}
+							}
+						});
+						builder.show();
+					}
+				}
+			}
+		};
+
+		findViewById(R.id.login_btn_demo).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_direct).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_google).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_facebook).setOnClickListener(onClickListener);
+		findViewById(R.id.login_btn_choose).setOnClickListener(onClickListener);
 	}
 
 	@Override

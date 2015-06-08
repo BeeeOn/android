@@ -25,6 +25,20 @@
     <string name="alert_neutral">Klikněte</string>
     <string name="alert_positive">OK</string>
 
+    <!-- Login activity -->
+    <string name="login_image_description_logo">Application logo</string>
+    <string name="login_app_name">BeeeOn</string>
+    <string name="login_app_slogan">Dům pod vaší kontrolou.</string>
+
+    <string name="login_label_login_or_register">Přihlaste se nebo se zaregistrujte pomocí:</string>
+    <string name="login_provider_google">Google</string>
+    <string name="login_provider_facebook">Facebook</string>
+    <string name="login_provider_choose_other">Zvolit jinou službu</string>
+
+    <string name="login_label_work_offline">Nebo můžete pracovat offline:</string>
+    <string name="login_btn_direct_connect">Přímé připojení k bráně</string>
+    <string name="login_btn_demo_mode">Spustit v demo režimu</string>
+
     <!-- New sensor dialog -->
     <string name="notification_title">Nové zařízení</string>
 
@@ -38,8 +52,6 @@
     <string name="notification_cancel">Zrušit</string>
 
     <!-- Labels -->
-    <string name="login_app_name">BeeeOn</string>
-    <string name="login_or_use">nebo použijte</string>
     <string name="addsensor_add_sensor">Přidat zařízení</string>
     <string name="addsensor_setup_sensor">Nastavte zařízení</string>
     <string name="addsensor_or">nebo</string>
@@ -111,6 +123,7 @@
     <string name="toast_delete_fail">Nepodařilo se odstranit</string>
     <string name="toast_delete_success">Smazáno</string>
     <string name="toast_field_must_be_filled">Je třeba vyplnit toto pole!</string>
+    <string name="toast_error_not_supported_yet">Tato funkce ještě není podporována.</string>
 
     <!-- Progress -->
     <string name="progress_signing">Přihlašuji&#8230;</string>

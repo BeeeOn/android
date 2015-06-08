@@ -33,6 +33,20 @@
     <string name="alert_neutral">Click me</string>
     <string name="alert_positive">OK</string>
 
+    <!-- Login activity -->
+    <string name="login_image_description_logo">Application logo</string>
+    <string name="login_app_name">BeeeOn</string>
+    <string name="login_app_slogan">Home under your control.</string>
+
+    <string name="login_label_login_or_register">Login or register with:</string>
+    <string name="login_provider_google">Google</string>
+    <string name="login_provider_facebook">Facebook</string>
+    <string name="login_provider_choose_other">Choose other service</string>
+
+    <string name="login_label_work_offline">Or you can work offline:</string>
+    <string name="login_btn_direct_connect">Direct connect to gateway</string>
+    <string name="login_btn_demo_mode">Start in demo mode</string>
+
     <!-- New sensor dialog -->
     <string name="notification_title">New module</string>
 
@@ -46,8 +60,6 @@
     <string name="notification_cancel">Cancel</string>
 
     <!-- Labels -->
-    <string name="login_app_name">BeeeOn</string>
-    <string name="login_or_use">or use</string>
     <string name="addsensor_add_sensor">Add module</string>
     <string name="addsensor_setup_sensor">Setup module</string>
     <string name="addsensor_or">or</string>
@@ -123,6 +135,7 @@
     <string name="toast_error_no_google_play">Failed to open Google Play</string>
     <string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
     <string name="toast_not_specified_gate">Not specified Gateway</string>
+    <string name="toast_error_not_supported_yet">This feature is not supported yet.</string>
 
     <!-- Progress -->
 	<string name="progress_signing">Logging in&#8230;</string>
