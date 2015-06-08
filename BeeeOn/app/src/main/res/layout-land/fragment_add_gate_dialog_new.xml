@@ -9,8 +9,8 @@
 			  android:background="@color/beeeon_primary_cyan">
 
 	<ScrollView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
 		<LinearLayout
 			android:layout_width="wrap_content"
@@ -26,10 +26,10 @@
 				android:gravity="center_horizontal"
 				android:textColor="@color/white"
 				android:textSize="35dp"
-				android:paddingLeft="20dp"
-				android:paddingRight="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp"/>
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:paddingTop="10dp"
+				android:paddingBottom="10dp"/>
 
 			<TextView
 				android:layout_width="wrap_content"
@@ -38,19 +38,19 @@
 				android:text="@string/addadapter_last_fragment_text"
 				android:textColor="@color/white"
 				android:textSize="20dp"
-				android:paddingLeft="20dp"
-				android:paddingRight="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp"/>
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:paddingTop="10dp"
+				android:paddingBottom="10dp"/>
 
 			<LinearLayout
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:orientation="horizontal"
-				android:paddingLeft="20dp"
-				android:paddingRight="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp">
+				android:paddingLeft="10dp"
+				android:paddingRight="10dp"
+				android:paddingTop="10dp"
+				android:paddingBottom="10dp">
 
 				<Button
 					android:id="@+id/add_gate_qr_button"
@@ -59,10 +59,10 @@
 					android:background="@color/beeeon_secundary_pink"
 					android:text="@string/addadapter_qr_button"
 					android:textColor="@color/white"
-					android:paddingLeft="20dp"
-					android:paddingRight="20dp"
-					android:paddingTop="20dp"
-					android:paddingBottom="20dp"/>
+					android:paddingLeft="10dp"
+					android:paddingRight="10dp"
+					android:paddingTop="10dp"
+					android:paddingBottom="10dp"/>
 
 				<Button
 					android:id="@+id/add_gate_write_it_button"
@@ -71,10 +71,10 @@
 					android:background="@color/beeeon_text_hint"
 					android:text="@string/addadapter_manual_edit"
 					android:textColor="@color/white"
-					android:paddingLeft="20dp"
-					android:paddingRight="20dp"
-					android:paddingTop="20dp"
-					android:paddingBottom="20dp"/>
+					android:paddingLeft="10dp"
+					android:paddingRight="10dp"
+					android:paddingTop="10dp"
+					android:paddingBottom="10dp"/>
 			</LinearLayout>
 		</LinearLayout>
 	</ScrollView>
