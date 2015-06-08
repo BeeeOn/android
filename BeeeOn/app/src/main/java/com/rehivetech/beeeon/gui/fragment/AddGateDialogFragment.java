@@ -33,10 +33,9 @@ public class AddGateDialogFragment extends DialogFragment {
 			public void onClick(DialogInterface dialog, int id) {
 				EditText editText = (EditText) view.findViewById(R.id.add_gate_overlay_dialog_edit_text);
 				String identifier = editText.getText().toString();
-				if(identifier.isEmpty()) {
+				if(identifier.length() == 0) {
 					Toast.makeText(getActivity(),R.string.toast_field_must_be_filled,Toast.LENGTH_LONG);
 				} else {
-					// TODO: Check if the string is a number
 					mCallback.onPositiveButtonClick(AddGateDialogFragment.this, identifier);
 				}
 			}
