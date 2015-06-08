@@ -2,11 +2,13 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
+import com.rehivetech.beeeon.gui.fragment.AddGateDialogFragment;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.util.Log;
@@ -14,7 +16,7 @@ import com.rehivetech.beeeon.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener {
+public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener,AddGateDialogFragment.NoticeDialogListener {
 
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 
@@ -57,5 +59,21 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	@Override
 	protected int getLastPageNextTextResource() {
 		return R.string.tutorial_add;
+	}
+
+	@Override
+	public void onPositiveButtonClick(AddGateDialogFragment addGateDialogFragment, String id) {
+		Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	public void onNegativeButtonClick(AddGateDialogFragment addGateDialogFragment) {
+		// TODO: delete if not neccessary
+	}
+
+	@Override
+	public void onWriteManuallyClicked() {
+		AddGateDialogFragment addGateDialogFragment = new AddGateDialogFragment();
+		addGateDialogFragment.show(getSupportFragmentManager(),"GATE_ID");
 	}
 }

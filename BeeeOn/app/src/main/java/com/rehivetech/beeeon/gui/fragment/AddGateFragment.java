@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -87,6 +88,7 @@ public class AddGateFragment extends TrackFragment {
 			@Override
 			public void onClick(View v) {
 				// overlay dialog must popup here
+				mCallback.onWriteManuallyClicked();
 			}
 		});
 
@@ -135,6 +137,8 @@ public class AddGateFragment extends TrackFragment {
 		 * This is called after user scans the QR code
 		 */
 		void onCodeScanned();
+
+		void onWriteManuallyClicked();
 	}
 
 	public void doRegisterGateTask(Gate gate) {
