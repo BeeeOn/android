@@ -201,6 +201,7 @@ public class AddGateFragment extends TrackFragment {
 					//imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					getActivity().finish();
 				} else {
+					Toast.makeText(getActivity(), R.string.toast_adapter_activate_failed, Toast.LENGTH_LONG).show();
 					if(fromQR) {
 						// QR scanning again, make it a function?
 						try {
