@@ -7,6 +7,7 @@ import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.lzyzsd.circleprogress.DonutProgress;
@@ -32,11 +33,13 @@ public class AddSensorFragment extends TrackFragment {
 	private static final int TIMER_SEC_COUNT = 30;
 	private static final int CHECK_EVERY_X_SECONDS = 2;
 
+	private boolean mFirstUse = true;
+
 	private OnAddSensorListener mCallback;
 
 	private String mGateId;
+	private TextView mSendPairTextView;
 
-	private View mView;
 	private DonutProgress mDonutProgress;
 	private CountDownTimer mCountDownTimer;
 
@@ -65,31 +68,27 @@ public class AddSensorFragment extends TrackFragment {
 			// Get activity and controller
 			mCallback = (OnAddSensorListener) getActivity();
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must implement OnAddSensorListener",activity.toString()));
+			throw new ClassCastException(String.format("%s must implement OnAddSensorListener", activity.toString()));
 		}
 
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.activity_add_sensor_activity_dialog, container, false);
+		View view = inflater.inflate(R.layout.activity_add_sensor_activity_dialog, container, false);
 
-		mDonutProgress = (DonutProgress) mView.findViewById(R.id.progress);
-		mDonutProgress.setProgress(TIMER_SEC_COUNT);
-		mDonutProgress.setMax(TIMER_SEC_COUNT);
-		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
-		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
+		mSendPairTextView = (TextView) view.findViewById(R.id.intro_image_text);
+		mDonutProgress = (DonutProgress) view.findViewById(R.id.progress);
+		resetTimer();
 
-		return mView;
+		return view;
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == Constants.SETUP_SENSOR_REQUEST_CODE) {
-			mCallback.setNextButtonEnabled(true);
-			mDonutProgress.setProgress(TIMER_SEC_COUNT);
-			mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
+			resetTimer();
 			mCallback.onAddSensor(resultCode == Activity.RESULT_OK);
 		}
 	}
@@ -106,14 +105,15 @@ public class AddSensorFragment extends TrackFragment {
 			//mDonutProgress.setTitle(" ");
 		}*/
 	}
-/*
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(TIMER_VALUE_PAUSE, mTimerValue);
-		// outState.putBoolean(TIMER_BOOL_PAUSE, true);
-	}
-	*/
+
+	/*
+		@Override
+		public void onSaveInstanceState(Bundle outState) {
+			super.onSaveInstanceState(outState);
+			outState.putInt(TIMER_VALUE_PAUSE, mTimerValue);
+			// outState.putBoolean(TIMER_BOOL_PAUSE, true);
+		}
+		*/
 /*
 	public void resetPairButton() {
 		//mTimeText.setText("Time is out");
@@ -128,8 +128,14 @@ public class AddSensorFragment extends TrackFragment {
 		mCallback.setNextButtonEnabled(false);
 		mDonutProgress.setProgress(TIMER_SEC_COUNT);
 		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
+		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
+		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
+		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.beeeon_secundary_pink));
+		mDonutProgress.setUnfinishedStrokeColor(getResources().getColor(R.color.white));
+		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
 
-		mCountDownTimer = new CountDownTimer(TIMER_SEC_COUNT * 1000, 1000) {
+		// the timer should start counting down from 30, thats why + 500
+		mCountDownTimer = new CountDownTimer(TIMER_SEC_COUNT * 1000 + 500, 500) {
 
 			public void onTick(long millisUntilFinished) {
 				int timerValue = (int) (millisUntilFinished / 1000);
@@ -142,11 +148,8 @@ public class AddSensorFragment extends TrackFragment {
 			}
 
 			public void onFinish() {
-
-				Toast.makeText(getActivity(),R.string.addsensor_device_not_found_in_time,Toast.LENGTH_LONG).show();
-				mDonutProgress.setProgress(TIMER_SEC_COUNT);
-				mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
-				mCallback.setNextButtonEnabled(true);
+				Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
+				resetTimer();
 			}
 
 		}.start();
@@ -167,20 +170,20 @@ public class AddSensorFragment extends TrackFragment {
 				List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 
 				if (devices.size() > 0) {
-					Toast.makeText(getActivity(),R.string.addsensor_device_found,Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
 
 					mCountDownTimer.cancel();
 
 					// go to setup uninit sensor
 					Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
 					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
-				} /*else {
+				} else {
 					if (mFirstUse) {
 						mFirstUse = false;
-						doPairRequestTask(mPairGate.getId());
-						mNext.setEnabled(false);
+						doPairRequestTask(mGateId);
 					}
-				}*/
+				}
+
 			}
 
 		});
@@ -191,7 +194,6 @@ public class AddSensorFragment extends TrackFragment {
 
 	private void doPairRequestTask(String gateId) {
 		mCallback.setNextButtonEnabled(false);
-		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_sending_request));
 		// Send First automatic pair request
 		PairRequestTask pairRequestTask = new PairRequestTask(getActivity());
 
@@ -199,14 +201,17 @@ public class AddSensorFragment extends TrackFragment {
 
 			@Override
 			public void onExecute(boolean success) {
-				mCallback.setNextButtonEnabled(true);
-				mDonutProgress.setInnerBottomText("");
+				//mCallback.setNextButtonEnabled(true);
+				mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
 				if (success) {
 					// Request was successfully sent
-					startTimer();
+					//startTimer();
 				} else {
 					// Request wasn't send
 					//resetBtnPair();
+					// TODO: Stop timer
+					Toast.makeText(getActivity(), getString(R.string.addsensor_request_task_not_successful), Toast.LENGTH_LONG).show();
+					resetTimer();
 				}
 			}
 
@@ -220,8 +225,20 @@ public class AddSensorFragment extends TrackFragment {
 		startTimer();
 	}
 
+	private void resetTimer() {
+		mCallback.setNextButtonEnabled(true);
+		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
+		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_drawer_bg));
+		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_drawer_bg));
+		mDonutProgress.setProgress(TIMER_SEC_COUNT);
+		mDonutProgress.setMax(TIMER_SEC_COUNT);
+		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.white));
+		mSendPairTextView.setText(R.string.activity_add_device_dialog_text);
+	}
+
 	public interface OnAddSensorListener {
 		void onAddSensor(boolean success);
+
 		void setNextButtonEnabled(boolean enabled);
 	}
 }

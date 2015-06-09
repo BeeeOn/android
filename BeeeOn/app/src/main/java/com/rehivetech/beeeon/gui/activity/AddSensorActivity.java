@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
-import android.support.v4.app.FragmentManager;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -40,12 +39,11 @@ public class AddSensorActivity extends BaseGuideActivity implements AddSensorFra
 
 		//the List and the FragmentManager objects are needed as arguments for the constructor
 		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.tut_add_sensor_text_1),
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_second_step, R.string.tut_add_sensor_text_2)
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.tut_add_sensor_text_1, R.string.adddevice_title),
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_second_step, R.string.tut_add_sensor_text_2, R.string.adddevice_title)
 		);
-		FragmentManager fm = getSupportFragmentManager();
 
-		return new IntroFragmentPagerAdapter(fm, pairs, AddSensorFragment.newInstance(gate.getId()));
+		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, AddSensorFragment.newInstance(gate.getId()));
 	}
 
 	@Override

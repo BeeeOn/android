@@ -38,13 +38,11 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	protected IntroFragmentPagerAdapter initPagerAdapter() {
 		// creating list of objects that will be used as params for the constructor of AddingUniversalFragment
 		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step, R.string.tut_add_gate_text_1),
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, R.string.tut_add_gate_text_2),
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_third_step, R.string.tut_add_gate_text_3)
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step, R.string.tut_add_gate_text_1, R.string.addadapter_title),
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, R.string.tut_add_gate_text_2, R.string.addadapter_title),
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_third_step, R.string.tut_add_gate_text_3, R.string.addadapter_title)
 		);
-		// FragmentManager object is necessary for the contructor of Adding....
-		FragmentManager fm = getSupportFragmentManager();
-		return new IntroFragmentPagerAdapter(fm,pairs,new AddGateFragment());
+		return new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,new AddGateFragment());
 	}
 
 	@Override

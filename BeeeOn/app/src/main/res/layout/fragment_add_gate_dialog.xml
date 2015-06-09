@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:minWidth="260dp"
     android:minHeight="200dp"
-    android:background="@color/light_gray"
+    android:background="@color/beeeon_primary_cyan"
     >
 
     <ScrollView 
@@ -31,7 +31,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:text="@string/addadapter_textview_name"
-				    android:textColor="@color/beeeon_text_color" 
+				    android:textColor="@color/beeeon_drawer_bg"
 				    android:layout_gravity="left"
 				    android:textIsSelectable="false"
 				    android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -45,7 +45,8 @@
 				    android:layout_marginRight="5dp"
 				    android:ems="10"
 				    android:hint="@string/addadapter_view_setname"
-				    android:textColor="@color/beeeon_primary_cyan"
+				    android:textColor="@color/beeeon_drawer_bg"
+					android:textColorHint="@color/beeeon_drawer_bg"
 				    android:singleLine="true"
 				    android:imeOptions="actionNext" />
 		        
@@ -64,7 +65,7 @@
 				    android:layout_width="wrap_content"
 				    android:layout_height="wrap_content"
 				    android:text="@string/addadapter_textview_code"
-				    android:textColor="@color/beeeon_text_color" 
+				    android:textColor="@color/beeeon_drawer_bg"
 				    android:layout_gravity="left"
 				    android:textIsSelectable="false"
 				    android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -90,7 +91,7 @@
 					    android:layout_width="wrap_content"
 					    android:layout_height="wrap_content"
 					    android:text="@string/addsensor_or"
-					    android:textColor="@color/beeeon_text_hint" 
+					    android:textColor="@color/beeeon_drawer_bg"
 					    android:layout_gravity="center"
 					    android:textIsSelectable="false"
 					    android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -103,7 +104,8 @@
 					    android:ems="10"
 					    android:hint="@string/addadapter_ser_num_hint"
 					    android:inputType="numberDecimal"
-					    android:textColor="@color/beeeon_primary_cyan"
+					    android:textColor="@color/beeeon_drawer_bg"
+						android:textColorHint="@color/beeeon_drawer_bg"
 					    android:singleLine="true"
 					    android:imeOptions="actionDone" />
 				

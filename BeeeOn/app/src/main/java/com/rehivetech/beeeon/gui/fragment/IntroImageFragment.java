@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
@@ -18,20 +19,24 @@ import com.rehivetech.beeeon.gui.activity.IntroActivity;
 public final class IntroImageFragment extends Fragment {
 	private static final String KEY_IMAGE_RES = "ImageRes";
 	private static final String KEY_TEXT_RES = "TextRes";
+	private static final String KEY_TITLE_RES = "TitleRes";
 
-	public static IntroImageFragment newInstance(int resourceImg, int textRes) {
+	public static IntroImageFragment newInstance(int resourceImg, int textRes, int titleRes) {
 		IntroImageFragment fragment = new IntroImageFragment();
 
 		Bundle args = new Bundle();
 		args.putInt(KEY_IMAGE_RES, resourceImg);
 		args.putInt(KEY_TEXT_RES, textRes);
+		args.putInt(KEY_TITLE_RES,titleRes);
 		fragment.setArguments(args);
 
 		return fragment;
 	}
 
+	private View mView;
 	private int mImageRes;
 	private int mTextRes;
+	private int mTitleRes;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -39,30 +44,18 @@ public final class IntroImageFragment extends Fragment {
 
 		mImageRes = getArguments().getInt(KEY_IMAGE_RES);
 		mTextRes = getArguments().getInt(KEY_TEXT_RES);
+		mTitleRes = getArguments().getInt(KEY_TITLE_RES);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		TextView text = new TextView(getActivity());
-		text.setPadding(20, 20, 20, 20);
-		text.setText(mTextRes);
-		text.setGravity(Gravity.CENTER_HORIZONTAL);
-		text.setTextSize(20);
-		text.setTextColor(getResources().getColor(R.color.white));
+		mView = inflater.inflate(R.layout.fragment_intro_image,container,false);
 
-		ImageView image = new ImageView(getActivity());
-		image.setImageResource(mImageRes);
-		image.setPadding(20, 20, 20, 20);
+		((TextView) mView.findViewById(R.id.intro_image_title)).setText(mTitleRes);
+		((TextView) mView.findViewById(R.id.intro_image_text)).setText(mTextRes);
+		((ImageView) mView.findViewById(R.id.intro_image_image)).setImageResource(mImageRes);
 
-
-		LinearLayout layout = new LinearLayout(getActivity());
-		layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		layout.setGravity(Gravity.CENTER);
-		layout.setOrientation(LinearLayout.VERTICAL);
-		layout.addView(text);
-		layout.addView(image);
-
-		return layout;
+		return mView;
 	}
 
 	@Override
@@ -84,10 +77,12 @@ public final class IntroImageFragment extends Fragment {
 	public static class ImageTextPair {
 		public final int imageRes;
 		public final int textRes;
+		public final int titleRes;
 
-		public ImageTextPair(int imageRes, int textRes) {
+		public ImageTextPair(int imageRes, int textRes, int titleRes) {
 			this.imageRes = imageRes;
 			this.textRes = textRes;
+			this.titleRes = titleRes;
 		}
 	}
 

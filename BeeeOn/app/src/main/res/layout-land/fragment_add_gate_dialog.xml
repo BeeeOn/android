@@ -1,139 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/light_gray"
-    android:minHeight="200dp"
-    android:minWidth="200dp"
-    android:orientation="vertical" >
-    
-    <!--  LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/beeeon_primary_cyan"
-        android:orientation="vertical" >
+			  android:layout_width="fill_parent"
+			  android:layout_height="fill_parent"
+			  android:background="@color/beeeon_primary_cyan"
+			  android:minHeight="200dp"
+			  android:minWidth="200dp"
+			  android:orientation="vertical">
 
-	    <TextView
-	        android:id="@+id/addadapter_add_adapter"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_marginTop="10dp"
-	        android:gravity="center_horizontal"
-	        android:paddingBottom="15dp"
-	        android:text="@string/addadapter_add_adapter"
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:textColor="@color/white"
-	        android:textIsSelectable="false" />
-    
-    </LinearLayout-->
-    
-    <ScrollView 
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-        	android:layout_height="wrap_content"
-        	android:scrollbars="vertical" 
-    		android:scrollbarAlwaysDrawVerticalTrack="true"
-            >   
-		    <LinearLayout 
-		        android:orientation="vertical"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:padding="10dp"
-		        android:layout_marginBottom="5dp"
-		        android:layout_gravity="center">
-		        
-		        <TextView
-				    android:id="@+id/addadapter_textview_name"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/addadapter_textview_name"
-				    android:textColor="@color/beeeon_text_color" 
-				    android:layout_gravity="left"
-				    android:textIsSelectable="false"
-				    android:textAppearance="?android:attr/textAppearanceMedium" />
-				
+	<!--  LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/beeeon_primary_cyan"
+		android:orientation="vertical" >
+
+		<TextView
+			android:id="@+id/addadapter_add_adapter"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="10dp"
+			android:gravity="center_horizontal"
+			android:paddingBottom="15dp"
+			android:text="@string/addadapter_add_adapter"
+			android:textAppearance="?android:attr/textAppearanceLarge"
+			android:textColor="@color/white"
+			android:textIsSelectable="false" />
+
+	</LinearLayout-->
+
+	<ScrollView
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:scrollbars="vertical"
+			android:scrollbarAlwaysDrawVerticalTrack="true"
+			>
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="10dp"
+				android:layout_marginBottom="5dp"
+				android:layout_gravity="center">
+
+				<TextView
+					android:id="@+id/addadapter_textview_name"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/addadapter_textview_name"
+					android:textColor="@color/beeeon_drawer_bg"
+					android:layout_gravity="left"
+					android:textIsSelectable="false"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+
 				<EditText
-				    android:id="@+id/addgate_text_name"
-				    android:layout_width="fill_parent"
-				    android:layout_height="wrap_content"
-				    android:layout_gravity="center"
-				    android:layout_marginLeft="5dp"
-				    android:layout_marginRight="5dp"
-				    android:ems="10"
-				    android:hint="@string/addadapter_view_setname"
-				    android:textColor="@color/beeeon_primary_cyan"
-				    android:singleLine="true"
-				    android:imeOptions="actionNext"  />
-		        
-		    </LinearLayout>
-		    <LinearLayout
-		        android:orientation="vertical"
-		        android:layout_width="match_parent"
-		        android:layout_height="wrap_content"
-		        android:padding="10dp"
-		        android:layout_marginBottom="15dp"
-		        android:layout_gravity="center" 
-		        >
-		         <TextView
-				    android:id="@+id/addadapter_textview_code"
-				    android:layout_width="wrap_content"
-				    android:layout_height="wrap_content"
-				    android:text="@string/addadapter_textview_code"
-				    android:textColor="@color/beeeon_text_color" 
-				    android:layout_gravity="left"
-				    android:textIsSelectable="false"
-				    android:textAppearance="?android:attr/textAppearanceMedium" />
-		
-			    <LinearLayout
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:layout_marginBottom="10dp"
-			        android:layout_marginLeft="10dp"
-			        android:layout_marginRight="10dp"
-			        android:gravity="center"
-			        android:orientation="horizontal" >
-			
-			        <ImageButton
-			            android:id="@+id/addgate_qrcode_button"
-			            android:layout_width="0dp"
-			            android:layout_height="wrap_content"
-			            android:layout_gravity="center_horizontal"
-			            android:layout_marginLeft="55dp"
-			            android:layout_weight="1"
-			            android:contentDescription="@string/addadapter_qrcode_desc"
-			            android:src="@drawable/qrcode" />
-			
-			        <TextView
-			            android:id="@+id/addadapter_or"
-			            android:layout_width="100dp"
-			            android:layout_height="fill_parent"
-			            android:layout_marginBottom="0dp"
-			            android:layout_weight="1"
-			            android:gravity="center"
-			            android:text="@string/addsensor_or"
-			            android:textAppearance="?android:attr/textAppearanceMedium"
-			            android:textColor="@color/beeeon_text_hint"
-			            android:textIsSelectable="false" />
-			
-			        <EditText
-			            android:id="@+id/addgate_ser_num"
-			            android:layout_width="250dp"
-			            android:layout_height="wrap_content"
-			            android:layout_marginBottom="0dp"
-			            android:layout_weight="1"
-			            android:ems="10"
-			            android:hint="@string/addadapter_ser_num_hint"
-			            android:inputType="numberDecimal"
-			            android:textColor="@color/beeeon_primary_cyan"
-			            android:singleLine="true"
-				    	android:imeOptions="actionDone"  >
-			
-			            <requestFocus />
-			        </EditText>
-			    </LinearLayout>
+					android:id="@+id/addgate_text_name"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+					android:layout_gravity="center"
+					android:layout_marginLeft="5dp"
+					android:layout_marginRight="5dp"
+					android:ems="10"
+					android:hint="@string/addadapter_view_setname"
+					android:textColor="@color/beeeon_drawer_bg"
+					android:textColorHint="@color/beeeon_drawer_bg"
+					android:singleLine="true"
+					android:imeOptions="actionNext"/>
+
+			</LinearLayout>
+
+			<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:padding="10dp"
+				android:layout_marginBottom="15dp"
+				android:layout_gravity="center"
+				>
+
+				<TextView
+					android:id="@+id/addadapter_textview_code"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/addadapter_textview_code"
+					android:textColor="@color/beeeon_drawer_bg"
+					android:layout_gravity="left"
+					android:textIsSelectable="false"
+					android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+				<LinearLayout
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginBottom="10dp"
+					android:layout_marginLeft="10dp"
+					android:layout_marginRight="10dp"
+					android:gravity="center"
+					android:orientation="horizontal">
+
+					<ImageButton
+						android:id="@+id/addgate_qrcode_button"
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:layout_marginLeft="55dp"
+						android:layout_weight="1"
+						android:contentDescription="@string/addadapter_qrcode_desc"
+						android:src="@drawable/qrcode"/>
+
+					<TextView
+						android:id="@+id/addadapter_or"
+						android:layout_width="100dp"
+						android:layout_height="fill_parent"
+						android:layout_marginBottom="0dp"
+						android:layout_weight="1"
+						android:gravity="center"
+						android:text="@string/addsensor_or"
+						android:textAppearance="?android:attr/textAppearanceMedium"
+						android:textColor="@color/beeeon_drawer_bg"
+						android:textIsSelectable="false"/>
+
+					<EditText
+						android:id="@+id/addgate_ser_num"
+						android:layout_width="250dp"
+						android:layout_height="wrap_content"
+						android:layout_marginBottom="0dp"
+						android:layout_weight="1"
+						android:ems="10"
+						android:hint="@string/addadapter_ser_num_hint"
+						android:inputType="numberDecimal"
+						android:textColor="@color/beeeon_drawer_bg"
+						android:textColorHint="@color/beeeon_drawer_bg"
+						android:singleLine="true"
+						android:imeOptions="actionDone">
+
+						<requestFocus/>
+					</EditText>
+				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
 	</ScrollView>

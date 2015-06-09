@@ -32,7 +32,7 @@ public class IntroFragmentPagerAdapter extends FragmentPagerAdapter {
 		// if there is last special fragment, his position will be higher than the size of the list
 		if (position < mPairs.size()) {
 			IntroImageFragment.ImageTextPair pair = mPairs.get(position);
-			return IntroImageFragment.newInstance(pair.imageRes, pair.textRes);
+			return IntroImageFragment.newInstance(pair.imageRes, pair.textRes, pair.titleRes);
 		} else
 			return mLastFragment;
 	}

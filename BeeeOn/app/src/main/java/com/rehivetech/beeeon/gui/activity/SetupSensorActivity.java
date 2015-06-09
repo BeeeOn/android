@@ -66,7 +66,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_intro);
+		setContentView(R.layout.activity_base_guide);
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (mToolbar != null) {
@@ -81,9 +81,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		mActivity = this;
 
 		mAdapter = new SetupSensorFragmentAdapter(getSupportFragmentManager());
-
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mAdapter);

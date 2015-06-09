@@ -3,8 +3,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,7 +21,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 	protected IntroFragmentPagerAdapter mPagerAdapter;
 	protected ViewPager mPager;
 	protected CirclePageIndicator mIndicator;
-	protected Toolbar mToolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceData) {
@@ -31,18 +28,11 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 
 		mPagerAdapter = initPagerAdapter();
 
-		setContentView(R.layout.activity_intro);
+		setContentView(R.layout.activity_base_guide);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setOffscreenPageLimit(mPagerAdapter.getCount());
-
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			setSupportActionBar(mToolbar);
-			getSupportActionBar().setHomeButtonEnabled(true);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		}
 
 		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		mIndicator.setViewPager(mPager);
@@ -60,8 +50,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 				if (position == mPagerAdapter.getCount() - 1) {
 					mSkip.setVisibility(View.INVISIBLE);
 					mNext.setText(getLastPageNextTextResource());
-					//InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					//imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 				} else {
 					mSkip.setVisibility(View.VISIBLE);
 					mNext.setText(R.string.tutorial_next);
@@ -109,16 +97,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 				}
 			}
 		});
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				closeActivity();
-		}
-		return super.onOptionsItemSelected(item);
 	}
 
 	protected void closeActivity() {
