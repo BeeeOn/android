@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -21,7 +19,6 @@ import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,7 +59,7 @@ public class AddGateFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_add_gate_dialog_new, container, false);
+		mView = inflater.inflate(R.layout.fragment_add_gate, container, false);
 
 		mView.findViewById(R.id.add_gate_qr_button).setOnClickListener(new OnClickListener() {
 			@Override
@@ -150,7 +147,6 @@ public class AddGateFragment extends TrackFragment {
 		// TODO: finish
 		Gate gate = new Gate();
 		gate.setId(id);
-		gate.setName("");
 
 		RegisterGateTask registerGateTask = new RegisterGateTask(getActivity());
 		registerGateTask.setListener(new CallbackTask.ICallbackTaskListener() {

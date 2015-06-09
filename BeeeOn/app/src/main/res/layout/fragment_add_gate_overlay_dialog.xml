@@ -3,12 +3,14 @@
 			  android:orientation="vertical"
 			  android:layout_width="wrap_content"
 			  android:layout_height="wrap_content"
-			  android:gravity="center">
+			  android:gravity="center"
+			  android:padding="20dp">
 
 	<EditText
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:inputType="numberDecimal"
-		android:id="@+id/add_gate_overlay_dialog_edit_text"/>
+		android:id="@+id/add_gate_overlay_dialog_edit_text"
+		/>
 
 </LinearLayout>
