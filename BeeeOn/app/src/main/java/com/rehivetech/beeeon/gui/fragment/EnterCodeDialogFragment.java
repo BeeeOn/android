@@ -17,22 +17,22 @@ import com.rehivetech.beeeon.R;
 /**
  * Created by david on 8.6.15.
  */
-public class AddGateDialogFragment extends DialogFragment {
-	private NoticeDialogListener mCallback;
+public class EnterCodeDialogFragment extends DialogFragment {
+	private EnterCodeDialogListener mCallback;
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		// using the Builder classs to construct the dialog
 
 		LayoutInflater inflater = getActivity().getLayoutInflater();
-		final View view = inflater.inflate(R.layout.fragment_add_gate_overlay_dialog, null);
+		final View view = inflater.inflate(R.layout.fragment_dialog_enter_code, null);
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		builder.setTitle(R.string.adddapter_overlay_dialog_title);
+		builder.setTitle(R.string.dialog_code_title);
 		builder.setView(view);
 		builder.setPositiveButton(R.string.ok, null);
 		builder.setNegativeButton(R.string.action_close, null);
-		
+
 		final AlertDialog dialog = builder.create();
 		dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 			@Override
@@ -47,7 +47,7 @@ public class AddGateDialogFragment extends DialogFragment {
 							// when the editText is empty...
 							Toast.makeText(getActivity(), R.string.toast_field_must_be_filled, Toast.LENGTH_LONG).show();
 						} else {
-							mCallback.onPositiveButtonClick(AddGateDialogFragment.this, identifier);
+							mCallback.onPositiveButtonClick(EnterCodeDialogFragment.this, identifier);
 						}
 					}
 				});
@@ -69,13 +69,13 @@ public class AddGateDialogFragment extends DialogFragment {
 		super.onAttach(activity);
 		// Checks if the activity implements the interface
 		try {
-			mCallback = (NoticeDialogListener) getActivity();
+			mCallback = (EnterCodeDialogListener) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must implement NoticeDialogListener", activity.toString()));
+			throw new ClassCastException(String.format("%s must implement EnterCodeDialogListener", activity.toString()));
 		}
 	}
 
-	public interface NoticeDialogListener {
-		void onPositiveButtonClick(AddGateDialogFragment addGateDialogFragment, String id);
+	public interface EnterCodeDialogListener {
+		void onPositiveButtonClick(EnterCodeDialogFragment enterCodeDialogFragment, String id);
 	}
 }
