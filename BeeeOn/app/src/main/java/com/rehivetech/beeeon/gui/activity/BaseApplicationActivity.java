@@ -58,8 +58,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 		isPaused = false;
 		onAppResume();
-
-		mProgressBar = findViewById(R.id.toolbar_progress);
 	}
 
 	@Override
@@ -106,8 +104,13 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	public void setBeeeOnProgressBarVisibility(boolean visible) {
 		if (mProgressBar == null) {
-			// This activity probably doesn't have progressbar in layout
-			return;
+			mProgressBar = findViewById(R.id.toolbar_progress);
+
+			if (mProgressBar == null) {
+				// This activity probably doesn't have progressbar in layout
+				Log.w(TAG, String.format("Can't set visibility of progressbar in '%s, it wasn't found in layout.", getClass().getSimpleName()));
+				return;
+			}
 		}
 
 		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
