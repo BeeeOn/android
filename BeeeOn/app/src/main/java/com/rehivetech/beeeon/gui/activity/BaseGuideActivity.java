@@ -3,8 +3,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -52,8 +50,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 				if (position == mPagerAdapter.getCount() - 1) {
 					mSkip.setVisibility(View.INVISIBLE);
 					mNext.setText(getLastPageNextTextResource());
-					//InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-					//imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 				} else {
 					mSkip.setVisibility(View.VISIBLE);
 					mNext.setText(R.string.tutorial_next);

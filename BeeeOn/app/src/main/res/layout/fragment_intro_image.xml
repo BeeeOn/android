@@ -51,8 +51,8 @@
 				android:paddingLeft="20dp"
 				android:paddingTop="20dp"
 				android:paddingBottom="20dp"
-				android:maxHeight="750dp"
-				android:maxWidth="750dp"
+				android:maxHeight="200dp"
+				android:maxWidth="200dp"
 				android:adjustViewBounds="true"
 				/>
 		</LinearLayout>

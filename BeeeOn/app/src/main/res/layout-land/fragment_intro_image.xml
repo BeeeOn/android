@@ -1,69 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:gravity="center"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:gravity="center_vertical">
 	<!-- content of both textviews and imageview is set in java code -->
 
-	<ScrollView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-
-		<LinearLayout
+		<TextView
+			android:id="@+id/intro_image_title"
+			android:text="Title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:gravity="center">
+			android:textSize="35dip"
+			android:textStyle="bold"
+			android:textColor="@color/white"
+			android:layout_marginBottom="25dp"
 
-			<TextView
-				android:id="@+id/intro_image_title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingRight="0dp"
-				android:paddingLeft="0dp"
-				android:paddingTop="0dp"
-				android:paddingBottom="0dp"
-				android:textSize="35dip"
-				android:textStyle="bold"
-				android:gravity="center_horizontal"
-				android:textColor="@color/white"/>
+			android:layout_toRightOf="@id/intro_image_image"
+			android:layout_alignTop="@id/intro_image_image"/>
 
-			<LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:gravity="center">
+		<TextView
+			android:id="@+id/intro_image_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Text"
+			android:textSize="15dip"
+			android:textColor="@color/white"
 
-				<TextView
-					android:id="@+id/intro_image_text"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingRight="0dp"
-					android:paddingLeft="0dp"
-					android:paddingTop="0dp"
-					android:paddingBottom="0dp"
-					android:maxEms="25"
-					android:textSize="15dip"
-					android:textStyle="bold"
-					android:gravity="center_horizontal"
-					android:textColor="@color/white"/>
+			android:layout_toRightOf="@id/intro_image_image"
+			android:layout_below="@id/intro_image_title"/>
 
-				<ImageView
-					android:id="@+id/intro_image_image"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingRight="0dp"
-					android:paddingLeft="0dp"
-					android:paddingTop="0dp"
-					android:paddingBottom="0dp"
-					android:maxHeight="250dp"
-					android:maxWidth="250dp"
-					android:minHeight="250dp"
-					android:minWidth="250dp"
-					android:adjustViewBounds="true"/>
 
-			</LinearLayout>
-		</LinearLayout>
-	</ScrollView>
-</LinearLayout>
+		<ImageView
+			android:id="@+id/intro_image_image"
+			android:src="@drawable/abc_btn_rating_star_off_mtrl_alpha"
+			android:layout_width="200dp"
+			android:layout_height="200dp"
+			android:layout_margin="25dp"
+			/>
+</RelativeLayout>
