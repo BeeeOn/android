@@ -24,7 +24,7 @@ public class IntroActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_intro);
+		setContentView(R.layout.activity_base_guide);
 
 		List<IntroImageFragment.ImageTextPair> pairs = new ArrayList<>();
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_icons,R.string.tut_intro_text_1, R.string.tut_intro_title));

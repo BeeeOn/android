@@ -28,7 +28,7 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 
 		mPagerAdapter = initPagerAdapter();
 
-		setContentView(R.layout.activity_intro);
+		setContentView(R.layout.activity_base_guide);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
 		mPager.setAdapter(mPagerAdapter);
