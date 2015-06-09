@@ -1,59 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:gravity="center"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
 
 	<!-- content of both textviews and imageview is set in java code -->
 
-	<ScrollView
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:gravity="center_horizontal"
+		android:padding="20dp">
 
-		<LinearLayout
+		<TextView
+			android:id="@+id/intro_image_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:orientation="vertical"
-			android:gravity="center">
+			android:layout_marginBottom="20dp"
+			android:textSize="35sp"
+			android:textStyle="bold"
+			android:gravity="center_horizontal"
+			android:textColor="@color/white"/>
 
-			<TextView
-				android:id="@+id/intro_image_title"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingRight="20dp"
-				android:paddingLeft="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp"
-				android:textSize="35sp"
-				android:textStyle="bold"
-				android:gravity="center_horizontal"
-				android:textColor="@color/white"/>
+		<ImageView
+			android:id="@+id/intro_image_image"
+			android:layout_width="200dp"
+			android:layout_height="200dp"
+			android:layout_marginBottom="20dp"/>
 
-			<TextView
-				android:id="@+id/intro_image_text"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingRight="20dp"
-				android:paddingLeft="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp"
-				android:textSize="20dip"
-				android:gravity="center_horizontal"
-				android:textColor="@color/white"/>
+		<TextView
+			android:id="@+id/intro_image_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="20dip"
+			android:gravity="center_horizontal"
+			android:textColor="@color/white"/>
 
-			<ImageView
-				android:id="@+id/intro_image_image"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingRight="20dp"
-				android:paddingLeft="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp"
-				android:maxHeight="200dp"
-				android:maxWidth="200dp"
-				android:adjustViewBounds="true"
-				/>
-		</LinearLayout>
-	</ScrollView>
-</LinearLayout>
+
+	</LinearLayout>
+</ScrollView>
