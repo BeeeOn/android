@@ -44,7 +44,6 @@ public class AddGateDialogFragment extends DialogFragment {
 		builder.setNegativeButton(R.string.action_close, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				// TODO: delete the callback if not neccessary
-				mCallback.onNegativeButtonClick(AddGateDialogFragment.this);
 				AddGateDialogFragment.this.onCancel(dialog);
 			}
 		});
@@ -65,6 +64,5 @@ public class AddGateDialogFragment extends DialogFragment {
 
 	public interface NoticeDialogListener {
 		void onPositiveButtonClick (AddGateDialogFragment addGateDialogFragment, String id);
-		void onNegativeButtonClick (AddGateDialogFragment addGateDialogFragment);
 	}
 }

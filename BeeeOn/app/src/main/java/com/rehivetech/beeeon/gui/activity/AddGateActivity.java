@@ -22,19 +22,8 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 
 	@Override
-	public void onCodeScanned() {
-		// automatically clicks the next button
-		onLastFragmentActionNext();
-	}
-
-	@Override
 	protected void onLastFragmentActionNext() {
-		AddGateFragment fragment = (AddGateFragment) mPagerAdapter.getFinalFragment();
-		if (fragment == null) {
-			Log.e(TAG, "AddGateActivity.onLastFragmentActionNext() return null fragment");
-			return;
-		}
-		fragment.doAction();
+		//there is nothing to do, but it is required to implement it
 	}
 
 	@Override
@@ -70,11 +59,6 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			return;
 		}
 		fragment.doRegisterGateTask(id,false);
-	}
-
-	@Override
-	public void onNegativeButtonClick(AddGateDialogFragment addGateDialogFragment) {
-		// TODO: delete if not neccessary
 	}
 
 	@Override

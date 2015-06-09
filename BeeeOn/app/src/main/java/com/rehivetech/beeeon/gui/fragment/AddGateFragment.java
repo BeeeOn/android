@@ -28,7 +28,6 @@ import java.util.regex.Pattern;
 
 public class AddGateFragment extends TrackFragment {
 
-	private static final String TAG = AddGateFragment.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 
 	private ProgressDialog mProgress;
@@ -116,22 +115,10 @@ public class AddGateFragment extends TrackFragment {
 		}
 	}
 
-	public String getGateName() {
-		EditText gateName = (EditText) mView.findViewById(R.id.addgate_text_name);
-		return gateName.getText().toString();
-	}
-
-	public String getGateCode() {
-		EditText gateCode = (EditText) mView.findViewById(R.id.addgate_ser_num);
-		return gateCode.getText().toString();
-	}
-
 	public interface OnAddGateListener {
 		/**
-		 * This is called after user scans the QR code
+		 * This is called after user clicks on the "write it" btn
 		 */
-		void onCodeScanned();
-
 		void onWriteManuallyClicked();
 	}
 
@@ -157,21 +144,6 @@ public class AddGateFragment extends TrackFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(registerGateTask, gate);
-	}
-
-	public void doAction() {
-
-		String gateName = getGateName();
-		String gateCode = getGateCode();
-		Log.d(TAG, String.format("Name: %s Code: %s", gateName, gateCode));
-
-		if (gateCode.isEmpty()) {
-			Toast.makeText(getActivity(), R.string.addadapter_fill_code, Toast.LENGTH_LONG).show();
-		} else {
-			// Show progress bar for saving
-			mProgress.show();
-			doRegisterGateTask(gateCode,true);
-		}
 	}
 
 	public void doRegisterGateTask(String id, final boolean fromQR) {
