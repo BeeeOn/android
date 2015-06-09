@@ -9,11 +9,14 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
+import com.rehivetech.beeeon.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener {
+
+	private static final String TAG = AddGateActivity.class.getSimpleName();
 
 	@Override
 	public void onCodeScanned() {
@@ -25,6 +28,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	protected void onLastFragmentActionNext() {
 		AddGateFragment fragment = (AddGateFragment) mPagerAdapter.getFinalFragment();
 		if (fragment == null) {
+			Log.e(TAG, "AddGateActivity.onLastFragmentActionNext() return null fragment");
 			return;
 		}
 		fragment.doAction();

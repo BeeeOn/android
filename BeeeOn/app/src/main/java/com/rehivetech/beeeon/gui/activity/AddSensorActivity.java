@@ -10,16 +10,20 @@ import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class AddSensorActivity extends BaseGuideActivity implements AddSensorFragment.OnAddSensorListener {
 
+	private static final String TAG = AddSensorActivity.class.getSimpleName();
+
 	@Override
 	protected void onLastFragmentActionNext() {
 		AddSensorFragment fragment = (AddSensorFragment) mPagerAdapter.getFinalFragment();
 		if (fragment == null) {
+			Log.e(TAG, "AddSensorActivity.onLastFragmentActionNext() return null fragment");
 			return;
 		}
 		fragment.doAction();
