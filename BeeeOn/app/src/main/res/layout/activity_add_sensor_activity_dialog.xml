@@ -1,28 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:circular="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/beeeon_primary_cyan"
-    >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:circular="http://schemas.android.com/apk/res-auto"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
 
-	<com.github.lzyzsd.circleprogress.DonutProgress
-		android:id="@+id/progress"
-		android:layout_margin="40dp"
-		android:layout_width="250dp"
-		android:layout_height="250dp"
-		android:layout_gravity="center"
-		circular:donut_progress="30"
-		circular:donut_text_color="@color/beeeon_drawer_bg"
-		circular:donut_inner_bottom_text_color="@color/beeeon_drawer_bg"
-		circular:donut_text_size="40sp"
-		circular:donut_suffix_text=""
-		circular:donut_finished_color="@color/beeeon_secundary_pink"
-		circular:donut_unfinished_color="@color/beeeon_drawer_bg"
-		/>
+	<!-- content of both textviews and imageview is set in java code -->
 
-</LinearLayout>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:gravity="center_horizontal"
+		android:padding="20dp">
 
-	<!-- @color/beeeon_drawer_bg-->
+		<TextView
+			android:id="@+id/intro_image_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="20dp"
+			android:textSize="35sp"
+			android:textStyle="bold"
+			android:gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:text="@string/title_activity_add_sensor"/>
+
+		<com.github.lzyzsd.circleprogress.DonutProgress
+			android:id="@+id/progress"
+			android:layout_marginBottom="20dp"
+			android:layout_width="200dp"
+			android:layout_height="200dp"
+			android:layout_gravity="center"
+			circular:donut_progress="30"
+			circular:donut_text_color="@color/white"
+			circular:donut_inner_bottom_text_color="@color/white"
+			circular:donut_text_size="40sp"
+			circular:donut_suffix_text=""
+			circular:donut_finished_color="@color/white"
+			circular:donut_unfinished_color="@color/white"
+			/>
+
+		<TextView
+			android:id="@+id/intro_image_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="20sp"
+			android:gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:text="@string/activity_add_device_dialog_text"
+			/>
+
+
+	</LinearLayout>
+</ScrollView>
