@@ -110,13 +110,7 @@ public class AddGateFragment extends TrackFragment {
 		Matcher matcher = pattern.matcher(data);
 
 		if (matcher.find()) {
-			String id = matcher.group(1);
-
-			// Fill scanned data into edit text
-			EditText serialNumberEdit = (EditText) mView.findViewById(R.id.addgate_ser_num);
-			serialNumberEdit.setText(id);
-
-			mCallback.onCodeScanned();
+			doRegisterGateTask(matcher.group(1),true);
 		} else {
 			Toast.makeText(getActivity(), R.string.toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
 		}
@@ -151,7 +145,7 @@ public class AddGateFragment extends TrackFragment {
 				mProgress.cancel();
 
 				if (success) {
-					Toast.makeText(getActivity(), R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.toast_adapter_activated, Toast.LENGTH_SHORT).show();
 
 					getActivity().setResult(Activity.RESULT_OK);
 					//InputMethodManager imm = (InputMethodManager) AddGateActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -201,7 +195,7 @@ public class AddGateFragment extends TrackFragment {
 					//imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					getActivity().finish();
 				} else {
-					Toast.makeText(getActivity(), R.string.toast_adapter_activate_failed, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.toast_adapter_activate_failed, Toast.LENGTH_SHORT).show();
 					if(fromQR) {
 						// QR scanning again, make it a function?
 						try {
@@ -223,5 +217,7 @@ public class AddGateFragment extends TrackFragment {
 				}
 			}
 		});
+		// Execute and remember task so it can be stopped automatically
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(registerGateTask, gate);
 	}
 }

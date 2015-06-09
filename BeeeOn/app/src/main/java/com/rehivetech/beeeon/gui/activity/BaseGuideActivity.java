@@ -52,6 +52,7 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 					mNext.setText(getLastPageNextTextResource());
 				} else {
 					mSkip.setVisibility(View.VISIBLE);
+					mNext.setVisibility(View.VISIBLE);
 					mNext.setText(R.string.tutorial_next);
 				}
 			}

@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -58,13 +59,12 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 
 	@Override
 	protected int getLastPageNextTextResource() {
+		mNext.setVisibility(View.INVISIBLE);
 		return R.string.tutorial_add;
 	}
 
 	@Override
 	public void onPositiveButtonClick(AddGateDialogFragment addGateDialogFragment, String id) {
-		Toast.makeText(this, id, Toast.LENGTH_LONG).show();
-
 		AddGateFragment fragment = (AddGateFragment) mPagerAdapter.getFinalFragment();
 		if (fragment == null) {
 			return;
