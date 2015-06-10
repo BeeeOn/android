@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public final class Module implements IOrderIdentifier {
 		mGroupRes = groupRes != null ? groupRes : 0;
 		mNameRes = nameRes != null ? nameRes : 0;
 		mIsActuator = isActuator;
-		mRules = Collections.unmodifiableList(rules);
+		mRules = rules != null ? Collections.unmodifiableList(rules) : null;
 
 		mType = ModuleType.fromTypeId(typeId);
 		if (mType.getValueClass() == EnumValue.class) {
@@ -60,7 +61,7 @@ public final class Module implements IOrderIdentifier {
 		mGroupRes = groupRes != null ? groupRes : 0;
 		mNameRes = nameRes != null ? nameRes : 0;
 		mIsActuator = isActuator;
-		mRules = Collections.unmodifiableList(rules);
+		mRules = rules != null ? Collections.unmodifiableList(rules) : null;
 
 		mType = ModuleType.fromTypeId(typeId);
 		if (mType.getValueClass() != EnumValue.class) {
@@ -170,28 +171,25 @@ public final class Module implements IOrderIdentifier {
 	/**
 	 * @return true if module should be visible to the user at this moment
 	 */
-	public boolean isVisible() {
+	public List<String> getHideModuleIdsFromRules() {
+		List<String> list = new ArrayList<>();
+
 		// Without rules is everyone visible
 		if (mRules == null)
-			return true;
+			return list;
 
 		// Get actual value
 		int value = (mValue instanceof EnumValue) ? ((EnumValue) mValue).getActive().getId() : (int) mValue.getDoubleValue();
 		Rule rule = mRules.get(value);
 
-		// No rule for actual value
-		if (rule == null)
-			return true;
-
-		int id = Integer.parseInt(mId);
-		for (int hideId : rule.hideModulesIds) {
-			// Check if this module id should be hide now
-			if (id == hideId) {
-				return false;
+		// Process rule for actual value
+		if (rule != null) {
+			for (int id : rule.hideModulesIds) {
+				list.add(String.valueOf(id));
 			}
 		}
 
-		return true;
+		return list;
 	}
 
 	public boolean isActuator() {

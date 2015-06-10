@@ -10,6 +10,7 @@ import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -202,12 +203,18 @@ public final class Device implements IIdentifier {
 	 */
 	public List<Module> getVisibleModules() {
 		List<Module> modules = mModules.getObjects();
+		List<String> hideModuleIds = new ArrayList<>();
 
-		// Remove invisible modules
+		// Get info from all the modules about what modules they propose to hide based on their own value
+		for (Module module : modules) {
+			hideModuleIds.addAll(module.getHideModuleIdsFromRules());
+		}
+
+		// Remove modules that should be hidden
 		Iterator<Module> it = modules.iterator();
 		while (it.hasNext()) {
 			Module module = it.next();
-			if (!module.isVisible()) {
+			if (hideModuleIds.contains(module.getId())) {
 				it.remove();
 			}
 		}
