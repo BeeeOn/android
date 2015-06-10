@@ -13,12 +13,10 @@ import android.widget.Toast;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.SetupSensorActivity;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
-import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 
 
 public class AddDeviceFragment extends TrackFragment {
@@ -28,6 +26,7 @@ public class AddDeviceFragment extends TrackFragment {
 	private static final String KEY_GATE_ID = "Gate_ID";
 	private static final int TIMER_SEC_COUNT = 30;
 	private boolean mFirsTime = true;
+	private long mStartTime = 0;
 
 	private OnAddSensorListener mCallback;
 
@@ -98,7 +97,7 @@ public class AddDeviceFragment extends TrackFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt(TIMER_VALUE_PAUSE, mDonutProgress.getProgress());
+		outState.putLong(TIMER_VALUE_PAUSE, mStartTime);
 		outState.putBoolean(TIMER_BOOL_PAUSE, mFirsTime);
 	}
 
@@ -107,7 +106,7 @@ public class AddDeviceFragment extends TrackFragment {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
 			if (!savedInstanceState.getBoolean(TIMER_BOOL_PAUSE)) {
-				mDonutProgress.setProgress(savedInstanceState.getInt(TIMER_VALUE_PAUSE));
+				mStartTime = savedInstanceState.getLong(TIMER_VALUE_PAUSE);
 				continueTimer();
 			}
 		}
@@ -115,7 +114,8 @@ public class AddDeviceFragment extends TrackFragment {
 
 	public void continueTimer() {
 		mCallback.setNextButtonEnabled(false);
-		mCountDownTimer = new CountDownTimer(mDonutProgress.getProgress() * 1000 + 500, 500) {
+		long currentTime = (long) (TIMER_SEC_COUNT) - ((System.currentTimeMillis() / 1000) - mStartTime);
+		mCountDownTimer = new CountDownTimer(currentTime * 1000 + 500, 500) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				int timerValue = (int) (millisUntilFinished / 1000);
@@ -158,6 +158,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 	public void startTimer() {
 		mFirsTime = false;
+		mStartTime = System.currentTimeMillis() / 1000;
 
 		mCallback.setNextButtonEnabled(false);
 		mDonutProgress.setProgress(TIMER_SEC_COUNT);
