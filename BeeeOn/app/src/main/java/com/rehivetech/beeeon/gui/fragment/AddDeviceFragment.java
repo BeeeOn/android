@@ -100,9 +100,6 @@ public class AddDeviceFragment extends TrackFragment {
 		super.onSaveInstanceState(outState);
 		outState.putInt(TIMER_VALUE_PAUSE, mDonutProgress.getProgress());
 		outState.putBoolean(TIMER_BOOL_PAUSE, mFirsTime);
-		if (mCountDownTimer != null)
-			mCountDownTimer.cancel();
-
 	}
 
 	@Override
@@ -159,27 +156,6 @@ public class AddDeviceFragment extends TrackFragment {
 		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId);
 	}
 
-	public void checkForUnInitDevices() {
-		// Function creates Task that checks for unitit devices, if there are any, the apps goes straight to setup uninit sensor
-		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(),true, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
-		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if(success) {
-					if(Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).size() > 0) {
-						Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
-
-						mCountDownTimer.cancel();
-
-						// go to setup uninit sensor
-						Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
-						startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
-					}
-				}
-			}
-		});
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(reloadGateDataTask,mGateId);
-	}
 	public void startTimer() {
 		mFirsTime = false;
 
@@ -191,9 +167,6 @@ public class AddDeviceFragment extends TrackFragment {
 		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.beeeon_secundary_pink));
 		mDonutProgress.setUnfinishedStrokeColor(getResources().getColor(R.color.white));
 		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
-
-		// First check if there are any uninit devices that belong to this gate
-		checkForUnInitDevices();
 
 		// the timer should start counting down from 30, thats why + 500
 		mCountDownTimer = new CountDownTimer(TIMER_SEC_COUNT * 1000 + 500, 500) {

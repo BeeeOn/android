@@ -23,11 +23,15 @@ public class PairDeviceTask extends CallbackTask<String> {
 	@Override
 	protected Boolean doInBackground(String gateId) {
 		Controller controller = Controller.getInstance(mContext);
+		UninitializedDevicesModel uninitializedDevicesModel = controller.getUninitializedDevicesModel();
+
+		// First check if there are any uninit devices that belong to this gate
+		if (uninitializedDevicesModel.getUninitializedDevicesByGate(mGateId).size() > 0) {
+			return true;
+		}
 
 		if (!mWasPaused)
 			controller.getGatesModel().sendPairRequest(mGateId);
-
-		UninitializedDevicesModel uninitializedDevicesModel = controller.getUninitializedDevicesModel();
 
 		long startTime = System.currentTimeMillis();
 		while (startTime + mTimeLimit * 1000 > System.currentTimeMillis()) {
