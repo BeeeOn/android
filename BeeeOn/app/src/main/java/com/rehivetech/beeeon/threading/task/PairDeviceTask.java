@@ -8,12 +8,12 @@ import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.threading.CallbackTask;
 
 
-public class PairRequestTask extends CallbackTask<String> {
+public class PairDeviceTask extends CallbackTask<String> {
 	private final String mGateId;
 	private final long mTimeLimit;
 	private boolean mWasPaused;
 
-	public PairRequestTask(Context context, String GateId, long timeLimit, boolean wasPaused) {
+	public PairDeviceTask(Context context, String GateId, long timeLimit, boolean wasPaused) {
 		super(context);
 		this.mGateId = GateId;
 		this.mTimeLimit = timeLimit;

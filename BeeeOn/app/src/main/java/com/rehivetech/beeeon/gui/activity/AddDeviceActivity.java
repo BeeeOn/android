@@ -14,9 +14,9 @@ import com.rehivetech.beeeon.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddSensorActivity extends BaseGuideActivity implements AddDeviceFragment.OnAddSensorListener {
+public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFragment.OnAddSensorListener {
 
-	private static final String TAG = AddSensorActivity.class.getSimpleName();
+	private static final String TAG = AddDeviceActivity.class.getSimpleName();
 
 	@Override
 	protected void onLastFragmentActionNext() {
