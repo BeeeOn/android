@@ -2,10 +2,8 @@ package data;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by Robert on 23. 5. 2015.
@@ -189,7 +187,10 @@ public class Devices {
 			// End of type definition
 		}
 
-		writer.println("/** END OF GENERATED CONTENT **/");
+		writer.println(String.format("\n/** Version from specification of this devices list */\npublic static final String DEVICES_VERSION = \"%s\";", mVersion));
+		writer.println(String.format("\n/** Generation time (GMT) of this devices list */\npublic static final long DEVICES_DATE = %sl;", new Date().getTime()));
+
+		writer.println("\n/** END OF GENERATED CONTENT **/");
 	}
 
 }
