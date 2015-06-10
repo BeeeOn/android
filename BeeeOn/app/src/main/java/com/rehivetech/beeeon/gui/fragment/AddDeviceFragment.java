@@ -24,7 +24,6 @@ public class AddDeviceFragment extends TrackFragment {
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
 	private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
-	private boolean mFirsTime = true;
 	private long mStartTime = 0;
 
 	private OnAddSensorListener mCallback;
@@ -97,18 +96,15 @@ public class AddDeviceFragment extends TrackFragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putLong(TIMER_VALUE_PAUSE, mStartTime);
-		outState.putBoolean(TIMER_BOOL_PAUSE, mFirsTime);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			mFirsTime = savedInstanceState.getBoolean(TIMER_BOOL_PAUSE);
-			if (!mFirsTime) {
-				mStartTime = savedInstanceState.getLong(TIMER_VALUE_PAUSE);
+			mStartTime = savedInstanceState.getLong(TIMER_VALUE_PAUSE);
+			if (mStartTime != 0)
 				continueTimer();
-			}
 		}
 	}
 
@@ -158,7 +154,6 @@ public class AddDeviceFragment extends TrackFragment {
 	}
 
 	public void startTimer() {
-		mFirsTime = false;
 		mStartTime = System.currentTimeMillis();
 
 		mCallback.setNextButtonEnabled(false);
