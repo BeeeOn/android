@@ -11,19 +11,21 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 public class PairRequestTask extends CallbackTask<String> {
 	private final String mGateId;
 	private final long mTimeLimit;
-	public boolean success = false;
+	private boolean mWasPaused;
 
-	public PairRequestTask(Context context, String GateId, long timeLimit) {
+	public PairRequestTask(Context context, String GateId, long timeLimit, boolean wasPaused) {
 		super(context);
 		this.mGateId = GateId;
 		this.mTimeLimit = timeLimit;
+		this.mWasPaused = wasPaused;
 	}
 
 	@Override
 	protected Boolean doInBackground(String gateId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		controller.getGatesModel().sendPairRequest(mGateId);
+		if (!mWasPaused)
+			controller.getGatesModel().sendPairRequest(mGateId);
 
 		UninitializedDevicesModel uninitializedDevicesModel = controller.getUninitializedDevicesModel();
 

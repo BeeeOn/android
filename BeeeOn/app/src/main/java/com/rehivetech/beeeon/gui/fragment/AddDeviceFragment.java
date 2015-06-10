@@ -26,7 +26,6 @@ public class AddDeviceFragment extends TrackFragment {
 	// private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
 	private static final int TIMER_SEC_COUNT = 30;
-	private static final int CHECK_EVERY_X_SECONDS = 2;
 
 	private boolean mFirstUse = true;
 
@@ -101,24 +100,76 @@ public class AddDeviceFragment extends TrackFragment {
 		}*/
 	}
 
-	/*
-		@Override
-		public void onSaveInstanceState(Bundle outState) {
-			super.onSaveInstanceState(outState);
-			outState.putInt(TIMER_VALUE_PAUSE, mTimerValue);
-			// outState.putBoolean(TIMER_BOOL_PAUSE, true);
-		}
-		*/
-/*
-	public void resetPairButton() {
-		//mTimeText.setText("Time is out");
-		if (mDonutProgress != null) {
-			//mDonutProgress.setTitle(" ");
-			mDonutProgress.setInnerBottomText("Time is out");
-		}
-		resetBtnPair();
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(TIMER_VALUE_PAUSE, mDonutProgress.getProgress());
+		pauseTimer();
+		// outState.putBoolean(TIMER_BOOL_PAUSE, true);
 	}
-*/
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			mDonutProgress.setProgress(savedInstanceState.getInt(TIMER_VALUE_PAUSE));
+			continueTimer();
+		}
+	}
+
+	public void pauseTimer () {
+		mCountDownTimer.cancel();
+	}
+
+	public void continueTimer() {
+		mCallback.setNextButtonEnabled(false);
+		mCountDownTimer = new CountDownTimer(mDonutProgress.getProgress() * 1000 + 500,500) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+				int timerValue = (int) (millisUntilFinished / 1000);
+				mDonutProgress.setProgress(timerValue);
+			}
+
+			@Override
+			public void onFinish() {
+				Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
+				resetTimer();
+			}
+		}.start();
+
+		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(),mGateId,mDonutProgress.getProgress(),true);
+		pairRequestTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
+
+					mCountDownTimer.cancel();
+
+					// go to setup uninit sensor
+					Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
+					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
+				} else {
+					Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
+					mCountDownTimer.cancel();
+					resetTimer();
+				}
+			}
+		});
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairRequestTask, mGateId);
+	}
+
+	/*
+		public void resetPairButton() {
+			//mTimeText.setText("Time is out");
+			if (mDonutProgress != null) {
+				//mDonutProgress.setTitle(" ");
+				mDonutProgress.setInnerBottomText("Time is out");
+			}
+			resetBtnPair();
+		}
+	*/
 	public void startTimer() {
 		mCallback.setNextButtonEnabled(false);
 		mDonutProgress.setProgress(TIMER_SEC_COUNT);
@@ -144,7 +195,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 		}.start();
 
-		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(), mGateId, TIMER_SEC_COUNT);
+		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(), mGateId, TIMER_SEC_COUNT,false);
 		pairRequestTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
