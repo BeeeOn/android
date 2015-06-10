@@ -125,6 +125,29 @@ public class Devices {
 									module.isActuator())
 							);
 
+							if (!module.getRules().isEmpty()) {
+								writer.println(", Arrays.asList(");
+
+								Iterator<Module.Rule> itRule = module.getRules().iterator();
+								while (itRule.hasNext()) {
+									Module.Rule rule = itRule.next();
+
+									String ids = Arrays.toString(rule.hideModulesIds);
+									ids = ids.substring(1, ids.length() - 1);
+
+									writer.print(String.format("\t\t\t\t\t\tnew Module.Rule(%d, new int[] {%s})",
+											rule.value,
+											ids
+									));
+
+									writer.println(itRule.hasNext() ? "," : "");
+								}
+
+								writer.print("\t\t\t\t)");
+							} else {
+								writer.print(", null");
+							}
+
 							if (!module.getValues().isEmpty()) {
 								writer.println(", Arrays.asList(");
 
@@ -132,7 +155,7 @@ public class Devices {
 								while (itValue.hasNext()) {
 									Module.Value value = itValue.next();
 
-									writer.print(String.format("\t\t\t\t\tnew EnumValue.Item(%d, \"%d\", %s)",
+									writer.print(String.format("\t\t\t\t\t\tnew EnumValue.Item(%d, \"%d\", %s)",
 											value.id,
 											value.id,
 											value.translation.getResourceId() // value name resource

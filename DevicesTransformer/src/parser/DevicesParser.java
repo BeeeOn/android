@@ -244,7 +244,7 @@ public class DevicesParser {
 					List<Integer> hideModulesIdsList = new ArrayList<>();
 					NodeList hideModuleNodes = ((Element) node).getElementsByTagName("hide-module");
 					for (int j = 0; j < hideModuleNodes.getLength(); j++) {
-						Node hideModuleNode = hideModuleNodes.item(i);
+						Node hideModuleNode = hideModuleNodes.item(j);
 						if (hideModuleNode instanceof Element) {
 							Integer id = new Integer(((Element) hideModuleNode).getAttribute("id"));
 							hideModulesIdsList.add(id);
