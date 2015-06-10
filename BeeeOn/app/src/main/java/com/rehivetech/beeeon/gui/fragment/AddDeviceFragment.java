@@ -22,9 +22,10 @@ import com.rehivetech.beeeon.threading.task.PairDeviceTask;
 public class AddDeviceFragment extends TrackFragment {
 	private static final String TAG = AddDeviceFragment.class.getSimpleName();
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
-	// private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
+	private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
 	private static final int TIMER_SEC_COUNT = 30;
+	private boolean mFirsTime = true;
 
 	private OnAddSensorListener mCallback;
 
@@ -96,21 +97,26 @@ public class AddDeviceFragment extends TrackFragment {
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(TIMER_VALUE_PAUSE, mDonutProgress.getProgress());
-		mCountDownTimer.cancel();
+		outState.putBoolean(TIMER_BOOL_PAUSE, mFirsTime);
+		if (mCountDownTimer != null)
+			mCountDownTimer.cancel();
+
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			mDonutProgress.setProgress(savedInstanceState.getInt(TIMER_VALUE_PAUSE));
-			continueTimer();
+			if (!savedInstanceState.getBoolean(TIMER_BOOL_PAUSE)) {
+				mDonutProgress.setProgress(savedInstanceState.getInt(TIMER_VALUE_PAUSE));
+				continueTimer();
+			}
 		}
 	}
 
 	public void continueTimer() {
 		mCallback.setNextButtonEnabled(false);
-		mCountDownTimer = new CountDownTimer(mDonutProgress.getProgress() * 1000 + 500,500) {
+		mCountDownTimer = new CountDownTimer(mDonutProgress.getProgress() * 1000 + 500, 500) {
 			@Override
 			public void onTick(long millisUntilFinished) {
 				int timerValue = (int) (millisUntilFinished / 1000);
@@ -124,11 +130,11 @@ public class AddDeviceFragment extends TrackFragment {
 			}
 		}.start();
 
-		doPairRequestTask(mDonutProgress.getProgress(),true);
+		doPairRequestTask(mDonutProgress.getProgress(), true);
 	}
 
 	private void doPairRequestTask(int timeLimit, boolean wasPaused) {
-		PairDeviceTask pairDeviceTask = new PairDeviceTask(getActivity(),mGateId,timeLimit,wasPaused);
+		PairDeviceTask pairDeviceTask = new PairDeviceTask(getActivity(), mGateId, timeLimit, wasPaused);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -151,6 +157,8 @@ public class AddDeviceFragment extends TrackFragment {
 	}
 
 	public void startTimer() {
+		mFirsTime = false;
+
 		mCallback.setNextButtonEnabled(false);
 		mDonutProgress.setProgress(TIMER_SEC_COUNT);
 		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
@@ -175,7 +183,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 		}.start();
 
-		doPairRequestTask(TIMER_SEC_COUNT,false);
+		doPairRequestTask(TIMER_SEC_COUNT, false);
 	}
 
 	public void doAction() {
