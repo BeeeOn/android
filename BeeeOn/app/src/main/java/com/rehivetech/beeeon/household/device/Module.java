@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 
+import java.util.Collections;
 import java.util.List;
 
 public final class Module implements IOrderIdentifier {
@@ -25,24 +26,24 @@ public final class Module implements IOrderIdentifier {
 	private final int mNameRes;
 	private final boolean mIsActuator;
 	// private final Constraints mConstraints; // FIXME: implement later
-	// private final Values mValues; // this is not needed, as needed is BaseValue property
-	// private final Rules mRules; // FIXME: implement later
+	private final List<Rule> mRules;
 
 	private final Device mDevice; // parent device
 	private final BaseValue mValue;
 
 	public static Module createUnknownModule(Device device, String id) {
-		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), 0, null, null, null, false);
+		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), 0, null, null, null, false, null);
 	}
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator) {
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules) {
 		mDevice = device;
 		mId = id;
+		mOffset = offset;
 		mSort = sort;
 		mGroupRes = groupRes != null ? groupRes : 0;
 		mNameRes = nameRes != null ? nameRes : 0;
 		mIsActuator = isActuator;
-		mOffset = offset;
+		mRules = Collections.unmodifiableList(rules);
 
 		mType = ModuleType.fromTypeId(typeId);
 		if (mType.getValueClass() == EnumValue.class) {
@@ -51,14 +52,15 @@ public final class Module implements IOrderIdentifier {
 		mValue = BaseValue.createFromModuleType(mType);
 	}
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<EnumValue.Item> enumValues) {
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules, List<EnumValue.Item> enumValues) {
 		mDevice = device;
 		mId = id;
+		mOffset = offset;
 		mSort = sort;
 		mGroupRes = groupRes != null ? groupRes : 0;
 		mNameRes = nameRes != null ? nameRes : 0;
 		mIsActuator = isActuator;
-		mOffset = offset;
+		mRules = Collections.unmodifiableList(rules);
 
 		mType = ModuleType.fromTypeId(typeId);
 		if (mType.getValueClass() != EnumValue.class) {
@@ -169,7 +171,26 @@ public final class Module implements IOrderIdentifier {
 	 * @return true if module should be visible to the user at this moment
 	 */
 	public boolean isVisible() {
-		// FIXME: real check based on rules
+		// Without rules is everyone visible
+		if (mRules == null)
+			return true;
+
+		// Get actual value
+		int value = (mValue instanceof EnumValue) ? ((EnumValue) mValue).getActive().getId() : (int) mValue.getDoubleValue();
+		Rule rule = mRules.get(value);
+
+		// No rule for actual value
+		if (rule == null)
+			return true;
+
+		int id = Integer.parseInt(mId);
+		for (int hideId : rule.hideModulesIds) {
+			// Check if this module id should be hide now
+			if (id == hideId) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -181,6 +202,16 @@ public final class Module implements IOrderIdentifier {
 	@Override
 	public Integer getSort() {
 		return mSort;
+	}
+
+	public static class Rule {
+		public final int value;
+		public final int[] hideModulesIds;
+
+		public Rule(int value, int[] hideModulesIds) {
+			this.value = value;
+			this.hideModulesIds = hideModulesIds;
+		}
 	}
 
 }
