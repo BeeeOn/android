@@ -49,12 +49,7 @@ public final class Device implements IIdentifier {
 		mAddress = address;
 
 		// Create modules list
-		List<Module> modules = type.createModules(this);
-		// Sort them by order, id
-		Collections.sort(modules, new OrderIdentifierComparator());
-
-		// Then set the modules holder
-		mModules.setObjects(modules);
+		mModules.setObjects(type.createModules(this));
 	}
 
 	/**
@@ -195,14 +190,21 @@ public final class Device implements IIdentifier {
 	 * @return List of modules this device contains.
 	 */
 	public List<Module> getAllModules() {
-		return mModules.getObjects();
+		List<Module> modules = mModules.getObjects();
+
+		// Sort modules by proper order
+		Collections.sort(modules, new OrderIdentifierComparator());
+
+		return modules;
 	}
 
 	/**
 	 * @return List of actually visible modules this device contains.
 	 */
 	public List<Module> getVisibleModules() {
-		List<Module> modules = mModules.getObjects();
+		// This will give us correctly sorted modules
+		List<Module> modules = getAllModules();
+
 		List<String> hideModuleIds = new ArrayList<>();
 
 		// Get info from all the modules about what modules they propose to hide based on their own value
