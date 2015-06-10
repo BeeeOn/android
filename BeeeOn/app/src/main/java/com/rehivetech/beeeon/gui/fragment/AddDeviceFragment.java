@@ -13,10 +13,12 @@ import android.widget.Toast;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.SetupSensorActivity;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
+import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 
 
 public class AddDeviceFragment extends TrackFragment {
@@ -134,6 +136,7 @@ public class AddDeviceFragment extends TrackFragment {
 	}
 
 	private void doPairRequestTask(int timeLimit, boolean wasPaused) {
+		// function creates and starts Task that handles pairing between the gate and the account
 		PairDeviceTask pairDeviceTask = new PairDeviceTask(getActivity(), mGateId, timeLimit, wasPaused);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
@@ -156,6 +159,27 @@ public class AddDeviceFragment extends TrackFragment {
 		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId);
 	}
 
+	public void checkForUnInitDevices() {
+		// Function creates Task that checks for unitit devices, if there are any, the apps goes straight to setup uninit sensor
+		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(),true, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
+		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if(success) {
+					if(Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).size() > 0) {
+						Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
+
+						mCountDownTimer.cancel();
+
+						// go to setup uninit sensor
+						Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
+						startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
+					}
+				}
+			}
+		});
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(reloadGateDataTask,mGateId);
+	}
 	public void startTimer() {
 		mFirsTime = false;
 
@@ -167,6 +191,9 @@ public class AddDeviceFragment extends TrackFragment {
 		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.beeeon_secundary_pink));
 		mDonutProgress.setUnfinishedStrokeColor(getResources().getColor(R.color.white));
 		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
+
+		// First check if there are any uninit devices that belong to this gate
+		checkForUnInitDevices();
 
 		// the timer should start counting down from 30, thats why + 500
 		mCountDownTimer = new CountDownTimer(TIMER_SEC_COUNT * 1000 + 500, 500) {
