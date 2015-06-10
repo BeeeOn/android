@@ -13,16 +13,11 @@ import android.widget.Toast;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.SetupSensorActivity;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.PairRequestTask;
-import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Log;
-
-import java.util.List;
 
 
 public class AddSensorFragment extends TrackFragment {
@@ -149,11 +144,11 @@ public class AddSensorFragment extends TrackFragment {
 
 		}.start();
 
-		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(),mGateId,TIMER_SEC_COUNT);
+		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(), mGateId, TIMER_SEC_COUNT);
 		pairRequestTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if(success) {
+				if (success) {
 					Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
 
 					mCountDownTimer.cancel();
@@ -168,74 +163,9 @@ public class AddSensorFragment extends TrackFragment {
 				}
 			}
 		});
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairRequestTask,mGateId);
-	}
-/*
-	public void doReloadUninitializedDevicesTask(String gateId, boolean forceReload) {
-		ReloadGateDataTask reloadUninitializedDevicesTask = new ReloadGateDataTask(getActivity(), forceReload, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
-
-		reloadUninitializedDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				if (!success) {
-					return;
-				}
-
-				List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
-
-				if (devices.size() > 0) {
-					Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
-
-					mCountDownTimer.cancel();
-
-					// go to setup uninit sensor
-					Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
-					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
-				} else {
-					if (mFirstUse) {
-						mFirstUse = false;
-						doPairRequestTask(mGateId);
-					}
-				}
-
-			}
-
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(reloadUninitializedDevicesTask, gateId);
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairRequestTask, mGateId);
 	}
 
-	private void doPairRequestTask(String gateId) {
-		mCallback.setNextButtonEnabled(false);
-		// Send First automatic pair request
-		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(),gateId);
-
-		pairRequestTask.setListener(new CallbackTask.ICallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				//mCallback.setNextButtonEnabled(true);
-				mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
-				if (success) {
-					// Request was successfully sent
-					//startTimer();
-				} else {
-					// Request wasn't send
-					//resetBtnPair();
-					// TODO: Stop timer
-					Toast.makeText(getActivity(), getString(R.string.addsensor_request_task_not_successful), Toast.LENGTH_LONG).show();
-					resetTimer();
-				}
-			}
-
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairRequestTask, gateId);
-	}
-*/
 	public void doAction() {
 		startTimer();
 	}
