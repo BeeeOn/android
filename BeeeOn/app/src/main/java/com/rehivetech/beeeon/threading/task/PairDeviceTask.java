@@ -25,6 +25,7 @@ public class PairDeviceTask extends CallbackTask<String> {
 		UninitializedDevicesModel uninitializedDevicesModel = controller.getUninitializedDevicesModel();
 
 		// First check if there are any uninit devices that belong to this gate
+		uninitializedDevicesModel.reloadUninitializedDevicesByGate(mGateId,true);
 		if (uninitializedDevicesModel.getUninitializedDevicesByGate(mGateId).size() > 0) {
 			return true;
 		}
