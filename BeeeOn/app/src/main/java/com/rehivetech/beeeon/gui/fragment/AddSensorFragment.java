@@ -140,11 +140,6 @@ public class AddSensorFragment extends TrackFragment {
 			public void onTick(long millisUntilFinished) {
 				int timerValue = (int) (millisUntilFinished / 1000);
 				mDonutProgress.setProgress(timerValue);
-
-				if (timerValue % CHECK_EVERY_X_SECONDS == 0) {
-					// check new uninitialized devices
-					doReloadUninitializedDevicesTask(mGateId, true);
-				}
 			}
 
 			public void onFinish() {
@@ -154,8 +149,28 @@ public class AddSensorFragment extends TrackFragment {
 
 		}.start();
 
-	}
+		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(),mGateId,TIMER_SEC_COUNT);
+		pairRequestTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if(success) {
+					Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
 
+					mCountDownTimer.cancel();
+
+					// go to setup uninit sensor
+					Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
+					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
+				} else {
+					Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
+					mCountDownTimer.cancel();
+					resetTimer();
+				}
+			}
+		});
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairRequestTask,mGateId);
+	}
+/*
 	public void doReloadUninitializedDevicesTask(String gateId, boolean forceReload) {
 		ReloadGateDataTask reloadUninitializedDevicesTask = new ReloadGateDataTask(getActivity(), forceReload, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
 
@@ -195,7 +210,7 @@ public class AddSensorFragment extends TrackFragment {
 	private void doPairRequestTask(String gateId) {
 		mCallback.setNextButtonEnabled(false);
 		// Send First automatic pair request
-		PairRequestTask pairRequestTask = new PairRequestTask(getActivity());
+		PairRequestTask pairRequestTask = new PairRequestTask(getActivity(),gateId);
 
 		pairRequestTask.setListener(new CallbackTask.ICallbackTaskListener() {
 
@@ -220,7 +235,7 @@ public class AddSensorFragment extends TrackFragment {
 		// Execute and remember task so it can be stopped automatically
 		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairRequestTask, gateId);
 	}
-
+*/
 	public void doAction() {
 		startTimer();
 	}
