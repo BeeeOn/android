@@ -24,7 +24,6 @@ public class AddDeviceFragment extends TrackFragment {
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
 	private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
-	private static final int TIMER_SEC_COUNT = 30;
 	private boolean mFirsTime = true;
 	private long mStartTime = 0;
 
@@ -114,7 +113,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 	public void continueTimer() {
 		mCallback.setNextButtonEnabled(false);
-		long currentTime = (long) (TIMER_SEC_COUNT) - ((System.currentTimeMillis() / 1000) - mStartTime);
+		long currentTime = (long) (Constants.TIMER_SEC_COUNT) - ((System.currentTimeMillis() / 1000) - (mStartTime / 1000));
 		mCountDownTimer = new CountDownTimer(currentTime * 1000 + 500, 500) {
 			@Override
 			public void onTick(long millisUntilFinished) {
@@ -129,12 +128,12 @@ public class AddDeviceFragment extends TrackFragment {
 			}
 		}.start();
 
-		doPairRequestTask(mDonutProgress.getProgress(), true);
+		doPairRequestTask(mStartTime);
 	}
 
-	private void doPairRequestTask(int timeLimit, boolean wasPaused) {
+	private void doPairRequestTask(long timeLimit) {
 		// function creates and starts Task that handles pairing between the gate and the account
-		PairDeviceTask pairDeviceTask = new PairDeviceTask(getActivity(), mGateId, timeLimit, wasPaused);
+		PairDeviceTask pairDeviceTask = new PairDeviceTask(getActivity(), mGateId, timeLimit);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -158,10 +157,10 @@ public class AddDeviceFragment extends TrackFragment {
 
 	public void startTimer() {
 		mFirsTime = false;
-		mStartTime = System.currentTimeMillis() / 1000;
+		mStartTime = System.currentTimeMillis();
 
 		mCallback.setNextButtonEnabled(false);
-		mDonutProgress.setProgress(TIMER_SEC_COUNT);
+		mDonutProgress.setProgress(Constants.TIMER_SEC_COUNT);
 		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
 		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
 		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
@@ -170,7 +169,7 @@ public class AddDeviceFragment extends TrackFragment {
 		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
 
 		// the timer should start counting down from 30, thats why + 500
-		mCountDownTimer = new CountDownTimer(TIMER_SEC_COUNT * 1000 + 500, 500) {
+		mCountDownTimer = new CountDownTimer(Constants.TIMER_SEC_COUNT * 1000 + 500, 500) {
 
 			public void onTick(long millisUntilFinished) {
 				int timerValue = (int) (millisUntilFinished / 1000);
@@ -184,7 +183,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 		}.start();
 
-		doPairRequestTask(TIMER_SEC_COUNT, false);
+		doPairRequestTask(0);
 	}
 
 	public void doAction() {
@@ -196,8 +195,8 @@ public class AddDeviceFragment extends TrackFragment {
 		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
 		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_drawer_bg));
 		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_drawer_bg));
-		mDonutProgress.setProgress(TIMER_SEC_COUNT);
-		mDonutProgress.setMax(TIMER_SEC_COUNT);
+		mDonutProgress.setProgress(Constants.TIMER_SEC_COUNT);
+		mDonutProgress.setMax(Constants.TIMER_SEC_COUNT);
 		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.white));
 		mSendPairTextView.setText(R.string.activity_add_device_dialog_text);
 	}

@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.threading.task;
 import android.content.Context;
 import android.os.SystemClock;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -10,14 +11,12 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 
 public class PairDeviceTask extends CallbackTask<String> {
 	private final String mGateId;
-	private final long mTimeLimit;
-	private boolean mWasPaused;
+	private final long mStartTime;
 
-	public PairDeviceTask(Context context, String GateId, long timeLimit, boolean wasPaused) {
+	public PairDeviceTask(Context context, String GateId, long startTime) {
 		super(context);
 		this.mGateId = GateId;
-		this.mTimeLimit = timeLimit;
-		this.mWasPaused = wasPaused;
+		this.mStartTime = startTime; // Value is zero when first start, or the real time of the first start
 	}
 
 	@Override
@@ -29,12 +28,19 @@ public class PairDeviceTask extends CallbackTask<String> {
 		if (uninitializedDevicesModel.getUninitializedDevicesByGate(mGateId).size() > 0) {
 			return true;
 		}
-
-		if (!mWasPaused)
+		long beginningTime;
+		// Zero means this is the first time it is called
+		if (mStartTime == 0) {
+			// Make request
 			controller.getGatesModel().sendPairRequest(mGateId);
+			// Use current time as the beginningTime
+			beginningTime = System.currentTimeMillis();
+		} else {
+			// Use the time given in constructor
+			beginningTime = mStartTime;
+		}
 
-		long startTime = System.currentTimeMillis();
-		while (startTime + mTimeLimit * 1000 > System.currentTimeMillis()) {
+		while (beginningTime + Constants.TIMER_SEC_COUNT * 1000 > System.currentTimeMillis()) {
 			if (isCancelled()) {
 				break;
 			}
