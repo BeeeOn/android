@@ -115,7 +115,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(registerGateTask, gate);
+		callbackTaskManager.executeTask(registerGateTask, gate,false);
 	}
 
 	@Override
