@@ -20,8 +20,8 @@ import com.rehivetech.beeeon.threading.task.PairRequestTask;
 import com.rehivetech.beeeon.util.Log;
 
 
-public class AddSensorFragment extends TrackFragment {
-	private static final String TAG = AddSensorFragment.class.getSimpleName();
+public class AddDeviceFragment extends TrackFragment {
+	private static final String TAG = AddDeviceFragment.class.getSimpleName();
 	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
 	// private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
@@ -38,8 +38,8 @@ public class AddSensorFragment extends TrackFragment {
 	private DonutProgress mDonutProgress;
 	private CountDownTimer mCountDownTimer;
 
-	public static AddSensorFragment newInstance(String gateId) {
-		AddSensorFragment fragment = new AddSensorFragment();
+	public static AddDeviceFragment newInstance(String gateId) {
+		AddDeviceFragment fragment = new AddDeviceFragment();
 
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
