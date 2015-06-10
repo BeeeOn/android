@@ -104,7 +104,8 @@ public class AddDeviceFragment extends TrackFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			if (!savedInstanceState.getBoolean(TIMER_BOOL_PAUSE)) {
+			mFirsTime = savedInstanceState.getBoolean(TIMER_BOOL_PAUSE);
+			if (!mFirsTime) {
 				mStartTime = savedInstanceState.getLong(TIMER_VALUE_PAUSE);
 				continueTimer();
 			}
@@ -113,6 +114,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 	public void continueTimer() {
 		mCallback.setNextButtonEnabled(false);
+		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
 		long currentTime = (long) (Constants.TIMER_SEC_COUNT) - ((System.currentTimeMillis() / 1000) - (mStartTime / 1000));
 		mCountDownTimer = new CountDownTimer(currentTime * 1000 + 500, 500) {
 			@Override
@@ -152,7 +154,7 @@ public class AddDeviceFragment extends TrackFragment {
 				}
 			}
 		});
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId,false);
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId, false);
 	}
 
 	public void startTimer() {

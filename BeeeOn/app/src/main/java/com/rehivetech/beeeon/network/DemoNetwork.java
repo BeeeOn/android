@@ -380,7 +380,7 @@ public class DemoNetwork implements INetwork {
 		}
 
 		Random rand = getRandomForGate(gateId);
-		if (rand.nextInt(4) == 0) {
+		if (rand.nextInt(10) == 0) {
 			Device device = new Device();
 
 			device.setGateId(gateId);
