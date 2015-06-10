@@ -34,10 +34,27 @@ public class PairRequestTask extends CallbackTask<String> {
 				break;
 			}
 
-			if (Controller.getInstance(mContext).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).size() > 0){
-				// If there are any uninitialized devices that belong to the gate, the request was successful
-				return true;
+			if ((System.currentTimeMillis() % 2000) == 0) {
+				// Every two seconds ask if there are uninitialized devices for this gate
+				ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(mContext, true, ReloadGateDataTask.ReloadWhat.UNINITIALIZED_DEVICES);
+				reloadGateDataTask.setListener(new ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						Log.d("PAIR REQUEST", "Executing request for realoading....devices...for gate");
+						if (!success) {
+							return;
+						}
+
+						if (Controller.getInstance(mContext).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).size() > 0) {
+							// If there are any uninitialized devices that belong to the gate, the request was successful
+							PairRequestTask.this.success = true;
+							return;
+						}
+
+					}
+				});
 			}
+
 
 			if (success) {
 				return true;
