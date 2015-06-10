@@ -152,7 +152,7 @@ public class AddDeviceFragment extends TrackFragment {
 				}
 			}
 		});
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId);
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId,false);
 	}
 
 	public void startTimer() {
