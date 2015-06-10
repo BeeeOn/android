@@ -165,6 +165,14 @@ public class Devices {
 								}
 
 								writer.print("\t\t\t\t)");
+							} else if (module.getConstraints() != null) {
+								Module.Constraints constraints = module.getConstraints();
+
+								writer.print(String.format(", new BaseValue.Constraints(%s, %s, %s)",
+										constraints.getMin(),
+										constraints.getMax(),
+										constraints.getGranularity()
+								));
 							}
 
 							writer.println(itModule.hasNext() ? ")," : ")");

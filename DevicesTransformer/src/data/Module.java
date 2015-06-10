@@ -98,11 +98,12 @@ public class Module {
 		mActuator = actuator;
 	}
 
+	@Nullable
 	public Constraints getConstraints() {
 		return mConstraints;
 	}
 
-	public void setConstraints(Constraints constraints) {
+	public void setConstraints(@Nullable Constraints constraints) {
 		mConstraints = constraints;
 	}
 
