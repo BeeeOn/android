@@ -9,8 +9,9 @@ public class NameIdentifierComparator implements Comparator<INameIdentifier> {
 		int result = lhs.getName().compareTo(rhs.getName());
 
 		// In case names are same, compare Ids
-		if (result == 0)
-			result = lhs.getId().compareTo(rhs.getId());
+		if (result == 0) {
+			result = IdentifierComparator.compareNumericIds(lhs, rhs);
+		}
 
 		return result;
 	}
