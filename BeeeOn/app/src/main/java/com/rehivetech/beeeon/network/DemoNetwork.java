@@ -549,6 +549,8 @@ public class DemoNetwork implements INetwork {
 		// Set new location id
 		location.setId(locationId);
 
+		mLocations.addObject(gateId, location);
+
 		return location;
 	}
 
