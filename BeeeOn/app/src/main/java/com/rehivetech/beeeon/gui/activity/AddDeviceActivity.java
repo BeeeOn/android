@@ -6,7 +6,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
-import com.rehivetech.beeeon.gui.fragment.AddSensorFragment;
+import com.rehivetech.beeeon.gui.fragment.AddDeviceFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;
@@ -14,13 +14,13 @@ import com.rehivetech.beeeon.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddSensorActivity extends BaseGuideActivity implements AddSensorFragment.OnAddSensorListener {
+public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFragment.OnAddSensorListener {
 
-	private static final String TAG = AddSensorActivity.class.getSimpleName();
+	private static final String TAG = AddDeviceActivity.class.getSimpleName();
 
 	@Override
 	protected void onLastFragmentActionNext() {
-		AddSensorFragment fragment = (AddSensorFragment) mPagerAdapter.getFinalFragment();
+		AddDeviceFragment fragment = (AddDeviceFragment) mPagerAdapter.getFinalFragment();
 		if (fragment == null) {
 			Log.e(TAG, "AddSensorActivity.onLastFragmentActionNext() return null fragment");
 			return;
@@ -43,7 +43,7 @@ public class AddSensorActivity extends BaseGuideActivity implements AddSensorFra
 				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_second_step, R.string.tut_add_sensor_text_2, R.string.adddevice_title)
 		);
 
-		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, AddSensorFragment.newInstance(gate.getId()));
+		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, AddDeviceFragment.newInstance(gate.getId()));
 	}
 
 	@Override

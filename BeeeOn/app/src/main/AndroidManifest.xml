@@ -91,7 +91,7 @@
 			android:label="@string/title_activity_location_detail_screen">
 		</activity>
 		<activity
-			android:name=".gui.activity.AddSensorActivity"
+			android:name=".gui.activity.AddDeviceActivity"
 			android:label="@string/title_activity_add_sensor">
 		</activity>
 		<activity

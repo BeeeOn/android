@@ -28,7 +28,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
-import com.rehivetech.beeeon.gui.activity.AddSensorActivity;
+import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.SenListAdapter;
@@ -412,7 +412,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 	public void showAddSensorDialog() {
 		Log.d(TAG, "HERE ADD SENSOR +");
-		Intent intent = new Intent(mActivity, AddSensorActivity.class);
+		Intent intent = new Intent(mActivity, AddDeviceActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
 	}
 

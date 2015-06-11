@@ -155,4 +155,7 @@ public final class Constants {
 	public static final String BROADCAST_ACTOR_CHANGED = "com.rehivetech.beeeon.BROADCAST_ACTOR_CHANGED";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID";
+
+	// The limit time for adding device in addDeviceFragment
+	public static final int TIMER_SEC_COUNT = 30;
 }
