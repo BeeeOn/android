@@ -135,6 +135,9 @@ public class AddDeviceFragment extends TrackFragment {
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
+				// Reset time of pairing start so it won't start again, when it already finished
+				mStartTime = 0;
+
 				if (success) {
 					Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
 
