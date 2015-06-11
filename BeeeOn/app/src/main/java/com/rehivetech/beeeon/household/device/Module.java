@@ -189,12 +189,14 @@ public final class Module implements IOrderIdentifier {
 
 		// Get actual value
 		int value = (mValue instanceof EnumValue) ? ((EnumValue) mValue).getActive().getId() : (int) mValue.getDoubleValue();
-		Rule rule = mRules.get(value);
 
-		// Process rule for actual value
-		if (rule != null) {
-			for (int id : rule.hideModulesIds) {
-				list.add(String.valueOf(id));
+		// Find rule with this value
+		for (Rule rule : mRules) {
+			if (rule.value == value) {
+				// Process rule for actual value
+				for (int id : rule.hideModulesIds) {
+					list.add(String.valueOf(id));
+				}
 			}
 		}
 
