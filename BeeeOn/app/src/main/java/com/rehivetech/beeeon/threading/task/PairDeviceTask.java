@@ -11,12 +11,12 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 
 public class PairDeviceTask extends CallbackTask<String> {
 	private final String mGateId;
-	private final long mStartTime;
+	private long mStartTimeMSec;
 
-	public PairDeviceTask(Context context, String GateId, long startTime) {
+	public PairDeviceTask(Context context, String GateId, long startTimeMSec) {
 		super(context);
 		this.mGateId = GateId;
-		this.mStartTime = startTime; // Value is zero when first start, or the real time of the first start
+		this.mStartTimeMSec = startTimeMSec; // Value is zero when first start, or the real time of the first start
 	}
 
 	@Override
@@ -29,19 +29,15 @@ public class PairDeviceTask extends CallbackTask<String> {
 		if (uninitializedDevicesModel.getUninitializedDevicesByGate(mGateId).size() > 0) {
 			return true;
 		}
-		long beginningTime;
 		// Zero means this is the first time it is called
-		if (mStartTime == 0) {
+		if (mStartTimeMSec == 0) {
 			// Make request
 			controller.getGatesModel().sendPairRequest(mGateId);
 			// Use current time as the beginningTime
-			beginningTime = System.currentTimeMillis();
-		} else {
-			// Use the time given in constructor
-			beginningTime = mStartTime;
+			mStartTimeMSec = System.nanoTime() / 1000000;
 		}
-
-		while (beginningTime + Constants.TIMER_SEC_COUNT * 1000 > System.currentTimeMillis()) {
+		long endTimeNanoSec = (mStartTimeMSec + (Constants.PAIR_TIME_SEC * 1000)) * 1000000;
+		while (System.nanoTime() < endTimeNanoSec) {
 			if (isCancelled()) {
 				break;
 			}

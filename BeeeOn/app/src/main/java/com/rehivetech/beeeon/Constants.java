@@ -157,5 +157,5 @@ public final class Constants {
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID";
 
 	// The limit time for adding device in addDeviceFragment
-	public static final int TIMER_SEC_COUNT = 30;
+	public static final int PAIR_TIME_SEC = 30;
 }
