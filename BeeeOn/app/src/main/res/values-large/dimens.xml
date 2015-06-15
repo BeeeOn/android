@@ -1,0 +1,9 @@
+<resources>
+	<!-- Size of activity_add_sensor_activity_dialog -->
+	<dimen name="donut_progress_size">400dp</dimen>
+	<dimen name="adddevice_title_size">45sp</dimen>
+	<dimen name="adddevice_text_size">30sp</dimen>
+	<dimen name="donut_progress_size_land">350dp</dimen>
+	<dimen name="addddevice_title_size_land">50sp</dimen>
+	<dimen name="adddevice_text_size_land">35sp</dimen>
+</resources>
