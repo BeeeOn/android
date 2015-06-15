@@ -43,10 +43,18 @@
 	<dimen name="nav_drawer_width">280dp</dimen>
 
 	<!-- Size of activity_add_sensor_activity_dialog -->
-	<dimen name="donut_progress_size">200dp</dimen>
-	<dimen name="adddevice_title_size">35sp</dimen>
+	<dimen name="content_view_size">175dp</dimen>
+	<dimen name="donut_stroke_width">10dp</dimen>
+	<dimen name="donut_inside_text_size">40sp</dimen>
+	<dimen name="donut_inside_bottom_text_size">15sp</dimen>
+	<dimen name="donut_inside_bottom_text_size_land">13sp</dimen>
+	<dimen name="donut_inside_text_size_land">30sp</dimen>
+	<dimen name="adddevice_title_size">26sp</dimen>
 	<dimen name="adddevice_text_size">20sp</dimen>
-	<dimen name="donut_progress_size_land">175dp</dimen>
+	<dimen name="content_view_size_land">150dp</dimen>
 	<dimen name="addddevice_title_size_land">30sp</dimen>
 	<dimen name="adddevice_text_size_land">20sp</dimen>
+	<dimen name="adddevice_layout_padding">20dp</dimen>
+	<dimen name="adddevice_padding_land">5dp</dimen>
+	<dimen name="adddevice_padding">20dp</dimen>
 </resources>

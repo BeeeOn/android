@@ -10,29 +10,34 @@
 		android:layout_height="match_parent"
 		android:orientation="vertical"
 		android:gravity="center_horizontal"
-		android:padding="20dp">
+		android:padding="40dp">
 
 		<TextView
+			android:text="Nadpis nadpisovaty"
+
 			android:id="@+id/intro_image_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="20dp"
-			android:textSize="35sp"
+			android:textSize="@dimen/adddevice_title_size"
 			android:textStyle="bold"
 			android:gravity="center_horizontal"
 			android:textColor="@color/white"/>
 
 		<ImageView
 			android:id="@+id/intro_image_image"
-			android:layout_width="200dp"
-			android:layout_height="200dp"
+			android:src="@drawable/beeeon_tutorial_aa_first_step"
+			android:layout_width="@dimen/content_view_size"
+			android:layout_height="@dimen/content_view_size"
 			android:layout_marginBottom="20dp"/>
 
 		<TextView
+			android:text="text blablabla/..rwqverber3b43"
+
 			android:id="@+id/intro_image_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:textSize="20sp"
+			android:textSize="@dimen/adddevice_text_size"
 			android:gravity="center_horizontal"
 			android:textColor="@color/white"/>
 
