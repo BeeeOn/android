@@ -12,6 +12,6 @@
 	<dimen name="addddevice_title_size_land">60sp</dimen>
 	<dimen name="adddevice_text_size_land">45sp</dimen>
 	<dimen name="adddevice_layout_padding">25dp</dimen>
-	<dimen name="adddevice_padding">40dp</dimen>
-	<dimen name="adddevice_padding_land">30dp</dimen>
+	<dimen name="adddevice_padding">30dp</dimen>
+	<dimen name="adddevice_padding_land">20dp</dimen>
 </resources>
