@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -75,10 +76,8 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private String mActiveGeoId;
 	private boolean mIsNew = false;
 
-	private Toolbar mToolbar;
 	private Menu mOptionsMenu;
 	private ProgressDialog mProgress;
-	private Gate mGate;
 	private UnitsHelper mUnitsHelper;
 	private SharedPreferences mPrefs;
 
@@ -94,18 +93,6 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private String mWatchdogAction;
 	private WatchdogBaseType mWatchdogOperator;
 
-	// GUI elements
-	private RadioGroup mActionType;
-	private EditText mRuleName;
-	private TextView mRuleTresholdUnit;
-	private SwitchCompat mRuleEnabled;
-	private Spinner mIfItemSpinner;
-	private FloatingActionButton mOperatorButton;
-	private EditText mRuleTreshold;
-
-	private EditText mNotificationText;
-	private Spinner mActorSpinner;
-
 	SpinnerMultiAdapter mSpinnerMultiAdapter;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -114,14 +101,18 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		Log.d(TAG, "onCreate()");
 
 		// prepare toolbar
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.watchdog_rule);
-			setSupportActionBar(mToolbar);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			getSupportActionBar().setHomeButtonEnabled(true);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.watchdog_rule);
+			setSupportActionBar(toolbar);
+		}
+
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
 			// x instead of <- indicating that no changes will be saved upon click
-			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 
 		// Prepare progress dialog
@@ -158,8 +149,8 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// get controller
 		Controller controller = Controller.getInstance(this);
 		// get gate
-		mGate = (mActiveGateId == null || mActiveGateId.isEmpty()) ? controller.getActiveGate() : controller.getGatesModel().getGate(mActiveGateId);
-		if (mGate == null) {
+		Gate gate = (mActiveGateId == null || mActiveGateId.isEmpty()) ? controller.getActiveGate() : controller.getGatesModel().getGate(mActiveGateId);
+		if (gate == null) {
 			Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
 			finish();
 			return;
@@ -170,7 +161,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
 		// get all locations for spinners
-		mLocations = controller.getLocationsModel().getLocationsByGate(mGate.getId());
+		mLocations = controller.getLocationsModel().getLocationsByGate(gate.getId());
 		// get all geofence areas
 		String userId = controller.getActualUser().getId();
 		mGeofences = controller.getGeofenceModel().getAllGeofences(userId);
@@ -178,13 +169,13 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// devices get by cycling through all locations
 		mDevices = new ArrayList<Device>();
 		for (Location loc : mLocations) {
-			List<Device> tempFac = controller.getDevicesModel().getDevicesByLocation(mGate.getId(), loc.getId());
+			List<Device> tempFac = controller.getDevicesModel().getDevicesByLocation(gate.getId(), loc.getId());
 			mDevices.addAll(tempFac);
 		}
 
 		// get watchdog rule
 		if (!mIsNew) {
-			mWatchdog = controller.getWatchdogsModel().getWatchdog(mGate.getId(), mActiveRuleId);
+			mWatchdog = controller.getWatchdogsModel().getWatchdog(gate.getId(), mActiveRuleId);
 			if (mWatchdog == null) {
 				Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
 				finish();
@@ -192,7 +183,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 			}
 		} else {
 			mWatchdog = new Watchdog(Watchdog.TYPE_SENSOR);
-			mWatchdog.setGateId(mGate.getId());
+			mWatchdog.setGateId(gate.getId());
 		}
 
 		mWatchdogOperator = mWatchdog.getOperatorType();
@@ -212,17 +203,12 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	 */
 	private void initLayout() {
 		// init gui elements
-		mRuleName = (EditText) findViewById(R.id.watchdog_edit_name);
-		mRuleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
-		mIfItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
-		mOperatorButton = (FloatingActionButton) findViewById(R.id.watchdog_edit_operator);
-		mRuleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
-		mRuleTresholdUnit = (TextView) findViewById(R.id.watchdog_edit_treshold_unit);
-		mActionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
-
-		// "Then" elements
-		mNotificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
-		mActorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
+		final Spinner ifItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
+		final FloatingActionButton operatorButton = (FloatingActionButton) findViewById(R.id.watchdog_edit_operator);
+		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
+		final TextView ruleTresholdUnit = (TextView) findViewById(R.id.watchdog_edit_treshold_unit);
+		final RadioGroup actionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
+		final Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
 
 		// ----- prepare list of available module & geofences
 		mSpinnerMultiAdapter = new SpinnerMultiAdapter(this);
@@ -250,11 +236,11 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// if nothing is to select, we show header with message
 		if (!isAnyIfInput) {
 			mSpinnerMultiAdapter.addHeader(getString(R.string.multiadapter_no_item));
-			mIfItemSpinner.setEnabled(false);
+			ifItemSpinner.setEnabled(false);
 		}
 
-		mIfItemSpinner.setAdapter(mSpinnerMultiAdapter);
-		mIfItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+		ifItemSpinner.setAdapter(mSpinnerMultiAdapter);
+		ifItemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				ISpinnerItem selected = mSpinnerMultiAdapter.getItem(position);
@@ -273,13 +259,13 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 
 					// if not any of mentioned types, do nothing
 					default:
-						mWatchdogOperator.clearGUI(mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
+						mWatchdogOperator.clearGUI(operatorButton, ruleTreshold, ruleTresholdUnit);
 						return;
 				}
 				// we need to refresh UnitHelper cause setOperator destroys it
 				mWatchdogOperator.setUnitsHelper(mUnitsHelper);
 				// setup gui based on type
-				mWatchdogOperator.setupGUI(selected, mOperatorButton, mRuleTreshold, mRuleTresholdUnit);
+				mWatchdogOperator.setupGUI(selected, operatorButton, ruleTreshold, ruleTresholdUnit);
 			}
 
 			@Override
@@ -290,10 +276,10 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 
 		// setup gui based on type in default position
 		int defaultPos = mSpinnerMultiAdapter.getRealPosition(0);
-		mIfItemSpinner.setSelection(defaultPos);
+		ifItemSpinner.setSelection(defaultPos);
 
 		// changing specified layout when checked
-		mActionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		actionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				RelativeLayout NotifLayout = (RelativeLayout) findViewById(R.id.watchdog_detail_notification);
@@ -326,13 +312,21 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		final ModuleArrayAdapter actorAdapter = new ModuleArrayAdapter(this, R.layout.custom_spinner2_item, getModulesArray(MODULES_ACTORS), mLocations);
 		actorAdapter.setLayoutInflater(getLayoutInflater());
 		actorAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
-		mActorSpinner.setAdapter(actorAdapter);
+		actorSpinner.setAdapter(actorAdapter);
 	}
 
 	/**
 	 * Fills gui elements with values
 	 */
 	private void setValues() {
+		final Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
+		final EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
+		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
+		final FloatingActionButton operatorButton = (FloatingActionButton) findViewById(R.id.watchdog_edit_operator);
+		final Spinner ifItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
+		final SwitchCompat ruleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
+		final EditText ruleName = (EditText) findViewById(R.id.watchdog_edit_name);
+		final RadioGroup actionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
 		// check first if sent geofence id as extra, then if watchdog already has it
 		String geoId = "";
 		if (mActiveGeoId != null && !mActiveGeoId.isEmpty())
@@ -343,32 +337,32 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// set spinner in the "IF" section
 		if (!geoId.isEmpty()) {
 			int index = Utils.getObjectIndexFromList(geoId, mGeofences);
-			if (index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, ISpinnerItem.SpinnerItemType.GEOFENCE));
+			if (index > -1) ifItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, ISpinnerItem.SpinnerItemType.GEOFENCE));
 		} else if (mWatchdog.getModules() != null && mWatchdog.getModules().size() > 0) {
 			int index = Utils.getObjectIndexFromList(mWatchdog.getModules().get(0), getModulesArray(MODULES_SENSORS));
-			if (index > -1) mIfItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, ISpinnerItem.SpinnerItemType.MODULE));
+			if (index > -1) ifItemSpinner.setSelection(mSpinnerMultiAdapter.getRealPosition(index, ISpinnerItem.SpinnerItemType.MODULE));
 		}
 
 		// if this is new watchdog, we don't set anything
 		if (mWatchdog.getId() == null) return;
 
-		mRuleName.setText(mWatchdog.getName());
-		mRuleEnabled.setChecked(mWatchdog.isEnabled());
-		mRuleTreshold.setText(mWatchdog.getParams().get(Watchdog.PAR_TRESHOLD));
+		ruleName.setText(mWatchdog.getName());
+		ruleEnabled.setChecked(mWatchdog.isEnabled());
+		ruleTreshold.setText(mWatchdog.getParams().get(Watchdog.PAR_TRESHOLD));
 
 		// get parameter action value
 		String par_action_value = mWatchdog.getParam(Watchdog.PAR_ACTION_VALUE);
 		// based on action type set different part of GUI
 		switch (mWatchdog.getAction()) {
 			case Watchdog.ACTION_NOTIFICATION:
-				mActionType.check(R.id.watchdog_edit_notification);
-				if (par_action_value != null) mNotificationText.setText(par_action_value);
+				actionType.check(R.id.watchdog_edit_notification);
+				if (par_action_value != null) notificationText.setText(par_action_value);
 				break;
 
 			case Watchdog.ACTION_ACTOR:
-				mActionType.check(R.id.watchdog_edit_actor);
+				actionType.check(R.id.watchdog_edit_actor);
 				int actorIndex = par_action_value == null ? -1 : Utils.getObjectIndexFromList(par_action_value, getModulesArray(MODULES_ACTORS));
-				if (actorIndex > -1) mActorSpinner.setSelection(actorIndex);
+				if (actorIndex > -1) actorSpinner.setSelection(actorIndex);
 				break;
 		}
 
@@ -376,7 +370,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		String par_operator = mWatchdog.getParam(Watchdog.PAR_OPERATOR);
 		if (par_operator != null) {
 			mWatchdogOperator.setByType(par_operator);
-			mOperatorButton.setImageResource(mWatchdogOperator.getIconResource());
+			operatorButton.setImageResource(mWatchdogOperator.getIconResource());
 		}
 	}
 
@@ -460,7 +454,13 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	 * Async task for saving watchdog
 	 */
 	private void doSaveWatchdogTask() {
-		if (!validateInput(mRuleName)) {
+		final Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
+		final EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
+		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
+		final Spinner ifItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
+		final SwitchCompat ruleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
+		final EditText ruleName = (EditText) findViewById(R.id.watchdog_edit_name);
+		if (!validateInput(ruleName)) {
 			return;
 		}
 
@@ -470,16 +470,16 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		// FIXME: must be because network sends short tag if empty
 		String tresholdValue = "_";
 
-		ISpinnerItem selected = mSpinnerMultiAdapter.getItem(mIfItemSpinner.getSelectedItemPosition());
+		ISpinnerItem selected = mSpinnerMultiAdapter.getItem(ifItemSpinner.getSelectedItemPosition());
 		switch (selected.getType()) {
 			case MODULE:
-				if (!validateInput(mRuleTreshold, "parseInt")) return;
+				if (!validateInput(ruleTreshold, "parseInt")) return;
 
 				Module selectedModule = (Module) selected.getObject();
 				devsIds.add(selectedModule.getId());
 				newParams.add(selectedModule.getId());
 
-				tresholdValue = mRuleTreshold.getText().toString();
+				tresholdValue = ruleTreshold.getText().toString();
 				break;
 
 			case GEOFENCE:
@@ -505,18 +505,18 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		newParams.add(mWatchdogAction);
 		switch (mWatchdogAction) {
 			case Watchdog.ACTION_NOTIFICATION:
-				if (!validateInput(mNotificationText)) return;
+				if (!validateInput(notificationText)) return;
 
-				newParams.add(mNotificationText.getText().toString());
+				newParams.add(notificationText.getText().toString());
 				break;
 
 			case Watchdog.ACTION_ACTOR:
-				if (mActorSpinner.getSelectedItem() == null) {
+				if (actorSpinner.getSelectedItem() == null) {
 					Toast.makeText(this, getString(R.string.actor_required), Toast.LENGTH_LONG).show();
 					return;
 				}
 
-				Module selectedActor = getModulesArray(MODULES_ACTORS).get(mActorSpinner.getSelectedItemPosition());
+				Module selectedActor = getModulesArray(MODULES_ACTORS).get(actorSpinner.getSelectedItemPosition());
 				newParams.add(selectedActor.getId());
 				break;
 		}
@@ -525,8 +525,8 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		mWatchdog.setParams(newParams);
 		mWatchdog.setModules(devsIds);
 
-		mWatchdog.setName(mRuleName.getText().toString());
-		mWatchdog.setEnabled(mRuleEnabled.isChecked());
+		mWatchdog.setName(ruleName.getText().toString());
+		mWatchdog.setEnabled(ruleEnabled.isChecked());
 
 		mProgress.show();
 

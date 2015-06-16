@@ -62,7 +62,6 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.security.cert.CertificateParsingException;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
@@ -82,24 +81,16 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	private SensorDetailActivity mActivity;
 
 	// GUI elements
-	private TextView mName;
-	private TextView mLocation;
-	private ImageView mLocationIcon;
 	private TextView mValue;
 	private SwitchCompat mValueSwitch;
-	private TextView mTime;
 	private ImageView mIcon;
-	private TextView mRefreshTimeText;
 	private FloatingActionButton mFABedit;
-	private GraphView mGraphView;
-	private TextView mBattery;
-	private TextView mSignal;
+	private GraphView graphView;
 
 	private Module mModule;
 	private Gate mGate;
 
 	private UnitsHelper mUnitsHelper;
-	private TimeHelper mTimeHelper;
 
 	private String mModuleID;
 	private String mLocationID;
@@ -184,10 +175,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		Controller controller = Controller.getInstance(mActivity);
 		Log.d(TAG, "INIT LAYOUT");
 		// Get View for sensor name
-		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
+		TextView name = (TextView) mView.findViewById(R.id.sen_detail_name);
 		// Get View for sensor location
-		mLocation = (TextView) mView.findViewById(R.id.sen_detail_loc_name);
-		mLocationIcon = (ImageView) mView.findViewById(R.id.sen_detail_loc_icon);
+		TextView location = (TextView) mView.findViewById(R.id.sen_detail_loc_name);
+		ImageView locationIcon = (ImageView) mView.findViewById(R.id.sen_detail_loc_icon);
 		// Get View for sensor value
 		mValue = (TextView) mView.findViewById(R.id.sen_detail_value);
 		mValueSwitch = (SwitchCompat) mView.findViewById(R.id.sen_detail_value_switch);
@@ -195,21 +186,21 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		// Get FAB for edit
 		mFABedit = (FloatingActionButton) mView.findViewById(R.id.sen_detail_edit_fab);
 		// Get View for sensor time
-		mTime = (TextView) mView.findViewById(R.id.sen_detail_time);
+		TextView time = (TextView) mView.findViewById(R.id.sen_detail_time);
 		// Get Image for sensor
 		mIcon = (ImageView) mView.findViewById(R.id.sen_detail_icon);
 		// Get TextView for refresh time
-		mRefreshTimeText = (TextView) mView.findViewById(R.id.sen_refresh_time_value);
+		TextView refreshTimeText = (TextView) mView.findViewById(R.id.sen_refresh_time_value);
 		// Get battery value
-		mBattery = (TextView) mView.findViewById(R.id.sen_detail_battery_value);
+		TextView battery = (TextView) mView.findViewById(R.id.sen_detail_battery_value);
 		// Get signal value
-		mSignal = (TextView) mView.findViewById(R.id.sen_detail_signal_value);
+		TextView signal = (TextView) mView.findViewById(R.id.sen_detail_signal_value);
 		// Get graphView
-		mGraphView = (GraphView) mView.findViewById(R.id.sen_graph);
+		graphView = (GraphView) mView.findViewById(R.id.sen_graph);
 
 		// Set title selected for animation if is text long
-		mName.setSelected(true);
-		mLocation.setSelected(true);
+		name.setSelected(true);
+		location.setSelected(true);
 
 
 		mFABedit.setOnClickListener(new OnClickListener() {
@@ -225,8 +216,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 
 		// Set name of sensor
-		mName.setText(module.getName());
-		mName.setBackgroundColor(Color.TRANSPARENT);
+		name.setText(module.getName());
+		name.setBackgroundColor(Color.TRANSPARENT);
 		if (controller.isUserAllowed(mGate.getRole())) {
 
 		}
@@ -311,23 +302,23 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Set name of location
 		if (controller != null) {
-			Location location = null;
+			Location tmp_location = null;
 
 			Gate gate = controller.getGatesModel().getGate(mGateId);
 			if (gate != null) {
-				location = controller.getLocationsModel().getLocation(gate.getId(), module.getDevice().getLocationId());
+				tmp_location = controller.getLocationsModel().getLocation(gate.getId(), module.getDevice().getLocationId());
 			}
 
-			if (location != null) {
-				mLocation.setText(location.getName());
-				mLocationIcon.setImageResource(location.getIconResource());
+			if (tmp_location != null) {
+				location.setText(tmp_location.getName());
+				locationIcon.setImageResource(tmp_location.getIconResource());
 			}
 			if (controller.isUserAllowed(mGate.getRole())) {
 
 			}
 		} else {
 			Log.e(TAG, "controller is null (this shouldn't happen)");
-			mLocation.setText(module.getDevice().getLocationId());
+			location.setText(module.getDevice().getLocationId());
 		}
 
 		Device device = module.getDevice();
@@ -337,7 +328,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		SharedPreferences prefs = controller.getUserSettings();
 
 		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
-		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		// Set value of sensor
 		if (mUnitsHelper != null) {
@@ -352,22 +343,22 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mIcon.setImageResource(module.getIconResource());
 
 		// Set time of sensor
-		if (mTimeHelper != null) {
-			mTime.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+		if (timeHelper != null) {
+			time.setText(timeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
 
 		// Set refresh time Text
-		mRefreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
+		refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
 
 		// Set battery
-		mBattery.setText(device.getBattery() + "%");
+		battery.setText(device.getBattery() + "%");
 
 		// Set signal
-		mSignal.setText(device.getNetworkQuality() + "%");
+		signal.setText(device.getNetworkQuality() + "%");
 
 		// Add Graph
-		if (mUnitsHelper != null && mTimeHelper != null && mGraphView.getSeries().size() == 0) {
-			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
+		if (mUnitsHelper != null && timeHelper != null && graphView.getSeries().size() == 0) {
+			DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 			addGraphView(fmt, mUnitsHelper);
 		}
 
@@ -419,12 +410,12 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	private void addGraphView(final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
 		// Create and set graphView
-		GraphViewHelper.prepareGraphView(mGraphView, getView().getContext(), mModule, fmt, unitsHelper); // empty heading
+		GraphViewHelper.prepareGraphView(graphView, getView().getContext(), mModule, fmt, unitsHelper); // empty heading
 
 		if (mModule.getValue() instanceof BaseEnumValue) {
 			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1, 1)});
 			((BarGraphSeries) mGraphSeries).setSpacing(30);
-			mGraphView.setDrawPointer(false);
+			graphView.setDrawPointer(false);
 		} else {
 			mGraphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1, 1)});
 			((LineGraphSeries) mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
@@ -435,10 +426,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		mGraphSeries.setTitle("Graph");
 
 		// Add data series
-		mGraphView.addSeries(mGraphSeries);
+		graphView.addSeries(mGraphSeries);
 
 		// touch listener to disable swipe and refresh trough graph
-		mGraphView.setOnTouchListener(new View.OnTouchListener() {
+		graphView.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				int i = motionEvent.getAction();
@@ -469,7 +460,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	public void fillGraph(ModuleLog log) {
-		if (mGraphView == null) {
+		if (graphView == null) {
 			return;
 		}
 
@@ -494,14 +485,14 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		Log.d(TAG, "Filling graph finished");
 
 		mGraphSeries.resetData(data);
-		mGraphView.getViewport().setXAxisBoundsManual(true);
+		graphView.getViewport().setXAxisBoundsManual(true);
 		if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
-			mGraphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
-			mGraphView.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
+			graphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
+			graphView.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
 		}
 
-		mGraphView.setLoading(false);
-		//mGraphView.animateY(2000);
+		graphView.setLoading(false);
+		//graphView.animateY(2000);
 		//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
 	}
 

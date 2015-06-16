@@ -1,12 +1,12 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
@@ -53,19 +53,10 @@ import java.util.Observer;
 public class ProfileDetailActivity extends BaseApplicationActivity implements Observer {
 	private static final String TAG = ProfileDetailActivity.class.getSimpleName();
 
-	private GamCategoryListAdapter mCategoryListAdapter;
 	private Context mContext;
-	private Activity mActivity;
-	private AchievementList mAchievementList;
 	private int mDisplayPixel;
 
-	private TextView userLevel;
-	private ListView mCategoryList;
-	private TextView mPoints;
 	private FloatingActionButton mMoreArrow;
-	private FloatingActionButton mMoreAdd;
-	private RelativeLayout mMoreVisible;
-	private RelativeLayout mMoreLayout;
 	private BetterProgressDialog mProgress;
 
 	// SocialNetworks
@@ -86,7 +77,6 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		setContentView(R.layout.activity_profile_detail);
 
 		mContext = this;
-		mActivity = this;
 		Controller controller = Controller.getInstance(mContext);
 		User actUser = controller.getActualUser();
 
@@ -94,8 +84,12 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.title_activity_profile_detail);
 			setSupportActionBar(toolbar);
-			getSupportActionBar().setHomeButtonEnabled(true);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		DisplayMetrics metrics = new DisplayMetrics();
@@ -104,14 +98,9 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 
 		// Inflate the layout for this fragment
 		TextView userName = (TextView) findViewById(R.id.profile_name);
-		userLevel = (TextView) findViewById(R.id.profile_detail);
 		ImageView userImage = (ImageView) findViewById(R.id.profile_image);
-		mCategoryList = (ListView) findViewById(R.id.gam_category_list);
-		mPoints = (TextView) findViewById(R.id.profile_points);
 		mMoreArrow = (FloatingActionButton) findViewById(R.id.profile_more_arrow);
-		mMoreAdd = (FloatingActionButton) findViewById(R.id.profile_more_add);
-		mMoreVisible = (RelativeLayout) findViewById(R.id.profile_more_accounts);
-		mMoreLayout = (RelativeLayout) findViewById(R.id.profile_more);
+		FloatingActionButton moreAdd = (FloatingActionButton) findViewById(R.id.profile_more_add);
 
 		userImage.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
@@ -131,13 +120,13 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		mProgress = new BetterProgressDialog(this);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-		mAchievementList = AchievementList.getInstance(mContext);
-		if (mAchievementList.isDownloaded())
+		AchievementList achievementsList = AchievementList.getInstance(mContext);
+		if (achievementsList.isDownloaded())
 			redrawCategories();
 		else {
 			mProgress.setMessageResource(R.string.progress_loading_achievement);
 			mProgress.show();
-			mAchievementList.addObserver(this);
+			achievementsList.addObserver(this);
 		}
 
 		mFb = SocialFacebook.getInstance(mContext);
@@ -170,15 +159,15 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 
 		//GUI components for social networks accounts
 		if (unconnectedNetworks > 0) {// more known networks to by added
-			mMoreAdd.setOnClickListener(new View.OnClickListener() {
+			moreAdd.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					new PairNetworkFragmentDialog().show(getSupportFragmentManager(), TAG);
 				}
 			});
-			mMoreAdd.setVisibility(View.VISIBLE);
+			moreAdd.setVisibility(View.VISIBLE);
 		} else
-			mMoreAdd.setVisibility(View.INVISIBLE);
+			moreAdd.setVisibility(View.INVISIBLE);
 		if (unconnectedNetworks != totalNetworks) { //at least one network is added
 			mMoreArrow.setVisibility(View.VISIBLE);
 		} else
@@ -213,23 +202,25 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 	}
 
 	private void setMoreButtonVisibility() {
+		RelativeLayout moreVisibleLayout = (RelativeLayout) findViewById(R.id.profile_more_accounts);
+		RelativeLayout moreLayout = (RelativeLayout) findViewById(R.id.profile_more);
 		if (unconnectedNetworks == totalNetworks) { //none social network is paired
 			mMoreArrow.setVisibility(View.INVISIBLE);
-			mMoreVisible.setVisibility(View.INVISIBLE);
+			moreVisibleLayout.setVisibility(View.INVISIBLE);
 		} else {    //at least one network is connected, allow to show the profile
 			if (showMoreAccounts) { // SHOW info
 				// DOWNLOAD data
 				if (mFb.isPaired()) mFb.downloadUserData();
 				if (mTw.isPaired()) mTw.downloadUserData();
 				if (mVk.isPaired()) mVk.downloadUserData();
-				mMoreLayout.getLayoutParams().height = (mDisplayPixel * 60) + ((totalNetworks - unconnectedNetworks) * (mDisplayPixel * 65));
-				mMoreLayout.requestLayout();
-				mMoreVisible.setVisibility(View.VISIBLE);
+				moreLayout.getLayoutParams().height = (mDisplayPixel * 60) + ((totalNetworks - unconnectedNetworks) * (mDisplayPixel * 65));
+				moreLayout.requestLayout();
+				moreVisibleLayout.setVisibility(View.VISIBLE);
 				rotate(90);
 			} else { // HIDE info
-				mMoreLayout.getLayoutParams().height = 60 * mDisplayPixel;
-				mMoreLayout.requestLayout();
-				mMoreVisible.setVisibility(View.INVISIBLE);
+				moreLayout.getLayoutParams().height = 60 * mDisplayPixel;
+				moreLayout.requestLayout();
+				moreVisibleLayout.setVisibility(View.INVISIBLE);
 				rotate(0);
 			}
 		}
@@ -311,27 +302,31 @@ public class ProfileDetailActivity extends BaseApplicationActivity implements Ob
 		textView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				network.logIn(mActivity);
+				network.logIn(ProfileDetailActivity.this);
 			}
 		});
 	}
 
 	private void redrawCategories() {
-		userLevel.setText(getString(R.string.profile_level) + " " + mAchievementList.getUserLevel());
-		mPoints.setText(String.valueOf(mAchievementList.getTotalPoints()));
+		TextView pointsTextView = (TextView) findViewById(R.id.profile_points);
+		ListView categoryList = (ListView) findViewById(R.id.gam_category_list);
+		TextView userLevel = (TextView) findViewById(R.id.profile_detail);
+		AchievementList achievementsList = AchievementList.getInstance(mContext);
+		userLevel.setText(getString(R.string.profile_level) + " " + achievementsList.getUserLevel());
+		pointsTextView.setText(String.valueOf(achievementsList.getTotalPoints()));
 
 		List<GamificationCategory> rulesList = new ArrayList<>();
 		rulesList.add(new GamificationCategory("0", getString(R.string.profile_category_app)));
 		rulesList.add(new GamificationCategory("1", getString(R.string.profile_category_friends)));
 		rulesList.add(new GamificationCategory("2", getString(R.string.profile_category_senzors)));
 
-		mCategoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), mAchievementList);
+		final GamCategoryListAdapter categoryListAdapter = new GamCategoryListAdapter(mContext, rulesList, getLayoutInflater(), achievementsList);
 
-		mCategoryList.setAdapter(mCategoryListAdapter);
-		mCategoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		categoryList.setAdapter(categoryListAdapter);
+		categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				GamificationCategory category = mCategoryListAdapter.getItem(position);
+				GamificationCategory category = categoryListAdapter.getItem(position);
 
 				Bundle bundle = new Bundle();
 				bundle.putString(AchievementOverviewActivity.EXTRA_CATEGORY_ID, category.getId());

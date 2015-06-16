@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -63,10 +64,8 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	private static final int GEOFENCE_BOUND_PADDING = 50;
 	private GoogleApiClient mGoogleApiClient;
 	private GoogleMap mMap;
-	private Toolbar mToolbar;
 	private ActionMode mActionMode;
 	private HashMap<Marker, GeofenceHolder> mMarkers = new HashMap<>();
-	private SearchView mSearchView;
 	private MenuItem mSearchItem;
 	private boolean mIsAnimated = false;
 
@@ -84,17 +83,19 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 //		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_map_geofence);
 
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_map_geofence);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.title_activity_map_geofence);
+			setSupportActionBar(toolbar);
 		}
 
 //		setSupportProgressBarIndeterminate(true);
 //		setSupportProgressBarIndeterminateVisibility(true);
-
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
 
@@ -191,18 +192,18 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		// Get the SearchView and set the searchable configuration
 		mSearchItem = menu.findItem(R.id.action_search);
-		mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
+		final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
 
-		mSearchView.setSubmitButtonEnabled(true);
+		searchView.setSubmitButtonEnabled(true);
 
-		mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 			@Override
 			public boolean onQueryTextSubmit(String s) {
 				new GeocoderTask().execute(s);
 
 				// hide keyboard
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-				imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
 
 				MenuItemCompat.collapseActionView(mSearchItem);
 
@@ -226,7 +227,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 				finish();
 				return true;
 //			case R.id.action_search:
-////				mSearchView.setIconified(false);
+////				searchView.setIconified(false);
 //				return true;
 		}
 		return false;

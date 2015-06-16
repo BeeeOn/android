@@ -10,13 +10,12 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.LocationDetailFragment;
 
 public class LocationDetailActivity extends BaseApplicationActivity {
-	private ViewPager mPager;
-	private PagerAdapter mPagerAdapter;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_location_detail_wraper);
+
+
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);

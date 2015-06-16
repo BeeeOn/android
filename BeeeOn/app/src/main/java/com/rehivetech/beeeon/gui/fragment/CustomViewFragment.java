@@ -51,7 +51,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 
-	private LinearLayout mLayout;
+	private LinearLayout layout;
 
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
@@ -62,7 +62,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.graphofsensors, container, false);
 
-		mLayout = (LinearLayout) view.findViewById(R.id.container);
+		layout = (LinearLayout) view.findViewById(R.id.container);
 
 		prepareModules();
 		loadData();
@@ -73,7 +73,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	private void addGraph(final Module module, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
 		// Inflate layout
 		LayoutInflater inflater = getLayoutInflater(null);
-		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
+		View row = inflater.inflate(R.layout.custom_graph_item, layout, false);
 		// Create and set graphView
 		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
 		GraphViewHelper.prepareGraphView(graphView, mActivity, module, fmt, unitsHelper); // empty heading
@@ -89,7 +89,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		mLegends.put(module.getType().getTypeId(), legend);
 
 		// Add whole item to global layout
-		mLayout.addView(row);
+		layout.addView(row);
 	}
 
 	private void fillGraph(ModuleLog log, Module module) {

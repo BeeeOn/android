@@ -46,7 +46,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	private SensorListFragment mListModules;
 	private CustomViewFragment mCustomView;
 	private WatchdogListFragment mWatchdogApp;
-	private Toolbar mToolbar;
 
 	private static final int BACK_TIME_INTERVAL = 2100;
 	private Toast mExitToast;
@@ -69,7 +68,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	private String mActiveGateId;
 
 	private boolean mFirstUseApp = true;
-	private ShowcaseView mSV;
 
 	private boolean doRedraw = true;
 
@@ -88,14 +86,14 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_location_screen);
 
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.app_name);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.app_name);
+			setSupportActionBar(toolbar);
 		}
 
 		// Create NavDrawerMenu
-		mNavDrawerMenu = new NavDrawerMenu(this, mToolbar);
+		mNavDrawerMenu = new NavDrawerMenu(this, toolbar);
 
 		// creates fragments
 		mListModules = new SensorListFragment();
@@ -172,14 +170,14 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			}
 		};
 
-		mSV = new ShowcaseView.Builder(this, true)
+		ShowcaseView showcaseView = new ShowcaseView.Builder(this, true)
 				.setTarget(target)
 				.setContentTitle(getString(R.string.tutorial_open_menu))
 				.setContentText(getString(R.string.tutorial_open_menu_text))
 						//.setStyle(R.style.CustomShowcaseTheme)
 				.setShowcaseEventListener(listener)
 				.build();
-		mSV.setButtonPosition(lps);
+		showcaseView.setButtonPosition(lps);
 	}
 
 	@Override

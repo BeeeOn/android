@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
@@ -10,21 +11,22 @@ import com.rehivetech.beeeon.gui.fragment.NotificationFragment;
 
 public class NotificationActivity extends BaseApplicationActivity {
 
-	private Toolbar mToolbar;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notification);
 
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_notification);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.title_activity_notification);
+			setSupportActionBar(toolbar);
 		}
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		Fragment fragment = new NotificationFragment();
 		fragment.setArguments(getIntent().getExtras());

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -36,21 +37,14 @@ import java.util.List;
 
 public class GateUsersActivity extends BaseApplicationActivity {
 
-	private GateUsersActivity mActivity;
-
 	private Gate mGate;
 
 	private List<User> mGateUsers;
 
-	private ListView mListActUsers;
-	private ListView mListPenUsers;
-
 	private static final int NAME_ITEM_HEIGHT = 74;
-	private Toolbar mToolbar;
 	private ActionMode mMode;
 
 	private RadioGroup mGroup;
-	private ScrollView mLayoutDialog;
 	private User mSelectedItem;
 	private int mSelectedItemPos;
 
@@ -59,17 +53,18 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_users);
 
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_gate_users);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.title_activity_gate_users);
+			setSupportActionBar(toolbar);
 		}
 
-		// Get actual activity
-		mActivity = this;
+		ActionBar actionBar = getSupportActionBar();
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		// Get selected gate
 		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
@@ -80,16 +75,16 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 	private void initLayouts() {
 		// Get elements
-		mListActUsers = (ListView) findViewById(R.id.gate_users_list);
+		final ListView listActUsers = (ListView) findViewById(R.id.gate_users_list);
 		//mListPenUsers = (ListView) findViewById(R.id.adapter_users_pending_list);
 
-		mListActUsers.setAdapter(new UsersListAdapter(mActivity, mGateUsers, null));
+		listActUsers.setAdapter(new UsersListAdapter(this, mGateUsers, null));
 
-		mListActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		listActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				mMode = startSupportActionMode(new ActionModeEditSensors());
-				mSelectedItem = (User) mListActUsers.getAdapter().getItem(position);
+				mSelectedItem = (User) listActUsers.getAdapter().getItem(position);
 				mSelectedItemPos = position;
 				setUserSelected();
 				return true;
@@ -97,8 +92,8 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		});
 
 		// Set listview height, for all 
-		float scale = mActivity.getResources().getDisplayMetrics().density;
-		mListActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mGateUsers.size())));
+		float scale = getResources().getDisplayMetrics().density;
+		listActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mGateUsers.size())));
 
 		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.fab_add_user);
 		mButton.setOnClickListener(new OnClickListener() {
@@ -106,9 +101,9 @@ public class GateUsersActivity extends BaseApplicationActivity {
 			@Override
 			public void onClick(View v) {
 				// Go to add new user 
-				Intent intent = new Intent(mActivity, AddGateUserActivity.class);
+				Intent intent = new Intent(GateUsersActivity.this, AddGateUserActivity.class);
 				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mGate.getId());
-				mActivity.startActivity(intent);
+				startActivity(intent);
 			}
 		});
 	}
@@ -134,11 +129,11 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 
 	private void setUserSelected() {
-		getViewByPosition(mSelectedItemPos, mListActUsers).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.layoutofsensor).setBackgroundColor(getResources().getColor(R.color.light_gray));
 	}
 
 	private void setUserUnselected() {
-		getViewByPosition(mSelectedItemPos, mListActUsers).findViewById(R.id.layoutofsensor).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.layoutofsensor).setBackgroundColor(getResources().getColor(R.color.white));
 	}
 
 
@@ -252,12 +247,12 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		AlertDialog.Builder builder;
 		AlertDialog alertDialog;
 
-		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(LAYOUT_INFLATER_SERVICE);
-		mLayoutDialog = (ScrollView) inflater.inflate(R.layout.beeeon_checkbox, null);
+		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+		final ScrollView layoutDialog = (ScrollView) inflater.inflate(R.layout.beeeon_checkbox, null);
 
-		ViewGroup checkboxContainer = (ViewGroup) mLayoutDialog.findViewById(R.id.checkbox_container);
+		ViewGroup checkboxContainer = (ViewGroup) layoutDialog.findViewById(R.id.checkbox_container);
 
-		mGroup = new RadioGroup(mActivity);
+		mGroup = new RadioGroup(this);
 		int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
 
 		for (User.Role role : User.Role.values()) {
@@ -272,17 +267,17 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		checkboxContainer.addView(mGroup);
 
 
-		builder = new AlertDialog.Builder(mActivity);
-		builder.setView(mLayoutDialog)
+		builder = new AlertDialog.Builder(this);
+		builder.setView(layoutDialog)
 				.setTitle(getString(R.string.gate_user_title_change_role));
 
 		builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
 				// User clicked OK button
-				//mSelectedItem.setRole(User.Role.fromString(((RadioButton)mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()));
+				//mSelectedItem.setRole(User.Role.fromString(((RadioButton)layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()));
 
 				for (User.Role role : User.Role.values()) {
-					if (getString(role.getStringResource()).equals(((RadioButton) mLayoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
+					if (getString(role.getStringResource()).equals(((RadioButton) layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
 						mSelectedItem.setRole(role);
 				}
 				doEditUserTask(mSelectedItem);

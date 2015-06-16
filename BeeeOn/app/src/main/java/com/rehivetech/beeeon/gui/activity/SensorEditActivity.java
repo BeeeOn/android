@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,19 +42,17 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	public static final String EXTRA_MODULE_ID = "module_id";
 	private static final String TAG = SensorEditActivity.class.getSimpleName();
 
-	private Toolbar mToolbar;
 	private String mModuleId;
-	private SensorEditActivity mActivity;
 	private PlaceholderFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor_edit);
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_sensor_edit);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.title_activity_sensor_edit);
+			setSupportActionBar(toolbar);
 		}
 		mModuleId = getIntent().getStringExtra(Constants.GUI_EDIT_SENSOR_ID);
 		if (mModuleId == null && savedInstanceState != null) {
@@ -66,10 +65,12 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					.replace(R.id.container, mFragment)
 					.commit();
 		}
-		mActivity = this;
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 	}
 
 	@Override
@@ -119,7 +120,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					Location location;
 					if (mFragment.isSetNewCustomRoom()) {
 						if (mFragment.getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
-							Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
+							Toast.makeText(this, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
 							return false;
 						}
 						// Create new custom room
@@ -157,19 +158,19 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	 */
 
 	private void doSaveDeviceWithNewLocation(Device.DataPair pair) {
-		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
+		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(this);
 
 		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
 					Log.d(TAG, "Success save to server");
-					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
+					Toast.makeText(SensorEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 					setResult(Activity.RESULT_OK);
 					finish();
 				} else {
 					Log.d(TAG, "Fail save to server");
-					Toast.makeText(mActivity, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
+					Toast.makeText(SensorEditActivity.this, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -180,19 +181,19 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	}
 
 	public void doSaveDeviceTask(Device.DataPair pair) {
-		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
+		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(this);
 
 		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
 					Log.d(TAG, "Success save to server");
-					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
+					Toast.makeText(SensorEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 					setResult(Activity.RESULT_OK);
 					finish();
 				} else {
 					Log.d(TAG, "Fail save to server");
-					Toast.makeText(mActivity, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
+					Toast.makeText(SensorEditActivity.this, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
 				}
 			}
 		});

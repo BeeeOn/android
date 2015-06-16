@@ -19,8 +19,7 @@ public class LocationDetailFragment extends Fragment {
 		String locationID = bundle.getString("locationID");
 		Log.d(TAG, "location id: " + locationID);
 
-		View view = inflater.inflate(R.layout.activity_location_detail_screen, container, false);
-		return view;
+		return inflater.inflate(R.layout.activity_location_detail_screen, container, false);
 	}
 
 }

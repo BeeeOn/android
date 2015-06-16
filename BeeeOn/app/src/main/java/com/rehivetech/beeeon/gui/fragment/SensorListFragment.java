@@ -62,8 +62,6 @@ public class SensorListFragment extends BaseApplicationFragment {
 	private MainActivity mActivity;
 
 	private SenListAdapter mSensorAdapter;
-	private StickyListHeadersListView mSensorList;
-	private FloatingActionButton mFAM;
 	private ArrayList<Integer> mFABMenuIcon = new ArrayList<>();
 	private ArrayList<String> mFABMenuLabels = new ArrayList<>();
 
@@ -180,7 +178,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mView = getView();
 		// get UI elements
 		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
-		mSensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
+		final StickyListHeadersListView sensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
 		Button refreshBtn = (Button) mView.findViewById(R.id.sensor_list_refresh_btn);
 
@@ -205,7 +203,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		mSensorAdapter = new SenListAdapter(mActivity);
 
-		mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
+		final FloatingActionButton floatingActionButton = (FloatingActionButton) mView.findViewById(R.id.fab);
 
 		// All locations on gate
 		locations = controller.getLocationsModel().getLocationsByGate(mActiveGateId);
@@ -224,7 +222,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		}
 
-		if (mSensorList == null) {
+		if (sensorList == null) {
 			Log.e(TAG, "LifeCycle: bad timing or what?");
 			return false; // TODO: this happens when we're in different activity
 			// (detail), fix that by changing that activity
@@ -241,7 +239,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_gate_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
-			mSensorList.setVisibility(View.GONE);
+			sensorList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.GONE);
 			// FAB
@@ -267,7 +265,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_sensor_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
-			mSensorList.setVisibility(View.GONE);
+			sensorList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.GONE);
 
@@ -289,7 +287,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		} else { // Have gate and modules
 			noItem.setVisibility(View.GONE);
 			refreshBtn.setVisibility(View.GONE);
-			mSensorList.setVisibility(View.VISIBLE);
+			sensorList.setVisibility(View.VISIBLE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.VISIBLE);
 			// FAB
@@ -312,24 +310,24 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		};
 
-		mSensorList.setAdapter(mSensorAdapter);
+		sensorList.setAdapter(mSensorAdapter);
 
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) { // API 14 +
-			mFAM.setMenuItems(Utils.convertIntegers(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
+			floatingActionButton.setMenuItems(Utils.convertIntegers(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
 					R.style.fab_item_menu, fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
-			mFAM.setOnClickListener(new OnClickListener() {
+			floatingActionButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Log.d(TAG, "FAB BTN HER");
-					mFAM.triggerMenu(90);
+					floatingActionButton.triggerMenu(90);
 				}
 			});
 		} else {
 			// API 10 to 13
 			// Show dialof to select Add Gate or Add sensor
 
-			mFAM.setOnClickListener(new OnClickListener() {
+			floatingActionButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					String[] mStringArray = new String[mFABMenuLabels.size()];
@@ -347,13 +345,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				int topRowVerticalPosition = (mSensorList == null || mSensorList.getListChildCount() == 0) ?
-						0 : mSensorList.getListChildAt(0).getTop();
+				int topRowVerticalPosition = (sensorList == null || sensorList.getListChildCount() == 0) ?
+						0 : sensorList.getListChildAt(0).getTop();
 				mSwipeLayout.setEnabled((topRowVerticalPosition >= 0));
 			}
 		};
 
-		mFAM.attachToListView(mSensorList.getWrappedList(), new ScrollDirectionListener() {
+		floatingActionButton.attachToListView(sensorList.getWrappedList(), new ScrollDirectionListener() {
 			@Override
 			public void onScrollDown() {
 
@@ -368,7 +366,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		if (haveModules) {
 			// Capture listview menu item click
-			mSensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
+			sensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Module module = mSensorAdapter.getModule(position);
@@ -383,7 +381,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			Gate tmpAda = controller.getGatesModel().getGate(mActiveGateId);
 			if (tmpAda != null) {
 				if (controller.isUserAllowed(tmpAda.getRole())) {
-					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
+					sensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 							mMode = mActivity.startSupportActionMode(new ActionModeEditSensors());

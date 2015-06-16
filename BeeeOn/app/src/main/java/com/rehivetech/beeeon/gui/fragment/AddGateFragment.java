@@ -13,7 +13,6 @@ import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 public class AddGateFragment extends TrackFragment {
 
 	public OnAddGateListener mCallback;
-	private View mView;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -30,16 +29,16 @@ public class AddGateFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_add_gate, container, false);
+		View view = inflater.inflate(R.layout.fragment_add_gate, container, false);
 
-		mView.findViewById(R.id.add_gate_qr_button).setOnClickListener(new OnClickListener() {
+		view.findViewById(R.id.add_gate_qr_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mCallback.showQrScanner();
 			}
 		});
 
-		mView.findViewById(R.id.add_gate_write_it_button).setOnClickListener(new OnClickListener() {
+		view.findViewById(R.id.add_gate_write_it_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// overlay dialog must popup here
@@ -47,7 +46,7 @@ public class AddGateFragment extends TrackFragment {
 			}
 		});
 
-		return mView;
+		return view;
 	}
 
 	public interface OnAddGateListener {

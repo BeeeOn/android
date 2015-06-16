@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.gui.activity;
 
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,34 +29,28 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 
 	protected static final String TAG = "AddGateUserActivity";
 
-	private Activity mActivity;
-
 	private Gate mGate;
 
-	/* GUI elements */
-	private Spinner mRole;
-	private EditText mEmail;
-	private Button mBtn;
-
 	private ProgressDialog mProgress;
-	private Toolbar mToolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_gate_user);
 
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.app_name);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.app_name);
+			setSupportActionBar(toolbar);
 		}
 
-		// Get actual activity
-		mActivity = this;
+		ActionBar actionBar = getSupportActionBar();
 
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
+
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
@@ -71,31 +65,31 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 	}
 
 	private void initLayout() {
-		mEmail = (EditText) findViewById(R.id.add_user_email);
-		mRole = (Spinner) findViewById(R.id.add_user_role);
-		mBtn = (Button) findViewById(R.id.add_user_gate_save);
+		final EditText email = (EditText) findViewById(R.id.add_user_email);
+		final Spinner role = (Spinner) findViewById(R.id.add_user_role);
+		Button button = (Button) findViewById(R.id.add_user_gate_save);
 
 		List<CharSequence> roles = new ArrayList<>();
-		for (User.Role role : User.Role.values()) {
-			roles.add(getString(role.getStringResource()));
+		for (User.Role tmpRole : User.Role.values()) {
+			roles.add(getString(tmpRole.getStringResource()));
 		}
 
 		ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, roles);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the gate to the spinner
-		mRole.setAdapter(adapter);
+		role.setAdapter(adapter);
 
-		mBtn.setOnClickListener(new OnClickListener() {
+		button.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				if (!(mEmail.getText().length() > 0)) {
+				if (!(email.getText().length() > 0)) {
 					// Please fill email
 					Log.d(TAG, "empty email");
 					return;
 				}
-				if (!isEmailValid(mEmail.getText())) {
+				if (!isEmailValid(email.getText())) {
 					// NON valid email 
 					Log.d(TAG, "non valid email");
 					return;
@@ -103,8 +97,8 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 				if (mProgress != null)
 					mProgress.show();
 				User newUser = new User();
-				newUser.setEmail(mEmail.getText().toString());
-				newUser.setRole(User.Role.values()[mRole.getSelectedItemPosition()]);
+				newUser.setEmail(email.getText().toString());
+				newUser.setRole(User.Role.values()[role.getSelectedItemPosition()]);
 
 				User.DataPair pair = new User.DataPair(newUser, mGate.getId());
 
@@ -114,7 +108,7 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 	}
 
 	protected void doAddGateUserTask(User.DataPair pair) {
-		AddUserTask addUserTask = new AddUserTask(mActivity);
+		AddUserTask addUserTask = new AddUserTask(this);
 
 		addUserTask.setListener(new ICallbackTaskListener() {
 

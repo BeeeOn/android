@@ -37,58 +37,34 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupSensorActivity.class.getSimpleName();
 	private Gate mPairGate;
 
-	private SetupSensorFragmentAdapter mAdapter;
-	private ViewPager mPager;
-	private CirclePageIndicator mIndicator;
-
 	private SetupSensorFragment mFragment;
-
-
 	private ProgressDialog mProgress;
-
-	private Spinner mSpinner;
-	private ListView mListOfName;
-	private TextView mNewLocation;
-	private Spinner mNewIconSpinner;
-
-	private Button mSkip;
-	private Button mCancel;
-	private Button mNext;
-
-
-	private boolean mFirstUse = true;
-
-	private Activity mActivity;
-	private Toolbar mToolbar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base_guide);
 
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_setup_sensor);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.title_activity_setup_sensor);
+			setSupportActionBar(toolbar);
 		}
-
 
 		mPairGate = Controller.getInstance(this).getActiveGate();
 
-		mActivity = this;
+		SetupSensorFragmentAdapter adapter = new SetupSensorFragmentAdapter(getSupportFragmentManager());
 
-		mAdapter = new SetupSensorFragmentAdapter(getSupportFragmentManager());
+		ViewPager viewPager = (ViewPager) findViewById(R.id.intro_pager);
+		viewPager.setAdapter(adapter);
+		viewPager.setOffscreenPageLimit(adapter.getCount());
 
-		mPager = (ViewPager) findViewById(R.id.intro_pager);
-		mPager.setAdapter(mAdapter);
-		mPager.setOffscreenPageLimit(mAdapter.getCount());
-
-		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
-		mIndicator.setViewPager(mPager);
-		mIndicator.setVisibility(View.GONE);
+		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
+		indicator.setViewPager(viewPager);
+		indicator.setVisibility(View.GONE);
 
 		// Prepare progress dialog
-		mProgress = new ProgressDialog(mActivity);
+		mProgress = new ProgressDialog(this);
 		mProgress.setMessage(getString(R.string.progress_saving_data));
 		mProgress.setCancelable(false);
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -98,40 +74,40 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 
 	private void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_gate_skip);
-		mCancel = (Button) findViewById(R.id.add_gate_cancel);
-		mNext = (Button) findViewById(R.id.add_gate_next);
+		Button skipBtn = (Button) findViewById(R.id.add_gate_skip);
+		Button cancelBtn = (Button) findViewById(R.id.add_gate_cancel);
+		Button nextBtn = (Button) findViewById(R.id.add_gate_next);
 
-		mSkip.setVisibility(View.INVISIBLE);
+		skipBtn.setVisibility(View.INVISIBLE);
 
-		mCancel.setOnClickListener(new OnClickListener() {
+		cancelBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+				InputMethodManager imm = (InputMethodManager) SetupSensorActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 			}
 		});
-		mNext.setText(getString(R.string.save));
-		mNext.setOnClickListener(new OnClickListener() {
+		nextBtn.setText(getString(R.string.save));
+		nextBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				mSpinner = mFragment.getSpinner();
-				mListOfName = mFragment.getListOfName();
-				mNewLocation = mFragment.getNewLocation();
-				mNewIconSpinner = mFragment.getNewIconSpinner();
+				Spinner spinner = mFragment.getSpinner();
+				ListView listOfName = mFragment.getListOfName();
+				TextView newLocation = mFragment.getNewLocation();
+				Spinner newIconSpinner = mFragment.getNewIconSpinner();
 				Device newDevice = Controller.getInstance(SetupSensorActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
 
 				// Controll if Names arent empty
 				for (int i = 0; i < newDevice.getModules().size(); i++) {
 					// Get new names from EditText
-					String name = ((EditText) mListOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
+					String name = ((EditText) listOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
 					if (name.isEmpty()) {
-						Toast.makeText(mActivity, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
 						return;
 					}
 					// Set this new name to sensor
@@ -141,22 +117,22 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 				Location location = null;
 				// last location - means new one
-				if (mSpinner.getSelectedItemPosition() == mSpinner.getCount() - 1) {
+				if (spinner.getSelectedItemPosition() == spinner.getCount() - 1) {
 
 					// check new location name
-					if (mNewLocation != null && mNewLocation.length() < 1) {
-						Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
+					if (newLocation != null && newLocation.length() < 1) {
+						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
 						return;
 					}
-					if ((mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
-						Toast.makeText(mActivity, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
+					if ((newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
+						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, mNewLocation.getText().toString(), mPairGate.getId(), ((Location.LocationIcon) mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition())).getId());
+					location = new Location(Location.NEW_LOCATION_ID, newLocation.getText().toString(), mPairGate.getId(), ((Location.LocationIcon) newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).getId());
 
 				} else {
-					location = (Location) mSpinner.getSelectedItem();
+					location = (Location) spinner.getSelectedItem();
 				}
 
 				// Set location to mDevice
@@ -177,17 +153,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 	}
 
-	public void setBtnLastPage() {
-		mSkip.setVisibility(View.INVISIBLE);
-		mNext.setText(mActivity.getString(R.string.addsensor_send_pair));
-	}
-
-	public void resetBtn() {
-		mSkip.setVisibility(View.VISIBLE);
-		mNext.setText("NEXT");
-	}
-
-
 	public void setFragment(SetupSensorFragment fragment) {
 		mFragment = fragment;
 	}
@@ -202,13 +167,13 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 				mProgress.cancel();
 				if (success) {
-					Toast.makeText(mActivity, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
+					Toast.makeText(SetupSensorActivity.this, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
 
 					Intent intent = new Intent();
 					intent.putExtra(Constants.SETUP_SENSOR_ACT_LOC, pair.location.getId());
 					setResult(Activity.RESULT_OK, intent);
 					//HIDE keyboard
-					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager imm = (InputMethodManager) SetupSensorActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					finish();
 				}

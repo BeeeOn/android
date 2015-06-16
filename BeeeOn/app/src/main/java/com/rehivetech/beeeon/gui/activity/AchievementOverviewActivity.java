@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -68,8 +69,12 @@ public class AchievementOverviewActivity extends BaseApplicationActivity impleme
 		if (toolbar != null) {
 			toolbar.setTitle(categoryName);
 			setSupportActionBar(toolbar);
-			getSupportActionBar().setHomeButtonEnabled(true);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		}
+		ActionBar actionBar = getSupportActionBar();
+
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		mAchievementListHolder = AchievementList.getInstance(this);

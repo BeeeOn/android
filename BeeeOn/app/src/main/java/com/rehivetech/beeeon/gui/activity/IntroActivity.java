@@ -14,12 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IntroActivity extends BaseActivity {
-	private IntroFragmentPagerAdapter mAdapter;
 	private ViewPager mPager;
-	private CirclePageIndicator mIndicator;
-	private Button mSkip;
-	private Button mCancel;
-	private Button mNext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,31 +28,31 @@ public class IntroActivity extends BaseActivity {
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.tut_intro_text_4, R.string.tut_intro_title));
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5, R.string.tut_intro_text_5, R.string.tut_intro_title));
 
-		mAdapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,null);
+		IntroFragmentPagerAdapter adapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,null);
 
 		mPager = (ViewPager) findViewById(R.id.intro_pager);
-		mPager.setAdapter(mAdapter);
+		mPager.setAdapter(adapter);
 
-		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
-		mIndicator.setViewPager(mPager);
+		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
+		indicator.setViewPager(mPager);
 
-		mIndicator.setPageColor(0x88FFFFFF);
-		mIndicator.setFillColor(0xFFFFFFFF);
-		mIndicator.setStrokeColor(0x88FFFFFF);
+		indicator.setPageColor(0x88FFFFFF);
+		indicator.setFillColor(0xFFFFFFFF);
+		indicator.setStrokeColor(0x88FFFFFF);
 
 		initLayout();
 	}
 
 	private void initLayout() {
 		// Get buttons
-		mSkip = (Button) findViewById(R.id.add_gate_skip);
-		mCancel = (Button) findViewById(R.id.add_gate_cancel);
-		mNext = (Button) findViewById(R.id.add_gate_next);
+		Button skipBtn = (Button) findViewById(R.id.add_gate_skip);
+		Button cancelBtn = (Button) findViewById(R.id.add_gate_cancel);
+		Button nextBtn = (Button) findViewById(R.id.add_gate_next);
 
-		mSkip.setVisibility(View.INVISIBLE);
-		mCancel.setVisibility(View.INVISIBLE);
+		skipBtn.setVisibility(View.INVISIBLE);
+		cancelBtn.setVisibility(View.INVISIBLE);
 
-		mNext.setOnClickListener(new View.OnClickListener() {
+		nextBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (mPager.getCurrentItem() != (mPager.getAdapter().getCount() - 1)) {
@@ -75,10 +70,10 @@ public class IntroActivity extends BaseActivity {
 	}
 
 	public void resetBtn() {
-		mNext.setText(this.getString(R.string.tutorial_next));
+		((Button) findViewById(R.id.add_gate_next)).setText(this.getString(R.string.tutorial_next));
 	}
 
 	public void setLastFragmentBtn() {
-		mNext.setText(this.getString(R.string.tutorial_go_to_app));
+		((Button) findViewById(R.id.add_gate_next)).setText(this.getString(R.string.tutorial_go_to_app));
 	}
 }

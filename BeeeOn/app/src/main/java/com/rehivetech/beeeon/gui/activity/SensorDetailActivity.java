@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,31 +43,28 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	private List<Module> mModules;
 
-	private PagerAdapter mPagerAdapter;
 	private ViewPager mPager;
 
 	private String mActiveGateId;
 	private String mActiveModuleId;
 	private int mActiveModulePosition;
 
-	private ProgressDialog mProgress;
-
-	private Toolbar mToolbar;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sensor_detail_wraper);
 
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_sensor_detail);
-			setSupportActionBar(mToolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		if (toolbar != null) {
+			toolbar.setTitle(R.string.title_activity_sensor_detail);
+			setSupportActionBar(toolbar);
 		}
 
-		//setBeeeOnProgressBarVisibility(true);
-		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
@@ -192,8 +190,8 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	public void initLayouts() {
 		// Instantiate a ViewPager and a PagerAdapter.
 		mPager = (ViewPager) findViewById(R.id.sensor_detail_wraper);
-		mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
-		mPager.setAdapter(mPagerAdapter);
+		PagerAdapter pagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+		mPager.setAdapter(pagerAdapter);
 		mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
