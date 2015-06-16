@@ -7,13 +7,12 @@
 
 	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		android:orientation="vertical"
 		android:gravity="center_horizontal"
-		android:padding="40dp">
+		android:padding="@dimen/adddevice_padding">
 
 		<TextView
-			android:text="Nadpis nadpisovaty"
 
 			android:id="@+id/intro_image_title"
 			android:layout_width="wrap_content"
@@ -32,7 +31,6 @@
 			android:layout_marginBottom="20dp"/>
 
 		<TextView
-			android:text="text blablabla/..rwqverber3b43"
 
 			android:id="@+id/intro_image_text"
 			android:layout_width="wrap_content"
