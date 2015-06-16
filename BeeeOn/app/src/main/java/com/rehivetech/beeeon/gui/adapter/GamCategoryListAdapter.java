@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,6 @@ public class GamCategoryListAdapter extends BaseAdapter {
 	private static final String TAG = GamCategoryListAdapter.class.getSimpleName();
 
 	Context mContext;
-	Controller mController;
 	LayoutInflater mInflater;
 	List<GamificationCategory> mCategoryList;
 	AchievementList mAchievementList;
@@ -34,7 +32,6 @@ public class GamCategoryListAdapter extends BaseAdapter {
 	public GamCategoryListAdapter(Context context, List<GamificationCategory> rules, LayoutInflater inflater, AchievementList achievementList) {
 		Log.d(TAG, "constructor()");
 		mContext = context;
-		mController = Controller.getInstance(mContext);
 		mInflater = inflater;
 		mCategoryList = rules;
 		mAchievementList = achievementList;

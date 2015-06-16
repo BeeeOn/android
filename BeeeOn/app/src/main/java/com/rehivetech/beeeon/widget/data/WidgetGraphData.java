@@ -11,6 +11,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.point.DataPoint;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -155,7 +156,7 @@ public class WidgetGraphData extends WidgetModuleData {
 		if (mTimeHelper == null || mUnitsHelper == null) return;
 		Log.d(TAG, "prepareWidgetGraphView");
 
-		Gate gate = mController.getGatesModel().getGate(widgetGateId);
+		Gate gate = Controller.getInstance(mContext).getGatesModel().getGate(widgetGateId);
 		String graphDateTimeFormat = "dd.MM. kk:mm";
 		final DateTimeFormatter fmt = mTimeHelper.getFormatter(graphDateTimeFormat, gate);
 		GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
@@ -249,14 +250,15 @@ public class WidgetGraphData extends WidgetModuleData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Gate gate = mController.getGatesModel().getGate(widgetGateId);
+		Controller controller = Controller.getInstance(mContext);
+		Gate gate = controller.getGatesModel().getGate(widgetGateId);
 		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {
-			Module module = mController.getDevicesModel().getModule(widgetGateId, dev.getId());
+			Module module = controller.getDevicesModel().getModule(widgetGateId, dev.getId());
 			if (module == null) continue;
 
-			Location location = mController.getLocationsModel().getLocation(dev.gateId, module.getDevice().getLocationId());
+			Location location = controller.getLocationsModel().getLocation(dev.gateId, module.getDevice().getLocationId());
 			if (location != null) {
 				widgetLocation.configure(location, gate);
 			}
@@ -270,7 +272,7 @@ public class WidgetGraphData extends WidgetModuleData {
 			widgetLastUpdate = getTimeNow();
 			widgetGateId = gate.getId();
 
-			ModuleLog log = mController.getModuleLogsModel().getModuleLog(mLogDataPair);
+			ModuleLog log = controller.getModuleLogsModel().getModuleLog(mLogDataPair);
 			if (log != null) {
 				fillGraph(log);
 				mGraphBitmap = mGraph.drawBitmap(mGraphWidth, mGraphHeight);

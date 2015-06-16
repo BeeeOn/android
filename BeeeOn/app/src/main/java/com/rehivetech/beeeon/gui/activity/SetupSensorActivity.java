@@ -35,8 +35,6 @@ import java.util.EnumSet;
 
 public class SetupSensorActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupSensorActivity.class.getSimpleName();
-
-	private Controller mController;
 	private Gate mPairGate;
 
 	private SetupSensorFragmentAdapter mAdapter;
@@ -74,9 +72,8 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 			setSupportActionBar(mToolbar);
 		}
 
-		// Get controller
-		mController = Controller.getInstance(this);
-		mPairGate = mController.getActiveGate();
+
+		mPairGate = Controller.getInstance(this).getActiveGate();
 
 		mActivity = this;
 
@@ -126,7 +123,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				mListOfName = mFragment.getListOfName();
 				mNewLocation = mFragment.getNewLocation();
 				mNewIconSpinner = mFragment.getNewIconSpinner();
-				Device newDevice = mController.getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
+				Device newDevice = Controller.getInstance(SetupSensorActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
 
 				// Controll if Names arent empty
 				for (int i = 0; i < newDevice.getModules().size(); i++) {

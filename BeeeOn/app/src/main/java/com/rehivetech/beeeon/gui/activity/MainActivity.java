@@ -23,7 +23,6 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.dialog.CustomAlertDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
@@ -35,8 +34,6 @@ import com.rehivetech.beeeon.util.Log;
 
 public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
-
-	private Controller mController;
 
 	public static final String ADD_GATE_TAG = "addGateDialog";
 	public static final String ADD_SENSOR_TAG = "addSensorDialog";
@@ -74,17 +71,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	private boolean mFirstUseApp = true;
 	private ShowcaseView mSV;
 
-	/**
-	 * Tasks which can be running in this activity and after finishing can try to change GUI -> must be cancelled when activity stop
-	 */
-	private CustomAlertDialog mDialog;
-
 	private boolean doRedraw = true;
 
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		Log.d(TAG, "onNewIntent()");
 
 		if (intent == null) return;
 		String gateId = intent.getStringExtra(GATE_ID);
@@ -95,7 +86,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate()");
 		setContentView(R.layout.activity_location_screen);
 
 		mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -103,9 +93,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mToolbar.setTitle(R.string.app_name);
 			setSupportActionBar(mToolbar);
 		}
-
-		// Get controller
-		mController = Controller.getInstance(this);
 
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this, mToolbar);
@@ -203,15 +190,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			return;
 
 		switch (requestCode) {
-			case Constants.ADD_GATE_REQUEST_CODE:
-			{
+			case Constants.ADD_GATE_REQUEST_CODE: {
 				// Succes of add gate -> setActive gate a redraw ALL
 				setActiveGateAndMenu();
 				doRedraw = false;
 				break;
 			}
-			case Constants.ADD_SENSOR_REQUEST_CODE:
-			{
+			case Constants.ADD_SENSOR_REQUEST_CODE: {
 				redraw();
 				break;
 			}
@@ -228,7 +213,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 					// Redraw Activity - probably list of sensors
 					Log.d(TAG, "After reload task - go to redraw mainActivity");
 					setActiveGateAndMenu();
-					if (mController.getActiveGate() == null) {
+					if (Controller.getInstance(MainActivity.this).getActiveGate() == null) {
 						checkNoGates();
 					} else {
 						redraw();
@@ -246,15 +231,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			redraw();
 		} else {
 			doRedraw = true;
-		}
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		if (mDialog != null) {
-			mDialog.dismiss();
 		}
 	}
 
@@ -301,7 +277,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	public void setActiveGateAndMenu() {
 		// Set active gate and location
-		Gate gate = mController.getActiveGate();
+		Gate gate = Controller.getInstance(this).getActiveGate();
 		if (gate != null) {
 			mActiveGateId = gate.getId();
 			setActiveGateId(mActiveGateId);
@@ -364,10 +340,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 
 	public void checkNoGates() {
-		if (mController.getActiveGate() == null) {
+		Controller controller = Controller.getInstance(this);
+		if (controller.getActiveGate() == null) {
 			// UserSettings can be null when user is not logged in!
 			Log.d(TAG, "CheckNoGate");
-			SharedPreferences prefs = mController.getUserSettings();
+			SharedPreferences prefs = controller.getUserSettings();
 			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_GATE, false)) {
 				Log.d(TAG, "Call ADD GATE");
 				Intent intent = new Intent(MainActivity.this, AddGateActivity.class);
@@ -426,7 +403,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void logout() {
-		mController.logout();
+		Controller.getInstance(this).logout();
 		Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 		startActivity(intent);
 		this.finish();

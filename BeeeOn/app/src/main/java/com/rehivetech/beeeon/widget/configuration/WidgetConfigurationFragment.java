@@ -48,7 +48,6 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 
 	protected WidgetConfigurationActivity mActivity;
 	protected View mView;
-	protected Controller mController;
 
 	protected WidgetData mGeneralWidgetdata;
 	protected ReloadGateDataTask mReloadTask;
@@ -139,7 +138,6 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mController = Controller.getInstance(mActivity);
 
 		// reloads all gateways and actual one
 		mReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
@@ -199,7 +197,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 * When fragment is shown for the first time
 	 */
 	protected void onAllGatesReload() {
-		mGates = mController.getGatesModel().getGates();
+		mGates = Controller.getInstance(getActivity()).getGatesModel().getGates();
 		mGateNeedsToReload = false;
 		// gate spinner refresh
 		ArrayAdapter<?> arrayAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, mGates);
@@ -237,13 +235,14 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 */
 	protected void getGateData(String gateId) {
 		if (gateId.isEmpty()) return;
+		Controller controller = Controller.getInstance(getActivity());
 
-		mLocations = mController.getLocationsModel().getLocationsByGate(gateId);
+		mLocations = controller.getLocationsModel().getLocationsByGate(gateId);
 
 		// get all devices by locations (avoiding mDevice without location)
 		mModules.clear();
 		for (Location loc : mLocations) {
-			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(gateId, loc.getId());
+			List<Device> tempFac = controller.getDevicesModel().getDevicesByLocation(gateId, loc.getId());
 			for (Device device : tempFac) {
 				mModules.addAll(device.getModules());
 			}
@@ -287,16 +286,17 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 	 */
 	protected int selectGate(String gateId) {
 		int mActiveGateIndex = 0;
+		Controller controller = Controller.getInstance(getActivity());
 		if (!gateId.isEmpty()) {
 			Pair<Integer, Gate> indexGate = Utils.getIndexAndObjectFromList(gateId, mGates);
 			if (indexGate == null) {
-				mActiveGate = mController.getActiveGate();
+				mActiveGate = controller.getActiveGate();
 			} else {
 				mActiveGateIndex = indexGate.first;
 				mActiveGate = indexGate.second;
 			}
 		} else {
-			mActiveGate = mController.getActiveGate();
+			mActiveGate = controller.getActiveGate();
 		}
 
 		return mActiveGateIndex;

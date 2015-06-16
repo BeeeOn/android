@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
@@ -119,13 +120,14 @@ public class WidgetLocationData extends WidgetData {
 
 	@Override
 	public boolean handleUpdateData() {
-		Location location = mController.getLocationsModel().getLocation(widgetGateId, widgetLocation.id);
+		Controller controller = Controller.getInstance(mContext);
+		Location location = controller.getLocationsModel().getLocation(widgetGateId, widgetLocation.id);
 		if (location == null) {
 			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
 			return false;
 		}
 
-		Gate gate = mController.getGatesModel().getGate(widgetGateId);
+		Gate gate = controller.getGatesModel().getGate(widgetGateId);
 		if (gate == null) return false;
 		widgetLocation.configure(location, gate);
 

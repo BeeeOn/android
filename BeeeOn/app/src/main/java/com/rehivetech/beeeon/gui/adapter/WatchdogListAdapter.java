@@ -27,7 +27,6 @@ import java.util.List;
 public class WatchdogListAdapter extends BaseAdapter {
 
 	Context mContext;
-	Controller mController;
 	LayoutInflater mInflater;
 	List<Watchdog> mRules;
 	SharedPreferences mPrefs;
@@ -37,12 +36,11 @@ public class WatchdogListAdapter extends BaseAdapter {
 
 	public WatchdogListAdapter(Context context, LayoutInflater inflater) {
 		mContext = context;
-		mController = Controller.getInstance(mContext);
 		mInflater = inflater;
 		mRules = new ArrayList<Watchdog>();
 
 		// UserSettings can be null when user is not logged in!
-		mPrefs = mController.getUserSettings();
+		mPrefs = Controller.getInstance(mContext).getUserSettings();
 		mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, mContext);
 	}
 
@@ -72,7 +70,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
-
+		Controller controller = Controller.getInstance(mContext);
 		// when first time inflating layout (not when scrolling)
 		if (convertView == null) {
 			convertView = mInflater.inflate(R.layout.watchdog_listview_item, parent, false);
@@ -104,7 +102,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 			case Watchdog.TYPE_SENSOR:
 				List<String> modulesIds = rule.getModules();
 				if (modulesIds.size() > 0) {
-					Module moduleFirst = mController.getDevicesModel().getModule(rule.getGateId(), modulesIds.get(0));
+					Module moduleFirst = controller.getDevicesModel().getModule(rule.getGateId(), modulesIds.get(0));
 					if (moduleFirst == null) return convertView;
 
 					holder.ItemIcon.setImageResource(moduleFirst.getIconResource());
@@ -128,7 +126,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 
 				String geoId = rule.getGeoRegionId();
 				if (geoId != null && !geoId.isEmpty()) {
-					SimpleGeofence geoArea = mController.getGeofenceModel().getGeofence(mController.getActualUser().getId(), geoId);
+					SimpleGeofence geoArea = controller.getGeofenceModel().getGeofence(controller.getActualUser().getId(), geoId);
 					if (geoArea == null) return convertView;
 					holder.ItemSubLabel.setText(geoArea.getName());
 				}

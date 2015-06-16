@@ -30,7 +30,6 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 	private final Map<String, BaseUnit> mUnits = new HashMap<String, BaseUnit>();
 	private final Map<String, ListPreference> mPreferences = new HashMap<String, ListPreference>();
 
-	private Controller mController;
 	private SharedPreferences mPrefs;
 
 	@SuppressWarnings("deprecation")
@@ -56,17 +55,17 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mController = Controller.getInstance(this);
+		Controller controller = Controller.getInstance(this);
 
 		final Toolbar toolbar = getToolbar();
 		toolbar.setTitle(R.string.units);
 
 		// Use own name for sharedPreferences
-		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(mController.getActualUser().getId()));
+		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(controller.getActualUser().getId()));
 
 
 		// UserSettings can be null when user is not logged in!
-		mPrefs = mController.getUserSettings();
+		mPrefs = controller.getUserSettings();
 		if (mPrefs == null) {
 			finish();
 			return;

@@ -43,7 +43,6 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	private static final String GATE_ID = "lastGateId";
 
 	private SwipeRefreshLayout mSwipeLayout;
-	private Controller mController;
 	private ListView mWatchdogListView;
 	private WatchdogListAdapter mWatchdogAdapter;
 	private Button mRefreshBtn;
@@ -109,7 +108,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	}
 
 	private void refreshListListener() {
-		Gate gate = mController.getActiveGate();
+		Gate gate = Controller.getInstance(mActivity).getActiveGate();
 		if (gate == null) {
 			mSwipeLayout.setRefreshing(false);
 			return;
@@ -120,10 +119,10 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mController = Controller.getInstance(mActivity);
+		Controller controller = Controller.getInstance(mActivity);
 
 		if (mActiveGateId == null) {
-			Gate gate = mController.getActiveGate();
+			Gate gate = controller.getActiveGate();
 			if (gate == null)
 				return;
 			mActiveGateId = gate.getId();
@@ -235,7 +234,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 * Redraw GUI rules, called asynchronously (callback) when new data available
 	 */
 	private void redrawRules() {
-		mWatchdogs = mController.getWatchdogsModel().getWatchdogsByGate(mActiveGateId);
+		mWatchdogs = Controller.getInstance(mActivity).getWatchdogsModel().getWatchdogsByGate(mActiveGateId);
 
 		boolean haveWatchdogs = mWatchdogs.size() > 0;
 

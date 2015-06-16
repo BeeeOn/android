@@ -29,11 +29,9 @@ public class UsersListAdapter extends BaseAdapter {
 	private OnClickListener mListener;
 	private List<User> mUsers;
 
-	private final Controller mController;
 
 	public UsersListAdapter(Context context, List<User> users, OnClickListener listener) {
 		mContext = context;
-		mController = Controller.getInstance(mContext);
 		mUsers = users;
 		//mShowAdd = !devices.isEmpty();
 		mListener = listener;

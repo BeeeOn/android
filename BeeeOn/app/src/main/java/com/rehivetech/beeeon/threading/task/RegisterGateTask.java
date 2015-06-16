@@ -5,30 +5,30 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.model.GatesModel;
 import com.rehivetech.beeeon.threading.CallbackTask;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
 /**
- * Registers new gate. It automatically reloads list of adapters and then we set this gate as active which also load all its sensors.
+ * Registers new gate. It automatically reloads list of gates and then we set this gate as active which also load all its sensors.
  */
 public class RegisterGateTask extends CallbackTask<Gate> {
-
-	private Controller mController;
 
 	public RegisterGateTask(Context context) {
 		super(context);
 	}
 
-	private String getUniqueGateName() {
+	private String getUniqueGateName(List<Gate> gates) {
 		Vector<String> gateNames = new Vector<String>();
 
-		for (Gate gate : mController.getGatesModel().getGates()) {
+		for (Gate gate : gates) {
 			gateNames.add(gate.getName());
 		}
 
-		String name = "";
+		String name;
 
 		int number = 1;
 		do {
@@ -38,31 +38,31 @@ public class RegisterGateTask extends CallbackTask<Gate> {
 		return name;
 	}
 
-	private String getHexaGateName(String id) {
-		try {
-			int number = Integer.parseInt(id);
-			return Integer.toHexString(number).toUpperCase(Locale.getDefault());
-		} catch (NumberFormatException e) {
-			return getUniqueGateName();
-		}
+	private String getHexaGateName(String id) throws NumberFormatException {
+		int number = Integer.parseInt(id);
+		return Integer.toHexString(number).toUpperCase(Locale.getDefault());
 	}
 
 	@Override
 	protected Boolean doInBackground(Gate gate) {
-		mController = Controller.getInstance(mContext);
+		Controller controller = Controller.getInstance(mContext);
+		GatesModel gatesModel = controller.getGatesModel();
 
 		String serialNumber = gate.getId();
 		String name = gate.getName().trim();
 
 		// Set default name for this gate, if user didn't filled any
 		if (name.isEmpty()) {
-			// name = getUniqueGateName();
-			name = getHexaGateName(serialNumber);
+			try {
+				name = getHexaGateName(serialNumber);
+			} catch (NumberFormatException e) {
+				name = getUniqueGateName(gatesModel.getGates());
+			}
 		}
 
 		// Register new gate and set it as active
-		if (mController.getGatesModel().registerGate(serialNumber, name)) {
-			mController.setActiveGate(serialNumber, true);
+		if (gatesModel.registerGate(serialNumber, name)) {
+			controller.setActiveGate(serialNumber, true);
 			return true;
 		}
 

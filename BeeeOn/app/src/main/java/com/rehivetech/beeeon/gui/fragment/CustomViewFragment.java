@@ -55,16 +55,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
-	private Controller mController;
-
 	public CustomViewFragment() {
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		mController = Controller.getInstance(mActivity);
 	}
 
 	@Override
@@ -164,19 +155,20 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	}
 
 	private void prepareModules() {
-		Gate gate = mController.getActiveGate();
+		Controller controller = Controller.getInstance(getActivity());
+		Gate gate = controller.getActiveGate();
 		if (gate == null)
 			return;
 
 		// Prepare helpers
-		final UnitsHelper unitsHelper = new UnitsHelper(mController.getUserSettings(), mActivity);
-		final TimeHelper timeHelper = new TimeHelper(mController.getUserSettings());
+		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
+		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, gate);
 
 		// Prepare data
 		Log.d(TAG, String.format("Preparing custom view for gate %s", gate.getId()));
 
-		for (Device device : mController.getDevicesModel().getDevicesByGate(gate.getId())) {
+		for (Device device : controller.getDevicesModel().getDevicesByGate(gate.getId())) {
 			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getModules().size()));
 
 			for (Module module : device.getModules()) {
@@ -227,7 +219,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 					int typeId = pairs.get(0).module.getType().getTypeId();
 
 					for (ModuleLog.DataPair pair : pairs) {
-						ModuleLog log = mController.getModuleLogsModel().getModuleLog(pair);
+						ModuleLog log = Controller.getInstance(getActivity()).getModuleLogsModel().getModuleLog(pair);
 						fillGraph(log, pair.module);
 					}
 

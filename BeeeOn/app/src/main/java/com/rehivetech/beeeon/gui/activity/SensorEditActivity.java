@@ -45,7 +45,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	private String mModuleId;
 	private SensorEditActivity mActivity;
 	private ProgressDialog mProgress;
-	private Controller mController;
 	private PlaceholderFragment mFragment;
 
 	@Override
@@ -69,7 +68,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					.commit();
 		}
 		mActivity = this;
-		mController = Controller.getInstance(this);
 
 		// Prepare progress dialog
 		mProgress = new ProgressDialog(this);
@@ -103,14 +101,14 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-
+		Controller controller = Controller.getInstance(this);
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
 			Set<Module.SaveModule> what = new HashSet<>();
-			Gate gate = mController.getActiveGate();
+			Gate gate = controller.getActiveGate();
 			if (gate == null)
 				return false;
-			Module module = mController.getDevicesModel().getModule(gate.getId(), mModuleId);
+			Module module = controller.getDevicesModel().getModule(gate.getId(), mModuleId);
 			Device device = module.getDevice();
 
 			if (!mFragment.getName().equals(module.getName())) {
@@ -247,7 +245,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		private EditText mName;
 		private SeekBar mRefreshTime;
 		private String mModuleID;
-		private Controller mController;
 		private Module mModule;
 		private TextView mRefreshTimeVal;
 		private Device mDevice;
@@ -274,11 +271,11 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			}
 			// Get activity
 			mActivity = (SensorEditActivity) getActivity();
-			mController = Controller.getInstance(mActivity);
-			mGate = mController.getActiveGate();
+			Controller controller = Controller.getInstance(mActivity);
+			mGate = controller.getActiveGate();
 			if (mGate == null)
 				return;
-			mModule = mController.getDevicesModel().getModule(mGate.getId(), mModuleID);
+			mModule = controller.getDevicesModel().getModule(mGate.getId(), mModuleID);
 			if (mModule == null)
 				return;
 			mDevice = mModule.getDevice();

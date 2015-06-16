@@ -38,6 +38,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -216,7 +217,7 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 		valueBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.value);
 
 		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = mController.getUserSettings();
+		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 		if (unitsHelper != null) {
 			valueBundle.putString(Control.Intents.EXTRA_TEXT, unitsHelper.getStringValueUnit(mModules.get(position).getValue()));
@@ -235,13 +236,14 @@ public class ListSensorControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mController.getGatesModel().reloadGates(true);
-				mGate = mController.getGatesModel().getGate(mGateId);
+				Controller controller = Controller.getInstance(mContext);
+				controller.getGatesModel().reloadGates(true);
+				mGate = controller.getGatesModel().getGate(mGateId);
 				if (mGate != null) {
 					mModules = new ArrayList<Module>();
 
-					mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
-					List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocationStr);
+					controller.getDevicesModel().reloadDevicesByGate(mGateId, true);
+					List<Device> devices = controller.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocationStr);
 					for (Device device : devices) {
 						mModules.addAll(device.getModules());
 					}

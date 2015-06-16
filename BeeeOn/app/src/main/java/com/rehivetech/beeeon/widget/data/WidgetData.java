@@ -56,7 +56,6 @@ public abstract class WidgetData {
 
 	// private managing variables
 	protected Context mContext;
-	protected Controller mController;
 	protected AppWidgetManager mWidgetManager;
 	protected AppWidgetProviderInfo mWidgetProviderInfo;
 	protected SharedPreferences mPrefs;
@@ -85,7 +84,6 @@ public abstract class WidgetData {
 		mContext = context.getApplicationContext();
 		mWidgetManager = AppWidgetManager.getInstance(mContext);
 		mWidgetProviderInfo = mWidgetManager.getAppWidgetInfo(mWidgetId);
-		mController = Controller.getInstance(mContext);
 		mPrefs = getSettings(mContext, mWidgetId);
 		mUnitsHelper = unitsHelper;
 		mTimeHelper = timeHelper;
@@ -111,7 +109,7 @@ public abstract class WidgetData {
 		widgetInitialized = mPrefs.getBoolean(PREF_INITIALIZED, false);
 		widgetGateId = mPrefs.getString(PREF_GATE_ID, "");
 		widgetWifiOnly = mPrefs.getBoolean(PREF_WIFI_ONLY, false);
-		mUserId = mPrefs.getString(PREF_USER_ID, mController.getActualUser().getId());
+		mUserId = mPrefs.getString(PREF_USER_ID, Controller.getInstance(mContext).getActualUser().getId());
 		// load widget's settings (color scheme e.g)
 		settings.load();
 	}

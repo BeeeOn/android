@@ -38,6 +38,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -158,7 +159,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 		if (menuItem == MENU_REFRESH) {
 
 			// clearDisplay();
-			// mModules = mController.getGate(gateId, false)
+			// mModules = controller.getGate(gateId, false)
 			// .getDevicesByLocation(locationStr);
 			getIntent().putExtra(EXTRA_INITIAL_POSITION, mLastKnowPosition);
 			actualize(mLastKnowPosition);
@@ -192,14 +193,15 @@ public class GalleryControlExtension extends ManagedControlExtension {
 
 		Module curModule = mModules.get(position);
 		Device curDevice = curModule.getDevice();
-		Gate curGate = mController.getGatesModel().getGate(curDevice.getGateId());
+		Controller controller = Controller.getInstance(mContext);
+		Gate curGate = controller.getGatesModel().getGate(curDevice.getGateId());
 
 		// Title data
 		Bundle syncBundle = new Bundle();
 		syncBundle.putInt(Control.Intents.EXTRA_LAYOUT_REFERENCE, R.id.sync_time);
 
 		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = mController.getUserSettings();
+		SharedPreferences prefs = controller.getUserSettings();
 
 		// Last update data
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
@@ -260,7 +262,7 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 				Module module = mModules.get(lastPosition);
-				if (mController.getDevicesModel().refreshDevice(module.getDevice(), false)) {
+				if (Controller.getInstance(mContext).getDevicesModel().refreshDevice(module.getDevice(), false)) {
 					sendListItem(createControlListItem(lastPosition));
 				}
 
@@ -275,9 +277,9 @@ public class GalleryControlExtension extends ManagedControlExtension {
 			public void run() {
 
 				mModules = new ArrayList<Module>();
-
-				mController.getDevicesModel().reloadDevicesByGate(mGateId, true);
-				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGateId, mLocationStr);
+				Controller controller = Controller.getInstance(mContext);
+				controller.getDevicesModel().reloadDevicesByGate(mGateId, true);
+				List<Device> devices = controller.getDevicesModel().getDevicesByLocation(mGateId, mLocationStr);
 				for (Device device : devices) {
 					mModules.addAll(device.getModules());
 				}

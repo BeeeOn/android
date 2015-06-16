@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.widget.data;
 import android.content.Context;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -134,11 +135,12 @@ public class WidgetModuleData extends WidgetData {
 	@Override
 	public boolean handleUpdateData() {
 		int updated = 0;
-		Gate gate = mController.getGatesModel().getGate(widgetGateId);
+		Controller controller = Controller.getInstance(mContext);
+		Gate gate = controller.getGatesModel().getGate(widgetGateId);
 		if (gate == null) return false;
 
 		for (WidgetModulePersistence dev : widgetModules) {
-			Module module = mController.getDevicesModel().getModule(widgetGateId, dev.getId());
+			Module module = controller.getDevicesModel().getModule(widgetGateId, dev.getId());
 			if (module != null) {
 				dev.configure(module, gate);
 			}

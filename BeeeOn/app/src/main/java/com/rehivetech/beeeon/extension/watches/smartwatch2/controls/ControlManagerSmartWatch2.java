@@ -62,28 +62,26 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 	private Stack<Intent> mControlStack;
 
-	protected Controller mController;
-
 	public ControlManagerSmartWatch2(Context context, String packageName) {
 		super(context, packageName);
 		mControlStack = new Stack<Intent>();
 
-		mController = Controller.getInstance(mContext);
+		Controller controller = Controller.getInstance(mContext);
 
 		Intent initialControlIntent;
 		// FIXME dodelat prihlaseni pokud neni v appce
-		if (!mController.isLoggedIn()) {
-			// String lastEmail = mController.getLastAuthProvider();
+		if (!controller.isLoggedIn()) {
+			// String lastEmail = controller.getLastAuthProvider();
 			// try {
 			// // GoogleAuth.getGoogleAuth().execute();
-			// mController.startGoogle(false, false); // this is equivalent of upper line but
+			// controller.startGoogle(false, false); // this is equivalent of upper line but
 			// } catch (Exception e) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
 			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
 			mCurrentControl = createControl(initialControlIntent);
 			return;
 			// }
-			// if (!(lastEmail.length() < 1) && !mController.login(lastEmail)) {
+			// if (!(lastEmail.length() < 1) && !controller.login(lastEmail)) {
 			// initialControlIntent = new Intent(mContext, TextControl.class);
 			// initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.please_log_in));
 			// mCurrentControl = createControl(initialControlIntent);
@@ -93,7 +91,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 		}
 
 		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = mController.getUserSettings();
+		SharedPreferences prefs = controller.getUserSettings();
 
 		// Try to find default setting
 		String gateId = (prefs == null) ? "" : prefs.getString(Constants.PERSISTENCE_PREF_SW2_ADAPTER, null);
@@ -104,7 +102,6 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 
 		// TODO zkontrolovat jestli neni cil prazdny
 		if (gateId != null) {
-			Controller controller = Controller.getInstance(mContext);
 
 			controller.getGatesModel().reloadGates(false);
 			Gate gate = controller.getGatesModel().getGate(gateId);
@@ -128,7 +125,7 @@ public class ControlManagerSmartWatch2 extends ControlManagerBase {
 			}
 		}
 
-		List<Gate> gates = mController.getGatesModel().getGates();
+		List<Gate> gates = controller.getGatesModel().getGates();
 		if (gates.size() < 1) {
 			initialControlIntent = new Intent(mContext, TextControl.class);
 			initialControlIntent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_adapter_available));

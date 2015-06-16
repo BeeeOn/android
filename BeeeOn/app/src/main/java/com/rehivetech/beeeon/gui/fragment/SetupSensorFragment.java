@@ -36,7 +36,6 @@ public class SetupSensorFragment extends TrackFragment {
 
 	public SetupSensorActivity mActivity;
 	private View mView;
-	private Controller mController;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 	private static final int NAME_ITEM_HEIGHT = 56;
@@ -62,14 +61,14 @@ public class SetupSensorFragment extends TrackFragment {
 
 		// Get activity and controller
 		mActivity = (SetupSensorActivity) getActivity();
-		mController = Controller.getInstance(mActivity);
+		Controller controller = Controller.getInstance(mActivity);
 
-		mGate = mController.getActiveGate();
+		mGate = controller.getActiveGate();
 		if (mGate == null) {
 			// CHYBA
 			return;
 		}
-		mNewDevices = mController.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGate.getId());
+		mNewDevices = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGate.getId());
 
 		// TODO: sent as parameter if we want first uninitialized module or some
 		// module with particular id
@@ -100,6 +99,8 @@ public class SetupSensorFragment extends TrackFragment {
 
 
 	private void initViews() {
+
+		Controller controller = Controller.getInstance(mActivity);
 		// Get GUI elements
 		mListOfName = (ListView) mView.findViewById(R.id.setup_sensor_name_list);
 		mSpinner = (Spinner) mView.findViewById(R.id.addsensor_spinner_choose_location);
@@ -138,14 +139,14 @@ public class SetupSensorFragment extends TrackFragment {
 		});
 
 		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = mController.getUserSettings();
+		SharedPreferences prefs = controller.getUserSettings();
 
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		// Set involved time of mDevice
 		if (timeHelper != null) {
 			Device device = mNewDevices.get(0);
-			Gate gate = mController.getGatesModel().getGate(device.getGateId());
+			Gate gate = controller.getGatesModel().getGate(device.getGateId());
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getInvolveTime(), gate)));
 		}
 

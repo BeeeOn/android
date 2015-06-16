@@ -52,7 +52,6 @@ public class NavDrawerMenu {
 	private final Toolbar mToolbar;
 
 	private MainActivity mActivity;
-	private Controller mController;
 
 	private DrawerLayout mDrawerLayout;
 	private StickyListHeadersListView mDrawerList;
@@ -73,9 +72,6 @@ public class NavDrawerMenu {
 		// Set activity
 		mActivity = activity;
 		mToolbar = toolbar;
-
-		// Get controller
-		mController = Controller.getInstance(mActivity);
 
 		// Get GUI element for menu
 		getGUIElements();
@@ -98,7 +94,7 @@ public class NavDrawerMenu {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				mSelectedMenuItem = (IMenuItem) mMenuAdapter.getItem(position);
-				Gate gate = mController.getActiveGate();
+				Gate gate = Controller.getInstance(mActivity).getActiveGate();
 				switch (mSelectedMenuItem.getType()) {
 					case GATE:
 						if (gate == null)
@@ -170,7 +166,7 @@ public class NavDrawerMenu {
 
 			public void onDrawerClosed(View view) {
 				// Set the title on the action when drawer closed
-				Gate gate = mController.getActiveGate();
+				Gate gate = Controller.getInstance(mActivity).getActiveGate();
 
 				if (gate != null && mActiveItem != null) {
 					if (mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
@@ -217,7 +213,7 @@ public class NavDrawerMenu {
 		mMenuAdapter = getMenuAdapter();
 		mDrawerList.setAdapter(mMenuAdapter);
 
-		Gate gate = mController.getActiveGate();
+		Gate gate = Controller.getInstance(mActivity).getActiveGate();
 
 		if (gate != null && mActiveItem != null) {
 			if (mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
@@ -288,9 +284,9 @@ public class NavDrawerMenu {
 
 	public MenuListAdapter getMenuAdapter() {
 		mMenuAdapter = new MenuListAdapter(mActivity);
-
+		Controller controller = Controller.getInstance(mActivity);
 		// Adding profile header
-		User actUser = mController.getActualUser();
+		User actUser = controller.getActualUser();
 
 		Bitmap picture = actUser.getPicture();
 		if (picture == null)
@@ -303,7 +299,7 @@ public class NavDrawerMenu {
 			}
 		}));
 
-		List<Gate> gates = mController.getGatesModel().getGates();
+		List<Gate> gates = controller.getGatesModel().getGates();
 
 
 		// Adding separator as item (we don't want to let it float as header)
@@ -312,7 +308,7 @@ public class NavDrawerMenu {
 		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.gate)));
 
 		if (!gates.isEmpty()) {
-			Gate activeGate = mController.getActiveGate();
+			Gate activeGate = controller.getActiveGate();
 			if (activeGate == null)
 				return mMenuAdapter;
 			// Adding gates
@@ -371,8 +367,9 @@ public class NavDrawerMenu {
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
 			inflater.inflate(R.menu.gate_menu, menu);
+			Controller controller = Controller.getInstance(mActivity);
 
-			if (!mController.isUserAllowed(mController.getGatesModel().getGate(mSelectedMenuItem.getId()).getRole())) {
+			if (!controller.isUserAllowed(controller.getGatesModel().getGate(mSelectedMenuItem.getId()).getRole())) {
 				menu.getItem(0).setVisible(false);// EDIT
 				menu.getItem(1).setVisible(false);// USERS
 			}

@@ -52,7 +52,6 @@ public class ManagedControlExtension extends ControlExtension {
 	public static final String EXTENSION_OVERRIDES_BACK = "EXTENSION_OVERRIDES_BACK";
 	private Intent mIntent;
 	protected ControlManagerSmartWatch2 mControlManager;
-	protected Controller mController;
 
 	/**
 	 * Constructor for ManagedControlExtension. Should not be called directly, is called by ControlManager.
@@ -66,7 +65,6 @@ public class ManagedControlExtension extends ControlExtension {
 		super(context, hostAppPackageName);
 		this.mIntent = intent;
 		mControlManager = controlManager;
-		mController = Controller.getInstance(mContext);
 	}
 
 	/**

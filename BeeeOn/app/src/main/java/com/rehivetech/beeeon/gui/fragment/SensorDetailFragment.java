@@ -62,6 +62,7 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.security.cert.CertificateParsingException;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
@@ -70,7 +71,6 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	private static final int REQUEST_BOILER_TYPE = 7894;
 	private static final int REQUEST_BOILER_MODE = 1236;
-	private Controller mController;
 	private static final String TAG = SensorDetailFragment.class.getSimpleName();
 
 	public static final String ARG_SEN_ID = "sensorid";
@@ -126,8 +126,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(TAG, "OnCreate - Here 1 " + mCurPageNumber);
-		mController = Controller.getInstance(mActivity);
-		mGate = mController.getGatesModel().getGate(mGateId);
+		mGate = Controller.getInstance(getActivity()).getGatesModel().getGate(mGateId);
 	}
 
 	@Override
@@ -140,6 +139,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
+		Controller controller = Controller.getInstance(getActivity());
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
 			mModuleID = savedInstanceState.getString(ARG_SEN_ID);
@@ -147,10 +147,10 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
 			mCurPageNumber = savedInstanceState.getInt(ARG_CUR_PAGE);
-			mGate = mController.getGatesModel().getGate(mGateId);
+			mGate = controller.getGatesModel().getGate(mGateId);
 		}
 		Log.d(TAG, "OnActivityCreated");
-		mModule = mController.getDevicesModel().getModule(mGateId, mModuleID);
+		mModule = controller.getDevicesModel().getModule(mGateId, mModuleID);
 		if (mModule != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mModule.getId(), mModule.getName()));
 			initLayout(mModule);
@@ -181,6 +181,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	private void initLayout(Module module) {
+		Controller controller = Controller.getInstance(mActivity);
 		Log.d(TAG, "INIT LAYOUT");
 		// Get View for sensor name
 		mName = (TextView) mView.findViewById(R.id.sen_detail_name);
@@ -226,11 +227,11 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		// Set name of sensor
 		mName.setText(module.getName());
 		mName.setBackgroundColor(Color.TRANSPARENT);
-		if (mController.isUserAllowed(mGate.getRole())) {
+		if (controller.isUserAllowed(mGate.getRole())) {
 
 		}
 
-		if (mController.isUserAllowed(mGate.getRole())) {
+		if (controller.isUserAllowed(mGate.getRole())) {
 			// Set value for Actor
 			mValueSwitch.setOnClickListener(new OnClickListener() {
 
@@ -309,31 +310,31 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		// Set name of location
-		if (mController != null) {
+		if (controller != null) {
 			Location location = null;
 
-			Gate gate = mController.getGatesModel().getGate(mGateId);
+			Gate gate = controller.getGatesModel().getGate(mGateId);
 			if (gate != null) {
-				location = mController.getLocationsModel().getLocation(gate.getId(), module.getDevice().getLocationId());
+				location = controller.getLocationsModel().getLocation(gate.getId(), module.getDevice().getLocationId());
 			}
 
 			if (location != null) {
 				mLocation.setText(location.getName());
 				mLocationIcon.setImageResource(location.getIconResource());
 			}
-			if (mController.isUserAllowed(mGate.getRole())) {
+			if (controller.isUserAllowed(mGate.getRole())) {
 
 			}
 		} else {
-			Log.e(TAG, "mController is null (this shouldn't happen)");
+			Log.e(TAG, "controller is null (this shouldn't happen)");
 			mLocation.setText(module.getDevice().getLocationId());
 		}
 
 		Device device = module.getDevice();
-		Gate gate = mController.getGatesModel().getGate(device.getGateId());
+		Gate gate = controller.getGatesModel().getGate(device.getGateId());
 
 		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = mController.getUserSettings();
+		SharedPreferences prefs = controller.getUserSettings();
 
 		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
@@ -375,6 +376,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	private void visibleAllElements() {
+		Controller controller = Controller.getInstance(mActivity);
 		Log.d(TAG, "VISIBLE ALL ELEMENTS");
 		//HIDE progress
 		mView.findViewById(R.id.sensor_progress).setVisibility(View.GONE);
@@ -388,7 +390,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 
 		// Show some controls if this module is an actor
-		if (mModule.getType().isActor() && mController.isUserAllowed(mGate.getRole())) {
+		if (mModule.getType().isActor() && controller.isUserAllowed(mGate.getRole())) {
 			BaseValue value = mModule.getValue();
 
 			// For actor values of type on/off, open/closed we show switch button
@@ -399,7 +401,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		}
 
-		if (mController.isUserAllowed(mGate.getRole())) {
+		if (controller.isUserAllowed(mGate.getRole())) {
 			mFABedit.setVisibility(View.VISIBLE);
 		}
 
@@ -551,7 +553,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			@Override
 			public void onExecute(boolean success) {
 				// Get new module
-				mModule = mController.getDevicesModel().getModule(module.getDevice().getGateId(), module.getId());
+				mModule = Controller.getInstance(mActivity).getDevicesModel().getModule(module.getDevice().getGateId(), module.getId());
 
 				// Set icon of sensor
 				mIcon.setImageResource(mModule.getIconResource());
@@ -581,7 +583,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mModule = mController.getDevicesModel().getModule(gateId, mModuleID);
+				mModule = Controller.getInstance(mActivity).getDevicesModel().getModule(gateId, mModuleID);
 				if (mModule == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;
@@ -613,7 +615,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		getModuleLogTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				fillGraph(mController.getModuleLogsModel().getModuleLog(pair));
+				fillGraph(Controller.getInstance(mActivity).getModuleLogsModel().getModuleLog(pair));
 			}
 		});
 

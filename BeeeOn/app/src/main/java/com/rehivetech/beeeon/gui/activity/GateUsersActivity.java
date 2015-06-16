@@ -36,8 +36,6 @@ import java.util.List;
 
 public class GateUsersActivity extends BaseApplicationActivity {
 
-	private Controller mController;
-
 	private GateUsersActivity mActivity;
 
 	private Gate mGate;
@@ -67,8 +65,6 @@ public class GateUsersActivity extends BaseApplicationActivity {
 			setSupportActionBar(mToolbar);
 		}
 
-		// Get controller
-		mController = Controller.getInstance(this);
 		// Get actual activity
 		mActivity = this;
 
@@ -76,7 +72,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Get selected gate
-		mGate = mController.getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
+		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
 
 		// Get all users for gate
 		doReloadGateUsersTask(mGate.getId(), true);
@@ -165,7 +161,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onExecute(boolean success) {
-				mGateUsers = mController.getUsersModel().getUsersByGate(gateId);
+				mGateUsers = Controller.getInstance(GateUsersActivity.this).getUsersModel().getUsersByGate(gateId);
 
 				initLayouts();
 			}

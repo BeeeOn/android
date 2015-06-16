@@ -29,8 +29,6 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 
 	protected static final String TAG = "AddGateUserActivity";
 
-	private Controller mController;
-
 	private Activity mActivity;
 
 	private Gate mGate;
@@ -54,8 +52,6 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 			setSupportActionBar(mToolbar);
 		}
 
-		// Get controller
-		mController = Controller.getInstance(this);
 		// Get actual activity
 		mActivity = this;
 
@@ -69,7 +65,7 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		// Get selected gate
-		mGate = mController.getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
+		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
 
 		initLayout();
 	}

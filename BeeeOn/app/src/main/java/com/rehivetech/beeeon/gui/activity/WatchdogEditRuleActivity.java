@@ -75,7 +75,6 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private String mActiveGeoId;
 	private boolean mIsNew = false;
 
-	private Controller mController;
 	private Toolbar mToolbar;
 	private Menu mOptionsMenu;
 	private ProgressDialog mProgress;
@@ -157,9 +156,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		}
 
 		// get controller
-		mController = Controller.getInstance(this);
+		Controller controller = Controller.getInstance(this);
 		// get gate
-		mGate = (mActiveGateId == null || mActiveGateId.isEmpty()) ? mController.getActiveGate() : mController.getGatesModel().getGate(mActiveGateId);
+		mGate = (mActiveGateId == null || mActiveGateId.isEmpty()) ? controller.getActiveGate() : controller.getGatesModel().getGate(mActiveGateId);
 		if (mGate == null) {
 			Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
 			finish();
@@ -167,25 +166,25 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		}
 
 		// UserSettings can be null when user is not logged in!
-		mPrefs = mController.getUserSettings();
+		mPrefs = controller.getUserSettings();
 		mUnitsHelper = (mPrefs == null) ? null : new UnitsHelper(mPrefs, this);
 
 		// get all locations for spinners
-		mLocations = mController.getLocationsModel().getLocationsByGate(mGate.getId());
+		mLocations = controller.getLocationsModel().getLocationsByGate(mGate.getId());
 		// get all geofence areas
-		String userId = mController.getActualUser().getId();
-		mGeofences = mController.getGeofenceModel().getAllGeofences(userId);
+		String userId = controller.getActualUser().getId();
+		mGeofences = controller.getGeofenceModel().getAllGeofences(userId);
 
 		// devices get by cycling through all locations
 		mDevices = new ArrayList<Device>();
 		for (Location loc : mLocations) {
-			List<Device> tempFac = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), loc.getId());
+			List<Device> tempFac = controller.getDevicesModel().getDevicesByLocation(mGate.getId(), loc.getId());
 			mDevices.addAll(tempFac);
 		}
 
 		// get watchdog rule
 		if (!mIsNew) {
-			mWatchdog = mController.getWatchdogsModel().getWatchdog(mGate.getId(), mActiveRuleId);
+			mWatchdog = controller.getWatchdogsModel().getWatchdog(mGate.getId(), mActiveRuleId);
 			if (mWatchdog == null) {
 				Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
 				finish();

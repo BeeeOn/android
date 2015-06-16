@@ -20,7 +20,6 @@ public class AchievementList extends Observable {
 	private static AchievementList mInstance = null;
 	private static String mGateId = "0";
 	private Context mContext;
-	private Controller mController;
 
 	private boolean allDataDownloaded;
 	private List<AchievementListItem> allAchievementList;
@@ -31,7 +30,6 @@ public class AchievementList extends Observable {
 
 	private AchievementList(Context context, Controller controller) {
 		mContext = context.getApplicationContext();
-		mController = controller;
 		allDataDownloaded = false;
 		allAchievementList = null;
 		doReloadAchievementsTask(mGateId, true);
@@ -61,7 +59,7 @@ public class AchievementList extends Observable {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "successfully downloaded data");
-				allAchievementList = mController.getAchievementsModel().getAchievements(gateId);
+				allAchievementList = Controller.getInstance(mContext).getAchievementsModel().getAchievements(gateId);
 				updateData();
 				allDataDownloaded = true;
 				setChanged();

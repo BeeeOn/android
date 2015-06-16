@@ -21,8 +21,7 @@ import java.util.List;
 
 public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
-	private final Controller mController;
-	private Context mActivity;
+	private Context mContext;
 	private List<Location> mLocations;
 	private int mDropDownLayoutResource;
 	private int mViewLayoutResource;
@@ -31,15 +30,13 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		super(context, resource, objects);
 		mViewLayoutResource = resource;
 		mLocations = objects;
-		mController = Controller.getInstance(context);
-		mActivity = context;
+		mContext = context.getApplicationContext();
 	}
 
 	public LocationArrayAdapter(Context context, int resource) {
 		super(context, resource, new ArrayList<Location>());
 		mViewLayoutResource = resource;
-		mActivity = context;
-		mController = Controller.getInstance(context);
+		mContext = context.getApplicationContext();
 		mLocations = getLocations();
 	}
 
@@ -61,7 +58,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
 
-		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
 		CheckedTextView label = (CheckedTextView) row.findViewById(R.id.custom_spinner_dropdown_label);
@@ -76,7 +73,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(mViewLayoutResource, parent, false);
 
 		TextView label = (TextView) row.findViewById(R.id.custom_spinner_label);
@@ -91,10 +88,10 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 	public List<Location> getLocations() {
 		// Get locations from gate
 		List<Location> locations = new ArrayList<Location>();
-
-		Gate gate = mController.getActiveGate();
+		Controller controller = Controller.getInstance(mContext);
+		Gate gate = controller.getActiveGate();
 		if (gate != null) {
-			locations = mController.getLocationsModel().getLocationsByGate(gate.getId());
+			locations = controller.getLocationsModel().getLocationsByGate(gate.getId());
 		} else {
 			// We need to have gate to continue below
 			return locations;
@@ -102,7 +99,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
 		// Add "missing" default rooms
 		for (Location.DefaultLocation room : Location.DefaultLocation.values()) {
-			String name = mActivity.getString(room.getTitleResource());
+			String name = mContext.getString(room.getTitleResource());
 
 			boolean found = false;
 			for (Location location : locations) {
@@ -121,7 +118,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID, mActivity.getString(R.string.addsensor_new_location_spinner), gate.getId(), "0"));
+		locations.add(new Location(Location.NEW_LOCATION_ID, mContext.getString(R.string.addsensor_new_location_spinner), gate.getId(), "0"));
 
 		return locations;
 	}

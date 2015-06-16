@@ -45,12 +45,9 @@ public class LoginActivity extends BaseActivity {
 	private static final String TWITTER_KEY = "0eAUtsrgm0D2CUKG3xnvGwuZp";
 	private static final String TWITTER_SECRET = "bhs3kwihnSJLweYOlsQImP84DrUMPqcB0DO2UsbQE6FmGhHJpL";
 
-
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
-
-	private Controller mController;
 	private BetterProgressDialog mProgress;
 
 	private boolean mLoginCancel = false;
@@ -69,7 +66,7 @@ public class LoginActivity extends BaseActivity {
 		Log.i("BeeeOn app starting...", "___________________________________");
 
 		// Get controller
-		mController = Controller.getInstance(this);
+		Controller controller = Controller.getInstance(this);
 
 
 		// Prepare progressDialog
@@ -140,14 +137,14 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		// Check already logged in user (but ignore demo mode)
-		if (mController.isLoggedIn() && !mController.isDemoMode()) {
+		if (controller.isLoggedIn() && !controller.isDemoMode()) {
 			Log.d(TAG, "Already logged in, going to next activity...");
 			onLoggedIn(); // finishes this activity
 			return;
 		}
 
 		// Do automatic login if we have remembered last logged in user
-		IAuthProvider lastAuthProvider = mController.getLastAuthProvider();
+		IAuthProvider lastAuthProvider = controller.getLastAuthProvider();
 		if (lastAuthProvider != null && !(lastAuthProvider instanceof DemoAuthProvider)) {
 			// Automatic login with last used provider
 			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", lastAuthProvider.getProviderName(), lastAuthProvider.getPrimaryParameter()));
@@ -252,7 +249,6 @@ public class LoginActivity extends BaseActivity {
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded
 		Controller.setDemoMode(this, demoMode);
-		mController = Controller.getInstance(this);
 	}
 
 	/**
@@ -276,7 +272,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void doLogin(final IAuthProvider authProvider) {
-		Log.d(TAG, "doLogin()");
+		final Controller controller = Controller.getInstance(this);
 
 		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.show();
@@ -290,28 +286,26 @@ public class LoginActivity extends BaseActivity {
 				boolean errFlag = true;
 
 				try {
-					Log.i(TAG, "Login started");
 
 					// Here is authProvider already filled with needed parameters so we can send them to the server
-					if (mController.login(authProvider)) {
-						Log.d(TAG, "Login successful");
+					if (controller.login(authProvider)) {
 						errFlag = false;
 
 						// Load all gates and data for active one on login
 						mProgress.setMessageResource(R.string.progress_loading_gates);
-						mController.getGatesModel().reloadGates(true);
+						controller.getGatesModel().reloadGates(true);
 
-						Gate active = mController.getActiveGate();
+						Gate active = controller.getActiveGate();
 						if (active != null) {
 							// Load data for active gate
 							mProgress.setMessageResource(R.string.progress_loading_gate);
-							mController.getLocationsModel().reloadLocationsByGate(active.getId(), true);
-							mController.getDevicesModel().reloadDevicesByGate(active.getId(), true);
+							controller.getLocationsModel().reloadLocationsByGate(active.getId(), true);
+							controller.getDevicesModel().reloadDevicesByGate(active.getId(), true);
 						}
 
 						if (mLoginCancel) {
 							// User cancelled login so do logout() to be sure it won't try to login automatically next time
-							mController.logout();
+							controller.logout();
 						} else {
 							// Open MainActivity or just this LoginActivity and let it redirect back
 							onLoggedIn(); // finishes this activity
@@ -367,8 +361,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void doRegister(final IAuthProvider authProvider) {
-		Log.d(TAG, "doRegister()");
-
+		final Controller controller = Controller.getInstance(this);
 		mProgress.setMessageResource(R.string.progress_signup);
 		mProgress.show();
 
@@ -382,7 +375,7 @@ public class LoginActivity extends BaseActivity {
 
 				try {
 					// Here is authProvider already filled with needed parameters so we can send them to the server
-					if (mController.register(authProvider)) {
+					if (controller.register(authProvider)) {
 						Log.d(TAG, "Register successful");
 						errFlag = false;
 

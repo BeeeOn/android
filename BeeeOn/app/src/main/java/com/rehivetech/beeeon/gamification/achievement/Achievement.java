@@ -27,7 +27,6 @@ public abstract class Achievement implements Observer {
 	protected AchievementList mAchievementList;
 	protected AchievementListItem mData = null;
 	protected Context mContext = null;
-	protected Controller mController;
 	private String mAchievementId;
 	private String mGateId;
 	private boolean mSendUpdate;
@@ -42,10 +41,11 @@ public abstract class Achievement implements Observer {
 		mAchievementId = achievement_id;
 		mSendUpdate = sendUpdate;
 
+
 		mGateId = "0";
-		mController = Controller.getInstance(mContext);
-		if (mController.getActiveGate() != null)
-			mGateId = mController.getActiveGate().getId();
+		Controller controller = Controller.getInstance(mContext);
+		if (controller.getActiveGate() != null)
+			mGateId = controller.getActiveGate().getId();
 		mAchievementList = AchievementList.getInstance(mContext);
 		if (mAchievementList.isDownloaded()) {
 			mData = mAchievementList.getItem(achievement_id);

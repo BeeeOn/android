@@ -40,7 +40,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_ACTIVE_POS = "act_module_pos";
 
-	private Controller mController;
 	private List<Module> mModules;
 
 	private PagerAdapter mPagerAdapter;
@@ -68,12 +67,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		//setBeeeOnProgressBarVisibility(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-		// Get controller
-		mController = Controller.getInstance(this);
-
-
-		Log.d(TAG, "onCreate()");
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
@@ -127,6 +120,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	private void doReloadDevicesTask(final String gateId, final boolean forceReload) {
+		final Controller controller = Controller.getInstance(this);
 		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);
 
 		reloadDevicesTask.setListener(new ICallbackTaskListener() {
@@ -134,13 +128,13 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				Log.d(TAG, "Start reload task");
-				Module module = mController.getDevicesModel().getModule(gateId, mActiveModuleId);
+				Module module = controller.getDevicesModel().getModule(gateId, mActiveModuleId);
 				if (module == null) {
 					Log.d(TAG, "Stop reload task");
 					return;
 				}
 
-				List<Device> devices = mController.getDevicesModel().getDevicesByLocation(gateId, module.getDevice().getLocationId());
+				List<Device> devices = controller.getDevicesModel().getDevicesByLocation(gateId, module.getDevice().getLocationId());
 
 				List<Module> modules = new ArrayList<Module>();
 				for (Device device : devices) {

@@ -18,21 +18,21 @@ public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 	private List<Location.LocationIcon> mIcons;
 	private int mLayoutResource;
 	private int mDropDownLayoutResource;
-	private Context mActivity;
+	private Context mContext;
 
 
 	public LocationIconAdapter(Context context, int resource, List<Location.LocationIcon> objects) {
 		super(context, resource, objects);
 		mLayoutResource = resource;
 		mIcons = objects;
-		mActivity = context;
+		mContext = context;
 	}
 
 	public LocationIconAdapter(Context context, int resource) {
 		super(context, resource, new ArrayList<Location.LocationIcon>());
 		mLayoutResource = resource;
 		mIcons = getIconArray();
-		mActivity = context;
+		mContext = context;
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
@@ -63,7 +63,7 @@ public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) mActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(mLayoutResource, parent, false);
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);

@@ -37,6 +37,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -154,8 +155,8 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 		if (clickType == Control.Intents.CLICK_TYPE_SHORT) {
 			Intent intent;
 			String gateId = mGates.get(listItem.listItemPosition).getId();
-			// mController.setActiveGate(gateId, false);
-			List<Location> locations = mController.getLocationsModel().getLocationsByGate(gateId);
+			// controller.setActiveGate(gateId, false);
+			List<Location> locations = Controller.getInstance(mContext).getLocationsModel().getLocationsByGate(gateId);
 			if (locations.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
 				intent.putExtra(TextControl.EXTRA_TEXT, mContext.getString(R.string.no_location_available));
@@ -192,7 +193,7 @@ public class ListAdapterControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mGates = mController.getGatesModel().getGates();
+				mGates = Controller.getInstance(mContext).getGatesModel().getGates();
 
 				resume();
 

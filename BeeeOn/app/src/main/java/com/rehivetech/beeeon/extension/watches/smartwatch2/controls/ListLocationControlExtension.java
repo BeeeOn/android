@@ -37,6 +37,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.extension.watches.smartwatch2.SW2ExtensionService;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -182,7 +183,7 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			// intent.putExtra(GalleryTestControl.EXTRA_INITIAL_POSITION,
 			// listItem.listItemPosition);
 			// mControlManager.startControl(intent);
-			List<Device> devices = mController.getDevicesModel().getDevicesByLocation(mGate.getId(), mLocations.get(listItem.listItemPosition).getId());
+			List<Device> devices = Controller.getInstance(mContext).getDevicesModel().getDevicesByLocation(mGate.getId(), mLocations.get(listItem.listItemPosition).getId());
 			Intent intent;
 			if (devices.size() < 1) {
 				intent = new Intent(mContext, TextControl.class);
@@ -229,9 +230,10 @@ public class ListLocationControlExtension extends ManagedControlExtension {
 			@Override
 			public void run() {
 
-				mGate = mController.getGatesModel().getGate(mGateId);
+				Controller controller = Controller.getInstance(mContext);
+				mGate = controller.getGatesModel().getGate(mGateId);
 
-				LocationsModel locationsModel = mController.getLocationsModel();
+				LocationsModel locationsModel = controller.getLocationsModel();
 				locationsModel.reloadLocationsByGate(mGateId, mForceUpdate);
 				mLocations = locationsModel.getLocationsByGate(mGateId);
 

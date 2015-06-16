@@ -16,7 +16,6 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 
 public class SensorListItem extends AbstractListItem {
 	private final Context mContext;
-	private final Controller mController;
 	private Module mModule;
 	private boolean mSeparatorVisible;
 
@@ -25,13 +24,11 @@ public class SensorListItem extends AbstractListItem {
 		mModule = module;
 		mSeparatorVisible = separator;
 		mContext = context;
-		mController = Controller.getInstance(context);
-
 	}
 
 	@Override
 	public void setView(View itemView) {
-
+		Controller controller = Controller.getInstance(mContext);
 		// Locate the TextViews in drawer_list_item.xml
 		TextView txtTitle = (TextView) itemView.findViewById(R.id.titleofsensor);
 		TextView txtValue = (TextView) itemView.findViewById(R.id.valueofsensor);
@@ -45,7 +42,7 @@ public class SensorListItem extends AbstractListItem {
 		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
 
 		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = mController.getUserSettings();
+		SharedPreferences prefs = controller.getUserSettings();
 
 		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
@@ -59,7 +56,7 @@ public class SensorListItem extends AbstractListItem {
 		}
 
 		Device device = mModule.getDevice();
-		Gate gate = mController.getGatesModel().getGate(device.getGateId());
+		Gate gate = controller.getGatesModel().getGate(device.getGateId());
 
 		if (timeHelper != null) {
 			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(device.getLastUpdate(), gate)));

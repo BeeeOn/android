@@ -59,7 +59,6 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 
 	private SwipeRefreshLayout mSwipeLayout;
-	private Controller mController;
 	private MainActivity mActivity;
 
 	private SenListAdapter mSensorAdapter;
@@ -103,16 +102,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(TAG, "onCreate()");
-
-		mController = Controller.getInstance(mActivity);
 
 		if (savedInstanceState != null) {
 			mActiveLocationId = savedInstanceState.getString(LCTN);
 			mActiveGateId = savedInstanceState.getString(GATE_ID);
 		}
 		// Check if tutoril was showed
-		SharedPreferences prefs = mController.getUserSettings();
+		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 		if (prefs != null) {
 			mFirstUseAddGate = prefs.getBoolean(Constants.TUTORIAL_ADD_GATE_SHOWED, true);
 			mFirstUseAddSensor = prefs.getBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, true);
@@ -145,7 +141,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			@Override
 			public void onRefresh() {
 				Log.d(TAG, "Refreshing list of sensors");
-				Gate gate = mController.getActiveGate();
+				Gate gate = Controller.getInstance(mActivity).getActiveGate();
 				if (gate == null) {
 					mSwipeLayout.setRefreshing(false);
 					return;
@@ -177,6 +173,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		}
 		List<Device> devices;
 		List<Location> locations;
+		final Controller controller = Controller.getInstance(mActivity);
 
 		Log.d(TAG, "LifeCycle: redraw modules list start");
 
@@ -197,7 +194,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		OnClickListener refreshNoSensor = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Gate gate = mController.getActiveGate();
+				Gate gate = controller.getActiveGate();
 				if (gate != null) {
 					doReloadDevicesTask(gate.getId(), true);
 				} else {
@@ -211,13 +208,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mFAM = (FloatingActionButton) mView.findViewById(R.id.fab);
 
 		// All locations on gate
-		locations = mController.getLocationsModel().getLocationsByGate(mActiveGateId);
+		locations = controller.getLocationsModel().getLocationsByGate(mActiveGateId);
 
 		List<Module> modules = new ArrayList<Module>();
 		for (Location loc : locations) {
 			mSensorAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
 			// all devices from actual location
-			devices = mController.getDevicesModel().getDevicesByLocation(mActiveGateId, loc.getId());
+			devices = controller.getDevicesModel().getDevicesByLocation(mActiveGateId, loc.getId());
 			for (Device fac : devices) {
 				for (int x = 0; x < fac.getModules().size(); x++) {
 					Module dev = fac.getModules().get(x);
@@ -235,7 +232,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		}
 
 		boolean haveModules = modules.size() > 0;
-		boolean haveGates = mController.getGatesModel().getGates().size() > 0;
+		boolean haveGates = controller.getGatesModel().getGates().size() > 0;
 
 		// Buttons in floating menu
 
@@ -252,10 +249,10 @@ public class SensorListFragment extends BaseApplicationFragment {
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addgate));
 			refreshBtn.setOnClickListener(refreshNoGate);
 
-			SharedPreferences prefs = mController.getUserSettings();
+			SharedPreferences prefs = controller.getUserSettings();
 			if (!(prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_GATE, false))) {
 				// TUTORIAL
-				if (mFirstUseAddGate && !mController.isDemoMode()) {
+				if (mFirstUseAddGate && !controller.isDemoMode()) {
 					mFirstUseAddGate = false;
 					mActivity.getMenu().closeMenu();
 					TutorialHelper.showAddGateTutorial((MainActivity) mActivity, mView);
@@ -280,11 +277,11 @@ public class SensorListFragment extends BaseApplicationFragment {
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addgate));
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
-			if (mFirstUseAddSensor && !mController.isDemoMode()) {
+			if (mFirstUseAddSensor && !controller.isDemoMode()) {
 				mFirstUseAddSensor = false;
 				mActivity.getMenu().closeMenu();
 				TutorialHelper.showAddSensorTutorial((MainActivity) mActivity, mView);
-				SharedPreferences prefs = mController.getUserSettings();
+				SharedPreferences prefs = controller.getUserSettings();
 				if (prefs != null) {
 					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).apply();
 				}
@@ -383,9 +380,9 @@ public class SensorListFragment extends BaseApplicationFragment {
 					startActivity(intent);
 				}
 			});
-			Gate tmpAda = mController.getGatesModel().getGate(mActiveGateId);
+			Gate tmpAda = controller.getGatesModel().getGate(mActiveGateId);
 			if (tmpAda != null) {
-				if (mController.isUserAllowed(tmpAda.getRole())) {
+				if (controller.isUserAllowed(tmpAda.getRole())) {
 					mSensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
