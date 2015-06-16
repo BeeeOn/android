@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +27,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.util.Log;
 
@@ -44,7 +44,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	private Toolbar mToolbar;
 	private String mModuleId;
 	private SensorEditActivity mActivity;
-	private ProgressDialog mProgress;
 	private PlaceholderFragment mFragment;
 
 	@Override
@@ -68,12 +67,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					.commit();
 		}
 		mActivity = this;
-
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_saving_data));
-		mProgress.setCancelable(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		getSupportActionBar().setHomeButtonEnabled(true);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -159,29 +152,16 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	@Override
-	protected void onAppPause() {
-		if (mProgress != null)
-			mProgress.dismiss();
-	}
-
-	public ProgressDialog getProgressDialog() {
-		return mProgress;
-	}
-
 	/*
 	 * ASYNC TASK - SAVE
 	 */
 
 	private void doSaveDeviceWithNewLocation(Device.DataPair pair) {
-		mProgress.show();
 		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 
 		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog() != null)
-					mActivity.getProgressDialog().dismiss();
 				if (success) {
 					Log.d(TAG, "Success save to server");
 					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
@@ -196,18 +176,15 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		// And don't show progressbar because in this activity is showing progress dialog
-		callbackTaskManager.executeTask(saveDeviceTask, pair, false);
+		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	public void doSaveDeviceTask(Device.DataPair pair) {
-		mProgress.show();
 		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(mActivity);
 
 		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (mActivity.getProgressDialog() != null)
-					mActivity.getProgressDialog().dismiss();
 				if (success) {
 					Log.d(TAG, "Success save to server");
 					Toast.makeText(mActivity, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
@@ -222,7 +199,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		// And don't show progressbar because in this activity is showing progress dialog
-		callbackTaskManager.executeTask(saveDeviceTask, pair, false);
+		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	/**

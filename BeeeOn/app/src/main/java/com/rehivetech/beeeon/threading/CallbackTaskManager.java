@@ -52,18 +52,19 @@ public class CallbackTaskManager {
 			mTimer = null;
 		}
 
-		// Hide progressbar when cancelling tasks
+		// Hide progressbar and dialog when cancelling tasks
 		mActivity.setBeeeOnProgressBarVisibility(false);
+		mActivity.hideProgressDialog();
 	}
 
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 	 *
-	 * @param task            task to be executed
-	 * @param param           param for the task
-	 * @param showProgressBar whether this task should show progressbar in Activity during its running
+	 * @param task            		task to be executed
+	 * @param param           		param for the task
+	 * @param progressIndicator what kind of progress indicator this task should show in Activity
 	 */
-	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param, boolean showProgressBar) {
+	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param, ProgressIndicator progressIndicator) {
 		// TODO: check if it makes sense to start the task (data are expired, etc.) - need implementation in each particular task
 		/*if (!task.needRun()) {
 			return;
@@ -71,12 +72,10 @@ public class CallbackTaskManager {
 
 		// Don't wait for task's preExecuteCallback for showing progressbar and show it immediately
 		// because when switching activities there could be still running previous task which would postpone executing of this one
-		if (showProgressBar) {
-			mActivity.setBeeeOnProgressBarVisibility(true);
-		}
+		showProgressIndicator(progressIndicator);
 
-		// Prepare listeners for showing/hiding progress bar
-		prepareTaskListeners(task, showProgressBar);
+		// Prepare listeners for showing/hiding progress indicator
+		prepareTaskListeners(task, progressIndicator);
 
 		// Remember task
 		addTask(task);
@@ -91,18 +90,18 @@ public class CallbackTaskManager {
 
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-	 * Shows progress bar in Activity automatically during its running.
+	 * Shows progress indicator in Activity automatically during its running.
 	 *
 	 * @param task  task to be executed
 	 * @param param param for the task
 	 */
 	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param) {
-		executeTask(task, param, true);
+		executeTask(task, param, ProgressIndicator.PROGRESS_ICON);
 	}
 
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-	 * Shows progress bar in Activity automatically during its running.
+	 * Shows progress indicator in Activity automatically during its running.
 	 *
 	 * @param task task to be executed
 	 */
@@ -143,20 +142,18 @@ public class CallbackTaskManager {
 	}
 
 	/**
-	 * Prepare own listeners (and preserve original ones) for showing/hiding progress bar of activity.
+	 * Prepare own listeners (and preserve original ones) for showing/hiding progress indicator of activity.
 	 *
 	 * @param task
-	 * @param showProgressBar whether this task should show progressbar during its running
+	 * @param progressIndicator what kind of progress indicator this task should show in Activity
 	 */
-	private void prepareTaskListeners(final CallbackTask task, final boolean showProgressBar) {
+	private void prepareTaskListeners(final CallbackTask task, final ProgressIndicator progressIndicator) {
 		final CallbackTask.ICallbackTaskPreExecuteListener origPreListener = task.getPreExecuteListener();
 		task.setPreExecuteListener(new CallbackTask.ICallbackTaskPreExecuteListener() {
 			@Override
 			public void onPreExecute() {
-				// Show progress bar in activity
-				if (showProgressBar) {
-					mActivity.setBeeeOnProgressBarVisibility(true);
-				}
+				// Show progress indicator in activity
+				showProgressIndicator(progressIndicator);
 
 				// Call original listener, if exists
 				if (origPreListener != null) {
@@ -178,10 +175,8 @@ public class CallbackTaskManager {
 					}
 				}
 
-				// Hide progress bar in activity
-				if (showProgressBar) {
-					mActivity.setBeeeOnProgressBarVisibility(false);
-				}
+				// Hide progress indicator in activity
+				hideProgressIndicator(progressIndicator);
 
 				// Handle eventual exceptions
 				AppException exception = task.getException();
@@ -226,6 +221,38 @@ public class CallbackTaskManager {
 				}
 			}
 		});
+	}
+
+	private void showProgressIndicator(ProgressIndicator type) {
+		switch (type) {
+			case PROGRESS_NONE:
+				break;
+			case PROGRESS_ICON:
+				mActivity.setBeeeOnProgressBarVisibility(true);
+				break;
+			case PROGRESS_DIALOG:
+				mActivity.showProgressDialog();
+				break;
+		}
+	}
+
+	private void hideProgressIndicator(ProgressIndicator type) {
+		switch (type) {
+			case PROGRESS_NONE:
+				break;
+			case PROGRESS_ICON:
+				mActivity.setBeeeOnProgressBarVisibility(false);
+				break;
+			case PROGRESS_DIALOG:
+				mActivity.hideProgressDialog();
+				break;
+		}
+	}
+
+	public enum ProgressIndicator {
+		PROGRESS_NONE,
+		PROGRESS_ICON,
+		PROGRESS_DIALOG;
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
+import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.util.Log;
 
@@ -28,6 +30,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	protected boolean isPaused = false;
 
 	private View mProgressBar;
+	private BetterProgressDialog mProgressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +80,9 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 		// Cancel and remove all remembered tasks
 		callbackTaskManager.cancelAndRemoveAll();
+
+		// Hide progress dialog if it is showing
+		hideProgressDialog();
 	}
 
 	public static void redirectToLogin(Context context, boolean logout) {
@@ -110,7 +116,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		// Empty default method
 	}
 
-	public void setBeeeOnProgressBarVisibility(boolean visible) {
+	public synchronized void setBeeeOnProgressBarVisibility(boolean visible) {
 		if (mProgressBar == null) {
 			mProgressBar = findViewById(R.id.toolbar_progress);
 
@@ -122,6 +128,26 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		}
 
 		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+	}
+
+	public synchronized void showProgressDialog(/*@StringRes int progressMessageRes*/) {
+		if (mProgressDialog == null) {
+			// Prepare progress dialog
+			mProgressDialog = new BetterProgressDialog(this);
+			mProgressDialog.setMessageResource(R.string.progress_saving_data);
+			mProgressDialog.setCancelable(false);
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		}
+
+		mProgressDialog.show();
+	}
+
+	public synchronized void hideProgressDialog() {
+		if (mProgressDialog == null || !mProgressDialog.isShowing()) {
+			return;
+		}
+		
+		mProgressDialog.dismiss();
 	}
 
 	/**

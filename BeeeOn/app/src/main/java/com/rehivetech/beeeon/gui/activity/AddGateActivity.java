@@ -19,6 +19,7 @@ import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
 
 import java.util.Arrays;
@@ -30,22 +31,10 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 	public static final String TAG_FRAGMENT_CODE_DIALOG = "Code_dialog";
-	private ProgressDialog mProgress;
 
 	@Override
 	protected void onLastFragmentActionNext() {
 		//there is nothing to do, but it is required to implement it
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceData) {
-		super.onCreate(savedInstanceData);
-		// Prepare progress dialog
-
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_saving_data));
-		mProgress.setCancelable(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
 
 	@Override
@@ -94,8 +83,6 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 
 			@Override
 			public void onExecute(boolean success) {
-				mProgress.cancel();
-
 				if (success) {
 					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
 					EnterCodeDialogFragment enterCodeDialogFragment = (EnterCodeDialogFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_CODE_DIALOG);
@@ -115,7 +102,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(registerGateTask, gate,false);
+		callbackTaskManager.executeTask(registerGateTask, gate, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	@Override

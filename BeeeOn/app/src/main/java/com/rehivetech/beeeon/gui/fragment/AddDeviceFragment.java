@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.SetupSensorActivity;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
 import com.rehivetech.beeeon.util.Log;
 
@@ -158,7 +159,7 @@ public class AddDeviceFragment extends TrackFragment {
 				}
 			}
 		});
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId, false);
+		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(pairDeviceTask, mGateId, CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
 	}
 
 	public void startTimer() {
