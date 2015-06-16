@@ -350,6 +350,11 @@
     <string name="tut_add_gate_text_3">In the next step, please give name to your gateway and scan QR code</string>
     <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
     <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actuator</string>
+    <string name="tut_add_sensor_title_1">Pull out the battery stripe</string>
+    <string name="tut_add_sensor_title_2">Prepare your device</string>
+    <string name="tut_add_gate_title_1">Connect the gate to the internet</string>
+    <string name="tut_add_gate_title_2">Connect the gate to the AC power</string>
+    <string name="tut_add_gate_title_3">Final information</string>
 
 	<!-- Achievements -->
 	<string name="share_title">Share this event</string>
@@ -414,10 +419,4 @@
     <string name="toast_device_not_available">Device is not available</string>
     <string name="activity_add_device_dialog_text">Now please press the button Send Pair</string>
     <string name="activity_add_device_shake_it">Now please shake the device or keep pressing the button on it.</string>
-    <string name="tut_add_sensor_title_1">Pull out the battery stripe</string>
-    <string name="tut_add_sensor_title_2">Prepare your device</string>
-    <string name="tut_add_gate_title_1">Connect the gate to the internet</string>
-    <string name="tut_add_gate_title_2">Connecting the gate to the AC power</string>
-    <string name="tut_add_gate_title_3">Final information</string>
-
 </resources>
