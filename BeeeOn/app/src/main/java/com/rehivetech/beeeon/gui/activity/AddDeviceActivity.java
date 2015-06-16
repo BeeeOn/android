@@ -39,8 +39,7 @@ public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFra
 
 		//the List and the FragmentManager objects are needed as arguments for the constructor
 		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.tut_add_sensor_text_1, R.string.tut_add_sensor_title_1),
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_second_step, R.string.tut_add_sensor_text_2, R.string.tut_add_sensor_title_2)
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.tut_add_sensor_text_1, R.string.tut_add_sensor_title_1)
 		);
 
 		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, AddDeviceFragment.newInstance(gate.getId()));

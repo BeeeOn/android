@@ -44,6 +44,9 @@
 
 	<!-- Size of activity_add_sensor_activity_dialog -->
 	<dimen name="content_view_size">175dp</dimen>
+	<dimen name="addgate_image_size">125dp</dimen>
+	<dimen name="addgate_button_width">100dp</dimen>
+	<dimen name="addgate_button_height">45dp</dimen>
 	<dimen name="donut_stroke_width">10dp</dimen>
 	<dimen name="donut_inside_text_size">40sp</dimen>
 	<dimen name="donut_inside_bottom_text_size">15sp</dimen>

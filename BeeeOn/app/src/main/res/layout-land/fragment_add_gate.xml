@@ -5,14 +5,19 @@
 			android:background="@color/beeeon_primary_cyan">
 
 
-	<LinearLayout
+	<RelativeLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:gravity="center"
-		android:orientation="vertical">
+		android:padding="@dimen/adddevice_padding_land">
 
+		<ImageView
+			android:id="@+id/add_gate_image"
+			android:layout_width="@dimen/content_view_size_land"
+			android:layout_height="@dimen/content_view_size_land"
+			android:src="@drawable/beeeon_tutorial_aa_third_step"/>
 
 		<TextView
+			android:id="@+id/add_gate_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/addadapter_last_fragment_title"
@@ -21,9 +26,13 @@
 			android:textStyle="bold"
 			android:textSize="@dimen/addddevice_title_size_land"
 			android:padding="10dp"
-			/>
+
+			android:layout_toEndOf="@id/add_gate_image"
+			android:layout_toRightOf="@id/add_gate_image"
+			android:layout_alignTop="@id/add_gate_image"/>
 
 		<TextView
+			android:id="@+id/add_gate_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:gravity="center_horizontal"
@@ -31,35 +40,38 @@
 			android:textColor="@color/white"
 			android:textSize="@dimen/adddevice_text_size_land"
 			android:padding="10dp"
-			/>
+
+			android:layout_toEndOf="@id/add_gate_image"
+			android:layout_toRightOf="@id/add_gate_image"
+			android:layout_below="@id/add_gate_title"/>
 
 		<LinearLayout
+			android:id="@+id/add_gate_buttons"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal"
-			android:padding="10dp">
+			android:layout_below="@id/add_gate_text"
+			android:layout_centerHorizontal="true">
 
 			<Button
 				android:id="@+id/add_gate_qr_button"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
+				android:layout_width="@dimen/addgate_button_width"
+				android:layout_height="@dimen/addgate_button_height"
 				android:background="@color/beeeon_secundary_pink"
-				android:layout_weight="1"
 				android:text="@string/addadapter_qr_button"
 				android:textColor="@color/white"
-				android:padding="10dp"
+				android:layout_gravity="center"
 				/>
 
 			<Button
 				android:id="@+id/add_gate_write_it_button"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
+				android:layout_width="@dimen/addgate_button_width"
+				android:layout_height="@dimen/addgate_button_height"
 				android:background="@color/beeeon_text_hint"
-				android:layout_weight="1"
 				android:text="@string/addadapter_manual_edit"
 				android:textColor="@color/white"
-				android:padding="10dp"
+				android:layout_gravity="center"
 				/>
 		</LinearLayout>
-	</LinearLayout>
+	</RelativeLayout>
 </ScrollView>
