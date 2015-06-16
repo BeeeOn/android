@@ -403,7 +403,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void logout() {
-		Controller.getInstance(this).logout();
+		Controller.getInstance(this).logout(false);
 		Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 		startActivity(intent);
 		this.finish();

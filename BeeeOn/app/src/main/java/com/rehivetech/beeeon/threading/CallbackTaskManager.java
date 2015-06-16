@@ -194,7 +194,12 @@ public class CallbackTaskManager {
 							switch ((NetworkError) errCode) {
 								case BAD_BT: {
 									BaseApplicationActivity.redirectToLogin(mActivity);
+									break;
 									// Intentionally no return here to let show error toast below
+								}
+								case COM_VER_MISMATCH: {
+									BaseApplicationActivity.redirectToLogin(mActivity, true);
+									break;
 								}
 							}
 						} else if (errCode instanceof ClientError) {
@@ -202,6 +207,7 @@ public class CallbackTaskManager {
 								case SOCKET:
 								case INTERNET_CONNECTION: {
 									// Stop scheduled tasks on client errors? -> Separate server and client errors into separate *Error classes? Probably
+									break;
 								}
 							}
 						}

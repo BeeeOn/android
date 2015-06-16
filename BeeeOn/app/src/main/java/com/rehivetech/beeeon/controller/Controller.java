@@ -407,9 +407,13 @@ public final class Controller {
 
 	/**
 	 * Destroy user session in network and forget him as last logged in user.
+	 *
+	 * @param alsoFromServer If set to true, it also send request to server to logout actual user. Otherwise only clear user data locally.
 	 */
-	public void logout() {
-		// TODO: Request to logout from server (discard actual BT)
+	public void logout(boolean alsoFromServer) {
+		if (alsoFromServer) {
+			// TODO: Request to logout from server (discard actual BT)
+		}
 
 		// delete geofences
 		getGeofenceModel().unregisterAllUserGeofence(getActualUser().getId());

@@ -79,13 +79,21 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		callbackTaskManager.cancelAndRemoveAll();
 	}
 
-	public static void redirectToLogin(Context context) {
+	public static void redirectToLogin(Context context, boolean logout) {
+		if (logout) {
+			Controller.getInstance(context).logout(false);
+		}
+
 		Log.d(TAG, "Redirecting to login");
 		Intent intent = new Intent(context, LoginActivity.class);
 		intent.putExtra(LoginActivity.BUNDLE_REDIRECT, true);
 		intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		context.startActivity(intent);
+	}
+
+	public static void redirectToLogin(Context context) {
+		redirectToLogin(context, false);
 	}
 
 	/**

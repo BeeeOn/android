@@ -305,7 +305,7 @@ public class LoginActivity extends BaseActivity {
 
 						if (mLoginCancel) {
 							// User cancelled login so do logout() to be sure it won't try to login automatically next time
-							controller.logout();
+							controller.logout(false);
 						} else {
 							// Open MainActivity or just this LoginActivity and let it redirect back
 							onLoggedIn(); // finishes this activity
