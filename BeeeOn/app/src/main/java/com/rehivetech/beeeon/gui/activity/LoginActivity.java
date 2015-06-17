@@ -246,6 +246,12 @@ public class LoginActivity extends BaseActivity {
 	// ///////////////// Custom METHODS
 	// ////////////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
+	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
+	 *
+	 * @param demoMode
+	 */
 	protected void setDemoMode(boolean demoMode) {
 		// After changing demo mode must be controller reloaded
 		Controller.setDemoMode(this, demoMode);
@@ -272,8 +278,6 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void doLogin(final IAuthProvider authProvider) {
-		final Controller controller = Controller.getInstance(this);
-
 		mProgress.setMessageResource(R.string.progress_signing);
 		mProgress.show();
 
@@ -286,6 +290,7 @@ public class LoginActivity extends BaseActivity {
 				boolean errFlag = true;
 
 				try {
+					Controller controller = Controller.getInstance(LoginActivity.this);
 
 					// Here is authProvider already filled with needed parameters so we can send them to the server
 					if (controller.login(authProvider)) {
@@ -361,7 +366,6 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void doRegister(final IAuthProvider authProvider) {
-		final Controller controller = Controller.getInstance(this);
 		mProgress.setMessageResource(R.string.progress_signup);
 		mProgress.show();
 
@@ -374,6 +378,8 @@ public class LoginActivity extends BaseActivity {
 				boolean errFlag = true;
 
 				try {
+					Controller controller = Controller.getInstance(LoginActivity.this);
+
 					// Here is authProvider already filled with needed parameters so we can send them to the server
 					if (controller.register(authProvider)) {
 						Log.d(TAG, "Register successful");

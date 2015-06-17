@@ -142,6 +142,9 @@ public final class Controller {
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
 	 *
+	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
+	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
+	 *
 	 * @param context  This must be the global Application context.
 	 * @param demoMode
 	 */
