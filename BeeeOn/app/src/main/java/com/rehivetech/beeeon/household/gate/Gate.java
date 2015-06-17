@@ -6,6 +6,11 @@ package com.rehivetech.beeeon.household.gate;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.user.User;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import java.util.TimeZone;
+
 /**
  * @author ThinkDeep
  * @brief Class for parsed data from XML file of adapters

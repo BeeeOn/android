@@ -442,4 +442,9 @@
     <string name="interval_weekly">Weekly</string>
     <string name="interval_daily">Daily</string>
     <string name="interval_monthly">Monthly</string>
+
+    <string name="title_activity_gate_edit">Gate edit</string>
+    <string name="fragment_gate_editText_hint">New name</string>
+    <string name="fragment_gate_gateName">Name of the gate</string>
+
 </resources>
