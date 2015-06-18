@@ -66,7 +66,7 @@
 				 android:layout_marginBottom="8dp"
                  android:text="Last sync: 00:00"
                  android:textColor="@color/beeeon_text_hint"
-                 android:textSize="10sp" />
+                 android:textSize="12sp" />
 
              <TextView
                  android:id="@+id/titleofsensor"

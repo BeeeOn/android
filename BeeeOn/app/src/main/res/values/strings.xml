@@ -152,7 +152,7 @@
     <string name="menu_watchdog">Watchdog</string>
 
     <!-- Add sensor dialog -->
-    <string name="addsensor_sending_request">Sending ... </string>
+    <string name="addsensor_sending_request">Sending … </string>
     <string name="addsensor_send_request">Send pair request  </string>
     <string name="addsensor_active_pair">Active pair mode </string>
     <string name="addadapter_textview_name">Name</string>
@@ -277,7 +277,7 @@
     <string name="play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
     <string name="company_email" translatable="false">info@BeeeOn.com</string>
     <string name="company_web" translatable="false">http://rehivetech.com/</string>
-    <string name="copyright">\u00A9 2014-15 RehiveTech. All rights reserved.</string>
+    <string name="copyright">\u00A9 2014–15 RehiveTech. All rights reserved.</string>
     <string name="version">Version</string>
     <string name="logo">Logo</string>
     <string name="rate">Rate</string>

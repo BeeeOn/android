@@ -203,7 +203,7 @@
     <string name="widget_configuration_select_device">Vyberte zariadenie zo zoznamu</string>
 
     <!-- About -->
-    <string name="copyright">\u00A9 2014-15 RehiveTech. Všetky práva vyhradené.</string>
+    <string name="copyright">\u00A9 2014–15 RehiveTech. Všetky práva vyhradené.</string>
     <string name="version">Verzia</string>
     <string name="logo">Logo</string>
     <string name="rate">Hodnotenie</string>
@@ -442,7 +442,7 @@
     <string name="name_38">Čo je nového?</string>
     <string name="name_39">Na rovnakej vlne.</string>
     <string name="name_4">Malý, ale náš.</string>
-    <string name="name_40">Čo je nového...</string>
+    <string name="name_40">Čo je nového…</string>
     <string name="name_41">Postni to!</string>
     <string name="name_42">Ahoj svet!</string>
     <string name="name_33">Lion\'s share</string>

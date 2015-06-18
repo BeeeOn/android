@@ -18,7 +18,7 @@
 		android:layout_height="wrap_content"
 		android:text="Lorem ipsum"
 		android:paddingTop="8dp"
-		android:textSize="17dp"
+		android:textSize="17sp"
 		/>
 
 	<LinearLayout
@@ -34,7 +34,7 @@
 			android:layout_height="wrap_content"
 			android:text="-"
 			android:textStyle="bold"
-			android:textSize="30dp"/>
+			android:textSize="30sp"/>
 
 		<EditText
 			android:gravity="center"
@@ -51,7 +51,7 @@
 			android:layout_height="wrap_content"
 			android:text="+"
 			android:textStyle="bold"
-			android:textSize="30dp"/>
+			android:textSize="30sp"/>
 
 	</LinearLayout>
 

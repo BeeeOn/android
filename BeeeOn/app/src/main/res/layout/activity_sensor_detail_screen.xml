@@ -332,7 +332,6 @@
 				android:id="@+id/sen_graph"
 				android:layout_width="match_parent"
 				android:layout_height="200dp"
-				android:layout_below="@id/sen_graph_name"
 				android:orientation="vertical"
 				android:visibility="visible"/>
 		</LinearLayout>

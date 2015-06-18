@@ -87,10 +87,6 @@
 			android:label="@string/title_activity_location_screen">
 		</activity>
 		<activity
-			android:name=".gui.activity.LocationDetailActivity"
-			android:label="@string/title_activity_location_detail_screen">
-		</activity>
-		<activity
 			android:name=".gui.activity.AddDeviceActivity"
 			android:label="@string/title_activity_add_sensor">
 		</activity>

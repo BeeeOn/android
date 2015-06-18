@@ -23,8 +23,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-		android:gravity="center"
+        android:gravity="center"
         android:orientation="vertical"
         >
         <TextView
@@ -55,9 +54,6 @@
         fab:fab_colorNormal="@color/beeeon_secundary_pink"
         fab:fab_colorPressed="@color/black"
         fab:fab_colorRipple="@color/beeeon_secundary_pink"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_margin="16dp"
         android:layout_gravity="right|bottom" />
 </FrameLayout>
