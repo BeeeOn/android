@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +19,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.AddUserTask;
 
 import java.util.ArrayList;
@@ -30,8 +30,6 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 	protected static final String TAG = "AddGateUserActivity";
 
 	private Gate mGate;
-
-	private ProgressDialog mProgress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +48,6 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
-
-
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_saving_data));
-		mProgress.setCancelable(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		// Get selected gate
 		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
@@ -94,8 +85,7 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 					Log.d(TAG, "non valid email");
 					return;
 				}
-				if (mProgress != null)
-					mProgress.show();
+
 				User newUser = new User();
 				newUser.setEmail(email.getText().toString());
 				newUser.setRole(User.Role.values()[role.getSelectedItemPosition()]);
@@ -114,14 +104,13 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onExecute(boolean success) {
-				mProgress.hide();
 				finish();
 			}
 
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(addUserTask, pair);
+		callbackTaskManager.executeTask(addUserTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	/*

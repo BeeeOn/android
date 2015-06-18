@@ -40,6 +40,7 @@ import com.rehivetech.beeeon.household.watchdog.WatchdogBaseType;
 import com.rehivetech.beeeon.household.watchdog.WatchdogGeofenceType;
 import com.rehivetech.beeeon.household.watchdog.WatchdogSensorType;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RemoveWatchdogTask;
 import com.rehivetech.beeeon.threading.task.SaveWatchdogTask;
 import com.rehivetech.beeeon.util.Log;
@@ -77,7 +78,6 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private boolean mIsNew = false;
 
 	private Menu mOptionsMenu;
-	private ProgressDialog mProgress;
 	private UnitsHelper mUnitsHelper;
 	private SharedPreferences mPrefs;
 
@@ -114,12 +114,6 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 			// x instead of <- indicating that no changes will be saved upon click
 			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
-
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_saving_data));
-		mProgress.setCancelable(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		Bundle bundle = getIntent().getExtras();
 		// if not regular bundle, try to saved instance bundle
@@ -528,15 +522,12 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		mWatchdog.setName(ruleName.getText().toString());
 		mWatchdog.setEnabled(ruleEnabled.isChecked());
 
-		mProgress.show();
-
 		// TODO check if data were changed ???
 		SaveWatchdogTask saveWatchdogTask = new SaveWatchdogTask(this);
 
 		saveWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (mProgress != null) mProgress.dismiss();
 				Toast.makeText(WatchdogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
 
 				// when new rule, close after done
@@ -545,7 +536,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(saveWatchdogTask, mWatchdog);
+		callbackTaskManager.executeTask(saveWatchdogTask, mWatchdog, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	/**

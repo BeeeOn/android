@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +26,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
@@ -38,7 +38,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 	private Gate mPairGate;
 
 	private SetupSensorFragment mFragment;
-	private ProgressDialog mProgress;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +61,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
 		indicator.setViewPager(viewPager);
 		indicator.setVisibility(View.GONE);
-
-		// Prepare progress dialog
-		mProgress = new ProgressDialog(this);
-		mProgress.setMessage(getString(R.string.progress_saving_data));
-		mProgress.setCancelable(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		initButtons();
 	}
@@ -140,8 +133,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 				// Set that mDevice was initialized
 				newDevice.setInitialized(true);
-				// Show progress bar for saving
-				mProgress.show();
 
 				// Save that mDevice
 				Log.d(TAG, String.format("InitializeDevice - mDevice: %s, loc: %s", newDevice.getId(), location.getId()));
@@ -164,8 +155,6 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onExecute(boolean success) {
-
-				mProgress.cancel();
 				if (success) {
 					Toast.makeText(SetupSensorActivity.this, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
 
@@ -182,7 +171,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(initializeDeviceTask, pair);
+		callbackTaskManager.executeTask(initializeDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 
