@@ -5,7 +5,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<RelativeLayout
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:padding="@dimen/adddevice_padding_land">
 		<!-- content of both textviews and imageview is set in java code -->

@@ -1,0 +1,63 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+	<dimen name="textsize">15sp</dimen>
+	<dimen name="textsizesmaller">11sp</dimen>
+
+	<!-- text sizes according to material design spec -->
+	<dimen name="textsize_caption">12sp</dimen>
+	<dimen name="textsize_body">14sp</dimen>
+	<dimen name="textsize_subhead">16sp</dimen>
+	<dimen name="textsize_title">20sp</dimen>
+	<dimen name="textsize_headline">24sp</dimen>
+
+	<!--  Widgets -->
+	<dimen name="widget_margin">8dp</dimen>
+
+	<dimen name="widget_width_cells_2">170dp</dimen>
+	<dimen name="widget_width_cells_3">240dp</dimen>
+
+	<dimen name="widget_height_cells_1">80dp</dimen>
+
+	<dimen name="widget_header_height">38dp</dimen>
+	<dimen name="widget_header_icon">32dp</dimen>
+
+	<dimen name="widget_clock_width">160dp</dimen>
+
+	<dimen name="widget_textsize_clock">40sp</dimen>
+	<dimen name="widget_textsize_clock_large">70sp</dimen>
+
+	<dimen name="widget_textsize_weather_icon">50dp</dimen>
+	<dimen name="widget_weather_icon">60dp</dimen>
+	<dimen name="widget_weather_icon_small">24dp</dimen>
+
+	<dimen name="widget_graph_width">320dp</dimen>
+	<dimen name="widget_graph_height">180dp</dimen>
+
+
+	<dimen name="custom_spinner_icon_size">35dp</dimen>
+	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>
+	
+	<dimen name="nav_drawer_width">280dp</dimen>
+
+	<!-- Size of activity_add_sensor_activity_dialog -->
+	<dimen name="content_view_size">175dp</dimen>
+	<dimen name="addgate_image_size">125dp</dimen>
+	<dimen name="addgate_button_width">100dp</dimen>
+	<dimen name="addgate_button_height">45dp</dimen>
+	<dimen name="donut_stroke_width">10dp</dimen>
+	<dimen name="donut_inside_text_size">40sp</dimen>
+	<dimen name="donut_inside_bottom_text_size">15sp</dimen>
+	<dimen name="donut_inside_bottom_text_size_land">13sp</dimen>
+	<dimen name="donut_inside_text_size_land">30sp</dimen>
+	<dimen name="adddevice_title_size">26sp</dimen>
+	<dimen name="adddevice_text_size">20sp</dimen>
+	<dimen name="content_view_size_land">150dp</dimen>
+	<dimen name="addddevice_title_size_land">30sp</dimen>
+	<dimen name="adddevice_text_size_land">20sp</dimen>
+	<dimen name="adddevice_layout_padding">20dp</dimen>
+	<dimen name="adddevice_padding_land">0dp</dimen>
+	<dimen name="adddevice_padding">20dp</dimen>
+</resources>

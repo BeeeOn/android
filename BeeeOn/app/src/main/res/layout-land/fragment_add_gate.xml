@@ -14,7 +14,8 @@
 			android:id="@+id/add_gate_image"
 			android:layout_width="@dimen/content_view_size_land"
 			android:layout_height="@dimen/content_view_size_land"
-			android:src="@drawable/beeeon_tutorial_aa_third_step"/>
+			android:src="@drawable/beeeon_tutorial_aa_third_step"
+			android:layout_margin="25dp"/>
 
 		<TextView
 			android:id="@+id/add_gate_title"
@@ -26,6 +27,7 @@
 			android:textStyle="bold"
 			android:textSize="@dimen/addddevice_title_size_land"
 			android:padding="10dp"
+			android:layout_marginBottom="25dp"
 
 			android:layout_toEndOf="@id/add_gate_image"
 			android:layout_toRightOf="@id/add_gate_image"
@@ -45,13 +47,13 @@
 			android:layout_toRightOf="@id/add_gate_image"
 			android:layout_below="@id/add_gate_title"/>
 
-		<LinearLayout
+		<RelativeLayout
 			android:id="@+id/add_gate_buttons"
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:orientation="horizontal"
 			android:layout_below="@id/add_gate_text"
-			android:layout_centerHorizontal="true">
+			android:layout_toRightOf="@id/add_gate_image"
+			android:gravity="center_horizontal">
 
 			<Button
 				android:id="@+id/add_gate_qr_button"
@@ -60,8 +62,8 @@
 				android:background="@color/beeeon_secundary_pink"
 				android:text="@string/addadapter_qr_button"
 				android:textColor="@color/white"
-				android:layout_gravity="center"
-				/>
+				android:layout_alignParentTop="true"
+				android:layout_centerHorizontal="true"/>
 
 			<Button
 				android:id="@+id/add_gate_write_it_button"
@@ -70,8 +72,9 @@
 				android:background="@color/beeeon_text_hint"
 				android:text="@string/addadapter_manual_edit"
 				android:textColor="@color/white"
-				android:layout_gravity="center"
-				/>
-		</LinearLayout>
+				android:layout_alignParentTop="true"
+				android:layout_toRightOf="@+id/add_gate_qr_button"
+				android:layout_toEndOf="@+id/add_gate_qr_button"/>
+		</RelativeLayout>
 	</RelativeLayout>
 </ScrollView>
