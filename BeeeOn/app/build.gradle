@@ -20,12 +20,12 @@ android {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 50
-        versionName "3.2.2"
+        versionCode 52
+        versionName "4.0.1"
         signingConfig signingConfigs.debug
     }
 
-/*
+
   android {
       lintOptions {
           checkReleaseBuilds false
@@ -34,7 +34,7 @@ android {
           abortOnError false
       }
   }
-*/
+
 
 
     signingConfigs {
