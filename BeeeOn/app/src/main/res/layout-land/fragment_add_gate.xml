@@ -24,7 +24,8 @@
 				android:layout_height="@dimen/addgate_button_height"
 				android:background="@color/beeeon_secundary_pink"
 				android:text="@string/addadapter_qr_button"
-				android:textColor="@color/white"/>
+				android:textColor="@color/white"
+				android:drawableLeft="@drawable/qrcode"/>
 
 			<Button
 				android:id="@+id/add_gate_write_it_button"
@@ -34,7 +35,8 @@
 				android:text="@string/addadapter_manual_edit"
 				android:textColor="@color/white"
 				android:layout_marginTop="25dp"
-				android:layout_below="@id/add_gate_qr_button"/>
+				android:layout_below="@id/add_gate_qr_button"
+				android:drawableLeft="@drawable/pen"/>
 		</RelativeLayout>
 		<TextView
 			android:id="@+id/add_gate_title"
