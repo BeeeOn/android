@@ -10,13 +10,32 @@
 		android:layout_height="wrap_content"
 		android:padding="@dimen/adddevice_padding_land">
 
-		<ImageView
-			android:id="@+id/add_gate_image"
+		<RelativeLayout
+			android:id="@+id/add_gate_buttons"
 			android:layout_width="@dimen/content_view_size_land"
 			android:layout_height="@dimen/content_view_size_land"
-			android:src="@drawable/beeeon_tutorial_aa_third_step"
-			android:layout_margin="25dp"/>
+			android:gravity="center_horizontal"
+			android:layout_centerVertical="true"
+			android:layout_margin="25dp">
 
+			<Button
+				android:id="@+id/add_gate_qr_button"
+				android:layout_width="@dimen/addgate_button_width"
+				android:layout_height="@dimen/addgate_button_height"
+				android:background="@color/beeeon_secundary_pink"
+				android:text="@string/addadapter_qr_button"
+				android:textColor="@color/white"/>
+
+			<Button
+				android:id="@+id/add_gate_write_it_button"
+				android:layout_width="@dimen/addgate_button_width"
+				android:layout_height="@dimen/addgate_button_height"
+				android:background="@color/beeeon_text_hint"
+				android:text="@string/addadapter_manual_edit"
+				android:textColor="@color/white"
+				android:layout_marginTop="25dp"
+				android:layout_below="@id/add_gate_qr_button"/>
+		</RelativeLayout>
 		<TextView
 			android:id="@+id/add_gate_title"
 			android:layout_width="wrap_content"
@@ -29,9 +48,8 @@
 			android:padding="10dp"
 			android:layout_marginBottom="25dp"
 
-			android:layout_toEndOf="@id/add_gate_image"
-			android:layout_toRightOf="@id/add_gate_image"
-			android:layout_alignTop="@id/add_gate_image"/>
+			android:layout_toEndOf="@id/add_gate_buttons"
+			android:layout_toRightOf="@id/add_gate_buttons"/>
 
 		<TextView
 			android:id="@+id/add_gate_text"
@@ -43,38 +61,10 @@
 			android:textSize="@dimen/adddevice_text_size_land"
 			android:padding="10dp"
 
-			android:layout_toEndOf="@id/add_gate_image"
-			android:layout_toRightOf="@id/add_gate_image"
+			android:layout_toEndOf="@id/add_gate_buttons"
+			android:layout_toRightOf="@id/add_gate_buttons"
 			android:layout_below="@id/add_gate_title"/>
 
-		<RelativeLayout
-			android:id="@+id/add_gate_buttons"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/add_gate_text"
-			android:layout_toRightOf="@id/add_gate_image"
-			android:gravity="center_horizontal">
 
-			<Button
-				android:id="@+id/add_gate_qr_button"
-				android:layout_width="@dimen/addgate_button_width"
-				android:layout_height="@dimen/addgate_button_height"
-				android:background="@color/beeeon_secundary_pink"
-				android:text="@string/addadapter_qr_button"
-				android:textColor="@color/white"
-				android:layout_alignParentTop="true"
-				android:layout_centerHorizontal="true"/>
-
-			<Button
-				android:id="@+id/add_gate_write_it_button"
-				android:layout_width="@dimen/addgate_button_width"
-				android:layout_height="@dimen/addgate_button_height"
-				android:background="@color/beeeon_text_hint"
-				android:text="@string/addadapter_manual_edit"
-				android:textColor="@color/white"
-				android:layout_alignParentTop="true"
-				android:layout_toRightOf="@+id/add_gate_qr_button"
-				android:layout_toEndOf="@+id/add_gate_qr_button"/>
-		</RelativeLayout>
 	</RelativeLayout>
 </ScrollView>
