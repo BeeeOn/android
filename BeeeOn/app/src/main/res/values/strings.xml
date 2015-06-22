@@ -315,7 +315,7 @@
     <string name="gate_timezone">gateway timezone</string>
 
     <!-- Default names -->
-    <string name="adapter_default_name">Gateway #%d</string>
+    <string name="adapter_default_name">%1$s\'s gateway #%2$d</string>
     <string name="settings">Settings</string>
     <string name="save">Save</string>
     <string name="ada_menu_edit">Edit gateway name</string>

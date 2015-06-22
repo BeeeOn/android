@@ -5,6 +5,7 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.model.GatesModel;
 import com.rehivetech.beeeon.threading.CallbackTask;
 
@@ -21,7 +22,7 @@ public class RegisterGateTask extends CallbackTask<Gate> {
 		super(context);
 	}
 
-	private String getUniqueGateName(List<Gate> gates) {
+	private String getUniqueGateName(String userName, List<Gate> gates) {
 		Vector<String> gateNames = new Vector<String>();
 
 		for (Gate gate : gates) {
@@ -32,15 +33,10 @@ public class RegisterGateTask extends CallbackTask<Gate> {
 
 		int number = 1;
 		do {
-			name = mContext.getString(R.string.adapter_default_name, number++);
+			name = mContext.getString(R.string.adapter_default_name, userName, number++);
 		} while (gateNames.contains(name));
 
 		return name;
-	}
-
-	private String getHexaGateName(String id) throws NumberFormatException {
-		int number = Integer.parseInt(id);
-		return Integer.toHexString(number).toUpperCase(Locale.getDefault());
 	}
 
 	@Override
@@ -52,12 +48,8 @@ public class RegisterGateTask extends CallbackTask<Gate> {
 		String name = gate.getName().trim();
 
 		// Set default name for this gate, if user didn't filled any
-		if (name.isEmpty()) {
-			try {
-				name = getHexaGateName(serialNumber);
-			} catch (NumberFormatException e) {
-				name = getUniqueGateName(gatesModel.getGates());
-			}
+		if (!gate.hasName()) {
+			name = getUniqueGateName(controller.getActualUser().getName(), gatesModel.getGates());
 		}
 
 		// Register new gate and set it as active

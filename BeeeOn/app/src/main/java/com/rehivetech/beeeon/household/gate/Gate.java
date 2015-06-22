@@ -48,6 +48,10 @@ public class Gate implements INameIdentifier {
 		return mName.length() > 0 ? mName : getId();
 	}
 
+	public boolean hasName() {
+		return !mName.isEmpty();
+	}
+
 	/**
 	 * Set role of actual user of gate
 	 *

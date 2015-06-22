@@ -291,7 +291,7 @@
     <string name="gate_timezone">Časové pásmo brány</string>
 
     <!-- Default names -->
-    <string name="adapter_default_name">Brána #%d</string>
+    <string name="adapter_default_name">%1$s brána #%2$d</string>
     <string name="settings">Nastavení</string>
     <string name="save">Uložit</string>
     <string name="ada_menu_edit">Editace názvu brány</string>
