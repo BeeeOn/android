@@ -40,10 +40,10 @@
 				android:background="@color/beeeon_secundary_pink"
 				android:text="@string/addadapter_qr_button"
 				android:textColor="@color/white"
-				android:paddingLeft="20dp"
-				android:paddingRight="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp"/>
+				android:textSize="15sp"
+				android:padding="10dp"
+				android:layout_marginRight="10dp"
+				android:drawableBottom="@drawable/qrcode"/>
 
 			<Button
 				android:id="@+id/add_gate_write_it_button"
@@ -53,10 +53,9 @@
 				android:background="@color/beeeon_text_hint"
 				android:text="@string/addadapter_manual_edit"
 				android:textColor="@color/white"
-				android:paddingLeft="20dp"
-				android:paddingRight="20dp"
-				android:paddingTop="20dp"
-				android:paddingBottom="20dp"/>
+				android:textSize="15sp"
+				android:padding="10dp"
+				android:drawableBottom="@drawable/pen"/>
 		</LinearLayout>
 
 		<TextView
