@@ -370,7 +370,7 @@
 	<string name="title_activity_sensor_edit">Editace zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název brány</string>
 	<string name="addadapter_fill_code">Vyplňte kód</string>
-	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. Tutorial Vám představí BeeeOn komponenty a aplikaci.</string>
+	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. Průvodce Vám představí BeeeOn komponenty a aplikaci.</string>
 	<string name="tut_intro_text_2">BeeeOn komponenty jsou bezdrátová zařízení (např. senzor) a brána.</string>
 	<string name="tut_intro_text_3">Senzory měří hodnoty (např. teplotu), aktory nastavují požadované hodnoty.</string>
 	<string name="tut_intro_text_4">Brána sbírá data z bezdrátových zařízení.</string>
@@ -408,5 +408,26 @@
     <string name="watchdog_no_valid_item">Žádná platná položka</string>
     <string name="multiadapter_no_item">- Nic k vybrání -</string>
     <string name="update_over_wifi_only">Aktualizovat pouze přes Wi-Fi</string>
+    <string name="activity_add_device_dialog_text">Nyní prosím klikněte na tlačítko Zahájit párování</string>
+    <string name="activity_add_device_shake_it">Nyní prosím zatřeste se zařízením či zmáčkněte tlačítko pro párování na zařízení</string>
+    <string name="addadapter_last_fragment_text">Bránu můžete přidat naskenováním QR kódu nebo ručním zadáním jejího kódu</string>
+    <string name="addadapter_last_fragment_title">Zadejte kód brány</string>
+    <string name="addadapter_manual_edit">Zadat ručně</string>
+    <string name="addadapter_title">Přidávání nové brány</string>
+    <string name="adddevice_title">Přidávání nového zařízení</string>
+    <string name="addsensor_device_found">Zařízení bylo nalezeno</string>
+    <string name="addsensor_device_not_found_in_time">Zařízení nebylo nalezeno, prosím ověřtě, zda je skutečně zapnuto, a zkuste to znovu</string>
+    <string name="addsensor_request_task_not_successful">Task pro párování nebyl úspěšný, prosím, zkuste to znovu</string>
+    <string name="addsensor_time_left_unit">sekundy</string>
+    <string name="addsensor_waiting">Čekám na start</string>
+    <string name="dialog_code_title">Zadejte kód brány</string>
+    <string name="toast_error_invalid_qr_code">Toto není platný BeeeOn QR kód</string>
+    <string name="toast_error_no_qr_reader">Nepodařilo se otevřít Google Play</string>
+    <string name="tut_add_gate_title_1">Připojte bránu k internetu</string>
+    <string name="tut_add_gate_title_2">Připojte brány ke zdroji napájení</string>
+    <string name="tut_add_gate_title_3">Konečně informace</string>
+    <string name="tut_add_sensor_title_1">Vytáhněte izolační proužek baterií</string>
+    <string name="tut_add_sensor_title_2">Připravte své zařízení</string>
+    <string name="tut_intro_title">Úvodní průvodce BeeeOn</string>
 
 </resources>

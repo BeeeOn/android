@@ -418,5 +418,5 @@
     <string name="widget_location_list_title">BeeeOn location</string>
     <string name="toast_device_not_available">Device is not available</string>
     <string name="activity_add_device_dialog_text">Now please press the button Send Pair</string>
-    <string name="activity_add_device_shake_it">Now please shake the device or keep pressing the button on it.</string>
+    <string name="activity_add_device_shake_it">Now please shake the device or press the button on it.</string>
 </resources>
