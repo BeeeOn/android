@@ -12,7 +12,7 @@
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notification</string>
-    <string name="title_activity_add_sensor">Add Device</string>
+    <string name="title_activity_add_sensor">Send the request</string>
     <string name="title_activity_sensor_detail">Device Detail</string>
     <string name="title_activity_add_gate">Add Gateway</string>
     <string name="title_activity_registration">Registration</string>
@@ -158,7 +158,7 @@
     <string name="addadapter_textview_name">Name</string>
     <string name="addadapter_view_setname">Set gateway name, e.g. Home</string>
     <string name="addadapter_qr_button"> Scan QR code </string>
-    <string name="addadapter_manual_edit">Write it manually</string>
+    <string name="addadapter_manual_edit">Enter manually</string>
     <string name="dialog_code_title">Enter the code of the gate</string>
     <string name="addsensor_send_pair">SEND PAIR</string>
     <string name="addsensor_waiting">Waiting for start</string>
@@ -166,7 +166,7 @@
 	<string name="addsensor_device_not_found_in_time">The device was not found, please check if it is really switched on and try it again</string>
 	<string name="addsensor_device_found">The device was found</string>
     <string name="addsensor_request_task_not_successful">Request task was not successful, please, try it again</string>
-    <string name="adddevice_title">Adding new sensor</string>
+    <string name="adddevice_title">Adding new device</string>
     <string name="addadapter_title">Adding new gate</string>
     <string name="addadapter_last_fragment_title">Enter the code of the gate</string>
     <string name="addadapter_last_fragment_text">You can either scan the QR code on the gate or write the code manually</string>
@@ -350,6 +350,11 @@
     <string name="tut_add_gate_text_3">In the next step, please give name to your gateway and scan QR code</string>
     <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
     <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actuator</string>
+    <string name="tut_add_sensor_title_1">Pull out the battery stripe</string>
+    <string name="tut_add_sensor_title_2">Prepare your device</string>
+    <string name="tut_add_gate_title_1">Connect the gate to the internet</string>
+    <string name="tut_add_gate_title_2">Connect the gate to the AC power</string>
+    <string name="tut_add_gate_title_3">Final information</string>
 
 	<!-- Achievements -->
 	<string name="share_title">Share this event</string>
@@ -414,5 +419,4 @@
     <string name="toast_device_not_available">Device is not available</string>
     <string name="activity_add_device_dialog_text">Now please press the button Send Pair</string>
     <string name="activity_add_device_shake_it">Now please shake the device or keep pressing the button on it.</string>
-
 </resources>

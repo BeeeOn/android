@@ -1,0 +1,20 @@
+<resources>
+	<!-- Size of activity_add_sensor_activity_dialog -->
+	<dimen name="content_view_size">300dp</dimen>
+	<dimen name="addgate_image_size">225dp</dimen>
+	<dimen name="addgate_button_width">185dp</dimen>
+	<dimen name="addgate_button_height">75dp</dimen>
+	<dimen name="donut_stroke_width">25dp</dimen>
+	<dimen name="donut_inside_text_size">90sp</dimen>
+	<dimen name="donut_inside_text_size_land">100sp</dimen>
+	<dimen name="donut_inside_bottom_text_size">35sp</dimen>
+	<dimen name="donut_inside_bottom_text_size_land">25sp</dimen>
+	<dimen name="adddevice_title_size">70sp</dimen>
+	<dimen name="adddevice_text_size">50sp</dimen>
+	<dimen name="content_view_size_land">250dp</dimen>
+	<dimen name="addddevice_title_size_land">60sp</dimen>
+	<dimen name="adddevice_text_size_land">45sp</dimen>
+	<dimen name="adddevice_layout_padding">25dp</dimen>
+	<dimen name="adddevice_padding">30dp</dimen>
+	<dimen name="adddevice_padding_land">20dp</dimen>
+</resources>

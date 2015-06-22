@@ -16,10 +16,10 @@
     
     <CheckedTextView
 	    android:id="@+id/custom_spinner_icon_dropdown_label"
-	    style="?android:attr/spinnerDropDownItemStyle"
-	    android:checkMark="?android:attr/listChoiceIndicatorSingle"
+        android:textColor="@color/black"
 	    android:singleLine="true"
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"/>
-    
+	    android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"/>
+
 </com.rehivetech.beeeon.gui.view.CheckableLinearLayout>

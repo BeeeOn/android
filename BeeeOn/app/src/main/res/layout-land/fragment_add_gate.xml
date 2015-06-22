@@ -1,83 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:orientation="vertical"
-			  android:layout_width="fill_parent"
-			  android:layout_height="wrap_content"
-			  android:gravity="center"
-			  android:minWidth="260dp"
-			  android:minHeight="200dp"
-			  android:background="@color/beeeon_primary_cyan">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/beeeon_primary_cyan">
 
-	<ScrollView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
 
-		<LinearLayout
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:padding="@dimen/adddevice_padding_land">
+
+		<RelativeLayout
+			android:id="@+id/add_gate_buttons"
+			android:layout_width="@dimen/content_view_size_land"
+			android:layout_height="@dimen/content_view_size_land"
+			android:gravity="center_horizontal"
+			android:layout_centerVertical="true"
+			android:layout_margin="25dp">
+
+			<Button
+				android:id="@+id/add_gate_qr_button"
+				android:layout_width="@dimen/addgate_button_width"
+				android:layout_height="@dimen/addgate_button_height"
+				android:background="@color/beeeon_secundary_pink"
+				android:text="@string/addadapter_qr_button"
+				android:textColor="@color/white"
+				android:drawableLeft="@drawable/qrcode"
+				android:padding="10dp"/>
+
+			<Button
+				android:id="@+id/add_gate_write_it_button"
+				android:layout_width="@dimen/addgate_button_width"
+				android:layout_height="@dimen/addgate_button_height"
+				android:background="@color/beeeon_text_hint"
+				android:text="@string/addadapter_manual_edit"
+				android:textColor="@color/white"
+				android:layout_marginTop="25dp"
+				android:layout_below="@id/add_gate_qr_button"
+				android:drawableLeft="@drawable/pen"
+				android:padding="10dp"/>
+		</RelativeLayout>
+		<TextView
+			android:id="@+id/add_gate_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:orientation="vertical">
+			android:text="@string/addadapter_last_fragment_title"
+			android:gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:textStyle="bold"
+			android:textSize="@dimen/addddevice_title_size_land"
+			android:padding="10dp"
+			android:layout_marginBottom="25dp"
+
+			android:layout_toEndOf="@id/add_gate_buttons"
+			android:layout_toRightOf="@id/add_gate_buttons"/>
+
+		<TextView
+			android:id="@+id/add_gate_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:text="@string/addadapter_last_fragment_text"
+			android:textColor="@color/white"
+			android:textSize="@dimen/adddevice_text_size_land"
+			android:padding="10dp"
+
+			android:layout_toEndOf="@id/add_gate_buttons"
+			android:layout_toRightOf="@id/add_gate_buttons"
+			android:layout_below="@id/add_gate_title"/>
 
 
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/addadapter_last_fragment_title"
-				android:gravity="center_horizontal"
-				android:textColor="@color/white"
-				android:textSize="35sp"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:paddingTop="10dp"
-				android:paddingBottom="10dp"/>
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:gravity="center_horizontal"
-				android:text="@string/addadapter_last_fragment_text"
-				android:textColor="@color/white"
-				android:textSize="20sp"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:paddingTop="10dp"
-				android:paddingBottom="10dp"/>
-
-			<LinearLayout
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:orientation="horizontal"
-				android:paddingLeft="10dp"
-				android:paddingRight="10dp"
-				android:paddingTop="10dp"
-				android:paddingBottom="10dp">
-
-				<Button
-					android:id="@+id/add_gate_qr_button"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:background="@color/beeeon_secundary_pink"
-					android:layout_weight="1"
-					android:text="@string/addadapter_qr_button"
-					android:textColor="@color/white"
-					android:paddingLeft="10dp"
-					android:paddingRight="10dp"
-					android:paddingTop="10dp"
-					android:paddingBottom="10dp"/>
-
-				<Button
-					android:id="@+id/add_gate_write_it_button"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:background="@color/beeeon_text_hint"
-					android:layout_weight="1"
-					android:text="@string/addadapter_manual_edit"
-					android:textColor="@color/white"
-					android:paddingLeft="10dp"
-					android:paddingRight="10dp"
-					android:paddingTop="10dp"
-					android:paddingBottom="10dp"/>
-			</LinearLayout>
-		</LinearLayout>
-	</ScrollView>
-</LinearLayout>
+	</RelativeLayout>
+</ScrollView>
