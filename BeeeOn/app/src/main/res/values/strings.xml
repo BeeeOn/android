@@ -158,7 +158,7 @@
     <string name="addadapter_textview_name">Name</string>
     <string name="addadapter_view_setname">Set gateway name, e.g. Home</string>
     <string name="addadapter_qr_button"> Scan QR code </string>
-    <string name="addadapter_manual_edit">Write it manually</string>
+    <string name="addadapter_manual_edit">Enter manually</string>
     <string name="dialog_code_title">Enter the code of the gate</string>
     <string name="addsensor_send_pair">SEND PAIR</string>
     <string name="addsensor_waiting">Waiting for start</string>

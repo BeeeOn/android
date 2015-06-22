@@ -27,10 +27,10 @@
 
 
 		<LinearLayout
-			android:layout_width="wrap_content"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal"
-			android:padding="20dp">
+			>
 
 			<Button
 				android:id="@+id/add_gate_qr_button"
@@ -43,7 +43,8 @@
 				android:textSize="15sp"
 				android:padding="10dp"
 				android:layout_marginRight="10dp"
-				android:drawableBottom="@drawable/qrcode"/>
+				android:drawablePadding="10dp"
+				android:drawableTop="@drawable/qrcode"/>
 
 			<Button
 				android:id="@+id/add_gate_write_it_button"
@@ -55,7 +56,9 @@
 				android:textColor="@color/white"
 				android:textSize="15sp"
 				android:padding="10dp"
-				android:drawableBottom="@drawable/pen"/>
+				android:drawableTop="@drawable/pen"
+				android:drawablePadding="10dp"
+				android:singleLine="false"/>
 		</LinearLayout>
 
 		<TextView
@@ -66,7 +69,7 @@
 			android:textColor="@color/white"
 			android:textSize="@dimen/adddevice_text_size"
 			android:padding="10dp"
-			/>
+			android:layout_marginTop="10dp"/>
 
 	</LinearLayout>
 </ScrollView>
