@@ -451,5 +451,5 @@
     <string name="edit_gate_success">The gate was edited successfully</string>
     <string name="edit_gate_failure">The gate was not edited successfully</string>
     <string name="delete_gate_failure">Gateway was not removed successsfully</string>
-
+	<string name="title_activity_gate_detail">Gate Detail</string>
 </resources>
