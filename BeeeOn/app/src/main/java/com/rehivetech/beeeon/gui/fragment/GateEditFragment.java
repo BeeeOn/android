@@ -74,17 +74,6 @@ public class GateEditFragment extends Fragment {
 		}
 	}
 
-	public static List<String> getMainTimeZones() {
-		String[] TZ = TimeZone.getAvailableIDs();
-		ArrayList<String> TZ1 = new ArrayList<>();
-		for (int i = 0; i < TZ.length; i++) {
-			if (!(TZ1.contains(TimeZone.getTimeZone(TZ[i]).getDisplayName()))) {
-				TZ1.add(TimeZone.getTimeZone(TZ[i]).getDisplayName());
-			}
-		}
-		return TZ1;
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

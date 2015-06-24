@@ -3,6 +3,14 @@
 			  android:orientation="vertical"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
+	<TextView
+		android:id="@+id/gate_detail_fragment_title"
+		android:layout_width="match_parent"
+		android:layout_height="72dp"
+		android:textSize="34sp"
+		android:paddingLeft="40dp"
+		android:textColor="@color/white"
+		android:background="@color/beeeon_primary_cyan"/>
 	<ListView
 		android:id="@+id/gate_detail_listview"
 		android:layout_width="match_parent"
