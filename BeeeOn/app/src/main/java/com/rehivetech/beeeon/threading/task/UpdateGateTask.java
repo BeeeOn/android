@@ -11,17 +11,15 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 /**
  * Created by david on 18.6.15.
  */
-public class EditGateTask extends CallbackTask<Gate> {
+public class UpdateGateTask extends CallbackTask<Gate> {
 
-	public EditGateTask(@NonNull Context context) {
+	public UpdateGateTask(@NonNull Context context) {
 		super(context);
 	}
 
 	@Override
 	protected Boolean doInBackground(Gate gate) {
 		GatesModel gatesModel = Controller.getInstance(mContext).getGatesModel();
-		// FIXME: now it always returns true, but nothing is sent to server
-		return true;
-		//return gatesModel.editGate(gate);
+		return gatesModel.editGate(gate);
 	}
 }

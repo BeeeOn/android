@@ -21,6 +21,7 @@ import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
  * Created by david on 23.6.15.
  */
 public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener {
+	public static final String GATE_ID = "GATE_ID";
 	private String mGateId;
 	public static final String FRAGMENT_GATE_DETAIL = "FRAGMENT_GATE_DETAIL";
 	private boolean mFirstTime = true;
@@ -28,7 +29,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_gate_detail_wrapper);
+		setContentView(R.layout.activity_gate_detail);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
@@ -40,7 +41,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
-		mGateId = getIntent().getStringExtra("GATE_ID");
+		mGateId = getIntent().getStringExtra(GATE_ID);
 
 		if (mGateId == null) {
 			Toast.makeText(this, "Gate ID is null :/", Toast.LENGTH_LONG).show();
@@ -68,7 +69,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				finish();
 				break;
 			case R.id.ada_menu_edit:
-				Intent intent = new Intent(this, GateEditActivity.class);
+				Intent intent = new Intent(this, GateUpdateActivity.class);
 				intent.putExtra(Constants.GUI_EDIT_GATE_ID, mGateId);
 				startActivity(intent);
 				break;

@@ -5,17 +5,14 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	tools:context="com.rehivetech.beeeon.gui.activity.GateEditActivity"
-	android:background="@color/white"
+	tools:context="com.rehivetech.beeeon.gui.activity.GateUpdateActivity"
 	>
+
 	<include layout="@layout/beeeon_toolbar"/>
+
 	<ScrollView
+		android:id="@+id/edit_gate_fragment_container"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-		<FrameLayout
-			android:id="@+id/edit_gate_fragment_container"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			tools:ignore="MergeRootFrame"/>
-	</ScrollView>
+		android:layout_height="match_parent"/>
+
 </LinearLayout>

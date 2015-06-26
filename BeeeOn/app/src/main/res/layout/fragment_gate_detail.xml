@@ -3,6 +3,7 @@
 			  android:orientation="vertical"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
+
 	<TextView
 		android:id="@+id/gate_detail_fragment_title"
 		android:layout_width="match_parent"
@@ -11,9 +12,16 @@
 		android:paddingLeft="40dp"
 		android:textColor="@color/white"
 		android:background="@color/beeeon_primary_cyan"/>
-	<ListView
-		android:id="@+id/gate_detail_listview"
+
+	<android.support.v4.widget.SwipeRefreshLayout
+		android:id="@+id/swipe_container"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+		android:layout_height="match_parent">
+
+		<ListView
+			android:id="@+id/gate_detail_listview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+	</android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

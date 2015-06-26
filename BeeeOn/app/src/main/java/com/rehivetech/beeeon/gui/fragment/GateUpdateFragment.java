@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.GateEditActivity;
+import com.rehivetech.beeeon.gui.activity.GateUpdateActivity;
 import com.rehivetech.beeeon.household.gate.Gate;
 
 import org.joda.time.DateTimeZone;
@@ -26,26 +26,24 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by david on 17.6.15.
  */
-public class GateEditFragment extends Fragment {
+public class GateUpdateFragment extends Fragment {
 	private static final String KEY_GATE_ID = "Gate_Id";
 	private static final String KEY_GATE_NAME = "Gate_name";
-	private static final String KEY_GATE_ZONE = "Gate_zone";
-	private GateEditActivity mActivity;
+	private GateUpdateActivity mActivity;
 	private MyTimeZone mSelectedZone = null;
 	private String mGateId;
 	private String mGateName = null;
 
-	public static GateEditFragment newInstance(String gateId) {
-		GateEditFragment gateEditFragment = new GateEditFragment();
+	public static GateUpdateFragment newInstance(String gateId) {
+		GateUpdateFragment gateUpdateFragment = new GateUpdateFragment();
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
-		gateEditFragment.setArguments(args);
-		return gateEditFragment;
+		gateUpdateFragment.setArguments(args);
+		return gateUpdateFragment;
 	}
 
 	@Override
@@ -68,7 +66,7 @@ public class GateEditFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mActivity = (GateEditActivity) getActivity();
+			mActivity = (GateUpdateActivity) getActivity();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(String.format("%s must be subclass of GateEditActivity", activity.toString()));
 		}
@@ -99,9 +97,11 @@ public class GateEditFragment extends Fragment {
 					.toFormatter();
 			String result = hm.print(period);
 			String name = String.format("GMT%s%s %s", millis >= 0 ? "+" : "", result, DateTimeZone.forID(id).toTimeZone().getDisplayName());
-			timeZones.add(new MyTimeZone(name, millis / (1000 * 60)));
+			MyTimeZone newTimeZone = new MyTimeZone(name, millis / (1000 * 60));
+			if (!timeZones.contains(newTimeZone))
+				timeZones.add(newTimeZone);
 		}
-		ArrayAdapter<MyTimeZone> adapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_item, timeZones);
+		ArrayAdapter<MyTimeZone> adapter = new ArrayAdapter<>(mActivity,R.layout.update_gate_spinner_item, timeZones);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -122,8 +122,8 @@ public class GateEditFragment extends Fragment {
 		return ((EditText) getView().findViewById(R.id.fragment_gate_edit_text)).getText().toString();
 	}
 
-	public MyTimeZone getNewGateZone() {
-		return mSelectedZone;
+	public int getNewOffsetInMinutes() {
+		return mSelectedZone.offsetInMinutes;
 	}
 
 	public class MyTimeZone {
@@ -138,6 +138,14 @@ public class GateEditFragment extends Fragment {
 		@Override
 		public String toString() {
 			return name;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (o instanceof MyTimeZone) {
+				return this.name.equals(((MyTimeZone) o).name);
+			} else
+				return false;
 		}
 	}
 }

@@ -152,7 +152,7 @@ public interface INetwork {
 
 	/**
 	 * Method edits gate's name and timezone
-	 * @param gate object that carries data
+	 * @param gate new gate with new data
 	 * @return true if change was successful
 	 */
 	boolean editGateData(Gate gate);

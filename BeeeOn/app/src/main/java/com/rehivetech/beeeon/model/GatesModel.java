@@ -124,7 +124,7 @@ public class GatesModel extends BaseModel {
 	/**
 	 * This CAN'T be called on UI thread!
 	 *
-	 * @param gate - gate object with new data
+	 * @param gate - new edited gate
 	 * @return
 	 */
 	public boolean editGate(Gate gate) {

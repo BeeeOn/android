@@ -300,7 +300,13 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean editGateData(Gate gate) {
-		return false;
+		String gateId = gate.getId();
+
+		if(!mGates.hasObject(gateId))
+			return false;
+
+		mGates.addObject(gate);
+		return true;
 	}
 
 	@Override

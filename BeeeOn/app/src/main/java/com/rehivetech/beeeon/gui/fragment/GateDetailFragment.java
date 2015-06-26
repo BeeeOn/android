@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.gui.activity.GateDetailActivity;
 import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.household.device.Device;
@@ -26,21 +28,25 @@ import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.util.Log;
 
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 /**
  * Created by david on 23.6.15.
  */
 public class GateDetailFragment extends Fragment {
+	private static final String TAG = GateDetailActivity.class.getSimpleName();
 	private String mGateId;
 	private static final String GATE_ID = "GATE_ID";
 	private OnGateDetailsButtonsClickedListener mCallback;
 	private GateDetailsAdapter mGateDetailsAdapter;
 	private ArrayList<Item> mItemList;
+	private SwipeRefreshLayout mSwipeRefreshLayout;
 
 	public static GateDetailFragment newInstance(String gateId) {
 		GateDetailFragment gateDetailFragment = new GateDetailFragment();
@@ -73,7 +79,7 @@ public class GateDetailFragment extends Fragment {
 		Gate gate = Controller.getInstance(getActivity()).getGatesModel().getGate(mGateId);
 		((TextView) view.findViewById(R.id.gate_detail_fragment_title)).setText(gate.getName());
 		mItemList = new ArrayList<>();
-		mItemList.add(new Item(R.drawable.dev_noise, R.string.gate_id, gate.getId()));
+		mItemList.add(new Item(R.drawable.dev_noise, R.string.fragment_gate_details_gate_id, gate.getId()));
 		mItemList.add(new Item(R.drawable.dev_illumination, R.string.gate_detail_your_role, gate.getRole().toString()));
 		mItemList.add(new Item(R.drawable.dev_pressure, R.string.time_zone, DateTimeZone.forOffsetMillis(gate.getUtcOffsetMillis()).toTimeZone().getDisplayName()));
 		mItemList.add(new Item(R.drawable.dev_state_closed, R.string.gate_detail_num_of_users, getActivity().getString(R.string.loading_data)));
@@ -83,97 +89,93 @@ public class GateDetailFragment extends Fragment {
 		ListView listView = (ListView) view.findViewById(R.id.gate_detail_listview);
 		listView.setAdapter(mGateDetailsAdapter);
 
-		// Load all users and devices
-		doReloadGateUsersTask(mGateId, true);
-		doReloadGateDevicesTask(mGateId, true);
+		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+		if (mSwipeRefreshLayout == null) {
+
+		}
+		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				Log.d(TAG, "Refreshing list of sensors");
+				Gate gate = Controller.getInstance(getActivity()).getActiveGate();
+				if (gate == null) {
+					mSwipeRefreshLayout.setRefreshing(false);
+					return;
+				}
+				doReloadGatesAndActiveGateTask(gate.getId(), true);
+			}
+		});
+		mSwipeRefreshLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
+
+		doReloadGatesAndActiveGateTask(mGateId, true);
 
 		return view;
 	}
 
-	private void doReloadGateDevicesTask(final String gateId, boolean forceReload) {
-		ReloadGateDataTask reloadGateDevicesTask = new ReloadGateDataTask(getActivity(), forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);
-
-		reloadGateDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					List<Device> gateDevices = Controller.getInstance(getActivity()).getDevicesModel().getDevicesByGate(mGateId);
-					mItemList.get(4).Text = (String.format("%d", gateDevices.size()));
-					View view = getView();
-					if (view != null)
-						view = ((ListView) view.findViewById(R.id.gate_detail_listview)).getChildAt(4);
-					if (view != null) {
-						ImageButton imageButton = (ImageButton) view.findViewById(R.id.simple_list_layout_user_list_btn);
-						imageButton.setVisibility(View.VISIBLE);
-						imageButton.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								mCallback.onDetailsButtonClicked(MainActivity.class);
-							}
-						});
-					}
-					GateDetailFragment.this.mGateDetailsAdapter.notifyDataSetChanged();
-				}
-			}
-		});
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(reloadGateDevicesTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
-	}
-
-	private void doReloadGateUsersTask(final String gateId, boolean forceReload) {
-		ReloadGateDataTask reloadUsersTask = new ReloadGateDataTask(getActivity(), forceReload, ReloadGateDataTask.ReloadWhat.USERS);
-
-		reloadUsersTask.setListener(new CallbackTask.ICallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					List<User> gateUsers = Controller.getInstance(getActivity()).getUsersModel().getUsersByGate(mGateId);
-					if (gateUsers.isEmpty()) {
-						Toast.makeText(getActivity(), R.string.toast_not_users_found, Toast.LENGTH_SHORT).show();
-						return;
-					}
-					mItemList.get(3).Text = (String.format("%d", gateUsers.size()));
-
-					View view = getView();
-					if (view != null)
-						view = ((ListView) view.findViewById(R.id.gate_detail_listview)).getChildAt(3);
-					if (view != null) {
-						ImageButton imageButton = (ImageButton) view.findViewById(R.id.simple_list_layout_user_list_btn);
-						imageButton.setVisibility(View.VISIBLE);
-						imageButton.setOnClickListener(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								mCallback.onDetailsButtonClicked(GateUsersActivity.class);
-							}
-						});
-					}
-					GateDetailFragment.this.mGateDetailsAdapter.notifyDataSetChanged();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		((BaseApplicationActivity) getActivity()).callbackTaskManager.executeTask(reloadUsersTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
-	}
 
 	private void doReloadGatesAndActiveGateTask(final String gateId, boolean forceReload) {
-		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), forceReload, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
+		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), forceReload, EnumSet.of(
+				ReloadGateDataTask.ReloadWhat.GATES,
+				ReloadGateDataTask.ReloadWhat.DEVICES,
+				ReloadGateDataTask.ReloadWhat.USERS
+		));
 
 		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Gate gate = Controller.getInstance(getActivity()).getGatesModel().getGate(mGateId);
+					mSwipeRefreshLayout.setRefreshing(false);
+					Controller controller = Controller.getInstance(getActivity());
+					Gate gate = controller.getGatesModel().getGate(mGateId);
 					View view = getView();
 					if (view != null) {
-						((TextView) view.findViewById(R.id.gate_detail_fragment_title)).setText(gate.getName());
-						mItemList.get(0).Text = gate.getName();
+						if(gate.hasName())
+							((TextView) view.findViewById(R.id.gate_detail_fragment_title)).setText(gate.getName());
+						else
+							((TextView) view.findViewById(R.id.gate_detail_fragment_title)).setText(R.string.gate_no_name);
+						mItemList.get(0).Text = gate.getId();
 						mItemList.get(1).Text = gate.getRole().toString();
 						mItemList.get(2).Text = DateTimeZone.forOffsetMillis(gate.getUtcOffsetMillis()).toTimeZone().getDisplayName();
+
+						List<User> gateUsers = controller.getUsersModel().getUsersByGate(mGateId);
+						List<Device> gateDevices = controller.getDevicesModel().getDevicesByGate(mGateId);
+						if (gateUsers.isEmpty() || gateDevices.isEmpty()) {
+							Toast.makeText(getActivity(), R.string.toast_not_users_found, Toast.LENGTH_SHORT).show();
+						} else {
+							mItemList.get(3).Text = (String.format("%d", gateUsers.size()));
+
+							View itemOfListView = ((ListView) view.findViewById(R.id.gate_detail_listview)).getChildAt(3);
+
+							if (itemOfListView != null) {
+								ImageButton imageButton = (ImageButton) itemOfListView.findViewById(R.id.simple_list_layout_user_list_btn);
+								imageButton.setVisibility(View.VISIBLE);
+								imageButton.setOnClickListener(new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										mCallback.onDetailsButtonClicked(GateUsersActivity.class);
+									}
+								});
+							}
+
+							mItemList.get(4).Text = (String.format("%d", gateDevices.size()));
+
+							itemOfListView = ((ListView) view.findViewById(R.id.gate_detail_listview)).getChildAt(4);
+
+							if (itemOfListView != null) {
+								ImageButton imageButton = (ImageButton) itemOfListView.findViewById(R.id.simple_list_layout_user_list_btn);
+								imageButton.setVisibility(View.VISIBLE);
+								imageButton.setOnClickListener(new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										mCallback.onDetailsButtonClicked(MainActivity.class);
+									}
+								});
+							}
+						}
 						GateDetailFragment.this.mGateDetailsAdapter.notifyDataSetChanged();
 					}
-				} else
-					Toast.makeText(getActivity(), "Reloading gate not successful", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
@@ -206,9 +208,9 @@ public class GateDetailFragment extends Fragment {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_list_item_layout, parent, false);
 			}
 			// Lookup view for data population
-			ImageView image = (ImageView) convertView.findViewById(R.id.icon);
-			TextView text = (TextView) convertView.findViewById(R.id.gate_detail_text);
-			TextView title = (TextView) convertView.findViewById(R.id.gate_detail_title);
+			ImageView image = (ImageView) convertView.findViewById(R.id.simple_list_layout_icon);
+			TextView text = (TextView) convertView.findViewById(R.id.simple_list_layout_text);
+			TextView title = (TextView) convertView.findViewById(R.id.simple_list_layout_title);
 			// Populate the data into the template view using the data object
 			image.setImageResource(item.ImageRes);
 			text.setText(item.Text);
@@ -219,8 +221,6 @@ public class GateDetailFragment extends Fragment {
 	}
 
 	public void reloadData() {
-		doReloadGateDevicesTask(mGateId, true);
-		doReloadGateUsersTask(mGateId, true);
 		doReloadGatesAndActiveGateTask(mGateId, true);
 	}
 

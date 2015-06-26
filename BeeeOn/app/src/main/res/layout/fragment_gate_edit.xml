@@ -2,28 +2,35 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  android:orientation="vertical"
 			  android:layout_width="match_parent"
-			  android:layout_height="match_parent"
-			  android:background="@color/white"
-			  android:layout_marginLeft="16dp"
-			  android:layout_marginRight="16dp"
-			  android:padding="16dp">
+			  android:layout_height="match_parent">
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/fragment_gate_gateName"
-		android:textSize="15sp"
-		android:textColor="@color/beeeon_text_hint"
-		android:layout_marginBottom="7dp"/>
-
-	<EditText
-		android:id="@+id/fragment_gate_edit_text"
+	<LinearLayout
+		android:paddingLeft="30dp"
+		android:paddingRight="30dp"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:textSize="45sp"
-		android:textColorLink="@color/white"
-		android:layout_marginBottom="15dp"
-		/>
+		android:layout_height="match_parent"
+		android:background="@color/beeeon_primary_cyan"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/fragment_gate_edit_gate_name"
+			android:textSize="15sp"
+			android:textColor="@color/light_gray"
+			/>
+
+		<EditText
+			android:id="@+id/fragment_gate_edit_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textSize="35sp"
+			android:textColorLink="@color/white"
+			android:paddingBottom="20dp"
+			android:textColor="@color/white"
+			android:textColorHint="@color/white"
+			/>
+	</LinearLayout>
 
 	<View
 		style="@style/Divider"
@@ -31,18 +38,22 @@
 
 
 	<TextView
+		android:paddingLeft="30dp"
+		android:paddingRight="30dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="15sp"
-		android:text="@string/gate_id_read_only"
+		android:textSize="12sp"
+		android:text="@string/fragment_gate_edit_gate_id_read_only"
 		android:textColor="@color/beeeon_text_hint"
 		android:layout_marginBottom="7dp"/>
 
 	<TextView
+		android:paddingLeft="30dp"
+		android:paddingRight="30dp"
 		android:id="@+id/fragment_gate_edit_gate_id"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="30sp"
+		android:textSize="16sp"
 		android:textColor="@color/beeeon_text_hint"
 		android:layout_marginBottom="15dp"
 		/>
@@ -52,16 +63,20 @@
 		android:layout_marginBottom="15dp"/>
 
 	<TextView
+		android:paddingLeft="30dp"
+		android:paddingRight="30dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/gate_time_zone"
+		android:text="@string/time_zone"
 		android:textColor="@color/beeeon_text_hint"
-		android:textSize="15sp"
-		android:layout_marginBottom="7dp"/>
+		android:textSize="12sp"
+		/>
 
 	<Spinner
+		android:paddingLeft="30dp"
+		android:paddingRight="30dp"
 		android:id="@+id/fragment_gate_edit_spinner"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginBottom="15dp"
 		/>

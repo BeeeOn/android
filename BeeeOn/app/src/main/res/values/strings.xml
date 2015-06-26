@@ -444,12 +444,11 @@
     <string name="interval_monthly">Monthly</string>
 
     <string name="title_activity_gate_edit">Gate edit</string>
-    <string name="fragment_gate_editText_hint">New name</string>
-    <string name="fragment_gate_gateName">Name of the gate</string>
-    <string name="gate_id">Gate Id</string>
-    <string name="gate_id_read_only">Gate Id (read-only)</string>
-    <string name="gate_time_zone">Time zone</string>
-    <string name="edit_gate_success">The gate was edited successfully</string>
+    <string name="fragment_gate_edit_gate_name">Gate name</string>
+    <string name="fragment_gate_details_gate_id">Gate Id</string>
+    <string name="fragment_gate_edit_gate_id_read_only">Gate Id (read-only)</string>
+    <string name="time_zone">Timezone</string>
+    <string name="edit_gate_success">The gate was updated successfully</string>
     <string name="edit_gate_failure">The gate was not edited successfully</string>
     <string name="delete_gate_failure">Gateway was not removed successsfully</string>
 	<string name="title_activity_gate_detail">Gate Details</string>
@@ -457,8 +456,10 @@
     <string name="gate_name">Gate name</string>
     <string name="gate_detail_your_role">Your role</string>
     <string name="gate_detail_user">User</string>
-    <string name="time_zone">Time zone</string>
     <string name="toast_not_users_found">No users found</string>
     <string name="gate_detail_num_of_users">Number of users</string>
     <string name="gate_detail_num_of_devices">Number of devices</string>
+    <string name="reloading_gate_data_not_successful">Reloading gate data not successful</string>
+    <string name="gate_no_name">No name</string>
+    <string name="update_gateway">Update gateway</string>
 </resources>

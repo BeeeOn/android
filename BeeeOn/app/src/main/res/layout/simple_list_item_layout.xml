@@ -5,21 +5,21 @@
 			  android:padding="15dp">
 
 	<ImageView
-		android:id="@+id/icon"
+		android:id="@+id/simple_list_layout_icon"
 		android:layout_centerVertical="true"
 		android:layout_width="24dp"
 		android:layout_height="24dp"/>
 
 	<LinearLayout
-		android:id="@+id/simple_list_linear_layout"
+		android:id="@+id/simple_list_layout_inner_layout"
 		android:paddingLeft="40dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:orientation="vertical"
-		android:layout_alignLeft="@id/icon">
+		android:layout_alignLeft="@id/simple_list_layout_icon">
 
 		<TextView
-			android:id="@+id/gate_detail_title"
+			android:id="@+id/simple_list_layout_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="@color/beeeon_text_hint"
@@ -27,7 +27,7 @@
 			android:layout_marginBottom="3dp"/>
 
 		<TextView
-			android:id="@+id/gate_detail_text"
+			android:id="@+id/simple_list_layout_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="16sp"/>
