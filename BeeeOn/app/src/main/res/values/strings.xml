@@ -399,7 +399,7 @@
 	<string name="tutorial_go_to_app">START</string>
 
     <string name="modules">Devices</string>
-	<string name="rule_delete_dialog">Please confirm rule removal</string>
+	
 	<string name="toast_delete_fail">Unable to remove</string>
 	<string name="toast_delete_success">Successfully removed</string>
 	<string name="addadapter_fill_name">Please fill gateway name</string>
@@ -419,4 +419,19 @@
     <string name="toast_device_not_available">Device is not available</string>
     <string name="activity_add_device_dialog_text">Now please press the button Send Pair</string>
     <string name="activity_add_device_shake_it">Now please shake the device or press the button on it.</string>
+    
+    <!-- Titles and messages fro critical confirm dialog-->
+
+    <string name="rule_delete_title">Remove Watchdog Rule</string>
+    <string name="rule_delete_dialog">Your Watchdog Rule will be permanetly removed. If you like delete it press Remove</string>
+    <string name="device_delete_title">Remove Device(s)</string>
+    <string name="device_delete_dialog">Your Device will be permanetly removed. You will loose your data from senzors. If you like continue, press Remove</string>
+    <string name="delete_gateway_title">Remove Gateway</string>
+    <string name="delete_gateway_message">You will lost control of gateway and device(s). Would you really like remove gateway from your Inteligent home.    </string>
+    <string name="change_role_title">Change User role</string>
+    <string name="change_role_message">Are you Sure, that you would change role\'s rights. </string>
+    <string name="change_role_confirm">Change</string>
+    <string name="delete_role_title">Remove User role</string>
+    <string name="delete_role_message">This User lost acces to Inteligent home. Are you Sure, that you would remove role\'s rights.  </string>
+
 </resources>

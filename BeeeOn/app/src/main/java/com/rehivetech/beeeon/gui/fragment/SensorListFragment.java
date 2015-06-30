@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ScrollDirectionListener;
@@ -460,23 +461,30 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
 	private void doRemoveDeviceTask(Device device) {
-		RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
-
-		removeDeviceTask.setListener(new ICallbackTaskListener() {
+		final RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
+		final Device devices = device;
+        CriticalConfirmDialogs criticalConfirmDialogsRemoveDevice = new CriticalConfirmDialogs();
+		criticalConfirmDialogsRemoveDevice.show(mActivity, R.string.device_delete_title, R.string.device_delete_dialog, R.string.rule_menu_del, new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
 			@Override
-			public void onExecute(boolean success) {
-				mActivity.redraw();
-				if (success) {
-					// Hlaska o uspechu
-				} else {
-					// Hlaska o neuspechu
-				}
-				doFullReloadTask(true);
+			public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
+				removeDeviceTask.setListener(new ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						mActivity.redraw();
+						if (success) {
+							Toast.makeText(mActivity,R.string.toast_delete_success,Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(mActivity,R.string.toast_delete_fail,Toast.LENGTH_SHORT).show();
+						}
+						doFullReloadTask(true);
+					}
+				});
+
+				// Execute and remember task so it can be stopped automatically
+				mActivity.callbackTaskManager.executeTask(removeDeviceTask, devices);
 			}
 		});
 
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(removeDeviceTask, device);
 	}
 
 

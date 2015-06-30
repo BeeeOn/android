@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
+import com.rehivetech.beeeon.gui.fragment.CriticalConfirmDialogs;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -169,19 +170,27 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 
 	private void doRemoveUserTask(User user) {
-		RemoveUserTask removeUserTask = new RemoveUserTask(this);
+		final RemoveUserTask removeUserTask = new RemoveUserTask(this);
 		User.DataPair pair = new User.DataPair(user, mGate.getId());
 
-		removeUserTask.setListener(new ICallbackTaskListener() {
+		CriticalConfirmDialogs criticalConfirmDialogsDeleteUser = new CriticalConfirmDialogs();
+		criticalConfirmDialogsDeleteUser.show(mActivity, R.string.delete_role_title, R.string.delete_role_message, R.string.rule_menu_del, new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
 			@Override
-			public void onExecute(boolean success) {
-				// Get all users for gate
-				doReloadGateUsersTask(mGate.getId(), true);
-				if (success) {
-					// Hlaska o uspechu
-				}
+			public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
+				removeUserTask.setListener(new ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						// Get all users for gate
+						doReloadGateUsersTask(mGate.getId(), true);
+						if (success) {
+							// Hlaska o uspechu
+						}
+					}
+				});
 			}
 		});
+
+
 
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(removeUserTask, pair);
@@ -280,7 +289,16 @@ public class GateUsersActivity extends BaseApplicationActivity {
 					if (getString(role.getStringResource()).equals(((RadioButton) layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
 						mSelectedItem.setRole(role);
 				}
-				doEditUserTask(mSelectedItem);
+
+				final User users = mSelectedItem;
+				CriticalConfirmDialogs criticalConfirmDialogsChangeRole = new CriticalConfirmDialogs();
+				criticalConfirmDialogsChangeRole.show(mActivity, R.string.change_role_title, R.string.change_role_message, R.string.change_role_confirm, new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
+					@Override
+					public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
+						doEditUserTask(users);
+					}
+				});
+
 			}
 		});
 		builder.setNegativeButton(R.string.notification_cancel, new DialogInterface.OnClickListener() {

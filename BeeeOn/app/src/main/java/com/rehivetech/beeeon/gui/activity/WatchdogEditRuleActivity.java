@@ -1,8 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -28,6 +26,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.SpinnerMultiAdapter;
+import com.rehivetech.beeeon.gui.fragment.CriticalConfirmDialogs;
 import com.rehivetech.beeeon.gui.spinnerItem.GeofenceSpinnerItem;
 import com.rehivetech.beeeon.gui.spinnerItem.ISpinnerItem;
 import com.rehivetech.beeeon.gui.spinnerItem.ModuleSpinnerItem;
@@ -421,22 +420,13 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 				doSaveWatchdogTask();
 				break;
 			case R.id.wat_menu_delete:
-				AlertDialog.Builder builder = new AlertDialog.Builder(this);
-				builder
-						.setMessage(R.string.rule_delete_dialog)
-						.setPositiveButton(R.string.rule_menu_del, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								doRemoveWatchdogTask();
-							}
-						})
-						.setNegativeButton(R.string.notification_cancel, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-
-							}
-						})
-						.show();
+				CriticalConfirmDialogs criticalConfirmDialogsWatchdogDelete = new CriticalConfirmDialogs();
+				criticalConfirmDialogsWatchdogDelete.show(this, R.string.rule_delete_title, R.string.rule_delete_dialog, R.string.rule_menu_del, new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
+					@Override
+					public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
+						doRemoveWatchdogTask();
+					}
+				});
 				break;
 		}
 		return super.onOptionsItemSelected(item);

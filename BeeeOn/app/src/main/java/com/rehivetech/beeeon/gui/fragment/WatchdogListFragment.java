@@ -321,9 +321,12 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 			}
 		});
 
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(removeWatchdogTask, watchdog);
-	}
+
+
+
+	// Execute and remember task so it can be stopped automatically
+	mActivity.callbackTaskManager.executeTask(removeWatchdogTask, watchdog);
+}
 
 	// ----- HELPERS + ACTIONMODE ----- //
 
@@ -357,38 +360,47 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		}
 	}
 
-	/**
-	 * Class for managing when longclicked on item (ActionMode)
-	 */
-	class ActionModeEditRules implements ActionMode.Callback {
-		@Override
-		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-			MenuInflater inflater = actionMode.getMenuInflater();
-			inflater.inflate(R.menu.watchdoglist_actionmode, menu);
-			return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-			return false;
-		}
-
-		@Override
-		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-			if (menuItem.getItemId() == R.id.action_delete) {
-				doRemoveWatchdogTask(mSelectedItem);
-			}
-
-			actionMode.finish();
-			return true;
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode actionMode) {
-			setRuleUnselected();
-			mSelectedItem = null;
-			mSelectedItemPos = 0;
-			mMode = null;
-		}
+/**
+ * Class for managing when longclicked on item (ActionMode)
+ */
+class ActionModeEditRules implements ActionMode.Callback {
+	@Override
+	public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+		MenuInflater inflater = actionMode.getMenuInflater();
+		inflater.inflate(R.menu.watchdoglist_actionmode, menu);
+		return true;
 	}
+
+	@Override
+	public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+		return false;
+	}
+
+	@Override
+	public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+		final Watchdog mWatchdog = mSelectedItem;
+		if (menuItem.getItemId() == R.id.action_delete) {
+
+			CriticalConfirmDialogs criticalConfirmDialogDeleteWatchdogRule = new CriticalConfirmDialogs();
+			criticalConfirmDialogDeleteWatchdogRule.show(mActivity, R.string.rule_delete_title, R.string.rule_delete_dialog, R.string.rule_menu_del, new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
+				@Override
+				public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
+					doRemoveWatchdogTask(mWatchdog);
+				}
+			});
+
+		}
+
+		actionMode.finish();
+		return true;
+	}
+
+	@Override
+	public void onDestroyActionMode(ActionMode actionMode) {
+		setRuleUnselected();
+		mSelectedItem = null;
+		mSelectedItemPos = 0;
+		mMode = null;
+	}
+}
 }
