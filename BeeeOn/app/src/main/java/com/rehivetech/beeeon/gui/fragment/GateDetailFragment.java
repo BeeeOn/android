@@ -79,11 +79,11 @@ public class GateDetailFragment extends Fragment {
 		Gate gate = Controller.getInstance(getActivity()).getGatesModel().getGate(mGateId);
 		((TextView) view.findViewById(R.id.gate_detail_fragment_title)).setText(gate.getName());
 		mItemList = new ArrayList<>();
-		mItemList.add(new Item(R.drawable.dev_noise, R.string.fragment_gate_details_gate_id, gate.getId()));
-		mItemList.add(new Item(R.drawable.dev_illumination, R.string.gate_detail_your_role, gate.getRole().toString()));
-		mItemList.add(new Item(R.drawable.dev_pressure, R.string.time_zone, DateTimeZone.forOffsetMillis(gate.getUtcOffsetMillis()).toTimeZone().getDisplayName()));
-		mItemList.add(new Item(R.drawable.dev_state_closed, R.string.gate_detail_num_of_users, getActivity().getString(R.string.loading_data)));
-		mItemList.add(new Item(R.drawable.dev_state_open, R.string.gate_detail_num_of_devices, getActivity().getString(R.string.loading_data)));
+		mItemList.add(new Item(R.drawable.ic_info_black_24dp, R.string.fragment_gate_details_gate_id, gate.getId()));
+		mItemList.add(new Item(R.drawable.ic_person_black_24dp, R.string.gate_detail_your_role, gate.getRole().toString()));
+		mItemList.add(new Item(R.drawable.ic_language_black_24dp, R.string.time_zone, DateTimeZone.forOffsetMillis(gate.getUtcOffsetMillis()).toTimeZone().getDisplayName()));
+		mItemList.add(new Item(R.drawable.ic_supervisor_account_black_24dp, R.string.gate_detail_num_of_users, getActivity().getString(R.string.loading_data)));
+		mItemList.add(new Item(R.drawable.ic_router_black_24dp, R.string.gate_detail_num_of_devices, getActivity().getString(R.string.loading_data)));
 		mGateDetailsAdapter = new GateDetailsAdapter(getActivity(), mItemList);
 
 		ListView listView = (ListView) view.findViewById(R.id.gate_detail_listview);

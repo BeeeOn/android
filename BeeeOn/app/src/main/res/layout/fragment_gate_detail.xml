@@ -21,7 +21,8 @@
 		<ListView
 			android:id="@+id/gate_detail_listview"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
+			android:layout_height="match_parent"
+			android:listSelector="@android:color/transparent"/>
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

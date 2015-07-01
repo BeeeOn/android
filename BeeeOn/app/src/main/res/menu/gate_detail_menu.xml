@@ -11,6 +11,6 @@
 		  app:showAsAction="ifRoom|collapseActionView"/>
 	<item android:id="@+id/ada_menu_delete"
 		  android:title="@string/ada_menu_del"
-		  android:icon="@drawable/ic_action_discard"
+		  android:icon="@drawable/ic_delete_white_24dp"
 		  app:showAsAction="ifRoom|collapseActionView"/>
 </menu>
