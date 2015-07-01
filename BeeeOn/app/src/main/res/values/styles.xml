@@ -8,12 +8,6 @@
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
-        <!-- Custom style for basic components -->
-        <item name="android:checkboxStyle">@style/BeeeOn.Custom.CheckBox</item>
-        <item name="android:seekBarStyle">@style/BeeeOn.Custom.SeekBar</item>
-        <item name="android:buttonStyle">@style/BeeeOn.Custom.Button</item>
-        <item name="android:imageButtonStyle">@style/BeeeOn.Custom.ImageButton</item>
-
 		<item name="actionBarSize">56dip</item>
 
         <!-- colorPrimary is used for the default action bar background -->
