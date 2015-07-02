@@ -43,7 +43,6 @@ public class GateUsersActivity extends BaseApplicationActivity {
 	private List<User> mGateUsers;
 
 	private static final int NAME_ITEM_HEIGHT = 74;
-	private ActionMode mMode;
 
 	private RadioGroup mGroup;
 	private User mSelectedItem;
@@ -84,7 +83,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		listActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				mMode = startSupportActionMode(new ActionModeEditSensors());
+				startSupportActionMode(new ActionModeEditSensors());
 				mSelectedItem = (User) listActUsers.getAdapter().getItem(position);
 				mSelectedItemPos = position;
 				setUserSelected();
@@ -229,16 +228,15 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.adausr_menu_del) {
-				final User users = mSelectedItem;
-				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_remove_user_title, R.string.confirm_remove_user_message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
-					@Override
-					public void onDeleteDialogButtonClick() {
-						doRemoveUserTask(users);
-					}
-				});
-			} else if (item.getItemId() == R.id.adausr_menu_edit)
-
-			{
+				if (mSelectedItem != null) {
+					ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_remove_user_title, R.string.confirm_remove_user_message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+						@Override
+						public void onDeleteDialogButtonClick() {
+							doRemoveUserTask(mSelectedItem);
+						}
+					});
+				}
+			} else if (item.getItemId() == R.id.adausr_menu_edit) {
 				changeUserRole();
 			}
 			mode.finish();
@@ -248,7 +246,6 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			setUserUnselected();
-			mMode = null;
 		}
 	}
 
@@ -285,19 +282,29 @@ public class GateUsersActivity extends BaseApplicationActivity {
 				// User clicked OK button
 				//mSelectedItem.setRole(User.Role.fromString(((RadioButton)layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()));
 
+				User.Role newRole = null;
+
 				for (User.Role role : User.Role.values()) {
 					if (getString(role.getStringResource()).equals(((RadioButton) layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
-						mSelectedItem.setRole(role);
+						newRole = role;
 				}
 
-				final User users = mSelectedItem;
-				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_change_ownership_title, R.string.confirm_change_ownership_message, R.string.button_change_ownership, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
-					@Override
-					public void onDeleteDialogButtonClick() {
-						doEditUserTask(users);
-					}
-				});
+				if (mSelectedItem == null || newRole == null)
+					return;
 
+				if (newRole == User.Role.Superuser) {
+					// Need confirmation for this change
+					ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_change_ownership_title, R.string.confirm_change_ownership_message, R.string.button_change_ownership, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+						@Override
+						public void onDeleteDialogButtonClick() {
+							mSelectedItem.setRole(User.Role.Superuser);
+							doEditUserTask(mSelectedItem);
+						}
+					});
+				} else {
+					mSelectedItem.setRole(newRole);
+					doEditUserTask(mSelectedItem);
+				}
 			}
 		});
 		builder.setNegativeButton(R.string.notification_cancel, new DialogInterface.OnClickListener() {
