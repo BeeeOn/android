@@ -419,7 +419,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 				doSaveWatchdogTask();
 				break;
 			case R.id.wat_menu_delete:
-				ConfirmDialogFragment.confirm(this, R.string.confirm_remove_watchdog_title, R.string.confirm_remove_watchdog_message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				String title = getString(R.string.confirm_remove_watchdog_title, mWatchdog.getName());
+				String message = getString(R.string.confirm_remove_watchdog_message);
+				ConfirmDialogFragment.confirm(this, title, message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
 					public void onDeleteDialogButtonClick() {
 						doRemoveWatchdogTask();

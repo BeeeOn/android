@@ -229,7 +229,11 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.adausr_menu_del) {
 				if (mSelectedItem != null) {
-					ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_remove_user_title, R.string.confirm_remove_user_message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+					User user = Controller.getInstance(GateUsersActivity.this).getUsersModel().getUser(mGate.getId(), mSelectedItem.getId());
+					String userName = user.getName();
+					String title = getString(R.string.confirm_remove_user_title, userName);
+					String message = getString(R.string.confirm_remove_user_message);
+					ConfirmDialogFragment.confirm(GateUsersActivity.this, title, message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 						@Override
 						public void onDeleteDialogButtonClick() {
 							doRemoveUserTask(mSelectedItem);
@@ -294,7 +298,10 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 				if (newRole == User.Role.Superuser) {
 					// Need confirmation for this change
-					ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_change_ownership_title, R.string.confirm_change_ownership_message, R.string.button_change_ownership, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+
+					String title = getString(R.string.confirm_change_ownership_title);
+					String message = getString(R.string.confirm_change_ownership_message);
+					ConfirmDialogFragment.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 						@Override
 						public void onDeleteDialogButtonClick() {
 							mSelectedItem.setRole(User.Role.Superuser);

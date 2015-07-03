@@ -12,8 +12,8 @@ import com.rehivetech.beeeon.R;
  */
 public class ConfirmDialogFragment extends BaseDialogFragment {
 	public static String TAG = "confirmDialog";
-	private int mSetTitles;
-	private int mSetMessage;
+	private String mSetTitles;
+	private String mSetMessage;
 	private int mPositiveTextButton;
 
 	private DeleteConfirmDialogEvent mCallBack;
@@ -22,7 +22,7 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
 		void onDeleteDialogButtonClick();
 	}
 
-	public static void confirm(FragmentActivity activity, int TitlesRes, int MessageRes, int ButtonTextRes, DeleteConfirmDialogEvent callBack) {
+	public static void confirm(FragmentActivity activity, String TitlesRes, String MessageRes, int ButtonTextRes, DeleteConfirmDialogEvent callBack) {
 		ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment();
 		confirmDialogFragment.setCallBack(callBack);
 		confirmDialogFragment.setTitles(TitlesRes);
@@ -60,11 +60,11 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
 		mCallBack = callBack;
 	}
 
-	public void setTitles(int setConfirmTitles) {
+	public void setTitles(String setConfirmTitles) {
 		mSetTitles = setConfirmTitles;
 	}
 
-	public void setMessage(int setConfirmMessage) {
+	public void setMessage(String setConfirmMessage) {
 		mSetMessage = setConfirmMessage;
 	}
 

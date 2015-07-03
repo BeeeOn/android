@@ -470,17 +470,20 @@
     <string name="update_over_wifi_only">Aktualizovať iba cez Wi-Fi</string>
     <string name="watchdog_no_valid_item">Žiadna platná položka</string>
 
+
+    <string name="button_unregister">Odregistrovať</string>
+
     <!-- Titles and messages for critical confirm dialog-->
 
-    <string name="confirm_remove_watchdog_title">Odstrániť pravidlo</string>
+    <string name="confirm_remove_watchdog_title">Odstrániť \"%1$s\"</string>
     <string name="confirm_remove_watchdog_message">Pravidlo bude odstránené. Ak chcete pokračovať, stlačte Odstrániť.</string>
-    <string name="confirm_unregister_device_title">Odstrániť senzor(y)</string>
+    <string name="confirm_unregister_device_title">Odregistrovať \"%1$s\"</string>
     <string name="confirm_unregister_device_message">Senzor bude odstránený. Stratíte dáta zo senzorov. Ak chcete pokračovať, stlačte Odstrániť.</string>
-    <string name="confirm_remove_gate_title">Odstrániť bránu</string>
-    <string name="confirm_remove_gate_message">Strata kontroly nad odstraňovanou  bránou a senzormi. Chcete naozaj odstrániť bránu z inteligentnej domácnosti?    </string>
+    <string name="confirm_remove_gate_title">Odstrániť \"%1$s\"</string>
+    <string name="confirm_remove_gate_message">Stratíte kontrolu nad odstraňovanou  bránou a senzormi. Chcete naozaj odstrániť bránu z inteligentnej domácnosti?    </string>
     <string name="confirm_change_ownership_title">Zmena používateľských práv</string>
     <string name="confirm_change_ownership_message"> Meníte používateľovi práva. Chcete naozaj zmeniť práva?</string>
     <string name="button_change_ownership">Zmeniť</string>
-    <string name="confirm_remove_user_title">Odstrániť použivateľské práva</string>
+    <string name="confirm_remove_user_title">Odstrániť \"%1$s\"</string>
     <string name="confirm_remove_user_message">Užívateľ, stratí kontrolu nad inteligentnou domácnosťou. Ste si istý, že chcete zmazať uživateľské práva?</string>
 </resources>

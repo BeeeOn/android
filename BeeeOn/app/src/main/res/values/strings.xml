@@ -423,15 +423,16 @@
     <string name="button_unregister">Unregister</string>
 
     <!-- Titles and messages for confirm dialog -->
-    <string name="confirm_remove_watchdog_title">Remove watchdog</string>
+    <string name="confirm_remove_watchdog_title">Remove \"%1$s\"</string>
     <string name="confirm_remove_watchdog_message">Your watchdog will be permanently removed.</string>
-    <string name="confirm_unregister_device_title">Unregister device</string>
+    <string name="confirm_unregister_device_title">Unregister \"%1$s\"</string>
     <string name="confirm_unregister_device_message">Your device will be unregistered from server and all its historical data will be lost.</string>
-    <string name="confirm_remove_gate_title">Remove gateway</string>
+    <string name="confirm_remove_gate_title">Remove \"%1$s\"</string>
+    <string name="confirm_remove_gate_title_default">Remove gateway</string>
     <string name="confirm_remove_gate_message">You will lost access to the gateway and its devices.\nIf you are the owner, whole gateway will be removed from the server and all settings including users, devices and historical data will be lost.</string>
     <string name="confirm_change_ownership_title">Change gateway ownership</string>
     <string name="confirm_change_ownership_message">You will hand over ownership of the gateway. You will not be able to manage users, devices and other settings of this gateway.</string>
-    <string name="confirm_remove_user_title">Remove user</string>
+    <string name="confirm_remove_user_title">Remove\"%1$s\"</string>
     <string name="confirm_remove_user_message">This user will lost access to your gateway and he won\'t be able to read or interact with your data anymore.</string>
 
 </resources>
