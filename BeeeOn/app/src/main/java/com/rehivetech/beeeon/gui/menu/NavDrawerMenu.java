@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
-import com.rehivetech.beeeon.gui.fragment.ConfirmDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GateMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GroupMenuItem;
@@ -401,9 +401,9 @@ public class NavDrawerMenu {
 				}
 
 				String message = mActivity.getString(R.string.confirm_remove_gate_message);
-				ConfirmDialogFragment.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
 					@Override
-					public void onDeleteDialogButtonClick() {
+					public void onConfirm() {
 						doUnregisterGateTask(mSelectedMenuItem.getId());
 					}
 

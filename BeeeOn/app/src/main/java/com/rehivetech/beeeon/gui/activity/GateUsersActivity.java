@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
-import com.rehivetech.beeeon.gui.fragment.ConfirmDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -233,9 +233,9 @@ public class GateUsersActivity extends BaseApplicationActivity {
 					String userName = user.getName();
 					String title = getString(R.string.confirm_remove_user_title, userName);
 					String message = getString(R.string.confirm_remove_user_message);
-					ConfirmDialogFragment.confirm(GateUsersActivity.this, title, message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
 						@Override
-						public void onDeleteDialogButtonClick() {
+						public void onConfirm() {
 							doRemoveUserTask(mSelectedItem);
 						}
 					});
@@ -301,9 +301,9 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 					String title = getString(R.string.confirm_change_ownership_title);
 					String message = getString(R.string.confirm_change_ownership_message);
-					ConfirmDialogFragment.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, new ConfirmDialog.ConfirmDialogListener() {
 						@Override
-						public void onDeleteDialogButtonClick() {
+						public void onConfirm() {
 							mSelectedItem.setRole(User.Role.Superuser);
 							doEditUserTask(mSelectedItem);
 						}

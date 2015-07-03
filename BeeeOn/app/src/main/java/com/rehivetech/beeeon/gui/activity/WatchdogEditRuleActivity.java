@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.SpinnerMultiAdapter;
-import com.rehivetech.beeeon.gui.fragment.ConfirmDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.spinnerItem.GeofenceSpinnerItem;
 import com.rehivetech.beeeon.gui.spinnerItem.ISpinnerItem;
 import com.rehivetech.beeeon.gui.spinnerItem.ModuleSpinnerItem;
@@ -421,9 +421,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 			case R.id.wat_menu_delete:
 				String title = getString(R.string.confirm_remove_watchdog_title, mWatchdog.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialogFragment.confirm(this, title, message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialog.confirm(this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
 					@Override
-					public void onDeleteDialogButtonClick() {
+					public void onConfirm() {
 						doRemoveWatchdogTask();
 					}
 				});

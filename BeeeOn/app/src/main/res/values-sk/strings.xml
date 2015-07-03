@@ -322,7 +322,6 @@
 	<string name="share_title">Zdieľať túto udalosť</string>
 	<string name="sensordetail_signal_label">Stav signálu</string>
 	<string name="sensordetail_location_label">Umiestenie</string>
-	<string name="rule_delete_dialog">Prosím potvrďte odstránenie pravidla</string>
 	<string name="radius">Rádius</string>
 	<string name="sensordetail_last_update_label">Posledná aktualizácia</string>
 	<string name="profile_category_app">Aplikácia</string>

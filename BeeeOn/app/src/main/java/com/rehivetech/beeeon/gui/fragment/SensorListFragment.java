@@ -33,6 +33,7 @@ import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.SenListAdapter;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.listItem.LocationListItem;
 import com.rehivetech.beeeon.gui.listItem.SensorListItem;
 import com.rehivetech.beeeon.household.device.Device;
@@ -502,9 +503,9 @@ public class SensorListFragment extends BaseApplicationFragment {
 				final Module mItemModule = mSelectedItem;
 				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_unregister_device_message);
-				ConfirmDialogFragment.confirm(mActivity, title, message, R.string.button_unregister, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, new ConfirmDialog.ConfirmDialogListener() {
 					@Override
-					public void onDeleteDialogButtonClick() {
+					public void onConfirm() {
 						doRemoveDeviceTask(mItemModule.getDevice());
 					}
 				});

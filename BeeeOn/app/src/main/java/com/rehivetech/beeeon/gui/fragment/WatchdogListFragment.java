@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.WatchdogEditRuleActivity;
 import com.rehivetech.beeeon.gui.adapter.WatchdogListAdapter;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -380,9 +381,9 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 			if (menuItem.getItemId() == R.id.action_delete) {
 				String title = getString(R.string.confirm_remove_watchdog_title, mWatchdog.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialogFragment.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
 					@Override
-					public void onDeleteDialogButtonClick() {
+					public void onConfirm() {
 						doRemoveWatchdogTask(mWatchdog);
 					}
 				});
