@@ -207,9 +207,9 @@
     <string name="placeholder_not_exists">NEEXISTUJE</string>
 
     <!-- Widgets -->
-    <string name="widget_sensor_title_small">BeeeOn zařízení 1x1</string>
-    <string name="widget_sensor_title_medium">BeeeOn zařízení 2x1</string>
-    <string name="widget_sensor_title_large">BeeeOn zařízení 3x1</string>
+    <string name="widget_sensor_title_small">BeeeOn zařízení malý</string>
+    <string name="widget_sensor_title_medium">BeeeOn zařízení střední</string>
+    <string name="widget_sensor_title_large">BeeeOn zařízení velký</string>
     <string name="widget_location_list_title">BeeeOn umístění</string>
     <string name="widget_graph_title">BeeeOn zařízení s grafem</string>
     <string name="widget_clock_title">BeeeOn-Time</string>
