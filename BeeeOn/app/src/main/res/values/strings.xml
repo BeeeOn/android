@@ -382,7 +382,7 @@
 	<string name="watchdog_no_valid_item">No valid item to check</string>
     <string name="multiadapter_no_item">- Nothing to select -</string>
 
-	<string name="title_activity_sensor_edit">Device Edit</string>
+	<string name="title_activity_module_edit">Device Edit</string>
 	<string name="sensor_name_label">Name of module</string>
 
 	<string name="dialog_register_new_account_title">No account</string>
@@ -405,7 +405,7 @@
 	<string name="addadapter_fill_code">Please fill gateway code</string>
 	<string name="addsensor_stoped">stopped</string>
 	<string name="add_action_dialog_title">What would you like to add?</string>
-	<string name="toast_need_sensor_location_icon">Please choose icon of your new location</string>
+	<string name="toast_need_module_location_icon">Please choose icon of your new location</string>
 	<string name="dialog_title_set_bioler_type">Choose boiler type</string>
 	<string name="dialog_set_boiler_setaction">set</string>
 	<string name="dialog_title_set_bioler_mode">Choose boiler mode</string>

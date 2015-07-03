@@ -30,7 +30,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
-import com.rehivetech.beeeon.gui.activity.SensorEditActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -208,9 +208,9 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			public void onClick(View v) {
 				// go to edit senzor
 				Log.d(TAG, "Click - edit senzor");
-				Intent intent = new Intent(mActivity, SensorEditActivity.class);
-				intent.putExtra(SensorEditActivity.EXTRA_GATE_ID, mGateId);
-				intent.putExtra(SensorEditActivity.EXTRA_MODULE_ID, mModuleId);
+				Intent intent = new Intent(mActivity, ModuleEditActivity.class);
+				intent.putExtra(ModuleEditActivity.EXTRA_GATE_ID, mGateId);
+				intent.putExtra(ModuleEditActivity.EXTRA_MODULE_ID, mModuleId);
 				mActivity.startActivityForResult(intent, Constants.EDIT_SENSOR_REQUEST_CODE);
 			}
 		});

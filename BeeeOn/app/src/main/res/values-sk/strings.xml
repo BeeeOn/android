@@ -317,7 +317,7 @@
 	<string name="toast_delete_fail">Nepodarilo sa odstrániť</string>
 	<string name="toast_delete_success">Vymazané</string>
 	<string name="toast_achievement_title">Achievement odomknutý!</string>
-	<string name="title_activity_sensor_edit">Editácia zariadenia</string>
+	<string name="title_activity_module_edit">Editácia zariadenia</string>
 	<string name="title_activity_achievement_overview">Prehľad úspechov</string>
 	<string name="share_title">Zdieľať túto udalosť</string>
 	<string name="sensordetail_signal_label">Stav signálu</string>
@@ -340,7 +340,7 @@
 	<string name="add_new_geofence_area">Pridať novú oblasť</string>
     <string name="logout_success">Odhlásenie prebehlo úspešne</string>
 	<string name="addsensor_stoped">zastavené</string>
-    <string name="toast_need_sensor_location_icon">Prosím vyberte ikonu nového umiestnenia</string>
+    <string name="toast_need_module_location_icon">Prosím vyberte ikonu nového umiestnenia</string>
 	<string name="dialog_title_set_bioler_type">Voľba typu prevádzky okruhu</string>
 	<string name="dialog_set_boiler_setaction">nastaviť</string>
 	<string name="dialog_title_set_bioler_mode">Voľba režimu okruhu</string>

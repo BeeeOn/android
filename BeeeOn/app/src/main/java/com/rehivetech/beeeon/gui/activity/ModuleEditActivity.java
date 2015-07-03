@@ -36,8 +36,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SensorEditActivity extends BaseApplicationActivity {
-	private static final String TAG = SensorEditActivity.class.getSimpleName();
+public class ModuleEditActivity extends BaseApplicationActivity {
+	private static final String TAG = ModuleEditActivity.class.getSimpleName();
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_MODULE_ID = "module_id";
@@ -48,10 +48,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_sensor_edit);
+		setContentView(R.layout.activity_module_edit);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(R.string.title_activity_sensor_edit);
+			toolbar.setTitle(R.string.title_activity_module_edit);
 			setSupportActionBar(toolbar);
 		}
 		ActionBar actionBar = getSupportActionBar();
@@ -80,7 +80,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_sensor_edit, menu);
+		getMenuInflater().inflate(R.menu.menu_module_edit, menu);
 		return true;
 	}
 
@@ -118,7 +118,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					Location location;
 					if (fragment.isSetNewCustomRoom()) {
 						if (fragment.getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
-							Toast.makeText(this, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
+							Toast.makeText(this, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
 							return false;
 						}
 						// Create new custom room
@@ -158,7 +158,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			public void onExecute(boolean success) {
 				if (success) {
 					Log.d(TAG, "Success save to server");
-					Toast.makeText(SensorEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
+					Toast.makeText(ModuleEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 					setResult(Activity.RESULT_OK);
 					finish();
 				}
@@ -178,7 +178,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			public void onExecute(boolean success) {
 				if (success) {
 					Log.d(TAG, "Success save to server");
-					Toast.makeText(SensorEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
+					Toast.makeText(ModuleEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 					setResult(Activity.RESULT_OK);
 					finish();
 				}
@@ -202,7 +202,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		private static final String SAVE_NEW_LOCATION_NAME = "new_location_name";
 		private static final String SAVE_REFRESH = "refresh";
 
-		private SensorEditActivity mActivity;
+		private ModuleEditActivity mActivity;
 
 		private String mModuleId;
 		private String mGateId;
@@ -233,10 +233,10 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			super.onAttach(activity);
 
 			try {
-				mActivity = (SensorEditActivity) activity;
+				mActivity = (ModuleEditActivity) activity;
 			} catch (ClassCastException e) {
 				throw new ClassCastException(activity.toString()
-						+ " must be subclass of SensorEditActivity");
+						+ " must be subclass of ModuleEditActivity");
 			}
 		}
 
@@ -256,7 +256,7 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View view = inflater.inflate(R.layout.fragment_sensor_edit, container, false);
+			View view = inflater.inflate(R.layout.fragment_module_edit, container, false);
 
 			mName = (EditText) view.findViewById(R.id.sen_edit_name);
 			mLocationSpinner = (Spinner) view.findViewById(R.id.sen_edit_location);

@@ -118,7 +118,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 					if ((newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
-						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
 						return;
 					}
 
