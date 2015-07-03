@@ -378,7 +378,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
 			final Watchdog mWatchdog = mSelectedItem;
 			if (menuItem.getItemId() == R.id.action_delete) {
-				ConfirmDialogFragment.confirm(mActivity, R.string.rule_delete_title, R.string.rule_delete_dialog, R.string.remove_button, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialogFragment.confirm(mActivity, R.string.confirm_remove_watchdog_title, R.string.confirm_remove_watchdog_message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
 					public void onDeleteDialogButtonClick() {
 						doRemoveWatchdogTask(mWatchdog);

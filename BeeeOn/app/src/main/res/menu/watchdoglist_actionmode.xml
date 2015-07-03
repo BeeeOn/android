@@ -9,6 +9,6 @@
         android:orderInCategory="200"
         app:showAsAction="always"
         android:icon="@drawable/ic_action_discard"
-        android:title="@string/remove_button"
+        android:title="@string/button_remove"
         />
 </menu>

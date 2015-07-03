@@ -339,7 +339,7 @@
     <string name="watchdog_rule_name">Název pravidla</string>
     <string name="notification_text">Text notifikace</string>
 
-    <string name="remove_button">Odstranit</string>
+    <string name="button_remove">Odstranit</string>
     <string name="adapter_isnt_set">Nastavit výchozí bránu</string>
     <string name="adapter_doest_exist">Výchozí brána již neexistuje. Nastavte novou výchozí bránu.</string>
     <string name="choose_adapter">Vyberte bránu:</string>
@@ -366,7 +366,7 @@
 	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="modules">Zařízení</string>
 	<string name="name">Název</string>
-	<string name="rule_delete_dialog">Prosím potvrďte odstranění pravidla</string>
+	<string name="confirm_remove_watchdog_message">Prosím potvrďte odstranění pravidla</string>
 	<string name="title_activity_sensor_edit">Editace zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název brány</string>
 	<string name="addadapter_fill_code">Vyplňte kód</string>

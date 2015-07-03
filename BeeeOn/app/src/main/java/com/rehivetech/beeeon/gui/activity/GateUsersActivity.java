@@ -230,7 +230,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.adausr_menu_del) {
 				final User users = mSelectedItem;
-				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.delete_role_title, R.string.delete_role_message, R.string.remove_button, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_remove_user_title, R.string.confirm_remove_user_message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
 					public void onDeleteDialogButtonClick() {
 						doRemoveUserTask(users);
@@ -291,7 +291,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 				}
 
 				final User users = mSelectedItem;
-				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.change_role_title, R.string.change_role_message, R.string.change_role_confirm, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.confirm_change_ownership_title, R.string.confirm_change_ownership_message, R.string.button_change_ownership, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
 					public void onDeleteDialogButtonClick() {
 						doEditUserTask(users);

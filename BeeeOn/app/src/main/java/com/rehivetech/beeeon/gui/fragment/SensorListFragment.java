@@ -500,7 +500,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
 				final Module mItemModule = mSelectedItem;
-				ConfirmDialogFragment.confirm(mActivity, R.string.device_delete_title, R.string.device_delete_dialog, R.string.remove_button, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialogFragment.confirm(mActivity, R.string.confirm_unregister_device_title, R.string.confirm_unregister_device_message, R.string.button_unregister, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
 					public void onDeleteDialogButtonClick() {
 						doRemoveDeviceTask(mItemModule.getDevice());

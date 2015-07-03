@@ -387,7 +387,7 @@ public class NavDrawerMenu {
 		public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 			Log.d(TAG, "ActionMode Gate - item id: " + item.getItemId());
 			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST GATE
-				ConfirmDialogFragment.confirm(mActivity, R.string.delete_gateway_title, R.string.delete_gateway_message, R.string.remove_button, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+				ConfirmDialogFragment.confirm(mActivity, R.string.confirm_remove_gate_title, R.string.confirm_remove_gate_message, R.string.button_remove, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
 					public void onDeleteDialogButtonClick() {
 						doUnregisterGateTask(mSelectedMenuItem.getId());
