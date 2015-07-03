@@ -32,9 +32,7 @@ import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class ModuleEditActivity extends BaseApplicationActivity {
 	private static final String TAG = ModuleEditActivity.class.getSimpleName();
@@ -72,7 +70,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, PlaceholderFragment.newInstance(mGateId, mModuleId), PlaceholderFragment.TAG)
+					.replace(R.id.container, ModuleEditFragment.newInstance(mGateId, mModuleId), ModuleEditFragment.TAG)
 					.commit();
 		}
 	}
@@ -86,88 +84,34 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		Controller controller = Controller.getInstance(this);
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_save) {
-			Set<Module.SaveModule> what = new HashSet<>();
-
-			Module module = controller.getDevicesModel().getModule(mGateId, mModuleId);
-			Device device = module.getDevice();
-
-			PlaceholderFragment fragment = (PlaceholderFragment) getSupportFragmentManager().findFragmentByTag(PlaceholderFragment.TAG);
-			if (fragment == null)
-				return false;
-
-			if (!fragment.getName().equals(module.getName())) {
-				what.add(Module.SaveModule.SAVE_NAME);
-				module.setName(fragment.getName());
-			}
-
-			if (!fragment.getRefreshTimeSeekBar().equals(device.getRefresh())) {
-				what.add(Module.SaveModule.SAVE_REFRESH);
-				device.setRefresh(fragment.getRefreshTimeSeekBar());
-			}
-
-			if (!fragment.getLocationId().equals(device.getLocationId())) {
-				what.add(Module.SaveModule.SAVE_LOCATION);
-				if (fragment.isSetNewRoom()) {
-					Location location;
-					if (fragment.isSetNewCustomRoom()) {
-						if (fragment.getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
-							Toast.makeText(this, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
-							return false;
-						}
-						// Create new custom room
-						location = new Location(Location.NEW_LOCATION_ID, fragment.getNewLocationName(), mGateId, fragment.getNewLocIcon().getId());
-					} else {
-						location = fragment.getLocation();
-					}
-					// Send request for new loc ..
-					doSaveDeviceWithNewLocation(new Device.DataPair(device, location, EnumSet.copyOf(what)));
-					return true;
-				} else {
-					device.setLocationId(fragment.getLocationId());
+		switch (item.getItemId()) {
+			case R.id.action_save: {
+				ModuleEditFragment fragment = (ModuleEditFragment) getSupportFragmentManager().findFragmentByTag(ModuleEditFragment.TAG);
+				if (fragment == null) {
+					return false;
 				}
-			}
 
-			if (what.isEmpty()) {
-				// nothing changed
-				setResult(Activity.RESULT_OK);
-				finish();
-			} else if (!fragment.isSetNewRoom()) {
-				doSaveDeviceTask(new Device.DataPair(device, EnumSet.copyOf(what)));
+				Device.DataPair pair = fragment.getSaveDataPair();
+				if (pair == null) {
+					return false;
+				} else if (pair.what.isEmpty()) {
+					// nothing changed
+					setResult(Activity.RESULT_OK);
+					finish();
+				} else {
+					doSaveDeviceTask(pair);
+				}
+
+				return true;
 			}
-			return true;
-		} else if (id == android.R.id.home) {
-			setResult(Activity.RESULT_CANCELED);
-			finish();
+			case R.id.home: {
+				setResult(Activity.RESULT_CANCELED);
+				finish();
+				break;
+			}
 		}
 
 		return super.onOptionsItemSelected(item);
-	}
-
-	private void doSaveDeviceWithNewLocation(Device.DataPair pair) {
-		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(this);
-
-		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					Log.d(TAG, "Success save to server");
-					Toast.makeText(ModuleEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-					setResult(Activity.RESULT_OK);
-					finish();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		// And don't show progressbar because in this activity is showing progress dialog
-		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	public void doSaveDeviceTask(Device.DataPair pair) {
@@ -190,11 +134,8 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-		private static final String TAG = PlaceholderFragment.class.getSimpleName();
+	public static class ModuleEditFragment extends Fragment {
+		private static final String TAG = ModuleEditFragment.class.getSimpleName();
 
 		private static final String SAVE_NAME = "name";
 		private static final String SAVE_LOCATION = "location";
@@ -216,14 +157,14 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 		private TextView mNewLocationName;
 		private View mNewLocationLayout;
 
-		public PlaceholderFragment() {}
+		public ModuleEditFragment() {}
 
-		public static PlaceholderFragment newInstance(String gateId, String moduleId) {
+		public static ModuleEditFragment newInstance(String gateId, String moduleId) {
 			Bundle args = new Bundle();
 			args.putString(EXTRA_GATE_ID, gateId);
 			args.putString(EXTRA_MODULE_ID, moduleId);
 
-			PlaceholderFragment fragment = new PlaceholderFragment();
+			ModuleEditFragment fragment = new ModuleEditFragment();
 			fragment.setArguments(args);
 			return fragment;
 		}
@@ -374,36 +315,81 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 		/** Helpers for getting content data */
 
-		public RefreshInterval getRefreshTimeSeekBar() {
+		private RefreshInterval getRefreshTimeSeekBar() {
 			return RefreshInterval.values()[mRefreshTimeSeekBar.getProgress()];
 		}
 
-		public String getLocationId() {
+		private String getLocationId() {
 			return ((Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition())).getId();
 		}
 
-		public String getName() {
+		private String getName() {
 			return mName.getText().toString();
 		}
 
-		public String getNewLocationName() {
+		private String getNewLocationName() {
 			return mNewLocationName.getText().toString();
 		}
 
-		public Location.LocationIcon getNewLocIcon() {
+		private Location.LocationIcon getNewLocIcon() {
 			return (Location.LocationIcon) mNewLocationIconSpinner.getAdapter().getItem(mNewLocationIconSpinner.getSelectedItemPosition());
 		}
 
-		public Location getLocation() {
+		private Location getLocation() {
 			return (Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition());
 		}
 
-		public boolean isSetNewRoom() {
+		private boolean isSetNewRoom() {
 			return ((Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition())).getId().equals(Location.NEW_LOCATION_ID);
 		}
 
-		public boolean isSetNewCustomRoom() {
+		private boolean isSetNewCustomRoom() {
 			return (mLocationSpinner.getSelectedItemPosition() == mLocationSpinner.getAdapter().getCount() - 1);
+		}
+
+		public Device.DataPair getSaveDataPair() {
+			Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
+			if (module == null) {
+				Log.e(TAG, String.format("Can't get module id=%s", mModuleId));
+				return null;
+			}
+
+			Device device = module.getDevice();
+
+			EnumSet<Module.SaveModule> what = EnumSet.noneOf(Module.SaveModule.class);
+
+			if (!getName().equals(module.getName())) {
+				what.add(Module.SaveModule.SAVE_NAME);
+				module.setName(getName());
+			}
+
+			if (!getRefreshTimeSeekBar().equals(device.getRefresh())) {
+				what.add(Module.SaveModule.SAVE_REFRESH);
+				device.setRefresh(getRefreshTimeSeekBar());
+			}
+
+			if (!getLocationId().equals(device.getLocationId())) {
+				what.add(Module.SaveModule.SAVE_LOCATION);
+				if (isSetNewRoom()) {
+					Location location;
+					if (isSetNewCustomRoom()) {
+						if (getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
+							Toast.makeText(mActivity, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
+							return null;
+						}
+						// Create new custom room
+						location = new Location(Location.NEW_LOCATION_ID, getNewLocationName(), mGateId, getNewLocIcon().getId());
+					} else {
+						location = getLocation();
+					}
+					// Send request for new loc ..
+					return new Device.DataPair(device, location, what);
+				} else {
+					device.setLocationId(getLocationId());
+				}
+			}
+
+			return new Device.DataPair(device, what);
 		}
 	}
 }
