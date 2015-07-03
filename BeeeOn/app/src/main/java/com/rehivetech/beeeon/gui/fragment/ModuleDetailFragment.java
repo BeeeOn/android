@@ -31,7 +31,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
-import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -67,8 +67,8 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
 
-public class SensorDetailFragment extends BaseApplicationFragment implements IListDialogListener {
-	private static final String TAG = SensorDetailFragment.class.getSimpleName();
+public class ModuleDetailFragment extends BaseApplicationFragment implements IListDialogListener {
+	private static final String TAG = ModuleDetailFragment.class.getSimpleName();
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_MODULE_ID = "module_id";
@@ -79,7 +79,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
 
-	private SensorDetailActivity mActivity;
+	private ModuleDetailActivity mActivity;
 
 	// GUI elements
 	private TextView mValue;
@@ -104,15 +104,15 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	private Button mValueSet;
 
-	public SensorDetailFragment() {
+	public ModuleDetailFragment() {
 	}
 
-	public static SensorDetailFragment newInstance(String gateId, String moduleId) {
+	public static ModuleDetailFragment newInstance(String gateId, String moduleId) {
 		Bundle args = new Bundle();
 		args.putString(EXTRA_GATE_ID, gateId);
 		args.putString(EXTRA_MODULE_ID, moduleId);
 
-		SensorDetailFragment fragment = new SensorDetailFragment();
+		ModuleDetailFragment fragment = new ModuleDetailFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -122,7 +122,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		super.onAttach(activity);
 
 		try {
-			mActivity = (SensorDetailActivity) activity;
+			mActivity = (ModuleDetailActivity) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must be subclass of SensorDetailActivity");

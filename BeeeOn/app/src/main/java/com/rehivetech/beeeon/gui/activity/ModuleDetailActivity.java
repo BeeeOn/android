@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.fragment.SensorDetailFragment;
+import com.rehivetech.beeeon.gui.fragment.ModuleDetailFragment;
 import com.rehivetech.beeeon.gui.view.CustomViewPager;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * Class that handle screen with detail of some sensor
  */
-public class SensorDetailActivity extends BaseApplicationActivity {
+public class ModuleDetailActivity extends BaseApplicationActivity {
 
-	private static final String TAG = SensorDetailActivity.class.getSimpleName();
+	private static final String TAG = ModuleDetailActivity.class.getSimpleName();
 
 	public static final String EXTRA_MODULE_ID = "module_id";
 	public static final String EXTRA_GATE_ID = "gate_id";
@@ -156,7 +156,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 	}
 
 	/**
-	 * A simple pager gate that represents 5 {@link SensorDetailFragment} objects, in sequence.
+	 * A simple pager gate that represents 5 {@link ModuleDetailFragment} objects, in sequence.
 	 */
 	public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
@@ -166,7 +166,7 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		@Override
 		public android.support.v4.app.Fragment getItem(int position) {
-			SensorDetailFragment fragment = SensorDetailFragment.newInstance(mActiveGateId, mModules.get(position).getId());
+			ModuleDetailFragment fragment = ModuleDetailFragment.newInstance(mActiveGateId, mModules.get(position).getId());
 			fragment.setPosition(position);
 			fragment.setSelectedPosition(mActiveModulePosition);
 			return fragment;

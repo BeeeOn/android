@@ -95,7 +95,7 @@
 			android:label="@string/title_activity_add_sensor">
 		</activity>
 		<activity
-			android:name=".gui.activity.SensorDetailActivity"
+			android:name=".gui.activity.ModuleDetailActivity"
 			android:label="@string/title_activity_sensor_detail">
 		</activity>
 		<activity
