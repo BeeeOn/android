@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -30,8 +29,6 @@ import java.util.List;
 
 /**
  * Class that handle screen with detail of some sensor
- *
- * @author ThinkDeep
  */
 public class SensorDetailActivity extends BaseApplicationActivity {
 
@@ -169,15 +166,9 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 		@Override
 		public android.support.v4.app.Fragment getItem(int position) {
-			Log.d(TAG, "Here 2 " + position);
-			SensorDetailFragment fragment = new SensorDetailFragment();
-			fragment.setSensorID(mModules.get(position).getId());
-			fragment.setLocationID(mModules.get(position).getDevice().getLocationId());
+			SensorDetailFragment fragment = SensorDetailFragment.newInstance(mActiveGateId, mModules.get(position).getId());
 			fragment.setPosition(position);
 			fragment.setSelectedPosition(mActiveModulePosition);
-			fragment.setGateId(mActiveGateId);
-			fragment.setFragmentAdapter(this);
-
 			return fragment;
 		}
 
@@ -210,7 +201,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 		((CustomViewPager) mPager).setPagingEnabled(true);
 		mPager.setOffscreenPageLimit(mModules.size());
 		mPager.setCurrentItem(mActiveModulePosition);
-		//setBeeeOnProgressBarVisibility(false);
 		visibleAllElements();
 	}
 
@@ -223,14 +213,6 @@ public class SensorDetailActivity extends BaseApplicationActivity {
 
 	public void setEnableSwipe(boolean state) {
 		((CustomViewPager) mPager).setPagingEnabled(state);
-	}
-
-	public void setCurrentViewPager() {
-		mPager.setCurrentItem(mActiveModulePosition);
-	}
-
-	public ViewPager getPager() {
-		return mPager;
 	}
 
 	@Override
