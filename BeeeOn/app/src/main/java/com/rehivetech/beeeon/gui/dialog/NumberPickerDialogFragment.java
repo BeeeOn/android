@@ -11,7 +11,7 @@ import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.fragment.SensorDetailFragment;
+import com.rehivetech.beeeon.gui.fragment.ModuleDetailFragment;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -69,7 +69,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 			public void onClick(View v) {
 				//
 				Log.d(TAG, "NUMBER PICKER selected index" + numberPicker.getValue() + " value " + numberPicker.getDisplayedValues()[numberPicker.getValue()]);
-				((SensorDetailFragment) mFragment).onSetTemperatureClick(Double.parseDouble(numberPicker.getDisplayedValues()[numberPicker.getValue()]));
+				((ModuleDetailFragment) mFragment).onSetTemperatureClick(Double.parseDouble(numberPicker.getDisplayedValues()[numberPicker.getValue()]));
 				dismiss();
 			}
 		});

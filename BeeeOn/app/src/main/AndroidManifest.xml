@@ -95,7 +95,7 @@
 			android:label="@string/title_activity_add_sensor">
 		</activity>
 		<activity
-			android:name=".gui.activity.SensorDetailActivity"
+			android:name=".gui.activity.ModuleDetailActivity"
 			android:label="@string/title_activity_sensor_detail">
 		</activity>
 		<activity
@@ -154,8 +154,8 @@
 			android:label="@string/title_activity_profile_detail">
 		</activity>
 		<activity
-			android:name=".gui.activity.SensorEditActivity"
-			android:label="@string/title_activity_sensor_edit"/>
+			android:name=".gui.activity.ModuleEditActivity"
+			android:label="@string/title_activity_module_edit"/>
 		<activity
 			android:name=".gui.activity.IntroActivity"
 			android:label="@string/app_name"/>

@@ -31,7 +31,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
-import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.SenListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.listItem.LocationListItem;
@@ -373,9 +373,9 @@ public class SensorListFragment extends BaseApplicationFragment {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Module module = mSensorAdapter.getModule(position);
 					Bundle bundle = new Bundle();
-					bundle.putString(SensorDetailActivity.EXTRA_GATE_ID, module.getDevice().getGateId());
-					bundle.putString(SensorDetailActivity.EXTRA_MODULE_ID, module.getId());
-					Intent intent = new Intent(mActivity, SensorDetailActivity.class);
+					bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, module.getDevice().getGateId());
+					bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, module.getId());
+					Intent intent = new Intent(mActivity, ModuleDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}

@@ -367,7 +367,7 @@
 	<string name="modules">Zařízení</string>
 	<string name="name">Název</string>
 	<string name="confirm_remove_watchdog_message">Prosím potvrďte odstranění pravidla</string>
-	<string name="title_activity_sensor_edit">Editace zařízení</string>
+	<string name="title_activity_module_edit">Editace zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název brány</string>
 	<string name="addadapter_fill_code">Vyplňte kód</string>
 	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. Průvodce Vám představí BeeeOn komponenty a aplikaci.</string>
@@ -381,7 +381,7 @@
 	<string name="dialog_choose_provider_title">Vyběr poskytovatele účtu</string>
 	<string name="addsensor_stoped">zastaveno</string>
 	<string name="add_action_dialog_title">Co byste chtěli přidat?</string>
-	<string name="toast_need_sensor_location_icon">Prosím vyberte ikonu nového umístění</string>
+	<string name="toast_need_module_location_icon">Prosím vyberte ikonu nového umístění</string>
 	<string name="dialog_title_set_bioler_type">Volba typu provozu okruhu</string>
 	<string name="dialog_set_boiler_setaction">nastavit</string>
 	<string name="dialog_title_set_bioler_mode">Volba režimu okruhu</string>

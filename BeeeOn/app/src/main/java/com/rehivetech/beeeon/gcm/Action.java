@@ -7,7 +7,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 
@@ -49,10 +49,10 @@ public final class Action {
 		Module module = modules.get(pos);
 
 		// Sensor exists, we can open activity
-		Intent intent = new Intent(context, SensorDetailActivity.class);
-		intent.putExtra(SensorDetailActivity.EXTRA_MODULE_ID, module.getId());
-		intent.putExtra(SensorDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
-		intent.putExtra(SensorDetailActivity.EXTRA_ACTIVE_POS, pos);
+		Intent intent = new Intent(context, ModuleDetailActivity.class);
+		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getId());
+		intent.putExtra(ModuleDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
+		intent.putExtra(ModuleDetailActivity.EXTRA_ACTIVE_POS, pos);
 
 		context.startActivity(intent);
 	}
