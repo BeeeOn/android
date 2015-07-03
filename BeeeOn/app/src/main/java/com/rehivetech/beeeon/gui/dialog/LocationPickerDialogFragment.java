@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
@@ -25,7 +26,8 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 	public static final String ARG_TITLE = "title";
 	public static final String ARG_CITY_NAME = "city_name";
 	public static final String ARG_POSITIVE_BUTTON_TEXT = "positive_button_text";
-	private static final String ARG_NEGATIVE_BUTTON_TEXT = "negative_button_text";
+	public static final String ARG_NEGATIVE_BUTTON_TEXT = "negative_button_text";
+	public static final String ARG_SHOW_KEYBOARD = "show_keyboard";
 
 	EditText mCityName;
 
@@ -47,6 +49,13 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 
 		this.mCityName = (EditText) view.findViewById(R.id.dialog_location_city_name);
 		this.mCityName.setText(this.getArguments().getString(ARG_CITY_NAME));
+
+		// shows keyboard immediately
+		boolean showKeyboard = this.getArguments().getBoolean(ARG_SHOW_KEYBOARD);
+		if(showKeyboard) {
+			this.mCityName.requestFocus();
+			getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		}
 
 		builder
 				.setTitle(this.getArguments().getString(ARG_TITLE))
@@ -96,6 +105,7 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 		private String mTitle;
 		private String mPositiveButtonText;
 		private String mNegativeButtonText;
+		private boolean mShowKeyboard;
 
 		protected LocationPickerDialogBuilder(Context context, FragmentManager fragmentManager) {
 			super(context, fragmentManager, LocationPickerDialogFragment.class);
@@ -126,14 +136,18 @@ public class LocationPickerDialogFragment extends BaseDialogFragment {
 			return this;
 		}
 
+		public LocationPickerDialogFragment.LocationPickerDialogBuilder showKeyboard(){
+			this.mShowKeyboard = true;
+			return this;
+		}
 
-		@Override
 		protected Bundle prepareArguments() {
 			Bundle args = new Bundle();
 			args.putString(ARG_TITLE, this.mTitle);
 			args.putString(ARG_CITY_NAME, this.mCityName);
 			args.putString(ARG_POSITIVE_BUTTON_TEXT, this.mPositiveButtonText);
 			args.putString(ARG_NEGATIVE_BUTTON_TEXT, this.mNegativeButtonText);
+			args.putBoolean(ARG_SHOW_KEYBOARD, this.mShowKeyboard);
 			return args;
 		}
 	}

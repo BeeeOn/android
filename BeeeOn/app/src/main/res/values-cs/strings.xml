@@ -207,9 +207,9 @@
     <string name="placeholder_not_exists">NEEXISTUJE</string>
 
     <!-- Widgets -->
-    <string name="widget_sensor_title_small">BeeeOn zařízení 1x1</string>
-    <string name="widget_sensor_title_medium">BeeeOn zařízení 2x1</string>
-    <string name="widget_sensor_title_large">BeeeOn zařízení 3x1</string>
+    <string name="widget_sensor_title_small">BeeeOn zařízení malý</string>
+    <string name="widget_sensor_title_medium">BeeeOn zařízení střední</string>
+    <string name="widget_sensor_title_large">BeeeOn zařízení velký</string>
     <string name="widget_location_list_title">BeeeOn umístění</string>
     <string name="widget_graph_title">BeeeOn zařízení s grafem</string>
     <string name="widget_clock_title">BeeeOn-Time</string>
@@ -429,5 +429,9 @@
     <string name="tut_add_sensor_title_1">Vytáhněte izolační proužek baterií</string>
     <string name="tut_add_sensor_title_2">Připravte své zařízení</string>
     <string name="tut_intro_title">Úvodní průvodce BeeeOn</string>
-
+    <string name="no_locations_cap">ŽÁDNÉ UMÍSTĚNÍ</string>
+    <string name="graph_interval_values">Interval hodnot grafu</string>
+    <string name="interval_weekly">Týdně</string>
+    <string name="interval_daily">Denně</string>
+    <string name="interval_monthly">Měsíčně</string>
 </resources>

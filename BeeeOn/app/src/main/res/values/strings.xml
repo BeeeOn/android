@@ -193,6 +193,7 @@
     <string name="no_sensor_cap">NO DEVICE</string>
     <string name="no_gate_cap">NO GATEWAY</string>
     <string name="no_rules_cap">NO RULE</string>
+    <string name="no_locations_cap">NO LOCATIONS</string>
     <string name="profile_category_senzors">Devices</string>
     <string name="profile_category_friends">Friends</string>
     <string name="profile_category_app">Application</string>
@@ -435,4 +436,8 @@
     <string name="confirm_remove_user_title">Remove \"%1$s\"</string>
     <string name="confirm_remove_user_message">This user will lost access to your gateway and he won\'t be able to read or interact with your data anymore.</string>
 
+    <string name="graph_interval_values">Graph interval values</string>
+    <string name="interval_weekly">Weekly</string>
+    <string name="interval_daily">Daily</string>
+    <string name="interval_monthly">Monthly</string>
 </resources>

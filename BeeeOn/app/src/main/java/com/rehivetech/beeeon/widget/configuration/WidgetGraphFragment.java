@@ -4,6 +4,7 @@ package com.rehivetech.beeeon.widget.configuration;
 import android.os.Bundle;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -55,43 +56,52 @@ public class WidgetGraphFragment extends WidgetConfigurationFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		mModuleSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
+        mModuleSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
+        TextView moduleEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_device_emptyview);
+        mModuleSpinner.setEmptyView(moduleEmptyView);
+
 		mGapGroup = (RadioGroup) mActivity.findViewById(R.id.widget_config_graph_gap);
 		mGapGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				switch (checkedId) {
-					case R.id.widget_gap_daily:
-						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.HOUR.getSeconds();
-						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusDays(1).getMillis();
-						mWidgetRefreshInterval = RefreshInterval.MIN_30;
-						break;
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.widget_gap_daily:
+                        mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.HOUR.getSeconds();
+                        mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusDays(1).getMillis();
+                        mWidgetRefreshInterval = RefreshInterval.MIN_30;
+                        break;
 
-					case R.id.widget_gap_monthly:
-						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.DAY.getSeconds();
-						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusMonths(1).getMillis();
-						mWidgetRefreshInterval = RefreshInterval.HOUR_24;     // TODO maybe could be longer
-						break;
+                    case R.id.widget_gap_monthly:
+                        mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.DAY.getSeconds();
+                        mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusMonths(1).getMillis();
+                        mWidgetRefreshInterval = RefreshInterval.HOUR_24;     // TODO maybe could be longer
+                        break;
 
-					default:
-					case R.id.widget_gap_weekly:
-						mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.HOUR.getSeconds();
-						mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
-						mWidgetRefreshInterval = RefreshInterval.HOUR_12;
-						break;
-				}
+                    default:
+                    case R.id.widget_gap_weekly:
+                        mWidgetData.widgetLogData.gap = ModuleLog.DataInterval.HOUR.getSeconds();
+                        mWidgetData.widgetLogData.intervalStart = DateTime.now(DateTimeZone.UTC).minusWeeks(1).getMillis();
+                        mWidgetRefreshInterval = RefreshInterval.HOUR_12;
+                        break;
+                }
 
-				mWidgetData.widgetLogData.gapRadioId = checkedId;
-			}
-		});
+                mWidgetData.widgetLogData.gapRadioId = checkedId;
+            }
+        });
 	}
 
-	@Override
-	protected void onFragmentResume() {
-		super.onFragmentResume();
+    @Override
+    public void onResume() {
+        super.onResume();
+        mGapGroup.check(mWidgetData.widgetLogData.gapRadioId);
+    }
 
-		mGapGroup.check(mWidgetData.widgetLogData.gapRadioId);
-	}
+    @Override
+    protected void onBeforeGateChanged() {
+        super.onBeforeGateChanged();
+        mModuleSpinner.setAdapter(null);
+    }
+
 
 	/**
 	 * Updates layout and expects to have all data fresh

@@ -37,8 +37,6 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	private static final int REQUEST_LOCATION_DIALOG = 1;
 
-	protected SeekBar mWidgetUpdateSeekBar;
-
 	protected WidgetClockData mWidgetData;
 
 	protected List<WidgetModulePersistence> mWidgetModules;
@@ -55,6 +53,14 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mHandler = new Handler();
 	}
 
+    protected int getFragmentLayoutResource() {
+        return R.layout.fragment_widget_clock;
+    }
+
+    protected int getFragmentTitle() {
+        return R.string.widget_configuration_widget_clock;
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,14 +76,6 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mWeatherProvider = new WeatherProvider(mActivity);
 	}
 
-	protected int getFragmentLayoutResource() {
-		return R.layout.fragment_widget_clock;
-	}
-
-	protected int getFragmentTitle() {
-		return R.string.widget_configuration_widget_clock;
-	}
-
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -89,8 +87,14 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		spinnerLayoutParams.setMargins(0, 0, 0, (int) mActivity.getResources().getDimension(R.dimen.widget_margin));
 
-		for (WidgetModulePersistence wDev : mWidgetModules) {
+        TextView moduleEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_device_emptyview);
+
+		for (WidgetModulePersistence ignored : mWidgetModules) {
 			Spinner moduleSpinner = new Spinner(mActivity);
+            if(moduleEmptyView != null){
+                moduleSpinner.setEmptyView(moduleEmptyView);
+            }
+
 			mModuleSpinnersWrapper.addView(moduleSpinner, spinnerLayoutParams);
 			mModuleSpinners.add(moduleSpinner);
 		}
@@ -127,13 +131,41 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		});
 	}
 
-	private void showLocationPickerDialog() {
+    @Override
+    protected void onBeforeGateChanged() {
+        super.onBeforeGateChanged();
+        int index = 0;
+        for (WidgetModulePersistence ignored : mWidgetModules) {
+            Spinner spinner = mModuleSpinners.get(index);
+            spinner.setAdapter(null);
+            index++;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // setup weather location if provided
+        if (!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
+
+        // setup color scheme
+        if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
+            mColorSchemeGroup.check(R.id.scheme_white);
+        } else if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
+            mColorSchemeGroup.check(R.id.scheme_pink_cyan);
+        } else if (mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)) {
+            mColorSchemeGroup.check(R.id.scheme_black);
+        }
+    }
+
+    private void showLocationPickerDialog() {
 		LocationPickerDialogFragment
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 				.setTitle(mActivity.getString(R.string.dialog_location_select))
 				.setCityName(mWidgetData.weather.cityName)
 				.setPositiveButtonText(mActivity.getString(R.string.ok))
 				.setNegativeButtonText(mActivity.getString(R.string.action_close))
+				.showKeyboard()
 				.setTargetFragment(this, REQUEST_LOCATION_DIALOG)
 				.show();
 	}
@@ -195,23 +227,6 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	@Override
 	public void onNegativeButtonClicked(int var1, EditText city, LocationPickerDialogFragment dialog) {
 		dialog.dismiss();
-	}
-
-	@Override
-	protected void onFragmentResume() {
-		super.onFragmentResume();
-		updateIntervalLayout(mWidgetUpdateSeekBar);
-
-		// setup weather location if provided
-		if (!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
-
-		if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
-			mColorSchemeGroup.check(R.id.scheme_white);
-		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
-			mColorSchemeGroup.check(R.id.scheme_pink_cyan);
-		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)) {
-			mColorSchemeGroup.check(R.id.scheme_black);
-		}
 	}
 
 	/**

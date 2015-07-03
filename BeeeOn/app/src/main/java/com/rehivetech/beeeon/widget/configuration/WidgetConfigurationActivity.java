@@ -6,25 +6,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.util.Log;
 
 /**
  * @author mlyko
  */
-public class WidgetConfigurationActivity extends ActionBarActivity {
+public class WidgetConfigurationActivity extends BaseApplicationActivity {
 	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
 	public static final String EXTRA_WIDGET_EDITING = "com.rehivetech.beeeon.widget.EXTRA_WIDGET_EDITING";
 
 	private Toolbar mToolbar;
-	private AppWidgetManager mAppWidgetManager;
 	private ProgressDialog mDialog;
 	private Fragment mConfigFragment;
-
 
 	private boolean mAppWidgetEditing = false;
 	private int mWidgetId;
@@ -55,13 +54,17 @@ public class WidgetConfigurationActivity extends ActionBarActivity {
 		if (mToolbar != null) {
 			mToolbar.setTitle(R.string.title_activity_widget_configuration);
 			setSupportActionBar(mToolbar);
-			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-			getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_accept);
+		}
+
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_accept);
 		}
 
 		// do we edit or create widget
 		mAppWidgetEditing = extras.getBoolean(EXTRA_WIDGET_EDITING, false);
-		mAppWidgetManager = AppWidgetManager.getInstance(this);
+		AppWidgetManager mAppWidgetManager = AppWidgetManager.getInstance(this);
 
 		// get informations about widget
 		mWidgetId = extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);

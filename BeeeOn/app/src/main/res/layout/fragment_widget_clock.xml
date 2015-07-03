@@ -21,6 +21,14 @@
 		android:text="@string/widget_configuration_adapter"
 		/>
 
+    <!-- gate emptyview-->
+    <TextView
+        android:id="@+id/widget_config_gateway_emptyview"
+        style="@style/LinearRow.Row"
+        android:text="@string/no_gate_cap"
+        android:textColor="@color/beeeon_text_hint"
+        />
+
 	<Spinner
 		android:id="@+id/widget_config_gateway"
 		android:layout_width="match_parent"
@@ -51,6 +59,13 @@
 		android:minHeight="40dp"
 		android:orientation="vertical">
 		<!-- spinners are inflated programmatically -->
+        <!-- module emptyview-->
+        <TextView
+            android:id="@+id/widget_config_device_emptyview"
+            style="@style/LinearRow.Row.NoMargin"
+            android:text="@string/no_sensor_cap"
+            android:textColor="@color/beeeon_text_hint"
+            />
 	</LinearLayout>
 
 	<!-- separator -->

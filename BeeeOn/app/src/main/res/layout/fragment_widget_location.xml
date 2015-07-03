@@ -28,6 +28,14 @@
 		style="@style/LinearRow.Row"
 		/>
 
+    <!-- gate emptyview-->
+    <TextView
+        android:id="@+id/widget_config_gateway_emptyview"
+        style="@style/LinearRow.Row"
+        android:text="@string/no_gate_cap"
+        android:textColor="@color/beeeon_text_hint"
+        />
+
 	<!-- separator -->
 	<ImageView
 		android:layout_width="match_parent"
@@ -48,6 +56,14 @@
 		android:layout_width="match_parent"
 		android:layout_height="40dp"
 		/>
+
+    <!-- gate emptyview-->
+    <TextView
+        android:id="@+id/widget_config_location_emptyview"
+        style="@style/LinearRow.Row"
+        android:text="@string/no_locations_cap"
+        android:textColor="@color/beeeon_text_hint"
+        />
 
 	<!-- separator -->
 	<ImageView
