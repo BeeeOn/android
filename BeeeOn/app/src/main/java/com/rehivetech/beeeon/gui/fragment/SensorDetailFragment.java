@@ -92,7 +92,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	private UnitsHelper mUnitsHelper;
 
-	private String mModuleID;
+	private String mModuleId;
 	private String mLocationID;
 	private int mCurPageNumber;
 	private int mSelPageNumber;
@@ -133,7 +133,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 		Controller controller = Controller.getInstance(getActivity());
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			mModuleID = savedInstanceState.getString(ARG_SEN_ID);
+			mModuleId = savedInstanceState.getString(ARG_SEN_ID);
 			mGateId = savedInstanceState.getString(ARG_GATE_ID);
 			mLocationID = savedInstanceState.getString(ARG_LOC_ID);
 			mSelPageNumber = savedInstanceState.getInt(ARG_SEL_PAGE);
@@ -141,7 +141,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 			mGate = controller.getGatesModel().getGate(mGateId);
 		}
 		Log.d(TAG, "OnActivityCreated");
-		mModule = controller.getDevicesModel().getModule(mGateId, mModuleID);
+		mModule = controller.getDevicesModel().getModule(mGateId, mModuleId);
 		if (mModule != null) {
 			Log.d(TAG, String.format("ID: %s, Name: %s", mModule.getId(), mModule.getName()));
 			initLayout(mModule);
@@ -152,7 +152,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(ARG_SEN_ID, mModuleID);
+		savedInstanceState.putString(ARG_SEN_ID, mModuleId);
 		savedInstanceState.putString(ARG_GATE_ID, mGateId);
 		savedInstanceState.putString(ARG_LOC_ID, mLocationID);
 		savedInstanceState.putInt(ARG_CUR_PAGE, mCurPageNumber);
@@ -165,7 +165,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
-			Log.d(TAG, "This fragment is visible - dev " + mModuleID);
+			Log.d(TAG, "This fragment is visible - dev " + mModuleId);
 			doReloadDevicesTask(mGateId, false);
 		}
 
@@ -209,7 +209,8 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 				// go to edit senzor
 				Log.d(TAG, "Click - edit senzor");
 				Intent intent = new Intent(mActivity, SensorEditActivity.class);
-				intent.putExtra(Constants.GUI_EDIT_SENSOR_ID, mModuleID);
+				intent.putExtra(SensorEditActivity.EXTRA_GATE_ID, mGateId);
+				intent.putExtra(SensorEditActivity.EXTRA_MODULE_ID, mModuleId);
 				mActivity.startActivityForResult(intent, Constants.EDIT_SENSOR_REQUEST_CODE);
 			}
 		});
@@ -497,7 +498,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	public void setSensorID(String id) {
-		mModuleID = id;
+		mModuleId = id;
 	}
 
 	public void setLocationID(String locationId) {
@@ -574,7 +575,7 @@ public class SensorDetailFragment extends BaseApplicationFragment implements ILi
 					return;
 				}
 				Log.d(TAG, "Fragment - Start reload task");
-				mModule = Controller.getInstance(mActivity).getDevicesModel().getModule(gateId, mModuleID);
+				mModule = Controller.getInstance(mActivity).getDevicesModel().getModule(gateId, mModuleId);
 				if (mModule == null) {
 					Log.d(TAG, "Fragment - Stop reload task");
 					return;

@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -17,7 +18,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
@@ -25,7 +25,6 @@ import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
@@ -38,12 +37,13 @@ import java.util.List;
 import java.util.Set;
 
 public class SensorEditActivity extends BaseApplicationActivity {
-
-	public static final String EXTRA_MODULE_ID = "module_id";
 	private static final String TAG = SensorEditActivity.class.getSimpleName();
 
+	public static final String EXTRA_GATE_ID = "gate_id";
+	public static final String EXTRA_MODULE_ID = "module_id";
+
 	private String mModuleId;
-	private PlaceholderFragment mFragment;
+	private String mGateId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,33 +54,28 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			toolbar.setTitle(R.string.title_activity_sensor_edit);
 			setSupportActionBar(toolbar);
 		}
-		mModuleId = getIntent().getStringExtra(Constants.GUI_EDIT_SENSOR_ID);
-		if (mModuleId == null && savedInstanceState != null) {
-			mModuleId = savedInstanceState.getString(EXTRA_MODULE_ID);
-		}
-		mFragment = new PlaceholderFragment();
-		mFragment.setModuleID(mModuleId);
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, mFragment)
-					.commit();
-		}
-
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
+
+		Intent intent = getIntent();
+		mModuleId = intent.getStringExtra(EXTRA_MODULE_ID);
+		mGateId = intent.getStringExtra(EXTRA_GATE_ID);
+
+		if (mModuleId == null || mGateId == null) {
+			Log.e(TAG, "Not specified module to edit.");
+			finish();
+			return;
+		}
+
+		if (savedInstanceState == null) {
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container, PlaceholderFragment.newInstance(mGateId, mModuleId), PlaceholderFragment.TAG)
+					.commit();
+		}
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(EXTRA_MODULE_ID, mModuleId);
-
-		// Always call the superclass so it can save the view hierarchy state
-		super.onSaveInstanceState(savedInstanceState);
-	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,46 +94,51 @@ public class SensorEditActivity extends BaseApplicationActivity {
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
 			Set<Module.SaveModule> what = new HashSet<>();
-			Gate gate = controller.getActiveGate();
-			if (gate == null)
-				return false;
-			Module module = controller.getDevicesModel().getModule(gate.getId(), mModuleId);
+
+			Module module = controller.getDevicesModel().getModule(mGateId, mModuleId);
 			Device device = module.getDevice();
 
-			if (!mFragment.getName().equals(module.getName())) {
+			PlaceholderFragment fragment = (PlaceholderFragment) getSupportFragmentManager().findFragmentByTag(PlaceholderFragment.TAG);
+			if (fragment == null)
+				return false;
+
+			if (!fragment.getName().equals(module.getName())) {
 				what.add(Module.SaveModule.SAVE_NAME);
-				module.setName(mFragment.getName());
+				module.setName(fragment.getName());
 			}
 
-			if (!mFragment.getRefreshTime().equals(device.getRefresh())) {
+			if (!fragment.getRefreshTimeSeekBar().equals(device.getRefresh())) {
 				what.add(Module.SaveModule.SAVE_REFRESH);
-				device.setRefresh(mFragment.getRefreshTime());
+				device.setRefresh(fragment.getRefreshTimeSeekBar());
 			}
-			if (!mFragment.getLocationId().equals(device.getLocationId())) {
+
+			if (!fragment.getLocationId().equals(device.getLocationId())) {
 				what.add(Module.SaveModule.SAVE_LOCATION);
-				if (mFragment.isSetNewRoom()) {
+				if (fragment.isSetNewRoom()) {
 					Location location;
-					if (mFragment.isSetNewCustomRoom()) {
-						if (mFragment.getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
+					if (fragment.isSetNewCustomRoom()) {
+						if (fragment.getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
 							Toast.makeText(this, getString(R.string.toast_need_sensor_location_icon), Toast.LENGTH_LONG).show();
 							return false;
 						}
 						// Create new custom room
-						location = new Location(Location.NEW_LOCATION_ID, mFragment.getNewLocName(), gate.getId(), mFragment.getNewLocIcon().getId());
+						location = new Location(Location.NEW_LOCATION_ID, fragment.getNewLocationName(), mGateId, fragment.getNewLocIcon().getId());
 					} else {
-						location = mFragment.getLocation();
+						location = fragment.getLocation();
 					}
 					// Send request for new loc ..
 					doSaveDeviceWithNewLocation(new Device.DataPair(device, location, EnumSet.copyOf(what)));
 					return true;
 				} else {
-					device.setLocationId(mFragment.getLocationId());
+					device.setLocationId(fragment.getLocationId());
 				}
 			}
-			if (what.isEmpty()) { // nothing change
+
+			if (what.isEmpty()) {
+				// nothing changed
 				setResult(Activity.RESULT_OK);
 				finish();
-			} else if (!mFragment.isSetNewRoom()) {
+			} else if (!fragment.isSetNewRoom()) {
 				doSaveDeviceTask(new Device.DataPair(device, EnumSet.copyOf(what)));
 			}
 			return true;
@@ -149,10 +149,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
-
-	/*
-	 * ASYNC TASK - SAVE
-	 */
 
 	private void doSaveDeviceWithNewLocation(Device.DataPair pair) {
 		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(this);
@@ -165,9 +161,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					Toast.makeText(SensorEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 					setResult(Activity.RESULT_OK);
 					finish();
-				} else {
-					Log.d(TAG, "Fail save to server");
-					Toast.makeText(SensorEditActivity.this, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -188,9 +181,6 @@ public class SensorEditActivity extends BaseApplicationActivity {
 					Toast.makeText(SensorEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
 					setResult(Activity.RESULT_OK);
 					finish();
-				} else {
-					Log.d(TAG, "Fail save to server");
-					Toast.makeText(SensorEditActivity.this, R.string.toast_fail_save_data, Toast.LENGTH_LONG).show();
 				}
 			}
 		});
@@ -204,114 +194,139 @@ public class SensorEditActivity extends BaseApplicationActivity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
 		private static final String TAG = PlaceholderFragment.class.getSimpleName();
 
-		public static final String EXTRA_DEV_ID = "module_id";
-		public static final String EXTRA_ACT_NAME = "EXTRA_ACT_NAME";
-		public static final String EXTRA_ACT_LOC = "EXTRA_ACT_LOC";
-		public static final String EXTRA_ACT_NEW_IC_LOC = "EXTRA_ACT_NEW_IC_LOC";
-		public static final String EXTRA_ACT_NEW_LOC = "EXTRA_ACT_NEW_LOC";
-		public static final String EXTRA_ACT_REFRESH = "EXTRA_ACT_REFRESH";
+		private static final String SAVE_NAME = "name";
+		private static final String SAVE_LOCATION = "location";
+		private static final String SAVE_NEW_LOCATION_ICON = "new_location_icon";
+		private static final String SAVE_NEW_LOCATION_NAME = "new_location_name";
+		private static final String SAVE_REFRESH = "refresh";
 
 		private SensorEditActivity mActivity;
-		private View mView;
-		private Spinner mSpinner;
-		private EditText mName;
-		private SeekBar mRefreshTime;
-		private String mModuleID;
-		private Module mModule;
-		private TextView mRefreshTimeVal;
-		private Device mDevice;
-		private Gate mGate;
-		private String mLocationId;
-		private Spinner mNewIconSpinner;
-		private TextView mNewLocName;
 
-		public PlaceholderFragment() {
+		private String mModuleId;
+		private String mGateId;
+
+		/** Content views */
+		private Spinner mLocationSpinner;
+		private EditText mName;
+		private SeekBar mRefreshTimeSeekBar;
+		private TextView mRefreshTimeText;
+		private Spinner mNewLocationIconSpinner;
+		private TextView mNewLocationName;
+		private View mNewLocationLayout;
+
+		public PlaceholderFragment() {}
+
+		public static PlaceholderFragment newInstance(String gateId, String moduleId) {
+			Bundle args = new Bundle();
+			args.putString(EXTRA_GATE_ID, gateId);
+			args.putString(EXTRA_MODULE_ID, moduleId);
+
+			PlaceholderFragment fragment = new PlaceholderFragment();
+			fragment.setArguments(args);
+			return fragment;
 		}
 
 		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-								 Bundle savedInstanceState) {
-			mView = inflater.inflate(R.layout.fragment_sensor_edit, container, false);
-			return mView;
+		public void onAttach(Activity activity) {
+			super.onAttach(activity);
+
+			try {
+				mActivity = (SensorEditActivity) activity;
+			} catch (ClassCastException e) {
+				throw new ClassCastException(activity.toString()
+						+ " must be subclass of SensorEditActivity");
+			}
+		}
+
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+
+			Bundle args = getArguments();
+			if (args == null || !args.containsKey(EXTRA_GATE_ID) || !args.containsKey(EXTRA_MODULE_ID)) {
+				Log.e(TAG, "Not specified moduleId as Fragment argument");
+				return;
+			}
+
+			mGateId = args.getString(EXTRA_GATE_ID);
+			mModuleId = args.getString(EXTRA_MODULE_ID);
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+			View view = inflater.inflate(R.layout.fragment_sensor_edit, container, false);
+
+			mName = (EditText) view.findViewById(R.id.sen_edit_name);
+			mLocationSpinner = (Spinner) view.findViewById(R.id.sen_edit_location);
+			mRefreshTimeSeekBar = (SeekBar) view.findViewById(R.id.sen_edit_refreshtime);
+			mRefreshTimeText = (TextView) view.findViewById(R.id.sen_edit_refreshtime_val);
+			mNewLocationIconSpinner = (Spinner) view.findViewById(R.id.sen_edit_new_loc_icon);
+			mNewLocationName = (TextView) view.findViewById(R.id.sen_edit_new_loc_text);
+
+			mNewLocationLayout = view.findViewById(R.id.sen_edit_third_section);
+
+			return view;
 		}
 
 		@Override
 		public void onActivityCreated(Bundle savedInstanceState) {
 			super.onActivityCreated(savedInstanceState);
-			if (savedInstanceState != null) {
-				mModuleID = savedInstanceState.getString(EXTRA_DEV_ID);
-			}
-			// Get activity
-			mActivity = (SensorEditActivity) getActivity();
-			Controller controller = Controller.getInstance(mActivity);
-			mGate = controller.getActiveGate();
-			if (mGate == null)
-				return;
-			mModule = controller.getDevicesModel().getModule(mGate.getId(), mModuleID);
-			if (mModule == null)
-				return;
-			mDevice = mModule.getDevice();
-			mLocationId = mDevice.getLocationId();
+
 			initLayout();
+
 			if (savedInstanceState != null) {
-				mName.setText(savedInstanceState.getString(EXTRA_ACT_NAME));
-				mSpinner.setSelection(savedInstanceState.getInt(EXTRA_ACT_LOC));
-				mNewIconSpinner.setSelection(savedInstanceState.getInt(EXTRA_ACT_NEW_IC_LOC));
-				mNewLocName.setText(savedInstanceState.getString(EXTRA_ACT_NEW_LOC));
-				mRefreshTime.setProgress(savedInstanceState.getInt(EXTRA_ACT_REFRESH));
+				// Fill remembered values
+				mName.setText(savedInstanceState.getString(SAVE_NAME));
+				mLocationSpinner.setSelection(savedInstanceState.getInt(SAVE_LOCATION));
+				mNewLocationIconSpinner.setSelection(savedInstanceState.getInt(SAVE_NEW_LOCATION_ICON));
+				mNewLocationName.setText(savedInstanceState.getString(SAVE_NEW_LOCATION_NAME));
+				mRefreshTimeSeekBar.setProgress(savedInstanceState.getInt(SAVE_REFRESH));
+			} else {
+				// Fill default values
+				Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
+				if (module == null)
+					return;
+
+				Device device = module.getDevice();
+				LocationArrayAdapter adapter = (LocationArrayAdapter) mLocationSpinner.getAdapter();
+
+				mName.setText(module.getName());
+				mLocationSpinner.setSelection(getLocationsIndexFromArray(adapter.getLocations(), device.getLocationId()));
+				mRefreshTimeSeekBar.setProgress(device.getRefresh().getIntervalIndex());
+				mRefreshTimeText.setText(" " + device.getRefresh().getStringInterval(mActivity));
 			}
 		}
 
 		@Override
-		public void onSaveInstanceState(Bundle savedInstanceState) {
-			// ModuleId what I edit
-			savedInstanceState.putString(EXTRA_DEV_ID, mModuleID);
-			// Actualy filled data
-			savedInstanceState.putString(EXTRA_ACT_NAME, mName.getText().toString());
-			savedInstanceState.putInt(EXTRA_ACT_LOC, mSpinner.getSelectedItemPosition());
-			savedInstanceState.putInt(EXTRA_ACT_NEW_IC_LOC, mNewIconSpinner.getSelectedItemPosition());
-			savedInstanceState.putString(EXTRA_ACT_NEW_LOC, mNewLocName.getText().toString());
-			savedInstanceState.putInt(EXTRA_ACT_REFRESH, mRefreshTime.getProgress());
+		public void onSaveInstanceState(Bundle outState) {
+			super.onSaveInstanceState(outState);
 
-			// Always call the superclass so it can save the view hierarchy state
-			super.onSaveInstanceState(savedInstanceState);
+			outState.putString(SAVE_NAME, mName.getText().toString());
+			outState.putInt(SAVE_LOCATION, mLocationSpinner.getSelectedItemPosition());
+			outState.putInt(SAVE_NEW_LOCATION_ICON, mNewLocationIconSpinner.getSelectedItemPosition());
+			outState.putString(SAVE_NEW_LOCATION_NAME, mNewLocationName.getText().toString());
+			outState.putInt(SAVE_REFRESH, mRefreshTimeSeekBar.getProgress());
 		}
 
 		private void initLayout() {
-			// Get name of sensor
-			mName = (EditText) mView.findViewById(R.id.sen_edit_name);
-			// Get spinner for locations
-			mSpinner = (Spinner) mView.findViewById(R.id.sen_edit_location);
-			// Get seekbar for refresh time
-			mRefreshTime = (SeekBar) mView.findViewById(R.id.sen_edit_refreshtime);
-			mRefreshTimeVal = (TextView) mView.findViewById(R.id.sen_edit_refreshtime_val);
-			// Get Spiner of icons for new location
-			mNewIconSpinner = (Spinner) mView.findViewById(R.id.sen_edit_new_loc_icon);
-			mNewLocName = (TextView) mView.findViewById(R.id.sen_edit_new_loc_text);
-
-			// Set locations to spinner
+			// Location adapter
 			LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.custom_spinner_item);
-			// Set layout to DataAdapter for locations
 			dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+			mLocationSpinner.setAdapter(dataAdapter);
 
-			// ICON gate
-			LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.custom_spinner_icon_item);
-			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
-
-			// Set listener for hide or unhide layout for add new location
-			mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			// Set listener to (un)hide layout for adding new location
+			mLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					if (position == mSpinner.getCount() - 1) {
+					if (position == mLocationSpinner.getCount() - 1) {
 						// show new location
-						showNewLocation(true);
+						mNewLocationLayout.setVisibility(View.VISIBLE);
 					} else {
 						// hide input for new location
-						showNewLocation(false);
+						mNewLocationLayout.setVisibility(View.GONE);
 					}
 				}
 
@@ -321,48 +336,34 @@ public class SensorEditActivity extends BaseApplicationActivity {
 				}
 			});
 
-			mSpinner.setAdapter(dataAdapter);
-			mSpinner.setSelection(getLocationsIndexFromArray(dataAdapter.getLocations()));
+			// Icon adapter
+			LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.custom_spinner_icon_item);
+			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
+			mNewLocationIconSpinner.setAdapter(iconAdapter);
 
-			mNewIconSpinner.setAdapter(iconAdapter);
-
-			mName.setText(mModule.getName());
-			// Set Max value by length of array with values
-			mRefreshTime.setMax(RefreshInterval.values().length - 1);
-			mRefreshTime.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
+			// Set max value by length of array with values
+			mRefreshTimeSeekBar.setMax(RefreshInterval.values().length - 1);
+			mRefreshTimeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+				@Override
 				public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 					String interval = RefreshInterval.values()[progress].getStringInterval(mActivity);
-					mRefreshTimeVal.setText(" " + interval);
+					mRefreshTimeText.setText(" " + interval);
 				}
 
 				@Override
 				public void onStartTrackingTouch(SeekBar seekBar) {
-
 				}
 
 				@Override
 				public void onStopTrackingTouch(SeekBar seekBar) {
-					String interval = RefreshInterval.values()[seekBar.getProgress()].getStringInterval(mActivity);
-					Log.d(TAG, String.format("Stop select value %s", interval));
 				}
 			});
-			// Set refresh time Text
-			mRefreshTimeVal.setText(" " + mDevice.getRefresh().getStringInterval(mActivity));
-
-			// Set refresh time SeekBar
-			mRefreshTime.setProgress(mDevice.getRefresh().getIntervalIndex());
-
 		}
 
-		private void showNewLocation(boolean b) {
-			mView.findViewById(R.id.sen_edit_third_section).setVisibility((b) ? View.VISIBLE : View.GONE);
-		}
-
-		private int getLocationsIndexFromArray(List<Location> locations) {
+		private int getLocationsIndexFromArray(List<Location> locations, String locationId) {
 			int index = 0;
 			for (Location room : locations) {
-				if (room.getId().equalsIgnoreCase(mLocationId)) {
+				if (room.getId().equalsIgnoreCase(locationId)) {
 					return index;
 				}
 				index++;
@@ -370,40 +371,39 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			return index;
 		}
 
-		public void setModuleID(String moduleId) {
-			mModuleID = moduleId;
-		}
 
-		public RefreshInterval getRefreshTime() {
-			return RefreshInterval.values()[mRefreshTime.getProgress()];
+		/** Helpers for getting content data */
+
+		public RefreshInterval getRefreshTimeSeekBar() {
+			return RefreshInterval.values()[mRefreshTimeSeekBar.getProgress()];
 		}
 
 		public String getLocationId() {
-			return ((Location) mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition())).getId();
+			return ((Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition())).getId();
 		}
 
 		public String getName() {
 			return mName.getText().toString();
 		}
 
-		public String getNewLocName() {
-			return mNewLocName.getText().toString();
+		public String getNewLocationName() {
+			return mNewLocationName.getText().toString();
 		}
 
 		public Location.LocationIcon getNewLocIcon() {
-			return (Location.LocationIcon) mNewIconSpinner.getAdapter().getItem(mNewIconSpinner.getSelectedItemPosition());
+			return (Location.LocationIcon) mNewLocationIconSpinner.getAdapter().getItem(mNewLocationIconSpinner.getSelectedItemPosition());
 		}
 
 		public Location getLocation() {
-			return (Location) mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition());
+			return (Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition());
 		}
 
 		public boolean isSetNewRoom() {
-			return ((Location) mSpinner.getAdapter().getItem(mSpinner.getSelectedItemPosition())).getId().equals(Location.NEW_LOCATION_ID);
+			return ((Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition())).getId().equals(Location.NEW_LOCATION_ID);
 		}
 
 		public boolean isSetNewCustomRoom() {
-			return (mSpinner.getSelectedItemPosition() == mSpinner.getAdapter().getCount() - 1);
+			return (mLocationSpinner.getSelectedItemPosition() == mLocationSpinner.getAdapter().getCount() - 1);
 		}
 	}
 }
