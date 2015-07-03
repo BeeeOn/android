@@ -468,6 +468,11 @@
     <string name="multiadapter_no_item">- Nič pre výber -</string>
     <string name="update_over_wifi_only">Aktualizovať iba cez Wi-Fi</string>
     <string name="watchdog_no_valid_item">Žiadna platná položka</string>
+    <string name="no_locations_cap">ŽIADNE UMIESTNENIE</string>
+    <string name="interval_daily">Denne</string>
+    <string name="interval_monthly">Mesačne</string>
+    <string name="interval_weekly">Ročne</string>
+    <string name="graph_interval_values">Interval hodnot grafu</string>
 
 
     <string name="button_unregister">Odregistrovať</string>

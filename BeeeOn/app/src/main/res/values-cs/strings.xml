@@ -429,5 +429,9 @@
     <string name="tut_add_sensor_title_1">Vytáhněte izolační proužek baterií</string>
     <string name="tut_add_sensor_title_2">Připravte své zařízení</string>
     <string name="tut_intro_title">Úvodní průvodce BeeeOn</string>
-
+    <string name="no_locations_cap">ŽÁDNÉ UMÍSTĚNÍ</string>
+    <string name="graph_interval_values">Interval hodnot grafu</string>
+    <string name="interval_weekly">Týdně</string>
+    <string name="interval_daily">Denně</string>
+    <string name="interval_monthly">Měsíčně</string>
 </resources>

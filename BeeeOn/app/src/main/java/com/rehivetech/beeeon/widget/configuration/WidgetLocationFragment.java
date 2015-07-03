@@ -4,6 +4,7 @@ package com.rehivetech.beeeon.widget.configuration;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -19,8 +20,6 @@ import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
  */
 public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	private static final String TAG = WidgetLocationFragment.class.getSimpleName();
-
-	protected SeekBar mWidgetUpdateSeekBar;
 
 	protected WidgetLocationData mWidgetData;
 
@@ -53,17 +52,17 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
 		mLocationSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_location);
-
+        TextView locationEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_location_emptyview);
+        mLocationSpinner.setEmptyView(locationEmptyView);
 	}
 
-	@Override
-	protected void onFragmentResume() {
-		super.onFragmentResume();
+    @Override
+    protected void onBeforeGateChanged() {
+        super.onBeforeGateChanged();
+        mLocationSpinner.setAdapter(null);
+    }
 
-		updateIntervalLayout(mWidgetUpdateSeekBar);
-	}
-
-	/**
+    /**
 	 * Updates layout and expects to have all data fresh
 	 */
 	protected void updateLayout() {

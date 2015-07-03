@@ -4,6 +4,7 @@ package com.rehivetech.beeeon.widget.configuration;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -19,8 +20,6 @@ import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
  */
 public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	private static final String TAG = WidgetModuleFragment.class.getSimpleName();
-
-	protected SeekBar mWidgetUpdateSeekBar;
 
 	protected WidgetModuleData mWidgetData;
 
@@ -38,7 +37,7 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	}
 
 	protected int getFragmentLayoutResource() {
-		return R.layout.fragment_widget_device;
+		return R.layout.fragment_widget_module;
 	}
 
 	protected int getFragmentTitle() {
@@ -53,14 +52,15 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
 		mModuleSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_device);
-	}
+        TextView moduleEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_device_emptyview);
+        mModuleSpinner.setEmptyView(moduleEmptyView);
+    }
 
-	@Override
-	protected void onFragmentResume() {
-		super.onFragmentResume();
-
-		updateIntervalLayout(mWidgetUpdateSeekBar);
-	}
+    @Override
+    protected void onBeforeGateChanged() {
+        super.onBeforeGateChanged();
+        mModuleSpinner.setAdapter(null);
+    }
 
 	/**
 	 * Updates layout and expects to have all data fresh

@@ -28,6 +28,14 @@
 		style="@style/LinearRow.Row"
 		/>
 
+    <!-- gate emptyview-->
+    <TextView
+        android:id="@+id/widget_config_gateway_emptyview"
+        style="@style/LinearRow.Row"
+        android:text="@string/no_gate_cap"
+        android:textColor="@color/beeeon_text_hint"
+        />
+
 	<!-- separator -->
 	<ImageView
 		android:layout_width="match_parent"
@@ -49,6 +57,14 @@
 		android:layout_height="40dp"
 		/>
 
+    <!-- module emptyview-->
+    <TextView
+        android:id="@+id/widget_config_device_emptyview"
+        style="@style/LinearRow.Row"
+        android:text="@string/no_sensor_cap"
+        android:textColor="@color/beeeon_text_hint"
+        />
+
 	<!-- separator -->
 	<ImageView
 		android:layout_width="match_parent"
@@ -60,7 +76,7 @@
 
 	<TextView
 		style="@style/LinearRow.Item"
-		android:text="Interval hodnot grafu"
+		android:text="@string/graph_interval_values"
 		/>
 
 	<RadioGroup
@@ -74,21 +90,21 @@
 			android:id="@+id/widget_gap_daily"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Denně"
+			android:text="@string/interval_daily"
 			/>
 
 		<RadioButton
 			android:id="@+id/widget_gap_weekly"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Týdně"
+			android:text="@string/interval_weekly"
 			/>
 
 		<RadioButton
 			android:id="@+id/widget_gap_monthly"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Měsíčně"
+			android:text="@string/interval_monthly"
 			/>
 	</RadioGroup>
 
@@ -105,6 +121,7 @@
 		android:id="@+id/widget_config_widget_label"
 		android:text="@string/widget"
 		style="@style/LinearRow.Caption"
+        android:layout_marginBottom="0dp"
 		/>
 
 	<RelativeLayout
