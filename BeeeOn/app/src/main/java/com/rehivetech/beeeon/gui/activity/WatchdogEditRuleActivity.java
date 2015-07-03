@@ -594,6 +594,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 	private boolean validateInput(EditText eText, String... additional) {
 		String inputText = eText.getText().toString().trim();
 		if (inputText.length() == 0) {
+			eText.requestFocus();
 			eText.setError(getString(R.string.toast_field_must_be_filled));
 			return false;
 		}
@@ -604,6 +605,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 					try {
 						int num = Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
+						eText.requestFocus();
 						eText.setError(getString(R.string.toast_field_must_be_number));
 						return false;
 					}
