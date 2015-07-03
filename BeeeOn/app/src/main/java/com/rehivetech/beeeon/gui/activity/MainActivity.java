@@ -202,8 +202,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public void onAppResume() {
-		// ASYN TASK - Reload all data, if wasnt download in login activity
-		final ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(this, false, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
+		// Reload all data, if wasn't downloaded in login activity
+		final ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(this, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
 		fullReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {

@@ -6,6 +6,8 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 
+import java.util.EnumSet;
+
 /**
  * Reloads specified data from server.
  */
@@ -13,19 +15,30 @@ public class ReloadGateDataTask extends CallbackTask<String> {
 
 	private final boolean mForceReload;
 
-	private ReloadWhat mWhat;
+	private EnumSet<ReloadWhat> mWhat;
 
 	public enum ReloadWhat {
-		GATES_AND_ACTIVE_GATE,
+		ACTIVE_GATE, // This special item gets ID of active gate automatically and for it load specified data; Also loads all GATES automatically
+		GATES,
 		LOCATIONS,
-		DEVICES,
+		DEVICES, // With devices are also automatically loaded LOCATIONS
 		UNINITIALIZED_DEVICES,
 		USERS,
 		WATCHDOGS,
 		ACHIEVEMENTS,
 	}
 
+	public static final EnumSet<ReloadWhat> RELOAD_GATES_AND_ACTIVE_GATE_DEVICES = EnumSet.of(
+			ReloadWhat.ACTIVE_GATE,
+			ReloadWhat.GATES,
+			ReloadWhat.DEVICES
+	);
+
 	public ReloadGateDataTask(Context context, boolean forceReload, ReloadWhat what) {
+		this(context, forceReload, EnumSet.of(what));
+	}
+
+	public ReloadGateDataTask(Context context, boolean forceReload, EnumSet<ReloadWhat> what) {
 		super(context);
 
 		mForceReload = forceReload;
@@ -36,38 +49,42 @@ public class ReloadGateDataTask extends CallbackTask<String> {
 	protected Boolean doInBackground(String gateId) {
 		Controller controller = Controller.getInstance(mContext);
 
-		if (mWhat == ReloadWhat.GATES_AND_ACTIVE_GATE) {
+		if (mWhat.contains(ReloadWhat.GATES) || mWhat.contains(ReloadWhat.ACTIVE_GATE)) {
 			controller.getGatesModel().reloadGates(mForceReload);
+		}
 
+		if (mWhat.contains(ReloadWhat.ACTIVE_GATE)) {
 			Gate active = controller.getActiveGate();
 			if (active == null)
 				return true;
 
-			// We need to update also devices
+			// Get ID of active gate so we can load specified data then
 			gateId = active.getId();
-			mWhat = ReloadWhat.DEVICES;
+		} else if (gateId == null) {
+			throw new IllegalArgumentException("Either ReloadWhat.ACTIVE_GATE must be used or given gateId parameter.");
 		}
 
-		if (mWhat == ReloadWhat.LOCATIONS || mWhat == ReloadWhat.DEVICES) {
+		if (mWhat.contains(ReloadWhat.LOCATIONS) || mWhat.contains(ReloadWhat.DEVICES)) {
 			controller.getLocationsModel().reloadLocationsByGate(gateId, mForceReload);
 		}
 
-		if (mWhat == ReloadWhat.DEVICES) {
+		if (mWhat.contains(ReloadWhat.DEVICES)) {
 			controller.getDevicesModel().reloadDevicesByGate(gateId, mForceReload);
 		}
 
-		if (mWhat == ReloadWhat.UNINITIALIZED_DEVICES) {
+		if (mWhat.contains(ReloadWhat.UNINITIALIZED_DEVICES)) {
 			controller.getUninitializedDevicesModel().reloadUninitializedDevicesByGate(gateId, mForceReload);
 		}
 
-		if (mWhat == ReloadWhat.USERS) {
+		if (mWhat.contains(ReloadWhat.USERS)) {
 			controller.getUsersModel().reloadUsersByGate(gateId, mForceReload);
 		}
 
-		if (mWhat == ReloadWhat.WATCHDOGS) {
+		if (mWhat.contains(ReloadWhat.WATCHDOGS)) {
 			controller.getWatchdogsModel().reloadWatchdogsByGate(gateId, mForceReload);
 		}
-		if (mWhat == ReloadWhat.ACHIEVEMENTS) {
+
+		if (mWhat.contains(ReloadWhat.ACHIEVEMENTS)) {
 			controller.getAchievementsModel().reloadAchievementsByGate(gateId, mForceReload);
 		}
 

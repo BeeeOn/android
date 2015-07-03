@@ -140,7 +140,7 @@ public abstract class WidgetConfigurationFragment extends Fragment {
 		super.onResume();
 
 		// reloads all gateways and actual one
-		mReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
+		mReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
 		mReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {

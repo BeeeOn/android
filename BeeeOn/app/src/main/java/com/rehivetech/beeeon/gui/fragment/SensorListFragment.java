@@ -445,7 +445,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
 	private void doFullReloadTask(boolean forceRefresh) {
-		ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.GATES_AND_ACTIVE_GATE);
+		ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
 
 		fullReloadTask.setListener(new ICallbackTaskListener() {
 			@Override
