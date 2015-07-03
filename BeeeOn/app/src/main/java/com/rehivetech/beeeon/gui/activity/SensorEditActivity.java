@@ -138,12 +138,9 @@ public class SensorEditActivity extends BaseApplicationActivity {
 			if (what.isEmpty()) { // nothing change
 				setResult(Activity.RESULT_OK);
 				finish();
-				return true;
-			}
-
-			if (!mFragment.isSetNewRoom())
+			} else if (!mFragment.isSetNewRoom()) {
 				doSaveDeviceTask(new Device.DataPair(device, EnumSet.copyOf(what)));
-
+			}
 			return true;
 		} else if (id == android.R.id.home) {
 			setResult(Activity.RESULT_CANCELED);
