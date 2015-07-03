@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -42,7 +43,6 @@ public class GateUsersActivity extends BaseApplicationActivity {
 	private List<User> mGateUsers;
 
 	private static final int NAME_ITEM_HEIGHT = 74;
-	private ActionMode mMode;
 
 	private RadioGroup mGroup;
 	private User mSelectedItem;
@@ -83,7 +83,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		listActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				mMode = startSupportActionMode(new ActionModeEditSensors());
+				startSupportActionMode(new ActionModeEditSensors());
 				mSelectedItem = (User) listActUsers.getAdapter().getItem(position);
 				mSelectedItemPos = position;
 				setUserSelected();
@@ -171,7 +171,6 @@ public class GateUsersActivity extends BaseApplicationActivity {
 	private void doRemoveUserTask(User user) {
 		RemoveUserTask removeUserTask = new RemoveUserTask(this);
 		User.DataPair pair = new User.DataPair(user, mGate.getId());
-
 		removeUserTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -182,6 +181,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 				}
 			}
 		});
+
 
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(removeUserTask, pair);
@@ -211,6 +211,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 	class ActionModeEditSensors implements ActionMode.Callback {
 
+
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
@@ -227,11 +228,21 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.adausr_menu_del) {
-				doRemoveUserTask(mSelectedItem);
+				if (mSelectedItem != null) {
+					User user = Controller.getInstance(GateUsersActivity.this).getUsersModel().getUser(mGate.getId(), mSelectedItem.getId());
+					String userName = user.getName();
+					String title = getString(R.string.confirm_remove_user_title, userName);
+					String message = getString(R.string.confirm_remove_user_message);
+					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
+						@Override
+						public void onConfirm() {
+							doRemoveUserTask(mSelectedItem);
+						}
+					});
+				}
 			} else if (item.getItemId() == R.id.adausr_menu_edit) {
 				changeUserRole();
 			}
-
 			mode.finish();
 			return true;
 		}
@@ -239,7 +250,6 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
 			setUserUnselected();
-			mMode = null;
 		}
 	}
 
@@ -276,11 +286,32 @@ public class GateUsersActivity extends BaseApplicationActivity {
 				// User clicked OK button
 				//mSelectedItem.setRole(User.Role.fromString(((RadioButton)layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()));
 
+				User.Role newRole = null;
+
 				for (User.Role role : User.Role.values()) {
 					if (getString(role.getStringResource()).equals(((RadioButton) layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
-						mSelectedItem.setRole(role);
+						newRole = role;
 				}
-				doEditUserTask(mSelectedItem);
+
+				if (mSelectedItem == null || newRole == null)
+					return;
+
+				if (newRole == User.Role.Superuser) {
+					// Need confirmation for this change
+
+					String title = getString(R.string.confirm_change_ownership_title);
+					String message = getString(R.string.confirm_change_ownership_message);
+					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, new ConfirmDialog.ConfirmDialogListener() {
+						@Override
+						public void onConfirm() {
+							mSelectedItem.setRole(User.Role.Superuser);
+							doEditUserTask(mSelectedItem);
+						}
+					});
+				} else {
+					mSelectedItem.setRole(newRole);
+					doEditUserTask(mSelectedItem);
+				}
 			}
 		});
 		builder.setNegativeButton(R.string.notification_cancel, new DialogInterface.OnClickListener() {

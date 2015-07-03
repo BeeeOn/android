@@ -21,6 +21,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.melnykov.fab.ScrollDirectionListener;
@@ -32,6 +33,7 @@ import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SensorDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.SenListAdapter;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.listItem.LocationListItem;
 import com.rehivetech.beeeon.gui.listItem.SensorListItem;
 import com.rehivetech.beeeon.household.device.Device;
@@ -461,15 +463,14 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 	private void doRemoveDeviceTask(Device device) {
 		RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
-
 		removeDeviceTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				mActivity.redraw();
 				if (success) {
-					// Hlaska o uspechu
+					Toast.makeText(mActivity, R.string.toast_delete_success, Toast.LENGTH_SHORT).show();
 				} else {
-					// Hlaska o neuspechu
+					Toast.makeText(mActivity, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
 				}
 				doFullReloadTask(true);
 			}
@@ -477,6 +478,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(removeDeviceTask, device);
+
 	}
 
 
@@ -498,9 +500,17 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
-				doRemoveDeviceTask(mSelectedItem.getDevice());
-			}
+				final Module mItemModule = mSelectedItem;
+				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName());
+				String message = getString(R.string.confirm_unregister_device_message);
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, new ConfirmDialog.ConfirmDialogListener() {
+					@Override
+					public void onConfirm() {
+						doRemoveDeviceTask(mItemModule.getDevice());
+					}
+				});
 
+			}
 			mode.finish();
 			return true;
 		}

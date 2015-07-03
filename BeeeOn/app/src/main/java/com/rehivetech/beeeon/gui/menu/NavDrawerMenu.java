@@ -25,6 +25,7 @@ import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GateMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GroupMenuItem;
@@ -68,6 +69,7 @@ public class NavDrawerMenu {
 	private IMenuItem mSelectedMenuItem;
 	private RelativeLayout mDrawerRelLay;
 
+
 	public NavDrawerMenu(MainActivity activity, Toolbar toolbar) {
 		// Set activity
 		mActivity = activity;
@@ -102,6 +104,7 @@ public class NavDrawerMenu {
 						// if it is not chosen, switch to selected gate
 						if (!gate.getId().equals(mSelectedMenuItem.getId())) {
 							doSwitchGateTask(mSelectedMenuItem.getId());
+
 						}
 						break;
 					case LOCATION:
@@ -150,6 +153,7 @@ public class NavDrawerMenu {
 						Log.i(TAG, "Long press - gate");
 						mMode = mActivity.startSupportActionMode(new ActionModeGates());
 						mSelectedMenuItem.setIsSelected();
+
 						break;
 					default:
 						// do nothing
@@ -282,6 +286,7 @@ public class NavDrawerMenu {
 		mActivity.callbackTaskManager.executeTask(unregisterGateTask, gateId);
 	}
 
+
 	public MenuListAdapter getMenuAdapter() {
 		mMenuAdapter = new MenuListAdapter(mActivity);
 		Controller controller = Controller.getInstance(mActivity);
@@ -384,9 +389,26 @@ public class NavDrawerMenu {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
+			String title;
 			Log.d(TAG, "ActionMode Gate - item id: " + item.getItemId());
 			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST GATE
-				doUnregisterGateTask(mSelectedMenuItem.getId());
+				Controller controller = Controller.getInstance(mActivity);
+				Gate gate = controller.getGatesModel().getGate(mSelectedMenuItem.getId());
+				if (gate == null) {
+					title = mActivity.getString(R.string.confirm_remove_gate_title_default);
+				} else {
+					title = mActivity.getString(R.string.confirm_remove_gate_title, gate.getName());
+				}
+
+				String message = mActivity.getString(R.string.confirm_remove_gate_message);
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
+					@Override
+					public void onConfirm() {
+						doUnregisterGateTask(mSelectedMenuItem.getId());
+					}
+
+				});
+
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);
 				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mSelectedMenuItem.getId());
@@ -405,6 +427,7 @@ public class NavDrawerMenu {
 			mMode = null;
 			mSelectedMenuItem.setNotSelected();
 		}
+
 
 	}
 }
