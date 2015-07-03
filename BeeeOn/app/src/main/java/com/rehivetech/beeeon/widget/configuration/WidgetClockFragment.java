@@ -165,6 +165,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 				.setCityName(mWidgetData.weather.cityName)
 				.setPositiveButtonText(mActivity.getString(R.string.ok))
 				.setNegativeButtonText(mActivity.getString(R.string.action_close))
+				.showKeyboard()
 				.setTargetFragment(this, REQUEST_LOCATION_DIALOG)
 				.show();
 	}

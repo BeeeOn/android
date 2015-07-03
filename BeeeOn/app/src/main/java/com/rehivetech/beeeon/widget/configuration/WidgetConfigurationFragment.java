@@ -161,7 +161,24 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		super.onResume();
         mGeneralWidgetdata.load();
 
-        mReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.ACTIVE_GATE);
+		String gateId = mGeneralWidgetdata.widgetGateId;
+		EnumSet<ReloadGateDataTask.ReloadWhat> whatToReload;
+		if(gateId.isEmpty()){
+			gateId = null;
+			whatToReload = EnumSet.of(
+					ReloadGateDataTask.ReloadWhat.ACTIVE_GATE,
+					ReloadGateDataTask.ReloadWhat.DEVICES
+			);
+		}
+		else{
+			whatToReload = EnumSet.of(
+					ReloadGateDataTask.ReloadWhat.GATES,
+					ReloadGateDataTask.ReloadWhat.DEVICES
+			);
+		}
+
+
+        mReloadTask = new ReloadGateDataTask(mActivity, false, whatToReload);
 		mReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -174,7 +191,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		});
 
         // async reload task
-		mActivity.callbackTaskManager.executeTask(mReloadTask, null, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+		mActivity.callbackTaskManager.executeTask(mReloadTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 
         updateIntervalLayout();
 
