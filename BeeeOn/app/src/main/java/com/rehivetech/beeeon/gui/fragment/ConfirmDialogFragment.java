@@ -10,8 +10,8 @@ import com.rehivetech.beeeon.R;
 /**
  * Created by vico on 30.6.2015.
  */
-public class CriticalConfirmDialogs extends BaseDialogFragment {
-	public static String TAG = "jayne";
+public class ConfirmDialogFragment extends BaseDialogFragment {
+	public static String TAG = "confirmDialog";
 	private int mSetTitles;
 	private int mSetMessage;
 	private int mPositiveTextButton;
@@ -19,16 +19,16 @@ public class CriticalConfirmDialogs extends BaseDialogFragment {
 	private DeleteConfirmDialogEvent mCallBack;
 
 	public interface DeleteConfirmDialogEvent {
-		void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs);
+		void onDeleteDialogButtonClick();
 	}
 
-	public void show(FragmentActivity activity, int TitlesRes, int MessageRes, int ButtonTextRes, DeleteConfirmDialogEvent callBack) {
-		CriticalConfirmDialogs criticalConfirmDialogs = new CriticalConfirmDialogs();
-		criticalConfirmDialogs.setCallBack(callBack);
-		criticalConfirmDialogs.setTitles(TitlesRes);
-		criticalConfirmDialogs.setMessage(MessageRes);
-		criticalConfirmDialogs.setPositiveText(ButtonTextRes);
-		criticalConfirmDialogs.show(activity.getSupportFragmentManager(), TAG);
+	public static void confirm(FragmentActivity activity, int TitlesRes, int MessageRes, int ButtonTextRes, DeleteConfirmDialogEvent callBack) {
+		ConfirmDialogFragment confirmDialogFragment = new ConfirmDialogFragment();
+		confirmDialogFragment.setCallBack(callBack);
+		confirmDialogFragment.setTitles(TitlesRes);
+		confirmDialogFragment.setMessage(MessageRes);
+		confirmDialogFragment.setPositiveText(ButtonTextRes);
+		confirmDialogFragment.show(activity.getSupportFragmentManager(), TAG);
 	}
 
 
@@ -40,7 +40,7 @@ public class CriticalConfirmDialogs extends BaseDialogFragment {
 			@Override
 			public void onClick(View v) {
 				if (mCallBack != null) {
-					mCallBack.onDeleteDialogButtonClick(CriticalConfirmDialogs.this);
+					mCallBack.onDeleteDialogButtonClick();
 					dismiss();
 
 				}

@@ -279,7 +279,7 @@
     <string name="watchdog_rule_name">Názov pravidla</string>
     <string name="notification_text">Text notifikácie</string>
 
-    <string name="rule_menu_del">Odstrániť</string>
+    <string name="remove_button">Odstrániť</string>
     <string name="preference_set_default_location">Nastaviť predvolené umiestnenie</string>
     <string name="preference_set_default_adapter">Nastaviť predvolenú bránu</string>
     <string name="preference_activity_title">Nastavenia</string>

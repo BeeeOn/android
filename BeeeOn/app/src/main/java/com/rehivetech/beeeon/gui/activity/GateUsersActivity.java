@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
-import com.rehivetech.beeeon.gui.fragment.CriticalConfirmDialogs;
+import com.rehivetech.beeeon.gui.fragment.ConfirmDialogFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -170,26 +170,18 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 
 	private void doRemoveUserTask(User user) {
-		final RemoveUserTask removeUserTask = new RemoveUserTask(this);
+		RemoveUserTask removeUserTask = new RemoveUserTask(this);
 		User.DataPair pair = new User.DataPair(user, mGate.getId());
-
-		CriticalConfirmDialogs criticalConfirmDialogsDeleteUser = new CriticalConfirmDialogs();
-		criticalConfirmDialogsDeleteUser.show(mActivity, R.string.delete_role_title, R.string.delete_role_message, R.string.rule_menu_del, new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
+		removeUserTask.setListener(new ICallbackTaskListener() {
 			@Override
-			public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
-				removeUserTask.setListener(new ICallbackTaskListener() {
-					@Override
-					public void onExecute(boolean success) {
-						// Get all users for gate
-						doReloadGateUsersTask(mGate.getId(), true);
-						if (success) {
-							// Hlaska o uspechu
-						}
-					}
-				});
+			public void onExecute(boolean success) {
+				// Get all users for gate
+				doReloadGateUsersTask(mGate.getId(), true);
+				if (success) {
+					// Hlaska o uspechu
+				}
 			}
 		});
-
 
 
 		// Execute and remember task so it can be stopped automatically
@@ -220,6 +212,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 	class ActionModeEditSensors implements ActionMode.Callback {
 
+
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
@@ -236,11 +229,18 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.adausr_menu_del) {
-				doRemoveUserTask(mSelectedItem);
-			} else if (item.getItemId() == R.id.adausr_menu_edit) {
+				final User users = mSelectedItem;
+				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.delete_role_title, R.string.delete_role_message, R.string.remove_button, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
+					@Override
+					public void onDeleteDialogButtonClick() {
+						doRemoveUserTask(users);
+					}
+				});
+			} else if (item.getItemId() == R.id.adausr_menu_edit)
+
+			{
 				changeUserRole();
 			}
-
 			mode.finish();
 			return true;
 		}
@@ -291,10 +291,9 @@ public class GateUsersActivity extends BaseApplicationActivity {
 				}
 
 				final User users = mSelectedItem;
-				CriticalConfirmDialogs criticalConfirmDialogsChangeRole = new CriticalConfirmDialogs();
-				criticalConfirmDialogsChangeRole.show(mActivity, R.string.change_role_title, R.string.change_role_message, R.string.change_role_confirm, new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
+				ConfirmDialogFragment.confirm(GateUsersActivity.this, R.string.change_role_title, R.string.change_role_message, R.string.change_role_confirm, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
-					public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
+					public void onDeleteDialogButtonClick() {
 						doEditUserTask(users);
 					}
 				});

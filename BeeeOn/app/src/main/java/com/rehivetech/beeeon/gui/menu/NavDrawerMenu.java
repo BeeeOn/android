@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
-import com.rehivetech.beeeon.gui.fragment.CriticalConfirmDialogs;
+import com.rehivetech.beeeon.gui.fragment.ConfirmDialogFragment;
 import com.rehivetech.beeeon.gui.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GateMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GroupMenuItem;
@@ -387,10 +387,9 @@ public class NavDrawerMenu {
 		public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 			Log.d(TAG, "ActionMode Gate - item id: " + item.getItemId());
 			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST GATE
-				CriticalConfirmDialogs criticalConfirmDialogsUnregistGate = new CriticalConfirmDialogs();
-				criticalConfirmDialogsUnregistGate.show(mActivity, R.string.delete_gateway_title, R.string.delete_gateway_message, R.string.rule_menu_del ,new CriticalConfirmDialogs.DeleteConfirmDialogEvent() {
+				ConfirmDialogFragment.confirm(mActivity, R.string.delete_gateway_title, R.string.delete_gateway_message, R.string.remove_button, new ConfirmDialogFragment.DeleteConfirmDialogEvent() {
 					@Override
-					public void onDeleteDialogButtonClick(CriticalConfirmDialogs criticalConfirmDialogs) {
+					public void onDeleteDialogButtonClick() {
 						doUnregisterGateTask(mSelectedMenuItem.getId());
 
 					}
