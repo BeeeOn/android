@@ -98,8 +98,7 @@
 			android:id="@+id/achievement_progress"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			style="@android:style/Widget.ProgressBar.Horizontal"
-			android:progressDrawable="@drawable/customholotheme_scrubber_progress_horizontal_holo_light"
+			style="@style/Widget.AppCompat.ProgressBar.Horizontal"
 			/>
 
 		</RelativeLayout>

@@ -44,8 +44,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginRight="70dp"
     android:layout_marginEnd="70dp"
-    style="@android:style/Widget.ProgressBar.Horizontal"
-    android:progressDrawable="@drawable/customholotheme_scrubber_progress_horizontal_holo_light"
+    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
     />
 
   <RelativeLayout
