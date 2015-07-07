@@ -2,11 +2,19 @@ package com.rehivetech.beeeon.util;
 
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarLineChartBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.utils.ValueFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -15,12 +23,12 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
 
-final public class GraphViewHelper {
+final public class ChartHelper {
 
 	/**
 	 * Private constructor to avoid instantiation.
 	 */
-	private GraphViewHelper() {
+	private ChartHelper() {
 	}
 
 	;
@@ -103,4 +111,78 @@ final public class GraphViewHelper {
 		}
 	}
 
+	public static void prepareChart(BarLineChartBase chart, final Context context, Module module, ViewGroup layout, Controller controller) {
+
+//		final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)module.getValue()).getEnumItems();
+		ValueFormatter enumValueFormatter = getValueFormatterInstance(module, context, controller);
+
+		Legend legend = chart.getLegend();
+		legend.setForm(Legend.LegendForm.CIRCLE);
+
+		chart.setDrawBorders(true);
+		chart.setDescription("");
+
+		//set bottom X axis style
+		XAxis xAxis = chart.getXAxis();
+		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+		xAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_text_hint));
+
+		//set left Y axis style
+		YAxis yAxis = chart.getAxisLeft();
+		yAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		yAxis.setStartAtZero(false);
+
+		//disable right Y axis
+		chart.getAxisRight().setEnabled(false);
+
+		if (module.getValue() instanceof BaseEnumValue) {
+			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)module.getValue()).getEnumItems();
+			if (yLabels.size() > 2) {
+//				if (layout.getVisibility() != View.VISIBLE) {
+					int j = 1;
+					for(int i = yLabels.size() - 1; i > -1; i--) {
+						TextView label = new TextView(context);
+						label.setText(String.format("%d. %s", j++, context.getString(yLabels.get(i).getStringResource())));
+						layout.addView(label);
+					}
+//				}
+				legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+			} else {
+				yAxis.setShowOnlyMinMax(true);
+			}
+
+			yAxis.setValueFormatter(enumValueFormatter);
+			yAxis.setLabelCount(yLabels.size() - 1);
+			yAxis.setAxisMinValue(0);
+			yAxis.setAxisMaxValue(yLabels.size() - 1);
+		}
+	}
+
+	public static ValueFormatter getValueFormatterInstance(final Module module, final Context context, Controller controller) {
+		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), context);
+		if (module.getValue() instanceof BaseEnumValue) {
+			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)module.getValue()).getEnumItems();
+			if (yLabels.size() > 2) {
+				return new ValueFormatter() {
+					@Override
+					public String getFormattedValue(float value) {
+						return String.format("%.0f.", yLabels.size() - value);
+					}
+				};
+			}
+			return new ValueFormatter() {
+
+				@Override
+				public String getFormattedValue(float value) {
+					return context.getString(yLabels.get((int) value).getStringResource());
+				}
+			};
+		}
+		return new ValueFormatter() {
+			@Override
+			public String getFormattedValue(float value) {
+				return value + unitsHelper.getStringUnit(module.getValue());
+			}
+		};
+	}
 }

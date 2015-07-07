@@ -20,7 +20,7 @@ import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.util.GraphViewHelper;
+import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -159,7 +159,7 @@ public class WidgetGraphData extends WidgetModuleData {
 		Gate gate = Controller.getInstance(mContext).getGatesModel().getGate(widgetGateId);
 		String graphDateTimeFormat = "dd.MM. kk:mm";
 		final DateTimeFormatter fmt = mTimeHelper.getFormatter(graphDateTimeFormat, gate);
-		GraphViewHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
+		ChartHelper.prepareWidgetGraphView(mGraph, mContext, baseValue, fmt, mUnitsHelper);
 
 		// clears series if reinitializes
 		if (mGraph.getSeries() != null && mGraph.getSeries().size() > 0) {
