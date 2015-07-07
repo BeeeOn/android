@@ -4,7 +4,6 @@
 			android:layout_height="match_parent"
 			android:background="@color/beeeon_primary_cyan">
 
-
 	<RelativeLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -26,18 +25,20 @@
 				android:text="@string/addadapter_qr_button"
 				android:textColor="@color/white"
 				android:drawableLeft="@drawable/qrcode"
+				style="@style/Widget.AppCompat.Button.Borderless"
 				android:padding="10dp"/>
 
 			<Button
 				android:id="@+id/add_gate_write_it_button"
 				android:layout_width="@dimen/addgate_button_width"
 				android:layout_height="@dimen/addgate_button_height"
-				android:background="@color/beeeon_text_hint"
+				android:background="@color/darkgray"
 				android:text="@string/addadapter_manual_edit"
 				android:textColor="@color/white"
 				android:layout_marginTop="25dp"
 				android:layout_below="@id/add_gate_qr_button"
 				android:drawableLeft="@drawable/pen"
+				style="@style/Widget.AppCompat.Button.Borderless"
 				android:padding="10dp"/>
 		</RelativeLayout>
 		<TextView
