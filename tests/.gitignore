@@ -1,0 +1,6 @@
+regress/**/bin/
+regress/**/gen/
+regress/**/report/
+regress/**/apk/
+
+monkey/**/logs/

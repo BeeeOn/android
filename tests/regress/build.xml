@@ -1,92 +1,576 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="test" default="help">
 
-    <!-- The local.properties file is created and updated by the 'android' tool.
-         It contains the path to the SDK. It should *NOT* be checked into
-         Version Control Systems. -->
-    <property file="local.properties" />
+	<!-- project name -->
+	<property name="out.filename" value="${ant.project.name}.jar" />
 
-    <!-- The ant.properties file can be created by you. It is only edited by the
-         'android' tool to add properties to it.
-         This is the place to change some Ant specific build properties.
-         Here are some properties you may want to change/update:
+	<!-- dirs -->
+	<property name="build.dir" location="bin" />
+	<property name="report.dir" location="report" />
+	<property name="testDemo.dir" location="${report.dir}/testDemo" />
+	<property name="testReal.dir" location="${report.dir}/testReal" />
+	<property name="testFailures.dir" location="${report.dir}/testFailures" />
+	<property name="testUserRoles.dir" location="${report.dir}/testUserRoles" />
+	<property name="jar.libs.dir" location="libs"/>
+	<property name="apk.dir" location="apk"/>
+	<property name="beeeon.apk" value="app-debug.apk" />
+	<property name="beeeon.package" value="com.rehivetech.beeeon.debug"/>
 
-         source.dir
-             The name of the source directory. Default is 'src'.
-         out.dir
-             The name of the output directory. Default is 'bin'.
+	<!-- Input directories -->
+	<property name="source.dir" value="src" />
+	<property name="source.absolute.dir" location="${source.dir}" />
+	<property name="jar.libs.dir" value="libs" />
+	<property name="jar.libs.absolute.dir" location="${jar.libs.dir}" />
 
-         For other overridable properties, look at the beginning of the rules
-         files in the SDK, at tools/ant/build.xml
+	<!-- Output directories -->
+	<property name="out.dir" value="bin" />
+	<property name="out.absolute.dir" location="${out.dir}" />
+	<property name="out.classes.absolute.dir" location="${out.dir}/classes" />
 
-         Properties related to the SDK location or the project target should
-         be updated using the 'android' tool with the 'update' action.
+	<property name="out.file" value="${out.absolute.dir}/${out.filename}" />
 
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems.
+	<!-- tools location -->
+	<property name="android.tools.dir" location="${sdk.dir}/tools" />
+	<property name="android.platform.tools.dir" location="${sdk.dir}/platform-tools" />
+	<condition property="exe" value=".exe" else=""><os family="windows" /></condition>
+	<condition property="bat" value=".bat" else=""><os family="windows" /></condition>
+	<property name="adb" location="${android.platform.tools.dir}/adb${exe}" />
 
-         -->
-    <property file="ant.properties" />
+	<!-- Intermediate files -->
+	<property name="dex.file.name" value="classes.dex" />
+	<property name="intermediate.dex.file" location="${out.absolute.dir}/${dex.file.name}" />
+	<property name="resource.package.file.name" value="${ant.project.name}.ap_" />
 
-    <!-- if sdk.dir was not set from one of the property file, then
-         get it from the ANDROID_HOME env var.
-         This must be done before we load project.properties since
-         the proguard config can use sdk.dir -->
-    <property environment="env" />
-    <condition property="sdk.dir" value="${env.ANDROID_HOME}">
-        <isset property="env.ANDROID_HOME" />
-    </condition>
+	<!-- escapovane znaky v build.xml http://allscm.com/archives/how-to-escape-characters-in-ant.html -->
 
-    <!-- The project.properties file is created and updated by the 'android'
-         tool, as well as ADT.
+	<!-- gateways -->
+	<property name="at10.name" value="at 10"/>
+	<property name="at10.id" value="101010"/>
 
-         This contains project specific properties such as project target, and library
-         dependencies. Lower level build properties are stored in ant.properties
-         (or in .classpath for Eclipse projects).
+	<property name="at11.name" value="at 11"/>
+	<property name="at11.id" value="111111"/>
 
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems. -->
-    <loadproperties srcFile="project.properties" />
+	<property name="at12.name" value="at 12"/>
+	<property name="at12.id" value="121212"/>
 
-    <!-- quick check on sdk.dir -->
-    <fail
-            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
-            unless="sdk.dir"
-    />
+	<!-- facilities -->
+	<property name="fac10.mac" value="101"/>
+	<property name="fac10.fk_gateway" value="101010"/>
 
-    <!--
-        Import per project custom build rules if present at the root of the project.
-        This is the place to put custom intermediary targets such as:
-            -pre-build
-            -pre-compile
-            -post-compile (This is typically used for code obfuscation.
-                           Compiled code location: ${out.classes.absolute.dir}
-                           If this is not done in place, override ${out.dex.input.absolute.dir})
-            -post-package
-            -post-build
-            -pre-clean
-    -->
-    <import file="custom_rules.xml" optional="true" />
+	<property name="fac11.mac" value="111"/>
+	<property name="fac11.fk_gateway" value="111111"/>
 
-    <!-- Import the actual build file.
+	<property name="fac12.mac" value="121"/>
+	<property name="fac12.fk_gateway" value="121212"/>
 
-         To customize existing targets, there are two options:
-         - Customize only one target:
-             - copy/paste the target into this file, *before* the
-               <import> task.
-             - customize it to your needs.
-         - Customize the whole content of build.xml
-             - copy/paste the content of the rules files (minus the top node)
-               into this file, replacing the <import> task.
-             - customize to your needs.
+	<!--devices--> <!--sensors-->
+	<property name="sen10.name" value="Teplota"/>
+	<property name="sen10.fk_mac" value="101"/>
+	<property name="sen10.type" value="10"/>
+	<property name="sen10.value" value="22"/>
 
-         ***********************
-         ****** IMPORTANT ******
-         ***********************
-         In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
-         in order to avoid having your file be overridden by tools such as "android update project"
-    -->
-    <!-- version-tag: VERSION_TAG -->
-    <import file="${sdk.dir}/tools/ant/uibuild.xml" />
+	<property name="sen11.name" value="Teplota"/>
+	<property name="sen11.fk_mac" value="111"/>
+	<property name="sen11.type" value="10"/>
+	<property name="sen11.value" value="22"/>
+
+	<property name="sen12.name" value="Teplota"/>
+	<property name="sen12.fk_mac" value="121"/>
+	<property name="sen12.type" value="10"/>
+	<property name="sen12.value" value="22"/>
+
+	<!--devices--> <!--actuators-->
+
+	<!-- The local.properties file is created and updated by the 'android' tool.
+	It contains the path to the SDK. It should *NOT* be checked into
+	Version Control Systems. -->
+	<property file="local.properties" />
+
+	<!-- The project.properties file is created and updated by the 'android'
+	 tool, as well as ADT.
+
+	 This contains project specific properties such as project target, and library
+	 dependencies. Lower level build properties are stored in ant.properties
+	 (or in .classpath for Eclipse projects).
+
+	 This file is an integral part of the build system for your
+	 application and should be checked into Version Control Systems. -->
+	<loadproperties srcFile="project.properties" />
+
+	<!-- quick check on sdk.dir -->
+	<fail
+	    message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through the ANDROID_HOME environment variable."
+	    unless="sdk.dir"
+	/>
+
+	<!-- Tells adb which device to target. You can change this from the command line
+	 by invoking "ant -Dadb.device.arg=-d" for device "ant -Dadb.device.arg=-e" for
+	 the emulator. -->
+	<property name="adb.device.arg" value="" />
+
+	<!-- compilation options -->
+	<property name="java.encoding" value="UTF-8" />
+	<property name="java.target" value="1.5" />
+	<property name="java.source" value="1.5" />
+	<property name="java.compilerargs" value="" />
+
+	<!-- Verbosity -->
+	<property name="verbose" value="false" />
+
+	<!-- ******************************************************* -->
+	<!-- ********************* Custom Tasks ******************** -->
+	<!-- ******************************************************* -->
+
+	<!-- jar file from where the tasks are loaded -->
+	<path id="android.antlibs">
+	<pathelement path="${sdk.dir}/tools/libs/ant-tasks.jar" />
+	</path>
+
+	<!-- Custom tasks
+	<taskdef resource="anttasks.properties" classpathref="android.antlibs" /> -->
+
+	<!-- Emma configuration -->
+	<property name="emma.dir" value="${sdk.dir}/tools/lib" />
+	<path id="emma.lib">
+	<pathelement location="${emma.dir}/emma.jar" />
+	<pathelement location="${emma.dir}/emma_ant.jar" />
+	</path>
+	<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+	<!-- End of emma configuration -->
+
+	<!-- ******************************************************* -->
+	<!-- ******************* Other Properties ****************** -->
+	<!-- ******************************************************* -->
+	<!-- overriding these properties may break the build
+	 unless the whole file is updated -->
+
+	<!-- whether we need to fork javac.
+	 This is only needed on Windows when running Java < 7 -->
+	<condition else="false" property="need.javac.fork">
+	<and>
+	    <matches pattern="1\.[56]" string="${java.specification.version}"/>
+	    <not>
+		<os family="unix"/>
+	    </not>
+	</and>
+	</condition>
+
+	<!--<macrodef name="run-tests-helper">
+	<attribute name="emma.enabled" default="false" />
+	<element name="extra-instrument-args" optional="yes" />
+	<sequential>
+	    <echo level="info">Running tests ...</echo>
+	    <exec executable="${adb}" failonerror="true">
+		<arg line="${adb.device.arg}" />
+		<arg value="shell" />
+		<arg value="am" />
+		<arg value="instrument" />
+		<arg value="-w" />
+		<arg value="-e" />
+		<arg value="coverage" />
+		<arg value="@{emma.enabled}" />
+		<extra-instrument-args />
+		<arg value="${project.app.package}/${test.runner}" />
+	    </exec>
+	</sequential>
+	</macrodef>-->
+
+	<!-- ******************************************************* -->
+	<!-- ******************** Build Targets ******************** -->
+	<!-- ******************************************************* -->
+	<property file="ant.properties" />
+
+	<!-- if sdk.dir was not set from one of the property file, then
+	 get it from the ANDROID_HOME env var.
+	 This must be done before we load project.properties since
+	 the proguard config can use sdk.dir -->
+	<property environment="env" />
+	<condition property="sdk.dir" value="${env.ANDROID_HOME}">
+	<isset property="env.ANDROID_HOME" />
+	</condition>
+
+	<!-- version-tag: VERSION_TAG -->
+	<import file="${sdk.dir}/tools/ant/uibuild.xml" />
+
+	<path id="external.classpath">
+	    <pathelement location="${jar.libs.dir}/uiautomator.jar"/>
+	    <pathelement location="${jar.libs.dir}/android.jar"/>
+	    <pathelement location="${jar.libs.dir}/uiautomator2junit-0.2.jar"/>
+	</path>
+
+	  <!-- clean: Deletes the existing build and bin directory. -->
+	  <target name="clean" depends="check-env"
+	    description="Removes output files created by other targets.">
+	    <echo>Deletes the existing build directory.</echo>
+	    <delete dir="${build.dir}" />
+	    <delete dir="${out.absolute.dir}" verbose="${verbose}" />
+	  </target>
+
+	  <!-- makedir: Creates the build and report directory. -->
+	  <target name="makedir">
+	    <echo>Creates the build and report directory.</echo>
+	    <mkdir dir="${build.dir}" />
+	    <mkdir dir="${report.dir}" />
+	    <mkdir dir="${testReal.dir}" />
+	    <mkdir dir="${testDemo.dir}" />
+	  </target>
+
+	<!-- Basic Ant + SDK check -->
+	<target name="check-env">
+	 <checkenv />
+	</target>
+
+	<!-- Pre build setup -->
+	<target name="build-setup" depends="check-env">
+	     <getbuildtools name="android.build.tools.dir" />
+	     <property name="dx" location="${android.build.tools.dir}/dx${bat}" />
+
+	    <echo level="info">Resolving Build Target for ${ant.project.name}...</echo>
+	    <!-- load project properties, resolve Android target, library dependencies
+	     and set some properties with the results.
+	     All property names are passed as parameters ending in -Out -->
+	    <getuitarget compileClassPathOut="project.target.class.path" />
+
+	    <echo level="info">----------</echo>
+	    <echo level="info">Creating output directories if needed...</echo>
+	    <mkdir dir="${out.absolute.dir}" />
+	    <mkdir dir="${out.classes.absolute.dir}" />
+	</target>
+
+	<!-- compile: Compiles the java code (including the usage of library for Android and Ui Automator -->
+	<target name="compile" depends="build-setup">
+	    <javac encoding="${java.encoding}"
+		    source="${java.source}" target="${java.target}"
+		    debug="true" extdirs="" includeantruntime="false"
+		    destdir="${out.classes.absolute.dir}"
+		    bootclasspathref="project.target.class.path"
+		    verbose="${verbose}"
+		    fork="${need.javac.fork}">
+		<src path="${source.absolute.dir}" />
+		<compilerarg line="${java.compilerargs}" />
+	    </javac>
+	</target>
+
+	<!-- Converts this project's .class files into .dex files -->
+	<target name="dex" depends="compile">
+	    <dex executable="${dx}"
+		    output="${intermediate.dex.file}"
+		    nolocals="@{nolocals}"
+		    verbose="${verbose}">
+		<path path="${out.classes.absolute.dir}"/>
+	    </dex>
+	</target>
+
+	<!-- jar: Creating jar file witch test scenarios.  -->
+	<target name="jar" depends="dex" >
+	<jar destfile="${out.file}">
+	    <fileset file="${intermediate.dex.file}" />
+	</jar>
+	</target>
+
+	<!-- push: Push jar file with test scenarios to your device.  -->
+	<target name="push" depends="clean, makedir, jar">
+	    <echo>Push jar file with test scenarios to your device.</echo>
+	    <exec executable="adb" failonerror="true">
+		<arg value="push"/>
+	    	<arg value="${out.file}" />
+		<arg value="/data/local/tmp/"/>
+	    </exec>
+	</target>
+
+	<!-- uninstall: Uninstalling the BeeeOn application.  -->
+	<target name="uninstall" depends="push">
+	    <echo>Uninstalling the BeeeOn application (in case that your device contains a previous version).</echo>
+	    <exec executable="adb">
+		<arg value="uninstall"/>
+		<arg value="${beeeon.package}"/>
+	    </exec>
+	</target>
+
+	<!-- install: Installing the BeeeOn application  -->
+	<target name="install" depends="uninstall" description="Install the test package">
+	    <echo>Installing the BeeeOn application.</echo>
+	    <exec executable="adb" failonerror="true">
+		<arg value="install"/>
+		<arg value="${apk.dir}/${beeeon.apk}"/>
+	    </exec>
+	</target>
+
+	<!-- testDemo: Testing the demo mode of the BeeeOn application  -->
+	<target name="testDemoMode" depends="install">
+	    <tstamp>
+		<format property="current.time"
+			pattern="yyyy-MM-dd_HHmmss" />
+		<format property="report.name"
+			pattern="'testDemoMode.'yyyy-MM-dd_HHmmss'.txt'" />
+		<format property="logcat.name"
+			pattern="'testDemoMode.'yyyy-MM-dd_HHmmss'.log'" />
+	    </tstamp>
+	    <echo>"Testing the demo mode of the BeeeOn application ... (Look at your device.)"</echo>
+	    <exec executable="adb">
+		<redirector output="${testDemo.dir}/${report.name}" alwayslog="false"/>  
+		<arg value="shell"/>
+		<arg value="uiautomator"/>
+		<arg value="runtest"/>
+		<arg value="${out.filename}"/>
+		<arg value="-c"/>
+		<arg value="com.rehivetech.beeeon.TestDemoMode"/>
+	    </exec>
+	    <exec executable="adb">
+		<arg value="logcat"/>
+		<arg value="-d"/>
+		<redirector output="${testDemo.dir}/${logcat.name}" alwayslog="false"/>  
+	    </exec>
+		<antcall target="jar-clean"/>
+		<antcall target="report-d"/>
+		<antcall target="finish"/>
+	</target>
+
+	<!-- db-insert: Inserting test data to the database.  -->
+	<target name="db-insert" depends="install">
+	    <echo>Inserting test data to the database.</echo>
+	    <sshexec 
+		host="ant-2.fit.vutbr.cz"
+		username="xkurov00"
+		keyfile="${user.home}/.ssh/ant-2"
+		passphrase="beeeon"
+		command="sh scriptsForRegress/insertGateway.sh ${at10.id} &quot;${at10.name}&quot; ; 
+			 sh scriptsForRegress/insertGateway.sh ${at11.id} &quot;${at11.name}&quot; ;
+			 sh scriptsForRegress/insertGateway.sh ${at12.id} &quot;${at12.name}&quot; ;"
+		/>
+	<sshexec 
+		host="ant-2.fit.vutbr.cz"
+		username="xkurov00"
+		keyfile="${user.home}/.ssh/ant-2"
+		passphrase="beeeon"
+		command="sh scriptsForRegress/insertFacility.sh 101 101010"
+		/>
+	<sshexec 
+		host="ant-2.fit.vutbr.cz"
+		username="xkurov00"
+		keyfile="${user.home}/.ssh/ant-2"
+		passphrase="beeeon"
+		command="sh scriptsForRegress/insertDevice.sh 101 &quot;Teplota&quot; 10 22"
+		/>
+		<!-- command="bash -s"
+		     input="DBscripts/insertions.sh" -->
+	</target>
+
+	<!-- screenshotdr: Creating dir in device for screenshots.  -->
+	<target name="screenshotdir" depends="install">
+	    <echo>Creating dir in device for screenshots.</echo>
+	    <exec executable="adb">
+		<arg value="shell"/>
+		<arg value="mkdir /data/local/tmp/screenshots"/>
+	    </exec>
+	</target>
+
+	<!-- testFailures: Testing the demo mode of the BeeeOn application  -->
+	<target name="testFailures" depends="install">
+	    <mkdir dir="${testFailures.dir}" />
+	    <tstamp>
+		<format property="current.time"
+			pattern="yyyy-MM-dd_HHmmss" />
+		<format property="report.name"
+			pattern="'testFailures.'yyyy-MM-dd_HHmmss'.txt'" />
+		<format property="logcat.name"
+			pattern="'testFailures.'yyyy-MM-dd_HHmmss'.log'" />
+	    </tstamp>
+	    <echo>"Testing the typical failures of the BeeeOn application ... (Look at your device.)"</echo>
+	    <exec executable="adb">
+		<redirector output="${testFailures.dir}/${report.name}" alwayslog="false"/>  
+		<arg value="shell"/>
+		<arg value="uiautomator"/>
+		<arg value="runtest"/>
+		<arg value="${out.filename}"/>
+		<arg value="-c"/>
+		<arg value="com.rehivetech.beeeon.TestFailures"/>
+	    </exec>
+	    <exec executable="adb">
+		<arg value="logcat"/>
+		<arg value="-d"/>
+		<redirector output="${testFailures.dir}/${logcat.name}" alwayslog="false"/>  
+	    </exec>
+		<antcall target="jar-clean"/>
+		<antcall target="report-d"/>
+		<antcall target="finish"/>
+	</target>
+
+	<!-- testUserRoles: Testing the demo mode of the BeeeOn application  -->
+	<target name="testUserRoles" depends="install, db-insert">
+	    <mkdir dir="${testUserRoles.dir}" />
+	    <tstamp>
+		<format property="current.time"
+			pattern="yyyy-MM-dd_HHmmss" />
+		<format property="report.name"
+			pattern="'testUserRoles.'yyyy-MM-dd_HHmmss'.txt'" />
+		<format property="logcat.name"
+			pattern="'testUserRoles.'yyyy-MM-dd_HHmmss'.log'" />
+	    </tstamp>
+	    <echo>"Testing the user roles of the BeeeOn application ... (Look at your device.)"</echo>
+	    <exec executable="adb">
+		<redirector output="${testUserRoles.dir}/${report.name}" alwayslog="false"/>  
+		<arg value="shell"/>
+		<arg value="uiautomator"/>
+		<arg value="runtest"/>
+		<arg value="${out.filename}"/>
+		<arg value="-c"/>
+		<arg value="com.rehivetech.beeeon.TestUserRoles"/>
+	    </exec>
+	    <exec executable="adb">
+		<arg value="logcat"/>
+		<arg value="-d"/>
+		<redirector output="${testUserRoles.dir}/${logcat.name}" alwayslog="false"/>  
+	    </exec>
+		<antcall target="jar-clean"/>
+		<antcall target="db-delete"/>
+		<antcall target="report-d"/>
+		<antcall target="finish"/>
+	</target>
+
+	<!-- real: Testing the real mode of the BeeeOn application  -->
+	<target name="testRealMode" depends="screenshotdir, db-insert, install">
+	    <tstamp>
+		<format property="current.time"
+			pattern="yyyy-MM-dd_HHmmss" />
+		<format property="report.name"
+			pattern="'testRealMode.'yyyy-MM-dd_HHmmss'.txt'" />
+		<format property="logcat.name"
+			pattern="'testRealMode.'yyyy-MM-dd_HHmmss'.log'" />
+	    </tstamp>
+	    <echo>"Testing the real mode of the BeeeOn application ... (Look at your device.)"</echo>
+	    <exec executable="adb">
+		<redirector output="${testReal.dir}/${report.name}" alwayslog="false"/>  
+		<arg value="shell"/>
+		<arg value="uiautomator"/>
+		<arg value="runtest"/>
+		<arg value="${out.filename}"/>
+		<arg value="-c"/>
+		<arg value="com.rehivetech.beeeon.TestRealMode"/>
+	    </exec>
+	    <exec executable="adb">
+		<arg value="logcat"/>
+		<arg value="-d"/>
+		<redirector output="${testReal.dir}/${logcat.name}" alwayslog="false"/>  
+	    </exec>
+		<antcall target="pull"/>
+		<antcall target="jar-clean"/>	
+		<antcall target="db-delete"/>
+		<antcall target="report-r"/>
+		<antcall target="finish"/>
+	</target>
+
+	<!-- pull: Pull all files used for the report and its deletion from the device.  -->
+	<target name="pull">
+	   <echo>Pull all files used for the report and its deletion from the device.</echo>
+	   <exec executable="adb">
+		<arg value="pull"/>
+		<arg value="/data/local/tmp/screenshots"/>
+		<arg value="${testReal.dir}/"/>
+	    </exec>
+		<exec executable="adb">
+		<arg value="shell"/>
+		<arg value="rm -r /data/local/tmp/screenshots"/>
+	    </exec>
+	</target>
+
+	<!-- jar-clean: Cleaning from the device.  -->
+	<target name="jar-clean">
+	   <echo>Cleaning from the device.</echo>
+	   <exec executable="adb">
+		<arg value="shell"/>
+		<arg value="rm /data/local/tmp/${out.filename}"/>
+	    </exec>
+	</target>
+
+	<!-- db-detele: Erasing all the test data from the database.  -->
+	<target name="db-delete">
+		<echo>Erasing all the test data from the database.</echo>
+		<sshexec 
+			host="ant-2.fit.vutbr.cz"
+			username="xkurov00"
+			keyfile="${user.home}/.ssh/ant-2"
+			passphrase="beeeon"
+			command="sh scriptsForRegress/deleteDevice.sh 101 10"
+			/>
+		<sshexec 
+			host="ant-2.fit.vutbr.cz"
+			username="xkurov00"
+			keyfile="${user.home}/.ssh/ant-2"
+			passphrase="beeeon"
+			command="sh scriptsForRegress/deleteFacility.sh 101"
+			/>
+		<sshexec 
+		   host="ant-2.fit.vutbr.cz"
+		   username="xkurov00"
+		   keyfile="${user.home}/.ssh/ant-2"
+		   passphrase="beeeon"
+		   command="sh scriptsForRegress/deleteGateway.sh ${at10.id} ; 
+			    sh scriptsForRegress/deleteGateway.sh ${at11.id} ;
+			    sh scriptsForRegress/deleteGateway.sh ${at12.id} ;"
+		   />
+	</target>
+
+	<!-- report: Make a html junit report from the log.  -->
+	<target name="report-d">
+		<echo>Creating a html junit report from the log.</echo>
+		<java
+		   jar="${jar.libs.dir}/uiautomator2junit-0.2.jar"
+		   fork="true"
+		   >
+		 <arg value="${testDemo.dir}/${report.name}"/>
+		</java>
+
+		<junitreport todir="${testDemo.dir}">
+		  <fileset dir="${testDemo.dir}">
+		    <include name="*.xml"/>
+		  </fileset>
+		  <report format="frames" todir="${testDemo.dir}/html"/>
+		</junitreport>
+	</target>
+	<target name="report-r">
+		<echo>Creating a html junit report from the log.</echo>
+		<java
+		   jar="${jar.libs.dir}/uiautomator2junit-0.2.jar"
+		   fork="true"
+		   >
+		 <arg value="${testReal.dir}/${report.name}"/>
+		</java>
+
+		<junitreport todir="${testReal.dir}">
+		  <fileset dir="${testReal.dir}">
+		    <include name="*.xml"/>
+		  </fileset>
+		  <report format="frames" todir="${testReal.dir}/html"/>
+		</junitreport>
+	</target>
+
+	<!-- finish: Info user about results.  -->
+	<target name="finish">
+	<echo>Testing process finish. See results in report folder.</echo>
+	</target>
+
+	<!-- help: Display help.  -->
+	<target name="help">
+	<!-- displays starts at col 13 |13 80| -->
+	<echo>Android Ant Build. Available targets: </echo>
+	<echo>   help:		Displays this help. </echo>
+	<echo>   clean:		Removes output files created by other targets. </echo>
+	<echo>   mkdir:		Creates dirs for output files. </echo>
+	<echo>   compile:         Compiles the test scenarios. </echo>
+	<echo>   jar:	        Creates an executable jar archive. </echo>
+	<echo>   push:		Inserts an executable file with test cases into the machine. </echo>
+	<echo>   uninstall:	Uninstalls testing application. </echo>
+	<echo>   install:         Installs testing application. </echo>
+	<echo>   db-insert:	Inserts testing data into database. </echo>
+	<echo>   screenshotdir:	Creates folder for screenshots in the device. </echo>
+	<echo>   testDemoMode: 	Starts test suite for demo mode of the application. </echo>
+	<echo>   testRealMode: 	Starts test suite for real-mode of the application. </echo>
+	<echo>   pull:		Downloading files from the device. </echo>
+	<echo>   jar-clean:	Cleaning in the device. </echo>
+	<echo>   db-delete:	Delete testing data from database. </echo>
+	<echo>   report:          Creates report. </echo>
+	<echo>   finish:          The end of the script, informs about the location of the test results. </echo>
+	</target>
 
 </project>
