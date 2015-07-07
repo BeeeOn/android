@@ -56,6 +56,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 		if (actionBar != null) {
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 
 		Intent intent = getIntent();
@@ -104,7 +105,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 				return true;
 			}
-			case R.id.home: {
+			case android.R.id.home: {
 				setResult(Activity.RESULT_CANCELED);
 				finish();
 				break;
