@@ -25,6 +25,9 @@
         <item name="colorControlActivated">@color/beeeon_secundary_pink</item>
         <item name="colorControlHighlight">@color/beeeon_primary_cyan_light</item>
 
+		<item name="android:windowBackground">@color/beeeon_background</item>
+		<item name="android:colorBackground">@color/beeeon_background</item>
+
     </style>
 
     <!-- Application theme. -->

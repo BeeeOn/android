@@ -12,6 +12,7 @@
     <color name="log_blue1">#33b5e5</color>
     <color name="light_gray">#e7e9ea</color>
     <color name="beeeon_background">#ffffff</color>
+    <color name="beeeon_background_gray">#eeeeee</color>
     <color name="alpha_grey">#7de7e9ea</color>
     <color name="alpha_blue">#7d00bcd4</color>
     <color name="beeeon_primary_cyan">#00bcd4</color>
