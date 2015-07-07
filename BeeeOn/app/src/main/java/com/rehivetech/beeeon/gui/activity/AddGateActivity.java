@@ -1,12 +1,10 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,8 +12,8 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
-import com.rehivetech.beeeon.gui.fragment.EnterCodeDialogFragment;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
+import com.rehivetech.beeeon.gui.fragment.EnterCodeDialogFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -112,11 +110,14 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			startActivityForResult(intent, SCAN_REQUEST);
 		} catch (ActivityNotFoundException e) {
 			try {
+				Toast.makeText(this, R.string.toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
+				// Let user to download e.g. Barcode Scanner
 				Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
 				Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
 				startActivity(marketIntent);
 			} catch (ActivityNotFoundException e1) {
-				Toast.makeText(this, R.string.toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.toast_error_no_google_play, Toast.LENGTH_LONG).show();
+				setScanQrButtonEnabled(true);
 			}
 		}
 	}
@@ -125,7 +126,9 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == SCAN_REQUEST && resultCode == MainActivity.RESULT_OK) {
+		if (requestCode == SCAN_REQUEST && resultCode == RESULT_OK) {
+			// Enable the Scan QR button again
+			setScanQrButtonEnabled(true);
 			onScanQRCode(data.getStringExtra("SCAN_RESULT"));
 		}
 	}
@@ -138,6 +141,13 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			doRegisterGateTask(matcher.group(1), true);
 		} else {
 			Toast.makeText(this, R.string.toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
+		}
+	}
+
+	private void setScanQrButtonEnabled(boolean enabled) {
+		AddGateFragment fragment = (AddGateFragment) mPagerAdapter.getFinalFragment();
+		if (fragment != null) {
+			fragment.setScanQrButtonEnabled(enabled);
 		}
 	}
 }

@@ -145,6 +145,7 @@
     <string name="addadapter_textview_name">Název</string>
     <string name="addadapter_view_setname">Nastavte název brány, např. Doma</string>
     <string name="addadapter_qr_button">Skenovat QR kód</string>
+    <string name="addadapter_qr_button_loading">Načítání...</string>
     <string name="addsensor_send_pair">ZAHÁJIT PÁROVÁNÍ</string>
 
     <!-- Others -->
@@ -422,7 +423,8 @@
     <string name="addsensor_waiting">Čekám na start</string>
     <string name="dialog_code_title">Zadejte kód brány</string>
     <string name="toast_error_invalid_qr_code">Toto není platný BeeeOn QR kód</string>
-    <string name="toast_error_no_qr_reader">Nepodařilo se otevřít Google Play</string>
+    <string name="toast_error_no_qr_reader">Nemáte nainstalovanou čtečku QR kódů</string>
+    <string name="toast_error_no_google_play">Nepodařilo se otevřít Google Play</string>
     <string name="tut_add_gate_title_1">Připojte bránu k internetu</string>
     <string name="tut_add_gate_title_2">Připojte brány ke zdroji napájení</string>
     <string name="tut_add_gate_title_3">Konečně informace</string>
