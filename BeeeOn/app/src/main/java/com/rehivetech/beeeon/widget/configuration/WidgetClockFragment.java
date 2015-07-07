@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.widget.configuration;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -36,6 +37,7 @@ import java.util.List;
 public class WidgetClockFragment extends WidgetConfigurationFragment implements LocationPickerDialogFragment.ILocationPickerDialogListener {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	private static final int REQUEST_LOCATION_DIALOG = 1;
+	private static final int SPACE_BETWEEN_MODULE_SPINNERS = 8;
 
 	protected WidgetClockData mWidgetData;
 
@@ -84,8 +86,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
 		mModuleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
-		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		spinnerLayoutParams.setMargins(0, 0, 0, (int) mActivity.getResources().getDimension(R.dimen.widget_margin));
+		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		spinnerLayoutParams.setMargins(0, 0, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SPACE_BETWEEN_MODULE_SPINNERS, mActivity.getResources().getDisplayMetrics()));
 
         TextView moduleEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_device_emptyview);
 
@@ -234,9 +236,9 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.spinner_icon_twoline_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
-		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
+		dataAdapter.setDropDownViewResource(R.layout.spinner_icon_twoline_dropdown_item);
 
 		int index = 0;
 		for (WidgetModulePersistence wDev : mWidgetModules) {

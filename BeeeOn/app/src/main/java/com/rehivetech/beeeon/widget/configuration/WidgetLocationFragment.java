@@ -67,8 +67,8 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.custom_spinner_item, mLocations);
-		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.spinner_icon_item, mLocations);
+		dataAdapter.setDropDownViewResource(R.layout.spinner_icon_dropdown_item);
 		mLocationSpinner.setAdapter(dataAdapter);
 
 		// set selection

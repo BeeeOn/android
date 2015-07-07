@@ -67,9 +67,9 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.custom_spinner2_item, mModules, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.spinner_icon_twoline_item, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
-		dataAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
+		dataAdapter.setDropDownViewResource(R.layout.spinner_icon_twoline_dropdown_item);
 
 		mModuleSpinner.setAdapter(dataAdapter);
 		int foundIndex = Utils.getObjectIndexFromList(mWidgetModule.getId(), mModules);

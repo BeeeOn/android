@@ -23,9 +23,9 @@
 
 	<Spinner
 		android:id="@+id/widget_config_gateway"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
-		style="@style/LinearRow.Row"
+		style="@style/BeeeOn.Spinner"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
 		/>
 
     <!-- gate emptyview-->
@@ -52,9 +52,9 @@
 
 	<Spinner
 		android:id="@+id/widget_config_location"
-		style="@style/LinearRow.Row"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
+		style="@style/BeeeOn.Spinner"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
 		/>
 
     <!-- gate emptyview-->
