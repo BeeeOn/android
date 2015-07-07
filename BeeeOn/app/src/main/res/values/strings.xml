@@ -119,7 +119,8 @@
 	<string name="toast_achievement_title">Achievement unlocked!</string>
     <string name="toast_field_must_be_filled">This field must be filled!</string>
     <string name="toast_field_must_be_number">This field must be number!</string>
-    <string name="toast_error_no_qr_reader">Failed to open Google Play</string>
+    <string name="toast_error_no_qr_reader">You don\'t have QR scanner installed</string>
+    <string name="toast_error_no_google_play">Failed to open Google Play</string>
     <string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
 
     <!-- Progress -->
@@ -159,6 +160,7 @@
     <string name="addadapter_view_setname">Set gateway name, e.g. Home</string>
     <string name="addadapter_qr_button"> Scan QR code </string>
     <string name="addadapter_manual_edit">Enter manually</string>
+    <string name="addadapter_qr_button_loading">Loading...</string>
     <string name="dialog_code_title">Enter the code of the gate</string>
     <string name="addsensor_send_pair">SEND PAIR</string>
     <string name="addsensor_waiting">Waiting for start</string>

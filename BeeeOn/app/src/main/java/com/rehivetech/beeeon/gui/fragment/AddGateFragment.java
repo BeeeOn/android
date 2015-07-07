@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
@@ -34,6 +35,7 @@ public class AddGateFragment extends TrackFragment {
 		view.findViewById(R.id.add_gate_qr_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				setScanQrButtonEnabled(false);
 				mCallback.showQrScanner();
 			}
 		});
@@ -47,6 +49,26 @@ public class AddGateFragment extends TrackFragment {
 		});
 
 		return view;
+	}
+
+	public void setScanQrButtonEnabled(boolean enabled) {
+		View view = getView();
+		if (view == null)
+			return;
+
+		Button button = (Button) view.findViewById(R.id.add_gate_qr_button);
+		if (button == null)
+			return;
+
+		if (enabled) {
+			button.setEnabled(true);
+			button.setText(R.string.addadapter_qr_button);
+			button.setTextColor(getResources().getColor(R.color.white));
+		} else {
+			button.setEnabled(false);
+			button.setText(R.string.addadapter_qr_button_loading);
+			button.setTextColor(getResources().getColor(R.color.light_gray));
+		}
 	}
 
 	public interface OnAddGateListener {
