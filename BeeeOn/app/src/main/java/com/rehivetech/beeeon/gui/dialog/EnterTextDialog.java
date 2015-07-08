@@ -13,11 +13,11 @@ public class EnterTextDialog extends BaseDialogFragment {
 	public static String TAG = "enterDialog";
 
 
-	private EnterTextDialogListener mCallback;
+	private IEnterTextDialogListener mCallback;
 	private View mView;
 	private boolean mClose;
 
-	public static void enterText(FragmentActivity activity, View view,EnterTextDialogListener listener) {
+	public static void enterText(FragmentActivity activity, View view,IEnterTextDialogListener listener) {
 		EnterTextDialog enterTextDialog = new EnterTextDialog();
 		enterTextDialog.setView(view);
 
@@ -48,7 +48,7 @@ public class EnterTextDialog extends BaseDialogFragment {
 		return builder;
 	}
 
-	public void setEnterTextListener(EnterTextDialogListener listener) {
+	public void setEnterTextListener(IEnterTextDialogListener listener) {
 		mCallback = listener;
 	}
 
@@ -60,7 +60,7 @@ public class EnterTextDialog extends BaseDialogFragment {
 		dismiss();
 	}
 
-	public interface EnterTextDialogListener {
+	public interface IEnterTextDialogListener {
 		void onEnterText();
 	}
 }

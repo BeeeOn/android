@@ -73,7 +73,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	public void showEnterCodeDialog() {
 		LayoutInflater inflater = AddGateActivity.this.getLayoutInflater();
 		final View view = inflater.inflate(R.layout.enter_text_dialog, null);
-		EnterTextDialog.enterText(AddGateActivity.this, view, new EnterTextDialog.EnterTextDialogListener() {
+		EnterTextDialog.enterText(AddGateActivity.this, view, new EnterTextDialog.IEnterTextDialogListener() {
 			@Override
 			public void onEnterText() {
 				EditText editText = (EditText) view.findViewById(R.id.add_gate_overlay_dialog_edit_text);
@@ -81,10 +81,10 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 				if (identifier.isEmpty()) {
 					// when the editText is empty...
 					Toast.makeText(AddGateActivity.this, R.string.toast_field_must_be_filled, Toast.LENGTH_LONG).show();
-				} else {
-					doRegisterGateTask(identifier, false);
-					finish();
+					return;
 				}
+
+				doRegisterGateTask(identifier, false);
 			}
 		});
 	}
@@ -100,6 +100,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+					finish();
 				} else {
 					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activate_failed, Toast.LENGTH_SHORT).show();
 					if (scanned) {
