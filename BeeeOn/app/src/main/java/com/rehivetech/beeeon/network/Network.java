@@ -528,7 +528,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean editGateData(Gate gate) {
+	public boolean updateGate(Gate gate) {
 		// FIXME someone should implement this method in the future when the server is ready for it
 		return false;
 	}

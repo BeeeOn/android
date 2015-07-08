@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 	  xmlns:app="http://schemas.android.com/apk/res-auto"
 	  xmlns:tools="http://schemas.android.com/tools"
-	  tools:context="com.rehivetech.beeeon.gui.activity.GateUpdateActivity">
+	  tools:context="com.rehivetech.beeeon.gui.activity.GateEditActivity">
 	<item
 		android:id="@+id/action_delete"
 		android:title="@string/ada_menu_del"

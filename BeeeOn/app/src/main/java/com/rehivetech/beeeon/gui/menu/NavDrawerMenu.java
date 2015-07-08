@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.GateDetailActivity;
-import com.rehivetech.beeeon.gui.activity.GateUpdateActivity;
+import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
@@ -417,7 +417,7 @@ public class NavDrawerMenu {
 				mActivity.startActivity(intent);
 
 			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME GATE
-				Intent intent = new Intent(mActivity, GateUpdateActivity.class);
+				Intent intent = new Intent(mActivity, GateEditActivity.class);
 				intent.putExtra(Constants.GUI_EDIT_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
 			} else if (item.getItemId() == R.id.ada_menu_details) {

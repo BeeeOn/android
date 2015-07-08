@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.GateUpdateActivity;
+import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.household.gate.Gate;
 
 import org.joda.time.DateTimeZone;
@@ -30,20 +30,20 @@ import java.util.List;
 /**
  * Created by david on 17.6.15.
  */
-public class GateUpdateFragment extends Fragment {
+public class GateEditFragment extends Fragment {
 	private static final String KEY_GATE_ID = "Gate_Id";
 	private static final String KEY_GATE_NAME = "Gate_name";
-	private GateUpdateActivity mActivity;
+	private GateEditActivity mActivity;
 	private MyTimeZone mSelectedZone = null;
 	private String mGateId;
 	private String mGateName = null;
 
-	public static GateUpdateFragment newInstance(String gateId) {
-		GateUpdateFragment gateUpdateFragment = new GateUpdateFragment();
+	public static GateEditFragment newInstance(String gateId) {
+		GateEditFragment gateEditFragment = new GateEditFragment();
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
-		gateUpdateFragment.setArguments(args);
-		return gateUpdateFragment;
+		gateEditFragment.setArguments(args);
+		return gateEditFragment;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class GateUpdateFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mActivity = (GateUpdateActivity) getActivity();
+			mActivity = (GateEditActivity) getActivity();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(String.format("%s must be subclass of GateEditActivity", activity.toString()));
 		}

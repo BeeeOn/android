@@ -11,9 +11,9 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 /**
  * Created by david on 18.6.15.
  */
-public class UpdateGateTask extends CallbackTask<Gate> {
+public class EditGateTask extends CallbackTask<Gate> {
 
-	public UpdateGateTask(@NonNull Context context) {
+	public EditGateTask(@NonNull Context context) {
 		super(context);
 	}
 

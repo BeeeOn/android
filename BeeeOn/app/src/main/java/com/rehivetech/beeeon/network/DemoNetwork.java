@@ -299,7 +299,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean editGateData(Gate gate) {
+	public boolean updateGate(Gate gate) {
 		String gateId = gate.getId();
 
 		if(!mGates.hasObject(gateId))

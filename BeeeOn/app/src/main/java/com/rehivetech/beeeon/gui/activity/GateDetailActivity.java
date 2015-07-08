@@ -108,7 +108,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				break;
 			}
 			case R.id.ada_menu_edit: {
-				Intent intent = new Intent(this, GateUpdateActivity.class);
+				Intent intent = new Intent(this, GateEditActivity.class);
 				intent.putExtra(Constants.GUI_EDIT_GATE_ID, mGateId);
 				startActivity(intent);
 				break;

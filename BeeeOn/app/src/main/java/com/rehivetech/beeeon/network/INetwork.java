@@ -155,7 +155,7 @@ public interface INetwork {
 	 * @param gate new gate with new data
 	 * @return true if change was successful
 	 */
-	boolean editGateData(Gate gate);
+	boolean updateGate(Gate gate);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////

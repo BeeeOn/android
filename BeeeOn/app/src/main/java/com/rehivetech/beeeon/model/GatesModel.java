@@ -128,7 +128,7 @@ public class GatesModel extends BaseModel {
 	 * @return
 	 */
 	public boolean editGate(Gate gate) {
-		return mNetwork.editGateData(gate);
+		return mNetwork.updateGate(gate);
 	}
 
 }

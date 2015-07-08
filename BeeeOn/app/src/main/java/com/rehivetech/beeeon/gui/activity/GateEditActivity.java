@@ -12,18 +12,18 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.fragment.GateUpdateFragment;
+import com.rehivetech.beeeon.gui.fragment.GateEditFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
-import com.rehivetech.beeeon.threading.task.UpdateGateTask;
+import com.rehivetech.beeeon.threading.task.EditGateTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 
 /**
  * Created by david on 17.6.15.
  */
-public class GateUpdateActivity extends BaseApplicationActivity {
-	private static final String TAG = GateUpdateActivity.class.getSimpleName();
+public class GateEditActivity extends BaseApplicationActivity {
+	private static final String TAG = GateEditActivity.class.getSimpleName();
 	private static final String TAG_FRAGMENT_EDIT_GATE_DIALOG = "TAG_FRAGMENT_EDIT_GATE_DIALOG";
 	private String mGateId;
 
@@ -44,10 +44,10 @@ public class GateUpdateActivity extends BaseApplicationActivity {
 		}
 		mGateId = getIntent().getStringExtra(Constants.GUI_EDIT_GATE_ID);
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		GateUpdateFragment gateUpdateFragment = (GateUpdateFragment) fragmentManager.findFragmentByTag(TAG_FRAGMENT_EDIT_GATE_DIALOG);
-		if (gateUpdateFragment == null)
-			gateUpdateFragment = GateUpdateFragment.newInstance(mGateId);
-		fragmentManager.beginTransaction().replace(R.id.edit_gate_fragment_container, gateUpdateFragment, TAG_FRAGMENT_EDIT_GATE_DIALOG).commit();
+		GateEditFragment gateEditFragment = (GateEditFragment) fragmentManager.findFragmentByTag(TAG_FRAGMENT_EDIT_GATE_DIALOG);
+		if (gateEditFragment == null)
+			gateEditFragment = GateEditFragment.newInstance(mGateId);
+		fragmentManager.beginTransaction().replace(R.id.edit_gate_fragment_container, gateEditFragment, TAG_FRAGMENT_EDIT_GATE_DIALOG).commit();
 	}
 
 	@Override
@@ -63,11 +63,11 @@ public class GateUpdateActivity extends BaseApplicationActivity {
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		GateUpdateFragment gateUpdateFragment = (GateUpdateFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_EDIT_GATE_DIALOG);
+		GateEditFragment gateEditFragment = (GateEditFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_EDIT_GATE_DIALOG);
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
-			String newGateName = gateUpdateFragment.getNewGateName();
-			int newOffsetInMinutes = gateUpdateFragment.getNewOffsetInMinutes();
+			String newGateName = gateEditFragment.getNewGateName();
+			int newOffsetInMinutes = gateEditFragment.getNewOffsetInMinutes();
 			Gate gate = new Gate();
 			gate.setId(mGateId);
 			gate.setName(newGateName);
@@ -88,18 +88,18 @@ public class GateUpdateActivity extends BaseApplicationActivity {
 	}
 
 	private void doEditGateTask(Gate gate) {
-		UpdateGateTask updateGateTask = new UpdateGateTask(this);
-		updateGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
+		EditGateTask editGateTask = new EditGateTask(this);
+		editGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(GateUpdateActivity.this, R.string.edit_gate_success, Toast.LENGTH_SHORT).show();
+					Toast.makeText(GateEditActivity.this, R.string.edit_gate_success, Toast.LENGTH_SHORT).show();
 					setResult(Activity.RESULT_OK);
 					finish();
 				}
 			}
 		});
-		callbackTaskManager.executeTask(updateGateTask, gate, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
+		callbackTaskManager.executeTask(editGateTask, gate, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	private void doUnregisterGateTask(String gateId) {
@@ -110,7 +110,7 @@ public class GateUpdateActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(GateUpdateActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
+					Toast.makeText(GateEditActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
 				}
 			}
 		});
