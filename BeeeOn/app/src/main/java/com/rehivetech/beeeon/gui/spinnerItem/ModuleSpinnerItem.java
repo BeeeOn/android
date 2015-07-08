@@ -44,7 +44,7 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.custom_spinner2_item;
+		return R.layout.spinner_icon_twoline_item;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public int getDropDownLayout() {
-		return R.layout.custom_spinner2_dropdown_item;
+		return R.layout.spinner_icon_twoline_dropdown_item;
 	}
 
 	@Override
