@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Name of Demo Gates -->
+
+	<string name="gate_1_name">Home</string>
+	<string name="gate_2_name">Weekend House</string>
+	<string name="gate_3_name">Regulator VPT</string>
+
+	<!-- Name of location  and id-->
+	<string name="loc_name_demo_living_room">Living Room</string>
+	<string name="loc_name_demo_bedroom">Bedroom</string>
+	<string name="loc_name_demo_kitchen">Kitchen</string>
+	<string name="loc_name_demo_wc">WC</string>
+	<string name="loc_name_demo_green_house">GreenHouse</string>
+
+	<string name="loc_name_demo_sauna">Sauna</string>
+	<string name="loc_name_demo_room">Room</string>
+
+	<!--Name of modules (devices) -->
+
+	<!-- Modules of Home -->
+	<string name="demo_name_module_window">Window\'s Temperature</string>
+	<string name="demo_name_module_radiator">Radiator\'s Temperature</string>
+	<string name="demo_name_module_window_act">Window - Ventilator</string>
+	<string name="demo_name_module_door_act">Balcony Door</string>
+	<string name="demo_name_module_baby_monitor">Baby Monitor - Bed</string>
+	<string name="demo_name_module_lamp_table">Lamp on desk</string>
+	<string name="demo_name_module_ventilator">Ventilator</string>
+	<string name="demo_name_module_pc">Computer</string>
+	<string name="demo_name_module_lamp_tv">Lamp next to TV</string>
+	<string name="demo_name_module_tv">Television</string>
+	<string name="demo_name_module_cooker">Cooker</string>
+	<string name="demo_name_module_wc_lamp">Lamp on WC</string>
+
+	<!-- Modules of Regulator VPT -->
+	<string name="demo_name_module_boiler">Boiler status</string>
+	<string name="demo_name_module_actual_temp1">Z1: Actual Temperature</string>
+	<string name="demo_name_module_desired_temp1">Z1: The Desired Temperature</string>
+	<string name="demo_name_module_type_operation1">Z1: Type of operation</string>
+	<string name="demo_name_module_mode_operation1">Z1: Mode of operation</string>
+	<string name="demo_name_module_actual_temp2">Z2: Actual Temperature</string>
+	<string name="demo_name_module_desired_temp2">Z2: The Desired Temperature</string>
+	<string name="demo_name_module_type_operation2">Z2: Type of operation</string>
+	<string name="demo_name_module_mode_operation2">Z2: Mode of operation</string>
+	<string name="demo_name_module_actual_temp3">Z3: Actual Temperature</string>
+	<string name="demo_name_module_desired_temp3">Z3: The Desired Temperature</string>
+	<string name="demo_name_module_type_operation3">Z3: Type of operation</string>
+	<string name="demo_name_module_mode_operation3">Z3: Mode of operation</string>
+	<string name="demo_name_module_actual_temp4">Z4: Actual Temperature</string>
+	<string name="demo_name_module_desired_temp4">Z4: The Desired Temperature</string>
+	<string name="demo_name_module_type_operation4">Z4: Type of operation</string>
+	<string name="demo_name_module_mode_operation4">Z4: Mode of operation</string>
+
+	<!-- Modules of Weekend House -->
+	<string name="demo_name_module_temp_air">Temperature of Air</string>
+	<string name="demo_name_module_pressure_air">Pressure of Air</string>
+	<string name="demo_name_module_soil">Soil Humidity</string>
+	<string name="demo_name_module_temp_stove">Stone\'s temperature</string>
+	<string name="demo_name_module_humidity_ceiling">Humidity of ceiling</string>
+	<string name="demo_name_module_switch">Switch stoves</string>
+	<string name="demo_name_module_electricity">The main supply of electricity</string>
+	<string name="demo_name_module_lighting">Lighting</string>
+	<string name="demo_name_module_air">Air</string>
+
+	<!-- Names of Watchdog and notification messages-->
+	<string name="demo_name_watchdog_temp_stone">Guard the temperature of stone</string>
+	<string name="demo_notif_watchdog_temp_stone">Stone is too hot!</string>
+	<string name="demo_name_watchdog_humidity">Humidity Soil</string>
+	<string name="demo_notif_watchdog_humidity">Soil humidity has dropped below 50%.</string>
+	<string name="demo_name_watchdog_cry">Baby sitting</string>
+	<string name="demo_notif_watchdog_cry">Baby crying. It need something.</string>
+	<string name="demo_name_watchdog_radiator">Wrong heating</string>
+	<string name="demo_notif_watchdog_radiator">Something is wrong with heating.</string>
+	<string name="demo_name_watchdog_temperature">Higher temperature Z1</string>
+	<string name="demo_notif_watchdog_temperature">Current temperature is greater than the desired temperature</string>
+
+
+</resources>
