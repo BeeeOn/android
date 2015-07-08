@@ -10,14 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.GateDetailActivity;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
@@ -78,16 +77,16 @@ public class GateDetailFragment extends Fragment {
 		String loadingText = getString(R.string.loading_data);
 
 		mDetailsItemList = new ArrayList<>();
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_black_24dp, R.string.fragment_gate_details_gate_id, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_black_24dp, R.string.gate_detail_your_role, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_black_24dp, R.string.time_zone, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_supervisor_account_black_24dp, R.string.gate_detail_num_of_users, loadingText, new View.OnClickListener() {
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_gray_24dp, R.string.fragment_gate_details_gate_id, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_your_role, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.time_zone, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_supervisor_account_gray_24dp, R.string.gate_detail_num_of_users, loadingText, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mCallback.onGateUsersClicked();
 			}
 		}));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_router_black_24dp, R.string.gate_detail_num_of_devices, loadingText, new View.OnClickListener() {
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_router_gray_24dp, R.string.gate_detail_num_of_devices, loadingText, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mCallback.onGateDevicesClicked();
@@ -188,12 +187,13 @@ public class GateDetailFragment extends Fragment {
 			ImageView image = (ImageView) convertView.findViewById(R.id.simple_list_layout_icon);
 			TextView text = (TextView) convertView.findViewById(R.id.simple_list_layout_text);
 			TextView title = (TextView) convertView.findViewById(R.id.simple_list_layout_title);
-			ImageButton button = (ImageButton) convertView.findViewById(R.id.simple_list_layout_user_list_btn);
+			Button button = (Button) convertView.findViewById(R.id.simple_list_layout_button_details);
 
 			// Populate the data into the template view using the data object
 			image.setImageResource(detailsItem.imageRes);
 			text.setText(detailsItem.text);
 			title.setText(detailsItem.titleRes);
+
 
 			button.setVisibility(detailsItem.buttonClickListener != null ? View.VISIBLE : View.INVISIBLE);
 			button.setEnabled(detailsItem.buttonEnabled);
@@ -206,7 +206,9 @@ public class GateDetailFragment extends Fragment {
 
 	public interface OnGateDetailsButtonsClickedListener {
 		void onGateUsersClicked();
+
 		void onGateDevicesClicked();
+
 		void onForceReloadData();
 	}
 }

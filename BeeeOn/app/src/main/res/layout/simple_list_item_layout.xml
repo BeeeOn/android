@@ -33,14 +33,16 @@
 			android:textSize="16sp"/>
 	</LinearLayout>
 
-	<ImageButton
-		android:id="@+id/simple_list_layout_user_list_btn"
-		android:layout_width="36dp"
-		android:layout_height="36dp"
-		android:padding="10dp"
-		android:background="@color/beeeon_secundary_pink"
-		android:src="@drawable/ic_info_white_24dp"
+	<Button
+		android:id="@+id/simple_list_layout_button_details"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:drawablePadding="10dp"
+		style="@style/Widget.AppCompat.Button.Borderless.Colored"
+		android:text="@string/layout_simple_list_button_text"
 		android:layout_centerVertical="true"
-		android:layout_alignParentRight="true"/>
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		/>
 
 </RelativeLayout>

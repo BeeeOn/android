@@ -462,4 +462,5 @@
     <string name="reloading_gate_data_not_successful">Reloading gate data not successful</string>
     <string name="gate_no_name">No name</string>
     <string name="update_gateway">Update gateway</string>
+    <string name="layout_simple_list_button_text">Details</string>
 </resources>
