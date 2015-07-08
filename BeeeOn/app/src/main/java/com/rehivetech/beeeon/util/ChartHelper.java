@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.util;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -36,9 +38,14 @@ final public class ChartHelper {
 	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, ViewGroup layout, Controller controller) {
 
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
+		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+		float textSizeSp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+				context.getResources().getDimension(R.dimen.textsize_body), metrics) / metrics.scaledDensity;
 
 		Legend legend = chart.getLegend();
 		legend.setForm(Legend.LegendForm.CIRCLE);
+		legend.setFormSize(textSizeSp);
+		legend.setTextSize(textSizeSp);
 
 		chart.setDrawBorders(true);
 		chart.setBorderColor(context.getResources().getColor(R.color.beeeon_separator));
@@ -66,6 +73,8 @@ final public class ChartHelper {
 					for (int i = yLabels.size() - 1; i > -1; i--) {
 						TextView label = new TextView(context);
 						label.setText(String.format("%d. %s", j++, context.getString(yLabels.get(i).getStringResource())));
+//						label.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.textsize_body));
+						label.setTextSize(textSizeSp);
 						layout.addView(label);
 					}
 				}

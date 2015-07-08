@@ -87,7 +87,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		}
 		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.graph_layout);
 		chartLayout.setVisibility(View.INVISIBLE);
-		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
+		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.customview_graph_height)));
 		chartLayout.addView(chart);
 		ChartHelper.prepareChart(chart, mActivity, module.getValue(), chartLayout, Controller.getInstance(mActivity));
 		chartLayout.setVisibility(View.VISIBLE);
@@ -124,7 +124,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 
 		String unit = unitsHelper.getStringUnit(module.getValue());
-		String name = mActivity.getString(module.getTypeStringResource());
+		String name = module.getName();
 
 		List dataSetList;
 		ArrayList<String> xVals;
@@ -160,7 +160,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			((LineDataSet)dataSet).setLineWidth(2f);
 		}
 		dataSet.setColor(color);
-		dataSet.setValueFormatter(ChartHelper.getValueFormatterInstance(module.getValue(),mActivity,controller));
+		dataSet.setValueFormatter(ChartHelper.getValueFormatterInstance(module.getValue(), mActivity, controller));
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();
