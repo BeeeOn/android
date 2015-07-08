@@ -178,6 +178,9 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	private void initLayout() {
 		View view = getView();
+		if(view == null){
+			return;
+		}
 
 		// Get View for sensor name
 		TextView name = (TextView) view.findViewById(R.id.sen_detail_name);

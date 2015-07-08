@@ -22,11 +22,11 @@
 		/>
 
     <Spinner
-    android:id="@+id/widget_config_gateway"
-    android:layout_width="match_parent"
-    android:layout_height="40dp"
-    style="@style/LinearRow.Row"
-    />
+		android:id="@+id/widget_config_gateway"
+		style="@style/BeeeOn.Spinner"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
+		/>
 
     <!-- gate emptyview-->
     <TextView
@@ -52,9 +52,9 @@
 
 	<Spinner
 		android:id="@+id/widget_config_device"
-		style="@style/LinearRow.Row"
-		android:layout_width="match_parent"
-		android:layout_height="40dp"
+		style="@style/BeeeOn.Spinner"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
 		/>
 
     <!-- module emptyview-->

@@ -60,4 +60,8 @@
 	<dimen name="adddevice_layout_padding">20dp</dimen>
 	<dimen name="adddevice_padding_land">5dp</dimen>
 	<dimen name="adddevice_padding">20dp</dimen>
+
+
+	<dimen name="spinner_height">48dp</dimen>
+	<dimen name="spinner_min_width">112dp</dimen>
 </resources>
