@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.GateDetailFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -96,15 +97,28 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 			case android.R.id.home: {
 				finish();
 				break;
 			}
 			case R.id.ada_menu_delete: {
-				doUnregisterGateTask(mGateId);
-				finish();
+				String title = getString(R.string.confirm_remove_gate_title_default);
+				String message = getString(R.string.confirm_remove_gate_message);
+
+				Gate gate = Controller.getInstance(this).getGatesModel().getGate(mGateId);
+				if (gate != null) {
+					title = getString(R.string.confirm_remove_gate_title, gate.getName());
+				}
+
+				ConfirmDialog.confirm(this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
+					@Override
+					public void onConfirm() {
+						doUnregisterGateTask(mGateId);
+						finish();
+					}
+
+				});
 				break;
 			}
 			case R.id.ada_menu_edit: {

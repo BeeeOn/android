@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.GateEditFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -98,24 +100,37 @@ public class GateEditActivity extends BaseApplicationActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		GateEditFragment gateEditFragment = (GateEditFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_EDIT);
-		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_save) {
-			Gate gate = gateEditFragment.getNewGate();
-			doEditGateTask(gate);
-		} else if (id == R.id.action_delete) {
-			doUnregisterGateTask(mGateId);
-			setResult(Activity.RESULT_OK);
-			finish();
-		} else if (id == android.R.id.home) {
-			setResult(Activity.RESULT_CANCELED);
-			finish();
-		}
+		switch (item.getItemId()) {
+			case android.R.id.home: {
+				finish();
+				break;
+			}
+			case R.id.action_delete: {
+				String title = getString(R.string.confirm_remove_gate_title_default);
+				String message = getString(R.string.confirm_remove_gate_message);
 
+				Gate gate = Controller.getInstance(this).getGatesModel().getGate(mGateId);
+				if (gate != null) {
+					title = getString(R.string.confirm_remove_gate_title, gate.getName());
+				}
+
+				ConfirmDialog.confirm(this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
+					@Override
+					public void onConfirm() {
+						doUnregisterGateTask(mGateId);
+						finish();
+					}
+
+				});
+				break;
+			}
+			case R.id.action_save: {
+				GateEditFragment gateEditFragment = (GateEditFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_EDIT);
+				Gate gate = gateEditFragment.getNewGate();
+				doEditGateTask(gate);
+				break;
+			}
+		}
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -126,7 +141,6 @@ public class GateEditActivity extends BaseApplicationActivity {
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(GateEditActivity.this, R.string.edit_gate_success, Toast.LENGTH_SHORT).show();
-					setResult(Activity.RESULT_OK);
 					finish();
 				}
 			}
