@@ -29,6 +29,8 @@
 		android:layout_toEndOf="@+id/custom_spinner_icon"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
+		android:singleLine="true"
+		android:ellipsize="marquee"
 		android:paddingLeft="8dp"
 		android:paddingRight="8dp"
 		/>

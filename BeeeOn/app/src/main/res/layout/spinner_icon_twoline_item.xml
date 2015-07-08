@@ -28,6 +28,8 @@
 		android:layout_marginStart="8dp"
 		android:paddingLeft="8dp"
 		android:paddingRight="8dp"
+		android:singleLine="true"
+		android:ellipsize="marquee"
 		/>
 
 	<TextView
@@ -43,6 +45,8 @@
 		android:layout_marginStart="8dp"
 		android:paddingLeft="8dp"
 		android:paddingRight="8dp"
+		android:singleLine="true"
+		android:ellipsize="marquee"
 		/>
 
 </RelativeLayout>
