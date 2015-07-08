@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
+    android:layout_height="96dp"
     android:paddingTop="16dp"
     android:id="@+id/watchdog_item_layout"
 >
@@ -22,7 +22,7 @@
         android:id="@+id/watchdogItemRuleName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="@dimen/textsize_subhead"
         android:gravity="top"
         android:textColor="@color/beeeon_text_color"
         android:layout_alignParentTop="true"
@@ -34,7 +34,7 @@
         android:id="@+id/watchdogItemSensorName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="@dimen/textsize_body"
         android:textColor="@color/beeeon_text_hint"
         android:layout_below="@+id/watchdogItemRuleName"
         android:layout_alignLeft="@+id/watchdogItemOperator"
@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/beeeon_secundary_pink"
         android:textStyle="bold"
-        android:textSize="14sp"
+        android:textSize="@dimen/textsize_body"
         android:gravity="center_vertical"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
@@ -95,12 +95,14 @@
     />
 
     <!-- separator z navdrawer-->
-    <ImageView
+    <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:src="@color/beeeon_separator"
+        android:background="@color/beeeon_separator"
         android:layout_alignParentBottom="true"
-        />
+        android:layout_marginLeft="72dp"
+		android:layout_marginStart="72dp"
+		/>
 
 
 </RelativeLayout>

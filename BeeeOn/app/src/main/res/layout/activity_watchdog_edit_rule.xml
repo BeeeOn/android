@@ -9,13 +9,6 @@
 	<!-- toolbar -->
 	<include layout="@layout/beeeon_toolbar"/>
 
-	<!-- shadow -->
-	<View
-		android:layout_width="match_parent"
-		android:layout_height="6dp"
-		android:background="@drawable/toolbar_dropshadow"
-		/>
-
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
