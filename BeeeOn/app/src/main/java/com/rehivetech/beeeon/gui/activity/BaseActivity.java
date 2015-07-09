@@ -1,12 +1,10 @@
 package com.rehivetech.beeeon.gui.activity;
 
-//import com.actionbarsherlock.app.SherlockFragmentActivity;
-
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.google.analytics.tracking.android.EasyTracker;
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
 	@Override
 	public void onStart() {
