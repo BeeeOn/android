@@ -38,7 +38,7 @@ import java.util.List;
  *
  * @author mlyko
  */
-public class WatchdogListFragment extends BaseApplicationFragment {
+public class WatchdogListFragment extends BaseApplicationFragment implements ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = WatchdogListFragment.class.getSimpleName();
 
 	private static final String GATE_ID = "lastGateId";
@@ -377,17 +377,10 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-			final Watchdog mWatchdog = mSelectedItem;
 			if (menuItem.getItemId() == R.id.action_delete) {
-				String title = getString(R.string.confirm_remove_watchdog_title, mWatchdog.getName());
+				String title = getString(R.string.confirm_remove_watchdog_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
-					@Override
-					public void onConfirm() {
-						doRemoveWatchdogTask(mWatchdog);
-					}
-				});
-
+				ConfirmDialog.confirm(getFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());
 			}
 
 			actionMode.finish();
@@ -400,6 +393,14 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 			mSelectedItem = null;
 			mSelectedItemPos = 0;
 			mMode = null;
+		}
+	}
+
+	@Override
+	public void onConfirm(int confirmType, String dataId) {
+		// FIXME: Do this better, without remembering item in mSelectedItem
+		if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
+			doRemoveWatchdogTask(mSelectedItem);
 		}
 	}
 }

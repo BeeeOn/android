@@ -56,7 +56,7 @@ import java.util.List;
  *
  * @author mlyko
  */
-public class WatchdogEditRuleActivity extends BaseApplicationActivity {
+public class WatchdogEditRuleActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = WatchdogEditRuleActivity.class.getSimpleName();
 
 	public static final String EXTRA_GATE_ID = "gate_id";
@@ -421,12 +421,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 			case R.id.wat_menu_delete:
 				String title = getString(R.string.confirm_remove_watchdog_title, mWatchdog.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialog.confirm(this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
-					@Override
-					public void onConfirm() {
-						doRemoveWatchdogTask();
-					}
-				});
+				ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mWatchdog.getId());
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -616,5 +611,12 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity {
 		return true;
 	}
 
+	@Override
+	public void onConfirm(int confirmType, String dataId) {
+		// FIXME: Rewrite with using dataId
+		if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
+			doRemoveWatchdogTask();
+		}
+	}
 }
 

@@ -24,7 +24,7 @@ import com.rehivetech.beeeon.util.Log;
 /**
  * Created by david on 17.6.15.
  */
-public class GateEditActivity extends BaseApplicationActivity {
+public class GateEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = GateEditActivity.class.getSimpleName();
 
 	private static final String FRAGMENT_EDIT = "fragment_edit";
@@ -114,14 +114,7 @@ public class GateEditActivity extends BaseApplicationActivity {
 					title = getString(R.string.confirm_remove_gate_title, gate.getName());
 				}
 
-				ConfirmDialog.confirm(this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
-					@Override
-					public void onConfirm() {
-						doUnregisterGateTask(mGateId);
-						finish();
-					}
-
-				});
+				ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
 				break;
 			}
 			case R.id.action_save: {
@@ -163,5 +156,13 @@ public class GateEditActivity extends BaseApplicationActivity {
 
 		// Execute and remember task so it can be stopped automatically
 		this.callbackTaskManager.executeTask(unregisterGateTask, gateId);
+	}
+
+	@Override
+	public void onConfirm(int confirmType, String dataId) {
+		if (confirmType == ConfirmDialog.TYPE_DELETE_GATE) {
+			doUnregisterGateTask(dataId);
+			finish();
+		}
 	}
 }

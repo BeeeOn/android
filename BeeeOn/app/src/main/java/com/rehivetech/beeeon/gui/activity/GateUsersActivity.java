@@ -22,7 +22,6 @@ import android.widget.RadioGroup;
 import android.widget.ScrollView;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
@@ -37,7 +36,7 @@ import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
-public class GateUsersActivity extends BaseApplicationActivity {
+public class GateUsersActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 
@@ -183,6 +182,8 @@ public class GateUsersActivity extends BaseApplicationActivity {
 				if (success) {
 					// Hlaska o uspechu
 				}
+				mSelectedItem = null;
+				mSelectedItemPos = 0;
 			}
 		});
 
@@ -237,12 +238,8 @@ public class GateUsersActivity extends BaseApplicationActivity {
 					String userName = user.getName();
 					String title = getString(R.string.confirm_remove_user_title, userName);
 					String message = getString(R.string.confirm_remove_user_message);
-					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
-						@Override
-						public void onConfirm() {
-							doRemoveUserTask(mSelectedItem);
-						}
-					});
+
+					ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_USER, user.getId());
 				}
 			} else if (item.getItemId() == R.id.adausr_menu_edit) {
 				changeUserRole();
@@ -302,16 +299,10 @@ public class GateUsersActivity extends BaseApplicationActivity {
 
 				if (newRole == User.Role.Superuser) {
 					// Need confirmation for this change
-
 					String title = getString(R.string.confirm_change_ownership_title);
 					String message = getString(R.string.confirm_change_ownership_message);
-					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, new ConfirmDialog.ConfirmDialogListener() {
-						@Override
-						public void onConfirm() {
-							mSelectedItem.setRole(User.Role.Superuser);
-							doEditUserTask(mSelectedItem);
-						}
-					});
+
+					ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_change_ownership, ConfirmDialog.TYPE_CHANGE_OWNERSHIP, mSelectedItem.getId());
 				} else {
 					mSelectedItem.setRole(newRole);
 					doEditUserTask(mSelectedItem);
@@ -330,4 +321,18 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		alertDialog.show();
 	}
 
+	@Override
+	public void onConfirm(int confirmType, String dataId) {
+		/*User user = Controller.getInstance(this).getUsersModel().getUser(mGateId, dataId);
+		user.setRole(User.Role.Superuser);
+		doEditUserTask(user);*/
+
+		// FIXME: Do this better, without remembering item in mSelectedItem (example above)
+		if (confirmType == ConfirmDialog.TYPE_CHANGE_OWNERSHIP) {
+			mSelectedItem.setRole(User.Role.Superuser);
+			doEditUserTask(mSelectedItem);
+		} else if (confirmType == ConfirmDialog.TYPE_DELETE_USER) {
+			doRemoveUserTask(mSelectedItem);
+		}
+	}
 }

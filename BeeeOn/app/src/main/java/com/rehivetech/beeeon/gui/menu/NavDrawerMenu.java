@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -26,8 +25,8 @@ import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
-import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
+import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.gui.menuItem.EmptyMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GateMenuItem;
 import com.rehivetech.beeeon.gui.menuItem.GroupMenuItem;
@@ -40,7 +39,6 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.SwitchGateTask;
-import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
@@ -269,26 +267,6 @@ public class NavDrawerMenu {
 		mActivity.callbackTaskManager.executeTask(switchGateTask, gateId);
 	}
 
-	private void doUnregisterGateTask(String gateId) {
-		UnregisterGateTask unregisterGateTask = new UnregisterGateTask(mActivity);
-
-		unregisterGateTask.setListener(new ICallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					Toast.makeText(mActivity, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
-					mActivity.setActiveGateAndMenu();
-					mActivity.redraw();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(unregisterGateTask, gateId);
-	}
-
-
 	public MenuListAdapter getMenuAdapter() {
 		mMenuAdapter = new MenuListAdapter(mActivity);
 		Controller controller = Controller.getInstance(mActivity);
@@ -403,13 +381,7 @@ public class NavDrawerMenu {
 				}
 
 				String message = mActivity.getString(R.string.confirm_remove_gate_message);
-				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
-					@Override
-					public void onConfirm() {
-						doUnregisterGateTask(mSelectedMenuItem.getId());
-					}
-
-				});
+				ConfirmDialog.confirm(mActivity.getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mSelectedMenuItem.getId());
 
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);
