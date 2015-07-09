@@ -19,21 +19,19 @@ public class TutorialHelper {
 
 	public static void showLoginTutorial(final LoginActivity activity) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 0;
+		int marginPx = 0;
 		int currentOrientation = activity.getResources().getConfiguration().orientation;
 		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
 			lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 			lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-			marginPixel = 15;
+			marginPx = Utils.convertDpToPixel(15);
 		} else {
 			lps.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 			lps.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			marginPixel = 40;
+			marginPx = Utils.convertDpToPixel(40);
 		}
 
-
-		int margin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
+		lps.setMargins(marginPx, marginPx, marginPx, marginPx);
 		ViewTarget target_google = new ViewTarget(R.id.login_btn_google, activity);
 
 		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
@@ -107,14 +105,12 @@ public class TutorialHelper {
 
 	public static void showAddSensorTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 25;
-		int marginPixelBottom = 55;
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
-		int margin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		int bottomMargin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixelBottom)).intValue();
-		lps.setMargins(margin, margin, margin, bottomMargin);
+		int marginPx = Utils.convertDpToPixel(25);
+		int marginBottomPx = Utils.convertDpToPixel(55);
+		lps.setMargins(marginPx, marginPx, marginPx, marginBottomPx);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
 		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
@@ -159,14 +155,12 @@ public class TutorialHelper {
 
 	public static void showAddGateTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-		int marginPixel = 25;
-		int marginPixelBottom = 55;
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
-		int margin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixel)).intValue();
-		int bottomMargin = ((Number) (activity.getResources().getDisplayMetrics().density * marginPixelBottom)).intValue();
-		lps.setMargins(margin, margin, margin, bottomMargin);
+		int marginPx = Utils.convertDpToPixel(25);
+		int marginBottomPx = Utils.convertDpToPixel(55);
+		lps.setMargins(marginPx, marginPx, marginPx, marginBottomPx);
 		ViewTarget target = new ViewTarget(layout.findViewById(R.id.fab));
 
 		OnShowcaseEventListener listener = new OnShowcaseEventListener() {

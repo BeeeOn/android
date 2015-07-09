@@ -18,6 +18,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.util.Compatibility;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,7 +29,6 @@ import java.util.List;
  */
 public class AchievementListAdapter extends BaseAdapter implements Filterable {
 	private LayoutInflater mInflater;
-	private int mDisplayPixel;
 	private ItemFilter mFilter = new ItemFilter();
 
 	private List<AchievementListItem> mAchievementList;
@@ -41,9 +41,6 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 		mAchievementList = achievements;
 		mFilteredList = mAchievementList;
 		mFilter.filter(categoryId);
-
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		mDisplayPixel = (int) metrics.density;
 	}
 
 	@Override
@@ -92,7 +89,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 			holder.achievementShare.setImageResource(R.drawable.share);
 			holder.achievementProgressText.setVisibility(View.GONE);
 			holder.achievementProgressLayout.setVisibility(View.GONE);
-			holder.achievementLayout.getLayoutParams().height = 100 * mDisplayPixel;
+			holder.achievementLayout.getLayoutParams().height = Utils.convertDpToPixel(100);
 			holder.achievementShare.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -108,14 +105,14 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 			holder.achievementShare.setVisibility(View.GONE);
 			holder.achievementDescription.setVisibility(View.VISIBLE);
 			if (achievement.getTotalProgress() > 1) {
-				holder.achievementLayout.getLayoutParams().height = 125 * mDisplayPixel;
+				holder.achievementLayout.getLayoutParams().height = Utils.convertDpToPixel(125);
 				holder.achievementProgressLayout.setVisibility(View.VISIBLE);
 				holder.achievementProgress.setMax(achievement.getTotalProgress());
 				holder.achievementProgress.setProgress(achievement.getCurrentProgress());
 				holder.achievementProgressText.setVisibility(View.VISIBLE);
 				holder.achievementProgressText.setText(achievement.getProgressString());
 			} else {
-				holder.achievementLayout.getLayoutParams().height = 100 * mDisplayPixel;
+				holder.achievementLayout.getLayoutParams().height = Utils.convertDpToPixel(100);
 				holder.achievementProgressLayout.setVisibility(View.GONE);
 				holder.achievementProgressText.setVisibility(View.GONE);
 			}
@@ -123,7 +120,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 			Compatibility.setBackground(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_lightgray));
 			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_separator));
 			holder.achievementShare.setOnClickListener(null);
-			holder.achievementLayout.getLayoutParams().height = 75 * mDisplayPixel;
+			holder.achievementLayout.getLayoutParams().height = Utils.convertDpToPixel(75);
 			holder.achievementShare.setVisibility(View.VISIBLE);
 			holder.achievementShare.setImageResource(R.drawable.question);
 			holder.achievementDescription.setVisibility(View.GONE);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -13,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.widget.Toast;
 
@@ -428,6 +430,24 @@ final public class Utils {
 		}
 
 		return defaultItem;
+	}
+
+	/**
+	 * Taken from https://gist.github.com/laaptu/7867851
+	 */
+	public static int convertPixelsToDp(float px) {
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		float dp = px / (metrics.densityDpi / 160f);
+		return Math.round(dp);
+	}
+
+	/**
+	 * Taken from https://gist.github.com/laaptu/7867851
+	 */
+	public static int convertDpToPixel(float dp) {
+		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+		float px = dp * (metrics.densityDpi / 160f);
+		return Math.round(px);
 	}
 
 }

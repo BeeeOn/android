@@ -27,6 +27,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,9 +151,9 @@ public class SetupSensorFragment extends TrackFragment {
 		// Set gate to ListView and to Spinner
 		listOfName.setAdapter(listAdapter);
 		spinner.setAdapter(dataAdapter);
-		// Set listview height, for all 
-		float scale = mActivity.getResources().getDisplayMetrics().density;
-		listOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mNewDevices.get(0).getModules().size())));
+		// Set listview height, for all
+		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mNewDevices.get(0).getModules().size());
+		listOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, heightPx));
 	}
 
 	/**

@@ -31,9 +31,12 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
+
+	private static final int TUTORIAL_MARGIN = 12;
 
 	public static final String ADD_GATE_TAG = "addGateDialog";
 	public static final String ADD_SENSOR_TAG = "addSensorDialog";
@@ -145,8 +148,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 
-		int margin = ((Number) (getResources().getDisplayMetrics().density * 12)).intValue();
-		lps.setMargins(margin, margin, margin, margin);
+		int marginPx = Utils.convertDpToPixel(TUTORIAL_MARGIN);
+		lps.setMargins(marginPx, marginPx, marginPx, marginPx);
 		ViewTarget target = new ViewTarget(android.R.id.home, this);
 
 		OnShowcaseEventListener listener = new OnShowcaseEventListener() {

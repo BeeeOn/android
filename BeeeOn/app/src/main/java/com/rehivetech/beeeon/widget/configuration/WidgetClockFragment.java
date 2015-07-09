@@ -87,7 +87,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 		mModuleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
 		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-		spinnerLayoutParams.setMargins(0, 0, 0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, SPACE_BETWEEN_MODULE_SPINNERS, mActivity.getResources().getDisplayMetrics()));
+		int marginBottomPx = Utils.convertDpToPixel(SPACE_BETWEEN_MODULE_SPINNERS);
+		spinnerLayoutParams.setMargins(0, 0, 0, marginBottomPx);
 
         TextView moduleEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_device_emptyview);
 

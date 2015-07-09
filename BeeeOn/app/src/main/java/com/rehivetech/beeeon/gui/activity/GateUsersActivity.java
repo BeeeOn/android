@@ -33,6 +33,7 @@ import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.EditUserTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveUserTask;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
@@ -43,6 +44,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 	private List<User> mGateUsers;
 
 	private static final int NAME_ITEM_HEIGHT = 74;
+	private static final int ROLE_RADIO_MARGIN = 16;
 
 	private RadioGroup mGroup;
 	private User mSelectedItem;
@@ -92,8 +94,8 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		});
 
 		// Set listview height, for all 
-		float scale = getResources().getDisplayMetrics().density;
-		listActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) (scale * NAME_ITEM_HEIGHT * mGateUsers.size())));
+		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mGateUsers.size());
+		listActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, heightPx));
 
 		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.fab_add_user);
 		mButton.setOnClickListener(new OnClickListener() {
@@ -263,12 +265,12 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		ViewGroup checkboxContainer = (ViewGroup) layoutDialog.findViewById(R.id.checkbox_container);
 
 		mGroup = new RadioGroup(this);
-		int margin = ((Number) (getResources().getDisplayMetrics().density * 16)).intValue();
+		int marginPx = Utils.convertDpToPixel(ROLE_RADIO_MARGIN);
 
 		for (User.Role role : User.Role.values()) {
 			RadioButton item = new RadioButton(this);
 			item.setText(getString(role.getStringResource()));
-			item.setPadding(margin, margin, margin, margin);
+			item.setPadding(marginPx, marginPx, marginPx, marginPx);
 
 			mGroup.addView(item);
 			if (role == mSelectedItem.getRole())
