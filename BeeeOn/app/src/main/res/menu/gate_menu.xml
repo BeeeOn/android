@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/ada_menu_details"
+        android:title="@string/gate_detail_title"
+        android:icon="@drawable/ic_description_white_24dp"
+        app:showAsAction="always|collapseActionView"/>1
     <item android:id="@+id/ada_menu_edit"
-        android:title="@string/ada_menu_edit"
+        android:title="@string/update_gateway"
         android:icon="@drawable/ic_mode_edit_white_24dp"
-        app:showAsAction="always|collapseActionView"/>
+        app:showAsAction="ifRoom|collapseActionView"/>
     <item android:id="@+id/ada_menu_users"
         android:title="@string/ada_menu_users"
         android:icon="@drawable/ic_group_white_24dp"
-        app:showAsAction="always|collapseActionView"/>
+        app:showAsAction="ifRoom|collapseActionView"/>
     <item android:id="@+id/ada_menu_del"
         android:title="@string/ada_menu_del"
         android:icon="@drawable/ic_delete_white_24dp"
-        app:showAsAction="always|collapseActionView"/>
+        app:showAsAction="ifRoom|collapseActionView"/>
 </menu>

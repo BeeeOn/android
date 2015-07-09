@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.GateDetailActivity;
+import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
@@ -411,12 +413,19 @@ public class NavDrawerMenu {
 
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);
-				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mSelectedMenuItem.getId());
+				intent.putExtra(GateUsersActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
 
 			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME GATE
-				Toast.makeText(mActivity, R.string.toast_not_implemented, Toast.LENGTH_LONG).show();
+				Intent intent = new Intent(mActivity, GateEditActivity.class);
+				intent.putExtra(GateEditActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
+				mActivity.startActivity(intent);
+			} else if (item.getItemId() == R.id.ada_menu_details) {
+				Intent intent = new Intent(mActivity, GateDetailActivity.class);
+				intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
+				mActivity.startActivity(intent);
 			}
+
 
 			mode.finish();
 			return true;

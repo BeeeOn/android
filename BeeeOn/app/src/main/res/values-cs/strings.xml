@@ -102,7 +102,7 @@
     <string name="toast_no_adapter">Nemáte žádnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všech zařízení</string>
-    <string name="toast_wrong_or_no_device">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
+    <string name="toast_not_specified_gate_or_module">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
     <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádné neinicializované zařízení</string>
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>
@@ -295,11 +295,11 @@
     <string name="adapter_default_name">%1$s brána #%2$d</string>
     <string name="settings">Nastavení</string>
     <string name="save">Uložit</string>
-    <string name="ada_menu_edit">Editace názvu brány</string>
+    <string name="ada_menu_edit">Upravit název brány</string>
     <string name="ada_menu_users">Uživatelé brány</string>
     <string name="ada_menu_del">Odstranit bránu</string>
     <string name="sensor_menu_del">Odstranit zařízení</string>
-    <string name="adausr_menu_edit">Editovat uživatele</string>
+    <string name="adausr_menu_edit">Upravit uživatele</string>
     <string name="adausr_menu_del">Odstranit uživatele</string>
 
 
@@ -367,8 +367,7 @@
 	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="modules">Zařízení</string>
 	<string name="name">Název</string>
-	<string name="confirm_remove_watchdog_message">Prosím potvrďte odstranění pravidla</string>
-	<string name="title_activity_module_edit">Editace zařízení</string>
+	<string name="title_activity_module_edit">Úprava zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název brány</string>
 	<string name="addadapter_fill_code">Vyplňte kód</string>
 	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. Průvodce Vám představí BeeeOn komponenty a aplikaci.</string>
@@ -436,4 +435,10 @@
     <string name="interval_weekly">Týdně</string>
     <string name="interval_daily">Denně</string>
     <string name="interval_monthly">Měsíčně</string>
+    <string name="delete_gate_failure">Brána nebyla úspěsně odstraněna</string>
+    <string name="fragment_gate_edit_gate_name">Název brány</string>
+    <string name="fragment_gate_details_gate_id">ID brány</string>
+    <string name="fragment_gate_edit_gate_id_read_only">ID brány (pouze ke čtení)</string>
+    <string name="title_activity_gate_edit">Úprava brány</string>
+
 </resources>

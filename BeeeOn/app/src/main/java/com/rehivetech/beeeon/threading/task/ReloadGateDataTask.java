@@ -60,6 +60,7 @@ public class ReloadGateDataTask extends CallbackTask<String> {
 
 			// Get ID of active gate so we can load specified data then
 			gateId = active.getId();
+			
 		} else if (gateId == null) {
 			throw new IllegalArgumentException("Either ReloadWhat.ACTIVE_GATE must be used or given gateId parameter.");
 		}

@@ -39,6 +39,8 @@ import java.util.List;
 
 public class GateUsersActivity extends BaseApplicationActivity {
 
+	public static final String EXTRA_GATE_ID = "gate_id";
+
 	private Gate mGate;
 
 	private List<User> mGateUsers;
@@ -69,7 +71,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 		}
 
 		// Get selected gate
-		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
+		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(EXTRA_GATE_ID));
 
 		// Get all users for gate
 		doReloadGateUsersTask(mGate.getId(), true);
@@ -104,7 +106,7 @@ public class GateUsersActivity extends BaseApplicationActivity {
 			public void onClick(View v) {
 				// Go to add new user 
 				Intent intent = new Intent(GateUsersActivity.this, AddGateUserActivity.class);
-				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mGate.getId());
+				intent.putExtra(AddGateUserActivity.EXTRA_GATE_ID, mGate.getId());
 				startActivity(intent);
 			}
 		});

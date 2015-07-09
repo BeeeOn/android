@@ -107,8 +107,6 @@ public final class Constants {
 
 	public static final String GUI_MENU_ALL_SENSOR_ID = "GUI_MENU_ALL_SENSOR_ID";
 
-	public static final String GUI_SELECTED_GATE_ID = "GUI_SELECTED_GATE_ID";
-
 	public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
 
 	public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
@@ -116,6 +114,8 @@ public final class Constants {
 	public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
 
 	public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
+
+	public static final String GUI_EDIT_SENSOR_ID = "GUI_EDIT_SENSOR_ID";
 
 	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY";
 

@@ -299,6 +299,19 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean updateGate(Gate gate) {
+		String gateId = gate.getId();
+
+		Gate oldGate = mGates.getObject(gateId);
+		if (oldGate == null)
+			return false;
+
+		oldGate.setName(gate.getName());
+		oldGate.setUtcOffsetMillis(gate.getUtcOffsetMillis());
+		return true;
+	}
+
+	@Override
 	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<Module.SaveModule> toSave) {
 		for (Device device : devices) {
 			if (!updateDevice(gateId, device, toSave)) {

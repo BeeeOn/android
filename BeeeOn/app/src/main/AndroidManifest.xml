@@ -103,6 +103,10 @@
 			android:label="@string/title_activity_add_gate">
 		</activity>
 		<activity
+			android:name=".gui.activity.GateEditActivity"
+			android:label="@string/title_activity_gate_edit">
+		</activity>
+		<activity
 			android:name=".widget.configuration.WidgetConfigurationActivity"
 			android:noHistory="true"
 			android:excludeFromRecents="true"
@@ -156,6 +160,9 @@
 		<activity
 			android:name=".gui.activity.ModuleEditActivity"
 			android:label="@string/title_activity_module_edit"/>
+		<activity
+			android:name=".gui.activity.GateDetailActivity"
+			android:label="@string/title_activity_gate_detail"/>
 		<activity
 			android:name=".gui.activity.IntroActivity"
 			android:label="@string/app_name"/>

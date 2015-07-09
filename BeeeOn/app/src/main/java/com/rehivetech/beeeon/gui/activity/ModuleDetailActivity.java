@@ -78,7 +78,7 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 		}
 
 		if (mActiveGateId == null || mActiveModuleId == null) {
-			Toast.makeText(this, R.string.toast_wrong_or_no_device, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}

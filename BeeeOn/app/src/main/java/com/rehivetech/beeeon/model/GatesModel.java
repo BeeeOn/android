@@ -121,4 +121,14 @@ public class GatesModel extends BaseModel {
 		return true;
 	}
 
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param gate - new edited gate
+	 * @return
+	 */
+	public boolean editGate(Gate gate) {
+		return mNetwork.updateGate(gate);
+	}
+
 }

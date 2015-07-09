@@ -38,6 +38,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 	private static final int TUTORIAL_MARGIN = 12;
 
+	public static final String EXTRA_GATE_ID = "gate_id";
+
 	public static final String ADD_GATE_TAG = "addGateDialog";
 	public static final String ADD_SENSOR_TAG = "addSensorDialog";
 	public static final String FRG_TAG_LOC = "Loc";
@@ -79,7 +81,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		super.onNewIntent(intent);
 
 		if (intent == null) return;
-		String gateId = intent.getStringExtra(GATE_ID);
+		String gateId = intent.getStringExtra(EXTRA_GATE_ID);
 		Log.d(TAG, "chosen gate = " + gateId);
 		// TODO should perform change of gate and show location (scroll to it?)
 	}
