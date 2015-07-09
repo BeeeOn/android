@@ -1,9 +1,7 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,18 +11,28 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.GateDetailFragment;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
+import com.rehivetech.beeeon.util.Log;
+
+import java.util.EnumSet;
 
 /**
  * Created by david on 23.6.15.
  */
 public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener {
-	public static final String GATE_ID = "GATE_ID";
+	private static final String TAG = GateDetailActivity.class.getSimpleName();
+
+	private static final String FRAGMENT_DETAILS = "fragment_details";
+
+	public static final String EXTRA_GATE_ID = "gate_id";
+
 	private String mGateId;
-	public static final String FRAGMENT_GATE_DETAIL = "FRAGMENT_GATE_DETAIL";
-	private boolean mFirstTime = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,50 +49,86 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
-		mGateId = getIntent().getStringExtra(GATE_ID);
 
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		if (mGateId == null) {
 			Toast.makeText(this, "Gate ID is null :/", Toast.LENGTH_LONG).show();
 			finish();
+			return;
 		}
 
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		GateDetailFragment gateDetailFragment = (GateDetailFragment) fragmentManager.findFragmentByTag(FRAGMENT_GATE_DETAIL);
-		if (gateDetailFragment == null)
-			gateDetailFragment = GateDetailFragment.newInstance(mGateId);
-		fragmentManager.beginTransaction().replace(R.id.container, gateDetailFragment, FRAGMENT_GATE_DETAIL).commit();
+		if (savedInstanceState == null) {
+			GateDetailFragment gateDetailFragment = GateDetailFragment.newInstance(mGateId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.container, gateDetailFragment, FRAGMENT_DETAILS).commit();
+		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		doReloadGatesAndActiveGateTask(mGateId, false);
+	}
+
+	private void doReloadGatesAndActiveGateTask(final String gateId, boolean forceReload) {
+		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(this, forceReload, EnumSet.of(
+				ReloadGateDataTask.ReloadWhat.GATES,
+				ReloadGateDataTask.ReloadWhat.DEVICES,
+				ReloadGateDataTask.ReloadWhat.USERS
+		));
+
+		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				Gate gate = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGate(mGateId);
+				if (gate == null) {
+					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
+					finish();
+				} else {
+					GateDetailFragment fragment = (GateDetailFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_DETAILS);
+					fragment.fillData();
+				}
+			}
+		});
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(reloadGateDataTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				setResult(Activity.RESULT_OK);
+			case android.R.id.home: {
 				finish();
 				break;
-			case R.id.ada_menu_delete:
+			}
+			case R.id.ada_menu_delete: {
 				doUnregisterGateTask(mGateId);
-				setResult(Activity.RESULT_OK);
 				finish();
 				break;
-			case R.id.ada_menu_edit:
+			}
+			case R.id.ada_menu_edit: {
 				Intent intent = new Intent(this, GateUpdateActivity.class);
 				intent.putExtra(Constants.GUI_EDIT_GATE_ID, mGateId);
 				startActivity(intent);
 				break;
-			case R.id.ada_menu_users:
-				startActivity(new Intent(this,GateUsersActivity.class).putExtra(Constants.GUI_SELECTED_GATE_ID, mGateId));
+			}
+			case R.id.ada_menu_users: {
+				Intent intent = new Intent(this, GateUsersActivity.class);
+				intent.putExtra(GateUsersActivity.EXTRA_GATE_ID, mGateId);
+				startActivity(intent);
 				break;
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.gate_detail_menu, menu);
-
 		return true;
 	}
 
@@ -97,6 +141,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(GateDetailActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
+					finish();
 				}
 			}
 		});
@@ -106,21 +151,21 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	}
 
 	@Override
-	public void onDetailsButtonClicked(Class newClass) {
-		Intent intent = new Intent(this, newClass);
-		intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mGateId);
+	public void onGateUsersClicked() {
+		Intent intent = new Intent(this, GateUsersActivity.class);
+		intent.putExtra(GateUsersActivity.EXTRA_GATE_ID, mGateId);
 		startActivity(intent);
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-		if (!mFirstTime) {
-			GateDetailFragment gateDetailFragment = (GateDetailFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_GATE_DETAIL);
-			if (gateDetailFragment != null) {
-				gateDetailFragment.reloadData();
-			}
-		} else
-			mFirstTime = false;
+	public void onGateDevicesClicked() {
+		Intent intent = new Intent(this, MainActivity.class);
+		intent.putExtra(MainActivity.EXTRA_GATE_ID, mGateId);
+		startActivity(intent);
+	}
+
+	@Override
+	public void onForceReloadData() {
+		doReloadGatesAndActiveGateTask(mGateId, true);
 	}
 }

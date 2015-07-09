@@ -413,7 +413,7 @@ public class NavDrawerMenu {
 
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);
-				intent.putExtra(Constants.GUI_SELECTED_GATE_ID, mSelectedMenuItem.getId());
+				intent.putExtra(GateUsersActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
 
 			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME GATE
@@ -422,7 +422,7 @@ public class NavDrawerMenu {
 				mActivity.startActivity(intent);
 			} else if (item.getItemId() == R.id.ada_menu_details) {
 				Intent intent = new Intent(mActivity, GateDetailActivity.class);
-				intent.putExtra(GateDetailActivity.GATE_ID, mSelectedMenuItem.getId());
+				intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
 			}
 

@@ -27,6 +27,8 @@ import java.util.List;
 
 public class AddGateUserActivity extends BaseApplicationActivity {
 
+	public static final String EXTRA_GATE_ID = "gate_id";
+
 	protected static final String TAG = "AddGateUserActivity";
 
 	private Gate mGate;
@@ -50,7 +52,7 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 		}
 
 		// Get selected gate
-		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(Constants.GUI_SELECTED_GATE_ID));
+		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(EXTRA_GATE_ID));
 
 		initLayout();
 	}
