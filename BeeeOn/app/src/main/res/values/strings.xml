@@ -446,5 +446,10 @@
     <string name="title_activity_gate_edit">Gate edit</string>
     <string name="fragment_gate_editText_hint">New name</string>
     <string name="fragment_gate_gateName">Name of the gate</string>
+    <string name="gate_id">Gate Id(read-only)</string>
+    <string name="gate_time_zone">Time zone</string>
+    <string name="edit_gate_success">The gate was edited successfully</string>
+    <string name="edit_gate_failure">The gate was not edited successfully</string>
+    <string name="delete_gate_failure">Gateway was not removed successsfully</string>
 
 </resources>

@@ -299,6 +299,11 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean editGateData(Gate gate) {
+		return false;
+	}
+
+	@Override
 	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<Module.SaveModule> toSave) {
 		for (Device device : devices) {
 			if (!updateDevice(gateId, device, toSave)) {

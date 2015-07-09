@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -13,7 +14,10 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.GateEditFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.task.EditGateTask;
+import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 
 /**
  * Created by david on 17.6.15.
@@ -29,7 +33,7 @@ public class GateEditActivity extends BaseApplicationActivity {
 		setContentView(R.layout.activity_gate_edit);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle("");
+			toolbar.setTitle(R.string.title_activity_gate_edit);
 			setSupportActionBar(toolbar);
 		}
 		ActionBar actionBar = getSupportActionBar();
@@ -39,21 +43,11 @@ public class GateEditActivity extends BaseApplicationActivity {
 			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 		mGateId = getIntent().getStringExtra(Constants.GUI_EDIT_GATE_ID);
-		GateEditFragment gateEditFragment = new GateEditFragment();
-		getSupportFragmentManager().beginTransaction().replace(R.id.container,gateEditFragment, TAG_FRAGMENT_EDIT_GATE_DIALOG).commit();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(Constants.GUI_EDIT_GATE_ID, mGateId);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		mGateId = savedInstanceState.getString(Constants.GUI_EDIT_GATE_ID);
-
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		GateEditFragment gateEditFragment = (GateEditFragment) fragmentManager.findFragmentByTag(TAG_FRAGMENT_EDIT_GATE_DIALOG);
+		if (gateEditFragment == null)
+			gateEditFragment = GateEditFragment.newInstance(mGateId);
+		fragmentManager.beginTransaction().replace(R.id.edit_gate_fragment_container, gateEditFragment, TAG_FRAGMENT_EDIT_GATE_DIALOG).commit();
 	}
 
 	@Override
@@ -74,10 +68,17 @@ public class GateEditActivity extends BaseApplicationActivity {
 		//noinspection SimplifiableIfStatement
 		if (id == R.id.action_save) {
 			Gate gate = controller.getGatesModel().getGate(mGateId);
-			String gateName = null;
-			Location gateLocation = null;
-			// Overit, co je vse potreba zmenit, pote zavolat task
-			doEditGateTask(gateName,gateLocation);
+			String newGateName = gateEditFragment.getNewGateName();
+			String newGateZone = gateEditFragment.getNewGateZone();
+			// now check if anything changed...
+			gate.setName(newGateName);
+			// TODO: Find out how to to the time zones correctly
+			Toast.makeText(this, String.format("Time zone: %s", newGateZone), Toast.LENGTH_SHORT).show();
+			doEditGateTask(gate);
+		} else if (id == R.id.action_delete) {
+			doUnregisterGateTask(mGateId);
+			setResult(Activity.RESULT_OK);
+			finish();
 		} else if (id == android.R.id.home) {
 			setResult(Activity.RESULT_CANCELED);
 			finish();
@@ -86,7 +87,41 @@ public class GateEditActivity extends BaseApplicationActivity {
 		return super.onOptionsItemSelected(item);
 
 	}
-	private void doEditGateTask(String gateName,Location gateLocation){
-		Toast.makeText(this,"Zde se bude volat server",Toast.LENGTH_SHORT).show();
+
+	private void doEditGateTask(Gate gate) {
+		EditGateTask editGateTask = new EditGateTask(this);
+		editGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					// TODO: finish acitivity correctly
+					Toast.makeText(GateEditActivity.this, R.string.edit_gate_success, Toast.LENGTH_SHORT).show();
+					setResult(Activity.RESULT_OK);
+					finish();
+				} else {
+					Toast.makeText(GateEditActivity.this, R.string.edit_gate_failure, Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		callbackTaskManager.executeTask(editGateTask, gate, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
+	}
+
+	private void doUnregisterGateTask(String gateId) {
+		UnregisterGateTask unregisterGateTask = new UnregisterGateTask(this);
+
+		unregisterGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					Toast.makeText(GateEditActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(GateEditActivity.this, R.string.gate, Toast.LENGTH_LONG).show();
+				}
+			}
+		});
+
+		// Execute and remember task so it can be stopped automatically
+		this.callbackTaskManager.executeTask(unregisterGateTask, gateId);
 	}
 }

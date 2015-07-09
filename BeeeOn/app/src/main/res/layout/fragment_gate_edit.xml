@@ -3,45 +3,71 @@
 			  android:orientation="vertical"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
-			  android:background="@color/beeeon_primary_cyan">
+			  android:background="@color/white"
+			  android:layout_marginLeft="16dp"
+			  android:layout_marginRight="16dp"
+			  android:padding="16dp">
 
-	<LinearLayout
+	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		android:layout_gravity="center">
+		android:text="@string/fragment_gate_gateName"
+		android:textSize="15sp"
+		android:textColor="@color/beeeon_text_hint"
+		android:layout_marginBottom="7dp"/>
 
-		<TextView
-			android:id="@+id/fragment_gate_text_view"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textSize="25sp"
-			android:text="@string/fragment_gate_gateName"
-			android:textColor="@color/white"/>
-
-		<EditText
-			android:id="@+id/fragment_gate_edit_text"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textColor="@color/white"
-			android:textColorHint="@color/white"
-			android:textSize="35sp"
-			android:textColorHighlight="@color/white"/>
-	</LinearLayout>
-
-	<LinearLayout
-		android:paddingTop="25dp"
+	<EditText
+		android:id="@+id/fragment_gate_edit_text"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1"
-		android:orientation="vertical"
-		android:layout_gravity="center"
-		android:background="@color/beeeon_light_gray">
+		android:layout_height="wrap_content"
+		android:textSize="45sp"
+		android:textColorLink="@color/white"
+		android:layout_marginBottom="15dp"
+		/>
 
-		<Spinner
-			android:id="@+id/fragment_gate_edit_spinner"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
-		</Spinner>
-	</LinearLayout>
+	<View
+		style="@style/Divider"
+		android:layout_marginBottom="15dp"/>
+
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="15sp"
+		android:text="@string/gate_id"
+		android:textColor="@color/beeeon_text_hint"
+		android:layout_marginBottom="7dp"/>
+
+	<TextView
+		android:id="@+id/fragment_gate_edit_gate_id"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textSize="30sp"
+		android:textColor="@color/beeeon_text_hint"
+		android:layout_marginBottom="15dp"
+		/>
+
+	<View
+		style="@style/Divider"
+		android:layout_marginBottom="15dp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/gate_time_zone"
+		android:textColor="@color/beeeon_text_hint"
+		android:textSize="15sp"
+		android:layout_marginBottom="7dp"/>
+
+	<Spinner
+		android:id="@+id/fragment_gate_edit_spinner"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="15dp"
+		/>
+
+
+	<View
+		style="@style/Divider"
+		/>
 </LinearLayout>
