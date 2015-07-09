@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,7 +21,6 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.TimezoneWrapper;
-import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +72,6 @@ public class GateDetailFragment extends Fragment {
 
 		mDetailsListView = (ListView) view.findViewById(R.id.gate_detail_listview);
 		mTitleText = (TextView) view.findViewById(R.id.gate_detail_fragment_title);
-
-		mDetailsListView.setDivider(new InsetDrawable(mDetailsListView.getDivider(), Utils.convertDpToPixel(56), 0, 0, 0));
 
 		String loadingText = getString(R.string.loading_data);
 

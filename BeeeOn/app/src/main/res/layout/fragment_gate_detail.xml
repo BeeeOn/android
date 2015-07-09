@@ -9,10 +9,12 @@
 		android:layout_width="match_parent"
 		android:layout_height="72dp"
 		android:singleLine="true"
-		android:textSize="34sp"
-		android:paddingLeft="40dp"
+		android:textSize="@dimen/textsize_headline"
 		android:textColor="@color/white"
-		android:background="@color/beeeon_primary_cyan"/>
+		android:gravity="center_vertical"
+		android:background="@color/beeeon_primary_cyan"
+		android:paddingLeft="72dp"
+		/>
 
 	<android.support.v4.widget.SwipeRefreshLayout
 		android:id="@+id/swipe_container"
@@ -23,7 +25,9 @@
 			android:id="@+id/gate_detail_listview"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:listSelector="@android:color/transparent"/>
+			android:listSelector="@android:color/transparent"
+			android:divider="@drawable/beeeon_divider"
+			/>
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>

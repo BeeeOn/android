@@ -12,6 +12,7 @@
 	<dimen name="textsize_subhead">16sp</dimen>
 	<dimen name="textsize_title">20sp</dimen>
 	<dimen name="textsize_headline">24sp</dimen>
+	<dimen name="textsize_display1">34sp</dimen>
 
 	<!--  Widgets -->
 	<dimen name="widget_margin">8dp</dimen>

@@ -5,11 +5,11 @@
 			  android:layout_height="match_parent">
 
 	<LinearLayout
-		android:paddingLeft="30dp"
-		android:paddingRight="30dp"
+		android:paddingLeft="72dp"
+		android:paddingRight="16dp"
 		android:paddingBottom="20dp"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		android:background="@color/beeeon_primary_cyan"
 		android:orientation="vertical">
 
@@ -17,7 +17,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/fragment_gate_edit_gate_name"
-			android:textSize="15sp"
+			android:textSize="@dimen/textsize_subhead"
 			android:textColor="@color/light_gray"
 			/>
 
@@ -25,7 +25,7 @@
 			android:id="@+id/fragment_gate_edit_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textSize="35sp"
+			android:textSize="@dimen/textsize_display1"
 			android:textColorLink="@color/white"
 			android:paddingBottom="20dp"
 			android:textColor="@color/white"
@@ -35,55 +35,54 @@
 
 	<View
 		style="@style/Divider"
-		android:layout_marginBottom="15dp"/>
-
+		android:layout_marginBottom="16dp"
+		/>
 
 	<TextView
-		android:paddingLeft="30dp"
-		android:paddingRight="30dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="12sp"
 		android:text="@string/fragment_gate_edit_gate_id_read_only"
 		android:textColor="@color/beeeon_text_hint"
-		android:layout_marginBottom="7dp"/>
+		android:layout_marginBottom="7dp"
+		android:textSize="@dimen/textsize_caption"
+		android:layout_marginLeft="72dp"
+		android:layout_marginStart="72dp"
+		/>
 
 	<TextView
-		android:paddingLeft="30dp"
-		android:paddingRight="30dp"
 		android:id="@+id/fragment_gate_edit_gate_id"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="16sp"
+		android:textSize="@dimen/textsize_body"
 		android:textColor="@color/beeeon_text_hint"
-		android:layout_marginBottom="15dp"
+		android:layout_marginLeft="72dp"
+		android:layout_marginStart="72dp"
+		android:layout_marginBottom="16dp"
 		/>
 
 	<View
 		style="@style/Divider"
-		android:layout_marginBottom="15dp"/>
+		android:layout_marginBottom="16dp"
+		/>
 
 	<TextView
-		android:paddingLeft="30dp"
-		android:paddingRight="30dp"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/time_zone"
 		android:textColor="@color/beeeon_text_hint"
-		android:textSize="12sp"
+		android:textSize="@dimen/textsize_caption"
+		android:layout_marginLeft="72dp"
+		android:layout_marginStart="72dp"
 		/>
 
 	<Spinner
-		android:paddingLeft="30dp"
-		android:paddingRight="30dp"
 		android:id="@+id/fragment_gate_edit_spinner"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginBottom="15dp"
+		android:layout_marginBottom="16dp"
+		android:layout_marginLeft="72dp"
+		android:layout_marginStart="72dp"
 		/>
 
-
-	<View
-		style="@style/Divider"
-		/>
+	<View style="@style/Divider" />
 </LinearLayout>
