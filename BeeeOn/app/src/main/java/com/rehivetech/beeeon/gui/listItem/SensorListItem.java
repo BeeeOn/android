@@ -36,7 +36,7 @@ public class SensorListItem extends AbstractListItem {
 		TextView txtTime = (TextView) itemView.findViewById(R.id.timeofsensor);
 
 		// Separators
-		View sepMidle = itemView.findViewById(R.id.sensor_sep_midle);
+		View sepMidle = itemView.findViewById(R.id.sensor_sep_middle);
 
 		// Locate the ImageView in drawer_list_item.xml
 		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);

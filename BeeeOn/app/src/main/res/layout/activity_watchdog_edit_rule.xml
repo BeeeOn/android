@@ -57,10 +57,10 @@
 			</RelativeLayout>
 
 			<!-- separator -->
-			<ImageView
+			<View
 				android:layout_width="match_parent"
-				android:layout_height="1px"
-				android:src="@color/beeeon_separator"
+				android:layout_height="wrap_content"
+				android:background="@drawable/beeeon_divider"
 				android:layout_marginTop="16dp"
 				android:layout_marginBottom="16dp"
 				/>
@@ -166,14 +166,12 @@
 				- separator
 				- because of retarded shadow in FAB, marginTop not here but in FAB
 			-->
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:src="@color/beeeon_separator"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="72dp"
-                android:layout_marginStart="72dp"
-                />
+			<View
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:background="@drawable/beeeon_divider"
+				android:layout_marginBottom="16dp"
+				/>
 
 			<!-- "then" section -->
 			<RelativeLayout
@@ -243,13 +241,11 @@
 				>
 
 				<!-- separator -->
-				<ImageView
+				<View
 					android:layout_width="match_parent"
-					android:layout_height="1px"
-					android:src="@color/beeeon_separator"
+					android:layout_height="wrap_content"
+					android:background="@drawable/beeeon_divider"
 					android:layout_alignParentTop="true"
-					android:layout_marginLeft="72dp"
-					android:layout_marginStart="72dp"
 					/>
 
 				<ImageView
@@ -298,13 +294,11 @@
 				>
 
 				<!-- separator -->
-				<ImageView
+				<View
 					android:layout_width="match_parent"
-					android:layout_height="1px"
-					android:src="@color/beeeon_separator"
+					android:layout_height="wrap_content"
+					android:background="@drawable/beeeon_divider"
 					android:layout_alignParentTop="true"
-					android:layout_marginLeft="72dp"
-					android:layout_marginStart="72dp"
 					/>
 
 				<ImageView
@@ -336,16 +330,17 @@
 					android:layout_height="36dp"
 					android:layout_below="@id/watchdog_edit_actor_text"
 					android:layout_alignLeft="@id/watchdog_edit_actor_text"
+					android:layout_alignStart="@+id/watchdog_edit_actor_text"
 					android:layout_marginEnd="16dp"
 					android:layout_marginRight="16dp"
 					/>
 			</RelativeLayout>
 
 			<!-- last separator (needs to be here) -->
-			<ImageView
+			<View
 				android:layout_width="match_parent"
-				android:layout_height="1px"
-				android:src="@color/beeeon_separator"
+				android:layout_height="wrap_content"
+				android:background="@drawable/beeeon_divider"
 				android:layout_marginTop="16dp"
 				/>
 

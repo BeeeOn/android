@@ -2,7 +2,7 @@
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/sensor_header"
-	android:layout_width="fill_parent"
+	android:layout_width="match_parent"
 	android:layout_height="48dp"
 	android:clickable="false">
 	<TextView
@@ -10,8 +10,10 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="16dp"
+		android:layout_marginStart="16dp"
 		android:textColor="@color/beeeon_text_hint"
 		android:layout_gravity="center_vertical"
-		android:textSize="16sp"
-		android:text="Location"/>
+		android:textSize="@dimen/textsize_body"
+		android:textStyle="bold"
+		/>
 </LinearLayout>
