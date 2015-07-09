@@ -381,7 +381,7 @@ public class NavDrawerMenu {
 				}
 
 				String message = mActivity.getString(R.string.confirm_remove_gate_message);
-				ConfirmDialog.confirm(mActivity.getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mSelectedMenuItem.getId());
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mSelectedMenuItem.getId());
 
 			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);

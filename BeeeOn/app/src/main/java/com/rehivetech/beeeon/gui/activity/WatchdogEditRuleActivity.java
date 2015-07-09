@@ -421,7 +421,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 			case R.id.wat_menu_delete:
 				String title = getString(R.string.confirm_remove_watchdog_title, mWatchdog.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mWatchdog.getId());
+				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mWatchdog.getId());
 				break;
 		}
 		return super.onOptionsItemSelected(item);

@@ -239,7 +239,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 					String title = getString(R.string.confirm_remove_user_title, userName);
 					String message = getString(R.string.confirm_remove_user_message);
 
-					ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_USER, user.getId());
+					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_USER, user.getId());
 				}
 			} else if (item.getItemId() == R.id.adausr_menu_edit) {
 				changeUserRole();
@@ -302,7 +302,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 					String title = getString(R.string.confirm_change_ownership_title);
 					String message = getString(R.string.confirm_change_ownership_message);
 
-					ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_change_ownership, ConfirmDialog.TYPE_CHANGE_OWNERSHIP, mSelectedItem.getId());
+					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, ConfirmDialog.TYPE_CHANGE_OWNERSHIP, mSelectedItem.getId());
 				} else {
 					mSelectedItem.setRole(newRole);
 					doEditUserTask(mSelectedItem);

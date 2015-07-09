@@ -110,7 +110,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 					title = getString(R.string.confirm_remove_gate_title, gate.getName());
 				}
 
-				ConfirmDialog.confirm(getSupportFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
+				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
 				break;
 			}
 			case R.id.ada_menu_edit: {

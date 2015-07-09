@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.WatchdogEditRuleActivity;
 import com.rehivetech.beeeon.gui.adapter.WatchdogListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
@@ -38,10 +40,12 @@ import java.util.List;
  *
  * @author mlyko
  */
-public class WatchdogListFragment extends BaseApplicationFragment implements ConfirmDialog.ConfirmDialogListener {
+public class WatchdogListFragment extends BaseApplicationFragment {
 	private static final String TAG = WatchdogListFragment.class.getSimpleName();
 
 	private static final String GATE_ID = "lastGateId";
+
+	private MainActivity mActivity;
 
 	private SwipeRefreshLayout mSwipeLayout;
 	private ListView mWatchdogListView;
@@ -57,6 +61,18 @@ public class WatchdogListFragment extends BaseApplicationFragment implements Con
 
 	private Watchdog mSelectedItem;
 	private int mSelectedItemPos;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+			mActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must be subclass of MainActivity");
+		}
+	}
 
 	/**
 	 * Initialize variables
@@ -380,7 +396,7 @@ public class WatchdogListFragment extends BaseApplicationFragment implements Con
 			if (menuItem.getItemId() == R.id.action_delete) {
 				String title = getString(R.string.confirm_remove_watchdog_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialog.confirm(getFragmentManager(), title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());
 			}
 
 			actionMode.finish();
@@ -393,14 +409,6 @@ public class WatchdogListFragment extends BaseApplicationFragment implements Con
 			mSelectedItem = null;
 			mSelectedItemPos = 0;
 			mMode = null;
-		}
-	}
-
-	@Override
-	public void onConfirm(int confirmType, String dataId) {
-		// FIXME: Do this better, without remembering item in mSelectedItem
-		if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
-			doRemoveWatchdogTask(mSelectedItem);
 		}
 	}
 }

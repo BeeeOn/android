@@ -455,6 +455,12 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onConfirm(int confirmType, String dataId) {
 		if (confirmType == ConfirmDialog.TYPE_DELETE_GATE) {
 			doUnregisterGateTask(dataId);
+		} else if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
+			// FIXME: perhaps call this on the WatchdogListFragment somehow?
+			// doRemoveWatchdogTask(mSelectedItem);
+		} else if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
+			// FIXME: perhaps call this on the SensorListFragment somehow?
+			// doRemoveDeviceTask(mSelectedItem.getDevice());
 		}
 	}
 }

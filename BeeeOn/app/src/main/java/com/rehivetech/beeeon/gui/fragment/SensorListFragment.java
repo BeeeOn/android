@@ -52,7 +52,7 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class SensorListFragment extends BaseApplicationFragment implements ConfirmDialog.ConfirmDialogListener {
+public class SensorListFragment extends BaseApplicationFragment {
 
 	private static final String TAG = SensorListFragment.class.getSimpleName();
 
@@ -502,7 +502,7 @@ public class SensorListFragment extends BaseApplicationFragment implements Confi
 			if (item.getItemId() == R.id.sensor_menu_del) {
 				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_unregister_device_message);
-				ConfirmDialog.confirm(getFragmentManager(), title, message, R.string.button_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());
 			}
 			mode.finish();
 			return true;
@@ -515,14 +515,6 @@ public class SensorListFragment extends BaseApplicationFragment implements Confi
 			mSelectedItemPos = 0;
 			mMode = null;
 
-		}
-	}
-
-	@Override
-	public void onConfirm(int confirmType, String dataId) {
-		// FIXME: Do this better, without remembering item in mSelectedItem
-		if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
-			doRemoveDeviceTask(mSelectedItem.getDevice());
 		}
 	}
 }

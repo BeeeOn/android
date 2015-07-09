@@ -32,7 +32,7 @@ public class ConfirmDialog extends BaseDialogFragment {
 	private static final String EXTRA_CONFIRM_TYPE = "extra_confirm_type";
 	private static final String EXTRA_DATA_ID = "extra_data_id";
 
-	public static void confirm(FragmentManager fragmentManager, String title, String message, @StringRes int buttonTextRes, int confirmType, String dataId) {
+	public static <T extends FragmentActivity & ConfirmDialogListener> void confirm(T activity, String title, String message, @StringRes int buttonTextRes, int confirmType, String dataId) {
 		ConfirmDialog confirmDialog = new ConfirmDialog();
 
 		Bundle args = new Bundle();
@@ -43,7 +43,7 @@ public class ConfirmDialog extends BaseDialogFragment {
 		args.putString(EXTRA_DATA_ID, dataId);
 		confirmDialog.setArguments(args);
 
-		confirmDialog.show(fragmentManager, TAG);
+		confirmDialog.show(activity.getSupportFragmentManager(), TAG);
 	}
 
 	@Override
