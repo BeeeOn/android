@@ -461,7 +461,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mActivity.callbackTaskManager.executeTask(fullReloadTask);
 	}
 
-	private void doRemoveDeviceTask(Device device) {
+	public void doRemoveDeviceTask(Device device) {
 		RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
 		removeDeviceTask.setListener(new ICallbackTaskListener() {
 			@Override
@@ -500,16 +500,9 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
-				final Module mItemModule = mSelectedItem;
 				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_unregister_device_message);
-				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, new ConfirmDialog.ConfirmDialogListener() {
-					@Override
-					public void onConfirm() {
-						doRemoveDeviceTask(mItemModule.getDevice());
-					}
-				});
-
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());
 			}
 			mode.finish();
 			return true;

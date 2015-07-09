@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
@@ -26,7 +25,7 @@ import java.util.EnumSet;
 /**
  * Created by david on 23.6.15.
  */
-public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener {
+public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener, ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = GateDetailActivity.class.getSimpleName();
 
 	private static final String FRAGMENT_DETAILS = "fragment_details";
@@ -111,14 +110,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 					title = getString(R.string.confirm_remove_gate_title, gate.getName());
 				}
 
-				ConfirmDialog.confirm(this, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
-					@Override
-					public void onConfirm() {
-						doUnregisterGateTask(mGateId);
-						finish();
-					}
-
-				});
+				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
 				break;
 			}
 			case R.id.ada_menu_edit: {
@@ -181,5 +173,14 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	public void onForceReloadData() {
 		doReloadGatesAndActiveGateTask(mGateId, true);
+	}
+
+
+	@Override
+	public void onConfirm(int confirmType, String dataId) {
+		if (confirmType == ConfirmDialog.TYPE_DELETE_GATE) {
+			doUnregisterGateTask(dataId);
+			finish();
+		}
 	}
 }

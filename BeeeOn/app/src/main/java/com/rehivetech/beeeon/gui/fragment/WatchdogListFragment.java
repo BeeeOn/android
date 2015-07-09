@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.WatchdogEditRuleActivity;
 import com.rehivetech.beeeon.gui.adapter.WatchdogListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
@@ -43,6 +45,8 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	private static final String GATE_ID = "lastGateId";
 
+	private MainActivity mActivity;
+
 	private SwipeRefreshLayout mSwipeLayout;
 	private ListView mWatchdogListView;
 	private WatchdogListAdapter mWatchdogAdapter;
@@ -57,6 +61,18 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	private Watchdog mSelectedItem;
 	private int mSelectedItemPos;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+			mActivity = (MainActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must be subclass of MainActivity");
+		}
+	}
 
 	/**
 	 * Initialize variables
@@ -309,7 +325,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 *
 	 * @param watchdog
 	 */
-	private void doRemoveWatchdogTask(Watchdog watchdog) {
+	public void doRemoveWatchdogTask(Watchdog watchdog) {
 		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity);
 
 		removeWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
@@ -377,17 +393,10 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-			final Watchdog mWatchdog = mSelectedItem;
 			if (menuItem.getItemId() == R.id.action_delete) {
-				String title = getString(R.string.confirm_remove_watchdog_title, mWatchdog.getName());
+				String title = getString(R.string.confirm_remove_watchdog_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, new ConfirmDialog.ConfirmDialogListener() {
-					@Override
-					public void onConfirm() {
-						doRemoveWatchdogTask(mWatchdog);
-					}
-				});
-
+				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());
 			}
 
 			actionMode.finish();

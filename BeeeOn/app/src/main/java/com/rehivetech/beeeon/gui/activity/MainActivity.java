@@ -23,17 +23,21 @@ import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
-public class MainActivity extends BaseApplicationActivity implements IListDialogListener {
+public class MainActivity extends BaseApplicationActivity implements IListDialogListener, ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final int TUTORIAL_MARGIN = 12;
@@ -428,5 +432,41 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 				.setRequestCode(ADD_ACTION_CODE)
 				.show();
 
+	}
+
+	private void doUnregisterGateTask(String gateId) {
+		UnregisterGateTask unregisterGateTask = new UnregisterGateTask(this);
+
+		unregisterGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
+
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					Toast.makeText(MainActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
+					setActiveGateAndMenu();
+					redraw();
+				}
+			}
+		});
+
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(unregisterGateTask, gateId);
+	}
+
+	@Override
+	public void onConfirm(int confirmType, String dataId) {
+		if (confirmType == ConfirmDialog.TYPE_DELETE_GATE) {
+			doUnregisterGateTask(dataId);
+		} else if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
+			Watchdog watchdog = Controller.getInstance(this).getWatchdogsModel().getWatchdog(mActiveGateId, dataId);
+			if (watchdog != null) {
+				mWatchdogApp.doRemoveWatchdogTask(watchdog);
+			}
+		} else if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
+			Device device = Controller.getInstance(this).getDevicesModel().getDevice(mActiveGateId, dataId);
+			if (device != null) {
+				mListModules.doRemoveDeviceTask(device);
+			}
+		}
 	}
 }
