@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
@@ -180,7 +181,9 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 				// Get all users for gate
 				doReloadGateUsersTask(mGate.getId(), true);
 				if (success) {
-					// Hlaska o uspechu
+					Toast.makeText(GateUsersActivity.this, R.string.toast_delete_success, Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(GateUsersActivity.this, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
 				}
 				mSelectedItem = null;
 				mSelectedItemPos = 0;
@@ -323,16 +326,15 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 	@Override
 	public void onConfirm(int confirmType, String dataId) {
-		/*User user = Controller.getInstance(this).getUsersModel().getUser(mGateId, dataId);
-		user.setRole(User.Role.Superuser);
-		doEditUserTask(user);*/
+		User user = Controller.getInstance(this).getUsersModel().getUser(mGate.getId(), dataId);
+		if (user == null)
+			return;
 
-		// FIXME: Do this better, without remembering item in mSelectedItem (example above)
 		if (confirmType == ConfirmDialog.TYPE_CHANGE_OWNERSHIP) {
-			mSelectedItem.setRole(User.Role.Superuser);
-			doEditUserTask(mSelectedItem);
+			user.setRole(User.Role.Superuser);
+			doEditUserTask(user);
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_USER) {
-			doRemoveUserTask(mSelectedItem);
+			doRemoveUserTask(user);
 		}
 	}
 }

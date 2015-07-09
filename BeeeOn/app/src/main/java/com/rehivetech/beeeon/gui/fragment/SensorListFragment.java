@@ -461,7 +461,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mActivity.callbackTaskManager.executeTask(fullReloadTask);
 	}
 
-	private void doRemoveDeviceTask(Device device) {
+	public void doRemoveDeviceTask(Device device) {
 		RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
 		removeDeviceTask.setListener(new ICallbackTaskListener() {
 			@Override

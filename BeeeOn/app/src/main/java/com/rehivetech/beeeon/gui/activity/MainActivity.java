@@ -28,7 +28,9 @@ import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
@@ -456,11 +458,15 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		if (confirmType == ConfirmDialog.TYPE_DELETE_GATE) {
 			doUnregisterGateTask(dataId);
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
-			// FIXME: perhaps call this on the WatchdogListFragment somehow?
-			// doRemoveWatchdogTask(mSelectedItem);
+			Watchdog watchdog = Controller.getInstance(this).getWatchdogsModel().getWatchdog(mActiveGateId, dataId);
+			if (watchdog != null) {
+				mWatchdogApp.doRemoveWatchdogTask(watchdog);
+			}
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
-			// FIXME: perhaps call this on the SensorListFragment somehow?
-			// doRemoveDeviceTask(mSelectedItem.getDevice());
+			Device device = Controller.getInstance(this).getDevicesModel().getDevice(mActiveGateId, dataId);
+			if (device != null) {
+				mListModules.doRemoveDeviceTask(device);
+			}
 		}
 	}
 }

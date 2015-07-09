@@ -325,7 +325,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 *
 	 * @param watchdog
 	 */
-	private void doRemoveWatchdogTask(Watchdog watchdog) {
+	public void doRemoveWatchdogTask(Watchdog watchdog) {
 		RemoveWatchdogTask removeWatchdogTask = new RemoveWatchdogTask(mActivity);
 
 		removeWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
