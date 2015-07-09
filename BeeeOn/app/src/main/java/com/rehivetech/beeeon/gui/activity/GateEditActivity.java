@@ -69,11 +69,9 @@ public class GateEditActivity extends BaseApplicationActivity {
 		if (id == R.id.action_save) {
 			Gate gate = controller.getGatesModel().getGate(mGateId);
 			String newGateName = gateEditFragment.getNewGateName();
-			String newGateZone = gateEditFragment.getNewGateZone();
-			// now check if anything changed...
+			GateEditFragment.MyTimeZone newGateZone = gateEditFragment.getNewGateZone();
 			gate.setName(newGateName);
-			// TODO: Find out how to to the time zones correctly
-			Toast.makeText(this, String.format("Time zone: %s", newGateZone), Toast.LENGTH_SHORT).show();
+			gate.setUtcOffset(newGateZone.offsetInMinutes);
 			doEditGateTask(gate);
 		} else if (id == R.id.action_delete) {
 			doUnregisterGateTask(mGateId);

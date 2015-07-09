@@ -20,6 +20,7 @@ public class EditGateTask extends CallbackTask<Gate> {
 	@Override
 	protected Boolean doInBackground(Gate gate) {
 		GatesModel gatesModel = Controller.getInstance(mContext).getGatesModel();
+		// FIXME: now it always returns true, but nothing is sent to server
 		return true;
 		//return gatesModel.editGate(gate);
 	}

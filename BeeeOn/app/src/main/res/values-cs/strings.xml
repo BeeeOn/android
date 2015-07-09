@@ -436,4 +436,10 @@
     <string name="interval_weekly">Týdně</string>
     <string name="interval_daily">Denně</string>
     <string name="interval_monthly">Měsíčně</string>
+    <string name="delete_gate_failure">Brána nebyla úspěsně odstraněna</string>
+    <string name="fragment_gate_editText_hint">Nové jméno</string>
+    <string name="fragment_gate_gateName">Jméno brány</string>
+    <string name="gate_id">ID brány (pouze ke čtení)</string>
+    <string name="title_activity_gate_edit">Editace brány</string>
+
 </resources>
