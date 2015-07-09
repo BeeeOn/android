@@ -401,7 +401,7 @@
 	<string name="notification_name_new_gate">Přidána nová brána</string>
 	<string name="notification_name_new_sensor">Přidáno nové zařízení</string>
 	<string name="notification_name_link">Spoj</string>
-    <string name="sensor_name_label">Meno zařízení</string>
+    <string name="sensor_name_label">Název zařízení</string>
     <string name="toast_device_not_available">Zařízení není dostupné</string>
     <string name="toast_field_must_be_number">Toto pole musí být číslo!</string>
     <string name="watchdog_create">Vytvořit hlídače</string>
