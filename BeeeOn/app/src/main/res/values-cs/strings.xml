@@ -370,11 +370,11 @@
 	<string name="title_activity_module_edit">Úprava zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název brány</string>
 	<string name="addadapter_fill_code">Vyplňte kód</string>
-	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. Průvodce Vám představí BeeeOn komponenty a aplikaci.</string>
-	<string name="tut_intro_text_2">BeeeOn komponenty jsou bezdrátová zařízení (např. senzor) a brána.</string>
-	<string name="tut_intro_text_3">Senzory měří hodnoty (např. teplotu), aktory nastavují požadované hodnoty.</string>
-	<string name="tut_intro_text_4">Brána sbírá data z bezdrátových zařízení.</string>
-	<string name="tut_intro_text_5">Mobilní aplikace poskytuje sledování a ovládání domácnosti odkukoliv a kdykoliv.</string>
+	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. V následujícím průvodci Vám bude představen systém inteligentní domácnosti a jeho části.</string>
+	<string name="tut_intro_text_2">BeeeOn domácnost se skládá z jednotlivých bezdrátových zařízení a brány do této domácnosti.</string>
+	<string name="tut_intro_text_3">Bezdrátová zařízení jsou dvojího typu - senzory a aktuátory. Senzory slouží ke snímání okolních veličin, aktuátory k nastavení jejich požadovaných hodnot.</string>
+	<string name="tut_intro_text_4">Brána inteligentní domácnosti přijímá a vysílá data směrem k bezdrátovým zařízením.</string>
+	<string name="tut_intro_text_5">Mobilní aplikace zobrazuje informace o domácnosti a umožnuje její ovládání odkukoliv a kdykoliv.</string>
 	<string name="tutorial_go_to_app">START</string>
 	<string name="tutorial_skip">PŘESKOČIT</string>
 	<string name="radius">Rádius</string>
@@ -401,7 +401,7 @@
 	<string name="notification_name_new_gate">Přidána nová brána</string>
 	<string name="notification_name_new_sensor">Přidáno nové zařízení</string>
 	<string name="notification_name_link">Spoj</string>
-    <string name="sensor_name_label">Meno zařízení</string>
+    <string name="sensor_name_label">Název zařízení</string>
     <string name="toast_device_not_available">Zařízení není dostupné</string>
     <string name="toast_field_must_be_number">Toto pole musí být číslo!</string>
     <string name="watchdog_create">Vytvořit hlídače</string>
