@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -17,49 +16,34 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.util.TimezoneWrapper;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.Duration;
-import org.joda.time.Period;
-import org.joda.time.format.PeriodFormatter;
-import org.joda.time.format.PeriodFormatterBuilder;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by david on 17.6.15.
  */
 public class GateEditFragment extends Fragment {
-	private static final String KEY_GATE_ID = "Gate_Id";
-	private static final String KEY_GATE_NAME = "Gate_name";
+	private static final String EXTRA_GATE_ID = "gate_id";
+
+	private static final String KEY_GATE_NAME = "gate_name";
+	private static final String KEY_GATE_TIMEZONE_INDEX = "gate_timezone_index";
+
 	private GateEditActivity mActivity;
-	private MyTimeZone mSelectedZone = null;
+
 	private String mGateId;
-	private String mGateName = null;
+	private List<TimezoneWrapper> mTimezones = TimezoneWrapper.getTimezones();
+
+	private EditText mGateNameEditText;
+	private Spinner mTimezoneSpinner;
+	private TextView mGateIdTextView;
 
 	public static GateEditFragment newInstance(String gateId) {
 		GateEditFragment gateEditFragment = new GateEditFragment();
 		Bundle args = new Bundle();
-		args.putString(KEY_GATE_ID, gateId);
+		args.putString(EXTRA_GATE_ID, gateId);
 		gateEditFragment.setArguments(args);
 		return gateEditFragment;
-	}
-
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mGateId = getArguments().getString(KEY_GATE_ID);
-		if (savedInstanceState != null) {
-			mGateName = savedInstanceState.getString(KEY_GATE_NAME);
-		}
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		mGateName = ((EditText) getView().findViewById(R.id.fragment_gate_edit_text)).getText().toString();
-		outState.putString(KEY_GATE_NAME, mGateName);
 	}
 
 	@Override
@@ -72,80 +56,79 @@ public class GateEditFragment extends Fragment {
 		}
 	}
 
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mGateId = getArguments().getString(EXTRA_GATE_ID);
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
-
-		//super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_gate_edit, container, false);
 
-		((EditText) view.findViewById(R.id.fragment_gate_edit_text)).setText((mGateName == null) ? (gate.getName()) : mGateName);
-		((TextView) view.findViewById(R.id.fragment_gate_edit_gate_id)).setText(gate.getId());
+		mGateNameEditText = ((EditText) view.findViewById(R.id.fragment_gate_edit_text));
+		mGateIdTextView = ((TextView) view.findViewById(R.id.fragment_gate_edit_gate_id));
+		mTimezoneSpinner = ((Spinner) view.findViewById(R.id.fragment_gate_edit_spinner));
 
-		Spinner spinner = (Spinner) view.findViewById(R.id.fragment_gate_edit_spinner);
-		List<MyTimeZone> timeZones = new ArrayList<>();
-		for (String id : DateTimeZone.getAvailableIDs()) {
-			int millis = DateTimeZone.forID(id).getOffset(null);
-			Period period = Duration.millis(millis).toPeriod();
-			PeriodFormatter hm = new PeriodFormatterBuilder()
-					.printZeroAlways()
-					.minimumPrintedDigits(2) // gives the '01'
-					.appendHours()
-					.appendSeparator(":")
-					.appendMinutes()
-					.toFormatter();
-			String result = hm.print(period);
-			String name = String.format("GMT%s%s %s", millis >= 0 ? "+" : "", result, DateTimeZone.forID(id).toTimeZone().getDisplayName());
-			MyTimeZone newTimeZone = new MyTimeZone(name, millis / (1000 * 60));
-			if (!timeZones.contains(newTimeZone))
-				timeZones.add(newTimeZone);
-		}
-		ArrayAdapter<MyTimeZone> adapter = new ArrayAdapter<>(mActivity,R.layout.update_gate_spinner_item, timeZones);
+		ArrayAdapter<TimezoneWrapper> adapter = new ArrayAdapter<>(mActivity, R.layout.update_gate_spinner_item, mTimezones);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				mSelectedZone = ((MyTimeZone) parent.getItemAtPosition(position));
-			}
+		mTimezoneSpinner.setAdapter(adapter);
 
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				// nothing to do
-			}
-		});
 		return view;
 	}
 
-	public String getNewGateName() {
-		return ((EditText) getView().findViewById(R.id.fragment_gate_edit_text)).getText().toString();
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		fillData(savedInstanceState);
 	}
 
-	public int getNewOffsetInMinutes() {
-		return mSelectedZone.offsetInMinutes;
-	}
+	public void fillData(Bundle savedInstanceState) {
+		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
+		if (gate == null)
+			return;
 
-	public class MyTimeZone {
-		public String name;
-		public int offsetInMinutes;
+		if (savedInstanceState != null) {
+			mGateNameEditText.setText(savedInstanceState.getString(KEY_GATE_NAME));
+			mGateIdTextView.setText(mGateId);
+			mTimezoneSpinner.setSelection(savedInstanceState.getInt(KEY_GATE_TIMEZONE_INDEX));
+		} else {
+			mGateNameEditText.setText(gate.getName());
+			mGateIdTextView.setText(gate.getId());
 
-		public MyTimeZone(String name, int offsetInMinutes) {
-			this.name = name;
-			this.offsetInMinutes = offsetInMinutes;
-		}
-
-		@Override
-		public String toString() {
-			return name;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (o instanceof MyTimeZone) {
-				return this.name.equals(((MyTimeZone) o).name);
-			} else
-				return false;
+			int index = mTimezones.indexOf(TimezoneWrapper.getZoneByOffset(gate.getUtcOffsetMillis()));
+			mTimezoneSpinner.setSelection(index != -1 ? index : 0);
 		}
 	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+
+		String gateName = mGateNameEditText.getText().toString();
+		outState.putString(KEY_GATE_NAME, gateName);
+
+		outState.putInt(KEY_GATE_TIMEZONE_INDEX, mTimezoneSpinner.getSelectedItemPosition());
+	}
+
+	public Gate getNewGate() {
+		View view = getView();
+		if (view == null)
+			return null;
+
+		Gate gate = new Gate();
+		gate.setId(mGateId);
+
+		String newGateName = ((TextView) view.findViewById(R.id.fragment_gate_edit_text)).getText().toString();
+		gate.setName(newGateName);
+
+		Spinner spinner = (Spinner) getView().findViewById(R.id.fragment_gate_edit_spinner);
+		TimezoneWrapper timezone = (TimezoneWrapper) spinner.getSelectedItem();
+		gate.setUtcOffset(timezone.offsetInMinutes);
+
+		return gate;
+	}
+
 }

@@ -302,10 +302,12 @@ public class DemoNetwork implements INetwork {
 	public boolean updateGate(Gate gate) {
 		String gateId = gate.getId();
 
-		if(!mGates.hasObject(gateId))
+		Gate oldGate = mGates.getObject(gateId);
+		if (oldGate == null)
 			return false;
 
-		mGates.addObject(gate);
+		oldGate.setName(gate.getName());
+		oldGate.setUtcOffsetMillis(gate.getUtcOffsetMillis());
 		return true;
 	}
 

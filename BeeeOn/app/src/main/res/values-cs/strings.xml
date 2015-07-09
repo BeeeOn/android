@@ -102,7 +102,7 @@
     <string name="toast_no_adapter">Nemáte žádnou registrovanou bránu</string>
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všech zařízení</string>
-    <string name="toast_wrong_or_no_device">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
+    <string name="toast_not_specified_gate_or_module">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
     <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádné neinicializované zařízení</string>
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>

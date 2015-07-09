@@ -20,8 +20,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
-
-import org.joda.time.DateTimeZone;
+import com.rehivetech.beeeon.util.TimezoneWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.List;
  * Created by david on 23.6.15.
  */
 public class GateDetailFragment extends Fragment {
-	private static final String EXTRA_GATE_ID = "gate_id";
+	private static final String KEY_GATE_ID = "gate_id";
 
 	private String mGateId;
 
@@ -45,7 +44,7 @@ public class GateDetailFragment extends Fragment {
 	public static GateDetailFragment newInstance(String gateId) {
 		GateDetailFragment gateDetailFragment = new GateDetailFragment();
 		Bundle args = new Bundle();
-		args.putString(EXTRA_GATE_ID, gateId);
+		args.putString(KEY_GATE_ID, gateId);
 		gateDetailFragment.setArguments(args);
 		return gateDetailFragment;
 	}
@@ -63,7 +62,7 @@ public class GateDetailFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mGateId = getArguments().getString(EXTRA_GATE_ID);
+		mGateId = getArguments().getString(KEY_GATE_ID);
 	}
 
 	@Nullable
@@ -130,7 +129,7 @@ public class GateDetailFragment extends Fragment {
 
 		mDetailsItemList.get(0).text = gate.getId();
 		mDetailsItemList.get(1).text = gate.getRole().toString();
-		mDetailsItemList.get(2).text = DateTimeZone.forOffsetMillis(gate.getUtcOffsetMillis()).toTimeZone().getDisplayName();
+		mDetailsItemList.get(2).text = TimezoneWrapper.getZoneByOffset(gate.getUtcOffsetMillis()).toString();
 
 		List<User> gateUsers = controller.getUsersModel().getUsersByGate(mGateId);
 		DetailsItem usersDetailsItem = mDetailsItemList.get(3);
@@ -179,10 +178,12 @@ public class GateDetailFragment extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// Get the data item for this position
 			DetailsItem detailsItem = getItem(position);
+
 			// Check if an existing view is being reused, otherwise inflate the view
 			if (convertView == null) {
 				convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_list_item_layout, parent, false);
 			}
+
 			// Lookup view for data population
 			ImageView image = (ImageView) convertView.findViewById(R.id.simple_list_layout_icon);
 			TextView text = (TextView) convertView.findViewById(R.id.simple_list_layout_text);
@@ -193,7 +194,6 @@ public class GateDetailFragment extends Fragment {
 			image.setImageResource(detailsItem.imageRes);
 			text.setText(detailsItem.text);
 			title.setText(detailsItem.titleRes);
-
 
 			button.setVisibility(detailsItem.buttonClickListener != null ? View.VISIBLE : View.INVISIBLE);
 			button.setEnabled(detailsItem.buttonEnabled);

@@ -20,7 +20,7 @@
     <string name="title_activity_widget_configuration">Widget Configuration</string>
     <string name="title_activity_location_detail_screen">Location Detail</string>
     <string name="title_activity_map_geofence">Geofence areas</string>
-    <string name="title_activity_gate_users">Users of gateway</string>
+    <string name="title_activity_gate_users">Manage users</string>
     <string name="title_activity_add_adapter_user">Add New User</string>
     <string name="title_activity_setup_sensor">Device Setup</string>
 	<string name="title_activity_achievement_overview">Achievement overview</string>
@@ -111,7 +111,7 @@
     <string name="toast_no_adapter">You have no registered gateway</string>
     <string name="toast_ignore_uninitialized_info">You can add these modules later by clicking on (+)</string>
     <string name="toast_empty_sensor_name">Please fill names of all modules</string>
-    <string name="toast_wrong_or_no_device">Wrong or no module selected</string>
+    <string name="toast_not_specified_gate_or_module">Not specified gateway or module</string>
     <string name="toast_no_uninitialized_devices">There are no uninitialized modules</string>
     <string name="toast_success_save_data">Data saved successfully</string>
     <string name="toast_fail_save_data">Failed saving data</string>
@@ -122,6 +122,7 @@
     <string name="toast_error_no_qr_reader">You don\'t have QR scanner installed</string>
     <string name="toast_error_no_google_play">Failed to open Google Play</string>
     <string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
+    <string name="toast_not_specified_gate">Not specified Gateway</string>
 
     <!-- Progress -->
 	<string name="progress_signing">Logging in&#8230;</string>
@@ -321,8 +322,8 @@
     <string name="adapter_default_name">%1$s\'s gateway #%2$d</string>
     <string name="settings">Settings</string>
     <string name="save">Save</string>
-    <string name="ada_menu_edit">Edit gateway name</string>
-    <string name="ada_menu_users">Users of gateway</string>
+    <string name="ada_menu_edit">Edit gateway</string>
+    <string name="ada_menu_users">Manage users</string>
     <string name="ada_menu_del">Remove gateway</string>
     <string name="sensor_menu_del">Remove module</string>
     <string name="adausr_menu_edit">Edit user</string>
@@ -384,7 +385,7 @@
 	<string name="watchdog_no_valid_item">No valid item to check</string>
     <string name="multiadapter_no_item">- Nothing to select -</string>
 
-	<string name="title_activity_module_edit">Device Edit</string>
+	<string name="title_activity_module_edit">Edit device</string>
 	<string name="sensor_name_label">Name of module</string>
 
 	<string name="dialog_register_new_account_title">No account</string>
@@ -443,7 +444,7 @@
     <string name="interval_daily">Daily</string>
     <string name="interval_monthly">Monthly</string>
 
-    <string name="title_activity_gate_edit">Gate edit</string>
+    <string name="title_activity_gate_edit">Edit gateway</string>
     <string name="fragment_gate_edit_gate_name">Gate name</string>
     <string name="fragment_gate_details_gate_id">Gate Id</string>
     <string name="fragment_gate_edit_gate_id_read_only">Gate Id (read-only)</string>
@@ -461,6 +462,6 @@
     <string name="gate_detail_num_of_devices">Number of devices</string>
     <string name="reloading_gate_data_not_successful">Reloading gate data not successful</string>
     <string name="gate_no_name">No name</string>
-    <string name="update_gateway">Update gateway</string>
+    <string name="update_gateway">Edit gateway</string>
     <string name="layout_simple_list_button_text">Details</string>
 </resources>

@@ -91,10 +91,14 @@ public class Gate implements INameIdentifier {
 	/**
 	 * Setting UTC offset of gate
 	 *
-	 * @param utcOffsetInMinutes
+	 * @param offsetInMinutes
 	 */
 	public void setUtcOffset(int offsetInMinutes) {
 		mUtcOffsetMillis = offsetInMinutes * 60 * 1000;
+	}
+
+	public void setUtcOffsetMillis(int utcOffsetMillis) {
+		mUtcOffsetMillis = utcOffsetMillis;
 	}
 
 	/**
@@ -105,5 +109,4 @@ public class Gate implements INameIdentifier {
 	public int getUtcOffsetMillis() {
 		return mUtcOffsetMillis;
 	}
-
 }

@@ -52,7 +52,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		if (mGateId == null) {
-			Toast.makeText(this, "Gate ID is null :/", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.toast_not_specified_gate, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
@@ -109,7 +109,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			}
 			case R.id.ada_menu_edit: {
 				Intent intent = new Intent(this, GateEditActivity.class);
-				intent.putExtra(Constants.GUI_EDIT_GATE_ID, mGateId);
+				intent.putExtra(GateEditActivity.EXTRA_GATE_ID, mGateId);
 				startActivity(intent);
 				break;
 			}
