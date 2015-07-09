@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.GateDetailActivity;
 import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
@@ -419,7 +420,12 @@ public class NavDrawerMenu {
 				Intent intent = new Intent(mActivity, GateEditActivity.class);
 				intent.putExtra(Constants.GUI_EDIT_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
+			} else if (item.getItemId() == R.id.ada_menu_details) {
+				Intent intent = new Intent(mActivity, GateDetailActivity.class);
+				intent.putExtra("GATE_ID", mSelectedMenuItem.getId());
+				mActivity.startActivity(intent);
 			}
+
 
 			mode.finish();
 			return true;

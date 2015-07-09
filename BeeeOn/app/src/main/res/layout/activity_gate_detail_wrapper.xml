@@ -3,14 +3,13 @@
 			  android:orientation="vertical"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
+
 	<include layout="@layout/beeeon_toolbar"/>
-	<ScrollView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-		<FrameLayout
-			android:id="@+id/container"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
-	</ScrollView>
+
+	<FrameLayout
+		android:id="@+id/container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

@@ -161,6 +161,9 @@
 			android:name=".gui.activity.ModuleEditActivity"
 			android:label="@string/title_activity_module_edit"/>
 		<activity
+			android:name=".gui.activity.GateDetailActivity"
+			android:label="@string/title_activity_gate_detail"/>
+		<activity
 			android:name=".gui.activity.IntroActivity"
 			android:label="@string/app_name"/>
 		<!-- Facebook login screen -->

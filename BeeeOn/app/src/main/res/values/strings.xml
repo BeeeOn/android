@@ -451,5 +451,14 @@
     <string name="edit_gate_success">The gate was edited successfully</string>
     <string name="edit_gate_failure">The gate was not edited successfully</string>
     <string name="delete_gate_failure">Gateway was not removed successsfully</string>
-	<string name="title_activity_gate_detail">Gate Detail</string>
+	<string name="title_activity_gate_detail">Gate Details</string>
+    <string name="gate_detail_title">Details</string>
+    <string name="gate_name">Gate name</string>
+    <string name="gate_id">Gate id</string>
+    <string name="gate_detail_your_role">Your role</string>
+    <string name="gate_detail_user">User</string>
+    <string name="time_zone">Time zone</string>
+    <string name="toast_not_users_found">No users found</string>
+    <string name="gate_detail_num_of_users">Number of users</string>
+    <string name="gate_detail_num_of_devices">Number of devices</string>
 </resources>
