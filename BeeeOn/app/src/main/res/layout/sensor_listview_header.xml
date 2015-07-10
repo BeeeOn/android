@@ -13,7 +13,6 @@
 		android:layout_marginStart="16dp"
 		android:textColor="@color/beeeon_text_hint"
 		android:layout_gravity="center_vertical"
-		android:textSize="@dimen/textsize_body"
-		android:textStyle="bold"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 		/>
 </LinearLayout>

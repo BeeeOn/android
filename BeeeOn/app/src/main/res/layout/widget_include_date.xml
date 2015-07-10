@@ -12,14 +12,14 @@
 		android:text="PO"
 		android:textAllCaps="true"
 		android:textColor="@color/beeeon_secundary_pink"
-		android:textSize="@dimen/textsize_body"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		/>
 
 	<TextView
 		android:id="@+id/date"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="@dimen/textsize_body"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:text="03.02.2015"
 		android:textStyle="bold"
 		android:textColor="@color/beeeon_secundary_pink"

@@ -23,7 +23,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textColor="@color/beeeon_text_color"
-		android:textSize="@dimen/textsize_body"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:layout_centerVertical="true"
 		android:layout_toRightOf="@+id/custom_spinner_icon"
 		android:layout_toEndOf="@+id/custom_spinner_icon"

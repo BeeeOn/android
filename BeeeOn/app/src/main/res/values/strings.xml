@@ -2,6 +2,7 @@
 <resources>
     <string name="blank" translatable="false" />
     <string name="demo_mode">DEMO MODE</string>
+    <string name="demo_mode_email" translatable="false">demo@beeeon.com</string>
 
     <string name="sufix_default"> (default)</string>
 

@@ -44,7 +44,7 @@
 			android:layout_height="wrap_content"
 			android:singleLine="true"
 			android:ellipsize="end"
-			android:textSize="@dimen/textsize_body"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 			android:layout_marginTop="-4dp"
 			android:textColor="@color/beeeon_primary_cyan"
 			android:text="@string/placeholder_none"
@@ -61,8 +61,7 @@
 				android:id="@+id/widget_clock_weather_temperature"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:textStyle="bold"
-				android:textSize="@dimen/textsize_body"
+				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 				android:textColor="@color/beeeon_secundary_pink"
 				/>
 
@@ -94,7 +93,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/household"
-		android:textSize="@dimen/textsize_body"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:singleLine="true"
 		android:ellipsize="end"
 		android:textColor="@color/beeeon_primary_cyan"

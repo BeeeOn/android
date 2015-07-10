@@ -9,7 +9,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="72dp"
 		android:singleLine="true"
-		android:textSize="@dimen/textsize_headline"
+		android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 		android:textColor="@color/white"
 		android:gravity="center_vertical"
 		android:background="@color/beeeon_primary_cyan"

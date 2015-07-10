@@ -50,7 +50,7 @@
                 android:singleLine="true"
                 android:text="@string/placeholder_none"
                 android:textColor="@color/white"
-                android:textSize="@dimen/textsize_caption"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textStyle="bold"
                 />
 
@@ -93,7 +93,7 @@
             android:background="@drawable/widget_bg"
             android:textStyle="bold"
             android:text="@string/widget_location_list_empty"
-            android:textSize="@dimen/textsize_caption"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:layout_below="@id/widget_header"
             android:layout_alignRight="@+id/widget_sensor_list_view"
             android:layout_alignLeft="@+id/widget_sensor_list_view"

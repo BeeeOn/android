@@ -3,18 +3,20 @@ package com.rehivetech.beeeon.gui.menu;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -67,7 +69,7 @@ public class NavDrawerMenu {
 	//
 	private ActionMode mMode;
 	private IMenuItem mSelectedMenuItem;
-	private RelativeLayout mDrawerRelLay;
+	private NavigationView mNavigationView;
 
 
 	public NavDrawerMenu(MainActivity activity, Toolbar toolbar) {
@@ -86,8 +88,8 @@ public class NavDrawerMenu {
 		mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
 		// Locate ListView in activity_location_screen.xml
 		mDrawerList = (StickyListHeadersListView) mActivity.findViewById(R.id.listview_drawer);
-		// Locate relative layout
-		mDrawerRelLay = (RelativeLayout) mActivity.findViewById(R.id.relative_layout_drawer);
+		// Locate navigationView layout
+		mNavigationView = (NavigationView) mActivity.findViewById(R.id.relative_layout_drawer);
 	}
 
 	private void settingsMenu() {
@@ -173,12 +175,20 @@ public class NavDrawerMenu {
 				Gate gate = Controller.getInstance(mActivity).getActiveGate();
 
 				if (gate != null && mActiveItem != null) {
-					if (mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
-					} else if (mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)) {
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_dashboard));
-					} else if (mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
+
+					ActionBar actionBar = mActivity.getSupportActionBar();
+					if (actionBar != null) {
+						switch (mActiveItem) {
+							case Constants.GUI_MENU_CONTROL:
+								actionBar.setTitle(mActivity.getString(R.string.menu_control));
+								break;
+							case Constants.GUI_MENU_DASHBOARD:
+								actionBar.setTitle(mActivity.getString(R.string.menu_dashboard));
+								break;
+							case Constants.GUI_MENU_WATCHDOG:
+								actionBar.setTitle(mActivity.getString(R.string.menu_watchdog));
+								break;
+						}
 					}
 				} else {
 					setDefaultTitle();
@@ -190,7 +200,8 @@ public class NavDrawerMenu {
 
 			public void onDrawerOpened(View drawerView) {
 				// Set the title on the action when drawer open
-				mActivity.getSupportActionBar().setTitle(mDrawerTitle);
+				if (mActivity.getSupportActionBar() != null)
+					mActivity.getSupportActionBar().setTitle(mDrawerTitle);
 				super.onDrawerOpened(drawerView);
 			}
 		};
@@ -202,15 +213,15 @@ public class NavDrawerMenu {
 	}
 
 	public void openMenu() {
-		mDrawerLayout.openDrawer(mDrawerRelLay);
+		mDrawerLayout.openDrawer(mNavigationView);
 	}
 
 	public void closeMenu() {
-		mDrawerLayout.closeDrawer(mDrawerRelLay);
+		mDrawerLayout.closeDrawer(mNavigationView);
 	}
 
 	public boolean isMenuOpened() {
-		return mDrawerLayout.isDrawerVisible(mDrawerRelLay);
+		return mDrawerLayout.isDrawerVisible(mNavigationView);
 	}
 
 	public void redrawMenu() {
@@ -220,12 +231,18 @@ public class NavDrawerMenu {
 		Gate gate = Controller.getInstance(mActivity).getActiveGate();
 
 		if (gate != null && mActiveItem != null) {
-			if (mActiveItem.equals(Constants.GUI_MENU_CONTROL)) {
-				mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
-			} else if (mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)) {
-				mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_dashboard));
-			} else if (mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)) {
-				mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
+			if (mActivity.getSupportActionBar() != null) {
+				switch (mActiveItem) {
+					case Constants.GUI_MENU_CONTROL:
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
+						break;
+					case Constants.GUI_MENU_DASHBOARD:
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_dashboard));
+						break;
+					case Constants.GUI_MENU_WATCHDOG:
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
+						break;
+				}
 			}
 		} else {
 			setDefaultTitle();
@@ -302,13 +319,13 @@ public class NavDrawerMenu {
 
 			// MANAGMENT
 			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_managment)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.ic_overview, false, Constants.GUI_MENU_CONTROL, (mActiveItem != null) ? mActiveItem.equals(Constants.GUI_MENU_CONTROL) : true));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard), R.drawable.ic_dashboard, false, Constants.GUI_MENU_DASHBOARD, (mActiveItem != null) ? mActiveItem.equals(Constants.GUI_MENU_DASHBOARD) : false));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.ic_menu_overview, R.drawable.ic_menu_overview_active, false, Constants.GUI_MENU_CONTROL, (mActiveItem == null) || mActiveItem.equals(Constants.GUI_MENU_CONTROL)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard), R.drawable.ic_menu_dashboard, R.drawable.ic_menu_dashboard_active, false, Constants.GUI_MENU_DASHBOARD, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)));
 
 			mMenuAdapter.addItem(new SeparatorMenuItem());
 			// APPLICATIONS
 			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_applications)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_app_watchdog, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null) ? mActiveItem.equals(Constants.GUI_MENU_WATCHDOG) : false));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_menu_watchdog, R.drawable.ic_menu_watchdog_active, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)));
 
 		} else {
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_gates)));
@@ -319,9 +336,9 @@ public class NavDrawerMenu {
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding settings, about etc.
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), R.drawable.settings, IMenuItem.ID_SETTINGS));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), R.drawable.info, IMenuItem.ID_ABOUT));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), R.drawable.logout, IMenuItem.ID_LOGOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), IMenuItem.ID_SETTINGS));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), IMenuItem.ID_ABOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), IMenuItem.ID_LOGOUT));
 		return mMenuAdapter;
 	}
 
