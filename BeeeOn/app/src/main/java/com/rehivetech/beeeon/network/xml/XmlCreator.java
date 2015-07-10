@@ -270,19 +270,6 @@ public class XmlCreator {
 	}
 
 	/**
-	 * Method create XML for ReInit message
-	 *
-	 * @param bt        userID of user
-	 * @param gateIdOld old id of gate
-	 * @param gateIdNew new id of gate
-	 * @return ReInit message
-	 * @since 2.2
-	 */
-	public static String createReInitGate(String bt, String gateIdOld, String gateIdNew) {
-		return createComAttribsVariant(Xconstants.STATE, REINITGATE, Xconstants.BT, bt, Xconstants.OLDID, gateIdOld, Xconstants.NEWID, gateIdNew);
-	}
-
-	/**
 	 * Method create message for removing actual user from adapter
 	 * @param bt beeeon Token (session Id)
 	 * @param aid gate Id
@@ -704,33 +691,6 @@ public class XmlCreator {
 	 */
 	public static String createGetAccounts(String bt, String aid) {
 		return createComAttribsVariant(Xconstants.STATE, GETACCOUNTS, Xconstants.BT, bt, Xconstants.AID, aid);
-	}
-
-	// /////////////////////////////////////TIME///////////////////////////////////////////////////////
-
-	/**
-	 * Method create XML of SetTimeZone message
-	 *
-	 * @param bt              userID of user
-	 * @param aid             gateId of actual gate
-	 * @param offsetInMinutes difference to GMT (Xconstants.UTC+0)
-	 * @return SetTimeZone message
-	 * @since 2.2
-	 */
-	public static String createSetTimeZone(String bt, String aid, int offsetInMinutes) {
-		return createComAttribsVariant(Xconstants.STATE, SETTIMEZONE, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.UTC, Integer.toString(offsetInMinutes));
-	}
-
-	/**
-	 * Method create XML of GetTimeZone message
-	 *
-	 * @param bt  userID of user
-	 * @param aid gateId of actual gate
-	 * @return GetTimeZone message
-	 * @since 2.2
-	 */
-	public static String createGetTimeZone(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETTIMEZONE, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
 	// /////////////////////////////////////LOCALE/////////////////////////////////////////////////////

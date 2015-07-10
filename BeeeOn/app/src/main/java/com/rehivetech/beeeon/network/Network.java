@@ -293,11 +293,8 @@ public class Network implements INetwork {
 		if (checkBT && !hasBT())
 			throw new AppException(NetworkError.BAD_BT);
 
-		// ParsedMessage msg = null;
-		// Debug.startMethodTracing("Support_231");
-		// long ltime = new Date().getTime();
 		try {
-			Log.d(TAG + " fromApp >>", messageToSend);
+			Log.i(TAG + " fromApp >>", messageToSend);
 			String result = startCommunication(messageToSend);
 			Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
 
@@ -319,11 +316,7 @@ public class Network implements INetwork {
 			return new XmlParsers().parseCommunication(result, false);
 		} catch (IOException | XmlPullParserException | ParseException e) {
 			throw AppException.wrap(e, ClientError.XML);
-		} /*finally {
-			// Debug.stopMethodTracing();
-			// ltime = new Date().getTime() - ltime;
-			// android.util.Log.d("Support_231", ltime+"");
-		}*/
+		}
 	}
 
 	/**
@@ -480,16 +473,6 @@ public class Network implements INetwork {
 
 		if (msg.getState() == State.ALLDEVICES)
 			return (ArrayList<Device>) msg.data;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public boolean reInitGate(String oldId, String newId) {
-		ParsedMessage msg = doRequest(XmlCreator.createReInitGate(mBT, oldId, newId));
-
-		if (msg.getState() == State.TRUE)
-			return true;
 
 		throw processFalse(msg);
 	}
@@ -757,27 +740,6 @@ public class Network implements INetwork {
 		return updateAccounts(gateId, list);
 	}
 
-	// /////////////////////////////////////TIME////////////////////////////////////////
-
-	public boolean setTimeZone(String gateId, int offsetInMinutes) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mBT, gateId, offsetInMinutes));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public int getTimeZone(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mBT, gateId));
-
-		if (msg.getState() == State.TIMEZONE)
-			return (Integer) msg.data;
-
-		throw processFalse(msg);
-	}
-
 	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
 
 	/**
@@ -821,11 +783,7 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * TODO: method need to be checked online
-	 *
-	 * @return
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<VisibleNotification> getNotifications() {
 		ParsedMessage msg = doRequest(XmlCreator.createGetNotifications(mBT));

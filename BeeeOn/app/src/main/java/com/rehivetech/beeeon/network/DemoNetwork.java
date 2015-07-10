@@ -284,12 +284,6 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean reInitGate(String oldId, String newId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean updateGate(Gate gate) {
 		String gateId = gate.getId();
 
@@ -300,6 +294,11 @@ public class DemoNetwork implements INetwork {
 		oldGate.setName(gate.getName());
 		oldGate.setUtcOffsetMillis(gate.getUtcOffsetMillis());
 		return true;
+	}
+
+	@Override
+	public boolean deleteGate(String gateId) {
+		return mGates.removeObject(gateId) != null;
 	}
 
 	@Override
@@ -668,29 +667,6 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean setTimeZone(String gateId, int offsetInMinutes) {
-		Gate gate = mGates.getObject(gateId);
-
-		if (gate == null) {
-			return false;
-		}
-
-		gate.setUtcOffset(offsetInMinutes);
-		return true;
-	}
-
-	@Override
-	public int getTimeZone(String gateId) {
-		Gate gate = mGates.getObject(gateId);
-
-		if (gate == null) {
-			return 0;
-		}
-
-		return gate.getUtcOffsetMillis() / (60 * 1000);
-	}
-
-	@Override
 	public boolean NotificationsRead(ArrayList<String> msgID) {
 		// TODO Auto-generated method stub
 		return false;
@@ -752,8 +728,4 @@ public class DemoNetwork implements INetwork {
 		return true;
 	}
 
-	@Override
-	public boolean deleteGate(String gateId) {
-		return mGates.removeObject(gateId) != null;
-	}
 }

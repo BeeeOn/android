@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.network;
 
-import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -17,26 +16,6 @@ import java.util.EnumSet;
 import java.util.List;
 
 public interface INetwork {
-
-	/**
-	 * Action of View messages
-	 *
-	 * @author ThinkDeep
-	 */
-	enum NetworkAction implements IIdentifier {
-		REMOVE("0"), //
-		ADD("1");
-
-		private final String mAction;
-
-		NetworkAction(String action) {
-			mAction = action;
-		}
-
-		public String getId() {
-			return mAction;
-		}
-	}
 
 	/**
 	 * Checks if Internet connection is available.
@@ -70,6 +49,11 @@ public interface INetwork {
 	 */
 	boolean hasBT();
 
+	/**
+	 * Logouts actual user, i.e. invalidate beeeon-token of actual user on server.
+	 *
+	 * @return
+	 */
 	boolean logout();
 
 	/**
@@ -121,11 +105,11 @@ public interface INetwork {
 	/**
 	 * Method register gate to server
 	 *
-	 * @param gateID   gate id
+	 * @param gateId   gate id
 	 * @param gateName gate name
 	 * @return true if gate has been registered, false otherwise
 	 */
-	boolean addGate(String gateID, String gateName);
+	boolean addGate(String gateId, String gateName);
 
 	/**
 	 * Method ask for list of gates. User has to be sign in before
@@ -137,19 +121,10 @@ public interface INetwork {
 	/**
 	 * Method ask for whole gate data
 	 *
-	 * @param gateID of wanted gate
+	 * @param gateId of wanted gate
 	 * @return Gate
 	 */
-	List<Device> initGate(String gateID);
-
-	/**
-	 * Method change gate id
-	 *
-	 * @param oldId id to be changed
-	 * @param newId new id
-	 * @return true if change has been successfully
-	 */
-	boolean reInitGate(String oldId, String newId);
+	List<Device> initGate(String gateId);
 
 	/**
 	 * Method edits gate's name and timezone
@@ -163,7 +138,7 @@ public interface INetwork {
 	 * @param gateId
 	 * @return
 	 */
-	public boolean deleteGate(String gateId);
+	boolean deleteGate(String gateId);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
@@ -174,35 +149,35 @@ public interface INetwork {
 	 *
 	 * @return true if everything goes well, false otherwise
 	 */
-	boolean updateDevices(String gateID, List<Device> devices, EnumSet<SaveModule> toSave);
+	boolean updateDevices(String gateId, List<Device> devices, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method send wanted fields of module to server
 	 *
-	 * @param gateID id of gate
+	 * @param gateId id of gate
 	 * @param module to save
 	 * @param toSave ENUMSET specified fields to save
 	 * @return true if fields has been updated, false otherwise
 	 */
-	boolean updateModule(String gateID, Module module, EnumSet<SaveModule> toSave);
+	boolean updateModule(String gateId, Module module, EnumSet<SaveModule> toSave);
 
 	/**
 	 * Method toggle or set actor to new value
 	 *
-	 * @param gateID
+	 * @param gateId
 	 * @param module
 	 * @return
 	 */
-	boolean switchState(String gateID, Module module);
+	boolean switchState(String gateId, Module module);
 
 	/**
 	 * Method make gate to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
 	 * shaken to connect
 	 *
-	 * @param gateID
+	 * @param gateId
 	 * @return
 	 */
-	boolean prepareGateToListenNewSensors(String gateID);
+	boolean prepareGateToListenNewSensors(String gateId);
 
 	/**
 	 * Method delete mDevice from server
@@ -228,15 +203,15 @@ public interface INetwork {
 	 */
 	Device getDevice(Device device);
 
-	boolean updateDevice(String gateID, Device device, EnumSet<SaveModule> toSave);
+	boolean updateDevice(String gateId, Device device, EnumSet<SaveModule> toSave);
 
 	/**
-	 * TODO: need to test
+	 * Method ask server for uninitialized (new) devices
 	 *
-	 * @param gateID
+	 * @param gateId
 	 * @return
 	 */
-	List<Device> getNewDevices(String gateID);
+	List<Device> getNewDevices(String gateId);
 
 	/**
 	 * Method ask for data of logs
@@ -244,7 +219,7 @@ public interface INetwork {
 	 * @param pair data of log (from, to, type, interval)
 	 * @return list of rows with logged data
 	 */
-	ModuleLog getLog(String gateID, Module module, ModuleLog.DataPair pair);
+	ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ROOMS///////////////////////////////////////
@@ -255,7 +230,7 @@ public interface INetwork {
 	 *
 	 * @return List with locations
 	 */
-	List<Location> getLocations(String gateID);
+	List<Location> getLocations(String gateId);
 
 	/**
 	 * Method call to server to update location
@@ -263,7 +238,7 @@ public interface INetwork {
 	 * @param locations to update
 	 * @return true if everything is OK, false otherwise
 	 */
-	boolean updateLocations(String gateID, List<Location> locations);
+	boolean updateLocations(String gateId, List<Location> locations);
 
 	/**
 	 * Method call to server to update location
@@ -287,15 +262,15 @@ public interface INetwork {
 	// /////////////////////////////////////ACCOUNTS////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
-	boolean addAccounts(String gateID, ArrayList<User> users);
+	boolean addAccounts(String gateId, ArrayList<User> users);
 
 	/**
 	 * Method add new user to gate
 	 *
-	 * @param gateID
+	 * @param gateId
 	 * @return
 	 */
-	boolean addAccount(String gateID, User user);
+	boolean addAccount(String gateId, User user);
 
 	/**
 	 * Method delete users from actual gate
@@ -303,23 +278,23 @@ public interface INetwork {
 	 * @param users email of user
 	 * @return true if all users has been deleted, false otherwise
 	 */
-	boolean deleteAccounts(String gateID, List<User> users);
+	boolean deleteAccounts(String gateId, List<User> users);
 
 	/**
 	 * Method delete on user from gate
 	 *
-	 * @param gateID
+	 * @param gateId
 	 * @param user
 	 * @return
 	 */
-	boolean deleteAccount(String gateID, User user);
+	boolean deleteAccount(String gateId, User user);
 
 	/**
 	 * Method ask for list of users of current gate
 	 *
 	 * @return Map of users where key is email and value is User object
 	 */
-	List<User> getAccounts(String gateID);
+	List<User> getAccounts(String gateId);
 
 	/**
 	 * Method update users roles on server on current gate
@@ -328,35 +303,16 @@ public interface INetwork {
 	 *
 	 * @return true if all accounts has been changed false otherwise
 	 */
-	boolean updateAccounts(String gateID, ArrayList<User> users);
+	boolean updateAccounts(String gateId, ArrayList<User> users);
 
 	/**
 	 * Method update users role on gate
 	 *
-	 * @param gateID
+	 * @param gateId
 	 * @param user
 	 * @return
 	 */
-	boolean updateAccount(String gateID, User user);
-
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////TIME////////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * Method set wanted time zone to server
-	 *
-	 * @param offsetInMinutes - difference from GMT (UTC+0)
-	 * @return
-	 */
-	boolean setTimeZone(String gateID, int offsetInMinutes);
-
-	/**
-	 * Method call to server to get actual time zone
-	 *
-	 * @return integer in range <-12,12>
-	 */
-	int getTimeZone(String gateID);
+	boolean updateAccount(String gateId, User user);
 
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
