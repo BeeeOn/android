@@ -467,9 +467,6 @@ final public class Utils {
 		return Color.argb(alpha, red, green, blue);
 	}
 
-}
-
-
 	/**
 	 * Enum for validation types
 	 */

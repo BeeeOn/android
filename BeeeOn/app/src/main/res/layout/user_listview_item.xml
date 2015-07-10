@@ -54,7 +54,7 @@
 	<View
 		android:layout_width="match_parent"
 		android:layout_height="1px"
-		android:background="@color/beeeon_separator"
+		android:background="@color/beeeon_divider"
 		android:layout_alignParentBottom="true"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"

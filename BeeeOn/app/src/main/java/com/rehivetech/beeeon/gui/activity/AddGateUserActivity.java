@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.avast.android.dialogs.fragment.SimpleDialogFragment;
+import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -27,13 +29,15 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddGateUserActivity extends BaseApplicationActivity {
+public class AddGateUserActivity extends BaseApplicationActivity implements IPositiveButtonDialogListener {
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 
 	protected static final String TAG = "AddGateUserActivity";
 
 	private Gate mGate;
+	private User mNewUser;
+	private User.Role mNewRole;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,35 +79,31 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 			@Override
 			public void onClick(View v) {
 				// check if email is set && valid
-				if(!Utils.validateInput(AddGateUserActivity.this, email, Utils.ValidationType.EMAIL)){
+				if (!Utils.validateInput(AddGateUserActivity.this, email, Utils.ValidationType.EMAIL)) {
 					return;
 				}
 
 				// create temporary user with email
-				final User newUser = new User();
-				newUser.setEmail(email.getText().toString());
+				mNewUser = new User();
+				mNewUser.setEmail(email.getText().toString());
 
 				// get user's role
-				User.Role newRole = User.Role.values()[role.getSelectedItemPosition()];
+				mNewRole = User.Role.values()[role.getSelectedItemPosition()];
 
 				// if superuser -- need to show dialog to confirm
-				if (newRole == User.Role.Superuser) {
-					ConfirmDialog.confirm(
-							AddGateUserActivity.this,
-							getString(R.string.confirm_add_owner_title),
-							getString(R.string.confirm_add_owner_message, email.getText()),
-							R.string.button_add_user_confirm,
-							new ConfirmDialog.ConfirmDialogListener() {
-								@Override
-								public void onConfirm() {
-									newUser.setRole(User.Role.Superuser);
-									doAddGateUserTask(newUser);
-								}
-							}
-					);
+				if (mNewRole == User.Role.Superuser) {
+					SimpleDialogFragment
+							.createBuilder(AddGateUserActivity.this, getSupportFragmentManager())
+							.setTitle(R.string.confirm_add_owner_title)
+							.setMessage(R.string.confirm_add_owner_message, email.getText())
+							.setPositiveButtonText(R.string.button_add_user_confirm)
+							.setNegativeButtonText(R.string.notification_cancel)
+							.show();
 				} else {
-					newUser.setRole(newRole);
-					doAddGateUserTask(newUser);
+					mNewUser.setRole(mNewRole);
+					doAddGateUserTask(mNewUser);
+					mNewUser = null;
+					mNewRole = null;
 				}
 			}
 		});
@@ -136,4 +136,11 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onPositiveButtonClicked(int i) {
+		mNewUser.setRole(User.Role.Superuser);
+		doAddGateUserTask(mNewUser);
+		mNewUser = null;
+		mNewRole = null;
+	}
 }

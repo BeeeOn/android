@@ -41,6 +41,7 @@ import java.util.List;
 public class GateUsersActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 
 	public static final String EXTRA_GATE_ID = "gate_id";
+	private static final int ROLE_RADIO_MARGIN = 16;
 
 	private Gate mGate;
 	private List<User> mGateUsers;
