@@ -28,8 +28,9 @@ public class GateMenuItem extends AbstractMenuItem {
 		roleView.setText(mRole);
 		if (mIsChosen) {
 			radioButton.setChecked(true);
-			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary));
-			view.setBackgroundColor(view.getResources().getColor(R.color.gray_light));
+			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_accent));
+			roleView.setTextColor(view.getResources().getColor(R.color.beeeon_accent_light));
+			//view.setBackgroundColor(view.getResources().getColor(R.color.gray_light));
 		} else {
 			radioButton.setChecked(false);
 		}

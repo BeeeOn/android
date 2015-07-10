@@ -119,7 +119,7 @@
 			android:layout_marginLeft="16dp"
 			fab:fab_colorNormal="@color/beeeon_accent"
 			fab:fab_type="mini"
-			fab:fab_colorPressed="@color/beeeon_accent_pressed"
+			fab:fab_colorPressed="@color/beeeon_accent_light"
 			fab:fab_colorRipple="@color/beeeon_accent"
 			android:visibility="invisible"/>
 		<!-- CONTENT - LOCATION, REFRESH TIME -->
