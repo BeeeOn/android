@@ -373,6 +373,7 @@
 	<string name="delete_geofence">Odstranit oblast</string>
 	<string name="modules">Zařízení</string>
 	<string name="name">Název</string>
+	<string name="confirm_remove_watchdog_message">Prosím potvrďte odstranění pravidla</string>
 	<string name="title_activity_module_edit">Úprava zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název brány</string>
 	<string name="addadapter_fill_code">Vyplňte kód</string>
@@ -446,5 +447,6 @@
     <string name="fragment_gate_details_gate_id">ID brány</string>
     <string name="fragment_gate_edit_gate_id_read_only">ID brány (pouze ke čtení)</string>
     <string name="title_activity_gate_edit">Úprava brány</string>
+    <string name="toast_field_must_be_email">Pole musí být platná e-mailová adresa!</string>
 
 </resources>

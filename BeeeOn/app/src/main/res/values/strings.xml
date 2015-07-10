@@ -137,6 +137,7 @@
 	<string name="toast_achievement_title">Achievement unlocked!</string>
     <string name="toast_field_must_be_filled">This field must be filled!</string>
     <string name="toast_field_must_be_number">This field must be number!</string>
+	<string name="toast_field_must_be_email">This field must be valid e-mail address!</string>
     <string name="toast_error_no_qr_reader">You don\'t have QR scanner installed</string>
     <string name="toast_error_no_google_play">Failed to open Google Play</string>
     <string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>

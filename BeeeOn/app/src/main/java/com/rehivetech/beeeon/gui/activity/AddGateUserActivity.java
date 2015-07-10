@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.AddUserTask;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +47,10 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 		}
 
 		ActionBar actionBar = getSupportActionBar();
-
 		if (actionBar != null) {
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 
 		// Get selected gate
@@ -63,12 +64,7 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 		final Spinner role = (Spinner) findViewById(R.id.add_user_role);
 		Button button = (Button) findViewById(R.id.add_user_gate_save);
 
-		List<CharSequence> roles = new ArrayList<>();
-		for (User.Role tmpRole : User.Role.values()) {
-			roles.add(getString(tmpRole.getStringResource()));
-		}
-
-		ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, roles);
+		ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, User.Role.values());
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the gate to the spinner
@@ -78,43 +74,42 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onClick(View v) {
-				if (!(email.getText().length() > 0)) {
-					// Please fill email
-					Log.d(TAG, "empty email");
-					return;
-				}
-				if (!isEmailValid(email.getText())) {
-					// NON valid email 
-					Log.d(TAG, "non valid email");
+				// check if email is set && valid
+				if(!Utils.validateInput(AddGateUserActivity.this, email, Utils.ValidationType.EMAIL)){
 					return;
 				}
 
-				User newUser = new User();
+				// create temporary user with email
+				final User newUser = new User();
 				newUser.setEmail(email.getText().toString());
-				newUser.setRole(User.Role.values()[role.getSelectedItemPosition()]);
 
-				User.DataPair pair = new User.DataPair(newUser, mGate.getId());
+				// get user's role
+				User.Role newRole = User.Role.values()[role.getSelectedItemPosition()];
 
-				if (role.getSelectedItemPosition() == 3) {
-					final User.DataPair pairInner = pair;
-					String title = getString(R.string.confirm_add_owner_title);
-					String message = getString(R.string.confirm_add_owner_message, email.getText());
-					ConfirmDialog.confirm(AddGateUserActivity.this, title, message, R.string.button_add_user_confirm, new ConfirmDialog.ConfirmDialogListener() {
-						@Override
-						public void onConfirm() {
-							doAddGateUserTask(pairInner);
-						}
-					});
+				// if superuser -- need to show dialog to confirm
+				if (newRole == User.Role.Superuser) {
+					ConfirmDialog.confirm(
+							AddGateUserActivity.this,
+							getString(R.string.confirm_add_owner_title),
+							getString(R.string.confirm_add_owner_message, email.getText()),
+							R.string.button_add_user_confirm,
+							new ConfirmDialog.ConfirmDialogListener() {
+								@Override
+								public void onConfirm() {
+									newUser.setRole(User.Role.Superuser);
+									doAddGateUserTask(newUser);
+								}
+							}
+					);
 				} else {
-					doAddGateUserTask(pair);
+					newUser.setRole(newRole);
+					doAddGateUserTask(newUser);
 				}
-
-
 			}
 		});
 	}
 
-	protected void doAddGateUserTask(User.DataPair pair) {
+	protected void doAddGateUserTask(User user) {
 		AddUserTask addUserTask = new AddUserTask(this);
 
 		addUserTask.setListener(new ICallbackTaskListener() {
@@ -127,14 +122,7 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(addUserTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
-	}
-
-	/*
-	 * Email validation
-	 */
-	boolean isEmailValid(CharSequence email) {
-		return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+		callbackTaskManager.executeTask(addUserTask, new User.DataPair(user, mGate.getId()), CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	@Override
@@ -142,7 +130,6 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 
 		switch (item.getItemId()) {
 			case android.R.id.home:
-
 				finish();
 				break;
 		}

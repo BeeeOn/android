@@ -12,7 +12,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView 
@@ -21,7 +21,9 @@
 	            android:text="@string/add_user_email_header"
 	            android:textColor="@color/beeeon_primary_text"
 			    android:textAppearance="?android:attr/textAppearanceMedium"
-			    android:layout_marginLeft="5dp" />
+			    android:layout_marginLeft="5dp"
+			    android:layout_marginStart="5dp"
+				/>
 
             <EditText
                 android:id="@+id/add_user_email"
@@ -45,7 +47,7 @@
 
 	        <Spinner
 	            android:id="@+id/add_user_role"
-	            android:layout_width="match_parent"
+	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:layout_marginLeft="10dp"
 	            android:layout_marginRight="10dp"/>
