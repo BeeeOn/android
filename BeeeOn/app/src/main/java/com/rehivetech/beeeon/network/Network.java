@@ -479,8 +479,12 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean updateGate(Gate gate) {
-		// FIXME someone should implement this method in the future when the server is ready for it
-		return false;
+		ParsedMessage msg = doRequest(XmlCreator.createSetGate(mBT, gate));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
 	}
 
 	@Override

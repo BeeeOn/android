@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
@@ -48,6 +49,7 @@ public class XmlCreator {
 	public static final String GETGATES = "getadapters";
 	public static final String DELGATE = "deladapter";
 	public static final String SCANMODE = "scanmode";
+	public static final String SETGATE = "setgate";
 
 	public static final String ADDACCOUNTS = "addaccs";
 	public static final String DELACCOUNTS = "delaccs";
@@ -278,6 +280,23 @@ public class XmlCreator {
 	 */
 	public static String createDelGate(String bt, String aid){
 		return createComAttribsVariant(Xconstants.STATE, DELGATE, Xconstants.BT, bt, Xconstants.AID, aid);
+	}
+
+	/**
+	 * New method create XML of SetDevs message with only one module in it. toSave parameter must by set properly.
+	 *
+	 * @param bt BeeeOn token (active session)
+	 * @param gate to save
+	 * @return SetGate message
+	 * @since 2.5
+	 */
+	public static String createSetGate(String bt, Gate gate) {
+		return createComAttribsVariant(
+				Xconstants.STATE, SETGATE,
+				Xconstants.BT, bt,
+				Xconstants.AID, gate.getId(),
+				Xconstants.ANAME, gate.getName(),
+				Xconstants.UTC, String.valueOf(gate.getUtcOffset()));
 	}
 
 	// /////////////////////////////////////DEVICES,LOGS///////////////////////////////////////////////
