@@ -2,7 +2,7 @@
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="72dp">
+	android:layout_height="wrap_content">
 
 	<ImageView
 		android:id="@+id/simple_list_layout_icon"
@@ -19,7 +19,7 @@
 		android:layout_height="wrap_content"
 		android:textColor="@color/beeeon_text_hint"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		android:layout_marginTop="20dp"
+		android:layout_marginTop="10dp"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
 		android:layout_alignParentLeft="true"
@@ -32,6 +32,7 @@
 		android:id="@+id/simple_list_layout_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:paddingBottom="10dp"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 		android:layout_below="@+id/simple_list_layout_title"
 		android:layout_alignLeft="@+id/simple_list_layout_title"

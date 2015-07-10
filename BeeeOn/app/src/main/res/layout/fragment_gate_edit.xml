@@ -82,6 +82,8 @@
 		android:layout_marginBottom="16dp"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
+		android:layout_marginRight="@dimen/activity_horizontal_margin"
+		android:layout_marginEnd="@dimen/activity_horizontal_margin"
 		/>
 
 	<View style="@style/BeeeOn.Divider.Full" />
