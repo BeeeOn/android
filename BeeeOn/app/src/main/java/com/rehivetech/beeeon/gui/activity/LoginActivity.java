@@ -46,6 +46,9 @@ public class LoginActivity extends BaseActivity {
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	private static final String TAG_DIALOG = "about_dialog";
 
+	/** Defines whether choose server spinner will be showed by default or not */
+	private static final boolean SERVER_ENABLED_DEFAULT = true;
+
 	private static final String TAG = LoginActivity.class.getSimpleName();
 	private BetterProgressDialog mProgress;
 
@@ -94,7 +97,7 @@ public class LoginActivity extends BaseActivity {
 		});
 
 		// Set choose server visibility
-		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 		setSelectServerVisibility(chooseServerEnabled);
 
 		// Intro to app
@@ -208,7 +211,7 @@ public class LoginActivity extends BaseActivity {
 		spinner.setSelection(server.ordinal());
 
 		// Set choose server visibility
-		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 		setSelectServerVisibility(chooseServerEnabled);
 	}
 
@@ -308,7 +311,7 @@ public class LoginActivity extends BaseActivity {
 		inflater.inflate(R.menu.login_menu, menu);
 
 		// Set choose server item (un)checked
-		boolean checked = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, false);
+		boolean checked = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 		MenuItem item = menu.findItem(R.id.action_choose_server_manually);
 		item.setChecked(checked);
 
