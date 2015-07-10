@@ -17,7 +17,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:text="@string/fragment_gate_edit_gate_name"
-			android:textSize="@dimen/textsize_subhead"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 			android:textColor="@color/light_gray"
 			/>
 
@@ -25,7 +25,7 @@
 			android:id="@+id/fragment_gate_edit_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textSize="@dimen/textsize_display1"
+			android:textAppearance="@style/TextAppearance.AppCompat.Display1"
 			android:textColorLink="@color/white"
 			android:paddingBottom="20dp"
 			android:textColor="@color/white"
@@ -44,7 +44,7 @@
 		android:text="@string/fragment_gate_edit_gate_id_read_only"
 		android:textColor="@color/beeeon_text_hint"
 		android:layout_marginBottom="7dp"
-		android:textSize="@dimen/textsize_caption"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
 		/>
@@ -53,7 +53,7 @@
 		android:id="@+id/fragment_gate_edit_gate_id"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textSize="@dimen/textsize_body"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:textColor="@color/beeeon_text_hint"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
@@ -70,7 +70,7 @@
 		android:layout_height="wrap_content"
 		android:text="@string/time_zone"
 		android:textColor="@color/beeeon_text_hint"
-		android:textSize="@dimen/textsize_caption"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
 		/>
