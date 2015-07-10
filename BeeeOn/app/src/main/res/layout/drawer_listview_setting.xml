@@ -10,22 +10,13 @@
     android:paddingRight="16dp"
     android:paddingTop="0dp" >
 
-    <!--<ImageView-->
-        <!--android:id="@+id/icon"-->
-        <!--android:layout_width="36dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginRight="22dp"-->
-        <!--android:adjustViewBounds="true" />-->
-
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/beeeon_text_color"
-        android:fontFamily="sans-serif-medium"
-        android:alpha="0.87"/>
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
 </LinearLayout>

@@ -26,9 +26,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/beeeon_text_color"
-            android:textSize="16sp"
-            android:fontFamily="sans-serif-medium"
-            android:alpha="0.87"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
 
         <TextView
             android:id="@+id/role"
@@ -36,8 +34,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="14sp"
-            android:textColor="@color/beeeon_text_hint" />
+            android:textColor="@color/beeeon_text_hint"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
     </LinearLayout>
 
     <RadioButton
