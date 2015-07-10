@@ -99,9 +99,12 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 				break;
 		}
 
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.widget_config_fragment, mConfigFragment);
-		ft.commit();
+		// create fragment only first time (it will persist)
+		if(savedInstanceState == null) {
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.replace(R.id.widget_config_fragment, mConfigFragment);
+			ft.commit();
+		}
 	}
 
 	/**

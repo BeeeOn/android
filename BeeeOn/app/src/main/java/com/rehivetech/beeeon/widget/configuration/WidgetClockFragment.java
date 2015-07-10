@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
-import com.rehivetech.beeeon.gui.dialog.LocationPickerDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialogFragment;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -33,16 +33,15 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public class WidgetClockFragment extends WidgetConfigurationFragment implements LocationPickerDialogFragment.ILocationPickerDialogListener {
+public class WidgetClockFragment extends WidgetConfigurationFragment implements EditTextDialogFragment.IEditTextDialogListener {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
-	private static final int REQUEST_LOCATION_DIALOG = 1;
+	public static final int REQUEST_LOCATION_DIALOG = 5;
 	private static final int SPACE_BETWEEN_MODULE_SPINNERS = 8;
 
 	protected WidgetClockData mWidgetData;
 
 	protected List<WidgetModulePersistence> mWidgetModules;
 	protected List<Spinner> mModuleSpinners;
-	private LinearLayout mModuleSpinnersWrapper;
 
 	private RadioGroup mColorSchemeGroup;
 	private TextView mCityLabel;
@@ -84,8 +83,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		mModuleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
-		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout moduleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
+		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		int marginBottomPx = Utils.convertDpToPixel(SPACE_BETWEEN_MODULE_SPINNERS);
 		spinnerLayoutParams.setMargins(0, 0, 0, marginBottomPx);
 
@@ -97,7 +96,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
                 moduleSpinner.setEmptyView(moduleEmptyView);
             }
 
-			mModuleSpinnersWrapper.addView(moduleSpinner, spinnerLayoutParams);
+			moduleSpinnersWrapper.addView(moduleSpinner, spinnerLayoutParams);
 			mModuleSpinners.add(moduleSpinner);
 		}
 
@@ -161,10 +160,10 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
     }
 
     private void showLocationPickerDialog() {
-		LocationPickerDialogFragment
+		EditTextDialogFragment
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 				.setTitle(mActivity.getString(R.string.dialog_location_select))
-				.setCityName(mWidgetData.weather.cityName)
+				.setEditTextValue(mWeatherCity != null ? mWeatherCity.name : mWidgetData.weather.cityName)
 				.setPositiveButtonText(mActivity.getString(R.string.ok))
 				.setNegativeButtonText(mActivity.getString(R.string.action_close))
 				.showKeyboard()
@@ -173,16 +172,18 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	@Override
-	public void onPositiveButtonClicked(int var1, EditText city, final LocationPickerDialogFragment dialog) {
-		if (city.getText().length() == 0) {
-			city.setError(mActivity.getString(R.string.place_must_be_filled));
+	public void onPositiveButtonClicked(int requestCode, View view, final EditTextDialogFragment dialog) {
+		EditText cityEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
+		if(!Utils.validateInput(mActivity, cityEditText)){
 			return;
 		}
+
+		// city name
+		final String cityInput = cityEditText.getText().toString();
 
 		// show dialog of loading
 		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
 
-		final String cityInput = city.getText().toString();
 		// load city data in background
 		new Thread() {
 			public void run() {
@@ -215,7 +216,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
-	private void loadingCitySuccess(WeatherProvider.City city, LocationPickerDialogFragment dialog) {
+	private void loadingCitySuccess(WeatherProvider.City city, EditTextDialogFragment dialog) {
 		mWeatherCity = city;
 		// setup city label
 		mCityLabel.setText(city.name);
@@ -227,7 +228,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	@Override
-	public void onNegativeButtonClicked(int var1, EditText city, LocationPickerDialogFragment dialog) {
+	public void onNegativeButtonClicked(int requestCode, View city, EditTextDialogFragment dialog) {
 		dialog.dismiss();
 	}
 
