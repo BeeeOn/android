@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -117,6 +118,14 @@ public interface INetwork {
 	 * @return list of gates or empty list
 	 */
 	List<Gate> getGates();
+
+	/**
+	 * Method ask for details about gate.
+	 *
+	 * @param gateId of wanted gate
+	 * @return GateInfo
+	 */
+	GateInfo getGateInfo(String gateId);
 
 	/**
 	 * Method ask for whole gate data

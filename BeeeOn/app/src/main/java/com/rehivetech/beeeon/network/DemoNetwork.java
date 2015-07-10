@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue.Item;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
@@ -250,6 +251,28 @@ public class DemoNetwork implements INetwork {
 		initDemoData();
 
 		return mGates.getObjects();
+	}
+
+	@Override
+	public GateInfo getGateInfo(String gateId) {
+		Gate gate = mGates.getObject(gateId);
+		if (gate == null)
+			return null;
+
+		int devicesCount = mDevices.getObjects(gateId).size();
+		int usersCount = mUsers.getObjects(gateId).size();
+		String version = "0";
+		String ip = "0.0.0.0";
+
+		return new GateInfo(
+				gate.getId(),
+				gate.getName(),
+				gate.getRole(),
+				gate.getUtcOffset(),
+				devicesCount,
+				usersCount,
+				version,
+				ip);
 	}
 
 	@Override

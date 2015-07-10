@@ -54,6 +54,10 @@ public class Xconstants {
 	public static final String REFRESH = "refresh";
 	public static final String BATTERY = "bat";
 	public static final String VALUE = "val";
+	public static final String NFACS = "nfacs";
+	public static final String NUSERS = "nusers";
+	public static final String IP = "ip";
+	public static final String AVERSION = "aversion";
 
 	public static final String ROW = "row";
 	public static final String INVOLVED = "inv";

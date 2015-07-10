@@ -47,6 +47,7 @@ public class XmlCreator {
 	public static final String ADDGATE = "addadapter";
 	public static final String REINITGATE = "reinitadapter";
 	public static final String GETGATES = "getadapters";
+	public static final String GETGATEINFO = "getgateinfo";
 	public static final String DELGATE = "deladapter";
 	public static final String SCANMODE = "scanmode";
 	public static final String SETGATE = "setgate";
@@ -269,6 +270,20 @@ public class XmlCreator {
 	 */
 	public static String createGetGates(String bt) {
 		return createComAttribsVariant(Xconstants.STATE, GETGATES, Xconstants.BT, bt);
+	}
+
+	/**
+	 * Method create XML of GetGateInfo message
+	 *
+	 * @param bt BeeeOn token (active session)
+	 * @return GetGateInfo message
+	 * @since 2.5
+	 */
+	public static String createGetGateInfo(String bt, String gateId) {
+		return createComAttribsVariant(
+				Xconstants.STATE, GETGATEINFO,
+				Xconstants.BT, bt,
+				Xconstants.AID, gateId);
 	}
 
 	/**

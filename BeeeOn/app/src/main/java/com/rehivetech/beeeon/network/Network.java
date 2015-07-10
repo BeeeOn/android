@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -462,6 +463,16 @@ public class Network implements INetwork {
 
 		if (msg.getState() == State.GATES)
 			return (List<Gate>) msg.data;
+
+		throw processFalse(msg);
+	}
+
+	@Override
+	public GateInfo getGateInfo(String gateId) {
+		ParsedMessage msg = doRequest(XmlCreator.createGetGateInfo(mBT, gateId));
+
+		if (msg.getState() == State.GATEINFO)
+			return (GateInfo) msg.data;
 
 		throw processFalse(msg);
 	}

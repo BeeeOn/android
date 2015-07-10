@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -50,6 +51,7 @@ public class XmlParsers {
 	 */
 	public enum State implements IIdentifier {
 		GATES("adapters"),
+		GATEINFO("gateinfo"),
 		ALLDEVICES("alldevs"),
 		DEVICES("devs"),
 		LOGDATA("logdata"),
@@ -57,7 +59,6 @@ public class XmlParsers {
 		TRUE("true"),
 		FALSE("false"),
 		VIEWS("views"),
-		TIMEZONE("timezone"),
 		ROOMS("rooms"),
 		ROOMCREATED("roomid"),
 		NOTIFICATIONS("notifs"),
@@ -150,6 +151,10 @@ public class XmlParsers {
 				// List<Gate>
 				result.data = parseGatesReady();
 				break;
+			case GATEINFO:
+				// GateInfo
+				result.data = parseGateInfo();
+				break;
 			case LOGDATA:
 				// ModuleLog
 				result.data = parseLogData();
@@ -174,10 +179,6 @@ public class XmlParsers {
 			case ACCOUNTS:
 				// List<User>
 				result.data = parseConAccountList();
-				break;
-			case TIMEZONE:
-				// integer
-				result.data = getSecureInt(getSecureAttrValue(Xconstants.UTC));
 				break;
 			case DEVICES:
 				String aid = getSecureAttrValue(Xconstants.AID);
@@ -233,6 +234,27 @@ public class XmlParsers {
 		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
 
 		return result;
+	}
+
+	/**
+	 * Method parse GateInfo message
+	 *
+	 * @return GateInfo
+	 * @throws XmlPullParserException
+	 * @throws IOException
+	 * @since 2.5
+	 */
+	private GateInfo parseGateInfo() throws XmlPullParserException, IOException {
+		String id = getSecureAttrValue(Xconstants.AID);
+		User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest);
+		String name = getSecureAttrValue(Xconstants.ANAME);
+		int devicesCount = getSecureInt(getSecureAttrValue(Xconstants.NFACS));
+		int usersCount = getSecureInt(getSecureAttrValue(Xconstants.NUSERS));
+		String ip = getSecureAttrValue(Xconstants.IP);
+		String version = getSecureAttrValue(Xconstants.AVERSION);
+		int utcOffsetInMinutes = getSecureInt(getSecureAttrValue(Xconstants.UTC));
+
+		return new GateInfo(id, name, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
 	}
 
 	/**
