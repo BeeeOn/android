@@ -34,8 +34,6 @@ public class User implements INameIdentifier {
 
 	private String mPictureUrl = "";
 
-	private SoftReference<Bitmap> mDefaultPicture = new SoftReference<>(null);
-
 	private HashMap<String, String> mJoinedProviders = new HashMap<>();
 
 	public User() {
@@ -170,17 +168,6 @@ public class User implements INameIdentifier {
 
 	public void setPictureUrl(String url) {
 		mPictureUrl = url;
-	}
-
-	/**
-	 * @param context
-	 * @return bitmap with default silhouette
-	 */
-	public Bitmap getDefaultPicture(Context context) {
-		if (mDefaultPicture.get() == null)
-			mDefaultPicture = new SoftReference<>(BitmapFactory.decodeResource(context.getResources(), R.drawable.person_silhouette));
-
-		return mDefaultPicture.get();
 	}
 
 	/**
