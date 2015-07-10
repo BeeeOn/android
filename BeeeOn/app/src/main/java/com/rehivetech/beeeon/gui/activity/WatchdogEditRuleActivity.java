@@ -439,7 +439,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		final Spinner ifItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
 		final SwitchCompat ruleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
 		final EditText ruleName = (EditText) findViewById(R.id.watchdog_edit_name);
-		if (!validateInput(ruleName)) {
+		if (!Utils.validateInput(this, ruleName)) {
 			return;
 		}
 
@@ -452,7 +452,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		ISpinnerItem selected = mSpinnerMultiAdapter.getItem(ifItemSpinner.getSelectedItemPosition());
 		switch (selected.getType()) {
 			case MODULE:
-				if (!validateInput(ruleTreshold, "parseInt")) return;
+				if (!Utils.validateInput(this, ruleTreshold, Utils.ValidationType.INTEGER)) return;
 
 				Module selectedModule = (Module) selected.getObject();
 				devsIds.add(selectedModule.getId());
@@ -484,7 +484,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		newParams.add(mWatchdogAction);
 		switch (mWatchdogAction) {
 			case Watchdog.ACTION_NOTIFICATION:
-				if (!validateInput(notificationText)) return;
+				if (!Utils.validateInput(this, notificationText)) return;
 
 				newParams.add(notificationText.getText().toString());
 				break;
