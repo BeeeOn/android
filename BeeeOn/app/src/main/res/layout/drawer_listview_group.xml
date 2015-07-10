@@ -17,8 +17,8 @@
         android:layout_weight="1"
         android:ellipsize="end"
         android:singleLine="true"
-        android:textColor="@color/beeeon_text_hint"
         android:textSize="14sp"
-        android:textStyle="normal" />
+        android:fontFamily="sans-serif-medium"
+        android:alpha="0.54" />
 
 </LinearLayout>

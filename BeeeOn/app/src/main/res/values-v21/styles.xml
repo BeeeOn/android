@@ -2,4 +2,8 @@
 <resources>
 	<style name="AppWidget.ActionButton" parent="@style/Widget.AppCompat.ActionButton" />
 	<style name="AppWidget.ActionButton.Overflow" parent="@style/Widget.AppCompat.ActionButton.Overflow" />
+
+	<style name="AppTheme" parent="AppBaseTheme">
+		<item name="android:windowTranslucentStatus">true</item>
+	</style>
 </resources>

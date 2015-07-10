@@ -27,10 +27,10 @@ public class GateMenuItem extends AbstractMenuItem {
 		nameView.setText(mName);
 		roleView.setText(mRole);
 		if (mIsChosen) {
-			iconView.setImageResource(R.drawable.ic_action_done);
-			iconView.setVisibility(View.VISIBLE);
+			iconView.setImageResource(R.drawable.abc_btn_radio_to_on_mtrl_015);
+			view.setBackgroundColor(view.getResources().getColor(R.color.beeeon_primary_cyan_light));
 		} else {
-			iconView.setVisibility(View.GONE);
+			iconView.setImageResource(R.drawable.abc_btn_radio_to_on_mtrl_000);
 		}
 		setMView(view);
 	}

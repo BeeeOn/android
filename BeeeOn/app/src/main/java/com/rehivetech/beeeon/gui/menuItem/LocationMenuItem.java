@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.gui.menuItem;
 
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,7 +24,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 	public void setView(View view) {
 		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
 		ImageView iconView = (ImageView) view.findViewById(com.rehivetech.beeeon.R.id.icon);
-		View separatorView = (View) view.findViewById(com.rehivetech.beeeon.R.id.top_separator);
+		View separatorView = view.findViewById(R.id.top_separator);
 
 		nameView.setText(mName);
 		iconView.setImageResource(mIconRes);
@@ -35,8 +34,9 @@ public class LocationMenuItem extends AbstractMenuItem {
 			separatorView.setVisibility(View.GONE);
 		}
 		if (mActualLoc) {
-			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
-			nameView.setTypeface(null, Typeface.BOLD);
+//			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
+//			nameView.setTypeface(null, Typeface.BOLD);
+			view.setBackgroundColor(view.getResources().getColor(R.color.beeeon_primary_cyan_light));
 		}
 		setMView(view);
 	}

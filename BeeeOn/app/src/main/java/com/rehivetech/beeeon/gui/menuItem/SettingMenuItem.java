@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.menuItem;
 
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
@@ -19,10 +18,10 @@ public class SettingMenuItem extends AbstractMenuItem {
 	@Override
 	public void setView(View view) {
 		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
-		ImageView iconView = (ImageView) view.findViewById(com.rehivetech.beeeon.R.id.icon);
+//		ImageView iconView = (ImageView) view.findViewById(com.rehivetech.beeeon.R.id.icon);
 
 		nameView.setText(mName);
-		iconView.setImageResource(mIconRes);
+//		iconView.setImageResource(mIconRes);
 	}
 
 	@Override
