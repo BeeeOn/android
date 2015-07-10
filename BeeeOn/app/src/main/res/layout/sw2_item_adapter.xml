@@ -52,12 +52,12 @@
 <!--         <View -->
 <!--             android:id="@+id/row1" -->
 <!--             android:layout_width="fill_parent" -->
-<!--             android:layout_height="1px" -->
+<!--             android:layout_height="@dimen/divider_size" -->
 <!--             android:background="@color/darkgray" /> -->
 
         <View
             android:layout_width="fill_parent"
-            android:layout_height="1px"
+            android:layout_height="@dimen/divider_size"
             android:layout_below="@+id/content_container"
             android:background="@color/gray" />
 <!--     </RelativeLayout> -->

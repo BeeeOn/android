@@ -141,7 +141,7 @@
 
 				<ImageView
 					android:id="@+id/widget_clock_separator_1"
-					android:layout_width="1px"
+					android:layout_width="@dimen/divider_size"
 					android:layout_height="16dp"
 					android:src="@color/beeeon_secundary_pink"
 					android:scaleType="center"

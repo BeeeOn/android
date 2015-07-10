@@ -153,13 +153,13 @@
 
     <style name="BeeeOn.Divider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">@dimen/divider_size</item>
         <item name="android:background">@drawable/beeeon_divider_inset</item>
     </style>
 
     <style name="BeeeOn.DividerListView">
         <item name="android:divider">@drawable/beeeon_divider_inset</item>
-        <item name="android:dividerHeight">1dp</item>
+        <item name="android:dividerHeight">@dimen/divider_size</item>
     </style>
 
     <style name="BeeeOn.Divider.Full">

@@ -68,4 +68,6 @@
 	<dimen name="activity_login_logo_size">50dp</dimen>
 	<dimen name="activity_login_app_name_size">30sp</dimen>
 	<dimen name="activity_login_app_slogan_size">18sp</dimen>
+
+	<dimen name="divider_size">1dp</dimen>
 </resources>

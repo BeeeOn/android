@@ -4,5 +4,5 @@
 
     <size android:width="32dp" android:height="32dp" />
 
-    <stroke android:width="1px" android:color="@color/darkgray" />
+    <stroke android:width="@dimen/divider_size" android:color="@color/darkgray" />
 </shape>

@@ -82,7 +82,7 @@
 		<ImageView
 			android:id="@+id/widget_clock_separator_1"
 			android:layout_width="30dp"
-			android:layout_height="1px"
+			android:layout_height="@dimen/divider_size"
 			android:src="@color/beeeon_primary_cyan"
 			android:layout_marginTop="2dp"
 			/>
@@ -120,7 +120,7 @@
 		<!-- separator -->
 		<ImageView
 			android:id="@+id/widget_clock_separator_2"
-			android:layout_width="1px"
+			android:layout_width="@dimen/divider_size"
 			android:layout_height="16dp"
 			android:src="@color/beeeon_primary_cyan"
 			android:layout_marginLeft="4dp"
