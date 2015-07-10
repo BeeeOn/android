@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.network.xml;
 
-import android.content.Context;
 import android.util.Xml;
 
 import com.rehivetech.beeeon.Constants;
@@ -25,10 +24,8 @@ import org.joda.time.DateTimeZone;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -727,164 +724,5 @@ public class XmlParsers {
 	 */
 	private int getSecureInt(String value) {
 		return (value.length() < 1) ? 0 : Integer.parseInt(value);
-	}
-
-	// /////////////////////////////// DEMO
-
-	/**
-	 * Factory for parsing gate from asset.
-	 *
-	 * @param context  of app
-	 * @param filename of devices xml
-	 * @return Gate or null
-	 */
-	public List<Device> getDemoDevicesFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading gate from asset '%s'", filename));
-		List<Device> result = null;
-		InputStream stream = null;
-		try {
-			stream = new BufferedInputStream(context.getAssets().open(filename));
-			mParser = Xml.newPullParser();
-			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			mParser.setInput(stream, null);
-			mParser.nextTag();
-
-			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
-						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-						.set(NetworkError.PARAM_COM_VER_SERVER, version);
-			}
-
-			result = parseAllDevices();
-		} catch (IOException | XmlPullParserException | ParseException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (stream != null)
-					stream.close();
-			} catch (IOException ioe) {
-				Log.e(TAG, ioe.getMessage(), ioe);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Factory for parsing locations from asset.
-	 *
-	 * @param context  of app
-	 * @param filename of locations xml
-	 * @return list of locations or empty list
-	 */
-	public List<Location> getDemoLocationsFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading locations from asset '%s'", filename));
-		List<Location> locations = new ArrayList<>();
-		InputStream stream = null;
-		try {
-			stream = new BufferedInputStream(context.getAssets().open(filename));
-			mParser = Xml.newPullParser();
-			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			mParser.setInput(stream, null);
-			mParser.nextTag();
-
-			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
-						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-						.set(NetworkError.PARAM_COM_VER_SERVER, version);
-			}
-
-			locations = parseRooms();
-		} catch (IOException | XmlPullParserException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (stream != null)
-					stream.close();
-			} catch (IOException ioe) {
-				Log.e(TAG, ioe.getMessage(), ioe);
-			}
-		}
-		return locations;
-	}
-
-	/**
-	 * Factory for parsing list of gates from asset
-	 *
-	 * @param context  of ap
-	 * @param filename of gates xml
-	 * @return list of gates or empty list
-	 */
-	public List<Gate> getDemoGatesFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading gates from asset '%s'", filename));
-		List<Gate> gates = new ArrayList<>();
-		InputStream stream = null;
-		try {
-			stream = new BufferedInputStream(context.getAssets().open(filename));
-			mParser = Xml.newPullParser();
-			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			mParser.setInput(stream, null);
-			mParser.nextTag();
-
-			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
-						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-						.set(NetworkError.PARAM_COM_VER_SERVER, version);
-			}
-
-			gates = parseGatesReady();
-		} catch (IOException | XmlPullParserException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (stream != null)
-					stream.close();
-			} catch (IOException ioe) {
-				Log.e(TAG, ioe.getMessage(), ioe);
-			}
-		}
-		return gates;
-	}
-
-	/**
-	 * Factory for parsing list of watchdogs
-	 *
-	 * @param context  of app
-	 * @param filename of watchdogs xml
-	 * @return list of watchogs
-	 * @throws AppException
-	 */
-	public List<Watchdog> getDemoWatchdogsFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading watchdog from asset '%s'", filename));
-		List<Watchdog> watchdogs = new ArrayList<>();
-		InputStream stream = null;
-		try {
-			stream = new BufferedInputStream(context.getAssets().open(filename));
-			mParser = Xml.newPullParser();
-			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			mParser.setInput(stream, null);
-			mParser.nextTag();
-
-			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
-						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-						.set(NetworkError.PARAM_COM_VER_SERVER, version);
-			}
-
-			watchdogs = parseWatchdog();
-		} catch (IOException | XmlPullParserException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (stream != null)
-					stream.close();
-			} catch (IOException ioe) {
-				Log.e(TAG, ioe.getMessage(), ioe);
-			}
-		}
-		return watchdogs;
 	}
 }
