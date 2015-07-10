@@ -9,13 +9,15 @@ import com.rehivetech.beeeon.R;
 public class LocationMenuItem extends AbstractMenuItem {
 	private String mName;
 	private int mIconRes;
+	private int mIconResActive;
 	private boolean mTopSeparatorVisible;
 	private boolean mActualLoc;
 
-	public LocationMenuItem(String name, int iconRes, boolean topSeparator, String id, boolean actualLoc) {
+	public LocationMenuItem(String name, int iconRes, int iconResActive, boolean topSeparator, String id, boolean actualLoc) {
 		super(id, MenuItemType.LOCATION);
 		mName = name;
 		mIconRes = iconRes;
+		mIconResActive = iconResActive;
 		mTopSeparatorVisible = topSeparator;
 		mActualLoc = actualLoc;
 	}
@@ -34,9 +36,11 @@ public class LocationMenuItem extends AbstractMenuItem {
 			separatorView.setVisibility(View.GONE);
 		}
 		if (mActualLoc) {
-//			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
-//			nameView.setTypeface(null, Typeface.BOLD);
-			view.setBackgroundColor(view.getResources().getColor(R.color.beeeon_primary_cyan_light));
+			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
+			view.setBackgroundColor(view.getResources().getColor(R.color.beeeon_light_gray));
+			iconView.setImageResource(mIconResActive);
+		} else {
+			iconView.setImageResource(mIconRes);
 		}
 		setMView(view);
 	}

@@ -40,11 +40,12 @@
             android:textColor="@color/beeeon_text_hint" />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/icon"
+    <RadioButton
+        android:id="@+id/radio_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|center_vertical"
-        android:adjustViewBounds="true" />
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:clickable="false"/>
 
 </LinearLayout>

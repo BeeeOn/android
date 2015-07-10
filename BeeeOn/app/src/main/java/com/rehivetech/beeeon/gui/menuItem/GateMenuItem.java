@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.gui.menuItem;
 
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
@@ -22,15 +22,16 @@ public class GateMenuItem extends AbstractMenuItem {
 	public void setView(View view) {
 		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
 		TextView roleView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.role);
-		ImageView iconView = (ImageView) view.findViewById(com.rehivetech.beeeon.R.id.icon);
+		RadioButton radioButton = (RadioButton) view.findViewById(R.id.radio_button);
 
 		nameView.setText(mName);
 		roleView.setText(mRole);
 		if (mIsChosen) {
-			iconView.setImageResource(R.drawable.abc_btn_radio_to_on_mtrl_015);
-			view.setBackgroundColor(view.getResources().getColor(R.color.beeeon_primary_cyan_light));
+			radioButton.setChecked(true);
+			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
+			view.setBackgroundColor(view.getResources().getColor(R.color.beeeon_light_gray));
 		} else {
-			iconView.setImageResource(R.drawable.abc_btn_radio_to_on_mtrl_000);
+			radioButton.setChecked(false);
 		}
 		setMView(view);
 	}

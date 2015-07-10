@@ -11,7 +11,7 @@
 		android:orientation="vertical"
 		android:layout_height="match_parent">
 
-		<include layout="@layout/include_toolbar"/>
+		<include layout="@layout/beeeon_toolbar"/>
 
 		<FrameLayout
 			android:id="@+id/content_frame"

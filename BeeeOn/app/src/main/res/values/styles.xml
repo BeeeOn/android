@@ -64,6 +64,11 @@
         <item name="android:textColorSecondary">@color/beeeon_text_hint</item>
     </style>
 
+    <!--MainActivity custom theme-->
+    <style name="MainActivityTheme" parent="AppTheme">
+
+    </style>
+
     <!-- FAB style -->
 	<style name="fab_item_menu" >
 		<item name="fab_colorNormal">@color/beeeon_secundary_pink</item>
