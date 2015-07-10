@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="gate_1_name">Doma</string>
+	<string name="gate_2_name">Chalupa</string>
+	<string name="gate_3_name">Regulátor VPT</string>
+
+	<!-- Name of location  and id-->
+	<string name="loc_name_demo_living_room">Obývací pokoj</string>
+	<string name="loc_name_demo_bedroom">Ložnice</string>
+	<string name="loc_name_demo_kitchen">Kuchyň</string>
+	<string name="loc_name_demo_wc">WC</string>
+	<string name="loc_name_demo_green_house">Skleník</string>
+	<string name="loc_name_demo_sauna">Sauna</string>
+	<string name="loc_name_demo_room">Pokoj</string>
+
+	<!--Name of modules (devices) -->
+
+	<!-- Modules of Home -->
+	<string name="demo_name_module_window">Teplota na okně</string>
+	<string name="demo_name_module_radiator">Teplota radiátoru</string>
+	<string name="demo_name_module_window_act">Okno - Ventilačka</string>
+	<string name="demo_name_module_door_act">Balkónové dveře</string>
+	<string name="demo_name_module_baby_monitor">Chůvička - postýlka</string>
+	<string name="demo_name_module_lamp_table">Lampička psací stůl</string>
+	<string name="demo_name_module_ventilator">Ventilátor</string>
+	<string name="demo_name_module_pc">Počítač</string>
+	<string name="demo_name_module_lamp_tv">Lampa u TV</string>
+	<string name="demo_name_module_tv">Televízor</string>
+	<string name="demo_name_module_cooker">Sporák</string>
+	<string name="demo_name_module_wc_lamp">Světlo na záchodě</string>
+
+	<!-- Modules of Regulator VPT -->
+	<string name="demo_name_module_boiler">Stav kotla</string>
+	<string name="demo_name_module_actual_temp1">Z1: Aktuálni teplota</string>
+	<string name="demo_name_module_desired_temp1">Z1: Žádaná teplota</string>
+	<string name="demo_name_module_type_operation1">Z1: Typ provozu</string>
+	<string name="demo_name_module_mode_operation1">Z1: Režim provozu</string>
+	<string name="demo_name_module_actual_temp2">Z2: Aktuálni teplota</string>
+	<string name="demo_name_module_desired_temp2">Z2: Žádaná teplota</string>
+	<string name="demo_name_module_type_operation2">Z2: Typ provozu</string>
+	<string name="demo_name_module_mode_operation2">Z2: Režim provozu</string>
+	<string name="demo_name_module_actual_temp3">Z3: Aktuálni teplota</string>
+	<string name="demo_name_module_desired_temp3">Z3: Žádaná teplota</string>
+	<string name="demo_name_module_type_operation3">Z3: Typ provozu</string>
+	<string name="demo_name_module_mode_operation3">Z3: Režim provozu</string>
+	<string name="demo_name_module_actual_temp4">Z4: Aktuálni teplota</string>
+	<string name="demo_name_module_desired_temp4">Z4: Žádaná teplota</string>
+	<string name="demo_name_module_type_operation4">Z4: Typ provozu</string>
+	<string name="demo_name_module_mode_operation4">Z4: Režim provozu</string>
+
+	<!-- Modules of Weekend House -->
+	<string name="demo_name_module_temp_air">Teplota ovzduší</string>
+	<string name="demo_name_module_pressure_air">Tlak ovzduší</string>
+	<string name="demo_name_module_soil">Vlhkost půdy</string>
+	<string name="demo_name_module_temp_stove">Teplota kamen</string>
+	<string name="demo_name_module_humidity_ceiling">Vlhkost stropu</string>
+	<string name="demo_name_module_switch">Spínač kamna</string>
+	<string name="demo_name_module_electricity">Hlavný přívod elektrickej energie</string>
+	<string name="demo_name_module_lighting">Osvětlení</string>
+	<string name="demo_name_module_air">Ovzduší</string>
+
+	<!-- Names of Watchdog and notification messages-->
+	<string name="demo_name_watchdog_temp_stone">Hlídaní teploty kamna</string>
+	<string name="demo_notif_watchdog_temp_stone">Kamen je příliš hořký!</string>
+	<string name="demo_name_watchdog_humidity">Vlhkost půdy</string>
+	<string name="demo_notif_watchdog_humidity">Vlhkost půdy klesla pod 50%.</string>
+	<string name="demo_name_watchdog_cry">Dětská chůvička</string>
+	<string name="demo_notif_watchdog_cry">Miminko pláče. Potřebuje něco.</string>
+	<string name="demo_name_watchdog_radiator">Špatné topení</string>
+	<string name="demo_notif_watchdog_radiator">Něco je špatně s topením</string>
+	<string name="demo_name_watchdog_temperature">Vyšší teplota Z1</string>
+	<string name="demo_notif_watchdog_temperature">Aktuální teplota je větší než žádaná teplota.</string>
+
+</resources>

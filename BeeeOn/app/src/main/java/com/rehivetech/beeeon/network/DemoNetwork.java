@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.network;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
@@ -23,7 +22,6 @@ import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
@@ -137,29 +135,23 @@ public class DemoNetwork implements INetwork {
 		mWatchdogs.clear();
 		mUsers.clear();
 
-		// Parse and set initial demo data
-		XmlParsers parser = new XmlParsers();
-
-		String assetName = Constants.ASSET_GATES_FILENAME;
-		mGates.setObjects(parser.getDemoGatesFromAsset(mContext, assetName));
-
+		DemoData demoData = new DemoData();
+		mGates.setObjects(demoData.getGates(mContext));
 		for (Gate gate : mGates.getObjects()) {
 			String gateId = gate.getId();
 
-			assetName = String.format(Constants.ASSET_LOCATIONS_FILENAME, gate.getId());
-			mLocations.setObjects(gateId, parser.getDemoLocationsFromAsset(mContext, assetName));
+			mLocations.setObjects(gateId, demoData.getLocation(mContext, gateId));
 			mLocations.setLastUpdate(gateId, DateTime.now());
 
-			assetName = String.format(Constants.ASSET_WATCHDOGS_FILENAME, gate.getId());
-			mWatchdogs.setObjects(gateId, parser.getDemoWatchdogsFromAsset(mContext, assetName));
-			mWatchdogs.setLastUpdate(gateId, DateTime.now());
-
-			assetName = String.format(Constants.ASSET_GATE_DATA_FILENAME, gate.getId());
-			mDevices.setObjects(gateId, parser.getDemoDevicesFromAsset(mContext, assetName));
+			mDevices.setObjects(gateId, demoData.getDevices(mContext, gateId));
 			mDevices.setLastUpdate(gateId, DateTime.now());
+			
+			mWatchdogs.setObjects(gateId, demoData.getWatchdogs(mContext, gateId));
+			mWatchdogs.setLastUpdate(gateId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
 			mUsers.setObjects(gateId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
+			mUsers.setLastUpdate(gateId, DateTime.now());
 
 			Random rand = getRandomForGate(gate.getId());
 
