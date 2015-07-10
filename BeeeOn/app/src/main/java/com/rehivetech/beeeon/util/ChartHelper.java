@@ -48,7 +48,7 @@ final public class ChartHelper {
 		legend.setTextSize(textSizeSp);
 
 		chart.setDrawBorders(true);
-		chart.setBorderColor(context.getResources().getColor(R.color.beeeon_separator));
+		chart.setBorderColor(context.getResources().getColor(R.color.gray));
 		chart.setDescription("");
 		chart.setHighlightEnabled(false);
 
