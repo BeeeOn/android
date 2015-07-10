@@ -23,6 +23,7 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
@@ -42,15 +43,13 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 	public static final String EXTRA_GATE_ID = "gate_id";
 
 	private Gate mGate;
-
 	private List<User> mGateUsers;
-
-	private static final int NAME_ITEM_HEIGHT = 74;
-	private static final int ROLE_RADIO_MARGIN = 16;
 
 	private RadioGroup mGroup;
 	private User mSelectedItem;
 	private int mSelectedItemPos;
+
+	private UsersListAdapter mUsersListAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +63,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		}
 
 		ActionBar actionBar = getSupportActionBar();
-
 		if (actionBar != null) {
 			actionBar.setHomeButtonEnabled(true);
 			actionBar.setDisplayHomeAsUpEnabled(true);
@@ -73,6 +71,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		// Get selected gate
 		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(EXTRA_GATE_ID));
 
+		initLayouts();
 		// Get all users for gate
 		doReloadGateUsersTask(mGate.getId(), true);
 	}
@@ -80,9 +79,8 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 	private void initLayouts() {
 		// Get elements
 		final ListView listActUsers = (ListView) findViewById(R.id.gate_users_list);
-		//mListPenUsers = (ListView) findViewById(R.id.adapter_users_pending_list);
-
-		listActUsers.setAdapter(new UsersListAdapter(this, mGateUsers, null));
+		mUsersListAdapter = new UsersListAdapter(this);
+		listActUsers.setAdapter(mUsersListAdapter);
 
 		listActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
@@ -94,10 +92,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 				return true;
 			}
 		});
-
-		// Set listview height, for all 
-		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mGateUsers.size());
-		listActUsers.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, heightPx));
 
 		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.fab_add_user);
 		mButton.setOnClickListener(new OnClickListener() {
@@ -121,10 +115,8 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		switch (item.getItemId()) {
 			case android.R.id.home:
-
 				finish();
 				break;
 		}
@@ -133,11 +125,11 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 
 	private void setUserSelected() {
-		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.layoutofsensor).setBackgroundColor(getResources().getColor(R.color.gray_light));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.user_item_layout).setBackgroundColor(getResources().getColor(R.color.gray_light));
 	}
 
 	private void setUserUnselected() {
-		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.layoutofsensor).setBackgroundColor(getResources().getColor(R.color.white));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.user_item_layout).setBackgroundColor(getResources().getColor(R.color.white));
 	}
 
 
@@ -161,15 +153,14 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 			@Override
 			public void onExecute(boolean success) {
 				mGateUsers = Controller.getInstance(GateUsersActivity.this).getUsersModel().getUsersByGate(gateId);
-
-				initLayouts();
+				mUsersListAdapter.updateData(mGateUsers);
 			}
-
 		});
 
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(reloadUsersTask, gateId);
 	}
+
 
 
 	private void doRemoveUserTask(User user) {

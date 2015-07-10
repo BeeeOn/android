@@ -12,34 +12,29 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.household.watchdog.Watchdog;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UsersListAdapter extends BaseAdapter {
 
-	private static final int MARGIN_LEFT_RIGHT = 2;
-	private static final int MARGIN_TOP = 10;
-	private static final int MARGIN_BOTTOM = 0;
-	private static final int MARGIN_TOP_M_L = -2;
-
 	// Declare Variables
 	private Context mContext;
-	private LayoutInflater inflater;
-	private boolean mShowAdd;
-	private OnClickListener mListener;
+
 	private List<User> mUsers;
+	LayoutInflater mInflater;
 
-
-	public UsersListAdapter(Context context, List<User> users, OnClickListener listener) {
+	public UsersListAdapter(Context context) {
 		mContext = context;
-		mUsers = users;
-		//mShowAdd = !devices.isEmpty();
-		mListener = listener;
+		mUsers = new ArrayList<>();
+		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public int getCount() {
-		return mUsers.size();// + (mShowAdd ? 1 : 0);
+		return mUsers.size();
 	}
 
 	@Override
@@ -49,41 +44,46 @@ public class UsersListAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		return position; // TODO: what's this?
-	}
-
-	public User getUser(int position) {
-		return mUsers.get(position);
+		return position;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		//if (position < mUsers.size()) {
-		return addItem(position, convertView, parent);
-		//}
-		//return addAddSensor(convertView, parent);
-	}
+		ViewHolder holder;
 
+		if(convertView == null){
+			convertView = mInflater.inflate(R.layout.user_listview_item, parent, false);
+			holder = new ViewHolder();
 
-	private View addItem(int position, View convertView, ViewGroup parent) {
-		inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View itemView = inflater.inflate(R.layout.user_listview_item, parent, false);
+			holder.UserName = (TextView) convertView.findViewById(R.id.adapter_user_name);
+			holder.UserEmail = (TextView) convertView.findViewById(R.id.adapter_user_email);
+			holder.UserRole = (TextView) convertView.findViewById(R.id.adapter_user_role);
+			holder.UserIcon = (ImageView) convertView.findViewById(R.id.adapter_user_icon);
 
-		// Locate the TextViews in drawer_list_item.xml
-		TextView txtNameUser = (TextView) itemView.findViewById(R.id.adapter_user_name);
-		TextView txtEmailUser = (TextView) itemView.findViewById(R.id.adapter_user_email);
-		TextView txtRoleUser = (TextView) itemView.findViewById(R.id.adapter_user_role);
-
-		// Locate the ImageView in drawer_list_item.xml
-		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
+			convertView.setTag(holder);
+		}
+		else{
+			holder = (ViewHolder) convertView.getTag();
+		}
 
 		User user = mUsers.get(position);
 
-		txtNameUser.setText(user.getFullName());
-		txtEmailUser.setText(user.getEmail());
-		txtRoleUser.setText(user.getRole().getStringResource());
+		holder.UserName.setText(user.getFullName());
+		holder.UserEmail.setText(user.getEmail());
+		holder.UserRole.setText(user.getRole().getStringResource());
 
-		return itemView;
+		return convertView;
 	}
 
+	public void updateData(List<User> data) {
+		this.mUsers = data;
+		notifyDataSetChanged();
+	}
+
+	private static class ViewHolder {
+		public TextView UserName;
+		public TextView UserEmail;
+		public TextView UserRole;
+		public ImageView UserIcon;
+	}
 }
