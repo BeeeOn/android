@@ -133,6 +133,7 @@
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_gravity="top"
+				android:visibility="gone"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				android:text="@string/login_provider_choose_other"/>
 
@@ -173,7 +174,7 @@
 				android:textColor="@color/white"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				android:text="@string/login_btn_direct_connect"
-				android:visibility="visible"/>
+				android:visibility="gone"/>
 
 			<Button
 				android:id="@+id/login_btn_demo"
