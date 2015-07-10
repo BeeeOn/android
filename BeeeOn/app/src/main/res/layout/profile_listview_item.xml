@@ -104,11 +104,9 @@
     </RelativeLayout>
 
 
-  <ImageView
-    android:layout_width="match_parent"
-    android:layout_height="1px"
-    android:src="@color/beeeon_separator"
-    android:layout_alignParentBottom="true"
-    />
+  <View
+      style="@style/BeeeOn.Divider"
+      android:layout_alignParentBottom="true"
+      />
 
 </RelativeLayout>

@@ -118,7 +118,7 @@ public class AchievementListAdapter extends BaseAdapter implements Filterable {
 			}
 		} else {
 			Compatibility.setBackground(holder.achievementPoints, convertView.getResources().getDrawable(R.drawable.hexagon_lightgray));
-			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_separator));
+			holder.achievementName.setTextColor(convertView.getResources().getColor(R.color.beeeon_text_color));
 			holder.achievementShare.setOnClickListener(null);
 			holder.achievementLayout.getLayoutParams().height = Utils.convertDpToPixel(75);
 			holder.achievementShare.setVisibility(View.VISIBLE);

@@ -26,7 +26,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:listSelector="@android:color/transparent"
-			android:divider="@drawable/beeeon_divider"
+			style="@style/BeeeOn.DividerListView"
 			/>
 	</android.support.v4.widget.SwipeRefreshLayout>
 

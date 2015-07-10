@@ -141,12 +141,6 @@
 
 	<style name="numberPicker" parent="@style/NPWidget.Material.NumberPicker" />
 
-	<style name="Divider">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">?android:attr/listDivider</item>
-    </style>
-
 	<style name="BeeeOn" />
 
 	<style name="BeeeOn.Spinner" parent="Base.Widget.AppCompat.Spinner">
@@ -154,5 +148,26 @@
 		<item name="android:layout_height">@dimen/spinner_height</item>
 		<item name="android:minWidth">@dimen/spinner_min_width</item>
 	</style>
+
+    <!-- Dividers -->
+
+    <style name="BeeeOn.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@drawable/beeeon_divider_inset</item>
+    </style>
+
+    <style name="BeeeOn.DividerListView">
+        <item name="android:divider">@drawable/beeeon_divider_inset</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <style name="BeeeOn.Divider.Full">
+        <item name="android:background">@color/beeeon_divider</item>
+    </style>
+
+    <style name="BeeeOn.DividerListView.Full">
+        <item name="android:background">@color/beeeon_divider</item>
+    </style>
 
 </resources>

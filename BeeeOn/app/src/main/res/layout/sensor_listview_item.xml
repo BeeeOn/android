@@ -78,9 +78,7 @@
 	<!-- divider -->
 	<View
 		android:id="@+id/sensor_sep_middle"
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:background="@drawable/beeeon_divider"
+		style="@style/BeeeOn.Divider"
 		android:layout_alignParentBottom="true"
 		android:clickable="false"
 		/>

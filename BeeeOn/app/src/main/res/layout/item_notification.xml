@@ -72,10 +72,8 @@
 	</LinearLayout>
 
 	<View
+		style="@style/BeeeOn.Divider"
 		android:id="@+id/item_notification_separator"
 		android:layout_alignParentBottom="true"
-		android:layout_width="match_parent"
-		android:layout_height="1px"
-		android:background="@color/beeeon_separator"
 		/>
 </RelativeLayout>

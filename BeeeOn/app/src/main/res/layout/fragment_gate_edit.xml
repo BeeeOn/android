@@ -34,7 +34,7 @@
 	</LinearLayout>
 
 	<View
-		style="@style/Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginBottom="16dp"
 		/>
 
@@ -61,7 +61,7 @@
 		/>
 
 	<View
-		style="@style/Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginBottom="16dp"
 		/>
 
@@ -84,5 +84,5 @@
 		android:layout_marginStart="72dp"
 		/>
 
-	<View style="@style/Divider" />
+	<View style="@style/BeeeOn.Divider.Full" />
 </LinearLayout>
