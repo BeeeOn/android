@@ -182,7 +182,7 @@
 	<string name="addadapter_qr_button"> Scan QR code </string>
 	<string name="addadapter_manual_edit">Enter manually</string>
 	<string name="addadapter_qr_button_loading">Loading...</string>
-	<string name="dialog_code_title">Enter the code of the gate</string>
+
 	<string name="addsensor_send_pair">SEND PAIR</string>
 	<string name="addsensor_waiting">Waiting for start</string>
 	<string name="addsensor_time_left_unit">seconds</string>
@@ -450,6 +450,8 @@
     <string name="confirm_remove_user_message">This user will lost access to your gateway and he won\'t be able to read or interact with your data anymore.</string>
 	<string name="confirm_add_owner_title">New User as Owner</string>
 	<string name="confirm_add_owner_message">You are going to give owner rights to new user. \"%1$s\" get rights to full access of gate and administration.</string>
+
+    <string name="enter_text_dialog_title">Enter the code of the gate</string>
 
     <string name="graph_interval_values">Graph interval values</string>
     <string name="interval_weekly">Weekly</string>

@@ -427,7 +427,7 @@
     <string name="addsensor_request_task_not_successful">Task pro párování nebyl úspěšný, prosím, zkuste to znovu</string>
     <string name="addsensor_time_left_unit">sekundy</string>
     <string name="addsensor_waiting">Čekám na start</string>
-    <string name="dialog_code_title">Zadejte kód brány</string>
+    <string name="enter_text_dialog_title">Zadejte kód brány</string>
     <string name="toast_error_invalid_qr_code">Toto není platný BeeeOn QR kód</string>
     <string name="toast_error_no_qr_reader">Nemáte nainstalovanou čtečku QR kódů</string>
     <string name="toast_error_no_google_play">Nepodařilo se otevřít Google Play</string>
