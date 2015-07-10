@@ -37,7 +37,6 @@ import com.rehivetech.beeeon.widget.data.WidgetData;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 import com.rehivetech.beeeon.widget.receivers.WidgetClockProvider;
-import com.rehivetech.beeeon.widget.receivers.WidgetGraphProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetLocationListProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetModuleProvider;
 import com.rehivetech.beeeon.widget.receivers.WidgetModuleProviderLarge;
@@ -783,8 +782,6 @@ public class WidgetService extends Service {
 		ids.addAll(getWidgetIds(WidgetModuleProvider.class));
 		ids.addAll(getWidgetIds(WidgetModuleProviderMedium.class));
 		ids.addAll(getWidgetIds(WidgetModuleProviderLarge.class));
-		// graph widget
-		ids.addAll(getWidgetIds(WidgetGraphProvider.class));
 
 		return Utils.convertIntegers(ids);
 	}

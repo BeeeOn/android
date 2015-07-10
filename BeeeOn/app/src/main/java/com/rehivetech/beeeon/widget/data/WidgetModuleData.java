@@ -116,11 +116,7 @@ public class WidgetModuleData extends WidgetData {
 				case R.layout.widget_device_3x1:
 				case R.layout.widget_device_2x1:
 					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
-
-				case R.layout.widget_device_3x2:
-					dev.setValueUnitSize(R.dimen.textsize_subhead);
 					break;
-
 				case R.layout.widget_device_1x1:
 					dev.setValueUnitSize(R.dimen.textsize_caption);
 					break;

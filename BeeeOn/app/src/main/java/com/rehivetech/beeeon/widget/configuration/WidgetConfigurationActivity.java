@@ -89,10 +89,6 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 				mConfigFragment = new WidgetModuleFragment();
 				break;
 
-			case ".WidgetGraphProvider":
-				mConfigFragment = new WidgetGraphFragment();
-				break;
-
 			case ".WidgetLocationListProvider":
 				mConfigFragment = new WidgetLocationFragment();
 				break;
