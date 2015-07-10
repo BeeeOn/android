@@ -464,6 +464,8 @@
     <string name="gate_name">Gate name</string>
     <string name="gate_detail_your_role">Your role</string>
     <string name="gate_detail_user">User</string>
+    <string name="gate_detail_ip">IP address</string>
+    <string name="gate_detail_version">Communication version</string>
     <string name="toast_not_users_found">No users found</string>
     <string name="gate_detail_num_of_users">Number of users</string>
     <string name="gate_detail_num_of_devices">Number of devices</string>

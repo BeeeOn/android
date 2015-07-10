@@ -13,14 +13,12 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.GateDetailFragment;
-import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
-import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Log;
-
-import java.util.EnumSet;
 
 /**
  * Created by david on 23.6.15.
@@ -67,21 +65,17 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	public void onResume() {
 		super.onResume();
 
-		doReloadGatesAndActiveGateTask(mGateId, false);
+		doReloadGateInfo(mGateId, false);
 	}
 
-	private void doReloadGatesAndActiveGateTask(final String gateId, boolean forceReload) {
-		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(this, forceReload, EnumSet.of(
-				ReloadGateDataTask.ReloadWhat.GATES,
-				ReloadGateDataTask.ReloadWhat.DEVICES,
-				ReloadGateDataTask.ReloadWhat.USERS
-		));
+	private void doReloadGateInfo(final String gateId, boolean forceReload) {
+		ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(this, forceReload);
 
-		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+		reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				Gate gate = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGate(mGateId);
-				if (gate == null) {
+				GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
+				if (gateInfo == null) {
 					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
 					finish();
 				} else {
@@ -91,7 +85,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadGateDataTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+		callbackTaskManager.executeTask(reloadGateInfoTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 	}
 
 	@Override
@@ -105,9 +99,9 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				String title = getString(R.string.confirm_remove_gate_title_default);
 				String message = getString(R.string.confirm_remove_gate_message);
 
-				Gate gate = Controller.getInstance(this).getGatesModel().getGate(mGateId);
-				if (gate != null) {
-					title = getString(R.string.confirm_remove_gate_title, gate.getName());
+				GateInfo gateInfo = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
+				if (gateInfo != null) {
+					title = getString(R.string.confirm_remove_gate_title, gateInfo.getName());
 				}
 
 				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
@@ -172,7 +166,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	@Override
 	public void onForceReloadData() {
-		doReloadGatesAndActiveGateTask(mGateId, true);
+		doReloadGateInfo(mGateId, true);
 	}
 
 

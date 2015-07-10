@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.model;
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.DataHolder;
@@ -17,6 +18,8 @@ public class GatesModel extends BaseModel {
 	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
 
 	private final DataHolder<Gate> mGatesHolder = new DataHolder<>();
+
+	private final DataHolder<GateInfo> mGatesInfoHolder = new DataHolder<>();
 
 	public GatesModel(INetwork network) {
 		super(network);
@@ -54,6 +57,16 @@ public class GatesModel extends BaseModel {
 	 */
 	public Gate getGate(String id) {
 		return mGatesHolder.getObject(id);
+	}
+
+	/**
+	 * Return gate info by its ID.
+	 *
+	 * @param id
+	 * @return GateInfo if found, null otherwise
+	 */
+	public GateInfo getGateInfo(String id) {
+		return mGatesInfoHolder.getObject(id);
 	}
 
 	/**
@@ -115,6 +128,27 @@ public class GatesModel extends BaseModel {
 		mGatesHolder.setObjects(mNetwork.getGates());
 		mGatesHolder.setLastUpdate(DateTime.now());
 
+		return true;
+	}
+
+	/**
+	 * This CAN'T be called on UI thread!
+	 *
+	 * @param gateId
+	 * @param forceReload
+	 * @return
+	 */
+	public synchronized boolean reloadGateInfo(String gateId, boolean forceReload) throws AppException {
+		// FIXME: Check isExpired for single item
+		/*if (!forceReload && !mGatesInfoHolder.isExpired(RELOAD_EVERY_SECONDS)) {
+			return false;
+		}*/
+
+		GateInfo gateInfo = mNetwork.getGateInfo(gateId);
+		if (gateInfo == null)
+			return false;
+
+		mGatesInfoHolder.addObject(gateInfo);
 		return true;
 	}
 
