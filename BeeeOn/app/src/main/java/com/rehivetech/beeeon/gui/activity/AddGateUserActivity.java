@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -94,7 +95,21 @@ public class AddGateUserActivity extends BaseApplicationActivity {
 
 				User.DataPair pair = new User.DataPair(newUser, mGate.getId());
 
-				doAddGateUserTask(pair);
+				if (role.getSelectedItemPosition() == 3) {
+					final User.DataPair pairInner = pair;
+					String title = getString(R.string.confirm_add_owner_title);
+					String message = getString(R.string.confirm_add_owner_message, email.getText());
+					ConfirmDialog.confirm(AddGateUserActivity.this, title, message, R.string.button_add_user_confirm, new ConfirmDialog.ConfirmDialogListener() {
+						@Override
+						public void onConfirm() {
+							doAddGateUserTask(pairInner);
+						}
+					});
+				} else {
+					doAddGateUserTask(pair);
+				}
+
+
 			}
 		});
 	}

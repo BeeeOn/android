@@ -36,6 +36,7 @@
 
     <!-- Labels -->
     <string name="login_app_name">BeeeOn</string>
+	<string name="login_or_use">alebo použite</string>
     <string name="addsensor_add_sensor">Pridať zariadenie</string>
     <string name="addsensor_setup_sensor">Nastavte zaradenie</string>
     <string name="addsensor_or">alebo</string>
@@ -90,6 +91,7 @@
     <string name="toast_no_adapter">Nemáte žiadnu registrovanú bránu</string>
     <string name="toast_ignore_uninitialized_info">Neskôr môžete pridať ďalšie zariadenie ťuknutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všetkých zariadení</string>
+	<string name="toast_wrong_or_no_device">Nebolo zadané žiadne zariadenie alebo zvolené zariadenie je nesprávne</string>
     <string name="toast_no_uninitialized_devices">K dispozicií nie sú žiadne neinicializované zariadenia</string>
     <string name="toast_success_save_data">Údaje boli úspešne uložené</string>
     <string name="toast_fail_save_data">Uloženie údajov zlyhalo</string>

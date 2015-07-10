@@ -74,52 +74,52 @@
 	<string name="sensordetail_location_label">Location</string>
 	<string name="sensordetail_last_update_label">Last update</string>
 	<string name="sensordetail_signal_label">Signal state</string>
-    <string name="update_needed">Please update application</string>
-    <string name="addsensor_type">Type of module: </string>
-    <string name="setup_sensor_info_text">Please, setup your new module which was activated at </string>
-    <string name="setup_sensor_header_names">Device names</string>
-    <string name="setup_sensor_set_name">Set name of module</string>
-    <string name="setup_sensor_header_location">Location</string>
-    <string name="addadapter_add_adapter">Add gateway</string>
-    <string name="registration_label">New account</string>
-    <string name="registration_serial_number">For gateway with serial number: </string>
-    <string name="alert_title">Title</string>                                 
-    <string name="alert_message">Message</string>
-    <string name="refresh_time">Refresh time </string>
-    <string name="last_update">Last update: </string>
-    <string name="sen_graph_label">Graph of history</string>
-    <string name="users_header">Users</string>
-    <string name="users_pending_header">Pending request</string>
-    <string name="add_users_adapter">Add user</string> 
-    <string name="add_user_email_header">E-mail</string>
-    <string name="add_user_role_header">Role</string>
-    <string name="gate_user_title_change_role">Change user role</string>
+	<string name="update_needed">Please update application</string>
+	<string name="addsensor_type">Type of module: </string>
+	<string name="setup_sensor_info_text">Please, setup your new module which was activated at </string>
+	<string name="setup_sensor_header_names">Device names</string>
+	<string name="setup_sensor_set_name">Set name of module</string>
+	<string name="setup_sensor_header_location">Location</string>
+	<string name="addadapter_add_adapter">Add gateway</string>
+	<string name="registration_label">New account</string>
+	<string name="registration_serial_number">For gateway with serial number: </string>
+	<string name="alert_title">Title</string>
+	<string name="alert_message">Message</string>
+	<string name="refresh_time">Refresh time </string>
+	<string name="last_update">Last update: </string>
+	<string name="sen_graph_label">Graph of history</string>
+	<string name="users_header">Users</string>
+	<string name="users_pending_header">Pending request</string>
+	<string name="add_users_adapter">Add user</string>
+	<string name="add_user_email_header">E-mail</string>
+	<string name="add_user_role_header">Role</string>
+	<string name="gate_user_title_change_role">Change user role</string>
 
-    <!-- Hints -->
-    <string name="login_user_name_hint">Login/email</string>
-    <string name="addsensor_sensor_name_hint">Name of new module</string>
-    <string name="addsensor_new_location_hint">New location name</string>
-    <string name="addadapter_ser_num_hint">Serial number</string>
+	<!-- Hints -->
+	<string name="login_user_name_hint">Login/email</string>
+	<string name="addsensor_sensor_name_hint">Name of new module</string>
+	<string name="addsensor_new_location_hint">New location name</string>
+	<string name="addadapter_ser_num_hint">Serial number</string>
 
-    <!-- Toasts -->
-    <string name="toast_changeto">\u0020changed to: \u0020</string>
-    <string name="toast_new_sensor_added">New module was added</string>
-    <string name="toast_new_sensor_not_added">Error when adding module</string>
-    <string name="toast_need_sensor_name">Write name of module please</string>
-    <string name="toast_need_sensor_location_name">Write name of new location please</string>
-    <string name="toast_bad_password">Wrong name or password</string>
-    <string name="toast_connecting_to_server">Connecting to server &#8230;</string>
-    <string name="toast_welcome_text">Welcome </string>
-    <string name="toast_play_missing">GooglePlay is missing or outdated</string>
-    <string name="toast_internet_connection">Please turn internet connection on</string>
-    <string name="toast_no_unregistered_adapter">There is no connected unregistered gateway</string>
-    <string name="toast_communication_error">Sorry, some communication problem, try later</string>
-    <string name="toast_tap_again_exit">Tap back again to exit</string>
-    <string name="toast_google_auth">Google authentication</string>
-    <string name="toast_something_wrong">Something goes wrong, try it later please</string>
-    <string name="toast_check_your_connection_via_browser">Check your connection via browser</string>
-    <string name="toast_not_implemented">Not implemented yet!</string>
-    <string name="toast_login_failed">Login failed</string>
+	<!-- Toasts -->
+	<string name="toast_changeto">\u0020changed to: \u0020</string>
+	<string name="toast_new_sensor_added">New module was added</string>
+	<string name="toast_new_sensor_not_added">Error when adding module</string>
+	<string name="toast_need_sensor_name">Write name of module please</string>
+	<string name="toast_need_sensor_location_name">Write name of new location please</string>
+	<string name="toast_bad_password">Wrong name or password</string>
+	<string name="toast_connecting_to_server">Connecting to server &#8230;</string>
+	<string name="toast_welcome_text">Welcome </string>
+	<string name="toast_play_missing">GooglePlay is missing or outdated</string>
+	<string name="toast_internet_connection">Please turn internet connection on</string>
+	<string name="toast_no_unregistered_adapter">There is no connected unregistered gateway</string>
+	<string name="toast_communication_error">Sorry, some communication problem, try later</string>
+	<string name="toast_tap_again_exit">Tap back again to exit</string>
+	<string name="toast_google_auth">Google authentication</string>
+	<string name="toast_something_wrong">Something goes wrong, try it later please</string>
+	<string name="toast_check_your_connection_via_browser">Check your connection via browser</string>
+	<string name="toast_not_implemented">Not implemented yet!</string>
+	<string name="toast_login_failed">Login failed</string>
 	<string name="toast_registration_failed">Registration failed</string>
 	<string name="toast_auth_provider_error">Error during authorization process</string>
     <string name="toast_adapter_activate_failed">Failed to activate gateway,please try it again</string>
@@ -129,6 +129,7 @@
     <string name="toast_ignore_uninitialized_info">You can add these modules later by clicking on (+)</string>
     <string name="toast_empty_sensor_name">Please fill names of all modules</string>
     <string name="toast_not_specified_gate_or_module">Not specified gateway or module</string>
+	<string name="toast_wrong_or_no_device">Wrong or no module selected</string>
     <string name="toast_no_uninitialized_devices">There are no uninitialized modules</string>
     <string name="toast_success_save_data">Data saved successfully</string>
     <string name="toast_fail_save_data">Failed saving data</string>
@@ -142,104 +143,104 @@
     <string name="toast_not_specified_gate">Not specified Gateway</string>
     <string name="toast_error_not_supported_yet">This feature is not supported yet.</string>
 
-    <!-- Progress -->
+	<!-- Progress -->
 	<string name="progress_signing">Logging in&#8230;</string>
-    <string name="progress_google">Handshaking with Google&#8230;</string>
-    <string name="progress_signup">Registering new user&#8230;</string>
-    <string name="progress_loading_gates">Loading your gateways&#8230;</string>
-    <string name="progress_loading_gate">Loading gateway data&#8230;</string>
-    <string name="progress_loading_demo">Loading demo data&#8230;</string>
-    <string name="progress_saving_data">Saving data&#8230;</string>
-    <string name="progress_loading_devices">Loading your modules&#8230;</string>
-    <string name="progress_loading_locations">Loading your locations&#8230;</string>
-    <string name="progress_checking_location">Checking location&#8230;</string>
+	<string name="progress_google">Handshaking with Google&#8230;</string>
+	<string name="progress_signup">Registering new user&#8230;</string>
+	<string name="progress_loading_gates">Loading your gateways&#8230;</string>
+	<string name="progress_loading_gate">Loading gateway data&#8230;</string>
+	<string name="progress_loading_demo">Loading demo data&#8230;</string>
+	<string name="progress_saving_data">Saving data&#8230;</string>
+	<string name="progress_loading_devices">Loading your modules&#8230;</string>
+	<string name="progress_loading_locations">Loading your locations&#8230;</string>
+	<string name="progress_checking_location">Checking location&#8230;</string>
 	<string name="progress_loading_achievement">Loading achievement data&#8230;</string>
 
 
-    <!-- NavDrawer -->
-    <string name="drawer_open">OPEN</string>
-    <string name="drawer_close">CLOSE</string>
-    <string name="location">Locations</string>
-    <string name="custom_view">Custom views</string>
-    <string name="gate">Gateways</string>
-    <string name="no_location">No locations</string>
-    <string name="no_custom_view">No custom views</string>
-    <string name="no_gates">You have no gateways</string>
-    <string name="menu_managment">Management</string>
-    <string name="menu_control">Overview</string>
-    <string name="menu_dashboard">Graphs</string>
-    <string name="menu_applications">Applications</string>
-    <string name="menu_watchdog">Watchdog</string>
+	<!-- NavDrawer -->
+	<string name="drawer_open">OPEN</string>
+	<string name="drawer_close">CLOSE</string>
+	<string name="location">Locations</string>
+	<string name="custom_view">Custom views</string>
+	<string name="gate">Gateways</string>
+	<string name="no_location">No locations</string>
+	<string name="no_custom_view">No custom views</string>
+	<string name="no_gates">You have no gateways</string>
+	<string name="menu_managment">Management</string>
+	<string name="menu_control">Overview</string>
+	<string name="menu_dashboard">Graphs</string>
+	<string name="menu_applications">Applications</string>
+	<string name="menu_watchdog">Watchdog</string>
 
-    <!-- Add sensor dialog -->
-    <string name="addsensor_sending_request">Sending … </string>
-    <string name="addsensor_send_request">Send pair request  </string>
-    <string name="addsensor_active_pair">Active pair mode </string>
-    <string name="addadapter_textview_name">Name</string>
-    <string name="addadapter_view_setname">Set gateway name, e.g. Home</string>
-    <string name="addadapter_qr_button"> Scan QR code </string>
-    <string name="addadapter_manual_edit">Enter manually</string>
-    <string name="addadapter_qr_button_loading">Loading...</string>
-    <string name="dialog_code_title">Enter the code of the gate</string>
-    <string name="addsensor_send_pair">SEND PAIR</string>
-    <string name="addsensor_waiting">Waiting for start</string>
+	<!-- Add sensor dialog -->
+	<string name="addsensor_sending_request">Sending … </string>
+	<string name="addsensor_send_request">Send pair request  </string>
+	<string name="addsensor_active_pair">Active pair mode </string>
+	<string name="addadapter_textview_name">Name</string>
+	<string name="addadapter_view_setname">Set gateway name, e.g. Home</string>
+	<string name="addadapter_qr_button"> Scan QR code </string>
+	<string name="addadapter_manual_edit">Enter manually</string>
+	<string name="addadapter_qr_button_loading">Loading...</string>
+	<string name="dialog_code_title">Enter the code of the gate</string>
+	<string name="addsensor_send_pair">SEND PAIR</string>
+	<string name="addsensor_waiting">Waiting for start</string>
 	<string name="addsensor_time_left_unit">seconds</string>
 	<string name="addsensor_device_not_found_in_time">The device was not found, please check if it is really switched on and try it again</string>
 	<string name="addsensor_device_found">The device was found</string>
-    <string name="addsensor_request_task_not_successful">Request task was not successful, please, try it again</string>
-    <string name="adddevice_title">Adding new device</string>
-    <string name="addadapter_title">Adding new gate</string>
-    <string name="addadapter_last_fragment_title">Enter the code of the gate</string>
-    <string name="addadapter_last_fragment_text">You can either scan the QR code on the gate or write the code manually</string>
+	<string name="addsensor_request_task_not_successful">Request task was not successful, please, try it again</string>
+	<string name="adddevice_title">Adding new device</string>
+	<string name="addadapter_title">Adding new gate</string>
+	<string name="addadapter_last_fragment_title">Enter the code of the gate</string>
+	<string name="addadapter_last_fragment_text">You can either scan the QR code on the gate or write the code manually</string>
 
-    <!-- Others -->
-    <string name="action_settings">Settings</string>
-    <string name="action_about">About</string>
-    <string name="action_search">Search</string>
-    <string name="action_refreshlist">Refresh list</string>
-    <string name="action_addgate">Add gateway</string>
-    <string name="action_addsensor">Add module</string>
-    <string name="action_logout">Logout</string>
-    <string name="action_hide_sensor">Hide module</string>
-    <string name="action_unregist_device">Remove module</string>
-    <string name="action_hide_device">Hide module</string>
-    <string name="action_close">Cancel</string>
-    <string name="action_done">Done</string>
-    <string name="action_intro">Intro</string>
-    <string name="action_intro_dialog">Intro dialog</string>
-    <string name="addadapter_qrcode_desc">Get QR code</string>
-    <string name="addsensor_new_location_spinner">New location</string>
-    <string name="sen_detail_graph_info">Tap to Active</string>
-    <string name="loading_data">Loading data&#8230;</string>
-    <string name="no_sensor_cap">NO DEVICE</string>
-    <string name="no_gate_cap">NO GATEWAY</string>
-    <string name="no_rules_cap">NO RULE</string>
-    <string name="no_locations_cap">NO LOCATIONS</string>
-    <string name="profile_category_senzors">Devices</string>
-    <string name="profile_category_friends">Friends</string>
-    <string name="profile_category_app">Application</string>
-    <string name="profile_level">Level</string>
+	<!-- Others -->
+	<string name="action_settings">Settings</string>
+	<string name="action_about">About</string>
+	<string name="action_search">Search</string>
+	<string name="action_refreshlist">Refresh list</string>
+	<string name="action_addgate">Add gateway</string>
+	<string name="action_addsensor">Add module</string>
+	<string name="action_logout">Logout</string>
+	<string name="action_hide_sensor">Hide module</string>
+	<string name="action_unregist_device">Remove module</string>
+	<string name="action_hide_device">Hide module</string>
+	<string name="action_close">Cancel</string>
+	<string name="action_done">Done</string>
+	<string name="action_intro">Intro</string>
+	<string name="action_intro_dialog">Intro dialog</string>
+	<string name="addadapter_qrcode_desc">Get QR code</string>
+	<string name="addsensor_new_location_spinner">New location</string>
+	<string name="sen_detail_graph_info">Tap to Active</string>
+	<string name="loading_data">Loading data&#8230;</string>
+	<string name="no_sensor_cap">NO DEVICE</string>
+	<string name="no_gate_cap">NO GATEWAY</string>
+	<string name="no_rules_cap">NO RULE</string>
+	<string name="no_locations_cap">NO LOCATIONS</string>
+	<string name="profile_category_senzors">Devices</string>
+	<string name="profile_category_friends">Friends</string>
+	<string name="profile_category_app">Application</string>
+	<string name="profile_level">Level</string>
 	<string name="profile_more_accounts">More accounts</string>
 	<string name="profile_new_account">Pair with selected network</string>
 
-    <!-- Arrays -->
-    <string-array name="registration_spinner">
-        <item>Facebook</item>
-        <item>Google</item>
-        <item>MojeID</item>
-    </string-array>
-    <string-array name="items">
-        <item>Item 1</item>
-        <item>Item 2</item>
-        <item>Item 3</item>
-        <item>Item 4</item>
-        <item>Item 5</item>
-        <item>Item 6</item>
-    </string-array>
-    <string-array name="title_of_main_fragments">
-        <item>List</item>
-        <item>Custom</item>
-    </string-array>
+	<!-- Arrays -->
+	<string-array name="registration_spinner">
+		<item>Facebook</item>
+		<item>Google</item>
+		<item>MojeID</item>
+	</string-array>
+	<string-array name="items">
+		<item>Item 1</item>
+		<item>Item 2</item>
+		<item>Item 3</item>
+		<item>Item 4</item>
+		<item>Item 5</item>
+		<item>Item 6</item>
+	</string-array>
+	<string-array name="title_of_main_fragments">
+		<item>List</item>
+		<item>Custom</item>
+	</string-array>
 
 	<string name="user_role_superuser">Owner</string>
 	<string name="user_role_admin">Admin</string>
@@ -364,19 +365,19 @@
     <string name="tutorial_add">ADD</string>
 	<string name="tutorial_skip">SKIP</string>
 
-    <string name="tutorial_open_menu">Open Menu</string>
-    <string name="tutorial_open_menu_text">For switch location tap to Icon and Menu will rise</string>
-    <!-- Help in Add dialogs -->
-    <string name="tut_add_gate_text_1">Please connect your gateway to the Internet</string>
-    <string name="tut_add_gate_text_2">Please connect your gateway to the AC power</string>
-    <string name="tut_add_gate_text_3">In the next step, please give name to your gateway and scan QR code</string>
-    <string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
-    <string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actuator</string>
-    <string name="tut_add_sensor_title_1">Pull out the battery stripe</string>
-    <string name="tut_add_sensor_title_2">Prepare your device</string>
-    <string name="tut_add_gate_title_1">Connect the gate to the internet</string>
-    <string name="tut_add_gate_title_2">Connect the gate to the AC power</string>
-    <string name="tut_add_gate_title_3">Final information</string>
+	<string name="tutorial_open_menu">Open Menu</string>
+	<string name="tutorial_open_menu_text">For switch location tap to Icon and Menu will rise</string>
+	<!-- Help in Add dialogs -->
+	<string name="tut_add_gate_text_1">Please connect your gateway to the Internet</string>
+	<string name="tut_add_gate_text_2">Please connect your gateway to the AC power</string>
+	<string name="tut_add_gate_text_3">In the next step, please give name to your gateway and scan QR code</string>
+	<string name="tut_add_sensor_text_1">Please pull out battery stripe</string>
+	<string name="tut_add_sensor_text_2">Please shake with new sensor shortly while countdown is running or push pair button on actuator</string>
+	<string name="tut_add_sensor_title_1">Pull out the battery stripe</string>
+	<string name="tut_add_sensor_title_2">Prepare your device</string>
+	<string name="tut_add_gate_title_1">Connect the gate to the internet</string>
+	<string name="tut_add_gate_title_2">Connect the gate to the AC power</string>
+	<string name="tut_add_gate_title_3">Final information</string>
 
     <!-- Watchdog -->
     <string name="action_watchdog">Watchdog</string>
@@ -390,7 +391,7 @@
     <string name="notification_text">Notification text</string>
     <string name="actor_required">Please select actor</string>
 	<string name="watchdog_no_valid_item">No valid item to check</string>
-    <string name="multiadapter_no_item">- Nothing to select -</string>
+	<string name="multiadapter_no_item">- Nothing to select -</string>
 
 	<string name="title_activity_module_edit">Edit device</string>
 	<string name="sensor_name_label">Name of module</string>
@@ -407,8 +408,8 @@
 	<string name="unit_meter_short" translatable="false">m</string>
 	<string name="tutorial_go_to_app">START</string>
 
-    <string name="modules">Devices</string>
-	
+	<string name="modules">Devices</string>
+
 	<string name="toast_delete_fail">Unable to remove</string>
 	<string name="toast_delete_success">Successfully removed</string>
 	<string name="addadapter_fill_name">Please fill gateway name</string>
@@ -432,6 +433,7 @@
     <string name="button_remove">Remove</string>
     <string name="button_change_ownership">Change ownership</string>
     <string name="button_unregister">Unregister</string>
+	<string name="button_add_user_confirm">Add User</string>
 
     <!-- Titles and messages for confirm dialog -->
     <string name="confirm_remove_watchdog_title">Remove \"%1$s\"</string>
@@ -445,6 +447,8 @@
     <string name="confirm_change_ownership_message">You will hand over ownership of the gateway. You will not be able to manage users, devices and other settings of this gateway.</string>
     <string name="confirm_remove_user_title">Remove \"%1$s\"</string>
     <string name="confirm_remove_user_message">This user will lost access to your gateway and he won\'t be able to read or interact with your data anymore.</string>
+	<string name="confirm_add_owner_title">New User as Owner</string>
+	<string name="confirm_add_owner_message">You are going to give owner rights to new user. \"%1$s\" get rights to full access of gate and administration.</string>
 
     <string name="graph_interval_values">Graph interval values</string>
     <string name="interval_weekly">Weekly</string>
