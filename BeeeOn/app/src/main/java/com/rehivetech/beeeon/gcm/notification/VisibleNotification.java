@@ -121,8 +121,8 @@ public abstract class VisibleNotification extends BaseNotification {
 
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-				.setSmallIcon(R.drawable.beeeon_logo_white)
-				.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.beeeon_logo_white_icons))
+				.setSmallIcon(R.drawable.beeeon_logo_white_border)
+				.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.beeeon_logo_white_border))
 				.setWhen(getDate().getTimeInMillis())
 				.setContentTitle(context.getText(R.string.app_name))
 				.setDefaults(NotificationCompat.DEFAULT_ALL)

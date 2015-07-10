@@ -16,7 +16,7 @@
             android:layout_width="100px"
             android:layout_height="100px"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/beeeon_logo" />
+            android:src="@drawable/beeeon_logo_cyan_border" />
 
         <TextView
             android:id="@+id/text_only"

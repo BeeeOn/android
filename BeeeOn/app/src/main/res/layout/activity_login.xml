@@ -18,7 +18,7 @@
 			android:layout_gravity="center"
 			android:orientation="horizontal"
 			android:padding="10dp"
-			android:src="@drawable/beeeon_logo_white_icons_transparent"
+			android:src="@drawable/beeeon_logo_white_transparent"
 			android:layout_centerVertical="true"
 			android:layout_alignParentLeft="true"
 			android:layout_alignParentStart="true"
