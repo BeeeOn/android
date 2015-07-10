@@ -22,9 +22,6 @@ import android.widget.TextView;
 import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
 import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -33,6 +30,7 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.FillFormatter;
 import com.github.mikephil.charting.utils.ValueFormatter;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
@@ -46,7 +44,6 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.units.BaseUnit;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BoilerOperationModeValue;
@@ -61,6 +58,7 @@ import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -71,9 +69,7 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -83,6 +79,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_MODULE_ID = "module_id";
+
 
 	private static final int REQUEST_BOILER_TYPE = 7894;
 	private static final int REQUEST_BOILER_MODE = 1236;
@@ -363,8 +360,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Add Graph
 		if (mUnitsHelper != null && mTimeHelper != null) {
-			DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
-			addGraphView(module, fmt, mUnitsHelper);
+			addGraphView(module);
 		}
 
 		// Visible all elements
@@ -414,82 +410,30 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
 	}
 
-	private void addGraphView(@NonNull final Module module, @NonNull final DateTimeFormatter fmt, @NonNull final UnitsHelper unitsHelper) {
+	private void addGraphView(@NonNull final Module module) {
+		Controller controller = Controller.getInstance(mActivity);
+		BaseValue baseValue = module.getValue();
 
-		ValueFormatter enumValueFormatter = null;
-		XAxis xAxis = mChart.getXAxis();
-		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		xAxis.setAxisLineColor(getResources().getColor(R.color.beeeon_text_hint));
-
-		YAxis yAxis = mChart.getAxisLeft();
-		yAxis.setAxisLineColor(getResources().getColor(R.color.beeeon_text_hint));
-
-		if (module.getValue() instanceof BaseEnumValue) {
-			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)module.getValue()).getEnumItems();
-			if (yLabels.size() > 2) {
-				enumValueFormatter = new ValueFormatter() {
-					@Override
-					public String getFormattedValue(float value) {
-						return String.format("%.0f.", yLabels.size() - value);
-					}
-				};
-				LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.sen_third_section);
-				if (layout.getVisibility() != View.VISIBLE) {
-					int j = 1;
-					for(int i = yLabels.size() - 1; i > -1; i--) {
-						TextView label = new TextView(mActivity);
-						label.setText(String.format("%d. %s", j++, mActivity.getString(yLabels.get(i).getStringResource())));
-						layout.addView(label);
-					}
-				}
-			} else {
-				enumValueFormatter = new ValueFormatter() {
-
-					@Override
-					public String getFormattedValue(float value) {
-						return mActivity.getString(yLabels.get((int) value).getStringResource());
-					}
-				};
-			}
-
-			yAxis.setValueFormatter(enumValueFormatter);
-			yAxis.setLabelCount(yLabels.size() - 1);
-			yAxis.setAxisMinValue(0);
-			yAxis.setAxisMaxValue(yLabels.size() - 1);
-
-			if (yLabels.size() == 2) {
-				yAxis.setShowOnlyMinMax(true);
-			}
-		}
-		mChart.getAxisRight().setEnabled(false);
-		mChart.getLegend().setForm(Legend.LegendForm.CIRCLE);
-		mChart.setDrawBorders(true);
-		mChart.setDescription("");
-
-		String unit = mUnitsHelper.getStringUnit(module.getValue());
+		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.sen_third_section);
+		String unit = mUnitsHelper.getStringUnit(baseValue);
 		String name = getString(module.getTypeStringResource());
+		ValueFormatter valueFormatter = ChartHelper.getValueFormatterInstance(baseValue, mActivity, controller);
 
-		if (module.getValue() instanceof BaseEnumValue) {
+		//set chart
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, layout, controller);
+		mChart.setFillFormatter(new CustomFillFormatter());
+
+
+		if (baseValue instanceof BaseEnumValue) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), name);
 		} else {
 			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(),String.format("%s [%s]",name, unit));
 			((LineDataSet)mDataSet).setDrawCircles(false);
 			((LineDataSet)mDataSet).setDrawFilled(true);
 			((LineDataSet)mDataSet).setFillColor(getResources().getColor(R.color.alpha_blue));
-
 		}
 		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
-		if (module.getValue() instanceof BaseEnumValue) {
-
-			mDataSet.setValueFormatter(enumValueFormatter);
-		} else {
-			mDataSet.setValueFormatter(new ValueFormatter() {
-				@Override
-				public String getFormattedValue(float value) {
-					return value + mUnitsHelper.getStringUnit(module.getValue());
-				}
-			});
-		}
+		mDataSet.setValueFormatter(valueFormatter);
 	}
 
 	public void fillGraph(ModuleLog log, Module module) {
@@ -678,5 +622,16 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 		module.setValue(String.valueOf(value));
 		doChangeStateModuleTask(module);
+	}
+
+	/**
+	 * Custom fill formatter which allow fill chart from bottom
+	 */
+	protected class CustomFillFormatter implements FillFormatter {
+
+		@Override
+		public float getFillLinePosition(LineDataSet dataSet, LineData data, float chartMaxY, float chartMinY) {
+			return chartMinY;
+		}
 	}
 }

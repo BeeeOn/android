@@ -31,7 +31,6 @@ final public class ChartHelper {
 	private ChartHelper() {
 	}
 
-	;
 
 	public static void prepareGraphView(final GraphView graphView, final Context context, final Module module, final DateTimeFormatter fmt, final UnitsHelper unitsHelper) {
 		boolean isEnumValue = module.getValue() instanceof BaseEnumValue;
@@ -111,16 +110,17 @@ final public class ChartHelper {
 		}
 	}
 
-	public static void prepareChart(BarLineChartBase chart, final Context context, Module module, ViewGroup layout, Controller controller) {
+	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, ViewGroup layout, Controller controller) {
 
 //		final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)module.getValue()).getEnumItems();
-		ValueFormatter enumValueFormatter = getValueFormatterInstance(module, context, controller);
+		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		Legend legend = chart.getLegend();
 		legend.setForm(Legend.LegendForm.CIRCLE);
 
-		chart.setDrawBorders(true);
+//		chart.setDrawBorders(true);
 		chart.setDescription("");
+		chart.setHighlightEnabled(false);
 
 		//set bottom X axis style
 		XAxis xAxis = chart.getXAxis();
@@ -135,18 +135,17 @@ final public class ChartHelper {
 		//disable right Y axis
 		chart.getAxisRight().setEnabled(false);
 
-		if (module.getValue() instanceof BaseEnumValue) {
-			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)module.getValue()).getEnumItems();
+		if (baseValue instanceof BaseEnumValue) {
+			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
-//				if (layout.getVisibility() != View.VISIBLE) {
+				if (layout.getVisibility() != View.VISIBLE) {
 					int j = 1;
 					for(int i = yLabels.size() - 1; i > -1; i--) {
 						TextView label = new TextView(context);
 						label.setText(String.format("%d. %s", j++, context.getString(yLabels.get(i).getStringResource())));
 						layout.addView(label);
 					}
-//				}
-				legend.setPosition(Legend.LegendPosition.BELOW_CHART_CENTER);
+				}
 			} else {
 				yAxis.setShowOnlyMinMax(true);
 			}
@@ -158,10 +157,10 @@ final public class ChartHelper {
 		}
 	}
 
-	public static ValueFormatter getValueFormatterInstance(final Module module, final Context context, Controller controller) {
+	public static ValueFormatter getValueFormatterInstance(final BaseValue baseValue, final Context context, Controller controller) {
 		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), context);
-		if (module.getValue() instanceof BaseEnumValue) {
-			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)module.getValue()).getEnumItems();
+		if (baseValue instanceof BaseEnumValue) {
+			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue)baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
 				return new ValueFormatter() {
 					@Override
@@ -181,7 +180,7 @@ final public class ChartHelper {
 		return new ValueFormatter() {
 			@Override
 			public String getFormattedValue(float value) {
-				return value + unitsHelper.getStringUnit(module.getValue());
+				return value + unitsHelper.getStringUnit(baseValue);
 			}
 		};
 	}

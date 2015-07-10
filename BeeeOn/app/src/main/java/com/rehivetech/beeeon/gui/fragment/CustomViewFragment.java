@@ -86,9 +86,11 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			chart = new LineChart(mActivity);
 		}
 		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.graph_layout);
+		chartLayout.setVisibility(View.INVISIBLE);
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400));
 		chartLayout.addView(chart);
-		ChartHelper.prepareChart(chart, mActivity, module, chartLayout, Controller.getInstance(mActivity));
+		ChartHelper.prepareChart(chart, mActivity, module.getValue(), chartLayout, Controller.getInstance(mActivity));
+		chartLayout.setVisibility(View.VISIBLE);
 
 
 		// Set title
@@ -158,7 +160,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			((LineDataSet)dataSet).setLineWidth(2f);
 		}
 		dataSet.setColor(color);
-		dataSet.setValueFormatter(ChartHelper.getValueFormatterInstance(module,mActivity,controller));
+		dataSet.setValueFormatter(ChartHelper.getValueFormatterInstance(module.getValue(),mActivity,controller));
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();
