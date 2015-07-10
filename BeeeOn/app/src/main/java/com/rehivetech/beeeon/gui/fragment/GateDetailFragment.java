@@ -127,9 +127,11 @@ public class GateDetailFragment extends Fragment {
 		else
 			mTitleText.setText(R.string.gate_no_name);
 
+		int offsetInMillis = gate.getUtcOffset() * 60 * 1000;
+
 		mDetailsItemList.get(0).text = gate.getId();
 		mDetailsItemList.get(1).text = gate.getRole().toString();
-		mDetailsItemList.get(2).text = TimezoneWrapper.getZoneByOffset(gate.getUtcOffsetMillis()).toString();
+		mDetailsItemList.get(2).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
 
 		List<User> gateUsers = controller.getUsersModel().getUsersByGate(mGateId);
 		DetailsItem usersDetailsItem = mDetailsItemList.get(3);

@@ -292,7 +292,7 @@ public class DemoNetwork implements INetwork {
 			return false;
 
 		oldGate.setName(gate.getName());
-		oldGate.setUtcOffsetMillis(gate.getUtcOffsetMillis());
+		oldGate.setUtcOffset(gate.getUtcOffset());
 		return true;
 	}
 
