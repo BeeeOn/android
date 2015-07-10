@@ -31,6 +31,9 @@ public enum NetworkError implements IErrorCode, IIdentifier {
 	BAD_PSWD(25),
 	SUSPECT_USER(26),
 	INVALID_PROVIDER(27),
+	NO_EMAIL(28),
+	EMAIL_PROVIDER_MISMATCH(29),
+	LOGOUT_FAILED(30),
 	ADA_SERVER_PROBLEM(100),
 
 	// Errors from UI server

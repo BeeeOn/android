@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
@@ -30,9 +31,9 @@ import java.util.Map;
  */
 public class XmlCreator {
 
-	private static final String ns = null;
+	protected static final String ns = null;
 
-	private static final String COM_VER = Constants.COM_VER;
+	protected static final String COM_VER = Constants.COM_VER;
 
 	// states
 
@@ -41,11 +42,15 @@ public class XmlCreator {
 	public static final String GETUSERINFO = "getuserinfo";
 	public static final String JOINACCOUNT = "joinaccount";
 	public static final String CUTACCOUNT = "cutaccount";
+	public static final String LOGOUT = "logout";
 
 	public static final String ADDGATE = "addadapter";
 	public static final String REINITGATE = "reinitadapter";
 	public static final String GETGATES = "getadapters";
+	public static final String GETGATEINFO = "getgateinfo";
+	public static final String DELGATE = "deladapter";
 	public static final String SCANMODE = "scanmode";
+	public static final String SETGATE = "setgate";
 
 	public static final String ADDACCOUNTS = "addaccs";
 	public static final String DELACCOUNTS = "delaccs";
@@ -87,7 +92,7 @@ public class XmlCreator {
 
 	// end of states
 
-	private static XmlSerializer beginXml(StringWriter writer) throws IOException {
+	protected static XmlSerializer beginXml(StringWriter writer) throws IOException {
 		XmlSerializer serializer = Xml.newSerializer();
 
 		serializer.setOutput(writer);
@@ -99,7 +104,7 @@ public class XmlCreator {
 		return serializer;
 	}
 
-	private static void endXml(XmlSerializer serializer) throws IOException {
+	protected static void endXml(XmlSerializer serializer) throws IOException {
 		serializer.text("");
 		serializer.endTag(ns, Xconstants.COM_ROOT);
 		serializer.endDocument();
@@ -224,6 +229,16 @@ public class XmlCreator {
 	}
 
 	/**
+	 * Method create message for loging out user
+	 * @param bt beeeon Token (session Id)
+	 * @return xml with logout message
+	 * @since 2.5
+	 */
+	public static String createLogout(String bt){
+		return createComAttribsVariant(Xconstants.STATE, LOGOUT, Xconstants.BT, bt);
+	}
+
+	/**
 	 * Method create message for obtain information about user
 	 *
 	 * @param bt beeeon Token (session Id)
@@ -258,16 +273,45 @@ public class XmlCreator {
 	}
 
 	/**
-	 * Method create XML for ReInit message
+	 * Method create XML of GetGateInfo message
 	 *
-	 * @param bt        userID of user
-	 * @param gateIdOld old id of gate
-	 * @param gateIdNew new id of gate
-	 * @return ReInit message
-	 * @since 2.2
+	 * @param bt BeeeOn token (active session)
+	 * @return GetGateInfo message
+	 * @since 2.5
 	 */
-	public static String createReInitGate(String bt, String gateIdOld, String gateIdNew) {
-		return createComAttribsVariant(Xconstants.STATE, REINITGATE, Xconstants.BT, bt, Xconstants.OLDID, gateIdOld, Xconstants.NEWID, gateIdNew);
+	public static String createGetGateInfo(String bt, String gateId) {
+		return createComAttribsVariant(
+				Xconstants.STATE, GETGATEINFO,
+				Xconstants.BT, bt,
+				Xconstants.AID, gateId);
+	}
+
+	/**
+	 * Method create message for removing actual user from adapter
+	 * @param bt beeeon Token (session Id)
+	 * @param aid gate Id
+	 * @return xml with delAdapter message
+	 * @since 2.4
+	 */
+	public static String createDelGate(String bt, String aid){
+		return createComAttribsVariant(Xconstants.STATE, DELGATE, Xconstants.BT, bt, Xconstants.AID, aid);
+	}
+
+	/**
+	 * New method create XML of SetDevs message with only one module in it. toSave parameter must by set properly.
+	 *
+	 * @param bt BeeeOn token (active session)
+	 * @param gate to save
+	 * @return SetGate message
+	 * @since 2.5
+	 */
+	public static String createSetGate(String bt, Gate gate) {
+		return createComAttribsVariant(
+				Xconstants.STATE, SETGATE,
+				Xconstants.BT, bt,
+				Xconstants.AID, gate.getId(),
+				Xconstants.ANAME, gate.getName(),
+				Xconstants.UTC, String.valueOf(gate.getUtcOffset()));
 	}
 
 	// /////////////////////////////////////DEVICES,LOGS///////////////////////////////////////////////
@@ -683,33 +727,6 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.STATE, GETACCOUNTS, Xconstants.BT, bt, Xconstants.AID, aid);
 	}
 
-	// /////////////////////////////////////TIME///////////////////////////////////////////////////////
-
-	/**
-	 * Method create XML of SetTimeZone message
-	 *
-	 * @param bt              userID of user
-	 * @param aid             gateId of actual gate
-	 * @param offsetInMinutes difference to GMT (Xconstants.UTC+0)
-	 * @return SetTimeZone message
-	 * @since 2.2
-	 */
-	public static String createSetTimeZone(String bt, String aid, int offsetInMinutes) {
-		return createComAttribsVariant(Xconstants.STATE, SETTIMEZONE, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.UTC, Integer.toString(offsetInMinutes));
-	}
-
-	/**
-	 * Method create XML of GetTimeZone message
-	 *
-	 * @param bt  userID of user
-	 * @param aid gateId of actual gate
-	 * @return GetTimeZone message
-	 * @since 2.2
-	 */
-	public static String createGetTimeZone(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETTIMEZONE, Xconstants.BT, bt, Xconstants.AID, aid);
-	}
-
 	// /////////////////////////////////////LOCALE/////////////////////////////////////////////////////
 
 	/**
@@ -958,7 +975,7 @@ public class XmlCreator {
 
 	// /////////////////////////////////////PRIVATE METHODS//////////////////////////////////////////////
 
-	private static String createComAttribsVariant(String... args) {
+	protected static String createComAttribsVariant(String... args) {
 		if (0 != (args.length % 2)) { // odd
 			throw new RuntimeException("Bad params count");
 		}

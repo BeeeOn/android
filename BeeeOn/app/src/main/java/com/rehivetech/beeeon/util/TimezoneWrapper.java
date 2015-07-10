@@ -14,13 +14,11 @@ import java.util.List;
 public class TimezoneWrapper implements Comparable<TimezoneWrapper> {
 	public final DateTimeZone timezone;
 	public final int offsetInMillis;
-	public final int offsetInMinutes;
 
 	private static List<TimezoneWrapper> mTimezones = null;
 
 	private TimezoneWrapper(DateTimeZone timezone, int millis) {
 		this.timezone = timezone;
-		this.offsetInMinutes = millis / (1000 * 60);
 		this.offsetInMillis = millis;
 	}
 
@@ -71,13 +69,13 @@ public class TimezoneWrapper implements Comparable<TimezoneWrapper> {
 
 	@Override
 	public boolean equals(Object o) {
-		return (o instanceof TimezoneWrapper) && this.offsetInMinutes == ((TimezoneWrapper) o).offsetInMinutes;
+		return (o instanceof TimezoneWrapper) && this.offsetInMillis == ((TimezoneWrapper) o).offsetInMillis;
 	}
 
 	@Override
 	public int compareTo(TimezoneWrapper another) {
-		int lhs = offsetInMinutes;
-		int rhs = another.offsetInMinutes;
+		int lhs = offsetInMillis;
+		int rhs = another.offsetInMillis;
 
 		return lhs < rhs ? -1 : (lhs == rhs ? 0 : 1);
 	}

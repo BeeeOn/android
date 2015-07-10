@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.TimezoneWrapper;
 
@@ -92,6 +92,9 @@ public class GateDetailFragment extends Fragment {
 			}
 		}));
 
+		mDetailsItemList.add(new DetailsItem(0, R.string.gate_detail_ip, loadingText));
+		mDetailsItemList.add(new DetailsItem(0, R.string.gate_detail_version, loadingText));
+
 		mGateDetailsAdapter = new GateDetailsAdapter(getActivity(), mDetailsItemList);
 		mDetailsListView.setAdapter(mGateDetailsAdapter);
 
@@ -118,28 +121,33 @@ public class GateDetailFragment extends Fragment {
 	public void fillData() {
 		Controller controller = Controller.getInstance(getActivity());
 
-		Gate gate = controller.getGatesModel().getGate(mGateId);
-		if (gate == null)
+		GateInfo gateInfo = controller.getGatesModel().getGateInfo(mGateId);
+		if (gateInfo == null)
 			return;
 
-		if (gate.hasName())
-			mTitleText.setText(gate.getName());
+		if (gateInfo.hasName())
+			mTitleText.setText(gateInfo.getName());
 		else
 			mTitleText.setText(R.string.gate_no_name);
 
-		mDetailsItemList.get(0).text = gate.getId();
-		mDetailsItemList.get(1).text = gate.getRole().toString();
-		mDetailsItemList.get(2).text = TimezoneWrapper.getZoneByOffset(gate.getUtcOffsetMillis()).toString();
+		int offsetInMillis = gateInfo.getUtcOffset() * 60 * 1000;
 
-		List<User> gateUsers = controller.getUsersModel().getUsersByGate(mGateId);
+		mDetailsItemList.get(0).text = gateInfo.getId();
+		mDetailsItemList.get(1).text = gateInfo.getRole().toString();
+		mDetailsItemList.get(2).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
+
+		int usersCount = gateInfo.getUsersCount();
 		DetailsItem usersDetailsItem = mDetailsItemList.get(3);
-		usersDetailsItem.buttonEnabled = !gateUsers.isEmpty();
-		usersDetailsItem.text = (String.format("%d", gateUsers.size()));
+		usersDetailsItem.buttonEnabled = usersCount > 0;
+		usersDetailsItem.text = (String.format("%d", usersCount));
 
-		List<Device> gateDevices = controller.getDevicesModel().getDevicesByGate(mGateId);
+		int devicesCount = gateInfo.getDevicesCount();
 		DetailsItem devicesDetailsItem = mDetailsItemList.get(4);
-		devicesDetailsItem.buttonEnabled = !gateDevices.isEmpty();
-		devicesDetailsItem.text = (String.format("%d", gateDevices.size()));
+		devicesDetailsItem.buttonEnabled = devicesCount > 0;
+		devicesDetailsItem.text = (String.format("%d", devicesCount));
+
+		mDetailsItemList.get(5).text = gateInfo.getIp();
+		mDetailsItemList.get(6).text = gateInfo.getVersion();
 
 		mGateDetailsAdapter.notifyDataSetChanged();
 	}
@@ -191,7 +199,8 @@ public class GateDetailFragment extends Fragment {
 			Button button = (Button) convertView.findViewById(R.id.simple_list_layout_button_details);
 
 			// Populate the data into the template view using the data object
-			image.setImageResource(detailsItem.imageRes);
+			if (detailsItem.imageRes > 0)
+				image.setImageResource(detailsItem.imageRes);
 			text.setText(detailsItem.text);
 			title.setText(detailsItem.titleRes);
 

@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
@@ -293,11 +294,8 @@ public class Network implements INetwork {
 		if (checkBT && !hasBT())
 			throw new AppException(NetworkError.BAD_BT);
 
-		// ParsedMessage msg = null;
-		// Debug.startMethodTracing("Support_231");
-		// long ltime = new Date().getTime();
 		try {
-			Log.d(TAG + " fromApp >>", messageToSend);
+			Log.i(TAG + " fromApp >>", messageToSend);
 			String result = startCommunication(messageToSend);
 			Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
 
@@ -319,11 +317,7 @@ public class Network implements INetwork {
 			return new XmlParsers().parseCommunication(result, false);
 		} catch (IOException | XmlPullParserException | ParseException e) {
 			throw AppException.wrap(e, ClientError.XML);
-		} /*finally {
-			// Debug.stopMethodTracing();
-			// ltime = new Date().getTime() - ltime;
-			// android.util.Log.d("Support_231", ltime+"");
-		}*/
+		}
 	}
 
 	/**
@@ -402,6 +396,16 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	public boolean logout() {
+		ParsedMessage msg = doRequest(XmlCreator.createLogout(mBT));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
+	}
+
+	@Override
 	public boolean addProvider(IAuthProvider authProvider) {
 		ParsedMessage msg = doRequest(XmlCreator.createJoinAccount(mBT, authProvider));
 
@@ -464,6 +468,16 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	public GateInfo getGateInfo(String gateId) {
+		ParsedMessage msg = doRequest(XmlCreator.createGetGateInfo(mBT, gateId));
+
+		if (msg.getState() == State.GATEINFO)
+			return (GateInfo) msg.data;
+
+		throw processFalse(msg);
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<Device> initGate(String gateId) {
 		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mBT, gateId));
@@ -475,8 +489,8 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean reInitGate(String oldId, String newId) {
-		ParsedMessage msg = doRequest(XmlCreator.createReInitGate(mBT, oldId, newId));
+	public boolean updateGate(Gate gate) {
+		ParsedMessage msg = doRequest(XmlCreator.createSetGate(mBT, gate));
 
 		if (msg.getState() == State.TRUE)
 			return true;
@@ -485,14 +499,16 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateGate(Gate gate) {
-		// FIXME someone should implement this method in the future when the server is ready for it
-		return false;
+	public boolean deleteGate(String gateId){
+		ParsedMessage msg = doRequest(XmlCreator.createDelGate(mBT, gateId));
+
+		if (msg.getState() == State.TRUE)
+			return true;
+
+		throw processFalse(msg);
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<SaveModule> toSave) {
@@ -739,27 +755,6 @@ public class Network implements INetwork {
 		return updateAccounts(gateId, list);
 	}
 
-	// /////////////////////////////////////TIME////////////////////////////////////////
-
-	public boolean setTimeZone(String gateId, int offsetInMinutes) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetTimeZone(mBT, gateId, offsetInMinutes));
-
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	public int getTimeZone(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetTimeZone(mBT, gateId));
-
-		if (msg.getState() == State.TIMEZONE)
-			return (Integer) msg.data;
-
-		throw processFalse(msg);
-	}
-
 	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
 
 	/**
@@ -803,11 +798,7 @@ public class Network implements INetwork {
 		throw processFalse(msg);
 	}
 
-	/**
-	 * TODO: method need to be checked online
-	 *
-	 * @return
-	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public List<VisibleNotification> getNotifications() {
 		ParsedMessage msg = doRequest(XmlCreator.createGetNotifications(mBT));

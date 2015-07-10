@@ -98,7 +98,8 @@ public class GateEditFragment extends Fragment {
 			mGateNameEditText.setText(gate.getName());
 			mGateIdTextView.setText(gate.getId());
 
-			int index = mTimezones.indexOf(TimezoneWrapper.getZoneByOffset(gate.getUtcOffsetMillis()));
+			int offsetInMillis = gate.getUtcOffset() * 60 * 1000;
+			int index = mTimezones.indexOf(TimezoneWrapper.getZoneByOffset(offsetInMillis));
 			mTimezoneSpinner.setSelection(index != -1 ? index : 0);
 		}
 	}
@@ -126,7 +127,8 @@ public class GateEditFragment extends Fragment {
 
 		Spinner spinner = (Spinner) getView().findViewById(R.id.fragment_gate_edit_spinner);
 		TimezoneWrapper timezone = (TimezoneWrapper) spinner.getSelectedItem();
-		gate.setUtcOffset(timezone.offsetInMinutes);
+		int offsetInMinutes = timezone.offsetInMillis / (1000 * 60);
+		gate.setUtcOffset(offsetInMinutes);
 
 		return gate;
 	}

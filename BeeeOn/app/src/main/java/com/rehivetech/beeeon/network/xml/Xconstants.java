@@ -37,7 +37,6 @@ public class Xconstants {
 	public static final String LOCALE = "loc";
 	public static final String ERRCODE = "errcode";
 	public static final String INTERVAL = "interval";
-	public static final String NOTIFICAION = "notif";
 	public static final String PART = "part";
 	public static final String MODULE = "dev";
 	public static final String INITIALIZED = "init";
@@ -55,6 +54,10 @@ public class Xconstants {
 	public static final String REFRESH = "refresh";
 	public static final String BATTERY = "bat";
 	public static final String VALUE = "val";
+	public static final String NFACS = "nfacs";
+	public static final String NUSERS = "nusers";
+	public static final String IP = "ip";
+	public static final String AVERSION = "aversion";
 
 	public static final String ROW = "row";
 	public static final String INVOLVED = "inv";
@@ -77,6 +80,7 @@ public class Xconstants {
 	public static final String SERVICE = "srv";
 	public static final String IMGURL = "imgurl";
 	public static final String GEOFENCE = "geo";
+	public static final String ACCOUNTS = "accounts";
 
 	public static final String ACHIEVEMENT = "ach";
 	public static final String CATEGORY = "cat";
@@ -85,6 +89,8 @@ public class Xconstants {
 	public static final String CURRENT_PROGRESS = "cprogress";
 	public static final String ACH_DATE = "date";
 	public static final String RANGE = "range";
+
+	public static final String DATE = "date";
 
 	public static final String ROW_DATA_SEPARATOR = "\\s+";
 }

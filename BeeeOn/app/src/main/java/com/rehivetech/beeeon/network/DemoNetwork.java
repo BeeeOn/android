@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue.Item;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
@@ -191,6 +192,11 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean logout() {
+		return true;
+	}
+
+	@Override
 	public boolean loginMe(IAuthProvider authProvider) {
 		return true;
 	}
@@ -248,6 +254,28 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public GateInfo getGateInfo(String gateId) {
+		Gate gate = mGates.getObject(gateId);
+		if (gate == null)
+			return null;
+
+		int devicesCount = mDevices.getObjects(gateId).size();
+		int usersCount = mUsers.getObjects(gateId).size();
+		String version = "0";
+		String ip = "0.0.0.0";
+
+		return new GateInfo(
+				gate.getId(),
+				gate.getName(),
+				gate.getRole(),
+				gate.getUtcOffset(),
+				devicesCount,
+				usersCount,
+				version,
+				ip);
+	}
+
+	@Override
 	public List<Device> initGate(String gateId) {
 		List<Device> devices = mDevices.getObjects(gateId);
 
@@ -279,12 +307,6 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean reInitGate(String oldId, String newId) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public boolean updateGate(Gate gate) {
 		String gateId = gate.getId();
 
@@ -293,8 +315,13 @@ public class DemoNetwork implements INetwork {
 			return false;
 
 		oldGate.setName(gate.getName());
-		oldGate.setUtcOffsetMillis(gate.getUtcOffsetMillis());
+		oldGate.setUtcOffset(gate.getUtcOffset());
 		return true;
+	}
+
+	@Override
+	public boolean deleteGate(String gateId) {
+		return mGates.removeObject(gateId) != null;
 	}
 
 	@Override
@@ -663,29 +690,6 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean setTimeZone(String gateId, int offsetInMinutes) {
-		Gate gate = mGates.getObject(gateId);
-
-		if (gate == null) {
-			return false;
-		}
-
-		gate.setUtcOffset(offsetInMinutes);
-		return true;
-	}
-
-	@Override
-	public int getTimeZone(String gateId) {
-		Gate gate = mGates.getObject(gateId);
-
-		if (gate == null) {
-			return 0;
-		}
-
-		return gate.getUtcOffsetMillis() / (60 * 1000);
-	}
-
-	@Override
 	public boolean NotificationsRead(ArrayList<String> msgID) {
 		// TODO Auto-generated method stub
 		return false;
@@ -746,4 +750,5 @@ public class DemoNetwork implements INetwork {
 	public boolean passBorder(String regionId, String type) {
 		return true;
 	}
+
 }

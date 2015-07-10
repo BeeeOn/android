@@ -1,22 +1,15 @@
-/**
- * @brief Package for gate manipulation
- */
 package com.rehivetech.beeeon.household.gate;
 
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.user.User;
 
-/**
- * @author ThinkDeep
- * @brief Class for parsed data from XML file of adapters
- */
 public class Gate implements INameIdentifier {
 	public static final String TAG = Gate.class.getSimpleName();
 
-	private String mId = "";
-	private String mName = "";
-	private User.Role mRole;
-	private int mUtcOffsetMillis;
+	protected String mId = "";
+	protected String mName = "";
+	protected User.Role mRole;
+	protected int mUtcOffsetInMinutes;
 
 	@Override
 	public String toString() {
@@ -24,25 +17,14 @@ public class Gate implements INameIdentifier {
 	}
 
 	/**
-	 * Debug method
-	 */
-	public String toDebugString() {
-		return String.format("Id: %s\nName: %s\nRole: %s", mId, mName, mRole);
-	}
-
-	/**
-	 * Set name of gate
-	 *
-	 * @param name
+	 * @param name of gate
 	 */
 	public void setName(String name) {
 		mName = name;
 	}
 
 	/**
-	 * Get name of gate
-	 *
-	 * @return
+	 * @return name of gate, or id if name is empty (check it with hasName())
 	 */
 	public String getName() {
 		return mName.length() > 0 ? mName : getId();
@@ -53,26 +35,20 @@ public class Gate implements INameIdentifier {
 	}
 
 	/**
-	 * Set role of actual user of gate
-	 *
-	 * @param role
+	 * @param role of actual user of gate
 	 */
 	public void setRole(User.Role role) {
 		mRole = role;
 	}
 
 	/**
-	 * Get role of actual user of gate
-	 *
-	 * @return
+	 * @return role of actual user of gate
 	 */
 	public User.Role getRole() {
 		return mRole;
 	}
 
 	/**
-	 * Setting id of gate
-	 *
 	 * @param id
 	 */
 	public void setId(String id) {
@@ -80,8 +56,6 @@ public class Gate implements INameIdentifier {
 	}
 
 	/**
-	 * Returning id of gate
-	 *
 	 * @return id
 	 */
 	public String getId() {
@@ -89,24 +63,16 @@ public class Gate implements INameIdentifier {
 	}
 
 	/**
-	 * Setting UTC offset of gate
-	 *
 	 * @param offsetInMinutes
 	 */
 	public void setUtcOffset(int offsetInMinutes) {
-		mUtcOffsetMillis = offsetInMinutes * 60 * 1000;
-	}
-
-	public void setUtcOffsetMillis(int utcOffsetMillis) {
-		mUtcOffsetMillis = utcOffsetMillis;
+		mUtcOffsetInMinutes = offsetInMinutes;
 	}
 
 	/**
-	 * Returning UTC offset of gate
-	 *
-	 * @return UTC offset in milliseconds
+	 * @return UTC offset of gate in minutes
 	 */
-	public int getUtcOffsetMillis() {
-		return mUtcOffsetMillis;
+	public int getUtcOffset() {
+		return mUtcOffsetInMinutes;
 	}
 }
