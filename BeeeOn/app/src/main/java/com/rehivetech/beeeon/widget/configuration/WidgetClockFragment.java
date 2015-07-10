@@ -164,6 +164,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 				.setTitle(mActivity.getString(R.string.dialog_location_select))
 				.setEditTextValue(mWeatherCity != null ? mWeatherCity.name : mWidgetData.weather.cityName)
+				.setEditTextHint(mActivity.getString(R.string.dialog_location_country))
 				.setPositiveButtonText(mActivity.getString(R.string.ok))
 				.setNegativeButtonText(mActivity.getString(R.string.action_close))
 				.showKeyboard()

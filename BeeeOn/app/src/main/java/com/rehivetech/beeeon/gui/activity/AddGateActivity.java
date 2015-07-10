@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialogFragment;
 import com.rehivetech.beeeon.gui.dialog.EnterTextDialog;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
@@ -20,13 +21,14 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener {
+public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EditTextDialogFragment.IEditTextDialogListener {
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 	public static final String TAG_FRAGMENT_CODE_DIALOG = "Code_dialog";
@@ -162,5 +164,20 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 		if (fragment != null) {
 			fragment.setScanQrButtonEnabled(enabled);
 		}
+	}
+
+	@Override
+	public void onPositiveButtonClicked(int requestCode, View view, EditTextDialogFragment fragment) {
+		EditText editText = (EditText) view.findViewById(R.id.dialog_edit_text);
+		if(!Utils.validateInput(this, editText)){
+			return;
+		}
+
+		doRegisterGateTask(editText.getText().toString(), false);
+	}
+
+	@Override
+	public void onNegativeButtonClicked(int requestCode, View view, EditTextDialogFragment fragment) {
+
 	}
 }
