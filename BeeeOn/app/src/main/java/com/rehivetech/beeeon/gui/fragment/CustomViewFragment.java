@@ -9,12 +9,17 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LegendView;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.BaseSeries;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.point.DataPoint;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.BarLineChartBase;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.ChartData;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
@@ -26,7 +31,7 @@ import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.GetModulesLogsTask;
-import com.rehivetech.beeeon.util.GraphViewHelper;
+import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -38,20 +43,19 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Random;
 import java.util.SortedMap;
 
 public class CustomViewFragment extends BaseApplicationFragment {
 
-	private SparseArray<List<Module>> mModules = new SparseArray<List<Module>>();
+	private SparseArray<List<Module>> mModules = new SparseArray<>();
 	// private SparseArray<List<ModuleLog>> mLogs = new SparseArray<List<ModuleLog>>();
-	private SparseArray<GraphView> mGraphs = new SparseArray<GraphView>();
-	private SparseArray<LegendView> mLegends = new SparseArray<>();
+	private SparseArray<BarLineChartBase> mCharts = new SparseArray<>();
 
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 
-	private LinearLayout layout;
+	private LinearLayout mLayout;
 
 	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
@@ -62,7 +66,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.graphofsensors, container, false);
 
-		layout = (LinearLayout) view.findViewById(R.id.container);
+		mLayout = (LinearLayout) view.findViewById(R.id.container);
 
 		prepareModules();
 		loadData();
@@ -70,88 +74,128 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		return view;
 	}
 
-	private void addGraph(final Module module, final UnitsHelper unitsHelper, final TimeHelper timeHelper, final DateTimeFormatter fmt) {
-		// Inflate layout
+	private void addChart(final Module module) {
+		// Inflate Layout
 		LayoutInflater inflater = getLayoutInflater(null);
-		View row = inflater.inflate(R.layout.custom_graph_item, layout, false);
-		// Create and set graphView
-		GraphView graphView = (GraphView) row.findViewById(R.id.graph);
-		GraphViewHelper.prepareGraphView(graphView, mActivity, module, fmt, unitsHelper); // empty heading
-		LegendView legend = (LegendView) row.findViewById(R.id.legend);
-		legend.setDrawBackground(true);
-		legend.setIconRound(10f);
+		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
+		// Create and set chart
+		BarLineChartBase chart;
+		if (module.getValue() instanceof BaseEnumValue) {
+			chart = new BarChart(mActivity);
+		} else {
+			chart = new LineChart(mActivity);
+		}
+		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.graph_layout);
+		chartLayout.setVisibility(View.INVISIBLE);
+		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.customview_graph_height)));
+		chartLayout.addView(chart);
+		ChartHelper.prepareChart(chart, mActivity, module.getValue(), chartLayout, Controller.getInstance(mActivity));
+		chartLayout.setVisibility(View.VISIBLE);
+
 
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
 		tv.setText(getString(module.getType().getStringResource()));
 
-		mGraphs.put(module.getType().getTypeId(), graphView);
-		mLegends.put(module.getType().getTypeId(), legend);
+		mCharts.put(module.getType().getTypeId(), chart);
 
-		// Add whole item to global layout
-		layout.addView(row);
+		// Add whole item to global mLayout
+		mLayout.addView(row);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void fillGraph(ModuleLog log, Module module) {
+		Controller controller = Controller.getInstance(mActivity);
+		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
+		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, controller.getActiveGate());
 
-		GraphView graphView = mGraphs.get(module.getType().getTypeId());
-		if (graphView == null) {
+		boolean isBarChart = (module.getValue() instanceof BaseEnumValue);
+
+		//get chart
+		BarLineChartBase chart = mCharts.get(module.getType().getTypeId());
+		if (chart == null) {
 			return;
 		}
 
+		//set random color
 		Random random = new Random();
 		int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 
-		// for (ModuleLog log : logs) {
 
-		// GraphViewSeriesStyle seriesStyleBlue = new
-		// GraphViewSeriesStyle(mContext.getResources().getColor(R.color.beeeon_primary_cyan), 2);
-		// GraphViewSeriesStyle seriesStyleGray = new
-		// GraphViewSeriesStyle(getResources().getColor(R.color.light_gray),2);
+		String unit = unitsHelper.getStringUnit(module.getValue());
+		String name = module.getName();
 
-		BaseSeries<DataPoint> graphSeries;
-		if (module.getValue() instanceof BaseEnumValue) {
-			graphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
-			graphView.setDrawPointer(false);
+		List dataSetList;
+		ArrayList<String> xVals;
+		if (chart.getData() != null) {
+			ChartData data = chart.getData();
+			xVals = (ArrayList<String>) data.getXVals();
+
+			if (isBarChart) {
+				dataSetList = (List<BarDataSet>)(data.getDataSets());
+			} else {
+				dataSetList = (List<LineDataSet>)(chart.getData().getDataSets());
+			}
 		} else {
-			graphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0),});
-			((LineGraphSeries) graphSeries).setThickness(4);
+			xVals = new ArrayList<>();
+			if (isBarChart) {
+				dataSetList = new ArrayList<BarDataSet>();
+			} else {
+				dataSetList = new ArrayList<LineDataSet>();
+			}
 		}
-		graphSeries.setTitle(module.getName());
-		graphSeries.setColor(color);
 
-		graphView.addSeries(graphSeries);
 
-		LegendView legend = mLegends.get(module.getType().getTypeId());
-		legend.initLegendSeries(graphView.getSeries());
-		legend.setDrawBackground(false);
-		legend.setSeriesPosition(LegendView.SeriesPosition.VERTICAL);
-		legend.invalidate();
-
+		List<BarEntry> barEntries = null;
+		List<Entry> lineEntries = null;
+		DataSet dataSet;
+		if (isBarChart) {
+			barEntries = new ArrayList<>();
+			dataSet = new BarDataSet(barEntries, name);
+		} else {
+			lineEntries = new ArrayList<>();
+			dataSet = new LineDataSet(lineEntries, String.format("%s [%s]", name, unit));
+			((LineDataSet)dataSet).setDrawCircles(false);
+			((LineDataSet)dataSet).setLineWidth(2f);
+		}
+		dataSet.setColor(color);
+		dataSet.setValueFormatter(ChartHelper.getValueFormatterInstance(module.getValue(), mActivity, controller));
+		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
-		DataPoint[] data = new DataPoint[size];
 
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
-
+		boolean setXvals = xVals.isEmpty();
 		int i = 0;
-		for (Entry<Long, Float> entry : values.entrySet()) {
+		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
-
-			data[i++] = new DataPoint(dateMillis, value);
-
+			if (setXvals) {
+				xVals.add(fmt.print(dateMillis));
+			}
+			if (isBarChart) {
+				barEntries.add(new BarEntry(value, i++));
+			} else {
+				lineEntries.add(new Entry(value, i++));
+			}
 			// This shouldn't happen, only when some other thread changes this values object - can it happen?
 			if (i >= size)
 				break;
 		}
+		dataSet.notifyDataSetChanged();
+
+		if (isBarChart) {
+			BarData  barData = new BarData(xVals, dataSetList);
+			chart.setData(barData);
+		} else {
+			LineData lineData = new LineData(xVals, dataSetList);
+			chart.setData(lineData);
+		}
+		chart.invalidate();
 
 		Log.d(TAG, "Filling graph finished");
-
-		graphSeries.resetData(data);
-		graphView.getViewport().setXAxisBoundsManual(true);
-
 	}
 
 	private void prepareModules() {
@@ -160,10 +204,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		if (gate == null)
 			return;
 
-		// Prepare helpers
-		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
-		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, gate);
 
 		// Prepare data
 		Log.d(TAG, String.format("Preparing custom view for gate %s", gate.getId()));
@@ -176,12 +216,13 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 				List<Module> modules = mModules.get(module.getType().getTypeId());
 				if (modules == null) {
-					modules = new ArrayList<Module>();
+					modules = new ArrayList<>();
 					mModules.put(module.getType().getTypeId(), modules);
-					addGraph(module, unitsHelper, timeHelper, fmt);
+					addChart(module);
 				}
 
 				modules.add(module);
+
 			}
 		}
 	}
@@ -223,10 +264,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 						fillGraph(log, pair.module);
 					}
 
-					// Hide loading label for this graph
-					GraphView graphView = mGraphs.get(typeId);
-					graphView.setLoading(false);
-					//graphView.animateY(2000);
+					// start chart animation
+					BarLineChartBase chart = mCharts.get(typeId);
+					chart.animateXY(2000, 2000);
 				}
 			});
 

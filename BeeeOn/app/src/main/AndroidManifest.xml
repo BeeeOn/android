@@ -201,22 +201,6 @@
 				android:resource="@xml/widget_location_info"/>
 		</receiver>
 
-		<!-- graph widget -->
-		<receiver
-			android:name=".widget.receivers.WidgetGraphProvider"
-			android:icon="@mipmap/ic_launcher"
-			android:label="@string/widget_graph_title"
-			>
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-			</intent-filter>
-
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_device_3x2_info"
-				/>
-		</receiver>
-
 		<!-- clock widget -->
 		<receiver
 			android:name=".widget.receivers.WidgetClockProvider"

@@ -201,6 +201,7 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 		((CustomViewPager) mPager).setPagingEnabled(true);
 		mPager.setOffscreenPageLimit(mModules.size());
 		mPager.setCurrentItem(mActiveModulePosition);
+		((CustomViewPager) mPager).setPagingEnabled(false);
 		visibleAllElements();
 	}
 

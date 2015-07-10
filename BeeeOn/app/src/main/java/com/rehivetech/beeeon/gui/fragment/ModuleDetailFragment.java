@@ -10,22 +10,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.BarGraphSeries;
-import com.jjoe64.graphview.series.BaseSeries;
-import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.point.DataPoint;
+import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.FillFormatter;
+import com.github.mikephil.charting.utils.ValueFormatter;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -52,7 +58,7 @@ import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
-import com.rehivetech.beeeon.util.GraphViewHelper;
+import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -63,15 +69,17 @@ import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
-import java.util.concurrent.TimeUnit;
 
 public class ModuleDetailFragment extends BaseApplicationFragment implements IListDialogListener {
 	private static final String TAG = ModuleDetailFragment.class.getSimpleName();
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_MODULE_ID = "module_id";
+
 
 	private static final int REQUEST_BOILER_TYPE = 7894;
 	private static final int REQUEST_BOILER_MODE = 1236;
@@ -80,13 +88,15 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	public static final String ARG_SEL_PAGE = "selectedpage";
 
 	private ModuleDetailActivity mActivity;
+	private TimeHelper mTimeHelper;
 
 	// GUI elements
 	private TextView mValue;
 	private SwitchCompat mValueSwitch;
 	private ImageView mIcon;
 	private FloatingActionButton mFABedit;
-	private GraphView graphView;
+	private CombinedChart mChart;
+	private DataSet mDataSet;
 
 	private UnitsHelper mUnitsHelper;
 
@@ -95,8 +105,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	private String mGateId;
 	private String mModuleId;
-
-	private BaseSeries<DataPoint> mGraphSeries;
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
 	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
@@ -203,8 +211,8 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		TextView battery = (TextView) view.findViewById(R.id.sen_detail_battery_value);
 		// Get signal value
 		TextView signal = (TextView) view.findViewById(R.id.sen_detail_signal_value);
-		// Get graphView
-		graphView = (GraphView) view.findViewById(R.id.sen_graph);
+		// Get chart view
+		mChart = (CombinedChart) view.findViewById(R.id.sen_graph);
 
 		// Set title selected for animation if is text long
 		name.setSelected(true);
@@ -322,7 +330,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		SharedPreferences prefs = controller.getUserSettings();
 
 		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
-		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		// Set value of sensor
 		if (mUnitsHelper != null) {
@@ -337,8 +345,8 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mIcon.setImageResource(module.getIconResource());
 
 		// Set time of sensor
-		if (timeHelper != null) {
-			time.setText(timeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+		if (mTimeHelper != null) {
+			time.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
 
 		// Set refresh time Text
@@ -351,9 +359,8 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		signal.setText(device.getNetworkQuality() + "%");
 
 		// Add Graph
-		if (mUnitsHelper != null && timeHelper != null && graphView.getSeries().size() == 0) {
-			DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
-			addGraphView(module, fmt, mUnitsHelper);
+		if (mUnitsHelper != null && mTimeHelper != null) {
+			addGraphView(module);
 		}
 
 		// Visible all elements
@@ -403,78 +410,82 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
 	}
 
-	private void addGraphView(@NonNull final Module module, @NonNull final DateTimeFormatter fmt, @NonNull final UnitsHelper unitsHelper) {
-		// Create and set graphView
-		GraphViewHelper.prepareGraphView(graphView, getView().getContext(), module, fmt, unitsHelper); // empty heading
+	private void addGraphView(@NonNull final Module module) {
+		Controller controller = Controller.getInstance(mActivity);
+		BaseValue baseValue = module.getValue();
 
-		if (module.getValue() instanceof BaseEnumValue) {
-			mGraphSeries = new BarGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1, 1)});
-			((BarGraphSeries) mGraphSeries).setSpacing(30);
-			graphView.setDrawPointer(false);
+		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.sen_third_section);
+		String unit = mUnitsHelper.getStringUnit(baseValue);
+		String name = getString(module.getTypeStringResource());
+		ValueFormatter valueFormatter = ChartHelper.getValueFormatterInstance(baseValue, mActivity, controller);
+
+		//set chart
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, layout, controller);
+		mChart.setFillFormatter(new CustomFillFormatter());
+
+
+		if (baseValue instanceof BaseEnumValue) {
+			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), name);
 		} else {
-			mGraphSeries = new LineGraphSeries<>(new DataPoint[]{new DataPoint(0, 0), new DataPoint(1, 1)});
-			((LineGraphSeries) mGraphSeries).setBackgroundColor(getResources().getColor(R.color.alpha_blue));
-			((LineGraphSeries) mGraphSeries).setDrawBackground(true);
-			((LineGraphSeries) mGraphSeries).setThickness(2);
+			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(),String.format("%s [%s]",name, unit));
+			((LineDataSet)mDataSet).setDrawCircles(false);
+			((LineDataSet)mDataSet).setDrawFilled(true);
+			((LineDataSet)mDataSet).setFillColor(getResources().getColor(R.color.alpha_blue));
 		}
-		mGraphSeries.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
-		mGraphSeries.setTitle("Graph");
-
-		// Add data series
-		graphView.addSeries(mGraphSeries);
-
-		// touch listener to disable swipe and refresh trough graph
-		graphView.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-				int i = motionEvent.getAction();
-
-				if (i == MotionEvent.ACTION_DOWN) {
-					mActivity.setEnableSwipe(false);
-					mSwipeLayout.setEnabled(false);
-				} else if (i == MotionEvent.ACTION_UP) {
-					mActivity.setEnableSwipe(true);
-					mSwipeLayout.setEnabled(true);
-				}
-				return false;
-			}
-		});
-
+		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
+		mDataSet.setValueFormatter(valueFormatter);
 	}
 
-	public void fillGraph(ModuleLog log) {
-		if (graphView == null) {
+	public void fillGraph(ModuleLog log, Module module) {
+		boolean barGraph = (module.getValue() instanceof BaseEnumValue);
+		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
+		if (mChart == null) {
 			return;
 		}
 
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
-		DataPoint[] data = new DataPoint[size];
+		ArrayList<String> xVals = new ArrayList<>();
+
+		List<BarEntry> barEntries = null;
+		List<Entry> lineEntries = null;
+		if (barGraph) {
+			barEntries = ((BarDataSet)mDataSet).getYVals();
+		} else {
+			lineEntries = ((LineDataSet)mDataSet).getYVals();
+		}
+		DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 
 		int i = 0;
-		for (Entry<Long, Float> entry : values.entrySet()) {
+		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
-
-			data[i++] = new DataPoint(dateMillis, value);
-
+			xVals.add(fmt.print(dateMillis));
+			if (barGraph) {
+				barEntries.add(new BarEntry(value,i++));
+			} else {
+				lineEntries.add(new Entry(value, i++));
+			}
 			// This shouldn't happen, only when some other thread changes this values object - can it happen?
 			if (i >= size)
 				break;
 		}
 
-		mGraphSeries.resetData(data);
-		graphView.getViewport().setXAxisBoundsManual(true);
-		if (values.size() > 100 && mGraphSeries instanceof BarGraphSeries) {
-			graphView.getViewport().setMaxX(mGraphSeries.getHighestValueX());
-			graphView.getViewport().setMinX(mGraphSeries.getHighestValueX() - TimeUnit.HOURS.toMillis(1));
+		mDataSet.notifyDataSetChanged();
+		CombinedData data = new CombinedData(xVals);
+		if (barGraph) {
+			BarData  barData = new BarData(xVals, (BarDataSet)mDataSet);
+			data.setData(barData);
+		} else {
+			LineData lineData = new LineData(xVals, (LineDataSet)mDataSet);
+			data.setData(lineData);
 		}
-
-		graphView.setLoading(false);
-		//graphView.animateY(2000);
-		//mGraphInfo.setText(getView().getResources().getString(R.string.sen_detail_graph_info));
+		mChart.setData(data);
+		mChart.invalidate();
+		Log.d(TAG, "Filling graph finished");
+		mChart.animateXY(2000, 2000);
 	}
 
 	public void setPosition(int position) {
@@ -543,7 +554,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	}
 
 	protected void doLoadGraphData() {
-		Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
+		final Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
 		if (module == null) {
 			Log.e(TAG, "Can't load module for loading graph data");
 			return;
@@ -564,7 +575,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		getModuleLogTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				fillGraph(Controller.getInstance(mActivity).getModuleLogsModel().getModuleLog(pair));
+				fillGraph(Controller.getInstance(mActivity).getModuleLogsModel().getModuleLog(pair),module);
 			}
 		});
 
@@ -611,5 +622,16 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 		module.setValue(String.valueOf(value));
 		doChangeStateModuleTask(module);
+	}
+
+	/**
+	 * Custom fill formatter which allow fill chart from bottom
+	 */
+	protected class CustomFillFormatter implements FillFormatter {
+
+		@Override
+		public float getFillLinePosition(LineDataSet dataSet, LineData data, float chartMaxY, float chartMinY) {
+			return chartMinY;
+		}
 	}
 }

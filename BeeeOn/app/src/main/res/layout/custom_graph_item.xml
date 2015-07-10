@@ -20,18 +20,10 @@
     <LinearLayout
         android:id="@+id/graph_layout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/graph_label"
         android:orientation="vertical" >
 
-		<com.jjoe64.graphview.GraphView
-			android:id="@+id/graph"
-			android:layout_width="fill_parent"
-			android:layout_height="210dp"/>
 
-		<com.jjoe64.graphview.LegendView
-			android:id="@+id/legend"
-			android:layout_width="wrap_content"
-			android:layout_height="90dp" />
 	</LinearLayout>
 </RelativeLayout>
