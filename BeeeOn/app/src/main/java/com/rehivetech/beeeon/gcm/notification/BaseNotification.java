@@ -115,9 +115,6 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 			case GATE_OFFLINE:
 				notification = GateOfflineNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case ACHIEVEMENT:
-				notification = AchievementNotification.getInstance(msgId, time, type, bundle);
-				break;
 		}
 
 		return notification;

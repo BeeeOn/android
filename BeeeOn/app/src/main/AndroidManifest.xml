@@ -150,14 +150,6 @@
 			android:label="@string/action_notification">
 		</activity>
 		<activity
-			android:name=".gui.activity.AchievementOverviewActivity"
-			android:label="@string/title_activity_achievement_overview">
-		</activity>
-		<activity
-			android:name=".gui.activity.ProfileDetailActivity"
-			android:label="@string/title_activity_profile_detail">
-		</activity>
-		<activity
 			android:name=".gui.activity.ModuleEditActivity"
 			android:label="@string/title_activity_module_edit"/>
 		<activity
@@ -174,9 +166,6 @@
 			android:theme="@android:style/Theme.Translucent.NoTitleBar"
 			android:label="@string/app_name">
 		</activity>
-		<!-- VKontakte login screen -->
-		<activity
-			android:name="com.vk.sdk.VKOpenAuthActivity"/>
 
 		<!-- Provider for sharing with Facebook -->
 		<provider

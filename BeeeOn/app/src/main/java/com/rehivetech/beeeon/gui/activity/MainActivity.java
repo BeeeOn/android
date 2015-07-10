@@ -135,10 +135,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
 			ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
-		} else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)) {
-			Intent intent = new Intent(this, ProfileDetailActivity.class);
-			mActiveMenuId = null;
-			startActivity(intent);
 		}
 		ft.commit();
 
@@ -327,10 +323,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
 			mWatchdogApp = new WatchdogListFragment();
 			ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
-		} else if (mActiveMenuId.equals(Constants.GUI_MENU_PROFILE)) {
-			Intent intent = new Intent(this, ProfileDetailActivity.class);
-			mActiveMenuId = null;
-			startActivity(intent);
 		}
 		ft.commitAllowingStateLoss();
 

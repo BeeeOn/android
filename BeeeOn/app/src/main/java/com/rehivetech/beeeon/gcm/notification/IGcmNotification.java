@@ -22,8 +22,7 @@ public interface IGcmNotification {
 		SENSOR_LOW_BATTERY("sensor_bat", SensorLowBatteryNotification.class),
 		SENSOR_LOW_SIGNAL("sensor_sig", SensorLowSignalNotification.class),
 		GATE_ADDED("adapter_add", GateAddedNotification.class),
-		GATE_OFFLINE("adapter_off", GateOfflineNotification.class),
-		ACHIEVEMENT("achievement", AchievementNotification.class);
+		GATE_OFFLINE("adapter_off", GateOfflineNotification.class);
 
 		private final String mName;
 		private final Class<? extends BaseNotification> mClass;

@@ -5,7 +5,6 @@ import android.content.Context;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -63,7 +62,6 @@ public class DemoNetwork implements INetwork {
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>();
-	public final MultipleDataHolder<AchievementListItem> mAchievements = new MultipleDataHolder<>();
 	public final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
 
 	public DemoNetwork(Context context) {
@@ -136,7 +134,6 @@ public class DemoNetwork implements INetwork {
 		mLocations.clear();
 		mDevices.clear();
 		mWatchdogs.clear();
-		mAchievements.clear();
 		mUsers.clear();
 
 		// Parse and set initial demo data
@@ -159,10 +156,6 @@ public class DemoNetwork implements INetwork {
 			assetName = String.format(Constants.ASSET_GATE_DATA_FILENAME, gate.getId());
 			mDevices.setObjects(gateId, parser.getDemoDevicesFromAsset(mContext, assetName));
 			mDevices.setLastUpdate(gateId, DateTime.now());
-
-			assetName = String.format(Constants.ASSET_ACHIEVEMENTS_FILENAME, gate.getId());
-			mAchievements.setObjects(gateId, parser.getDemoAchievementsFromAsset(mContext, assetName));
-			mAchievements.setLastUpdate(gateId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
 			mUsers.setObjects(gateId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
@@ -620,7 +613,6 @@ public class DemoNetwork implements INetwork {
 			mLocations.removeHolder(gateId);
 			mDevices.removeHolder(gateId);
 			mWatchdogs.removeHolder(gateId);
-			mAchievements.removeHolder(gateId);
 			return mGates.removeObject(gateId) != null;
 		} else {
 			// TODO: This is correct implementation for future
@@ -760,15 +752,5 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public boolean passBorder(String regionId, String type) {
 		return true;
-	}
-
-	@Override
-	public List<AchievementListItem> getAllAchievements(String gateId) {
-		return mAchievements.getObjects(gateId);
-	}
-
-	@Override
-	public List<String> setProgressLvl(String gateId, String achievementId) {
-		return new ArrayList<>();
 	}
 }

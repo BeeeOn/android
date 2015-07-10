@@ -17,7 +17,6 @@
     <string name="title_activity_gate_users">Uživatelé brány</string>
     <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
-    <string name="title_activity_achievement_overview">Přehled achievementů</string>
     <string name="title_activity_profile_detail">Detaily účtu</string>
 
     <!-- Buttons -->
@@ -124,7 +123,6 @@
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Nebylo zadáno žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
-    <string name="toast_achievement_title">Achievement odemknut!</string>
     <string name="toast_delete_fail">Nepodařilo se odstranit</string>
     <string name="toast_delete_success">Smazáno</string>
     <string name="toast_field_must_be_filled">Je třeba vyplnit toto pole!</string>
@@ -139,7 +137,6 @@
     <string name="progress_loading_demo">Nahrávám demo data&#8230;</string>
     <string name="progress_saving_data">Ukládám data&#8230;</string>
     <string name="progress_checking_location">Ověřuji polohu&#8230;</string>
-	<string name="progress_loading_achievement">Nahrávám data achievementů&#8230;</string>
 
     <!-- NavDrawer -->
     <string name="drawer_open">OTEVŘÍT</string>
@@ -338,15 +335,6 @@
     <string name="tut_add_gate_text_3">V následujícím kroku zadejte název brány a naskenujte QR kód</string>
     <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze zařízení nebo zapojte aktor do elektrické sítě</string>
     <string name="tut_add_sensor_text_2">Během odpočítávání krátce zatřeste se zařízení nebo stiskněte párovací tlačítko na aktoru</string>
-
-    <!-- Achievements -->
-    <string name="share_title">Sdílet tuto událost</string>
-    <string name="downloading_data">Stahuji data &#8230;</string>
-    <string name="logout_success">Odhlášení proběhlo úspěšně</string>
-    <string name="achievement_share_url_name"> BeeeOn Inteligentní domáctnost</string>
-    <string name="achievement_share_msg">Odemknul jsem tento nový achievement!</string>
-	<string name="date_today">Dnes</string>
-	<string name="date_yesterday">Včera</string>
 
     <!-- Watchdog -->
     <string name="action_watchdog">Hlídač</string>

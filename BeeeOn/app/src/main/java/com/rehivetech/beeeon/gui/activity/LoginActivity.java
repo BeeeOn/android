@@ -36,10 +36,6 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
-import com.twitter.sdk.android.Twitter;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
@@ -47,13 +43,7 @@ import io.fabric.sdk.android.Fabric;
  * @author Robyer
  */
 public class LoginActivity extends BaseActivity {
-
-	// Note: Your consumer key and secret should be obfuscated in your source code before shipping.
-	private static final String TWITTER_KEY = "0eAUtsrgm0D2CUKG3xnvGwuZp";
-	private static final String TWITTER_SECRET = "bhs3kwihnSJLweYOlsQImP84DrUMPqcB0DO2UsbQE6FmGhHJpL";
-
 	public static final String BUNDLE_REDIRECT = "isRedirect";
-
 	private static final String TAG_DIALOG = "about_dialog";
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
@@ -70,8 +60,6 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-		Fabric.with(this, new Twitter(authConfig));
 		setContentView(R.layout.activity_login);
 
 		Log.i("BeeeOn app starting...", "___________________________________");

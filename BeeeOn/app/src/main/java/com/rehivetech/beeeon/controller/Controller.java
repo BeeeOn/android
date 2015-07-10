@@ -8,11 +8,9 @@ import android.graphics.Bitmap;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.gamification.AchievementList;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
-import com.rehivetech.beeeon.model.AchievementsModel;
 import com.rehivetech.beeeon.model.BaseModel;
 import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.model.GatesModel;
@@ -220,10 +218,6 @@ public final class Controller {
 		return (GatesModel) getModelInstance(GatesModel.class);
 	}
 
-	public AchievementsModel getAchievementsModel() {
-		return (AchievementsModel) getModelInstance(AchievementsModel.class);
-	}
-
 	public LocationsModel getLocationsModel() {
 		return (LocationsModel) getModelInstance(LocationsModel.class);
 	}
@@ -420,9 +414,6 @@ public final class Controller {
 		// delete all visible notification
 		NotificationManager notifMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		notifMgr.cancelAll();
-
-		// delete all achievements
-		AchievementList.cleanAll();
 
 		// Delete GCM id on server side
 		getGcmModel().deleteGCM(mUser.getId(), null);

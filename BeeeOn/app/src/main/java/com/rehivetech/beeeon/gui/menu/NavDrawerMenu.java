@@ -277,12 +277,7 @@ public class NavDrawerMenu {
 		if (picture == null)
 			picture = actUser.getDefaultPicture(mActivity);
 
-		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getFullName(), actUser.getEmail(), picture, new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				changeMenuItem(Constants.GUI_MENU_PROFILE, true);
-			}
-		}));
+		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getFullName(), actUser.getEmail(), picture, null));
 
 		List<Gate> gates = controller.getGatesModel().getGates();
 

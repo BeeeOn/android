@@ -7,7 +7,6 @@ import android.net.NetworkInfo;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -884,29 +883,4 @@ public class Network implements INetwork {
 
 		throw processFalse(msg);
 	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<AchievementListItem> getAllAchievements(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAllAchievements(mBT, gateId));
-
-		if (msg.getState() == State.ACHIEVEMENTS) {
-			return (ArrayList<AchievementListItem>) msg.data;
-		}
-
-		throw processFalse(msg);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<String> setProgressLvl(String gateId, String achievementId) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetProgressLvl(mBT, gateId, achievementId));
-
-		if (msg.getState() == State.PROGRESS) {
-			return (List<String>) msg.data;
-		}
-
-		throw processFalse(msg);
-	}
-
 }

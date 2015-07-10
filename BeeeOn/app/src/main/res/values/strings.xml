@@ -25,7 +25,6 @@
     <string name="title_activity_gate_users">Manage users</string>
     <string name="title_activity_add_adapter_user">Add New User</string>
     <string name="title_activity_setup_sensor">Device Setup</string>
-	<string name="title_activity_achievement_overview">Achievement overview</string>
 	<string name="title_activity_profile_detail">Account info</string>
 
     <!-- Buttons -->
@@ -377,17 +376,6 @@
     <string name="tut_add_gate_title_1">Connect the gate to the internet</string>
     <string name="tut_add_gate_title_2">Connect the gate to the AC power</string>
     <string name="tut_add_gate_title_3">Final information</string>
-
-	<!-- Achievements -->
-	<string name="share_title">Share this event</string>
-	<string name="downloading_data">Downloading data &#8230;</string>
-	<string name="logout_success">Successfully logged out</string>
-	<string name="achievement_share_msg"> I just unlocked this new achievement!</string>
-	<string name="achievement_share_url_name"> BeeeOn Smart home</string>
-	<string name="achievement_share_url" translatable="false">http://www.beeeon.com</string>
-	<string name="achievement_share_img" translatable="false">http://www.fit.vutbr.cz/images/logo_fit.png</string>
-	<string name="date_today">Today</string>
-	<string name="date_yesterday">Yesterday</string>
 
     <!-- Watchdog -->
     <string name="action_watchdog">Watchdog</string>

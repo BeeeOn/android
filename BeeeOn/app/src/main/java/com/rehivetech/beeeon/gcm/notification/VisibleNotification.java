@@ -61,9 +61,6 @@ public abstract class VisibleNotification extends BaseNotification {
 			case GATE_OFFLINE:
 				notification = GateOfflineNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
-			case ACHIEVEMENT:
-				notification = AchievementNotification.getInstance(msgId, time, type, isRead, parser);
-				break;
 		}
 		return notification;
 	}

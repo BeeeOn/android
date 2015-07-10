@@ -11,7 +11,6 @@ public class ProfileMenuItem extends AbstractMenuItem {
 	private String mName;
 	private String mEmail;
 	private Bitmap mIcon;
-	private Bitmap mLevel;
 	private View.OnClickListener mListener;
 
 	public ProfileMenuItem(String name, String email, Bitmap icon, View.OnClickListener listener) {
@@ -27,7 +26,6 @@ public class ProfileMenuItem extends AbstractMenuItem {
 		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
 		TextView emailView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.email);
 		ImageView iconView = (ImageView) view.findViewById(com.rehivetech.beeeon.R.id.icon);
-		ImageView levelView = (ImageView) view.findViewById(R.id.level);
 
 		nameView.setText(mName);
 		emailView.setText(mEmail);
@@ -37,7 +35,6 @@ public class ProfileMenuItem extends AbstractMenuItem {
 		emailView.setOnClickListener(mListener);
 		iconView.setOnClickListener(mListener);
 		nameView.setOnClickListener(mListener);
-		levelView.setOnClickListener(mListener);
 	}
 
 	@Override

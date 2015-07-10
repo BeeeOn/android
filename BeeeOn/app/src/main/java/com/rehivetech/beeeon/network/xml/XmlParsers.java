@@ -8,7 +8,6 @@ import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
-import com.rehivetech.beeeon.gamification.AchievementListItem;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -67,9 +66,7 @@ public class XmlParsers {
 		BT("bt"),
 		ALGCREATED("algcreated"),
 		USERINFO("userinfo"),
-		ALGORITHMS("algs"),
-		ACHIEVEMENTS("achievements"),
-		PROGRESS("confirmprogresslvl");
+		ALGORITHMS("algs");
 
 		private final String mValue;
 
@@ -208,14 +205,6 @@ public class XmlParsers {
 			case NOTIFICATIONS:
 				// List<Notification>
 				result.data = parseNotifications();
-				break;
-			case ACHIEVEMENTS:
-				// List<AchievementListItem>
-				result.data = parseAchievements();
-				break;
-			case PROGRESS:
-				// List<String>
-				result.data = parseProgress();
 				break;
 			default:
 				break;
@@ -595,53 +584,6 @@ public class XmlParsers {
 		return result;
 	}
 
-	private ArrayList<AchievementListItem> parseAchievements() throws XmlPullParserException, IOException {
-		String aid = getSecureAttrValue(Xconstants.AID);
-		mParser.nextTag();
-
-		ArrayList<AchievementListItem> result = new ArrayList<>();
-
-		if (!mParser.getName().equals(Xconstants.ACHIEVEMENT))
-			return result;
-
-		do {
-			AchievementListItem item = new AchievementListItem(
-					getSecureAttrValue(Xconstants.ID),
-					getSecureAttrValue(Xconstants.PID),
-					getSecureAttrValue(Xconstants.CATEGORY),
-					getSecureInt(getSecureAttrValue(Xconstants.POINTS)),
-					getSecureInt(getSecureAttrValue(Xconstants.TOTAL_PROGRESS)),
-					getSecureInt(getSecureAttrValue(Xconstants.CURRENT_PROGRESS)),
-					getSecureAttrValue(Xconstants.VISIBILITY),
-					getSecureAttrValue(Xconstants.ACH_DATE),
-					getSecureAttrValue(Xconstants.RANGE));
-
-			item.setAid(aid);
-			result.add(item);
-
-			mParser.nextTag();
-
-		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
-
-		return result;
-	}
-
-	private List<String> parseProgress() throws XmlPullParserException, IOException {
-		mParser.nextTag();
-		List<String> result = new ArrayList<>();
-
-		if (!mParser.getName().equals(Xconstants.ACHIEVEMENT)) {
-			return result;
-		}
-
-		do {
-			result.add(getSecureAttrValue(Xconstants.ID));
-			mParser.nextTag();
-		} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
-
-		return result;
-	}
-
 	// ///////////////////////////////// OTHER
 
 	// FIXME: check on first use
@@ -944,38 +886,5 @@ public class XmlParsers {
 			}
 		}
 		return watchdogs;
-	}
-
-
-	public List<AchievementListItem> getDemoAchievementsFromAsset(Context context, String filename) throws AppException {
-		Log.i(TAG, String.format("Loading achievements from asset '%s'", filename));
-		List<AchievementListItem> achievements = new ArrayList<AchievementListItem>();
-		InputStream stream = null;
-		try {
-			stream = new BufferedInputStream(context.getAssets().open(filename));
-			mParser = Xml.newPullParser();
-			mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			mParser.setInput(stream, null);
-			mParser.nextTag();
-
-			String version = getSecureAttrValue(Xconstants.VERSION);
-			if (!version.equals(COM_VER)) {
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
-						.set(NetworkError.PARAM_COM_VER_LOCAL, COM_VER)
-						.set(NetworkError.PARAM_COM_VER_SERVER, version);
-			}
-
-			achievements = parseAchievements();
-		} catch (IOException | XmlPullParserException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (stream != null)
-					stream.close();
-			} catch (IOException ioe) {
-				Log.e(TAG, ioe.getMessage(), ioe);
-			}
-		}
-		return achievements;
 	}
 }

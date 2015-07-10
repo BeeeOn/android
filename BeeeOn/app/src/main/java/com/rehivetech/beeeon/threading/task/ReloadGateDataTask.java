@@ -25,7 +25,6 @@ public class ReloadGateDataTask extends CallbackTask<String> {
 		UNINITIALIZED_DEVICES,
 		USERS,
 		WATCHDOGS,
-		ACHIEVEMENTS,
 	}
 
 	public static final EnumSet<ReloadWhat> RELOAD_GATES_AND_ACTIVE_GATE_DEVICES = EnumSet.of(
@@ -83,10 +82,6 @@ public class ReloadGateDataTask extends CallbackTask<String> {
 
 		if (mWhat.contains(ReloadWhat.WATCHDOGS)) {
 			controller.getWatchdogsModel().reloadWatchdogsByGate(gateId, mForceReload);
-		}
-
-		if (mWhat.contains(ReloadWhat.ACHIEVEMENTS)) {
-			controller.getAchievementsModel().reloadAchievementsByGate(gateId, mForceReload);
 		}
 
 		return true;
