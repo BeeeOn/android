@@ -8,7 +8,7 @@
 	<RelativeLayout
 		android:layout_width="0dp"
 		android:layout_height="match_parent"
-		android:background="@color/beeeon_primary_cyan_dark"
+		android:background="@color/beeeon_primary"
 		android:padding="10dp"
 		android:layout_weight="0.5">
 
@@ -41,7 +41,7 @@
 			android:layout_gravity="center"
 			android:orientation="vertical"
 			android:padding="10dp"
-			android:src="@drawable/beeeon_logo_white_icons_transparent"
+			android:src="@drawable/beeeon_logo_white_transparent"
 			android:layout_centerHorizontal="true"
 			android:layout_marginTop="20dp"
 			android:layout_below="@id/slogan"
@@ -147,7 +147,7 @@
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="@color/beeeon_primary_cyan_medium"
+			android:background="@color/beeeon_primary_medium"
 			android:padding="5dp">
 
 			<TextView

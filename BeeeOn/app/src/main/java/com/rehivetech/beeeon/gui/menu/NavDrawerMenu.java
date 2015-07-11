@@ -290,11 +290,7 @@ public class NavDrawerMenu {
 		// Adding profile header
 		User actUser = controller.getActualUser();
 
-		Bitmap picture = actUser.getPicture();
-		if (picture == null)
-			picture = actUser.getDefaultPicture(mActivity);
-
-		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getFullName(), actUser.getEmail(), picture, null));
+		mMenuAdapter.addHeader(new ProfileMenuItem(actUser.getFullName(), actUser.getEmail(), actUser.getPicture(), null));
 
 		List<Gate> gates = controller.getGatesModel().getGates();
 

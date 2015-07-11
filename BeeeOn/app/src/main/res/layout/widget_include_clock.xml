@@ -14,7 +14,7 @@
 		android:textSize="@dimen/widget_textsize_clock"
 		android:textStyle="bold"
 		android:text="00"
-		android:textColor="@color/beeeon_primary_cyan"
+		android:textColor="@color/beeeon_primary"
 		/>
 
 	<TextView
@@ -25,7 +25,7 @@
 		android:textStyle="bold"
 		android:text=":"
 		android:layout_marginTop="-4dp"
-		android:textColor="@color/beeeon_primary_cyan"
+		android:textColor="@color/beeeon_primary"
 		/>
 
 	<TextView
@@ -35,14 +35,14 @@
 		android:textSize="@dimen/widget_textsize_clock"
 		android:textStyle="bold"
 		android:text="00"
-		android:textColor="@color/beeeon_primary_cyan"
+		android:textColor="@color/beeeon_primary"
 		/>
 
 	<TextView
 		android:id="@+id/widget_clock_ampm"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textColor="@color/beeeon_primary_cyan"
+		android:textColor="@color/beeeon_primary"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 		android:text="AM"
 		android:visibility="gone"

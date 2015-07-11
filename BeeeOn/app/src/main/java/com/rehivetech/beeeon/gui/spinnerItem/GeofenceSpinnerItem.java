@@ -50,12 +50,12 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.gray_light));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_background));
 	}
 
 }

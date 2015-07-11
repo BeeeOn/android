@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
@@ -448,6 +449,20 @@ final public class Utils {
 		DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
 		float px = dp * (metrics.densityDpi / 160f);
 		return Math.round(px);
+	}
+
+	/**
+	 * Set alpha channel of the given color.
+	 *
+	 * @param color
+	 * @param alpha must be [0..255], otherwise color is undefined
+	 * @return argb variant of given color and alpha
+	 */
+	public static int setColorAlpha(int color, int alpha) {
+		int red = Color.red(color);
+		int green = Color.green(color);
+		int blue = Color.blue(color);
+		return Color.argb(alpha, red, green, blue);
 	}
 
 }

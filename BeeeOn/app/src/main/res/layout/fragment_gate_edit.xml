@@ -10,7 +10,7 @@
 		android:paddingBottom="20dp"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:background="@color/beeeon_primary_cyan"
+		android:background="@color/beeeon_primary"
 		android:orientation="vertical">
 
 		<TextView
@@ -18,7 +18,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/fragment_gate_edit_gate_name"
 			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-			android:textColor="@color/light_gray"
+			android:textColor="@color/gray_light"
 			/>
 
 		<EditText
@@ -42,7 +42,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/fragment_gate_edit_gate_id_read_only"
-		android:textColor="@color/beeeon_text_hint"
+		android:textColor="@color/beeeon_secondary_text"
 		android:layout_marginBottom="7dp"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 		android:layout_marginLeft="72dp"
@@ -54,7 +54,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-		android:textColor="@color/beeeon_text_hint"
+		android:textColor="@color/beeeon_secondary_text"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
 		android:layout_marginBottom="16dp"
@@ -69,7 +69,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/time_zone"
-		android:textColor="@color/beeeon_text_hint"
+		android:textColor="@color/beeeon_secondary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"

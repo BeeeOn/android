@@ -16,7 +16,7 @@
             android:layout_width="100px"
             android:layout_height="100px"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/beeeon_logo" />
+            android:src="@drawable/beeeon_logo_cyan_border" />
 
         <TextView
             android:id="@+id/text_only"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/logo"
             android:paddingTop="5px"
-            android:textColor="@color/beeeon_secundary_pink"
+            android:textColor="@color/beeeon_accent"
             android:textSize="@dimen/smart_watch_2_text_size_large"
             android:textStyle="bold" />
     </RelativeLayout>

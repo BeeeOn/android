@@ -17,13 +17,10 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.GateInfo;
-import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.TimezoneWrapper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by david on 23.6.15.
@@ -106,7 +103,7 @@ public class GateDetailFragment extends Fragment {
 				mSwipeRefreshLayout.setRefreshing(false);
 			}
 		});
-		mSwipeRefreshLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
+		mSwipeRefreshLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 
 		return view;
 	}

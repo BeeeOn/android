@@ -55,11 +55,11 @@ final public class ChartHelper {
 		//set bottom X axis style
 		XAxis xAxis = chart.getXAxis();
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		xAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		xAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
 
 		//set left Y axis style
 		YAxis yAxis = chart.getAxisLeft();
-		yAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_text_hint));
+		yAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
 		yAxis.setStartAtZero(false);
 
 		//disable right Y axis

@@ -12,7 +12,7 @@
 		android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 		android:textColor="@color/white"
 		android:gravity="center_vertical"
-		android:background="@color/beeeon_primary_cyan"
+		android:background="@color/beeeon_primary"
 		android:paddingLeft="72dp"
 		/>
 

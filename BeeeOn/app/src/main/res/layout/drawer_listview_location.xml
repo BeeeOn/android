@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="@color/beeeon_text_color"
+            android:textColor="@color/beeeon_primary_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
     </LinearLayout>
 

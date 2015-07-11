@@ -4,26 +4,26 @@
 
         <!-- Style of toolbar's action mode -->
         <item name="windowActionModeOverlay">true</item>
-        <item name="actionModeBackground">@color/darkgray</item>
+        <item name="actionModeBackground">@color/gray_dark</item>
         <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
 
 		<item name="actionBarSize">56dip</item>
 
         <!-- colorPrimary is used for the default action bar background -->
-        <item name="colorPrimary">@color/beeeon_primary_cyan</item>
+        <item name="colorPrimary">@color/beeeon_primary</item>
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/beeeon_primary_cyan_dark</item>
+        <item name="colorPrimaryDark">@color/beeeon_primary_dark</item>
         <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
-        <item name="colorAccent">@color/beeeon_secundary_pink</item>
+        <item name="colorAccent">@color/beeeon_accent</item>
 
-        <item name="android:textColorPrimary">@color/beeeon_text_color</item>
-        <item name="android:textColorSecondary">@color/beeeon_text_hint</item>
+        <item name="android:textColorPrimary">@color/beeeon_primary_text</item>
+        <item name="android:textColorSecondary">@color/beeeon_secondary_text</item>
 
         <!-- there can also be set colorControlNormal, colorControlActivated colorControlHighlight, and colorSwitchThumbNormal. -->
-        <item name="colorControlNormal">@color/beeeon_text_color</item>
-        <item name="colorControlActivated">@color/beeeon_secundary_pink</item>
-        <item name="colorControlHighlight">@color/beeeon_primary_cyan_light</item>
+        <item name="colorControlNormal">@color/beeeon_primary_text</item>
+        <item name="colorControlActivated">@color/beeeon_accent</item>
+        <item name="colorControlHighlight">@color/beeeon_primary_light</item>
 
 		<item name="android:windowBackground">@color/beeeon_background</item>
 		<item name="android:colorBackground">@color/beeeon_background</item>
@@ -55,27 +55,19 @@
 
 
     <style name="settingsTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/beeeon_primary_cyan</item>
+        <item name="colorPrimary">@color/beeeon_primary</item>
         <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/beeeon_primary_cyan_dark</item>
-        <item name="colorAccent">@color/beeeon_secundary_pink</item>
+        <item name="colorPrimaryDark">@color/beeeon_primary_dark</item>
+        <item name="colorAccent">@color/beeeon_accent</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">@color/beeeon_text_color</item>
-        <item name="android:textColorSecondary">@color/beeeon_text_hint</item>
+        <item name="android:textColor">@color/beeeon_primary_text</item>
+        <item name="android:textColorSecondary">@color/beeeon_secondary_text</item>
     </style>
 
     <!--MainActivity custom theme-->
     <style name="MainActivityTheme" parent="AppTheme">
 
     </style>
-
-    <!-- FAB style -->
-	<style name="fab_item_menu" >
-		<item name="fab_colorNormal">@color/beeeon_secundary_pink</item>
-		<item name="fab_colorPressed">@color/black</item>
-		<item name="fab_colorRipple">@color/beeeon_secundary_pink</item>
-		<item name="fab_type">mini</item>
-	</style>
 
     <!-- widget configuration activity -->
 
@@ -98,7 +90,7 @@
     <style name="LinearRow.Caption">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/beeeon_secundary_pink</item>
+        <item name="android:textColor">@color/beeeon_accent</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
@@ -111,7 +103,7 @@
     <style name="LinearRow.Item">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/beeeon_primary_cyan</item>
+        <item name="android:textColor">@color/beeeon_primary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:gravity">center_vertical</item>
@@ -173,6 +165,19 @@
 
     <style name="BeeeOn.DividerListView.Full">
         <item name="android:background">@color/beeeon_divider</item>
+    </style>
+
+    <!-- FAB -->
+
+    <style name="BeeeOn.Fab">
+        <item name="fab_colorNormal">@color/beeeon_accent</item>
+        <item name="fab_colorPressed">@color/beeeon_accent_light</item>
+        <item name="fab_colorRipple">@color/beeeon_accent</item>
+        <item name="fab_type">normal</item>
+    </style>
+
+    <style name="BeeeOn.Fab.Mini">
+        <item name="fab_type">mini</item>
     </style>
 
 </resources>

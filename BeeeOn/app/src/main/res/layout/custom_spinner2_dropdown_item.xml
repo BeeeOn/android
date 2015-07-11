@@ -13,7 +13,7 @@ android:orientation="horizontal">
         android:paddingStart="5dp"
         android:paddingRight="5dp"
         android:paddingEnd="5dp"
-        android:src="@drawable/dev_unknown"
+        android:src="@drawable/ic_module_unknow"
         />
 
     <RelativeLayout
@@ -24,7 +24,7 @@ android:orientation="horizontal">
 
         <TextView
             android:id="@+id/custom_spinner2_dropdown_label"
-            android:textColor="@color/beeeon_text_color"
+            android:textColor="@color/beeeon_primary_text"
             android:singleLine="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@ android:orientation="horizontal">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/beeeon_text_hint"
+            android:textColor="@color/beeeon_secondary_text"
             android:layout_below="@+id/custom_spinner2_dropdown_label"
             />
     </RelativeLayout>

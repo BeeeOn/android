@@ -22,7 +22,7 @@ public class IntroActivity extends BaseActivity {
 		setContentView(R.layout.activity_base_guide);
 
 		List<IntroImageFragment.ImageTextPair> pairs = new ArrayList<>();
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_icons,R.string.tut_intro_text_1, R.string.tut_intro_title));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_border,R.string.tut_intro_text_1, R.string.tut_intro_title));
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.tut_intro_text_2, R.string.tut_intro_title));
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.tut_intro_text_3, R.string.tut_intro_title));
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.tut_intro_text_4, R.string.tut_intro_title));

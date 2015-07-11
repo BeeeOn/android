@@ -16,11 +16,11 @@ public final class BoilerStatusValue extends BaseEnumValue {
 		super();
 
 		// FIXME: Fix drawables and colors
-		mItems.add(this.new Item(0, UNDEFINED, R.drawable.dev_thermostat, R.string.dev_boiler_status_undefined, Color.BLACK));
-		mItems.add(this.new Item(1, HEATING, R.drawable.dev_thermostat, R.string.dev_boiler_status_heating, Color.BLACK));
-		mItems.add(this.new Item(2, HOT_WATER, R.drawable.dev_thermostat, R.string.dev_boiler_status_hot_water, Color.BLACK));
-		mItems.add(this.new Item(3, FAILURE, R.drawable.dev_thermostat, R.string.dev_boiler_status_failure, Color.BLACK));
-		mItems.add(this.new Item(4, SHUTDOWN, R.drawable.dev_thermostat, R.string.dev_boiler_status_shutdown, Color.BLACK));
+		mItems.add(this.new Item(0, UNDEFINED, R.drawable.ic_dev_termostat_gray, R.string.dev_boiler_status_undefined, Color.BLACK));
+		mItems.add(this.new Item(1, HEATING, R.drawable.ic_dev_termostat_gray, R.string.dev_boiler_status_heating, Color.BLACK));
+		mItems.add(this.new Item(2, HOT_WATER, R.drawable.ic_dev_termostat_gray, R.string.dev_boiler_status_hot_water, Color.BLACK));
+		mItems.add(this.new Item(3, FAILURE, R.drawable.ic_dev_termostat_gray, R.string.dev_boiler_status_failure, Color.BLACK));
+		mItems.add(this.new Item(4, SHUTDOWN, R.drawable.ic_dev_termostat_gray, R.string.dev_boiler_status_shutdown, Color.BLACK));
 	}
 
 }

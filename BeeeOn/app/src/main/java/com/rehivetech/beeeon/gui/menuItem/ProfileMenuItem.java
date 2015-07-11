@@ -29,7 +29,10 @@ public class ProfileMenuItem extends AbstractMenuItem {
 
 		nameView.setText(mName);
 		emailView.setText(mEmail);
-		iconView.setImageBitmap(mIcon);
+		if (mIcon != null) {
+			iconView.setImageBitmap(mIcon);
+			iconView.setPadding(0, 0, 0, 0);
+		}
 
 		view.setOnClickListener(mListener);
 		emailView.setOnClickListener(mListener);

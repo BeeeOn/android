@@ -31,13 +31,13 @@ public class Location implements INameIdentifier {
 	 * Represents location icon.
 	 */
 	public enum LocationIcon implements IIdentifier {
-		UNKNOWN(0, R.drawable.loc_unknown),
-		BATHROOM(1, R.drawable.loc_bath_room),
-		BEDROOM(2, R.drawable.loc_bed_room),
-		GARDEN(3, R.drawable.loc_garden),
-		DINING_ROOM(4, R.drawable.loc_dinner_room),
-		LIVING_ROOM(5, R.drawable.loc_living_room),
-		WC(6, R.drawable.loc_wc);
+		UNKNOWN(0, R.drawable.loc_unknown_gray),
+		BATHROOM(1, R.drawable.loc_bath_room_gray),
+		BEDROOM(2, R.drawable.loc_bed_room_gray),
+		GARDEN(3, R.drawable.loc_garden_gray),
+		DINING_ROOM(4, R.drawable.loc_dinner_room_gray),
+		LIVING_ROOM(5, R.drawable.loc_living_room_gray),
+		WC(6, R.drawable.loc_wc_gray);
 
 		private final String mId;
 		private final int mIconRes;

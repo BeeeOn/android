@@ -33,12 +33,12 @@
         android:id="@+id/widget_config_gateway_emptyview"
         style="@style/LinearRow.Row"
         android:text="@string/no_gate_cap"
-        android:textColor="@color/beeeon_text_hint"
+        android:textColor="@color/beeeon_secondary_text"
         />
 
     <!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
@@ -60,12 +60,12 @@
         android:id="@+id/widget_config_device_emptyview"
         style="@style/LinearRow.Row"
         android:text="@string/no_sensor_cap"
-        android:textColor="@color/beeeon_text_hint"
+        android:textColor="@color/beeeon_secondary_text"
         />
 
 	<!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
@@ -96,7 +96,7 @@
 
 	<!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
@@ -131,7 +131,7 @@
 
 	<!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>

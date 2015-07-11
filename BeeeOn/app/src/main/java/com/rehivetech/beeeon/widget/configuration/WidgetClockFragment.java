@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.widget.configuration;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -117,7 +116,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 					case R.id.scheme_pink_cyan:
 					default:
-						mWidgetData.settings.setColorScheme(R.color.beeeon_primary_cyan, R.color.beeeon_secundary_pink);
+						mWidgetData.settings.setColorScheme(R.color.beeeon_primary, R.color.beeeon_accent);
 						break;
 				}
 			}

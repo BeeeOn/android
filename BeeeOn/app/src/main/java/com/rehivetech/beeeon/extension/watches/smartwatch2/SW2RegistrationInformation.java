@@ -96,8 +96,8 @@ public class SW2RegistrationInformation extends RegistrationInformation {
 	@Override
 	public ContentValues getExtensionRegistrationConfiguration() {
 		Log.d(SW2ExtensionService.LOG_TAG, "getExtensionRegistrationConfiguration");
-		String iconHostapp = ExtensionUtils.getUriString(mContext, R.drawable.beeeon_logo);
-		String iconExtension = ExtensionUtils.getUriString(mContext, R.drawable.beeeon_logo);
+		String iconHostapp = ExtensionUtils.getUriString(mContext, R.drawable.beeeon_logo_cyan_border);
+		String iconExtension = ExtensionUtils.getUriString(mContext, R.drawable.beeeon_logo_cyan_border);
 
 		ContentValues values = new ContentValues();
 

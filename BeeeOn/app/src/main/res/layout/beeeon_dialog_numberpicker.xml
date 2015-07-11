@@ -14,7 +14,7 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textColor="@color/beeeon_primary_cyan"
+		android:textColor="@color/beeeon_primary"
 		android:textSize="30sp"
 		android:layout_marginLeft="8dp"
 		android:text="°C"

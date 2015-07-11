@@ -36,7 +36,7 @@
                 android:paddingEnd="8dp"
                 android:scaleType="fitCenter"
                 android:layout_gravity="center"
-                android:src="@drawable/dev_unknown"
+                android:src="@drawable/ic_module_unknow"
                 android:contentDescription="@string/placeholder_icon"
                 />
 
@@ -98,7 +98,7 @@
             android:layout_alignRight="@+id/widget_sensor_list_view"
             android:layout_alignLeft="@+id/widget_sensor_list_view"
             android:layout_alignBottom="@+id/widget_sensor_list_view"
-            android:textColor="@color/beeeon_text_hint"
+            android:textColor="@color/beeeon_secondary_text"
             />
 
 

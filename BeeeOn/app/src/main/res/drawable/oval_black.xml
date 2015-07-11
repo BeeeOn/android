@@ -3,8 +3,4 @@
     <solid android:color="@color/black" />
 
     <size android:width="32dp" android:height="32dp" />
-
-    <stroke
-        android:width="3dp"
-        android:color="@color/black" />
 </shape>

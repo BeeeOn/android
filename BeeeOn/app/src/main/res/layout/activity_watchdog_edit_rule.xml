@@ -82,7 +82,7 @@
 					android:textStyle="bold"
 					android:textSize="16sp"
 					android:gravity="center"
-					android:background="@drawable/oval_pink"
+					android:background="@drawable/oval_primary"
 					android:text="@string/icon_if"
 					/>
 
@@ -121,10 +121,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:src="@drawable/ic_action_next_item"
-					fab:fab_type="mini"
-					fab:fab_colorNormal="@color/beeeon_primary_cyan_dark"
-					fab:fab_colorPressed="@color/beeeon_primary_cyan"
-					fab:fab_colorRipple="@color/beeeon_primary_cyan"
+					style="@style/BeeeOn.Fab.Mini"
 					android:layout_alignParentTop="true"
 					android:layout_marginLeft="70dp"
 					android:layout_marginStart="70dp"
@@ -136,7 +133,7 @@
 					android:layout_width="100dp"
 					android:singleLine="true"
 					android:layout_height="wrap_content"
-					android:textColor="@color/beeeon_secundary_pink"
+					android:textColor="@color/beeeon_accent"
 					android:textSize="16sp"
 					android:gravity="center_horizontal"
 					android:layout_toRightOf="@+id/watchdog_edit_operator"
@@ -152,7 +149,7 @@
 					android:id="@+id/watchdog_edit_treshold_unit"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:textColor="@color/beeeon_secundary_pink"
+					android:textColor="@color/beeeon_accent"
 					android:textStyle="bold"
 					android:textSize="16sp"
 					android:layout_toRightOf="@+id/watchdog_edit_treshold"
@@ -189,7 +186,7 @@
 					android:textSize="14sp"
 					android:gravity="center"
 					android:text="@string/icon_then"
-					android:background="@drawable/oval_pink"
+					android:background="@drawable/oval_primary"
 					/>
 
 				<LinearLayout

@@ -46,7 +46,7 @@
 			android:ellipsize="end"
 			android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 			android:layout_marginTop="-4dp"
-			android:textColor="@color/beeeon_primary_cyan"
+			android:textColor="@color/beeeon_primary"
 			android:text="@string/placeholder_none"
 			/>
 
@@ -62,7 +62,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-				android:textColor="@color/beeeon_secundary_pink"
+				android:textColor="@color/beeeon_accent"
 				/>
 
 			<!-- weather icon -->
@@ -82,7 +82,7 @@
 			android:id="@+id/widget_clock_separator_1"
 			android:layout_width="30dp"
 			android:layout_height="@dimen/divider_size"
-			android:src="@color/beeeon_primary_cyan"
+			android:src="@color/beeeon_primary"
 			android:layout_marginTop="2dp"
 			/>
 	</LinearLayout>
@@ -96,7 +96,7 @@
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:singleLine="true"
 		android:ellipsize="end"
-		android:textColor="@color/beeeon_primary_cyan"
+		android:textColor="@color/beeeon_primary"
 		/>
 
 	<!-- values -->
@@ -121,7 +121,7 @@
 			android:id="@+id/widget_clock_separator_2"
 			android:layout_width="@dimen/divider_size"
 			android:layout_height="16dp"
-			android:src="@color/beeeon_primary_cyan"
+			android:src="@color/beeeon_primary"
 			android:layout_marginLeft="4dp"
 			android:layout_marginStart="4dp"
 			android:layout_marginRight="4dp"

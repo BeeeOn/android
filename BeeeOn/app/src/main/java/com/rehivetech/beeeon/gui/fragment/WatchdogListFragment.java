@@ -121,7 +121,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 			}
 		});
 
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
+		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 	}
 
 	private void refreshListListener() {
@@ -349,7 +349,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 * Changes color of selected item row
 	 */
 	private void setRuleSelected() {
-		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.light_gray));
+		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
 	}
 
 	private void setRuleUnselected() {

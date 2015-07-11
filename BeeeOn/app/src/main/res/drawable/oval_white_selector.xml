@@ -3,10 +3,10 @@
 
 	<item android:state_checked="true">
 		<layer-list>
-			<item android:drawable="@drawable/oval_white"/>
+			<item android:drawable="@drawable/oval_white_border"/>
 			<item android:drawable="@drawable/ic_action_accept_dark" />
 		</layer-list>
 	</item>
 
-	<item android:state_checked="false" android:drawable="@drawable/oval_white" />
+	<item android:state_checked="false" android:drawable="@drawable/oval_white_border" />
 </selector>

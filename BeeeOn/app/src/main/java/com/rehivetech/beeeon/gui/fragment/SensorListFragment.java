@@ -150,7 +150,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 				doReloadDevicesTask(gate.getId(), true);
 			}
 		});
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
+		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 	}
 
 	public void onPause() {
@@ -317,7 +317,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) { // API 14 +
 			floatingActionButton.setMenuItems(Utils.convertIntegers(mFABMenuIcon), mFABMenuLabels.toArray(new String[mFABMenuLabels.size()]),
-					R.style.fab_item_menu, fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
+					R.style.BeeeOn_Fab_Mini, fabMenuListener, getResources().getDrawable(R.drawable.ic_action_cancel));
 			floatingActionButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

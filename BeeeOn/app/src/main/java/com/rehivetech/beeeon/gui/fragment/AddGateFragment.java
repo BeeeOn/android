@@ -67,7 +67,7 @@ public class AddGateFragment extends TrackFragment {
 		} else {
 			button.setEnabled(false);
 			button.setText(R.string.addadapter_qr_button_loading);
-			button.setTextColor(getResources().getColor(R.color.light_gray));
+			button.setTextColor(getResources().getColor(R.color.gray_light));
 		}
 	}
 

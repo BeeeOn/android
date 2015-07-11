@@ -11,7 +11,7 @@
 		android:layout_height="wrap_content"
 		android:text="PO"
 		android:textAllCaps="true"
-		android:textColor="@color/beeeon_secundary_pink"
+		android:textColor="@color/beeeon_accent"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		/>
 
@@ -22,7 +22,7 @@
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:text="03.02.2015"
 		android:textStyle="bold"
-		android:textColor="@color/beeeon_secundary_pink"
+		android:textColor="@color/beeeon_accent"
 		android:layout_marginLeft="4dp"
 		android:layout_marginStart="4dp"
 		/>

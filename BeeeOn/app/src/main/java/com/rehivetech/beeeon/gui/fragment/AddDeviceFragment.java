@@ -168,9 +168,9 @@ public class AddDeviceFragment extends TrackFragment {
 		mCallback.setNextButtonEnabled(false);
 		mDonutProgress.setProgress(Constants.PAIR_TIME_SEC);
 		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
-		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
-		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_secundary_pink));
-		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.beeeon_secundary_pink));
+		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_accent));
+		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_accent));
+		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.beeeon_accent));
 		mDonutProgress.setUnfinishedStrokeColor(getResources().getColor(R.color.white));
 		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
 
@@ -199,8 +199,8 @@ public class AddDeviceFragment extends TrackFragment {
 	private void resetTimer() {
 		mCallback.setNextButtonEnabled(true);
 		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
-		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_drawer_bg));
-		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_drawer_bg));
+		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.white));
+		mDonutProgress.setTextColor(getResources().getColor(R.color.white));
 		mDonutProgress.setProgress(Constants.PAIR_TIME_SEC);
 		mDonutProgress.setMax(Constants.PAIR_TIME_SEC);
 		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.white));

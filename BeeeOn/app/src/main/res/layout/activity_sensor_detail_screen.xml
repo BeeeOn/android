@@ -19,7 +19,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="150dp"
 			android:id="@+id/sen_header"
-			android:background="@color/beeeon_primary_cyan"
+			android:background="@color/beeeon_primary"
 			android:paddingLeft="16dp"
 			android:paddingRight="16dp"
 			android:orientation="vertical"
@@ -36,7 +36,8 @@
 					android:layout_height="84dp"
 					android:layout_alignParentLeft="true"
 					android:layout_alignParentBottom="true"
-					android:src="@drawable/dev_unknown"
+					android:background="@drawable/oval_white"
+					android:src="@drawable/ic_module_unknow"
 					android:contentDescription="Icon of module"
 					/>
 				<!-- VALUE OF SENSOR  or  SWITCH FOR ACTOR -->
@@ -83,7 +84,7 @@
 						android:layout_gravity="right|bottom"
 						android:text="set"
 						style="@style/Base.Widget.AppCompat.Button.Small"
-						android:background="@color/beeeon_secundary_pink"
+						android:background="@color/beeeon_accent"
 						android:textColor="@color/white"
 						android:visibility="gone"
 						/>
@@ -117,10 +118,7 @@
 			android:layout_alignBottom="@+id/sen_header"
 			android:layout_marginBottom="-20dp"
 			android:layout_marginLeft="16dp"
-			fab:fab_colorNormal="@color/beeeon_secundary_pink"
-			fab:fab_type="mini"
-			fab:fab_colorPressed="@color/beeeon_secundary_pink_pressed"
-			fab:fab_colorRipple="@color/beeeon_secundary_pink"
+			style="@style/BeeeOn.Fab.Mini"
 			android:visibility="invisible"/>
 		<!-- CONTENT - LOCATION, REFRESH TIME -->
 		<LinearLayout
@@ -152,13 +150,13 @@
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_color"
+						android:textColor="@color/beeeon_primary_text"
 						android:textSize="16sp"
 						android:id="@+id/sen_detail_loc_name"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_hint"
+						android:textColor="@color/beeeon_secondary_text"
 						android:textSize="14sp"
 						android:text="@string/sensordetail_location_label"/>
 				</LinearLayout>
@@ -183,14 +181,14 @@
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_color"
+						android:textColor="@color/beeeon_primary_text"
 						android:textSize="16sp"
 						android:text="5 min"
 						android:id="@+id/sen_refresh_time_value"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_hint"
+						android:textColor="@color/beeeon_secondary_text"
 						android:textSize="14sp"
 						android:text="@string/sensordetail_refresh_time"/>
 				</LinearLayout>
@@ -200,7 +198,7 @@
 		<View
 			android:layout_width="fill_parent"
 			android:layout_height="1dp"
-			android:background="@color/light_gray"
+			android:background="@color/gray_light"
 			android:paddingBottom="8dp"
 			android:paddingTop="8dp"
 			android:layout_marginLeft="72dp"
@@ -232,14 +230,14 @@
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_color"
+						android:textColor="@color/beeeon_primary_text"
 						android:textSize="16sp"
 						android:text="1 min ago"
 						android:id="@+id/sen_detail_time"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_hint"
+						android:textColor="@color/beeeon_secondary_text"
 						android:textSize="14sp"
 						android:text="@string/sensordetail_last_update_label"/>
 				</LinearLayout>
@@ -258,14 +256,14 @@
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_color"
+						android:textColor="@color/beeeon_primary_text"
 						android:textSize="16sp"
 						android:text="80%"
 						android:id="@+id/sen_detail_battery_value"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_hint"
+						android:textColor="@color/beeeon_secondary_text"
 						android:textSize="14sp"
 						android:text="@string/sensordetail_battery_label"/>
 				</LinearLayout>
@@ -284,14 +282,14 @@
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_color"
+						android:textColor="@color/beeeon_primary_text"
 						android:textSize="16sp"
 						android:text="100%"
 						android:id="@+id/sen_detail_signal_value"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_text_hint"
+						android:textColor="@color/beeeon_secondary_text"
 						android:textSize="14sp"
 						android:text="@string/sensordetail_signal_label"/>
 				</LinearLayout>
@@ -301,7 +299,7 @@
 		<View
 			android:layout_width="fill_parent"
 			android:layout_height="1dp"
-			android:background="@color/light_gray"
+			android:background="@color/gray_light"
 			android:paddingBottom="8dp"
 			android:paddingTop="8dp"
 			android:layout_marginLeft="72dp"
@@ -325,7 +323,7 @@
 				android:layout_height="48dp"
 				android:gravity="center"
 				android:text="@string/sen_graph_label"
-				android:textColor="@color/beeeon_text_hint"
+				android:textColor="@color/beeeon_secondary_text"
 				android:textSize="14sp"/>
 
 			<com.github.mikephil.charting.charts.CombinedChart
