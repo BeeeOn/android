@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
-import com.rehivetech.beeeon.gui.dialog.EditTextDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 import com.rehivetech.beeeon.gui.dialog.EnterTextDialog;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EditTextDialogFragment.IEditTextDialogListener {
+public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EditTextDialog.IEditTextDialogListener {
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 	public static final String TAG_FRAGMENT_CODE_DIALOG = "Code_dialog";
@@ -167,7 +167,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	}
 
 	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, EditTextDialogFragment fragment) {
+	public void onPositiveButtonClicked(int requestCode, View view, EditTextDialog fragment) {
 		EditText editText = (EditText) view.findViewById(R.id.dialog_edit_text);
 		if(!Utils.validateInput(this, editText)){
 			return;
@@ -177,7 +177,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	}
 
 	@Override
-	public void onNegativeButtonClicked(int requestCode, View view, EditTextDialogFragment fragment) {
+	public void onNegativeButtonClicked(int requestCode, View view, EditTextDialog fragment) {
 
 	}
 }

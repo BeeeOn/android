@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
-import com.rehivetech.beeeon.gui.dialog.EditTextDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public class WidgetClockFragment extends WidgetConfigurationFragment implements EditTextDialogFragment.IEditTextDialogListener {
+public class WidgetClockFragment extends WidgetConfigurationFragment implements EditTextDialog.IEditTextDialogListener {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	public static final int REQUEST_LOCATION_DIALOG = 5;
 	private static final int SPACE_BETWEEN_MODULE_SPINNERS = 8;
@@ -160,7 +160,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
     }
 
     private void showLocationPickerDialog() {
-		EditTextDialogFragment
+		EditTextDialog
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 				.setTitle(mActivity.getString(R.string.dialog_location_select))
 				.setEditTextValue(mWeatherCity != null ? mWeatherCity.name : mWidgetData.weather.cityName)
@@ -173,7 +173,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, final EditTextDialogFragment dialog) {
+	public void onPositiveButtonClicked(int requestCode, View view, final EditTextDialog dialog) {
 		EditText cityEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
 		if(!Utils.validateInput(mActivity, cityEditText)){
 			return;
@@ -217,7 +217,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
-	private void loadingCitySuccess(WeatherProvider.City city, EditTextDialogFragment dialog) {
+	private void loadingCitySuccess(WeatherProvider.City city, EditTextDialog dialog) {
 		mWeatherCity = city;
 		// setup city label
 		mCityLabel.setText(city.name);
@@ -229,7 +229,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	@Override
-	public void onNegativeButtonClicked(int requestCode, View city, EditTextDialogFragment dialog) {
+	public void onNegativeButtonClicked(int requestCode, View city, EditTextDialog dialog) {
 		dialog.dismiss();
 	}
 

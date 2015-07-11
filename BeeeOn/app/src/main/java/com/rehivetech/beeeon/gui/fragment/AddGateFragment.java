@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
-import com.rehivetech.beeeon.gui.dialog.EditTextDialogFragment;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 
 public class AddGateFragment extends TrackFragment {
 
@@ -49,7 +49,7 @@ public class AddGateFragment extends TrackFragment {
 			@Override
 			public void onClick(View v) {
 				// overlay dialog must popup here
-				EditTextDialogFragment
+				EditTextDialog
 						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 						.setTitle(mActivity.getString(R.string.enter_text_dialog_title))
 						.showKeyboard()

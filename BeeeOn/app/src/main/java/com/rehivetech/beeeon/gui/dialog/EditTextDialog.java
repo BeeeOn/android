@@ -4,12 +4,10 @@ package com.rehivetech.beeeon.gui.dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.widget.EditText;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
@@ -21,7 +19,7 @@ import java.util.List;
 /**
  * Created by mlyko on 25. 4. 2015.
  */
-public class EditTextDialogFragment extends BaseDialogFragment {
+public class EditTextDialog extends BaseDialogFragment {
 	public static String TAG = "edit_text_picker";
 
 	public static final String ARG_TITLE = "title";
@@ -33,7 +31,7 @@ public class EditTextDialogFragment extends BaseDialogFragment {
 	public static final String ARG_NEGATIVE_BUTTON_TEXT = "negative_button_text";
 	public static final String ARG_SHOW_KEYBOARD = "show_keyboard";
 
-	public EditTextDialogFragment() {
+	public EditTextDialog() {
 	}
 
 	public static EditTextDialogBuilder createBuilder(Context context, FragmentManager fragmentManager) {
@@ -76,8 +74,8 @@ public class EditTextDialogFragment extends BaseDialogFragment {
 			builder.setPositiveButton(positiveButtonText, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					for (IEditTextDialogListener listener : EditTextDialogFragment.this.getDialogListeners()) {
-						listener.onPositiveButtonClicked(EditTextDialogFragment.this.mRequestCode, editText, EditTextDialogFragment.this);
+					for (IEditTextDialogListener listener : EditTextDialog.this.getDialogListeners()) {
+						listener.onPositiveButtonClicked(EditTextDialog.this.mRequestCode, editText, EditTextDialog.this);
 					}
 				}
 			});
@@ -89,8 +87,8 @@ public class EditTextDialogFragment extends BaseDialogFragment {
 			builder.setNegativeButton(negativeButtonText, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					for (IEditTextDialogListener listener : EditTextDialogFragment.this.getDialogListeners()) {
-						listener.onNegativeButtonClicked(EditTextDialogFragment.this.mRequestCode, editText, EditTextDialogFragment.this);
+					for (IEditTextDialogListener listener : EditTextDialog.this.getDialogListeners()) {
+						listener.onNegativeButtonClicked(EditTextDialog.this.mRequestCode, editText, EditTextDialog.this);
 					}
 				}
 			});
@@ -118,7 +116,7 @@ public class EditTextDialogFragment extends BaseDialogFragment {
 		private boolean mShowKeyboard;
 
 		protected EditTextDialogBuilder(Context context, FragmentManager fragmentManager) {
-			super(context, fragmentManager, EditTextDialogFragment.class);
+			super(context, fragmentManager, EditTextDialog.class);
 		}
 
 		@Override
@@ -177,8 +175,8 @@ public class EditTextDialogFragment extends BaseDialogFragment {
 	}
 
 	public interface IEditTextDialogListener {
-		void onPositiveButtonClicked(int requestCode, View view, EditTextDialogFragment fragment);
+		void onPositiveButtonClicked(int requestCode, View view, EditTextDialog fragment);
 
-		void onNegativeButtonClicked(int requestCode, View view, EditTextDialogFragment fragment);
+		void onNegativeButtonClicked(int requestCode, View view, EditTextDialog fragment);
 	}
 }
