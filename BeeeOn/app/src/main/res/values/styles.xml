@@ -69,14 +69,6 @@
 
     </style>
 
-    <!-- FAB style -->
-	<style name="fab_item_menu" >
-		<item name="fab_colorNormal">@color/beeeon_accent</item>
-		<item name="fab_colorPressed">@color/black</item>
-		<item name="fab_colorRipple">@color/beeeon_accent</item>
-		<item name="fab_type">mini</item>
-	</style>
-
     <!-- widget configuration activity -->
 
     <style name="LinearRow" />
@@ -173,6 +165,19 @@
 
     <style name="BeeeOn.DividerListView.Full">
         <item name="android:background">@color/beeeon_divider</item>
+    </style>
+
+    <!-- FAB -->
+
+    <style name="BeeeOn.Fab">
+        <item name="fab_colorNormal">@color/beeeon_accent</item>
+        <item name="fab_colorPressed">@color/beeeon_accent_light</item>
+        <item name="fab_colorRipple">@color/beeeon_accent</item>
+        <item name="fab_type">normal</item>
+    </style>
+
+    <style name="BeeeOn.Fab.Mini">
+        <item name="fab_type">mini</item>
     </style>
 
 </resources>

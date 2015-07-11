@@ -8,7 +8,7 @@
     <color name="beeeon_primary_alpha">#7D00ACC1</color> <!-- background of graphs only, remove somehow -->
     <color name="beeeon_accent">#FF4081</color>
     <color name="beeeon_accent_alpha">#90FF4081</color> <!-- map geofence area only, remove somehow -->
-    <color name="beeeon_accent_light">#FF80AB</color> <!-- pressed FAB only, remove somehow -->
+    <color name="beeeon_accent_light">#FF80AB</color>
     <color name="beeeon_primary_text">#212121</color>
     <color name="beeeon_secondary_text">#727272</color>
     <color name="beeeon_icons">#FFFFFF</color>

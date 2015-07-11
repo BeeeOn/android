@@ -50,9 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_add_white_24dp"
-        fab:fab_colorNormal="@color/beeeon_accent"
-        fab:fab_colorPressed="@color/black"
-        fab:fab_colorRipple="@color/beeeon_accent"
+        style="@style/BeeeOn.Fab"
         android:layout_margin="16dp"
         android:layout_gravity="right|bottom" />
 </FrameLayout>

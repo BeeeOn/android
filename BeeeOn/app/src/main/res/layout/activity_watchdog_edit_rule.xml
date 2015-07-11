@@ -82,7 +82,7 @@
 					android:textStyle="bold"
 					android:textSize="16sp"
 					android:gravity="center"
-					android:background="@drawable/oval_accent"
+					android:background="@drawable/oval_primary"
 					android:text="@string/icon_if"
 					/>
 
@@ -121,10 +121,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:src="@drawable/ic_action_next_item"
-					fab:fab_type="mini"
-					fab:fab_colorNormal="@color/beeeon_primary_dark"
-					fab:fab_colorPressed="@color/beeeon_primary"
-					fab:fab_colorRipple="@color/beeeon_primary"
+					style="@style/BeeeOn.Fab.Mini"
 					android:layout_alignParentTop="true"
 					android:layout_marginLeft="70dp"
 					android:layout_marginStart="70dp"
@@ -189,7 +186,7 @@
 					android:textSize="14sp"
 					android:gravity="center"
 					android:text="@string/icon_then"
-					android:background="@drawable/oval_accent"
+					android:background="@drawable/oval_primary"
 					/>
 
 				<LinearLayout
