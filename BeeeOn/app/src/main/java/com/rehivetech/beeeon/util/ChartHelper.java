@@ -40,7 +40,7 @@ final public class ChartHelper {
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
 		float textSizeSp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-				context.getResources().getDimension(R.dimen.textsize_body), metrics) / metrics.scaledDensity;
+				context.getResources().getDimension(R.dimen.graph_textsize_body), metrics) / metrics.scaledDensity;
 
 		Legend legend = chart.getLegend();
 		legend.setForm(Legend.LegendForm.CIRCLE);

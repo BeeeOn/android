@@ -4,12 +4,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-	<!-- text sizes according to material design spec -->
-	<dimen name="textsize_caption">12sp</dimen>
-	<dimen name="textsize_body">14sp</dimen>
-	<dimen name="textsize_title">20sp</dimen>
-	<dimen name="textsize_headline">24sp</dimen>
-
 	<!--  Widgets -->
 	<dimen name="widget_margin">8dp</dimen>
 
@@ -22,6 +16,11 @@
 	<dimen name="widget_header_icon">32dp</dimen>
 
 	<dimen name="widget_clock_width">160dp</dimen>
+
+	<dimen name="widget_textsize_caption">12sp</dimen>
+	<dimen name="widget_textsize_body">14sp</dimen>
+	<dimen name="widget_textsize_title">20sp</dimen>
+	<dimen name="widget_textsize_headline">24sp</dimen>
 
 	<dimen name="widget_textsize_clock">40sp</dimen>
 	<dimen name="widget_textsize_clock_large">70sp</dimen>
@@ -66,5 +65,7 @@
 	<dimen name="activity_login_app_slogan_size">18sp</dimen>
 
 	<dimen name="divider_size">1dp</dimen>
+
 	<dimen name="customview_graph_height">200dp</dimen>
+	<dimen name="graph_textsize_body">14sp</dimen>
 </resources>
