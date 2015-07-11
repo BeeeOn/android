@@ -63,7 +63,7 @@
 
     <!-- separator -->
     <View
-        style="@style/BeeeOn.Divider"
+        style="@style/BeeeOn.Divider.Full"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

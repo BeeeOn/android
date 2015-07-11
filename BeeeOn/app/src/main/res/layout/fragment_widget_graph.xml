@@ -38,7 +38,7 @@
 
 	<!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
@@ -65,7 +65,7 @@
 
 	<!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
@@ -106,7 +106,7 @@
 
 	<!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
@@ -148,7 +148,7 @@
 
 	<!-- separator -->
 	<View
-		style="@style/BeeeOn.Divider"
+		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
 		android:layout_marginBottom="8dp"
 		/>
