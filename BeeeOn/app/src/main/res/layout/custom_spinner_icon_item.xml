@@ -5,4 +5,4 @@
          android:contentDescription="@string/placeholder_icon"
          android:layout_width="@dimen/custom_spinner_icon_size_smaller"
          android:layout_height="@dimen/custom_spinner_icon_size_smaller"
-         android:src="@drawable/loc_unknown"/>
+         android:src="@drawable/loc_unknown_gray"/>
