@@ -46,6 +46,7 @@ import com.rehivetech.beeeon.geofence.GeofenceHelper;
 import com.rehivetech.beeeon.geofence.SimpleGeofence;
 import com.rehivetech.beeeon.gui.dialog.GeofenceDialogFragment;
 import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -322,10 +323,15 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 						.snippet(getString(R.string.radius) + ": " + fence.getRadius() + " " + getString(R.string.unit_meter_short))
 						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
+		int fillColor = Utils.setColorAlpha(getResources().getColor(R.color.beeeon_accent), 144);
+
 		// Instantiates a new CircleOptions object + center/radius
-		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
-				.radius(fence.getRadius()).fillColor(getResources().getColor(R.color.beeeon_accent_alpha))
-				.strokeColor(Color.TRANSPARENT).strokeWidth(2);
+		CircleOptions circleOptions = new CircleOptions()
+				.center(new LatLng(fence.getLatitude(), fence.getLongitude()))
+				.radius(fence.getRadius())
+				.fillColor(fillColor)
+				.strokeColor(Color.TRANSPARENT)
+				.strokeWidth(2);
 
 		// Get back the mutable Circle
 		Circle circle = mMap.addCircle(circleOptions);

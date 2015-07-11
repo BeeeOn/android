@@ -4,10 +4,7 @@
     <color name="beeeon_primary_medium">#00ACC1</color> <!-- darker is #00838F -->
     <color name="beeeon_primary_dark">#006064</color>
     <color name="beeeon_primary_light">#4DD0E1</color> <!-- #B2EBF2 -->
-    <color name="beeeon_primary_lighter">#B2EBF2</color> <!-- #32B9F3FA -->
-    <color name="beeeon_primary_alpha">#7D00ACC1</color> <!-- background of graphs only, remove somehow -->
     <color name="beeeon_accent">#FF4081</color>
-    <color name="beeeon_accent_alpha">#90FF4081</color> <!-- map geofence area only, remove somehow -->
     <color name="beeeon_accent_light">#FF80AB</color>
     <color name="beeeon_primary_text">#212121</color>
     <color name="beeeon_secondary_text">#727272</color>

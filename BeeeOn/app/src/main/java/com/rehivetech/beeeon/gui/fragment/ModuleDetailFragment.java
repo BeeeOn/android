@@ -36,8 +36,8 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -62,6 +62,7 @@ import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -427,10 +428,12 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		if (baseValue instanceof BaseEnumValue) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), name);
 		} else {
+			int fillColor = Utils.setColorAlpha(getResources().getColor(R.color.beeeon_primary_medium), 125);
+
 			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(),String.format("%s [%s]",name, unit));
 			((LineDataSet)mDataSet).setDrawCircles(false);
 			((LineDataSet)mDataSet).setDrawFilled(true);
-			((LineDataSet)mDataSet).setFillColor(getResources().getColor(R.color.beeeon_primary_alpha));
+			((LineDataSet)mDataSet).setFillColor(fillColor);
 		}
 		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_medium));
 		mDataSet.setValueFormatter(valueFormatter);
