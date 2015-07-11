@@ -1,31 +1,34 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
+import com.rehivetech.beeeon.gui.dialog.EnterTextDialog;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
-import com.rehivetech.beeeon.gui.fragment.EnterCodeDialogFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EnterCodeDialogFragment.EnterCodeDialogListener {
+public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EditTextDialog.IEditTextDialogListener {
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 	public static final String TAG_FRAGMENT_CODE_DIALOG = "Code_dialog";
@@ -69,14 +72,23 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	}
 
 	@Override
-	public void onPositiveButtonClick(EnterCodeDialogFragment enterCodeDialogFragment, String id) {
-		doRegisterGateTask(id, false);
-	}
-
-	@Override
 	public void showEnterCodeDialog() {
-		EnterCodeDialogFragment enterCodeDialogFragment = new EnterCodeDialogFragment();
-		enterCodeDialogFragment.show(getSupportFragmentManager(), TAG_FRAGMENT_CODE_DIALOG);
+		LayoutInflater inflater = AddGateActivity.this.getLayoutInflater();
+		final View view = inflater.inflate(R.layout.enter_text_dialog, null);
+		EnterTextDialog.enterText(AddGateActivity.this, view, new EnterTextDialog.IEnterTextDialogListener() {
+			@Override
+			public void onEnterText() {
+				EditText editText = (EditText) view.findViewById(R.id.add_gate_overlay_dialog_edit_text);
+				String identifier = editText.getText().toString();
+				if (identifier.isEmpty()) {
+					// when the editText is empty...
+					Toast.makeText(AddGateActivity.this, R.string.toast_field_must_be_filled, Toast.LENGTH_LONG).show();
+					return;
+				}
+
+				doRegisterGateTask(identifier, false);
+			}
+		});
 	}
 
 	public void doRegisterGateTask(String id, final boolean scanned) {
@@ -90,11 +102,6 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
-					EnterCodeDialogFragment enterCodeDialogFragment = (EnterCodeDialogFragment) getSupportFragmentManager().findFragmentByTag(TAG_FRAGMENT_CODE_DIALOG);
-					if (enterCodeDialogFragment != null) {
-						enterCodeDialogFragment.dismiss();
-					}
-					setResult(Activity.RESULT_OK);
 					finish();
 				} else {
 					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activate_failed, Toast.LENGTH_SHORT).show();
@@ -157,5 +164,20 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 		if (fragment != null) {
 			fragment.setScanQrButtonEnabled(enabled);
 		}
+	}
+
+	@Override
+	public void onPositiveButtonClicked(int requestCode, View view, EditTextDialog fragment) {
+		EditText editText = (EditText) view.findViewById(R.id.dialog_edit_text);
+		if(!Utils.validateInput(this, editText)){
+			return;
+		}
+
+		doRegisterGateTask(editText.getText().toString(), false);
+	}
+
+	@Override
+	public void onNegativeButtonClicked(int requestCode, View view, EditTextDialog dialog) {
+		dialog.dismiss();
 	}
 }

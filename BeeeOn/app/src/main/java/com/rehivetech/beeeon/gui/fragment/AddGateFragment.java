@@ -2,6 +2,8 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,10 +12,12 @@ import android.widget.Button;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 
 public class AddGateFragment extends TrackFragment {
 
 	public OnAddGateListener mCallback;
+	private FragmentActivity mActivity;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -22,6 +26,7 @@ public class AddGateFragment extends TrackFragment {
 		try {
 			// Get activity and controller
 			mCallback = (AddGateActivity) getActivity();
+			mActivity = (AddGateActivity) getActivity();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(String.format("%s must implement OnAddGateListener", activity.toString()));
 		}
@@ -44,7 +49,14 @@ public class AddGateFragment extends TrackFragment {
 			@Override
 			public void onClick(View v) {
 				// overlay dialog must popup here
-				mCallback.showEnterCodeDialog();
+				EditTextDialog
+						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+						.setTitle(mActivity.getString(R.string.enter_text_dialog_title))
+						.showKeyboard()
+						.setEditTextInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL)
+						.setPositiveButtonText(mActivity.getString(R.string.ok))
+						.setNegativeButtonText(mActivity.getString(R.string.action_close))
+						.show();
 			}
 		});
 

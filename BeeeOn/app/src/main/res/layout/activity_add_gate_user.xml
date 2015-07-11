@@ -2,60 +2,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <include layout="@layout/beeeon_toolbar" />
 
     <ScrollView 
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView 
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
 	            android:text="@string/add_user_email_header"
-	            android:textColor="@color/beeeon_primary_text"
-			    android:textAppearance="?android:attr/textAppearanceMedium"
-			    android:layout_marginLeft="5dp" />
+				style="@style/LinearRow.Caption"
+				/>
 
             <EditText
                 android:id="@+id/add_user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:ems="10"
-                android:inputType="textEmailAddress" >
-
+                android:inputType="textEmailAddress"
+				>
                 <requestFocus />
             </EditText>
-	       
-	        <TextView 
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
+
+			<View
+				style="@style/BeeeOn.Divider.Full"
+				android:layout_marginTop="8dp"
+				/>
+
+	        <TextView
 	            android:text="@string/add_user_role_header"
-	            android:textColor="@color/beeeon_primary_text"
-			    android:textAppearance="?android:attr/textAppearanceMedium"
-			    android:layout_marginLeft="5dp" />
+				style="@style/LinearRow.Caption"
+			 />
 
 	        <Spinner
 	            android:id="@+id/add_user_role"
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="10dp"
-	            android:layout_marginRight="10dp"/>
-
-	        <Button 
-	            android:layout_gravity="right|bottom"
 	            android:layout_width="wrap_content"
-	            android:layout_height="50dp"
-	            android:text="@string/add_users_adapter"
-	            android:id="@+id/add_user_gate_save"
+	            android:layout_height="48dp"
+				/>
+
+			<View
+				style="@style/BeeeOn.Divider.Full"
+				android:layout_marginTop="8dp"
+				/>
+
+	        <Button
+				android:id="@+id/add_user_gate_save"
+				android:layout_gravity="right|bottom"
+				android:layout_width="wrap_content"
+				android:layout_height="48dp"
+				android:text="@string/add_users_adapter"
 	            />
         </LinearLayout>
         

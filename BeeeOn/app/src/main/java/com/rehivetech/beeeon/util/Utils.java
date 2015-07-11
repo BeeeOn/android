@@ -17,12 +17,14 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Pair;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 
@@ -463,6 +465,53 @@ final public class Utils {
 		int green = Color.green(color);
 		int blue = Color.blue(color);
 		return Color.argb(alpha, red, green, blue);
+	}
+
+	/**
+	 * Enum for validation types
+	 */
+	public enum ValidationType{
+		INTEGER,
+		EMAIL
+	}
+
+	/**
+	 * Helper function for validating EditText
+	 *
+	 * @param eText
+	 * @param additional Array of additional rules to validate: parseInt
+	 * @return
+	 */
+	public static boolean validateInput(Context context, EditText eText, ValidationType... additional) {
+		String inputText = eText.getText().toString().trim();
+		if (inputText.length() == 0) {
+			eText.requestFocus();
+			eText.setError(context.getString(R.string.toast_field_must_be_filled));
+			return false;
+		}
+
+		for (ValidationType type : additional) {
+			switch (type) {
+				case INTEGER:
+					try {
+						int num = Integer.parseInt(inputText);
+					} catch (NumberFormatException e) {
+						eText.requestFocus();
+						eText.setError(context.getString(R.string.toast_field_must_be_number));
+						return false;
+					}
+					break;
+
+				case EMAIL:
+					if(!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()){
+						eText.requestFocus();
+						eText.setError(context.getString(R.string.toast_field_must_be_email));
+						return false;
+					}
+			}
+		}
+
+		return true;
 	}
 
 }
