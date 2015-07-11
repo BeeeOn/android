@@ -168,11 +168,11 @@
     </style>
 
     <style name="BeeeOn.Divider.Full">
-        <item name="android:background">@color/beeeon_divider_alpha</item>
+        <item name="android:background">@color/beeeon_divider</item>
     </style>
 
     <style name="BeeeOn.DividerListView.Full">
-        <item name="android:background">@color/beeeon_divider_alpha</item>
+        <item name="android:background">@color/beeeon_divider</item>
     </style>
 
 </resources>

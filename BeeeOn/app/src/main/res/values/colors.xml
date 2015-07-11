@@ -12,8 +12,7 @@
     <color name="beeeon_primary_text">#212121</color>
     <color name="beeeon_secondary_text">#727272</color>
     <color name="beeeon_icons">#FFFFFF</color>
-    <color name="beeeon_divider">#B6B6B6</color>
-    <color name="beeeon_divider_alpha">#60B6B6B6</color>
+    <color name="beeeon_divider">#60B6B6B6</color>
 
     <color name="beeeon_background">#FFFFFF</color>
     <color name="beeeon_background_gray">#EEEEEE</color>
