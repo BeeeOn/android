@@ -159,7 +159,15 @@ public class GatesModel extends BaseModel {
 	 * @return
 	 */
 	public boolean editGate(Gate gate) {
-		return mNetwork.updateGate(gate);
+		if (mNetwork.updateGate(gate)) {
+			// Invalidate gates and gatesInfo caches
+			// FIXME: don't do it by deleting whole object, but just setting isExpired for single item
+			mGatesInfoHolder.removeObject(gate.getId());
+			mGatesHolder.setLastUpdate(null);
+			return true;
+		}
+
+		return false;
 	}
 
 }

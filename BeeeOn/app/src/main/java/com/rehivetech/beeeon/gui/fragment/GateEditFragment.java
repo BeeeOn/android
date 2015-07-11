@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.util.TimezoneWrapper;
 
 import java.util.List;
@@ -86,7 +87,7 @@ public class GateEditFragment extends Fragment {
 	}
 
 	public void fillData(Bundle savedInstanceState) {
-		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
+		GateInfo gate = Controller.getInstance(mActivity).getGatesModel().getGateInfo(mGateId);
 		if (gate == null)
 			return;
 

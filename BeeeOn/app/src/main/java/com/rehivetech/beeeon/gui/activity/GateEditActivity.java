@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -14,10 +12,12 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.GateEditFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.EditGateTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 
@@ -67,15 +67,15 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	public void onResume() {
 		super.onResume();
 
-		doReloadGates(mGateId, false);
+		doReloadGateInfo(mGateId, false);
 	}
 
-	private void doReloadGates(final String gateId, boolean forceReload) {
-		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.GATES);
-		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+	private void doReloadGateInfo(final String gateId, boolean forceReload) {
+		ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(this, forceReload);
+		reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				Gate gate = Controller.getInstance(GateEditActivity.this).getGatesModel().getGate(mGateId);
+				GateInfo gate = Controller.getInstance(GateEditActivity.this).getGatesModel().getGateInfo(mGateId);
 				if (gate == null) {
 					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
 					finish();
@@ -88,7 +88,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadGateDataTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+		callbackTaskManager.executeTask(reloadGateInfoTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				String title = getString(R.string.confirm_remove_gate_title_default);
 				String message = getString(R.string.confirm_remove_gate_message);
 
-				Gate gate = Controller.getInstance(this).getGatesModel().getGate(mGateId);
+				GateInfo gate = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
 				if (gate != null) {
 					title = getString(R.string.confirm_remove_gate_title, gate.getName());
 				}
