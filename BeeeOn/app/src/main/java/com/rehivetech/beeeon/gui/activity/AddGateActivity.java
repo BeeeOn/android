@@ -177,7 +177,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	}
 
 	@Override
-	public void onNegativeButtonClicked(int requestCode, View view, EditTextDialog fragment) {
-
+	public void onNegativeButtonClicked(int requestCode, View view, EditTextDialog dialog) {
+		dialog.dismiss();
 	}
 }
