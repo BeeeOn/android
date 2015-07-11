@@ -12,7 +12,7 @@
 	<ImageView
 		android:id="@+id/icon"
 		android:padding="4dp"
-		android:background="@drawable/oval_primary_medium"
+		android:background="@drawable/oval_primary"
 		android:src="@drawable/ic_person_white_48dp"
 		android:layout_width="65dp"
 		android:layout_height="65dp"
