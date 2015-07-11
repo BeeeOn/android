@@ -118,7 +118,7 @@ public class WidgetModuleData extends WidgetData {
 					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
 					break;
 				case R.layout.widget_device_1x1:
-					dev.setValueUnitSize(R.style.TextAppearance_AppCompat_Caption);
+					dev.setValueUnitSize(R.dimen.textsize_caption);
 					break;
 			}
 		}
