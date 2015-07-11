@@ -31,6 +31,14 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	public static final String TAG_FRAGMENT_CODE_DIALOG = "Code_dialog";
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		// Enable scan QR button on each resume because we might not get any onActivityResult call
+		setScanQrButtonEnabled(true);
+	}
+
+	@Override
 	protected void onLastFragmentActionNext() {
 		//there is nothing to do, but it is required to implement it
 	}
