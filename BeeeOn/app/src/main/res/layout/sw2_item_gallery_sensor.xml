@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="28px"
         android:layout_alignParentTop="true"
-        android:background="@color/beeeon_primary_cyan" >
+        android:background="@color/beeeon_primary" >
 
         <ImageView
             android:id="@+id/battery"
@@ -82,7 +82,7 @@
                 android:layout_marginLeft="2px"
                 android:layout_toRightOf="@id/sync_icon"
                 android:singleLine="true"
-                android:textColor="@color/darkgray"
+                android:textColor="@color/gray_dark"
                 android:textSize="@dimen/smart_watch_2_text_size_small" />
         </RelativeLayout>
 
@@ -111,7 +111,7 @@
         android:paddingLeft="4px"
         android:paddingRight="4px"
         android:singleLine="true"
-        android:textColor="@color/beeeon_secundary_pink"
+        android:textColor="@color/beeeon_accent"
         android:textSize="50px"
         android:textStyle="bold" />
 
@@ -125,7 +125,7 @@
         android:layout_marginTop="30px"
         android:padding="4px"
         android:singleLine="true"
-        android:textColor="@color/beeeon_secundary_pink"
+        android:textColor="@color/beeeon_accent"
         android:textSize="55px"
         android:textStyle="bold" />
 

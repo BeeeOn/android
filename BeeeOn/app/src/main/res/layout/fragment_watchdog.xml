@@ -35,7 +35,7 @@
             android:layout_gravity="center"
             android:textSize="24sp"
             android:visibility="gone"
-            android:textColor="@color/darkgray"
+            android:textColor="@color/gray_dark"
             />
         <Button
             android:id="@+id/watchdog_list_refresh_btn"
@@ -54,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_add_white_24dp"
-        fab:fab_colorNormal="@color/beeeon_secundary_pink"
-        fab:fab_colorRipple="@color/beeeon_secundary_pink"
+        fab:fab_colorNormal="@color/beeeon_accent"
+        fab:fab_colorRipple="@color/beeeon_accent"
         fab:fab_colorPressed="@color/black"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"

@@ -4,7 +4,7 @@
 				android:clickable="true"
 				android:layout_width="match_parent"
 				android:layout_height="120dp"
-				android:background="@color/beeeon_primary_cyan_dark"
+				android:background="@color/beeeon_primary"
 				android:paddingBottom="2dp"
 				android:paddingLeft="16dp"
 				android:paddingRight="16dp">

@@ -35,7 +35,7 @@ public class ApplicationMenuItem extends AbstractMenuItem {
 			separatorView.setVisibility(View.GONE);
 		}
 		if (mActualLoc) {
-			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
+			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary));
 			nameView.setTypeface(null, Typeface.BOLD);
 		}
 		setMView(view);
@@ -48,12 +48,12 @@ public class ApplicationMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.gray_light));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_background_drawer));
 	}
 
 }

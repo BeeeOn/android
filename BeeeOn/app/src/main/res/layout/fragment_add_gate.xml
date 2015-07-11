@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/beeeon_primary_cyan">
+	android:background="@color/beeeon_primary">
 
 	<LinearLayout
 		android:layout_width="match_parent"
@@ -37,7 +37,7 @@
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
-				android:background="@color/beeeon_secundary_pink"
+				android:background="@color/beeeon_accent"
 				android:text="@string/addadapter_qr_button"
 				android:textColor="@color/white"
 				android:textSize="15sp"
@@ -52,7 +52,7 @@
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
-				android:background="@color/beeeon_text_hint"
+				android:background="@color/beeeon_secondary_text"
 				android:text="@string/addadapter_manual_edit"
 				android:textColor="@color/white"
 				android:textSize="15sp"

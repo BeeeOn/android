@@ -70,8 +70,8 @@ public class WidgetSettings extends WidgetPersistence {
 	@Override
 	public void load() {
 		isColorScheme = mPrefs.getBoolean(getProperty(PREF_IS_COLOR_SCHEME), false);
-		colorPrimary = mPrefs.getInt(getProperty(PREF_COLOR_PRIMARY), R.color.beeeon_primary_cyan);
-		colorSecondary = mPrefs.getInt(getProperty(PREF_COLOR_SECONDARY), R.color.beeeon_secundary_pink);
+		colorPrimary = mPrefs.getInt(getProperty(PREF_COLOR_PRIMARY), R.color.beeeon_primary);
+		colorSecondary = mPrefs.getInt(getProperty(PREF_COLOR_SECONDARY), R.color.beeeon_accent);
 	}
 
 	@Override

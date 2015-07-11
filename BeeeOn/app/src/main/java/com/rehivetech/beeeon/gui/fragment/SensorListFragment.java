@@ -150,7 +150,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 				doReloadDevicesTask(gate.getId(), true);
 			}
 		});
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
+		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 	}
 
 	public void onPause() {

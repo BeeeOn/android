@@ -42,7 +42,7 @@
                  android:scrollHorizontally="true"
                  android:singleLine="true"
                  android:text="Name of user"
-                 android:textColor="@color/beeeon_text_color"
+                 android:textColor="@color/beeeon_primary_text"
                  android:textSize="22sp"
                  android:textStyle="normal" />
              
@@ -60,7 +60,7 @@
 	                 android:layout_height="wrap_content"
 	                 
 	                 android:text="user"
-	                 android:textColor="@color/beeeon_text_hint"
+	                 android:textColor="@color/beeeon_secondary_text"
 	                 android:textSize="14sp" />
 	             <!-- TextView
 	                 android:layout_width="wrap_content"
@@ -79,7 +79,7 @@
                  	 android:marqueeRepeatLimit="marquee_forever"
                  	 android:scrollHorizontally="true"
                  	 android:singleLine="true"
-	                 android:textColor="@color/beeeon_text_hint"
+	                 android:textColor="@color/beeeon_secondary_text"
 	                 android:textSize="14sp" />
              </LinearLayout>
 

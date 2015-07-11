@@ -133,7 +133,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 
 	private void setUserSelected() {
-		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.layoutofsensor).setBackgroundColor(getResources().getColor(R.color.light_gray));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.layoutofsensor).setBackgroundColor(getResources().getColor(R.color.gray_light));
 	}
 
 	private void setUserUnselected() {

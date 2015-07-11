@@ -5,7 +5,7 @@
     android:layout_margin="10dp"
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp"
-    android:background="@drawable/beeeon_item_solo_bg"
+    android:background="@color/beeeon_background"
     android:orientation="vertical"
     android:padding="10dp" >
 

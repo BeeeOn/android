@@ -407,7 +407,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 				doReloadDevicesTask(mGateId, true);
 			}
 		});
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary_cyan, R.color.beeeon_text_color, R.color.beeeon_secundary_pink);
+		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 	}
 
 	private void addGraphView(@NonNull final Module module) {
@@ -430,9 +430,9 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(),String.format("%s [%s]",name, unit));
 			((LineDataSet)mDataSet).setDrawCircles(false);
 			((LineDataSet)mDataSet).setDrawFilled(true);
-			((LineDataSet)mDataSet).setFillColor(getResources().getColor(R.color.alpha_blue));
+			((LineDataSet)mDataSet).setFillColor(getResources().getColor(R.color.beeeon_primary_alpha));
 		}
-		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_cyan));
+		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_medium));
 		mDataSet.setValueFormatter(valueFormatter);
 	}
 

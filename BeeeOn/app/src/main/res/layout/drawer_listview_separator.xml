@@ -3,7 +3,7 @@
     
     android:layout_width="fill_parent"
     android:layout_height="1dp"
-    android:background="@color/light_gray"
+    android:background="@color/gray_light"
     android:paddingBottom="8dp"
     android:paddingTop="8dp"
     android:clickable="false"

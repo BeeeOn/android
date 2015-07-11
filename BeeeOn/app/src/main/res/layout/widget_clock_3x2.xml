@@ -54,7 +54,7 @@
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 				android:singleLine="true"
 				android:ellipsize="end"
-				android:textColor="@color/beeeon_primary_cyan"
+				android:textColor="@color/beeeon_primary"
 				/>
 
 			<!-- value layout - inflated programmatically -->
@@ -108,7 +108,7 @@
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-				android:textColor="@color/beeeon_primary_cyan"
+				android:textColor="@color/beeeon_primary"
 				android:text="@string/placeholder_none"
 				/>
 
@@ -119,7 +119,7 @@
 				android:textStyle="bold"
 				android:textAppearance="@style/TextAppearance.AppCompat.Title"
 				android:layout_marginTop="-4dp"
-				android:textColor="@color/beeeon_secundary_pink"
+				android:textColor="@color/beeeon_accent"
 				android:layout_below="@+id/widget_clock_weather_city"
 				/>
 
@@ -135,7 +135,7 @@
 					android:id="@+id/widget_clock_weather_humidity"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:textColor="@color/beeeon_primary_cyan"
+					android:textColor="@color/beeeon_primary"
 					android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 					/>
 
@@ -143,7 +143,7 @@
 					android:id="@+id/widget_clock_separator_1"
 					android:layout_width="@dimen/divider_size"
 					android:layout_height="16dp"
-					android:src="@color/beeeon_secundary_pink"
+					android:src="@color/beeeon_accent"
 					android:scaleType="center"
 					android:layout_marginLeft="4dp"
 					android:layout_marginStart="4dp"
@@ -155,7 +155,7 @@
 					android:id="@+id/widget_clock_weather_pressure"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:textColor="@color/beeeon_primary_cyan"
+					android:textColor="@color/beeeon_primary"
 					android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 					/>
 			</LinearLayout>

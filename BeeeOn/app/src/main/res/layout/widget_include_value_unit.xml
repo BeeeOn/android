@@ -25,7 +25,7 @@
 		android:layout_height="wrap_content"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 		android:singleLine="true"
-		android:textColor="@color/beeeon_secundary_pink"
+		android:textColor="@color/beeeon_accent"
 		android:text="@string/placeholder_none"
 		/>
 
@@ -37,6 +37,6 @@
 		android:layout_marginLeft="2dp"
 		android:layout_marginStart="2dp"
 		android:singleLine="true"
-		android:textColor="@color/beeeon_secundary_pink"
+		android:textColor="@color/beeeon_accent"
 		/>
 </LinearLayout>

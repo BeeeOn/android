@@ -97,7 +97,7 @@
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/toolbar_shadow"
 			android:text="@string/placeholder_none"
-			android:textColor="@color/darkgray"
+			android:textColor="@color/gray_dark"
 			android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 			android:layout_alignRight="@+id/widget_header"
 			android:layout_alignEnd="@+id/widget_header"

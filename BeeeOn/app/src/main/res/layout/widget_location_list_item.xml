@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:textColor="@color/beeeon_text_color"
+        android:textColor="@color/beeeon_primary_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:layout_marginLeft="48dp"
         android:layout_marginStart="48dp"
@@ -42,7 +42,7 @@
         android:layout_toStartOf="@+id/widget_loc_item_value"
         android:layout_toLeftOf="@+id/widget_loc_item_value"
         android:layout_below="@+id/widget_loc_item_name"
-        android:textColor="@color/beeeon_text_hint"
+        android:textColor="@color/beeeon_secondary_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         />
 
@@ -56,7 +56,7 @@
         android:paddingEnd="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:textColor="@color/beeeon_secundary_pink"
+        android:textColor="@color/beeeon_accent"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textStyle="bold"
         />

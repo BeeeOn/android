@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="28px"
         android:layout_alignParentTop="true"
-        android:background="@color/beeeon_primary_cyan" >
+        android:background="@color/beeeon_primary" >
 
         <TextView
             android:id="@+id/list_title"

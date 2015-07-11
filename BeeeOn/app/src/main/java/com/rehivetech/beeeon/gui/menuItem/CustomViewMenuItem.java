@@ -37,7 +37,7 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 			separatorView.setVisibility(View.GONE);
 		}
 		if (mActualCustomView) {
-			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary_cyan));
+			nameView.setTextColor(view.getResources().getColor(R.color.beeeon_primary));
 		}
 		setMView(view);
 	}
@@ -49,12 +49,12 @@ public class CustomViewMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setIsSelected() {
-		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.light_gray));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.gray_light));
 	}
 
 	@Override
 	public void setNotSelected() {
-		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_drawer_bg));
+		getMView().setBackgroundColor(getMView().getResources().getColor(R.color.beeeon_background_drawer));
 	}
 
 }

@@ -324,7 +324,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		// Instantiates a new CircleOptions object + center/radius
 		CircleOptions circleOptions = new CircleOptions().center(new LatLng(fence.getLatitude(), fence.getLongitude()))
-				.radius(fence.getRadius()).fillColor(getResources().getColor(R.color.beeeon_secundary_pink_transparent))
+				.radius(fence.getRadius()).fillColor(getResources().getColor(R.color.beeeon_accent_alpha))
 				.strokeColor(Color.TRANSPARENT).strokeWidth(2);
 
 		// Get back the mutable Circle
