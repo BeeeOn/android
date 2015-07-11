@@ -34,9 +34,7 @@
             </EditText>
 
 			<View
-				android:layout_width="match_parent"
-				android:layout_height="1px"
-				android:background="@color/beeeon_divider"
+				style="@style/BeeeOn.Divider.Full"
 				android:layout_marginTop="8dp"
 				/>
 
@@ -52,9 +50,7 @@
 				/>
 
 			<View
-				android:layout_width="match_parent"
-				android:layout_height="1px"
-				android:background="@color/beeeon_divider"
+				style="@style/BeeeOn.Divider.Full"
 				android:layout_marginTop="8dp"
 				/>
 
