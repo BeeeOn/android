@@ -14,9 +14,9 @@ public final class BoilerOperationModeValue extends BaseEnumValue {
 		super();
 
 		// FIXME: Fix drawables and colors
-		mItems.add(this.new Item(0, AUTOMATIC, R.drawable.dev_thermostat, R.string.dev_boiler_operation_mode_value_automatic, Color.BLACK));
-		mItems.add(this.new Item(1, MANUAL, R.drawable.dev_thermostat, R.string.dev_boiler_operation_mode_value_manual, Color.BLACK));
-		mItems.add(this.new Item(2, VACATION, R.drawable.dev_thermostat, R.string.dev_boiler_operation_mode_value_vacation, Color.BLACK));
+		mItems.add(this.new Item(0, AUTOMATIC, R.drawable.ic_module_state_gray, R.string.dev_boiler_operation_mode_value_automatic, Color.BLACK));
+		mItems.add(this.new Item(1, MANUAL, R.drawable.ic_module_state_gray, R.string.dev_boiler_operation_mode_value_manual, Color.BLACK));
+		mItems.add(this.new Item(2, VACATION, R.drawable.ic_module_state_gray, R.string.dev_boiler_operation_mode_value_vacation, Color.BLACK));
 	}
 
 }

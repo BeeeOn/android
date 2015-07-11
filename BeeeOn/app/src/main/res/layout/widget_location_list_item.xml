@@ -16,7 +16,7 @@
         android:paddingLeft="8dp"
         android:paddingStart="8dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/dev_unknown"
+        android:src="@drawable/ic_module_unknow"
         />
 
     <TextView

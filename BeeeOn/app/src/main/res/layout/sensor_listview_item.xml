@@ -7,11 +7,12 @@
 
 	<ImageView
 		android:id="@+id/iconofsensor"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
-		android:src="@drawable/dev_unknown"
-		android:layout_marginLeft="16dp"
-		android:layout_marginStart="16dp"
+		android:layout_width="48dp"
+		android:layout_height="48dp"
+		android:src="@drawable/ic_module_unknow_gray"
+
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
 		android:layout_centerVertical="true"
 		/>
 

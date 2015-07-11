@@ -13,7 +13,7 @@
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:adjustViewBounds="true"
-        android:src="@drawable/dev_humidity" />
+        android:src="@drawable/ic_module_humidity" />
 
     <EditText
         android:id="@+id/setup_sensor_item_name"

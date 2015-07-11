@@ -17,12 +17,12 @@ public final class TemperatureValue extends BaseValue {
 
 	@Override
 	public int getIconResource() {
-		return R.drawable.dev_temperature;
+		return R.drawable.ic_module_temperature_gray;
 	}
 
 	@Override
 	public int getActorIconResource() {
-		return R.drawable.dev_tem_actor;
+		return R.drawable.ic_module_temperature_gray;
 	}
 
 	public double getValue() {

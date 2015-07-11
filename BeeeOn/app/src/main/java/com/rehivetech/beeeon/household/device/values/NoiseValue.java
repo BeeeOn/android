@@ -17,7 +17,7 @@ public final class NoiseValue extends BaseValue {
 
 	@Override
 	public int getIconResource() {
-		return R.drawable.dev_noise;
+		return R.drawable.ic_module_noise_gray;
 	}
 
 	@Override
