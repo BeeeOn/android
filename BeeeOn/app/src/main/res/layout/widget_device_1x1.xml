@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_module_unknow"
+                android:src="@drawable/ic_val_unknown"
                 android:contentDescription="@string/placeholder_icon"
                 />
 

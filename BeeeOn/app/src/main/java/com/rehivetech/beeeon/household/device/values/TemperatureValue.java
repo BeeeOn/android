@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.household.device.values;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
 
@@ -16,13 +17,13 @@ public final class TemperatureValue extends BaseValue {
 	}
 
 	@Override
-	public int getIconResource() {
-		return R.drawable.ic_module_temperature_gray;
+	public int getIconResource(IconResourceType type) {
+		return type == IconResourceType.WHITE ? R.drawable.ic_val_temperature : R.drawable.ic_val_temperature_gray;
 	}
 
 	@Override
-	public int getActorIconResource() {
-		return R.drawable.ic_module_temperature_gray;
+	public int getActorIconResource(IconResourceType type) {
+		return getIconResource(type);
 	}
 
 	public double getValue() {

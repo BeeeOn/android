@@ -15,7 +15,7 @@
 			android:layout_marginLeft="8dp"
 			android:layout_marginRight="16dp"
 			android:layout_height="match_parent"
-			android:src="@drawable/ic_module_unknow"/>
+			android:src="@drawable/ic_val_unknown"/>
 
 		<LinearLayout
 			android:layout_width="0px"

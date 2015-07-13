@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 
@@ -56,7 +57,7 @@ public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 		View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
-		icon.setImageResource(mIcons.get(position).getIconResource());
+		icon.setImageResource(mIcons.get(position).getIconResource(IconResourceType.DARK));
 
 		return row;
 	}
@@ -67,7 +68,7 @@ public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 		View row = inflater.inflate(mLayoutResource, parent, false);
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);
-		icon.setImageResource(mIcons.get(position).getIconResource());
+		icon.setImageResource(mIcons.get(position).getIconResource(IconResourceType.DARK));
 
 		return row;
 	}

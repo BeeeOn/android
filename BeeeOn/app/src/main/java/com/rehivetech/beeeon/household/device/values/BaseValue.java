@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.household.device.values;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
 
@@ -9,9 +10,9 @@ public abstract class BaseValue {
 
 	public abstract BaseUnit getUnit();
 
-	public abstract int getIconResource();
+	public abstract int getIconResource(IconResourceType type);
 
-	public abstract int getActorIconResource();
+	public abstract int getActorIconResource(IconResourceType type);
 
 	public abstract double getDoubleValue();
 

@@ -12,7 +12,7 @@
 		android:id="@+id/icon"
 		android:layout_width="20dp"
 		android:layout_height="20dp"
-		android:src="@drawable/loc_unknown_gray"
+		android:src="@drawable/ic_loc_unknown_gray"
 		android:layout_marginRight="4dp"
 		android:layout_marginEnd="4dp"
 		android:layout_marginTop="2dp"

@@ -34,6 +34,7 @@ import com.github.mikephil.charting.utils.FillFormatter;
 import com.github.mikephil.charting.utils.ValueFormatter;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
@@ -343,7 +344,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		// Set icon of sensor
-		mIcon.setImageResource(module.getIconResource());
+		mIcon.setImageResource(module.getIconResource(IconResourceType.WHITE));
 
 		// Set time of sensor
 		if (mTimeHelper != null) {

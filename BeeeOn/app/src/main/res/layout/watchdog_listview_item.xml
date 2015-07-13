@@ -10,7 +10,7 @@
         android:id="@+id/watchdogItemIcon"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_module_unknow"
+        android:src="@drawable/ic_val_unknown"
         android:scaleType="fitCenter"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

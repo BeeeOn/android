@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
@@ -171,7 +172,7 @@ public class SetupSensorFragment extends TrackFragment {
 		// Prepare list of icons
 		List<Integer> iconsList = new ArrayList<>();
 		for (Location.LocationIcon icon : Location.LocationIcon.values()) {
-			iconsList.add(icon.getIconResource());
+			iconsList.add(icon.getIconResource(IconResourceType.DARK));
 		}
 
 		// first call need to add gate
