@@ -104,7 +104,7 @@ public class WidgetModuleData extends WidgetData {
 
 			// when only 1 module is in the widget - we assume that we need icon and name
 			if (isOnlyOne) {
-				mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.ic_module_unknow : dev.icon);
+				mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.ic_module_unknown : dev.icon);
 				mBuilder.setTextViewText(R.id.name, dev.getName());
 				isOnlyOne = false;
 			}

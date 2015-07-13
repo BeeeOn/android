@@ -9,7 +9,7 @@
 		android:id="@+id/iconofsensor"
 		android:layout_width="48dp"
 		android:layout_height="48dp"
-		android:src="@drawable/ic_module_unknow_gray"
+		android:src="@drawable/ic_module_unknown_gray"
 
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
