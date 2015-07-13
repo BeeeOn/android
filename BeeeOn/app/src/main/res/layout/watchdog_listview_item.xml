@@ -86,7 +86,7 @@
         android:layout_toLeftOf="@+id/watchdogItemSwitch"
         android:layout_toStartOf="@+id/watchdogItemSwitch"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_notification"
+        android:src="@drawable/ic_bell_dark_24dp"
         />
 
     <android.support.v7.widget.SwitchCompat

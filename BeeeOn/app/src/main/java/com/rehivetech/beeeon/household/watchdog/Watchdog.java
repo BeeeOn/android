@@ -19,7 +19,7 @@ public class Watchdog implements INameIdentifier {
 
 	// icons of possible actions
 	public static final int[] actionIcons = {
-			R.drawable.ic_notification,
+			R.drawable.ic_bell_dark_24dp,
 			R.drawable.ic_shutdown
 	};
 
