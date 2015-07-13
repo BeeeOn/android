@@ -483,4 +483,6 @@
     <string name="gate_no_name">No name</string>
     <string name="update_gateway">Edit gateway</string>
     <string name="layout_simple_list_button_text">Details</string>
+    <string name="chart_legend">Legend</string>
+    <string name="chart_y_axis">Y axis labels</string>
 </resources>

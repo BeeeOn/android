@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -52,6 +53,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	private SparseArray<List<Module>> mModules = new SparseArray<>();
 	// private SparseArray<List<ModuleLog>> mLogs = new SparseArray<List<ModuleLog>>();
 	private SparseArray<BarLineChartBase> mCharts = new SparseArray<>();
+	private SparseArray<VerticalChartLegend> mLegends = new SparseArray<>();
 
 	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
 
@@ -80,6 +82,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
 		// Create and set chart
 		BarLineChartBase chart;
+		VerticalChartLegend legend = new VerticalChartLegend(mActivity);
 		if (module.getValue() instanceof BaseEnumValue) {
 			chart = new BarChart(mActivity);
 		} else {
@@ -90,14 +93,28 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.customview_graph_height)));
 		chartLayout.addView(chart);
 		ChartHelper.prepareChart(chart, mActivity, module.getValue(), chartLayout, Controller.getInstance(mActivity));
+		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
+		//set legend title
+		int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
+		TextView legendHeadline = new TextView(mActivity);
+		legendHeadline.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
+		legendHeadline.setPadding(0, padding, 0, padding);
+		legendHeadline.setText(getString(R.string.chart_legend));
+		chartLayout.addView(legendHeadline);
+
+		// set legend
+		legend.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		legend.setTextAppearane(R.style.TextAppearance_AppCompat_Caption);
+		chartLayout.addView(legend);
 
 		// Set title
 		TextView tv = (TextView) row.findViewById(R.id.graph_label);
 		tv.setText(getString(module.getType().getStringResource()));
 
 		mCharts.put(module.getType().getTypeId(), chart);
+		mLegends.put(module.getType().getTypeId(), legend);
 
 		// Add whole item to global mLayout
 		mLayout.addView(row);
@@ -255,6 +272,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 			getModulesLogsTask.setListener(new CallbackTask.ICallbackTaskListener() {
 				@Override
+				@SuppressWarnings("unchecked")
 				public void onExecute(boolean success) {
 					// Remember type of graph we're downloading data for
 					int typeId = pairs.get(0).module.getType().getTypeId();
@@ -267,6 +285,11 @@ public class CustomViewFragment extends BaseApplicationFragment {
 					// start chart animation
 					BarLineChartBase chart = mCharts.get(typeId);
 					chart.animateXY(2000, 2000);
+
+					VerticalChartLegend legend = mLegends.get(typeId);
+
+					legend.setChartDatasets(chart.getData().getDataSets());
+					legend.invalidate();
 				}
 			});
 

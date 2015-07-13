@@ -1,8 +1,6 @@
 package com.rehivetech.beeeon.util;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -37,15 +35,13 @@ final public class ChartHelper {
 	 */
 	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, ViewGroup layout, Controller controller) {
 
+		int padding = context.getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		float textSizeSp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-				context.getResources().getDimension(R.dimen.graph_textsize_body), metrics) / metrics.scaledDensity;
 
 		Legend legend = chart.getLegend();
 		legend.setForm(Legend.LegendForm.CIRCLE);
-		legend.setFormSize(textSizeSp);
-		legend.setTextSize(textSizeSp);
+		legend.setTextSize(context.getResources().getDimension(R.dimen.abc_text_size_caption_material));
+		legend.setFormSize(context.getResources().getDimension(R.dimen.abc_text_size_caption_material));
 
 		chart.setDrawBorders(true);
 		chart.setBorderColor(context.getResources().getColor(R.color.gray));
@@ -70,11 +66,16 @@ final public class ChartHelper {
 			if (yLabels.size() > 2) {
 				if (layout.getVisibility() != View.VISIBLE) {
 					int j = 1;
+					TextView headline = new TextView(context);
+					headline.setText(context.getString(R.string.chart_y_axis));
+					headline.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
+					headline.setPadding(0, padding, 0, padding);
+					layout.addView(headline);
 					for (int i = yLabels.size() - 1; i > -1; i--) {
 						TextView label = new TextView(context);
 						label.setText(String.format("%d. %s", j++, context.getString(yLabels.get(i).getStringResource())));
-//						label.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.textsize_body));
-						label.setTextSize(textSizeSp);
+						label.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+//						label.setPadding(padding, 0, 0, 0);
 						layout.addView(label);
 					}
 				}
