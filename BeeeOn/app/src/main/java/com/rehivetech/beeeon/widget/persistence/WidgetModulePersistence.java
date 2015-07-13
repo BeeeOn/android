@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
@@ -135,7 +136,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		Location location = (Location) obj3;
 
 		locationId = location.getId();
-		locationIcon = location.getIconResource();
+		locationIcon = location.getIconResource(IconResourceType.WHITE);
 	}
 
 	@Override

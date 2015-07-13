@@ -36,7 +36,6 @@
 					android:layout_height="84dp"
 					android:layout_alignParentLeft="true"
 					android:layout_alignParentBottom="true"
-					android:background="@drawable/oval_white"
 					android:src="@drawable/ic_val_unknown"
 					android:contentDescription="Icon of module"
 					/>

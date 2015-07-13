@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.household.location;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -31,28 +32,30 @@ public class Location implements INameIdentifier {
 	 * Represents location icon.
 	 */
 	public enum LocationIcon implements IIdentifier {
-		UNKNOWN(0, R.drawable.ic_loc_unknown_gray),
-		BATHROOM(1, R.drawable.ic_loc_bathroom_gray),
-		BEDROOM(2, R.drawable.ic_loc_bedroom_gray),
-		GARDEN(3, R.drawable.ic_loc_garden_gray),
-		DINING_ROOM(4, R.drawable.ic_loc_dining_room_gray),
-		LIVING_ROOM(5, R.drawable.ic_loc_living_room_gray),
-		WC(6, R.drawable.ic_loc_wc_gray);
+		UNKNOWN(0, R.drawable.ic_loc_unknown, R.drawable.ic_loc_unknown_gray),
+		BATHROOM(1, R.drawable.ic_loc_bathroom, R.drawable.ic_loc_bathroom_gray),
+		BEDROOM(2, R.drawable.ic_loc_bedroom, R.drawable.ic_loc_bedroom_gray),
+		GARDEN(3, R.drawable.ic_loc_garden, R.drawable.ic_loc_garden_gray),
+		DINING_ROOM(4, R.drawable.ic_loc_dining_room, R.drawable.ic_loc_dining_room_gray),
+		LIVING_ROOM(5, R.drawable.ic_loc_living_room, R.drawable.ic_loc_living_room_gray),
+		WC(6, R.drawable.ic_loc_wc, R.drawable.ic_loc_wc_gray);
 
 		private final String mId;
 		private final int mIconRes;
+		private final int mIconResDark;
 
-		LocationIcon(final int id, final int iconRes) {
+		LocationIcon(final int id, final int iconRes, final int iconResDark) {
 			mId = String.valueOf(id);
 			mIconRes = iconRes;
+			mIconResDark = iconResDark;
 		}
 
 		public String getId() {
 			return mId;
 		}
 
-		public int getIconResource() {
-			return mIconRes;
+		public int getIconResource(IconResourceType type) {
+			return type == IconResourceType.WHITE ? mIconRes : mIconResDark;
 		}
 	}
 
@@ -126,8 +129,12 @@ public class Location implements INameIdentifier {
 		mIcon = Utils.getEnumFromId(LocationIcon.class, String.valueOf(type), LocationIcon.UNKNOWN);
 	}
 
-	public int getIconResource() {
-		return mIcon.getIconResource();
+	public int getIconResource(IconResourceType type) {
+		return mIcon.getIconResource(type);
+	}
+
+	public int getIconResource(){
+		return getIconResource(IconResourceType.DARK);
 	}
 
 	@Override

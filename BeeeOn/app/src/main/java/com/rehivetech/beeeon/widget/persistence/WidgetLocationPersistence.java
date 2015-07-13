@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -70,11 +71,11 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 		super.renderView(parentBuilder);
 		if (mBoundView == 0) {
 			parentBuilder.setTextViewText(R.id.name, name);
-			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
+			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
 		} else {
 			mBuilder.loadRootView(R.layout.widget_include_location);
 			mBuilder.setTextViewText(R.id.name, name);
-			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource());
+			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
 			parentBuilder.removeAllViews(mBoundView);
 			parentBuilder.addView(mBoundView, mBuilder.getRoot());
 		}

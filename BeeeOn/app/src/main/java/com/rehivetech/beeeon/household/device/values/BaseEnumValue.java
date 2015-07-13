@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.household.device.values;
 
 import android.graphics.Color;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.BlankUnit;
 import com.rehivetech.beeeon.util.Log;
@@ -15,7 +16,7 @@ public abstract class BaseEnumValue extends BaseValue {
 
 	protected final List<Item> mItems = new ArrayList<Item>();
 
-	protected final Item mUnknownValue = this.new Item(-1, "", R.drawable.ic_val_unknown_gray, R.string.dev_unknown_unit, Color.BLACK);
+	protected final Item mUnknownValue = this.new Item(-1, "", R.drawable.ic_val_unknown, R.drawable.ic_val_unknown_gray, R.string.dev_unknown_unit, Color.BLACK);
 
 	private Item mValue = mUnknownValue;
 
@@ -25,13 +26,15 @@ public abstract class BaseEnumValue extends BaseValue {
 		private final int mId;
 		private final String mValue;
 		private final int mIconResource;
+		private final int mIconResourceDark;
 		private final int mStringResource;
 		private final int mColor;
 
-		protected Item(int id, String value, int iconResource, int stringResource, int color) {
+		protected Item(int id, String value, int iconResource, int iconResourceDark, int stringResource, int color) {
 			mId = id;
 			mValue = value;
 			mIconResource = iconResource;
+			mIconResourceDark = iconResourceDark;
 			mStringResource = stringResource;
 			mColor = color;
 		}
@@ -44,8 +47,8 @@ public abstract class BaseEnumValue extends BaseValue {
 			return mValue;
 		}
 
-		public int getIconResource() {
-			return mIconResource;
+		public int getIconResource(IconResourceType type) {
+			return type == IconResourceType.WHITE ? mIconResource : mIconResourceDark;
 		}
 
 		public int getStringResource() {
@@ -69,14 +72,14 @@ public abstract class BaseEnumValue extends BaseValue {
 	}
 
 	@Override
-	public int getIconResource() {
-		return mValue.getIconResource();
+	public int getIconResource(IconResourceType type) {
+		return mValue.getIconResource(type);
 	}
 
 	@Override
-	public int getActorIconResource() {
+	public int getActorIconResource(IconResourceType type) {
 		// BaseEnumValues probably won't have special icon for actors
-		return mValue.getIconResource();
+		return mValue.getIconResource(type);
 	}
 
 	@Override

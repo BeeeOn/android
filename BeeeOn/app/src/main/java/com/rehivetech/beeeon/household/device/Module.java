@@ -4,6 +4,7 @@
 package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.INameIdentifier;
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 
 /**
@@ -86,8 +87,12 @@ public class Module implements INameIdentifier {
 		return mType.getStringResource();
 	}
 
-	public int getIconResource() {
-		return getType().isActor() ? mValue.getActorIconResource() : mValue.getIconResource();
+	public int getIconResource(){
+		return getIconResource(IconResourceType.DARK);
+	}
+
+	public int getIconResource(IconResourceType type){
+		return getType().isActor() ? mValue.getActorIconResource(type) : mValue.getIconResource(type);
 	}
 
 	public void setDevice(Device device) {

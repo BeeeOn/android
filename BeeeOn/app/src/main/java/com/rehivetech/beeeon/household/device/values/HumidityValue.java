@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.household.device.values;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.HumidityUnit;
 
@@ -16,14 +17,14 @@ public final class HumidityValue extends BaseValue {
 	}
 
 	@Override
-	public int getIconResource() {
-		return R.drawable.ic_val_humidity_gray;
+	public int getIconResource(IconResourceType type) {
+		return type == IconResourceType.WHITE ? R.drawable.ic_val_humidity : R.drawable.ic_val_humidity_gray;
 	}
 
 	@Override
-	public int getActorIconResource() {
+	public int getActorIconResource(IconResourceType type) {
 		// FIXME: Use real resource when we will have real actor icon
-		return getIconResource();
+		return getIconResource(type);
 	}
 
 	@Override
