@@ -40,7 +40,7 @@ public class WidgetClockData extends WidgetData {
 	private Calendar mCalendar;
 
 	private int mClockFont = R.dimen.widget_textsize_clock;
-	private int mWeatherFont = R.dimen.widget_textsize_headline;
+	private int mWeatherFont = R.dimen.abc_text_size_headline_material;
 
 	private int mWeatherIconDimension = R.dimen.widget_weather_icon;
 	private boolean mForceReloadWeatherIcon = true;
@@ -136,7 +136,7 @@ public class WidgetClockData extends WidgetData {
 		switch (this.widgetLayout) {
 			case R.layout.widget_clock_3x2:
 				mClockFont = R.dimen.widget_textsize_clock_large;
-				mWeatherFont = R.dimen.widget_textsize_title;
+				mWeatherFont = R.dimen.abc_text_size_title_material;
 				mWeatherIconDimension = R.dimen.widget_weather_icon;
 				mBuilder.setImage(R.id.widget_clock_separator_1, settings.colorSecondary);
 				mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
@@ -149,7 +149,7 @@ public class WidgetClockData extends WidgetData {
 				mBuilder.setTextViewColor(R.id.widget_clock_household_label, settings.colorPrimary);
 			default:
 				mClockFont = R.dimen.widget_textsize_clock;
-				mWeatherFont = R.dimen.widget_textsize_body;
+				mWeatherFont = R.dimen.abc_text_size_body_1_material;
 				break;
 		}
 
@@ -163,7 +163,7 @@ public class WidgetClockData extends WidgetData {
 			if (this.widgetLayout == R.layout.widget_clock_3x2) {
 				if (dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
 			} else if (this.widgetLayout == R.layout.widget_clock_2x2) {
-				dev.setValueUnitSize(R.dimen.widget_textsize_caption);
+				dev.setValueUnitSize(R.dimen.abc_text_size_caption_material);
 			}
 		}
 
@@ -230,7 +230,7 @@ public class WidgetClockData extends WidgetData {
 				R.id.day_of_week,
 				weekDays[mCalendar.get(Calendar.DAY_OF_WEEK)],
 				settings.colorSecondary,
-				R.dimen.widget_textsize_body
+				R.dimen.abc_text_size_body_1_material
 		);
 
 		// set date
@@ -238,7 +238,7 @@ public class WidgetClockData extends WidgetData {
 				R.id.date,
 				DateTimeFormat.shortDate().print(mCalendar.getTimeInMillis()),
 				settings.colorSecondary,
-				R.dimen.widget_textsize_body
+				R.dimen.abc_text_size_body_1_material
 		);
 
 		// clear old sub views
@@ -256,14 +256,14 @@ public class WidgetClockData extends WidgetData {
 						R.id.widget_clock_weather_humidity,
 						weather.getHumidity(),
 						settings.colorPrimary,
-						R.dimen.widget_textsize_caption
+						R.dimen.abc_text_size_caption_material
 				);
 
 				mBuilder.setTextView(
 						R.id.widget_clock_weather_pressure,
 						weather.getPressure(),
 						settings.colorPrimary,
-						R.dimen.widget_textsize_caption
+						R.dimen.abc_text_size_caption_material
 				);
 
 			case R.layout.widget_clock_2x2:
@@ -271,7 +271,7 @@ public class WidgetClockData extends WidgetData {
 						R.id.widget_clock_weather_city,
 						weather.cityName,
 						settings.colorPrimary,
-						R.dimen.widget_textsize_body
+						R.dimen.abc_text_size_body_1_material
 				);
 
 				mBuilder.setTextView(
