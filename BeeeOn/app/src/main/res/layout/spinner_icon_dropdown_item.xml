@@ -15,7 +15,7 @@
 		android:layout_height="24dp"
 		android:contentDescription="@string/placeholder_icon"
 		android:layout_centerVertical="true"
-		android:src="@drawable/loc_unknown_gray"
+		android:src="@drawable/ic_loc_unknown_gray"
 		/>
 
 	<CheckedTextView

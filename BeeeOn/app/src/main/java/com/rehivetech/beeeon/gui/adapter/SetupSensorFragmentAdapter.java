@@ -11,10 +11,10 @@ import com.viewpagerindicator.IconPagerAdapter;
 public class SetupSensorFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 	protected static final String[] CONTENT = new String[]{"Welcome", "to", "BeeeOn", "Test",};
 	protected static final int[] ICONS = new int[]{
-			R.drawable.loc_bath_room_gray,
-			R.drawable.loc_garden_gray,
-			R.drawable.loc_wc_gray,
-			R.drawable.loc_dinner_room_gray
+			R.drawable.ic_loc_bathroom_gray,
+			R.drawable.ic_loc_garden_gray,
+			R.drawable.ic_loc_wc_gray,
+			R.drawable.ic_loc_dining_room_gray
 	};
 
 	private int mCount = 1;
