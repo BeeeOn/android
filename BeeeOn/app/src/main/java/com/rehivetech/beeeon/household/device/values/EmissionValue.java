@@ -17,7 +17,7 @@ public final class EmissionValue extends BaseValue {
 
 	@Override
 	public int getIconResource() {
-		return R.drawable.ic_module_emission_gray;
+		return R.drawable.ic_val_emission_gray;
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public final class UnknownValue extends BaseValue {
 
 	@Override
 	public int getIconResource() {
-		return R.drawable.ic_module_unknown_gray;
+		return R.drawable.ic_val_unknown_gray;
 	}
 
 	@Override

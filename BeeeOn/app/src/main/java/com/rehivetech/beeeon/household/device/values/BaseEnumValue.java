@@ -15,7 +15,7 @@ public abstract class BaseEnumValue extends BaseValue {
 
 	protected final List<Item> mItems = new ArrayList<Item>();
 
-	protected final Item mUnknownValue = this.new Item(-1, "", R.drawable.ic_module_unknown_gray, R.string.dev_unknown_unit, Color.BLACK);
+	protected final Item mUnknownValue = this.new Item(-1, "", R.drawable.ic_val_unknown_gray, R.string.dev_unknown_unit, Color.BLACK);
 
 	private Item mValue = mUnknownValue;
 

@@ -17,7 +17,7 @@ public final class HumidityValue extends BaseValue {
 
 	@Override
 	public int getIconResource() {
-		return R.drawable.ic_module_humidity_gray;
+		return R.drawable.ic_val_humidity_gray;
 	}
 
 	@Override

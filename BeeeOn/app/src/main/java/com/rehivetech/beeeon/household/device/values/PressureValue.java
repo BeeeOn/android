@@ -17,7 +17,7 @@ public final class PressureValue extends BaseValue {
 
 	@Override
 	public int getIconResource() {
-		return R.drawable.ic_module_pressure_gray;
+		return R.drawable.ic_val_pressure_gray;
 	}
 
 	@Override

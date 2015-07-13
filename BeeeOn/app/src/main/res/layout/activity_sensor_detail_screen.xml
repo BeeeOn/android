@@ -37,7 +37,7 @@
 					android:layout_alignParentLeft="true"
 					android:layout_alignParentBottom="true"
 					android:background="@drawable/oval_white"
-					android:src="@drawable/ic_module_unknown"
+					android:src="@drawable/ic_val_unknown"
 					android:contentDescription="Icon of module"
 					/>
 				<!-- VALUE OF SENSOR  or  SWITCH FOR ACTOR -->

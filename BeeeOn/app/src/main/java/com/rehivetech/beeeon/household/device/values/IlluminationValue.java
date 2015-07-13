@@ -17,7 +17,7 @@ public final class IlluminationValue extends BaseValue {
 
 	@Override
 	public int getIconResource() {
-		return R.drawable.ic_module_lux_gray;
+		return R.drawable.ic_val_lux_gray;
 	}
 
 	@Override
