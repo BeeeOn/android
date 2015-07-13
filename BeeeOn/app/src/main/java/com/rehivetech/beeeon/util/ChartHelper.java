@@ -38,10 +38,7 @@ final public class ChartHelper {
 		int padding = context.getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
-		Legend legend = chart.getLegend();
-		legend.setForm(Legend.LegendForm.CIRCLE);
-		legend.setTextSize(context.getResources().getDimension(R.dimen.abc_text_size_caption_material));
-		legend.setFormSize(context.getResources().getDimension(R.dimen.abc_text_size_caption_material));
+		chart.getLegend().setEnabled(false);
 
 		chart.setDrawBorders(true);
 		chart.setBorderColor(context.getResources().getColor(R.color.gray));
@@ -75,7 +72,6 @@ final public class ChartHelper {
 						TextView label = new TextView(context);
 						label.setText(String.format("%d. %s", j++, context.getString(yLabels.get(i).getStringResource())));
 						label.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
-//						label.setPadding(padding, 0, 0, 0);
 						layout.addView(label);
 					}
 				}

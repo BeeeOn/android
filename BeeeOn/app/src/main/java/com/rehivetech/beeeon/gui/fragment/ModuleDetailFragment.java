@@ -40,6 +40,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
+import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -99,6 +100,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	private FloatingActionButton mFABedit;
 	private CombinedChart mChart;
 	private DataSet mDataSet;
+	private VerticalChartLegend mLegend;
 
 	private UnitsHelper mUnitsHelper;
 
@@ -438,8 +440,23 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_medium));
 		mDataSet.setValueFormatter(valueFormatter);
+
+		//set legend title
+		int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
+		TextView legendTitle = new TextView(mActivity);
+		legendTitle.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
+		legendTitle.setText(getString(R.string.chart_legend));
+		legendTitle.setPadding(0, padding, 0, padding);
+		layout.addView(legendTitle);
+
+		//set legend
+		mLegend = new VerticalChartLegend(mActivity);
+		mLegend.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+		mLegend.setTextAppearane(R.style.TextAppearance_AppCompat_Caption);
+		layout.addView(mLegend);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void fillGraph(ModuleLog log, Module module) {
 		boolean barGraph = (module.getValue() instanceof BaseEnumValue);
 		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
@@ -490,6 +507,12 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mChart.invalidate();
 		Log.d(TAG, "Filling graph finished");
 		mChart.animateXY(2000, 2000);
+
+		mLegend.setChartDatasets(mChart.getData().getDataSets());
+		mLegend.invalidate();
+		mLegend.setPadding(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.customview_text_padding));
+
+		mActivity.findViewById(R.id.sen_third_section).invalidate();
 	}
 
 	public void setPosition(int position) {
