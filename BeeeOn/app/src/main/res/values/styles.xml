@@ -53,17 +53,6 @@
         <item name="sv_buttonText">Next</item>
     </style>
 
-
-    <style name="settingsTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/beeeon_primary</item>
-        <!-- colorPrimaryDark is used for the status bar -->
-        <item name="colorPrimaryDark">@color/beeeon_primary_dark</item>
-        <item name="colorAccent">@color/beeeon_accent</item>
-        <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">@color/beeeon_primary_text</item>
-        <item name="android:textColorSecondary">@color/beeeon_secondary_text</item>
-    </style>
-
     <!--MainActivity custom theme-->
     <style name="MainActivityTheme" parent="AppTheme">
 

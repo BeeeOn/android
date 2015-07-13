@@ -119,16 +119,14 @@
 
 		<activity
 			android:name=".gui.activity.SettingsMainActivity"
-			android:label="@string/preference_activity_title"
-			android:theme="@style/settingsTheme">
+			android:label="@string/preference_activity_title">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
 		</activity>
 		<activity
 			android:name=".gui.activity.SettingsUnitActivity"
-			android:label="@string/units"
-			android:theme="@style/settingsTheme">
+			android:label="@string/units">
 		</activity>
 		<activity
 			android:name=".gui.activity.MapGeofenceActivity"

@@ -21,7 +21,7 @@ public abstract class ActionBarPreferenceActivity extends PreferenceActivity {
 	protected abstract int getPreferencesXmlId();
 
 	public Toolbar getToolbar() {
-		return ((Toolbar) findViewById(R.id.abp__toolbar));
+		return ((Toolbar) findViewById(R.id.toolbar));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -29,7 +29,7 @@ public abstract class ActionBarPreferenceActivity extends PreferenceActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.abp__activity_preference);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.abp__toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
 			View shadowView = findViewById(R.id.abp__shadowView);
 			final ViewGroup parent = (ViewGroup) shadowView.getParent();
@@ -52,16 +52,5 @@ public abstract class ActionBarPreferenceActivity extends PreferenceActivity {
 		final TypedValue typedvalueattr = new TypedValue();
 		activity.getTheme().resolveAttribute(attr, typedvalueattr, true);
 		return typedvalueattr.resourceId;
-	}
-
-	protected void setEnabledActionBarShadow(final boolean enable) {
-		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP)
-			ViewCompat.setElevation(findViewById(R.id.abp__toolbar), enable ? 4 : 0);
-		else {
-			View shadowView = findViewById(R.id.abp__shadowView);
-			if (shadowView != null) {
-				shadowView.setVisibility(enable ? View.VISIBLE : View.GONE);
-			}
-		}
 	}
 }
