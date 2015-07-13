@@ -4,7 +4,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,7 +13,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
-import com.rehivetech.beeeon.gui.dialog.EnterTextDialog;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -28,7 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EditTextDialog.IEditTextDialogListener {
+public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EditTextDialog.IPositiveButtonDialogListener {
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 	public static final String TAG_FRAGMENT_CODE_DIALOG = "Code_dialog";
@@ -69,26 +67,6 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	protected int getLastPageNextTextResource() {
 		mNext.setVisibility(View.INVISIBLE);
 		return R.string.tutorial_add;
-	}
-
-	@Override
-	public void showEnterCodeDialog() {
-		LayoutInflater inflater = AddGateActivity.this.getLayoutInflater();
-		final View view = inflater.inflate(R.layout.enter_text_dialog, null);
-		EnterTextDialog.enterText(AddGateActivity.this, view, new EnterTextDialog.IEnterTextDialogListener() {
-			@Override
-			public void onEnterText() {
-				EditText editText = (EditText) view.findViewById(R.id.add_gate_overlay_dialog_edit_text);
-				String identifier = editText.getText().toString();
-				if (identifier.isEmpty()) {
-					// when the editText is empty...
-					Toast.makeText(AddGateActivity.this, R.string.toast_field_must_be_filled, Toast.LENGTH_LONG).show();
-					return;
-				}
-
-				doRegisterGateTask(identifier, false);
-			}
-		});
 	}
 
 	public void doRegisterGateTask(String id, final boolean scanned) {
@@ -174,10 +152,5 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 		}
 
 		doRegisterGateTask(editText.getText().toString(), false);
-	}
-
-	@Override
-	public void onNegativeButtonClicked(int requestCode, View view, EditTextDialog dialog) {
-		dialog.dismiss();
 	}
 }

@@ -53,7 +53,7 @@ public class AddGateFragment extends TrackFragment {
 						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 						.setTitle(mActivity.getString(R.string.enter_text_dialog_title))
 						.showKeyboard()
-						.setEditTextInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL)
+						.setEditTextInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
 						.setPositiveButtonText(mActivity.getString(R.string.ok))
 						.setNegativeButtonText(mActivity.getString(R.string.action_close))
 						.show();
@@ -85,7 +85,5 @@ public class AddGateFragment extends TrackFragment {
 
 	public interface OnAddGateListener {
 		void showQrScanner();
-
-		void showEnterCodeDialog();
 	}
 }

@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author mlyko
  */
-public class WidgetClockFragment extends WidgetConfigurationFragment implements EditTextDialog.IEditTextDialogListener {
+public class WidgetClockFragment extends WidgetConfigurationFragment implements EditTextDialog.IPositiveButtonDialogListener {
 	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	public static final int REQUEST_LOCATION_DIALOG = 5;
 	private static final int SPACE_BETWEEN_MODULE_SPINNERS = 8;
@@ -84,7 +84,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
 		LinearLayout moduleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
-		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		int marginBottomPx = Utils.convertDpToPixel(SPACE_BETWEEN_MODULE_SPINNERS);
 		spinnerLayoutParams.setMargins(0, 0, 0, marginBottomPx);
 
@@ -226,11 +226,6 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		if (dialog != null) dialog.dismiss();
 		// hide progress dialog
 		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
-	}
-
-	@Override
-	public void onNegativeButtonClicked(int requestCode, View city, EditTextDialog dialog) {
-		dialog.dismiss();
 	}
 
 	/**
