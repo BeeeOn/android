@@ -30,7 +30,6 @@
 		android:layout_above="@+id/email"
 		android:layout_toRightOf="@+id/icon"
 		android:layout_toEndOf="@+id/icon"
-		android:text="Robert Posel"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"/>
 
@@ -44,7 +43,7 @@
 		android:layout_toRightOf="@+id/icon"
 		android:layout_toEndOf="@+id/icon"
 		android:layout_marginLeft="16dp"
-		android:text="robyer@seznam.cz"
+		android:singleLine="true"
 		android:layout_marginStart="16dp"
 		android:layout_marginBottom="16dp"/>
 </RelativeLayout>

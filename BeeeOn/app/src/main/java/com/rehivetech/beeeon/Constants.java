@@ -114,6 +114,8 @@ public final class Constants {
 
 	public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
 
+	public static final String GUI_MENU_GATEWAY = "GUI_MENU_GATEWAY";
+
 	public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
 
 	public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";

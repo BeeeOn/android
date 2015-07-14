@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.menu;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -15,8 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -135,36 +132,6 @@ public class NavDrawerMenu {
 				}
 			}
 		});
-		mDrawerList.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				if (mMode != null) {
-					// Action Mode is active and I want change
-					mSelectedMenuItem.setNotSelected();
-					mMode = null;
-				}
-
-				Log.d(TAG, "Item Long press");
-				mSelectedMenuItem = (IMenuItem) mMenuAdapter.getItem(position);
-				switch (mSelectedMenuItem.getType()) {
-					case LOCATION:
-
-						break;
-					case GATE:
-						Log.i(TAG, "Long press - gate");
-						mMode = mActivity.startSupportActionMode(new ActionModeGates());
-						mSelectedMenuItem.setIsSelected();
-
-						break;
-					default:
-						// do nothing
-						break;
-				}
-				return true;
-			}
-
-		});
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
@@ -180,10 +147,10 @@ public class NavDrawerMenu {
 					if (actionBar != null) {
 						switch (mActiveItem) {
 							case Constants.GUI_MENU_CONTROL:
-								actionBar.setTitle(mActivity.getString(R.string.menu_control));
+								actionBar.setTitle(mActivity.getString(R.string.menu_devices));
 								break;
 							case Constants.GUI_MENU_DASHBOARD:
-								actionBar.setTitle(mActivity.getString(R.string.menu_dashboard));
+								actionBar.setTitle(mActivity.getString(R.string.menu_charts));
 								break;
 							case Constants.GUI_MENU_WATCHDOG:
 								actionBar.setTitle(mActivity.getString(R.string.menu_watchdog));
@@ -234,10 +201,10 @@ public class NavDrawerMenu {
 			if (mActivity.getSupportActionBar() != null) {
 				switch (mActiveItem) {
 					case Constants.GUI_MENU_CONTROL:
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_control));
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_devices));
 						break;
 					case Constants.GUI_MENU_DASHBOARD:
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_dashboard));
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_charts));
 						break;
 					case Constants.GUI_MENU_WATCHDOG:
 						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
@@ -312,28 +279,27 @@ public class NavDrawerMenu {
 			// Adding separator as item (we don't want to let it float as header)
 			mMenuAdapter.addItem(new SeparatorMenuItem());
 
-
-			// MANAGMENT
-			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_managment)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_control), R.drawable.ic_menu_overview, R.drawable.ic_menu_overview_active, false, Constants.GUI_MENU_CONTROL, (mActiveItem == null) || mActiveItem.equals(Constants.GUI_MENU_CONTROL)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_dashboard), R.drawable.ic_menu_dashboard, R.drawable.ic_menu_dashboard_active, false, Constants.GUI_MENU_DASHBOARD, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)));
-
-			mMenuAdapter.addItem(new SeparatorMenuItem());
-			// APPLICATIONS
-			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.menu_applications)));
+			// OVERVIEW
+			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.menu_household)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_devices), R.drawable.ic_menu_overview, R.drawable.ic_menu_overview_active, false, Constants.GUI_MENU_CONTROL, (mActiveItem == null) || mActiveItem.equals(Constants.GUI_MENU_CONTROL)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_charts), R.drawable.ic_menu_dashboard, R.drawable.ic_menu_dashboard_active, false, Constants.GUI_MENU_DASHBOARD, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)));
 			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_menu_watchdog, R.drawable.ic_menu_watchdog_active, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)));
 
-		} else {
-			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getResources().getString(R.string.no_gates)));
+			mMenuAdapter.addItem(new SeparatorMenuItem());
+			// MANAGMENT
+			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.menu_management)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_gate), R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_GATEWAY, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_GATEWAY)));
 
+		} else {
+			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getString(R.string.no_gates)));
 		}
 
 		// Adding separator as header
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding settings, about etc.
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_settings), IMenuItem.ID_SETTINGS));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getResources().getString(R.string.action_about), IMenuItem.ID_ABOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_settings), IMenuItem.ID_SETTINGS));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_about), IMenuItem.ID_ABOUT));
 		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), IMenuItem.ID_LOGOUT));
 		return mMenuAdapter;
 	}

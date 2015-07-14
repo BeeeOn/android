@@ -116,9 +116,11 @@
     <string name="no_location">Žiadne umiestnenia</string>
     <string name="no_custom_view">Požívateľský pohľad nie je k dispozícii</string>
     <string name="no_gates">Nemáte žiadne brány</string>
-    <string name="menu_managment">Správa domácnosti</string>
-    <string name="menu_control">Prehľad</string>
-    <string name="menu_dashboard">Grafy</string>
+    <string name="menu_household">Prehľad</string>
+    <string name="menu_management">Správa domácnosti</string>
+    <string name="menu_devices">Zariadenia</string>
+    <string name="menu_charts">Grafy</string>
+    <string name="menu_gate">Aktivná brána</string>
     <string name="menu_applications">Aplikácia</string>
     <string name="menu_watchdog">Sledovač</string>
 

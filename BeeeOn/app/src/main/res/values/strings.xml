@@ -167,9 +167,11 @@
 	<string name="no_location">No locations</string>
 	<string name="no_custom_view">No custom views</string>
 	<string name="no_gates">You have no gateways</string>
-	<string name="menu_managment">Management</string>
-	<string name="menu_control">Overview</string>
-	<string name="menu_dashboard">Graphs</string>
+	<string name="menu_household">Overview</string>
+    <string name="menu_management">Management</string>
+	<string name="menu_devices">Devices</string>
+	<string name="menu_charts">Charts</string>
+    <string name="menu_gate">Active gateway</string>
 	<string name="menu_applications">Applications</string>
 	<string name="menu_watchdog">Watchdog</string>
 
