@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
+import com.rehivetech.beeeon.gui.fragment.BaseApplicationFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -42,6 +43,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 	private String mModuleId;
 	private String mGateId;
+	private ModuleEditFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,16 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 	}
 
 	@Override
+	public void onFragmentAttached(Fragment fragment) {
+		super.onFragmentAttached(fragment);
+		try {
+			mFragment = (ModuleEditFragment) fragment;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format("%s must be ModuleEditFragment", fragment.toString()));
+		}
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.menu_module_edit, menu);
@@ -87,12 +99,11 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.action_save: {
-				ModuleEditFragment fragment = (ModuleEditFragment) getSupportFragmentManager().findFragmentByTag(ModuleEditFragment.TAG);
-				if (fragment == null) {
+				if (mFragment == null) {
 					return false;
 				}
 
-				Device.DataPair pair = fragment.getSaveDataPair();
+				Device.DataPair pair = mFragment.getSaveDataPair();
 				if (pair == null) {
 					return false;
 				} else if (pair.what.isEmpty()) {
@@ -135,7 +146,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
-	public static class ModuleEditFragment extends Fragment {
+	public static class ModuleEditFragment extends BaseApplicationFragment {
 		private static final String TAG = ModuleEditFragment.class.getSimpleName();
 
 		private static final String SAVE_NAME = "name";
