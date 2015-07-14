@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,7 +18,6 @@ import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.EditGateTask;
-import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Log;
@@ -32,6 +33,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	public static final String EXTRA_GATE_ID = "gate_id";
 
 	private String mGateId;
+	@Nullable private GateEditFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,16 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 		doReloadGateInfo(mGateId, false);
 	}
 
+	@Override
+	public void onFragmentAttached(Fragment fragment) {
+		super.onFragmentAttached(fragment);
+		try {
+			mFragment = (GateEditFragment) fragment;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format("%s must be GateEditFragment", fragment.toString()));
+		}
+	}
+
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
 		ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(this, forceReload);
 		reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
@@ -80,9 +92,8 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
 					finish();
 				} else {
-					GateEditFragment fragment = (GateEditFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_EDIT);
-					if (success) {
-						fragment.fillData(null);
+					if (success && mFragment != null) {
+						mFragment.fillData(null);
 					}
 				}
 			}
@@ -118,9 +129,10 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				break;
 			}
 			case R.id.action_save: {
-				GateEditFragment gateEditFragment = (GateEditFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_EDIT);
-				Gate gate = gateEditFragment.getNewGate();
-				doEditGateTask(gate);
+				if (mFragment != null) {
+					Gate gate = mFragment.getNewGate();
+					doEditGateTask(gate);
+				}
 				break;
 			}
 		}

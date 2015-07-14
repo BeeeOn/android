@@ -2,6 +2,8 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -31,6 +33,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	public static final String EXTRA_GATE_ID = "gate_id";
 
 	private String mGateId;
+	@Nullable private GateDetailFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,16 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		doReloadGateInfo(mGateId, false);
 	}
 
+	@Override
+	public void onFragmentAttached(Fragment fragment) {
+		super.onFragmentAttached(fragment);
+		try {
+			mFragment = (GateDetailFragment) fragment;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format("%s must be GateDetailFragment", fragment.toString()));
+		}
+	}
+
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
 		ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(this, forceReload);
 
@@ -79,8 +92,9 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
 					finish();
 				} else {
-					GateDetailFragment fragment = (GateDetailFragment) getSupportFragmentManager().findFragmentByTag(FRAGMENT_DETAILS);
-					fragment.fillData();
+					if (mFragment != null) {
+						mFragment.fillData();
+					}
 				}
 			}
 		});

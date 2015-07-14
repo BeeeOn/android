@@ -12,4 +12,7 @@
 	<style name="MainActivityTheme" parent="AppTheme">
 		<item name="android:statusBarColor">@android:color/transparent</item>
 	</style>
+
+	<!-- preference activity has support of material styles -->
+	<style name="SettingsActivity" parent="AppTheme" />
 </resources>

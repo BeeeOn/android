@@ -18,6 +18,8 @@ public abstract class BaseApplicationFragment extends TrackFragment {
 			throw new ClassCastException(activity.toString()
 					+ " must be subclass of BaseApplicationActivity");
 		}
+
+		mActivity.onFragmentAttached(this);
 	}
 
 }

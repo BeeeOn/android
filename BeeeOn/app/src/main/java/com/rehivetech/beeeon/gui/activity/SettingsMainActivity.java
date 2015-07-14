@@ -8,6 +8,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -81,7 +82,13 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 			Intent intentGeofence = new Intent(this, MapGeofenceActivity.class);
 			mPrefGeofence.setIntent(intentGeofence);
 		} else {
-			mPrefGeofence.setEnabled(false);
+			mPrefGeofence.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					Toast.makeText(SettingsMainActivity.this, R.string.toast_no_google_play_services, Toast.LENGTH_LONG).show();
+					return true;
+				}
+			});
 		}
 
 

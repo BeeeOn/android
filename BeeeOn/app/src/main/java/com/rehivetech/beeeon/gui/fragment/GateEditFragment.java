@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by david on 17.6.15.
  */
-public class GateEditFragment extends Fragment {
+public class GateEditFragment extends BaseApplicationFragment {
 	private static final String EXTRA_GATE_ID = "gate_id";
 
 	private static final String KEY_GATE_NAME = "gate_name";

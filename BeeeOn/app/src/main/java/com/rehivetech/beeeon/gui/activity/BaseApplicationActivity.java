@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.rehivetech.beeeon.R;
@@ -157,5 +158,9 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		// FIXME: Leo (or someone else?) should implement correct handling of notifications (showing somewhere in activity or something like that?)
 
 		return false;
+	}
+
+	public void onFragmentAttached(Fragment fragment){
+
 	}
 }

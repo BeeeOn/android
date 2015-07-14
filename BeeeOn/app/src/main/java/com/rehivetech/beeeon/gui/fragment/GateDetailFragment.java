@@ -25,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Created by david on 23.6.15.
  */
-public class GateDetailFragment extends Fragment {
+public class GateDetailFragment extends BaseApplicationFragment {
 	private static final String KEY_GATE_ID = "gate_id";
 
 	private String mGateId;
