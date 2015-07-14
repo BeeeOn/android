@@ -5,6 +5,7 @@ import org.joda.time.Duration;
 import org.joda.time.Period;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,23 +18,37 @@ public class TimezoneWrapper implements Comparable<TimezoneWrapper> {
 
 	private static List<TimezoneWrapper> mTimezones = null;
 
-	private TimezoneWrapper(DateTimeZone timezone, int millis) {
+	private TimezoneWrapper(DateTimeZone timezone) {
 		this.timezone = timezone;
-		this.offsetInMillis = millis;
+		this.offsetInMillis = timezone.getOffset(null);
 	}
 
 	public static synchronized List<TimezoneWrapper> getTimezones() {
 		if (mTimezones == null) {
 			mTimezones = new ArrayList<>();
-			for (String id : DateTimeZone.getAvailableIDs()) {
-				int millis = DateTimeZone.forID(id).getOffset(null);
+			String[] timezonesIds = new String[] {
+					"Etc/GMT+12", "Etc/GMT+11", "Etc/GMT+10", "Pacific/Marquesas", "America/Adak", "America/Anchorage", "America/Creston",
+					"America/Belize", "America/Atikokan", "America/Caracas", "America/Port_of_Spain", "America/Araguaina", "America/St_Johns",
+					"America/Godthab", "Atlantic/Cape_Verde", "Africa/Abidjan", "Africa/Algiers", "Africa/Maputo", "Africa/Nairobi",
+					"Asia/Dubai", "Asia/Kabul", "Antarctica/Mawson", "Asia/Kolkata", "Asia/Kathmandu", "Antarctica/Vostok", "Asia/Rangoon",
+					"Antarctica/Davis", "Antarctica/Casey", "Australia/Eucla", "Asia/Dili", "Australia/Adelaide", "Antarctica/DumontDUrville",
+					"Australia/Lord_Howe", "Antarctica/Macquarie", "Pacific/Norfolk", "Pacific/Auckland", "Pacific/Chatham", "Etc/GMT-13",
+					"Etc/GMT-14"
+			};
+			for (String id : timezonesIds) {
 				DateTimeZone zone = DateTimeZone.forID(id);
 
-				TimezoneWrapper newTimeZone = new TimezoneWrapper(zone, millis);
-				if (!mTimezones.contains(newTimeZone))
-					mTimezones.add(newTimeZone);
+				TimezoneWrapper newTimeZone = new TimezoneWrapper(zone);
+				mTimezones.add(newTimeZone);
 			}
 			Collections.sort(mTimezones);
+
+			List<String> ids = new ArrayList<>();
+			for (TimezoneWrapper zone : mTimezones) {
+					ids.add(zone.timezone.getID());
+			}
+			Log.i("Timezones", Arrays.toString(ids.toArray()));
+
 		}
 		return mTimezones;
 	}
@@ -45,7 +60,7 @@ public class TimezoneWrapper implements Comparable<TimezoneWrapper> {
 		}
 
 		DateTimeZone zone = DateTimeZone.forOffsetMillis(offsetInMillis);
-		return new TimezoneWrapper(zone, offsetInMillis);
+		return new TimezoneWrapper(zone);
 	}
 
 	@Override
