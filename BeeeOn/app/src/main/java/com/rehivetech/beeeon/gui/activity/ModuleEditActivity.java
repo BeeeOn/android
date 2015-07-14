@@ -108,7 +108,6 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 					return false;
 				} else if (pair.what.isEmpty()) {
 					// nothing changed
-					setResult(Activity.RESULT_OK);
 					finish();
 				} else {
 					doSaveDeviceTask(pair);
@@ -117,7 +116,6 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 				return true;
 			}
 			case android.R.id.home: {
-				setResult(Activity.RESULT_CANCELED);
 				finish();
 				break;
 			}
@@ -135,7 +133,6 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 				if (success) {
 					Log.d(TAG, "Success save to server");
 					Toast.makeText(ModuleEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
-					setResult(Activity.RESULT_OK);
 					finish();
 				}
 			}
