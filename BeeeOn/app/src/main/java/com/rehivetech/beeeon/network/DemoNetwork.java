@@ -238,7 +238,7 @@ public class DemoNetwork implements INetwork {
 		gate.setRole(roles[rand.nextInt(roles.length)]);
 
 		// Use random offset
-		gate.setUtcOffset(rand.nextInt(24 * 60) - 12 * 60);
+		gate.setUtcOffset(0);
 
 		mGates.addObject(gate);
 
