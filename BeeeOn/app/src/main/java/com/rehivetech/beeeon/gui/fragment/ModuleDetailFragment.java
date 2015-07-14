@@ -451,7 +451,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			//set legend
 			mLegend = new VerticalChartLegend(mActivity);
 			mLegend.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-			mLegend.setTextAppearane(R.style.TextAppearance_AppCompat_Caption);
 			layout.addView(mLegend);
 			layout.invalidate();
 		}

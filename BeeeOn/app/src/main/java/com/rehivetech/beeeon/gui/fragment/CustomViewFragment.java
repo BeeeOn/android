@@ -106,7 +106,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 		// set legend
 		legend.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-		legend.setTextAppearane(R.style.TextAppearance_AppCompat_Caption);
+		legend.setTextAppearance(R.style.TextAppearance_AppCompat_Caption);
 		chartLayout.addView(legend);
 
 		// Set title

@@ -59,7 +59,7 @@ public class VerticalChartLegend<T extends DataSet<? extends Entry>> extends Vie
 
 	private void init(Context context) {
 		mContext = context;
-		mTextResId = R.style.TextAppearance_AppCompat_Caption;
+		mTextResId = R.style.TextAppearance_AppCompat_Body1;
 
 		//create textView for styling paint
 		TextView text = new TextView(context);
@@ -127,7 +127,7 @@ public class VerticalChartLegend<T extends DataSet<? extends Entry>> extends Vie
 	 * Set label text appearance
 	 * @param resId text appearance rescource Id
 	 */
-	public void setTextAppearane(@StyleRes int resId) {
+	public void setTextAppearance(@StyleRes int resId) {
 		mTextResId = resId;
 		init(mContext);
 	}
