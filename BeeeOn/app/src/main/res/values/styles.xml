@@ -58,7 +58,14 @@
 
     </style>
 
-    <!-- widget configuration activity -->
+	<!-- style for preference activity which has no appcompat support (overwritten in api 21+)-->
+	<style name="SettingsActivity" parent="AppTheme">
+		<item name="android:textColor">@color/beeeon_primary_text</item>
+		<item name="android:textColorPrimary">@color/white</item>
+		<item name="colorControlNormal">@color/white</item>
+	</style>
+
+	<!-- widget configuration activity -->
 
     <style name="LinearRow" />
 
