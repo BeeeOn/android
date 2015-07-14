@@ -101,7 +101,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 		id = module.getId();
 		name = module.getName();
-		icon = module.getIconResource();
+		icon = module.getIconResource(IconResourceType.WHITE);
 		gateId = gate.getId();
 		mGateRole = gate.getRole().getId();
 		type = module.getType().getTypeId();
