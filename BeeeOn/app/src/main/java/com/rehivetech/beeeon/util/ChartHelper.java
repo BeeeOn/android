@@ -6,10 +6,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.utils.ValueFormatter;
+import com.github.mikephil.charting.utils.*;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
@@ -40,6 +39,10 @@ final public class ChartHelper {
 
 		chart.getLegend().setEnabled(false);
 
+		//TextView to get text color and typeface from textAppearance
+		TextView tempText = new TextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
 		chart.setDrawBorders(true);
 		chart.setBorderColor(context.getResources().getColor(R.color.gray));
 		chart.setDescription("");
@@ -49,11 +52,18 @@ final public class ChartHelper {
 		XAxis xAxis = chart.getXAxis();
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		xAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
+		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		xAxis.setTypeface(tempText.getTypeface());
+		xAxis.setTextColor(tempText.getCurrentTextColor());
 
 		//set left Y axis style
 		YAxis yAxis = chart.getAxisLeft();
 		yAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
 		yAxis.setStartAtZero(false);
+		yAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		yAxis.setTypeface(tempText.getTypeface());
+		yAxis.setTextColor(tempText.getCurrentTextColor());
+
 
 		//disable right Y axis
 		chart.getAxisRight().setEnabled(false);
