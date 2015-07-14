@@ -144,10 +144,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		String name = module.getName();
 
 		List dataSetList;
-		ArrayList<String> xVals;
+		ArrayList<String> xVals = new ArrayList<>();
 		if (chart.getData() != null) {
 			ChartData data = chart.getData();
-			xVals = (ArrayList<String>) data.getXVals();
 
 			if (isBarChart) {
 				dataSetList = (List<BarDataSet>)(data.getDataSets());
@@ -155,7 +154,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 				dataSetList = (List<LineDataSet>)(chart.getData().getDataSets());
 			}
 		} else {
-			xVals = new ArrayList<>();
 			if (isBarChart) {
 				dataSetList = new ArrayList<BarDataSet>();
 			} else {
@@ -184,14 +182,11 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		int size = values.size();
 
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
-		boolean setXvals = xVals.isEmpty();
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
-			if (setXvals) {
-				xVals.add(fmt.print(dateMillis));
-			}
+			xVals.add(fmt.print(dateMillis));
 			if (isBarChart) {
 				barEntries.add(new BarEntry(value, i++));
 			} else {
@@ -202,6 +197,15 @@ public class CustomViewFragment extends BaseApplicationFragment {
 				break;
 		}
 		dataSet.notifyDataSetChanged();
+
+		ArrayList<String> chartXVals = new ArrayList<>();
+		if (chart.getData() != null) {
+			chartXVals = (ArrayList<String>) chart.getData().getXVals();
+		}
+
+		if (xVals.size() < chartXVals.size()) {
+			xVals = chartXVals;
+		}
 
 		if (isBarChart) {
 			BarData  barData = new BarData(xVals, dataSetList);
