@@ -47,7 +47,7 @@ final public class ChartHelper {
 		chart.setBorderColor(context.getResources().getColor(R.color.gray));
 		chart.setDescription("");
 		chart.setHighlightEnabled(false);
-
+		chart.setGridBackgroundColor(context.getResources().getColor(R.color.white));
 		//set bottom X axis style
 		XAxis xAxis = chart.getXAxis();
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
