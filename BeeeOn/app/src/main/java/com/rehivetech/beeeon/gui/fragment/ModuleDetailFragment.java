@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -382,8 +381,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		view.findViewById(R.id.sen_first_section).setVisibility(View.VISIBLE);
 		view.findViewById(R.id.sen_second_section).setVisibility(View.VISIBLE);
 		view.findViewById(R.id.sen_third_section).setVisibility(View.VISIBLE);
-		view.findViewById(R.id.sen_sep_1).setVisibility(View.VISIBLE);
-		view.findViewById(R.id.sen_sep_2).setVisibility(View.VISIBLE);
 
 
 		// Show some controls if this module is an actor
