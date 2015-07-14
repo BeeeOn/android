@@ -38,6 +38,7 @@ final public class ChartHelper {
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		chart.getLegend().setEnabled(false);
+		chart.setNoDataText(context.getString(R.string.chart_no_data));
 
 		//TextView to get text color and typeface from textAppearance
 		TextView tempText = new TextView(context);
