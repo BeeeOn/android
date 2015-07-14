@@ -62,5 +62,6 @@
 	<dimen name="divider_size">1dp</dimen>
 
 	<dimen name="customview_graph_height">200dp</dimen>
-	<dimen name="graph_textsize_body">14sp</dimen>
+	<dimen name="customview_text_padding">8dp</dimen>
+	<dimen name="module_detail_list_padding">16dp</dimen>
 </resources>

@@ -1,17 +1,14 @@
 package com.rehivetech.beeeon.util;
 
 import android.content.Context;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.utils.ValueFormatter;
+import com.github.mikephil.charting.utils.*;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
@@ -37,30 +34,37 @@ final public class ChartHelper {
 	 */
 	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, ViewGroup layout, Controller controller) {
 
+		int padding = context.getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		float textSizeSp = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-				context.getResources().getDimension(R.dimen.graph_textsize_body), metrics) / metrics.scaledDensity;
 
-		Legend legend = chart.getLegend();
-		legend.setForm(Legend.LegendForm.CIRCLE);
-		legend.setFormSize(textSizeSp);
-		legend.setTextSize(textSizeSp);
+		chart.getLegend().setEnabled(false);
+		chart.setNoDataText(context.getString(R.string.chart_no_data));
+
+		//TextView to get text color and typeface from textAppearance
+		TextView tempText = new TextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
 
 		chart.setDrawBorders(true);
 		chart.setBorderColor(context.getResources().getColor(R.color.gray));
 		chart.setDescription("");
 		chart.setHighlightEnabled(false);
-
+		chart.setGridBackgroundColor(context.getResources().getColor(R.color.white));
 		//set bottom X axis style
 		XAxis xAxis = chart.getXAxis();
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		xAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
+		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		xAxis.setTypeface(tempText.getTypeface());
+		xAxis.setTextColor(tempText.getCurrentTextColor());
 
 		//set left Y axis style
 		YAxis yAxis = chart.getAxisLeft();
 		yAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
 		yAxis.setStartAtZero(false);
+		yAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		yAxis.setTypeface(tempText.getTypeface());
+		yAxis.setTextColor(tempText.getCurrentTextColor());
+
 
 		//disable right Y axis
 		chart.getAxisRight().setEnabled(false);
@@ -70,11 +74,15 @@ final public class ChartHelper {
 			if (yLabels.size() > 2) {
 				if (layout.getVisibility() != View.VISIBLE) {
 					int j = 1;
+					TextView headline = new TextView(context);
+					headline.setText(context.getString(R.string.chart_y_axis));
+					headline.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
+					headline.setPadding(0, padding, 0, padding);
+					layout.addView(headline);
 					for (int i = yLabels.size() - 1; i > -1; i--) {
 						TextView label = new TextView(context);
 						label.setText(String.format("%d. %s", j++, context.getString(yLabels.get(i).getStringResource())));
-//						label.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.textsize_body));
-						label.setTextSize(textSizeSp);
+						label.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
 						layout.addView(label);
 					}
 				}

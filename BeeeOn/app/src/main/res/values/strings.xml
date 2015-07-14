@@ -16,7 +16,6 @@
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notification</string>
     <string name="title_activity_add_sensor">Send the request</string>
-    <string name="title_activity_sensor_detail">Device Detail</string>
     <string name="title_activity_add_gate">Add Gateway</string>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login_facebook">Facebook</string>
@@ -34,6 +33,8 @@
     <string name="registration_button">Registration</string>
     <string name="alert_neutral">Click me</string>
     <string name="alert_positive">OK</string>
+    <string name="sensordetail_set_button">set</string>
+
 
     <!-- Login activity -->
     <string name="login_image_description_logo">Application logo</string>
@@ -483,4 +484,7 @@
     <string name="gate_no_name">No name</string>
     <string name="update_gateway">Edit gateway</string>
     <string name="layout_simple_list_button_text">Details</string>
+    <string name="chart_legend">Legend</string>
+    <string name="chart_y_axis">Y axis labels</string>
+    <string name="chart_no_data">No device data available.</string>
 </resources>

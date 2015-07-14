@@ -5,7 +5,6 @@
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notifikácia</string>
     <string name="title_activity_add_sensor">Pridanie zariadenia</string>
-    <string name="title_activity_sensor_detail">Detail zariadenia</string>
     <string name="title_activity_add_gate">Pridanie brány</string>
     <string name="title_activity_registration">Registrácia</string>
     <string name="title_activity_login_facebook">Facebook</string>
@@ -21,6 +20,7 @@
     <string name="registration_button">Registrácia</string>
     <string name="alert_neutral">Kliknite</string>
     <string name="alert_positive">OK</string>
+    <string name="sensordetail_set_button">nastaviť</string>
 
     <!-- New sensor dialog -->
     <string name="notification_title">Nové zariadenie</string>
