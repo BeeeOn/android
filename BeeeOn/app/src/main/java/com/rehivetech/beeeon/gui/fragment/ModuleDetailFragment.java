@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -194,8 +195,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			return;
 		}
 
-		// Get View for sensor name
-		TextView name = (TextView) view.findViewById(R.id.sen_detail_name);
 		// Get View for sensor location
 		TextView location = (TextView) view.findViewById(R.id.sen_detail_loc_name);
 		ImageView locationIcon = (ImageView) view.findViewById(R.id.sen_detail_loc_icon);
@@ -219,7 +218,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mChart = (CombinedChart) view.findViewById(R.id.sen_graph);
 
 		// Set title selected for animation if is text long
-		name.setSelected(true);
 		location.setSelected(true);
 
 		mFABedit.setOnClickListener(new OnClickListener() {
@@ -246,8 +244,9 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		// Set name of sensor
-		name.setText(module.getName());
-		name.setBackgroundColor(Color.TRANSPARENT);
+		Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
+		toolbar.setTitle(module.getName());
+
 		if (controller.isUserAllowed(gate.getRole())) {
 			// Set value for Actor
 			mValueSwitch.setOnClickListener(new OnClickListener() {
@@ -441,19 +440,24 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_medium));
 		mDataSet.setValueFormatter(valueFormatter);
 
-		//set legend title
-		int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
-		TextView legendTitle = new TextView(mActivity);
-		legendTitle.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
-		legendTitle.setText(getString(R.string.chart_legend));
-		legendTitle.setPadding(0, padding, 0, padding);
-		layout.addView(legendTitle);
+		int viewCount  = layout.getChildCount();
+		View view = layout.getChildAt(viewCount - 1);
+		if (!(view instanceof VerticalChartLegend)) {
+			//set legend title
+			int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
+			TextView legendTitle = new TextView(mActivity);
+			legendTitle.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
+			legendTitle.setText(getString(R.string.chart_legend));
+			legendTitle.setPadding(0, padding, 0, padding);
+			layout.addView(legendTitle);
 
-		//set legend
-		mLegend = new VerticalChartLegend(mActivity);
-		mLegend.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-		mLegend.setTextAppearane(R.style.TextAppearance_AppCompat_Caption);
-		layout.addView(mLegend);
+			//set legend
+			mLegend = new VerticalChartLegend(mActivity);
+			mLegend.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+			mLegend.setTextAppearane(R.style.TextAppearance_AppCompat_Caption);
+			layout.addView(mLegend);
+			layout.invalidate();
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -508,9 +512,11 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		Log.d(TAG, "Filling graph finished");
 		mChart.animateXY(2000, 2000);
 
-		mLegend.setChartDatasets(mChart.getData().getDataSets());
-		mLegend.invalidate();
-		mLegend.setPadding(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.customview_text_padding));
+		if (mLegend != null) {
+			mLegend.setChartDatasets(mChart.getData().getDataSets());
+			mLegend.invalidate();
+			mLegend.setPadding(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.customview_text_padding));
+		}
 
 		mActivity.findViewById(R.id.sen_third_section).invalidate();
 	}

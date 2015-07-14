@@ -11,105 +11,77 @@
 	<RelativeLayout
 	    android:id="@+id/sensordetail_scroll"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="wrap_content"
 	 	android:layout_gravity="top"
 	    android:orientation="horizontal" >
 		<!-- HEADER  contain ICON, VALUE and NAME -->
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="150dp"
+		<RelativeLayout
 			android:id="@+id/sen_header"
 			android:background="@color/beeeon_primary"
-			android:paddingLeft="16dp"
-			android:paddingRight="16dp"
-			android:orientation="vertical"
-			android:visibility="invisible">
-			<!-- ICON and VALUE -->
-			<RelativeLayout
-				android:layout_width="match_parent"
-				android:layout_height="90dp"
-				android:orientation="horizontal">
-				<!-- ICON OF SENSOR -->
-				<ImageView
-					android:id="@+id/sen_detail_icon"
-					android:layout_width="84dp"
-					android:layout_height="84dp"
-					android:layout_alignParentLeft="true"
-					android:layout_alignParentBottom="true"
-					android:src="@drawable/ic_val_unknown"
-					android:contentDescription="Icon of module"
-					/>
-				<!-- VALUE OF SENSOR  or  SWITCH FOR ACTOR -->
-				<LinearLayout
-					android:id="@+id/sen_detail_value_wrap"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_alignParentBottom="true"
-					android:layout_alignParentRight="true"
-					android:layout_toRightOf="@+id/sen_detail_icon"
-					android:layout_marginLeft="8dp"
-					android:orientation="vertical"
-					>
-					<!-- VALUE -->
-					<TextView
-						android:id="@+id/sen_detail_value"
-						android:layout_width="fill_parent"
-						android:layout_height="match_parent"
-						android:text="ValueSensor "
-						android:textColor="@color/white"
-						android:layout_gravity="right"
-						android:gravity="right"
-						android:ellipsize="end"
-						android:maxLines="2"
-						android:textSize="24sp"
-						/>
-					<!-- SWITCH ACTOR -->
-					<android.support.v7.widget.SwitchCompat
-						android:id="@+id/sen_detail_value_switch"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_gravity="right"
-						android:paddingTop="8dp"
-						android:paddingBottom="8dp"
-						android:focusable="false"
-						android:focusableInTouchMode="false"
-						android:visibility="gone"
-						/>
-					<!-- SET ACTOR -->
-					<Button
-						android:id="@+id/sen_detail_value_set"
-						android:layout_width="wrap_content"
-						android:layout_height="25dp"
-						android:layout_gravity="right|bottom"
-						android:text="set"
-						style="@style/Base.Widget.AppCompat.Button.Small"
-						android:background="@color/beeeon_accent"
-						android:textColor="@color/white"
-						android:visibility="gone"
-						/>
+			android:layout_width="match_parent"
+			android:paddingRight="@dimen/activity_horizontal_margin"
+			android:paddingEnd="@dimen/activity_horizontal_margin"
+			android:paddingStart="@dimen/activity_horizontal_margin"
+			android:paddingLeft="@dimen/activity_horizontal_margin"
+			android:layout_height="100dp">
 
-				</LinearLayout>
-			</RelativeLayout>
-			<!-- NAME of SENSOR -->
-			<TextView
-				android:id="@+id/sen_detail_name"
-				android:layout_width="match_parent"
+
+
+			<ImageView
+				android:id="@+id/sen_detail_icon"
+				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:layout_marginTop="8dp"
-				android:ellipsize="marquee"
-				android:marqueeRepeatLimit="marquee_forever"
-				android:scrollHorizontally="true"
-				android:singleLine="true"
-				android:text="NameSensor"
-				android:textColor="@color/white"
-				android:textSize="24sp"
-				android:textStyle="bold"/>
+				android:layout_alignParentBottom="true"
+				android:paddingLeft="56dp"
+				android:paddingStart="56dp"
+				android:paddingRight="0dp"
+				android:paddingEnd="0dp"
+				android:paddingBottom="16dp"
+				android:src="@drawable/ic_val_unknown"/>
 
-		</LinearLayout>
+			<TextView
+				android:id="@+id/sen_detail_value"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_toRightOf="@+id/sen_detail_icon"
+				android:layout_toEndOf="@+id/sen_detail_icon"
+				android:paddingBottom="16dp"
+				android:maxLines="2"
+				android:gravity="start"
+				android:textColor="@color/white"
+				android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+			<!-- SWITCH ACTOR -->
+			<android.support.v7.widget.SwitchCompat
+				android:id="@+id/sen_detail_value_switch"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true"
+				android:focusable="false"
+				android:focusableInTouchMode="false"
+				android:visibility="gone"
+				/>
+			<!-- SET ACTOR -->
+			<Button
+				android:id="@+id/sen_detail_value_set"
+				android:layout_width="wrap_content"
+				android:layout_height="25dp"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"
+				android:layout_alignParentTop="true"
+				style="@style/Base.Widget.AppCompat.Button.Small"
+				android:background="@color/beeeon_accent"
+				android:textColor="@color/white"
+				android:visibility="gone"
+				android:text="@string/sensordetail_set_button"
+				/>
+
+		</RelativeLayout>
 		<!-- EDIT FAB -->
 		<com.melnykov.fab.FloatingActionButton
-			xmlns:fab="http://schemas.android.com/apk/res-auto"
 			android:id="@+id/sen_detail_edit_fab"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -117,9 +89,10 @@
 			android:layout_alignBottom="@+id/sen_header"
 			android:layout_marginBottom="-20dp"
 			android:layout_marginLeft="16dp"
+			android:layout_marginStart="16dp"
 			style="@style/BeeeOn.Fab.Mini"
 			android:visibility="invisible"/>
-		<!-- CONTENT - LOCATION, REFRESH TIME -->
+		 <!--CONTENT - LOCATION, REFRESH TIME-->
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="fill_parent"
@@ -139,25 +112,24 @@
 					android:layout_height="40dp"
 					android:layout_gravity="center"
 					android:layout_marginRight="16dp"
+					android:layout_marginEnd="16dp"
 					android:id="@+id/sen_detail_loc_icon"/>
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:paddingTop="16dp"
-					android:paddingBottom="16dp"
+					android:paddingTop="@dimen/module_detail_list_padding"
+					android:paddingBottom="@dimen/module_detail_list_padding"
 					android:orientation="vertical">
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_primary_text"
-						android:textSize="16sp"
-						android:id="@+id/sen_detail_loc_name"/>
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+						android:id="@+id/sen_detail_loc_name" />
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_secondary_text"
-						android:textSize="14sp"
-						android:text="@string/sensordetail_location_label"/>
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/sensordetail_location_label" />
 				</LinearLayout>
 
 			</LinearLayout>
@@ -174,37 +146,28 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:paddingTop="16dp"
-					android:paddingBottom="16dp"
+					android:paddingTop="@dimen/module_detail_list_padding"
+					android:paddingBottom="@dimen/module_detail_list_padding"
 					android:orientation="vertical">
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_primary_text"
-						android:textSize="16sp"
-						android:text="5 min"
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 						android:id="@+id/sen_refresh_time_value"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_secondary_text"
-						android:textSize="14sp"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 						android:text="@string/sensordetail_refresh_time"/>
 				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
 		<!-- SEPARATOR 1 -->
 		<View
-			android:layout_width="fill_parent"
-			android:layout_height="1dp"
-			android:background="@color/gray_light"
-			android:paddingBottom="8dp"
-			android:paddingTop="8dp"
-			android:layout_marginLeft="72dp"
-			android:clickable="false"
 			android:id="@+id/sen_sep_1"
-			android:layout_below="@+id/sen_first_section"
-			android:visibility="invisible"/>
+			style="@style/BeeeOn.Divider"
+			android:visibility="invisible"
+			android:layout_below="@+id/sen_first_section" />
 		<!-- CONTENT - LOCATION, REFRESH TIME -->
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -222,22 +185,19 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:paddingTop="16dp"
+					android:paddingTop="@dimen/module_detail_list_padding"
 					android:paddingLeft="56dp"
-					android:paddingBottom="16dp"
+					android:paddingBottom="@dimen/module_detail_list_padding"
 					android:orientation="vertical">
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_primary_text"
-						android:textSize="16sp"
-						android:text="1 min ago"
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 						android:id="@+id/sen_detail_time"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_secondary_text"
-						android:textSize="14sp"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 						android:text="@string/sensordetail_last_update_label"/>
 				</LinearLayout>
 			</LinearLayout>
@@ -248,22 +208,19 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:paddingTop="16dp"
+					android:paddingTop="@dimen/module_detail_list_padding"
 					android:paddingLeft="56dp"
-					android:paddingBottom="16dp"
+					android:paddingBottom="@dimen/module_detail_list_padding"
 					android:orientation="vertical">
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_primary_text"
-						android:textSize="16sp"
-						android:text="80%"
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 						android:id="@+id/sen_detail_battery_value"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_secondary_text"
-						android:textSize="14sp"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 						android:text="@string/sensordetail_battery_label"/>
 				</LinearLayout>
 			</LinearLayout>
@@ -274,38 +231,29 @@
 				<LinearLayout
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
-					android:paddingTop="16dp"
+					android:paddingTop="@dimen/module_detail_list_padding"
 					android:paddingLeft="56dp"
-					android:paddingBottom="16dp"
+					android:paddingBottom="@dimen/module_detail_list_padding"
 					android:orientation="vertical">
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_primary_text"
-						android:textSize="16sp"
-						android:text="100%"
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 						android:id="@+id/sen_detail_signal_value"/>
 					<TextView
 						android:layout_width="fill_parent"
 						android:layout_height="wrap_content"
-						android:textColor="@color/beeeon_secondary_text"
-						android:textSize="14sp"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 						android:text="@string/sensordetail_signal_label"/>
 				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
 		<!-- SEPARATOR 2 -->
 		<View
-			android:layout_width="fill_parent"
-			android:layout_height="1dp"
-			android:background="@color/gray_light"
-			android:paddingBottom="8dp"
-			android:paddingTop="8dp"
-			android:layout_marginLeft="72dp"
-			android:clickable="false"
 			android:id="@+id/sen_sep_2"
-			android:layout_below="@+id/sen_second_section"
-			android:visibility="invisible"/>
+			style="@style/BeeeOn.Divider"
+			android:visibility="invisible"
+			android:layout_below="@+id/sen_second_section" />
 		<!-- GRAPH CONTENT -->
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -322,8 +270,7 @@
 				android:layout_height="48dp"
 				android:gravity="center"
 				android:text="@string/sen_graph_label"
-				android:textColor="@color/beeeon_secondary_text"
-				android:textSize="14sp"/>
+				android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
 			<com.github.mikephil.charting.charts.CombinedChart
 				android:id="@+id/sen_graph"

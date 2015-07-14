@@ -8,7 +8,6 @@
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notifikace</string>
     <string name="title_activity_add_sensor">Přidat nové zařízení</string>
-    <string name="title_activity_sensor_detail">Detail zařízení</string>
     <string name="title_activity_add_gate">Přidat bránu</string>
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
@@ -25,6 +24,7 @@
     <string name="registration_button">Registrace</string>
     <string name="alert_neutral">Klikněte</string>
     <string name="alert_positive">OK</string>
+    <string name="sensordetail_set_button">nastavit</string>
 
     <!-- Login activity -->
     <string name="login_image_description_logo">Application logo</string>

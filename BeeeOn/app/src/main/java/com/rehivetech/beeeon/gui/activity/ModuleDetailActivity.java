@@ -53,7 +53,7 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(R.string.title_activity_sensor_detail);
+			toolbar.setTitle("");
 			setSupportActionBar(toolbar);
 		}
 

@@ -63,4 +63,5 @@
 
 	<dimen name="customview_graph_height">200dp</dimen>
 	<dimen name="customview_text_padding">8dp</dimen>
+	<dimen name="module_detail_list_padding">16dp</dimen>
 </resources>
