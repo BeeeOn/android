@@ -35,7 +35,7 @@ public class TimeHelper {
 	public DateTimeZone getDateTimeZone(Gate gate) {
 		boolean useLocalTime = useLocalTimezone() || gate == null;
 
-		int offsetInMillis = gate.getUtcOffset() * 60 * 1000;
+		int offsetInMillis = (gate != null ? gate.getUtcOffset() : 0) * 60 * 1000;
 		return useLocalTime ? DateTimeZone.getDefault() : DateTimeZone.forOffsetMillis(offsetInMillis);
 	}
 
