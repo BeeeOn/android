@@ -265,7 +265,7 @@
 			<com.github.mikephil.charting.charts.CombinedChart
 				android:id="@+id/sen_graph"
 				android:layout_width="match_parent"
-				android:layout_height="300dp"/>
+				android:layout_height="@dimen/graph_height"/>
 
 		</LinearLayout>
 		<!-- LOADING SECTION -->

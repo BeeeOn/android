@@ -388,29 +388,25 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	private void addGraphView(@NonNull final Module module) {
 		Controller controller = Controller.getInstance(mActivity);
 		BaseValue baseValue = module.getValue();
-
+		boolean barchart = baseValue instanceof BaseEnumValue;
 		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.sen_third_section);
 		String unit = mUnitsHelper.getStringUnit(baseValue);
 		String name = getString(module.getTypeStringResource());
-		ValueFormatter valueFormatter = ChartHelper.getValueFormatterInstance(baseValue, mActivity, controller);
 
 		//set chart
 		ChartHelper.prepareChart(mChart, mActivity, baseValue, layout, controller);
 		mChart.setFillFormatter(new CustomFillFormatter());
 
 
-		if (baseValue instanceof BaseEnumValue) {
+		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), name);
 		} else {
-			int fillColor = Utils.setColorAlpha(getResources().getColor(R.color.beeeon_primary_medium), 125);
+
 
 			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(),String.format("%s [%s]",name, unit));
-			((LineDataSet)mDataSet).setDrawCircles(false);
-			((LineDataSet)mDataSet).setDrawFilled(true);
-			((LineDataSet)mDataSet).setFillColor(fillColor);
 		}
-		mDataSet.setColor(getResources().getColor(R.color.beeeon_primary_medium));
-		mDataSet.setValueFormatter(valueFormatter);
+		//set dataset style
+		ChartHelper.prepareDataSet(mDataSet,  barchart, true, getResources().getColor(R.color.beeeon_primary_medium));
 
 		int viewCount  = layout.getChildCount();
 		View view = layout.getChildAt(viewCount - 1);

@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
@@ -90,7 +91,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		}
 		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.graph_layout);
 		chartLayout.setVisibility(View.INVISIBLE);
-		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.customview_graph_height)));
+		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
 		ChartHelper.prepareChart(chart, mActivity, module.getValue(), chartLayout, Controller.getInstance(mActivity));
 		chart.getLegend().setEnabled(false);
@@ -171,11 +172,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		} else {
 			lineEntries = new ArrayList<>();
 			dataSet = new LineDataSet(lineEntries, String.format("%s [%s]", name, unit));
-			((LineDataSet)dataSet).setDrawCircles(false);
-			((LineDataSet)dataSet).setLineWidth(2f);
 		}
-		dataSet.setColor(color);
-		dataSet.setValueFormatter(ChartHelper.getValueFormatterInstance(module.getValue(), mActivity, controller));
+		ValueFormatter valueFormatter = ChartHelper.getValueFormatterInstance(module.getValue(), mActivity, controller);
+		ChartHelper.prepareDataSet (dataSet, isBarChart, false, color);
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();

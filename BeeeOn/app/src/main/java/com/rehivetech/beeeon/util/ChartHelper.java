@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.util;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -8,9 +9,12 @@ import android.widget.TextView;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.utils.*;
+import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.view.ChartMarkerView;
 import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 
@@ -39,6 +43,7 @@ final public class ChartHelper {
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_no_data));
+
 
 		//TextView to get text color and typeface from textAppearance
 		TextView tempText = new TextView(context);
@@ -94,7 +99,31 @@ final public class ChartHelper {
 			yAxis.setLabelCount(yLabels.size() - 1);
 			yAxis.setAxisMinValue(0);
 			yAxis.setAxisMaxValue(yLabels.size() - 1);
+		} else {
+			ChartMarkerView markerView = new ChartMarkerView(context, R.layout.chart_markerview);
+			chart.setMarkerView(markerView);
 		}
+	}
+
+	/**
+	 * Prepare data set for chart
+	 * @param dataset data set to prepare
+	 * @param barChart bar chart flag
+	 * @param filled fill dataset flag
+	 * @param color line color
+	 */
+	public static void prepareDataSet(DataSet dataset, boolean barChart, boolean filled, @ColorInt int color) {
+		int fillColor = Utils.setColorAlpha(color, 125);
+		if (!barChart) {
+			((LineDataSet) dataset).setDrawCircles(false);
+
+			if (filled) {
+				((LineDataSet) dataset).setDrawFilled(true);
+				((LineDataSet) dataset).setFillColor(fillColor);
+			}
+		}
+		dataset.setColor(color);
+		dataset.setDrawValues(false);
 	}
 
 	/**
