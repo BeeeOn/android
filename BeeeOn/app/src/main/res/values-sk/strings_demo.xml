@@ -20,7 +20,7 @@
 	<!-- Modules of Home -->
 	<string name="demo_name_module_window">Teplota na okne</string>
 	<string name="demo_name_module_radiator">Teplota radiátora</string>
-	<string name="demo_name_module_window_act">Okno - Ventilačka</string>
+	<string name="demo_name_module_window_act">Okno - ventilačka</string>
 	<string name="demo_name_module_door_act">Balkónové dvere</string>
 	<string name="demo_name_module_baby_monitor">Pestúnka - postieľka</string>
 	<string name="demo_name_module_lamp_table">Lampa na pracovnom stole</string>
@@ -29,7 +29,7 @@
 	<string name="demo_name_module_lamp_tv">Lampa pri TV</string>
 	<string name="demo_name_module_tv">Televízia</string>
 	<string name="demo_name_module_cooker">Šporák</string>
-	<string name="demo_name_module_wc_lamp">Lampa na WC</string>
+	<string name="demo_name_module_wc_lamp">Svetlo na záchode</string>
 
 	<!-- Modules of Regulator VPT -->
 	<string name="demo_name_module_boiler">Stav kotla</string>
@@ -37,7 +37,7 @@
 	<string name="demo_name_module_desired_temp1">Z1: Požadovaná teplota</string>
 	<string name="demo_name_module_type_operation1">Z1: Typ prevádzky</string>
 	<string name="demo_name_module_mode_operation1">Z1: Režim prevádzky</string>
-	<string name="demo_name_module_actual_temp2">Z2:Aktuálna teplota</string>
+	<string name="demo_name_module_actual_temp2">Z2: Aktuálna teplota</string>
 	<string name="demo_name_module_desired_temp2">Z2: Požadovaná teplota</string>
 	<string name="demo_name_module_type_operation2">Z2: Typ prevádzky</string>
 	<string name="demo_name_module_mode_operation2">Z2: Režim prevádzky</string>
@@ -54,9 +54,8 @@
 	<string name="demo_name_module_temp_air">Teplota ovzdušia</string>
 	<string name="demo_name_module_pressure_air">Tlak ovzdušia</string>
 	<string name="demo_name_module_soil">Vlhkosť pôdy</string>
-	<string name="demo_name_module_temp_stove">Teplota kameňa</string>
+	<string name="demo_name_module_temp_stove">Teplota kachlí</string>
 	<string name="demo_name_module_humidity_ceiling">Vlhkosť stropu</string>
-	<string name="demo_name_module_switch">Prepínač kameňa</string>
 	<string name="demo_name_module_electricity">Hlavný prívod elektrickej energie</string>
 	<string name="demo_name_module_lighting">Osvetlenie</string>
 	<string name="demo_name_module_air">Ovzdušie</string>

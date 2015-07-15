@@ -34,7 +34,7 @@
     <string name="action_choose_server_manually">Zvolit BeeeOn server ručně</string>
     <string name="login_label_server">Zvolte server:</string>
 
-    <string name="login_label_login_or_register">Přihlaste se nebo se zaregistrujte pomocí:</string>
+    <string name="login_label_login_or_register">Přihlaste se pomocí:</string>
     <string name="login_provider_google">Google</string>
     <string name="login_provider_facebook">Facebook</string>
     <string name="login_provider_choose_other">Použít jinou službu</string>
@@ -65,9 +65,9 @@
     <string name="sensordetail_location_label">Umístění</string>
     <string name="sensordetail_last_update_label">Poslední aktualizace</string>
     <string name="sensordetail_signal_label">Stav signálu</string>
-    <string name="update_needed">Prosím aktualizujte aplikaci</string>
+    <string name="update_needed">Aktualizujte aplikaci</string>
     <string name="addsensor_type">Typ zařízení:</string>
-    <string name="setup_sensor_info_text">Prosím, nastavte zařízení inicializován v</string>
+    <string name="setup_sensor_info_text">Nastavte zařízení inicializován v</string>
     <string name="setup_sensor_header_names">Název zařízení</string>
     <string name="setup_sensor_set_name">Nastavte název zařízení</string>
     <string name="setup_sensor_header_location">Umístění</string>
@@ -78,7 +78,7 @@
     <string name="alert_message">Zpráva</string>
     <string name="refresh_time">Interval probuzení:</string>
     <string name="last_update">Aktualizováno: </string>
-    <string name="sen_graph_label">Graf hodnot</string>
+    <string name="sen_graph_label">Historické hodnoty</string>
     <string name="users_header">Uživatelé</string>
     <string name="add_users_adapter">Přidat uživatele</string>
     <string name="add_user_email_header">E-mail</string>
@@ -86,7 +86,7 @@
     <string name="gate_user_title_change_role">Změnit roli uživatele</string>
 
     <!-- Hints -->
-    <string name="login_user_name_hint">Login/email</string>
+    <string name="login_user_name_hint">Login/e-mail</string>
     <string name="addsensor_sensor_name_hint">Název nového zařízení</string>
     <string name="addsensor_new_location_hint">Název nového umístění</string>
 
@@ -100,7 +100,7 @@
     <string name="toast_connecting_to_server">Připojuji se na server &#8230;</string>
     <string name="toast_welcome_text">Vítejte </string>
     <string name="toast_play_missing">Google Play není dostupné nebo je zastaralé</string>
-    <string name="toast_internet_connection">Prosím aktivujte připojení k Internetu</string>
+    <string name="toast_internet_connection">Aktivujte připojení k Internetu</string>
     <string name="toast_no_unregistered_adapter">K dispozici není žádná neregistrovaná brána</string>
     <string name="toast_communication_error">Nastal problém v komunikaci, opakujte akci později</string>
     <string name="toast_tap_again_exit">Pro ukončení stiskněte zpět ještě jednou</string>
@@ -140,10 +140,8 @@
     <string name="drawer_open">OTEVŘÍT</string>
     <string name="drawer_close">ZAVŘÍT</string>
     <string name="location">Umístění</string>
-    <string name="custom_view">Uživatelský pohled</string>
     <string name="gate">Brány</string>
     <string name="no_location">Žádná umístění</string>
-    <string name="no_custom_view">Uživatelský pohled není k dispozici</string>
     <string name="no_gates">Nemáte žádné brány</string>
     <string name="menu_household">Přehled</string>
 	<string name="menu_management">Správa domácnosti</string>
@@ -154,7 +152,6 @@
     <string name="menu_watchdog">Hlídač</string>
 
     <!-- Add sensor dialog -->
-    <string name="addsensor_sending_request">Posílám párovací požadavek </string>
     <string name="addsensor_send_request">Poslat párovací požadavek</string>
     <string name="addsensor_active_pair">Párovací režim je aktivní </string>
     <string name="addadapter_textview_name">Název</string>
@@ -163,13 +160,13 @@
     <string name="addsensor_send_pair">ZAHÁJIT PÁROVÁNÍ</string>
 
     <!-- Others -->
-    <string name="action_settings">Nastavení aplikace</string>
+    <string name="action_settings">Nastavení</string>
     <string name="action_about">O aplikaci</string>
-    <string name="action_search">Hledání</string>
+    <string name="action_search">Hledat</string>
     <string name="action_refreshlist">Obnovit seznam</string>
     <string name="action_addgate">Přidání brány</string>
     <string name="action_addsensor">Přidání zařízení</string>
-    <string name="action_logout">Odhlášení</string>
+    <string name="action_logout">Odhlásit</string>
     <string name="action_unregist_device">Odstranit zařízení</string>
     <string name="action_hide_device">Skrýt zařízení</string>
     <string name="action_close">Zrušit</string>
@@ -355,7 +352,7 @@
     <string name="preference_set_default_location">Nastavit výchozí umístění</string>
     <string name="preference_set_default_adapter">Nastavit výchozí bránu</string>
     <string name="preference_activity_title">Nastavení</string>
-    <string name="please_log_in">Přihlašte se prosím</string>
+    <string name="please_log_in">Přihlašte se</string>
     <string name="no_sensor_available">Žádné dostupné zařízení</string>
     <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí bránu</string>
     <string name="users_pending_header">Žádost o přidání</string>
@@ -374,19 +371,19 @@
 	<string name="confirm_remove_watchdog_message">Prosím potvrďte odstranění pravidla</string>
 	<string name="title_activity_module_edit">Úprava zařízení</string>
 	<string name="addadapter_fill_name">Vyplňte název brány</string>
-	<string name="addadapter_fill_code">Vyplňte kód</string>
+	<string name="addadapter_fill_code">Vyplňte kód brány</string>
 	<string name="tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. V následujícím průvodci Vám bude představen systém inteligentní domácnosti a jeho části.</string>
 	<string name="tut_intro_text_2">BeeeOn domácnost se skládá z jednotlivých bezdrátových zařízení a brány do této domácnosti.</string>
-	<string name="tut_intro_text_3">Bezdrátová zařízení jsou dvojího typu - senzory a aktuátory. Senzory slouží ke snímání okolních veličin, aktuátory k nastavení jejich požadovaných hodnot.</string>
+	<string name="tut_intro_text_3">Bezdrátová zařízení jsou dvojího typu - senzory a aktory. Senzory slouží ke snímání okolních veličin, aktory k nastavení jejich požadovaných hodnot.</string>
 	<string name="tut_intro_text_4">Brána inteligentní domácnosti přijímá a vysílá data směrem k bezdrátovým zařízením.</string>
 	<string name="tut_intro_text_5">Mobilní aplikace zobrazuje informace o domácnosti a umožnuje její ovládání odkukoliv a kdykoliv.</string>
 	<string name="tutorial_go_to_app">START</string>
 	<string name="tutorial_skip">PŘESKOČIT</string>
-	<string name="radius">Rádius</string>
+	<string name="radius">Poloměr</string>
 	<string name="dialog_choose_provider_title">Vyběr poskytovatele účtu</string>
 	<string name="addsensor_stoped">zastaveno</string>
 	<string name="add_action_dialog_title">Co chcete přidat?</string>
-	<string name="toast_need_module_location_icon">Prosím vyberte ikonu nového umístění</string>
+	<string name="toast_need_module_location_icon">Vyberte ikonu nového umístění</string>
 	<string name="dialog_title_set_bioler_type">Volba typu provozu okruhu</string>
 	<string name="dialog_set_boiler_setaction">nastavit</string>
 	<string name="dialog_title_set_bioler_mode">Volba režimu okruhu</string>
@@ -481,5 +478,6 @@
     <string name="toast_not_users_found">Nenalezen žádný uživatel</string>
     <string name="toast_wrong_or_no_device">Nebylo zadané žádné zařízení nebo je zvolené zařízení nesprávné</string>
     <string name="update_gateway">Upravit bránu</string>
+    <string name="dialog_code_title">Zadejte kód brány</string>
 
 </resources>

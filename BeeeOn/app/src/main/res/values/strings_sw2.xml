@@ -17,7 +17,7 @@
     <string name="adapter_doest_exist">Default gateway no longer exists. Set new default gateway.</string>
     <string name="no_location_available_def_adapter">No location available in default gateway.</string>
     
-    <string name="please_log_in">Please Log In</string>
+    <string name="please_log_in">Log In</string>
     <string name="no_adapter_available">No gateway available</string>
     <string name="no_sensor_available">No module available</string>
     <string name="no_location_available">No location available</string>
