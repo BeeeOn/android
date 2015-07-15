@@ -199,11 +199,12 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 					final List<WeatherProvider.City> foundCities = mWeatherProvider.parseCities(data);
 					mHandler.post(new Runnable() {
 						public void run() {
-							WeatherProvider.City city = foundCities.get(0);
-							if (city == null) {
+							if (foundCities == null || foundCities.size() == 0) {
 								loadingCityFail();
 								return;
 							}
+
+							WeatherProvider.City city = foundCities.get(0);
 							loadingCitySuccess(city, dialog);
 						}
 					});

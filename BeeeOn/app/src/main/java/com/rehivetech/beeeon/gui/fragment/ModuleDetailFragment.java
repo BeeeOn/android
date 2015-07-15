@@ -513,7 +513,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 				Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
 
 				// Set new data
-				mIcon.setImageResource(module.getIconResource());
+				mIcon.setImageResource(module.getIconResource(IconResourceType.WHITE));
 				mValueSwitch.setEnabled(true);
 				mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
 			}

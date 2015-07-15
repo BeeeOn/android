@@ -218,7 +218,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			for (Device fac : devices) {
 				for (int x = 0; x < fac.getModules().size(); x++) {
 					Module dev = fac.getModules().get(x);
-					mSensorAdapter.addItem(new SensorListItem(dev, dev.getId(), mActivity, (x == (fac.getModules().size() - 1)) ? true : false));
+					mSensorAdapter.addItem(new SensorListItem(dev, dev.getId(), mActivity, (x == (fac.getModules().size() - 1))));
 				}
 				modules.addAll(fac.getModules());
 			}

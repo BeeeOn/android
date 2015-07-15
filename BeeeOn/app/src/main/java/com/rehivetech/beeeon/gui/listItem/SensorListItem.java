@@ -59,7 +59,7 @@ public class SensorListItem extends AbstractListItem {
 		Gate gate = controller.getGatesModel().getGate(device.getGateId());
 
 		if (timeHelper != null) {
-			txtTime.setText(String.format("%s %s", mContext.getString(R.string.last_update), timeHelper.formatLastUpdate(device.getLastUpdate(), gate)));
+			txtTime.setText(timeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
 
 		// Set title selected for animation if is text long
