@@ -17,7 +17,7 @@ public class IdentifierComparator implements Comparator<IIdentifier> {
 
 		if (TextUtils.isDigitsOnly(lhsId) && TextUtils.isDigitsOnly(rhsId)) {
 			// Numeric comparison
-			return Integer.valueOf(lhsId).compareTo(Integer.valueOf(rhsId));
+			return Long.valueOf(lhsId).compareTo(Long.valueOf(rhsId));
 		} else {
 			// String comparison
 			return lhsId.compareTo(rhsId);
