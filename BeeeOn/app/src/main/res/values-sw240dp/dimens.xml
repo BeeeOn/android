@@ -3,8 +3,6 @@
 	<dimen name="custom_spinner_icon_size">35dp</dimen>
 	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>
 	
-	<dimen name="nav_drawer_width">280dp</dimen>
-
 	<!-- Size of activity_add_sensor_activity_dialog -->
 	<dimen name="content_view_size">175dp</dimen>
 	<dimen name="addgate_image_size">125dp</dimen>
