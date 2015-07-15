@@ -10,8 +10,6 @@ public class FalseAnswer {
 	private int mErrCode;
 	private String mErrMessage;
 
-	public Object troubleMakers;
-
 	/**
 	 * Constructor
 	 */
@@ -20,15 +18,12 @@ public class FalseAnswer {
 
 	/**
 	 * Constructor
-	 * 
-	 * @param additionalInfo previous state where exception appear
+	 *  @param additionalInfo previous state where exception appear
 	 * @param errCode        code of error
-	 * @param troubleMaker   object that caused the problem
 	 */
-	public FalseAnswer(String additionalInfo, int errCode, Object troubleMaker) {
+	public FalseAnswer(String additionalInfo, int errCode) {
 		mAdditionalInfo = additionalInfo;
 		mErrCode = errCode;
-		troubleMakers = troubleMaker;
 	}
 
 	/**

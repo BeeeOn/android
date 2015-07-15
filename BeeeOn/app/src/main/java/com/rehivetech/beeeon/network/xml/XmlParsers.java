@@ -296,18 +296,8 @@ public class XmlParsers {
 	 * @since 2.2
 	 */
 	private FalseAnswer parseFalse() throws XmlPullParserException, IOException {
-		Object trouble = null;
 		int err = getSecureInt(getSecureAttrValue(Xconstants.ERRCODE));
-		if (err == 10) { // TODO: check this with pavel
-			trouble = getFalseMessage10();
-		}
-		if (err == 17) { // TODO: check this with pavel
-			trouble = getFalseMessage17();
-		}
-		if (err == 3) {
-			trouble = getFalseMessage17();
-		}
-		return new FalseAnswer((mParser.getEventType() == XmlPullParser.END_TAG) ? "" : readText(Xconstants.COM_ROOT), err, trouble);
+		return new FalseAnswer((mParser.getEventType() == XmlPullParser.END_TAG) ? "" : readText(Xconstants.COM_ROOT), err);
 	}
 
 	// /////////////////////////////////DEVICES, LOGS/////////////////////////////////////////////////////////

@@ -685,15 +685,7 @@ public class Network implements INetwork {
 		if (msg.getState() == State.TRUE)
 			return true;
 
-		AppException e = processFalse(msg);
-
-		FalseAnswer fa = (FalseAnswer) msg.data;
-		String troubleUsers = "";
-		for (User u : (ArrayList<User>) fa.troubleMakers) {
-			troubleUsers += u.toDebugString() + "\n";
-		}
-
-		throw AppException.wrap(e).set("Trouble users", troubleUsers);
+		throw processFalse(msg);
 	}
 
 	@Override
