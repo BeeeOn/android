@@ -24,6 +24,8 @@
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 		android:layout_toRightOf="@+id/iconofsensor"
 		android:layout_toEndOf="@+id/iconofsensor"
+		android:layout_toLeftOf="@+id/valueofsensor"
+		android:layout_toStartOf="@id/valueofsensor"
 		android:layout_alignTop="@+id/iconofsensor"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
@@ -39,6 +41,8 @@
 		android:layout_below="@+id/titleofsensor"
 		android:layout_alignLeft="@+id/titleofsensor"
 		android:layout_alignStart="@+id/titleofsensor"
+		android:layout_toLeftOf="@+id/valueofsensor"
+		android:layout_toStartOf="@id/valueofsensor"
 		/>
 
 	<TextView
@@ -53,12 +57,11 @@
 		android:scrollHorizontally="true"
 		android:singleLine="false"
 		android:textColor="@color/beeeon_accent"
-		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 		android:textStyle="bold"
-		android:layout_marginLeft="16dp"
-		android:layout_marginStart="16dp"
-		android:layout_toRightOf="@+id/timeofsensor"
-		android:layout_toEndOf="@+id/timeofsensor"
+		android:maxWidth="100dp"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
 		/>
 
 	<TextView
