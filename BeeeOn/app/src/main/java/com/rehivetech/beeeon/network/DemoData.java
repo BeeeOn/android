@@ -248,7 +248,7 @@ public class DemoData {
 				Module moduleVentilator = Module.createFromModuleTypeId("4");
 				moduleVentilator.setVisibility(true);
 				moduleVentilator.setName(context.getString(R.string.demo_name_module_ventilator));
-				moduleVentilator.setValue("ON");
+				moduleVentilator.setValue("1");
 
 				device1_ventilator.addModule(moduleVentilator);
 				deviceList.add(device1_ventilator);
@@ -267,7 +267,7 @@ public class DemoData {
 				Module modulePc = Module.createFromModuleTypeId("4");
 				modulePc.setVisibility(true);
 				modulePc.setName(context.getString(R.string.demo_name_module_pc));
-				modulePc.setValue("OFF");
+				modulePc.setValue("1");
 
 				device1_pc.addModule(modulePc);
 				deviceList.add(device1_pc);
@@ -286,7 +286,7 @@ public class DemoData {
 				Module moduleLampTv = Module.createFromModuleTypeId("160");
 				moduleLampTv.setVisibility(true);
 				moduleLampTv.setName(context.getString(R.string.demo_name_module_lamp_tv));
-				moduleLampTv.setValue("ON");
+				moduleLampTv.setValue("1");
 
 				device1_lampTv.addModule(moduleLampTv);
 				deviceList.add(device1_lampTv);
@@ -305,7 +305,7 @@ public class DemoData {
 				Module moduleTv = Module.createFromModuleTypeId("160");
 				moduleTv.setVisibility(true);
 				moduleTv.setName(context.getString(R.string.demo_name_module_tv));
-				moduleTv.setValue("ON");
+				moduleTv.setValue("0");
 
 				device1_tv.addModule(moduleTv);
 				deviceList.add(device1_tv);
@@ -324,7 +324,7 @@ public class DemoData {
 				Module moduleCooker = Module.createFromModuleTypeId("4");
 				moduleCooker.setVisibility(true);
 				moduleCooker.setName(context.getString(R.string.demo_name_module_cooker));
-				moduleCooker.setValue("ON");
+				moduleCooker.setValue("1");
 
 				device1_cooker.addModule(moduleCooker);
 				deviceList.add(device1_cooker);
