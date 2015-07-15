@@ -65,7 +65,6 @@
     <string name="login_user_name_hint">Prihlasovacie meno/email</string>
     <string name="addsensor_sensor_name_hint">Názov nového zariadenia</string>
     <string name="addsensor_new_location_hint">Názov nového umiestnenia</string>
-    <string name="addadapter_ser_num_hint">Sériové číslo brány</string>
 
     <!-- Toasts -->
     <string name="toast_changeto">\u0020zmenené na: \u0020</string>
@@ -83,7 +82,6 @@
     <string name="toast_tap_again_exit">Pre ukončenie stlačte späť ešte raz</string>
     <string name="toast_google_auth">Google autentizácia</string>
     <string name="toast_something_wrong">Nastala neznámá chyba, skúste to neskôr</string>
-    <string name="toast_check_your_connection_via_browser">Zkontrolujte pripojenie s použitím webového prehliadača</string>
     <string name="toast_login_failed">Prihlásenie zlyhalo</string>
     <string name="toast_adapter_activate_failed">Zlyhalo pridanie brány</string>
     <string name="toast_adapter_activated">Brána bola aktivovaná</string>
@@ -96,7 +94,6 @@
     <string name="toast_success_save_data">Údaje boli úspešne uložené</string>
     <string name="toast_fail_save_data">Uloženie údajov zlyhalo</string>
     <string name="toast_wrong_or_no_watchdog_rule">Nebolo zadané žiadne pravidlo alebo je zvolené pravidlo nesprávne</string>
-    <string name="toast_field_must_be_filled">Je potrebné vyplniť toto pole!</string>
 
     <!-- Progress -->
     <string name="progress_signing">Prihlasujem&#8230;</string>
@@ -129,7 +126,6 @@
     <string name="addsensor_send_request">Poslať párovací požiadavok</string>
     <string name="addsensor_active_pair">Párovací režim je aktívny </string>
     <string name="addadapter_textview_name">Názov</string>
-    <string name="addadapter_view_setname">Nastavte názov brány, napr. Doma</string>
     <string name="addadapter_qr_button">QR kód</string>
     <string name="addsensor_send_pair">SPUSTIŤ PÁROVÁNIE</string>
     <string name="addadapter_manual_edit">Napísať kód</string>
@@ -152,11 +148,10 @@
     <string name="action_addgate">Pridanie brány</string>
     <string name="action_addsensor">Pridanie zaradenia</string>
     <string name="action_logout">Odhlásenie</string>
-    <string name="action_hide_sensor">Skryť zariadenie</string>
     <string name="action_unregist_device">Odstráňiť zariadenie</string>
     <string name="action_hide_device">Skryť zariadenie</string>
     <string name="action_close">Zrušiť</string>
-    <string name="action_intro">Prednastavenie</string>
+    <string name="action_intro">Úvod</string>
     <string name="action_intro_dialog">Úvodný dialóg</string>
     <string name="addadapter_qrcode_desc">Získanie QR kódu</string>
     <string name="addsensor_new_location_spinner">Nové umiestnenie</string>
@@ -256,7 +251,7 @@
     <string name="adapter_default_name">%1$s brána #%2$d</string>
     <string name="settings">Nastavenie</string>
     <string name="save">Uložiť</string>
-    <string name="ada_menu_edit">Editácia názvu brány</string>
+    <string name="ada_menu_edit">Editácia brány</string>
     <string name="ada_menu_users">Používatelia brány</string>
     <string name="ada_menu_del">Odstrániť bránu</string>
     <string name="sensor_menu_del">Odstrániť zariadenie</string>
@@ -287,7 +282,7 @@
     <!-- Watchdog -->
     <string name="action_watchdog">Sledovač</string>
     <string name="watchdog_rule">Pravidlo sledovača</string>
-    <string name="treshold_value">Prahová hodnota</string>
+    <string name="treshold_value">Prah</string>
     <string name="watchdog_actor_change_state">Zmeniť stav aktoru</string>
     <string name="watchdog_notification_send">Poslať notifikáciu</string>
     <string name="watchdog_activate_rule">Aktivovať pravidlo</string>
@@ -313,11 +308,11 @@
     <string name="adapter_isnt_set">Nastavte východziu bránu</string>
     <string name="adapter_doest_exist">Východzia brána už neexistuje. Nastavte novú východziu bránu.</string>
     <string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>
-    <string name="add_user_role_header">Úloha</string>
+    <string name="add_user_role_header">Role</string>
 
     <string name="title_activity_location_detail_screen">Detail umiestnenia</string>
     <string name="sensor_name_label">Meno zariadenia</string>
-    <string name="actor_required">Je potrebné vybrať aktor</string>
+    <string name="actor_required">Vyberte aktor</string>
     <string name="addadapter_fill_name">Vyplnte názov brány</string>
     <string name="addadapter_fill_code">Vyplnte kód</string>
     <string name="tutorial_skip">PRESKOČIŤ</string>
@@ -349,7 +344,7 @@
     <string name="dialog_choose_provider_title">Vyberte poskytovateľa účtu</string>
     <string name="modules">Zariadenia</string>
     <string name="delete_geofence">Odstrániť oblasť</string>
-    <string name="add_new_geofence_area">Pridať novú oblasť</string>
+    <string name="add_new_geofence_area">Pridať oblasť</string>
     <string name="addsensor_stoped">zastavené</string>
     <string name="toast_need_module_location_icon">Prosím vyberte ikonu nového umiestnenia</string>
     <string name="dialog_title_set_bioler_type">Voľba typu prevádzky okruhu</string>
@@ -358,7 +353,7 @@
     <string name="dialog_title_set_temperature">Voľba teploty</string>
     <string name="action_done">Hotovo</string>
     <string name="action_notification">Notifikácie</string>
-    <string name="add_action_dialog_title">Čo by ste chceli pridať?</string>
+    <string name="add_action_dialog_title">Čo chcete pridať?</string>
     <string name="color_scheme">Farebná schéma</string>
     <string name="dev_actor_boiler_operation_mode">Režim prevádzky kotla</string>
     <string name="dev_actor_boiler_operation_type">Typ prevádzky kotla.</string>
@@ -405,7 +400,6 @@
     <string name="widget_location_list_title">BeeeOn umiestnenie</string>
     <string name="watchdog_create">Vytvoriť strážnika</string>
     <string name="toast_device_not_available">Zariadenie nie je dostupné</string>
-    <string name="toast_field_must_be_number">Toto pole musí byť číslo!</string>
     <string name="demo_mode">DEMO REŽIM</string>
     <string name="multiadapter_no_item">- Nič pre výber -</string>
     <string name="update_over_wifi_only">Aktualizovať iba cez Wi-Fi</string>
@@ -413,23 +407,24 @@
     <string name="toast_error_no_qr_reader">Nepodarilo sa otvoriť Google Play</string>
     <string name="toast_error_invalid_qr_code">Neplatný BeeeOn QR kód</string>
 
-    <string name="activity_add_device_dialog_text">Teraz stlačte tlačidlo POSLAŤ PÁROVANIE</string>
-    <string name="activity_add_device_shake_it">Zatraste zariadením alebo stlačte tlačidlo na zariadení.</string>
+    <string name="activity_add_device_dialog_text">Stlačte tlačidlo POSLAŤ PÁROVANIE</string>
+    <string name="activity_add_device_shake_it">Zatraste zariadením alebo stlačte tlačidlo pre párovanie na zariadení.</string>
 
     <string name="button_unregister">Odregistrovať</string>
 
     <!-- Titles and messages for critical confirm dialog-->
 
-    <string name="confirm_remove_watchdog_title">Odstrániť \"%1$s\"</string>
+    <string name="confirm_remove_title">Odstrániť \"%1$s\"</string>
     <string name="confirm_remove_watchdog_message">Strážnik bude úplne odstránený.</string>
     <string name="confirm_unregister_device_title">Odregistrovať \"%1$s\"</string>
-    <string name="confirm_unregister_device_message">Vaše zariadenie bude odregistrované zo servera a všetky historické dáta budú zmazané.</string>
-    <string name="confirm_remove_gate_title">Odstrániť \"%1$s\"</string>
+    <string name="confirm_unregister_device_message">Vaše zariadenie bude odregistrované zo servera a jeho historické dáta budú zmazané.</string>
     <string name="confirm_remove_gate_title_default">Odstrániť bránu</string>
     <string name="confirm_remove_gate_message">Stratíte prístup k bráne a ich zariadeniam.\nAk ste vlastník, celá brána bude odstránená zo servera a všetky nastavenia vrátane užívateľov, zariadení a historické dáta budú zmazané.</string>
     <string name="confirm_change_ownership_title">Zmena vlastníka brány</string>
     <string name="confirm_change_ownership_message"> Ak sa vzdáte vlastníctva brány. Nebudete môcť spravovať užívateľov, zariadenia a nastavenia tejto brány</string>
     <string name="button_change_ownership">Zmeniť vlastníctvo</string>
-    <string name="confirm_remove_user_title">Odstrániť \"%1$s\"</string>
     <string name="confirm_remove_user_message">Užívateľ, stratí prístup k bráne a nebude môcť pristupovať k dátam a meniť ich.</string>
+    <string name="addadapter_qr_button_loading">Načítanie…</string>
+    <string name="button_add_user_confirm">Pridať používateľa</string>
+    <string name="chart_legend"></string>
 </resources>

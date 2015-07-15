@@ -7,14 +7,14 @@
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notifikace</string>
-    <string name="title_activity_add_sensor">Přidat nové zařízení</string>
+    <string name="title_activity_add_sensor">Přidat zařízení</string>
     <string name="title_activity_add_gate">Přidat bránu</string>
     <string name="title_activity_registration">Registrace</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Konfigurace widgetu</string>
     <string name="title_activity_map_geofence">Geolokační oblasti</string>
     <string name="title_activity_gate_users">Uživatelé brány</string>
-    <string name="title_activity_add_adapter_user">Přidat nového uživatele</string>
+    <string name="title_activity_add_adapter_user">Přidat uživatele</string>
     <string name="title_activity_setup_sensor">Nastavení zařízení</string>
     <string name="title_activity_profile_detail">Detaily účtu</string>
 
@@ -31,7 +31,7 @@
     <string name="login_app_name">BeeeOn</string>
     <string name="login_app_slogan">Dům pod vaší kontrolou.</string>
 
-    <string name="action_choose_server_manually">Zvolit server ručně</string>
+    <string name="action_choose_server_manually">Zvolit BeeeOn server ručně</string>
     <string name="login_label_server">Zvolte server:</string>
 
     <string name="login_label_login_or_register">Přihlaste se nebo se zaregistrujte pomocí:</string>
@@ -89,7 +89,6 @@
     <string name="login_user_name_hint">Login/email</string>
     <string name="addsensor_sensor_name_hint">Název nového zařízení</string>
     <string name="addsensor_new_location_hint">Název nového umístění</string>
-    <string name="addadapter_ser_num_hint">Sériové číslo brány</string>
 
     <!-- Toasts -->
     <string name="toast_changeto">\u0020změněno na: \u0020</string>
@@ -102,13 +101,12 @@
     <string name="toast_welcome_text">Vítejte </string>
     <string name="toast_play_missing">Google Play není dostupné nebo je zastaralé</string>
     <string name="toast_internet_connection">Prosím aktivujte připojení k Internetu</string>
-    <string name="toast_no_unregistered_adapter">K dispozici není žádný neregistrovanou bránu</string>
+    <string name="toast_no_unregistered_adapter">K dispozici není žádná neregistrovaná brána</string>
     <string name="toast_communication_error">Nastal problém v komunikaci, opakujte akci později</string>
     <string name="toast_tap_again_exit">Pro ukončení stiskněte zpět ještě jednou</string>
-    <string name="toast_google_auth">Google autentizace</string>
+    <string name="toast_google_auth">Google ověření</string>
     <string name="toast_something_wrong">Nastala neznámá chyba, opakujte akci později</string>
-    <string name="toast_check_your_connection_via_browser">Zkontrolujte připojení s použitím webového prohlížeče</string>
-    <string name="toast_not_implemented">Bude implementováno v příští verzi!</string>
+    <string name="toast_not_implemented">Bude implementováno v příští verzi</string>
     <string name="toast_login_failed">Přihlášení selhalo</string>
     <string name="toast_registration_failed">Registrace selhala</string>
     <string name="toast_auth_provider_error">Nastala chyba během procesu autorizace</string>
@@ -119,13 +117,13 @@
     <string name="toast_ignore_uninitialized_info">Později můžete přidat další zařízení klepnutím na (+)</string>
     <string name="toast_empty_sensor_name">Vyplňte názvy všech zařízení</string>
     <string name="toast_not_specified_gate_or_module">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
-    <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádné neinicializované zařízení</string>
+    <string name="toast_no_uninitialized_devices">Nejsou k dispozici žádná neinicializovaná zařízení</string>
     <string name="toast_success_save_data">Údaje byly úspěšně uloženy</string>
     <string name="toast_fail_save_data">Uložení údajů selhalo</string>
-    <string name="toast_wrong_or_no_watchdog_rule">Nebylo zadáno žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
+    <string name="toast_wrong_or_no_watchdog_rule">Nebylo zadané žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
     <string name="toast_delete_fail">Nepodařilo se odstranit</string>
     <string name="toast_delete_success">Smazáno</string>
-    <string name="toast_field_must_be_filled">Je třeba vyplnit toto pole!</string>
+    <string name="toast_field_must_be_filled">Je třeba vyplnit</string>
     <string name="toast_error_not_supported_yet">Tato funkce ještě není podporována.</string>
 
     <!-- Progress -->
@@ -160,9 +158,8 @@
     <string name="addsensor_send_request">Poslat párovací požadavek</string>
     <string name="addsensor_active_pair">Párovací režim je aktivní </string>
     <string name="addadapter_textview_name">Název</string>
-    <string name="addadapter_view_setname">Nastavte název brány, např. Doma</string>
     <string name="addadapter_qr_button">Skenovat QR kód</string>
-    <string name="addadapter_qr_button_loading">Načítání...</string>
+    <string name="addadapter_qr_button_loading">Načítání…</string>
     <string name="addsensor_send_pair">ZAHÁJIT PÁROVÁNÍ</string>
 
     <!-- Others -->
@@ -173,11 +170,10 @@
     <string name="action_addgate">Přidání brány</string>
     <string name="action_addsensor">Přidání zařízení</string>
     <string name="action_logout">Odhlášení</string>
-    <string name="action_hide_sensor">Skrýt zařízení</string>
     <string name="action_unregist_device">Odstranit zařízení</string>
     <string name="action_hide_device">Skrýt zařízení</string>
     <string name="action_close">Zrušit</string>
-    <string name="action_intro">Představení</string>
+    <string name="action_intro">Úvod</string>
     <string name="action_intro_dialog">Úvodní dialog</string>
     <string name="addadapter_qrcode_desc">Získání QR kódu</string>
     <string name="addsensor_new_location_spinner">Nové umístění</string>
@@ -312,7 +308,7 @@
     <string name="adapter_default_name">%1$s brána #%2$d</string>
     <string name="settings">Nastavení</string>
     <string name="save">Uložit</string>
-    <string name="ada_menu_edit">Upravit název brány</string>
+    <string name="ada_menu_edit">Upravit bránu</string>
     <string name="ada_menu_users">Uživatelé brány</string>
     <string name="ada_menu_del">Odstranit bránu</string>
     <string name="sensor_menu_del">Odstranit zařízení</string>
@@ -332,7 +328,7 @@
     <string name="tutorial_open_menu">Otevřte nabídku</string>
     <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
     <!-- Help in Add dialogs -->
-    <string name="tut_add_gate_text_1">Připojte bránu k internetové síti</string>
+    <string name="tut_add_gate_text_1">Připojte bránu k internetu</string>
     <string name="tut_add_gate_text_2">Zapojte bránu do elektrické sítě</string>
     <string name="tut_add_gate_text_3">V následujícím kroku zadejte název brány a naskenujte QR kód</string>
     <string name="tut_add_sensor_text_1">Vytáhněte izolační proužek baterií ze zařízení nebo zapojte aktor do elektrické sítě</string>
@@ -341,7 +337,7 @@
     <!-- Watchdog -->
     <string name="action_watchdog">Hlídač</string>
     <string name="watchdog_rule">Pravidlo hlídače</string>
-    <string name="treshold_value">Prahová Hodnota</string>
+    <string name="treshold_value">Práh</string>
     <string name="watchdog_actor_change_state">Změnit stav aktoru</string>
     <string name="watchdog_notification_send">Poslat notifikaci</string>
     <string name="watchdog_activate_rule">Aktivovat pravidlo</string>
@@ -367,8 +363,8 @@
     <string name="dialog_register_new_account_title">Nemáte účet</string>
     <string name="dialog_register_new_account_message">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
 
-    <string name="actor_required">Je potřeba vybrat aktor</string>
-    <string name="add_new_geofence_area">Přidat novou oblast</string>
+    <string name="actor_required">Vyberte aktor</string>
+    <string name="add_new_geofence_area">Přidat oblast</string>
 
     <string name="action_done">Hotovo</string>
 
@@ -389,7 +385,7 @@
 	<string name="radius">Rádius</string>
 	<string name="dialog_choose_provider_title">Vyběr poskytovatele účtu</string>
 	<string name="addsensor_stoped">zastaveno</string>
-	<string name="add_action_dialog_title">Co byste chtěli přidat?</string>
+	<string name="add_action_dialog_title">Co chcete přidat?</string>
 	<string name="toast_need_module_location_icon">Prosím vyberte ikonu nového umístění</string>
 	<string name="dialog_title_set_bioler_type">Volba typu provozu okruhu</string>
 	<string name="dialog_set_boiler_setaction">nastavit</string>
@@ -412,21 +408,21 @@
 	<string name="notification_name_link">Spoj</string>
     <string name="sensor_name_label">Název zařízení</string>
     <string name="toast_device_not_available">Zařízení není dostupné</string>
-    <string name="toast_field_must_be_number">Toto pole musí být číslo!</string>
+    <string name="toast_field_must_be_number">Vložte platné číslo</string>
     <string name="watchdog_create">Vytvořit hlídače</string>
     <string name="watchdog_no_valid_item">Žádná platná položka</string>
     <string name="multiadapter_no_item">- Nic k vybrání -</string>
     <string name="update_over_wifi_only">Aktualizovat pouze přes Wi-Fi</string>
-    <string name="activity_add_device_dialog_text">Nyní prosím klikněte na tlačítko Zahájit párování</string>
-    <string name="activity_add_device_shake_it">Nyní prosím zatřeste se zařízením či zmáčkněte tlačítko pro párování na zařízení</string>
-    <string name="addadapter_last_fragment_text">Bránu můžete přidat naskenováním QR kódu nebo ručním zadáním jejího kódu</string>
+    <string name="activity_add_device_dialog_text">Klikněte ZAHÁJIT PÁROVÁNÍ</string>
+    <string name="activity_add_device_shake_it">Zatřeste se zařízením či zmáčkněte tlačítko pro párování na zařízení</string>
+    <string name="addadapter_last_fragment_text">Naskenujte QR kód brány nebo zadejte kód</string>
     <string name="addadapter_last_fragment_title">Zadejte kód brány</string>
     <string name="addadapter_manual_edit">Zadat ručně</string>
     <string name="addadapter_title">Přidávání nové brány</string>
     <string name="adddevice_title">Přidávání nového zařízení</string>
     <string name="addsensor_device_found">Zařízení bylo nalezeno</string>
-    <string name="addsensor_device_not_found_in_time">Zařízení nebylo nalezeno, prosím ověřtě, zda je skutečně zapnuto, a zkuste to znovu</string>
-    <string name="addsensor_request_task_not_successful">Task pro párování nebyl úspěšný, prosím, zkuste to znovu</string>
+    <string name="addsensor_device_not_found_in_time">Zařízení nebylo nalezeno, ověřtě, zda je skutečně zapnuto, a zkuste to znovu</string>
+    <string name="addsensor_request_task_not_successful">Úloha byla neúspěšná, zkuste to znovu</string>
     <string name="addsensor_time_left_unit">sekundy</string>
     <string name="addsensor_waiting">Čekám na start</string>
     <string name="enter_text_dialog_title">Zadejte kód brány</string>
@@ -449,6 +445,41 @@
     <string name="fragment_gate_details_gate_id">ID brány</string>
     <string name="fragment_gate_edit_gate_id_read_only">ID brány (pouze ke čtení)</string>
     <string name="title_activity_gate_edit">Úprava brány</string>
-    <string name="toast_field_must_be_email">Pole musí být platná e-mailová adresa!</string>
+    <string name="toast_field_must_be_email">Vložte platnou e-mailovou adresu</string>
+    <string name="button_add_user_confirm">Přidat uživatele</string>
+    <string name="button_change_ownership">Změnit vlastnictví</string>
+    <string name="button_unregister">Odregistrovat</string>
+    <string name="chart_legend">Legenda</string>
+    <string name="chart_no_data">Nejsou dostupná žádná data</string>
+    <string name="chart_y_axis">Popis osy Y</string>
+    <string name="confirm_add_owner_message">Chystáte se přidat práva vlastníka novému uživateli. \"%1$s\" bude mít plný přístup k bráně a správě.</string>
+    <string name="confirm_add_owner_title">Nový uživatel jako Vlastník</string>
+    <string name="confirm_change_ownership_message">Přenesete vlastnictví brány. Nebudete nadále moct spravovat uživatele, zařízení a jiná nastavení této brány.</string>
+    <string name="confirm_change_ownership_title">Změnit vlastnictví brány</string>
+    <string name="confirm_remove_gate_message">Nebudete mít přístup k této bráně a jejím zařízením.\n\nPokud jste vlastníkem, brána bude odstraněna ze serveru a všechna nastavení (uživatelé, zařízení, historická data) budou ztraceny.</string>
+    <string name="confirm_remove_title">Odstranit \"%1$s\"</string>
+    <string name="confirm_remove_gate_title_default">Odstranit bránu</string>
+    <string name="confirm_remove_user_message">Uživatel ztratí přístup k této bráně a nebude moct přistupovat k datám a měnit je.</string>
+    <string name="confirm_unregister_device_title">Odregistrovat \"%1$s\</string>
+    <string name="confirm_unregister_device_message">Zařízení bude odregistrováno ze serveru a jeho historická data budou ztracena.</string>
+    <string name="edit_gate_failure">Brána nebyla upravena</string>
+    <string name="edit_gate_success">Brána byla úspěšně upravena</string>
+    <string name="gate_detail_ip">IP adresa</string>
+    <string name="gate_detail_num_of_devices">Počet zařízení</string>
+    <string name="gate_detail_num_of_users">Počet uživatelů</string>
+    <string name="gate_detail_title">Detaily</string>
+    <string name="gate_detail_user">Uživatel</string>
+    <string name="gate_detail_version">Komunikační verze</string>
+    <string name="gate_detail_your_role">Vaše role</string>
+    <string name="gate_name">Název brány</string>
+    <string name="gate_no_name">Bez názvu</string>
+    <string name="layout_simple_list_button_text">Detaily</string>
+    <string name="reloading_gate_data_not_successful">Nahrávání dat brány neúspěšné</string>
+    <string name="title_activity_gate_detail">Detaily brány</string>
+    <string name="toast_no_google_play_services">Nejsou dostupné Služby Google Play.</string>
+    <string name="toast_not_specified_gate">Nespecifikována brána</string>
+    <string name="toast_not_users_found">Nenalezen žádný uživatel</string>
+    <string name="toast_wrong_or_no_device">Nebylo zadané žádné zařízení nebo je zvolené zařízení nesprávné</string>
+    <string name="update_gateway">Upravit bránu</string>
 
 </resources>

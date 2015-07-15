@@ -45,8 +45,7 @@
 
 	        <Spinner
 	            android:id="@+id/add_user_role"
-	            android:layout_width="wrap_content"
-	            android:layout_height="48dp"
+				style="@style/BeeeOn.Spinner"
 				/>
 
 			<View

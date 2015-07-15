@@ -54,7 +54,7 @@
 	<string name="dev_boiler_operation_type_value_off">Off</string>
 	<string name="dev_boiler_operation_type_value_room">Room regulator</string>
 	<string name="dev_boiler_operation_type_value_equiterm">Equiterm regulation</string>
-	<string name="dev_boiler_operation_type_value_stable">Regulation to stable water temperature</string>
+	<string name="dev_boiler_operation_type_value_stable">Regulation for constant water temperature</string>
 	<string name="dev_boiler_operation_type_value_tuv">TUV heating</string>
 
 	<string name="dev_boiler_operation_mode_value_automatic">Automatic</string>

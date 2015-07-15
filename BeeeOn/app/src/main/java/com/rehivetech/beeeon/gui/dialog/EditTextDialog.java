@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.dialog;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentManager;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -124,8 +125,18 @@ public class EditTextDialog extends BaseDialogFragment {
 			return this;
 		}
 
+		public EditTextDialogBuilder setTitle(@StringRes int stringRes){
+			this.mTitle = this.mContext.getString(stringRes);
+			return this;
+		}
+
 		public EditTextDialogBuilder setEditTextValue(String text) {
 			this.mEditTextValue = text;
+			return this;
+		}
+
+		public EditTextDialogBuilder setEditTextValue(@StringRes int stringRes){
+			this.mEditTextValue = this.mContext.getString(stringRes);
 			return this;
 		}
 
@@ -139,13 +150,28 @@ public class EditTextDialog extends BaseDialogFragment {
 			return this;
 		}
 
+		public EditTextDialogBuilder setEditTextHint(@StringRes int stringRes){
+			this.mEditTextHint = this.mContext.getString(stringRes);
+			return this;
+		}
+
 		public EditTextDialogBuilder setPositiveButtonText(String text) {
 			this.mPositiveButtonText = text;
 			return this;
 		}
 
+		public EditTextDialogBuilder setPositiveButtonText(@StringRes int stringRes){
+			this.mPositiveButtonText = this.mContext.getString(stringRes);
+			return this;
+		}
+
 		public EditTextDialogBuilder setNegativeButtonText(String text) {
 			this.mNegativeButtonText = text;
+			return this;
+		}
+
+		public EditTextDialogBuilder setNegativeButtonText(@StringRes int stringRes){
+			this.mNegativeButtonText = this.mContext.getString(stringRes);
 			return this;
 		}
 
