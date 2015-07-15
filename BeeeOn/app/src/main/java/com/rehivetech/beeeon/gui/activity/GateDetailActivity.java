@@ -115,7 +115,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 				GateInfo gateInfo = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
 				if (gateInfo != null) {
-					title = getString(R.string.confirm_remove_gate_title, gateInfo.getName());
+					title = getString(R.string.confirm_remove_title, gateInfo.getName());
 				}
 
 				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);

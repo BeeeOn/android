@@ -122,7 +122,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 
 				GateInfo gate = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
 				if (gate != null) {
-					title = getString(R.string.confirm_remove_gate_title, gate.getName());
+					title = getString(R.string.confirm_remove_title, gate.getName());
 				}
 
 				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);

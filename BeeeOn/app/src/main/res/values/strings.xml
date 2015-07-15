@@ -16,15 +16,15 @@
     <string name="title_activity_location_screen">BeeeOn</string>
     <string name="title_activity_notification">Notification</string>
     <string name="title_activity_add_sensor">Send the request</string>
-    <string name="title_activity_add_gate">Add Gateway</string>
+    <string name="title_activity_add_gate">Add gateway</string>
     <string name="title_activity_registration">Registration</string>
     <string name="title_activity_login_facebook">Facebook</string>
     <string name="title_activity_widget_configuration">Widget Configuration</string>
     <string name="title_activity_location_detail_screen">Location Detail</string>
     <string name="title_activity_map_geofence">Geofence areas</string>
     <string name="title_activity_gate_users">Manage users</string>
-    <string name="title_activity_add_adapter_user">Add New User</string>
-    <string name="title_activity_setup_sensor">Device Setup</string>
+    <string name="title_activity_add_adapter_user">Add user</string>
+    <string name="title_activity_setup_sensor">Device setup</string>
 	<string name="title_activity_profile_detail">Account info</string>
 
     <!-- Buttons -->
@@ -100,7 +100,6 @@
 	<string name="login_user_name_hint">Login/email</string>
 	<string name="addsensor_sensor_name_hint">Name of new module</string>
 	<string name="addsensor_new_location_hint">New location name</string>
-	<string name="addadapter_ser_num_hint">Serial number</string>
 
 	<!-- Toasts -->
 	<string name="toast_changeto">\u0020changed to: \u0020</string>
@@ -114,16 +113,15 @@
 	<string name="toast_play_missing">GooglePlay is missing or outdated</string>
 	<string name="toast_internet_connection">Please turn internet connection on</string>
 	<string name="toast_no_unregistered_adapter">There is no connected unregistered gateway</string>
-	<string name="toast_communication_error">Sorry, some communication problem, try later</string>
+	<string name="toast_communication_error">Communication problem occurred, try again later</string>
 	<string name="toast_tap_again_exit">Tap back again to exit</string>
 	<string name="toast_google_auth">Google authentication</string>
-	<string name="toast_something_wrong">Something goes wrong, try it later please</string>
-	<string name="toast_check_your_connection_via_browser">Check your connection via browser</string>
-	<string name="toast_not_implemented">Not implemented yet!</string>
+	<string name="toast_something_wrong">Something went wrong, try again later</string>
+	<string name="toast_not_implemented">Not implemented yet</string>
 	<string name="toast_login_failed">Login failed</string>
 	<string name="toast_registration_failed">Registration failed</string>
 	<string name="toast_auth_provider_error">Error during authorization process</string>
-    <string name="toast_adapter_activate_failed">Failed to activate gateway,please try it again</string>
+    <string name="toast_adapter_activate_failed">Failed to activate gateway, try again</string>
     <string name="toast_adapter_activated">Gateway has been activated</string>
     <string name="toast_gate_removed">Gateway has been removed</string>
     <string name="toast_no_adapter">You have no registered gateway</string>
@@ -135,14 +133,13 @@
     <string name="toast_success_save_data">Data saved successfully</string>
     <string name="toast_fail_save_data">Failed saving data</string>
     <string name="toast_wrong_or_no_watchdog_rule">Wrong or no Watchdog rule selected</string>
-	<string name="toast_achievement_title">Achievement unlocked!</string>
-    <string name="toast_field_must_be_filled">This field must be filled!</string>
-    <string name="toast_field_must_be_number">This field must be number!</string>
-	<string name="toast_field_must_be_email">This field must be valid e-mail address!</string>
+    <string name="toast_field_must_be_filled">Must be filled</string>
+    <string name="toast_field_must_be_number">Enter a valid number</string>
+	<string name="toast_field_must_be_email">Enter a valid e-mail address</string>
     <string name="toast_error_no_qr_reader">You don\'t have QR scanner installed</string>
     <string name="toast_error_no_google_play">Failed to open Google Play</string>
     <string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
-    <string name="toast_not_specified_gate">Not specified Gateway</string>
+    <string name="toast_not_specified_gate">Not specified gateway</string>
     <string name="toast_error_not_supported_yet">This feature is not supported yet.</string>
     <string name="toast_no_google_play_services">Google Play Services not available.</string>
 
@@ -157,7 +154,6 @@
 	<string name="progress_loading_devices">Loading your modules&#8230;</string>
 	<string name="progress_loading_locations">Loading your locations&#8230;</string>
 	<string name="progress_checking_location">Checking location&#8230;</string>
-	<string name="progress_loading_achievement">Loading achievement data&#8230;</string>
 
 
 	<!-- NavDrawer -->
@@ -182,21 +178,20 @@
 	<string name="addsensor_send_request">Send pair request  </string>
 	<string name="addsensor_active_pair">Active pair mode </string>
 	<string name="addadapter_textview_name">Name</string>
-	<string name="addadapter_view_setname">Set gateway name, e.g. Home</string>
 	<string name="addadapter_qr_button"> Scan QR code </string>
 	<string name="addadapter_manual_edit">Enter manually</string>
-	<string name="addadapter_qr_button_loading">Loading...</string>
+	<string name="addadapter_qr_button_loading">Loading…</string>
 
 	<string name="addsensor_send_pair">SEND PAIR</string>
 	<string name="addsensor_waiting">Waiting for start</string>
 	<string name="addsensor_time_left_unit">seconds</string>
-	<string name="addsensor_device_not_found_in_time">The device was not found, please check if it is really switched on and try it again</string>
-	<string name="addsensor_device_found">The device was found</string>
-	<string name="addsensor_request_task_not_successful">Request task was not successful, please, try it again</string>
+	<string name="addsensor_device_not_found_in_time">Device was not found, check if it\'s really switched on and try it again</string>
+	<string name="addsensor_device_found">Device was found</string>
+	<string name="addsensor_request_task_not_successful">Request task was not successful, try again</string>
 	<string name="adddevice_title">Adding new device</string>
 	<string name="addadapter_title">Adding new gate</string>
 	<string name="addadapter_last_fragment_title">Enter the code of the gate</string>
-	<string name="addadapter_last_fragment_text">You can either scan the QR code on the gate or write the code manually</string>
+	<string name="addadapter_last_fragment_text">Scan the QR code on the gate or write the code manually</string>
 
 	<!-- Others -->
 	<string name="action_settings">Settings</string>
@@ -206,7 +201,6 @@
 	<string name="action_addgate">Add gateway</string>
 	<string name="action_addsensor">Add module</string>
 	<string name="action_logout">Logout</string>
-	<string name="action_hide_sensor">Hide module</string>
 	<string name="action_unregist_device">Remove module</string>
 	<string name="action_hide_device">Hide module</string>
 	<string name="action_close">Cancel</string>
@@ -388,13 +382,13 @@
     <string name="action_watchdog">Watchdog</string>
     <string name="watchdog_rule">Watchdog Rule</string>
     <string name="watchdog_create">Create watchdog</string>
-    <string name="treshold_value">Threshold value</string>
+    <string name="treshold_value">Threshold</string>
     <string name="watchdog_actor_change_state">Change actor\'s state</string>
     <string name="watchdog_notification_send">Send notification</string>
     <string name="watchdog_activate_rule">Set this rule active</string>
     <string name="watchdog_rule_name">Rule name</string>
     <string name="notification_text">Notification text</string>
-    <string name="actor_required">Please select actor</string>
+    <string name="actor_required">Select actor</string>
 	<string name="watchdog_no_valid_item">No valid item to check</string>
 	<string name="multiadapter_no_item">- Nothing to select -</string>
 
@@ -406,7 +400,7 @@
 	<string name="dialog_choose_provider_title">Choose login provider</string>
 
 	<string name="name">Name</string>
-	<string name="add_new_geofence_area">Add new geofence area</string>
+	<string name="add_new_geofence_area">Add geofence area</string>
 
 	<string name="radius">Radius</string>
 	<string name="delete_geofence">Delete geofence</string>
@@ -417,10 +411,10 @@
 
 	<string name="toast_delete_fail">Unable to remove</string>
 	<string name="toast_delete_success">Successfully removed</string>
-	<string name="addadapter_fill_name">Please fill gateway name</string>
-	<string name="addadapter_fill_code">Please fill gateway code</string>
+	<string name="addadapter_fill_name">Fill gateway name</string>
+	<string name="addadapter_fill_code">Fill gateway code</string>
 	<string name="addsensor_stoped">stopped</string>
-	<string name="add_action_dialog_title">What would you like to add?</string>
+	<string name="add_action_dialog_title">What to add?</string>
 	<string name="toast_need_module_location_icon">Please choose icon of your new location</string>
 	<string name="dialog_title_set_bioler_type">Choose boiler type</string>
 	<string name="dialog_set_boiler_setaction">set</string>
@@ -432,8 +426,8 @@
     <string name="notification_name_link">Link</string>
     <string name="widget_location_list_title">BeeeOn location</string>
     <string name="toast_device_not_available">Device is not available</string>
-    <string name="activity_add_device_dialog_text">Now please press the button Send Pair</string>
-    <string name="activity_add_device_shake_it">Now please shake the device or press the button on it.</string>
+    <string name="activity_add_device_dialog_text">Click SEND PAIR</string>
+    <string name="activity_add_device_shake_it">Shake the device or press the button on it.</string>
 
     <string name="button_remove">Remove</string>
     <string name="button_change_ownership">Change ownership</string>
@@ -441,18 +435,16 @@
 	<string name="button_add_user_confirm">Add User</string>
 
     <!-- Titles and messages for confirm dialog -->
-    <string name="confirm_remove_watchdog_title">Remove \"%1$s\"</string>
-    <string name="confirm_remove_watchdog_message">Your watchdog will be permanently removed.</string>
+    <string name="confirm_remove_title">Remove \"%1$s\"</string>
+    <string name="confirm_remove_watchdog_message">Watchdog will be permanently removed.</string>
     <string name="confirm_unregister_device_title">Unregister \"%1$s\"</string>
-    <string name="confirm_unregister_device_message">Your device will be unregistered from server and all its historical data will be lost.</string>
-    <string name="confirm_remove_gate_title">Remove \"%1$s\"</string>
+    <string name="confirm_unregister_device_message">Device will be unregistered from server and all its historical data will be lost.</string>
     <string name="confirm_remove_gate_title_default">Remove gateway</string>
     <string name="confirm_remove_gate_message">You will lost access to the gateway and its devices.\n\nIf you are the owner, whole gateway will be removed from the server and all settings including users, devices and historical data will be lost.</string>
     <string name="confirm_change_ownership_title">Change gateway ownership</string>
     <string name="confirm_change_ownership_message">You will hand over ownership of the gateway. You will not be able to manage users, devices and other settings of this gateway.</string>
-    <string name="confirm_remove_user_title">Remove \"%1$s\"</string>
     <string name="confirm_remove_user_message">This user will lost access to your gateway and he won\'t be able to read or interact with your data anymore.</string>
-	<string name="confirm_add_owner_title">New User as Owner</string>
+	<string name="confirm_add_owner_title">New user as Owner</string>
 	<string name="confirm_add_owner_message">You are going to give owner rights to new user. \"%1$s\" get rights to full access of gate and administration.</string>
 
     <string name="enter_text_dialog_title">Enter the code of the gate</string>
@@ -466,11 +458,10 @@
     <string name="fragment_gate_edit_gate_name">Gate name</string>
     <string name="fragment_gate_details_gate_id">Gate Id</string>
     <string name="fragment_gate_edit_gate_id_read_only">Gate Id (read-only)</string>
-    <string name="time_zone">Timezone</string>
-    <string name="edit_gate_success">The gate was updated successfully</string>
-    <string name="edit_gate_failure">The gate was not edited successfully</string>
+    <string name="edit_gate_success">Gate updated successfully</string>
+    <string name="edit_gate_failure">Gate not updated</string>
     <string name="delete_gate_failure">Gateway was not removed successsfully</string>
-	<string name="title_activity_gate_detail">Gate Details</string>
+	<string name="title_activity_gate_detail">Gateway details</string>
     <string name="gate_detail_title">Details</string>
     <string name="gate_name">Gate name</string>
     <string name="gate_detail_your_role">Your role</string>

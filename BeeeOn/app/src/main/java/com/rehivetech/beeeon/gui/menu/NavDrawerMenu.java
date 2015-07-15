@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -351,7 +350,7 @@ public class NavDrawerMenu {
 				if (gate == null) {
 					title = mActivity.getString(R.string.confirm_remove_gate_title_default);
 				} else {
-					title = mActivity.getString(R.string.confirm_remove_gate_title, gate.getName());
+					title = mActivity.getString(R.string.confirm_remove_title, gate.getName());
 				}
 
 				String message = mActivity.getString(R.string.confirm_remove_gate_message);

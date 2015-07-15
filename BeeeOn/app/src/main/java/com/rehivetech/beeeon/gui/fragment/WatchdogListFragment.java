@@ -394,7 +394,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
 			if (menuItem.getItemId() == R.id.action_delete) {
-				String title = getString(R.string.confirm_remove_watchdog_title, mSelectedItem.getName());
+				String title = getString(R.string.confirm_remove_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
 				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());
 			}

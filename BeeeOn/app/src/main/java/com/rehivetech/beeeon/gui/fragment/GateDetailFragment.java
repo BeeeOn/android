@@ -75,7 +75,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		mDetailsItemList = new ArrayList<>();
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_gray_24dp, R.string.fragment_gate_details_gate_id, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_your_role, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.time_zone, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.timezone, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_supervisor_account_gray_24dp, R.string.gate_detail_num_of_users, loadingText, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -23,7 +22,6 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
@@ -231,7 +229,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 				if (mSelectedItem != null) {
 					User user = Controller.getInstance(GateUsersActivity.this).getUsersModel().getUser(mGate.getId(), mSelectedItem.getId());
 					String userName = user.getName();
-					String title = getString(R.string.confirm_remove_user_title, userName);
+					String title = getString(R.string.confirm_remove_title, userName);
 					String message = getString(R.string.confirm_remove_user_message);
 
 					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_USER, user.getId());
