@@ -52,7 +52,7 @@ public class Xconstants {
 	public static final String LNAME = "lname";
 	public static final String ALGNAME = "algname";
 	public static final String REFRESH = "refresh";
-	public static final String BATTERY = "bat";
+	public static final String BATTERY = "batt";
 	public static final String VALUE = "val";
 	public static final String NFACS = "nfacs";
 	public static final String NUSERS = "nusers";
