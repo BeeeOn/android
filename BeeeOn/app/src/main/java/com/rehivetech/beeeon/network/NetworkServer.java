@@ -64,12 +64,6 @@ public enum NetworkServer implements INameIdentifier {
 	}
 
 	public static final NetworkServer getDefaultServer() {
-		if (BuildConfig.BUILD_TYPE.equals("debug") || BuildConfig.BUILD_TYPE.equals("alpha")) {
-			return SERVER_ANT2_ALPHA;
-		} else if (BuildConfig.BUILD_TYPE.equals("beta_ant2")) {
-			return SERVER_ANT2_BETA;
-		} else {
 			return SERVER_IOTPRO;
-		}
 	}
 }

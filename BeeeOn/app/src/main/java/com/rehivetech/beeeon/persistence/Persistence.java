@@ -215,7 +215,7 @@ public class Persistence {
 		String parameter = getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, "");
 
 		// Return null if we have no className found
-		if (className.isEmpty())
+		if (className == null || className.isEmpty())
 			return null;
 
 		IAuthProvider provider = null;

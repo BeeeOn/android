@@ -171,12 +171,12 @@ public abstract class VisibleNotification extends BaseNotification {
 	private int getImageRes() {
 		switch (getType()) {
 			case ADVERT:
-				return R.drawable.notif_pr;
+				return R.drawable.ic_notif_pr_gray;
 			case ALERT:
-				return R.drawable.notif_alert;
+				return R.drawable.ic_notif_alert_gray;
 			// INFO
 			default:
-				return R.drawable.notif_info;
+				return R.drawable.ic_notif_info_gray;
 		}
 	}
 }
