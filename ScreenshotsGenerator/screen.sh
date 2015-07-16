@@ -61,15 +61,15 @@ adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.act
 sleep 7
 adb shell "screencap -p /data/local/tmp/gpss/screenshot3.png"
 
-# Overview screen
-adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.activity.ModuleDetailActivity -e gate_id 62260 -e module_id 101:00:FF:000:FF0---10"
-sleep 20
-adb shell "screencap -p /data/local/tmp/gpss/screenshot4.png"
-
 # navDrawer
 adb shell input tap 50 90
 sleep 5
 adb shell "screencap -p /data/local/tmp/gpss/screenshot5.png"
+
+# Overview screen
+adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.activity.ModuleDetailActivity -e gate_id 65260 -e module_id 101:00:FF:000:FF0---10"
+sleep 20
+adb shell "screencap -p /data/local/tmp/gpss/screenshot4.png"
 
 # Guige screen
 adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.activity.AddGateActivity"
