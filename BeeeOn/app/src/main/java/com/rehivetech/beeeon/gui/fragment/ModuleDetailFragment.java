@@ -31,9 +31,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.utils.FillFormatter;
-import com.github.mikephil.charting.utils.ValueFormatter;
 import com.melnykov.fab.FloatingActionButton;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -64,7 +62,6 @@ import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
-import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -210,12 +207,12 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 		final Gate gate = controller.getGatesModel().getGate(mGateId);
 		final Module module = controller.getDevicesModel().getModule(mGateId, mModuleId);
-		final Device device = module.getDevice();
 
 		if (gate == null || module == null) {
 			Log.e(TAG, "Can't load gate or module.");
 			return;
 		}
+		final Device device = module.getDevice();
 
 		// Set name of sensor
 		Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
