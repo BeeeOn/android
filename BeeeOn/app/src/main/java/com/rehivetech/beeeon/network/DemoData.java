@@ -378,7 +378,7 @@ public class DemoData {
 				deviceList.add(device2_atmosphere);
 
 				Device device2_soil = new Device();
-				device2_soil.setGateId(GATE_1_ID);
+				device2_soil.setGateId(gateId);
 				device2_soil.setInitialized(true);
 				device2_soil.setAddress("101:00:FF:001:FF0");
 				device2_soil.setLocationId(GATE_2_LOCATION1);
