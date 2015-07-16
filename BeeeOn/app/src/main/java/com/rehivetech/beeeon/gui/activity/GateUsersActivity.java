@@ -1,26 +1,23 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.fragment.ListDialogFragment;
+import com.avast.android.dialogs.iface.IListDialogListener;
 import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -32,11 +29,10 @@ import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.EditUserTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveUserTask;
-import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
-public class GateUsersActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
+public class GateUsersActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener, IListDialogListener {
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	private static final int ROLE_RADIO_MARGIN = 16;
@@ -206,7 +202,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		callbackTaskManager.executeTask(editUserTask, pair);
 	}
 
-
 	class ActionModeEditSensors implements ActionMode.Callback {
 
 
@@ -248,70 +243,44 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 	}
 
 	private void changeUserRole() {
-		AlertDialog.Builder builder;
-		AlertDialog alertDialog;
+		int index = 0, selectedRole = 0;
 
-		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-		final ScrollView layoutDialog = (ScrollView) inflater.inflate(R.layout.beeeon_checkbox, null);
-
-		ViewGroup checkboxContainer = (ViewGroup) layoutDialog.findViewById(R.id.checkbox_container);
-
-		mGroup = new RadioGroup(this);
-		int marginPx = Utils.convertDpToPixel(ROLE_RADIO_MARGIN);
-
+		String[] userRole = new String[User.Role.values().length];
 		for (User.Role role : User.Role.values()) {
-			RadioButton item = new RadioButton(this);
-			item.setText(getString(role.getStringResource()));
-			item.setPadding(marginPx, marginPx, marginPx, marginPx);
-
-			mGroup.addView(item);
-			if (role == mSelectedItem.getRole())
-				mGroup.check(item.getId());
+			userRole[index] = getString(role.getStringResource());
+			if (mSelectedItem.getRole() == role) {
+				selectedRole = index;
+			}
+			index++;
 		}
-		checkboxContainer.addView(mGroup);
+
+		ListDialogFragment.createBuilder(this, getSupportFragmentManager())
+				.setTitle(R.string.gate_user_title_change_role)
+				.setItems(userRole)
+				.setSelectedItem(selectedRole)
+				.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
+				.setConfirmButtonText(R.string.save)
+				.setCancelButtonText(R.string.notification_cancel)
+				.show();
+	}
 
 
-		builder = new AlertDialog.Builder(this);
-		builder.setView(layoutDialog)
-				.setTitle(getString(R.string.gate_user_title_change_role));
+	@Override
+	public void onListItemSelected(CharSequence charSequence, int position, int i1) {
+		User.Role newRole = User.Role.values()[position];
 
-		builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				// User clicked OK button
-				//mSelectedItem.setRole(User.Role.fromString(((RadioButton)layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()));
+		if (mSelectedItem == null || newRole == null) return;
 
-				User.Role newRole = null;
+		if (newRole == User.Role.Superuser) {
+			// Need confirmation for this change
+			String title = getString(R.string.confirm_change_ownership_title);
+			String message = getString(R.string.confirm_change_ownership_message);
 
-				for (User.Role role : User.Role.values()) {
-					if (getString(role.getStringResource()).equals(((RadioButton) layoutDialog.findViewById(mGroup.getCheckedRadioButtonId())).getText().toString()))
-						newRole = role;
-				}
-
-				if (mSelectedItem == null || newRole == null)
-					return;
-
-				if (newRole == User.Role.Superuser) {
-					// Need confirmation for this change
-					String title = getString(R.string.confirm_change_ownership_title);
-					String message = getString(R.string.confirm_change_ownership_message);
-
-					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, ConfirmDialog.TYPE_CHANGE_OWNERSHIP, mSelectedItem.getId());
-				} else {
-					mSelectedItem.setRole(newRole);
-					doEditUserTask(mSelectedItem);
-				}
-			}
-		});
-		builder.setNegativeButton(R.string.notification_cancel, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				// User cancelled the dialog
-				mSelectedItem = null;
-				mSelectedItemPos = 0;
-			}
-		});
-
-		alertDialog = builder.create();
-		alertDialog.show();
+			ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, ConfirmDialog.TYPE_CHANGE_OWNERSHIP, mSelectedItem.getId());
+		} else {
+			mSelectedItem.setRole(newRole);
+			doEditUserTask(mSelectedItem);
+		}
 	}
 
 	@Override
@@ -325,6 +294,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 			doEditUserTask(user);
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_USER) {
 			doRemoveUserTask(user);
-		}
+	}
 	}
 }
