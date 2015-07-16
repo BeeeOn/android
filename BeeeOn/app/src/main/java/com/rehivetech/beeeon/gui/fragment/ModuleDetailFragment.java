@@ -474,7 +474,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mChart.setData(data);
 		mChart.invalidate();
 		Log.d(TAG, "Filling graph finished");
-		mChart.animateXY(2000, 2000);
+		mChart.animateY(2000);
 
 		if (mLegend != null) {
 			mLegend.setChartDatasets(mChart.getData().getDataSets());
