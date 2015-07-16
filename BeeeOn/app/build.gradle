@@ -10,9 +10,6 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
-// Properties props = new Properties()
-// props.load(new FileInputStream(file("../keystores/keystore.txt")))
-
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -25,52 +22,23 @@ android {
         signingConfig signingConfigs.debug
     }
 
-
-  android {
-      lintOptions {
-          checkReleaseBuilds false
-          // Or, if you prefer, you can continue to check for errors in release builds,
-          // but continue the build even when errors are found:
-          abortOnError false
-      }
-  }
-
-
-
     signingConfigs {
         debug {
             storeFile file('../keystores/debug.keystore')
         }
-        /*release {
-            storeFile file("../keystores/release.keystore")
-            storePassword props['pass_store']
-            keyAlias "beeeon"
-            keyPassword props['pass_alias']
-        }*/
     }
+
     buildTypes {
         debug {
+            debuggable true
             signingConfig signingConfigs.debug
             versionNameSuffix " debug"
             applicationIdSuffix ".debug"
-            resValue "string", "app_name", "BeeeOn (debug)"
         }
 
-        alpha {
-//            signingConfig signingConfigs.release
-            versionNameSuffix " debug"
-            resValue "string", "app_name", "BeeeOn (alpha)"
-        }
-
-		beta_ant2 {
-			resValue "string", "app_name", "BeeeOn (beta-ant2)"
-		}
-
-        beta_iotpro {
-//            signingConfig signingConfigs.release
-            minifyEnabled false
+        release {
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "app_name", "BeeeOn"
         }
     }
     productFlavors {
