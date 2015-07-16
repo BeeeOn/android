@@ -179,6 +179,7 @@
     <string name="no_sensor_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
     <string name="no_gate_cap">ŽÁDNÁ BRÁNA</string>
     <string name="no_rules_cap">ŽÁDNÉ PRAVIDLO</string>
+    <string name="no_notifications_cap">ŽÁDNÁ NOTIFIKACE</string>
     <string name="profile_category_senzors">Zařízení</string>
     <string name="profile_category_friends">Přátelé</string>
     <string name="profile_category_app">Aplikace</string>

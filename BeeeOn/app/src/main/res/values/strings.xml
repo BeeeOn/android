@@ -213,6 +213,7 @@
 	<string name="no_gate_cap">NO GATEWAY</string>
 	<string name="no_rules_cap">NO RULE</string>
 	<string name="no_locations_cap">NO LOCATIONS</string>
+	<string name="no_notifications_cap">NO NOTIFICATIONS</string>
 	<string name="profile_category_senzors">Devices</string>
 	<string name="profile_category_friends">Friends</string>
 	<string name="profile_category_app">Application</string>
@@ -477,4 +478,5 @@
 	<string name="chart_y_axis">Y axis labels</string>
 	<string name="chart_no_data">No device data available.</string>
 	<string name="dialog_code_title">Enter gateway code</string>
+
 </resources>

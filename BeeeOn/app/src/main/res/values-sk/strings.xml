@@ -351,7 +351,7 @@
     <string name="add_action_dialog_title">Čo chcete pridať?</string>
     <string name="color_scheme">Farebná schéma</string>
     <string name="dev_actor_boiler_operation_mode">Režim prevádzky kotla</string>
-    <string name="dev_actor_boiler_operation_type">Typ prevádzky kotla.</string>
+    <string name="dev_actor_boiler_operation_type">Typ prevádzky kotla</string>
     <string name="dev_actor_temperature">Regulátor teploty</string>
     <string name="dev_boiler_operation_mode_value_automatic">Automatický</string>
     <string name="dev_boiler_operation_mode_value_manual">Ručne</string>
@@ -462,6 +462,7 @@
     <string name="login_provider_facebook">Facebook</string>
     <string name="login_provider_google">Google</string>
     <string name="no_locations_cap">ŽIADNE UMIESTNENIE</string>
+    <string name="no_notifications_cap">ŽIADNA NOTIFIKÁCIA</string>
     <string name="reloading_gate_data_not_successful">Nahrávanie dát brány neúspešné</string>
     <string name="sufix_default">(východzie)</string>
     <string name="title_activity_gate_detail">Detaily brány</string>
