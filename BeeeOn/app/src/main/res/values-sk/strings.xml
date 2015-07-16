@@ -3,7 +3,7 @@
 
     <!-- Titles -->
     <string name="title_activity_location_screen">BeeeOn</string>
-    <string name="title_activity_notification">Notifikácia</string>
+    <string name="title_activity_notification">Notifikácie</string>
     <string name="title_activity_add_sensor">Pridanie zariadenia</string>
     <string name="title_activity_add_gate">Pridanie brány</string>
     <string name="title_activity_registration">Registrácia</string>
@@ -123,7 +123,7 @@
     <string name="addsensor_active_pair">Párovací režim je aktívny </string>
     <string name="addadapter_textview_name">Názov</string>
     <string name="addadapter_qr_button">Skenovať QR kód</string>
-    <string name="addsensor_send_pair">SPUSTIŤ PÁROVÁNIE</string>
+    <string name="addsensor_send_pair">SPUSTIŤ PÁROVANIE</string>
     <string name="addadapter_manual_edit">Zadať ručne</string>
     <string name="dialog_code_title">Zadajte kód brány</string>
     <string name="addsensor_waiting">Čakám na štart</string>
@@ -402,7 +402,7 @@
     <string name="toast_error_no_qr_reader">Nemáte naištalovanú čítačku QR kódu</string>
     <string name="toast_error_invalid_qr_code">Neplatný BeeeOn QR kód</string>
 
-    <string name="activity_add_device_dialog_text">Stlačte POSLAŤ PÁROVANIE</string>
+    <string name="activity_add_device_dialog_text">Stlačte SPUSTIŤ PÁROVANIE</string>
     <string name="activity_add_device_shake_it">Zatraste zariadením alebo stlačte tlačidlo pre párovanie na zariadení.</string>
 
     <string name="button_unregister">Odregistrovať</string>
