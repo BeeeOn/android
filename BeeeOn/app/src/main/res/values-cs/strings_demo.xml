@@ -60,8 +60,8 @@
 	<string name="demo_name_module_air">Ovzduší</string>
 
 	<!-- Names of Watchdog and notification messages-->
-	<string name="demo_name_watchdog_temp_stone">Hlídaní teploty kamna</string>
-	<string name="demo_notif_watchdog_temp_stone">Kamna jsou příliš horká!</string>
+	<string name="demo_name_watchdog_temp_stove">Hlídaní teploty kamna</string>
+	<string name="demo_notif_watchdog_temp_stove">Kamna jsou příliš horká!</string>
 	<string name="demo_name_watchdog_humidity">Vlhkost půdy</string>
 	<string name="demo_notif_watchdog_humidity">Vlhkost půdy klesla pod 50%.</string>
 	<string name="demo_name_watchdog_cry">Dětská chůvička</string>

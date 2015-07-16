@@ -665,7 +665,7 @@ public class DemoData {
 				watchdog2_tempStone.setId("3");
 				watchdog2_tempStone.setGateId(gateID);
 				watchdog2_tempStone.setEnabled(false);
-				watchdog2_tempStone.setName(context.getString(R.string.demo_name_watchdog_temp_stone));
+				watchdog2_tempStone.setName(context.getString(R.string.demo_name_watchdog_temp_stove));
 
 				TreeMap<String, String> tDevices2_tempStone = new TreeMap<>();
 				TreeMap<String, String> tParams2_tempStone = new TreeMap<>();
@@ -676,7 +676,7 @@ public class DemoData {
 				tParams2_tempStone.put("2", "gt");
 				tParams2_tempStone.put("3", "120");
 				tParams2_tempStone.put("4", "notif");
-				tParams2_tempStone.put("5", context.getString(R.string.demo_notif_watchdog_temp_stone));
+				tParams2_tempStone.put("5", context.getString(R.string.demo_notif_watchdog_temp_stove));
 
 				watchdog2_tempStone.setModules(new ArrayList<>(tDevices2_tempStone.values()));
 				watchdog2_tempStone.setParams(new ArrayList<>(tParams2_tempStone.values()));

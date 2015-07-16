@@ -430,7 +430,7 @@
     <string name="confirm_add_owner_title">Nový používateľ ako vlastník</string>
     <string name="delete_gate_failure">Brána nebola úspešne odstránená</string>
     <string name="demo_name_module_switch">Spínač kachlí</string>
-    <string name="demo_notif_watchdog_temp_stone">Kachle sú príliš horúce!</string>
+    <string name="demo_notif_watchdog_temp_stove">Kachle sú príliš horúce!</string>
     <string name="edit_gate_failure">Brána nebola upravená</string>
     <string name="edit_gate_success">Brána bola úspešne upravená</string>
     <string name="enter_text_dialog_title">Zadajte kód brány</string>
