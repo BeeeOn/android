@@ -38,7 +38,7 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 	@Override
 	public void setView(View convertView) {
 		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.custom_spinner_icon);
-		ItemIcon.setImageResource(R.drawable.dev_geofence);
+		ItemIcon.setImageResource(R.drawable.ic_val_geofence_gray);
 
 		TextView ItemLabel = (TextView) convertView.findViewById(R.id.custom_spinner_label);
 		ItemLabel.setText(mGeofence.getName());

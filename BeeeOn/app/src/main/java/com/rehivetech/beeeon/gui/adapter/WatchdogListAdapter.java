@@ -122,7 +122,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 				break;
 
 			case Watchdog.TYPE_GEOFENCE:
-				holder.ItemIcon.setImageResource(R.drawable.dev_geofence);
+				holder.ItemIcon.setImageResource(R.drawable.ic_val_geofence_gray);
 
 				String geoId = rule.getGeoRegionId();
 				if (geoId != null && !geoId.isEmpty()) {
