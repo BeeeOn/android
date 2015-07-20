@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
@@ -110,7 +111,11 @@ public class DemoNetwork implements INetwork {
 			module.setValue(item.getValue());
 		} else {
 			double lastValue = module.getValue().getDoubleValue();
-			double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
+			double range = 5;
+
+			if (module.getDevice().getType().getFeatures().hasRefresh()) {
+				range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
+			}
 
 			if (Double.isNaN(lastValue)) {
 				lastValue = rand.nextDouble() * 1000;
@@ -282,7 +287,9 @@ public class DemoNetwork implements INetwork {
 		for (Device device : devices) {
 			if (device.isExpired()) {
 				// Set new random values
-				// device.setBattery(rand.nextInt(101));
+				if (device.getType().getFeatures().hasBattery()) {
+					device.setBattery(rand.nextInt(101));
+				}
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 				device.setNetworkQuality(rand.nextInt(101));
 
@@ -375,7 +382,9 @@ public class DemoNetwork implements INetwork {
 
 		if (newDevice != null && newDevice.isExpired()) {
 			// Set new random values
-			// newDevice.setBattery(rand.nextInt(101));
+			if (newDevice.getType().getFeatures().hasBattery()) {
+				newDevice.setBattery(rand.nextInt(101));
+			}
 			newDevice.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			newDevice.setNetworkQuality(rand.nextInt(101));
 
@@ -418,15 +427,20 @@ public class DemoNetwork implements INetwork {
 			// Create new device
 			Device device = Device.createDeviceByType(randType.getId(), gateId, address);
 
-			// device.setBattery(rand.nextInt(101));
+			DeviceFeatures features = device.getType().getFeatures();
+			if (features.hasBattery()) {
+				device.setBattery(rand.nextInt(101));
+			}
+			if (features.hasRefresh()) {
+				RefreshInterval[] refresh = RefreshInterval.values();
+				device.setRefresh(refresh[rand.nextInt(refresh.length)]);
+			}
+
 			device.setInitialized(rand.nextBoolean());
 			device.setPairedTime(DateTime.now(DateTimeZone.UTC));
 			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			// mDevice.setLocationId(locationId); // uninitialized mDevice has no location
 			device.setNetworkQuality(rand.nextInt(101));
-
-			RefreshInterval[] refresh = RefreshInterval.values();
-			// device.setRefresh(refresh[rand.nextInt(refresh.length)]);
 
 			// add random number of devices (max. 5)
 			/*int count = rand.nextInt(5);
@@ -473,25 +487,30 @@ public class DemoNetwork implements INetwork {
 		// Generate random values for log in demo mode
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
-		double lastValue = pair.module.getValue().getDoubleValue();
-		double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
-
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
 
 		Random rand = getRandomForGate(gateId);
 
+		double lastValue = pair.module.getValue().getDoubleValue();
 		if (Double.isNaN(lastValue)) {
 			lastValue = rand.nextDouble() * 1000;
 		}
 
-		int everyMsecs = Math.max(pair.gap.getSeconds(), module.getDevice().getRefresh().getInterval()) * 1000;
-
 		boolean isEnum = (module.getValue() instanceof EnumValue);
+		boolean hasRefresh = module.getDevice().getType().getFeatures().hasRefresh();
 
-		if (isEnum) {
+		int everyMsecs;
+		double range = 5;
+
+		if (isEnum || !hasRefresh) {
 			// For enums we want fixed number of steps (because application surely wants raw values)
+			// For devices without refresh it is the similar situation
 			everyMsecs = (int) (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
+		} else {
+			int refreshInterval = module.getDevice().getRefresh().getInterval();
+			everyMsecs = Math.max(pair.gap.getSeconds(), refreshInterval) * 1000;
+			range = 2 + Math.log(refreshInterval);
 		}
 
 		while (start < end) {

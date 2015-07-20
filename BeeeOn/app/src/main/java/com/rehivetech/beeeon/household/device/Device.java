@@ -96,8 +96,7 @@ public final class Device implements IIdentifier {
 	 * @return True when refresh interval since last update has expired, false otherwise.
 	 */
 	public boolean isExpired() {
-		DeviceFeatures features = mType.getFeatures();
-		if (!features.hasRefresh()) {
+		if (!mType.getFeatures().hasRefresh()) {
 			return true;
 		}
 		return mLastUpdate.plusSeconds(getRefresh().getInterval()).isBeforeNow();
@@ -197,11 +196,8 @@ public final class Device implements IIdentifier {
 	@Nullable
 	public RefreshInterval getRefresh() {
 		if (!mType.getFeatures().hasRefresh()) {
-			return RefreshInterval.SEC_1;
-			// FIXME: this should return null, but need to adapt rest of code first
-			//return null;
+			return null;
 		}
-
 		return mRefreshInterval != null ? mRefreshInterval : mType.getFeatures().getDefaultRefresh();
 	}
 
@@ -210,7 +206,6 @@ public final class Device implements IIdentifier {
 	 */
 	public void setRefresh(@Nullable RefreshInterval refreshInterval) {
 		if (!mType.getFeatures().hasRefresh()) {
-			// TODO: Throw exception?
 			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have refresh.");
 			return;
 		}
@@ -229,7 +224,6 @@ public final class Device implements IIdentifier {
 	 */
 	public void setBattery(int batteryValue) {
 		if (!mType.getFeatures().hasBattery()) {
-			// TODO: Throw exception?
 			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have battery.");
 			return;
 		}

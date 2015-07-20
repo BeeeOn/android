@@ -9,8 +9,10 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -371,6 +373,7 @@ public class XmlParsers {
 			String address = getSecureAttrValue(Xconstants.DID);
 
 			Device device = Device.createDeviceByType(type, aid, address);
+			DeviceFeatures features = device.getType().getFeatures();
 
 			// device.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
 			device.setInitialized(init);
@@ -379,9 +382,12 @@ public class XmlParsers {
 			device.setPairedTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
 			device.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
-			// FIXME: support for refresh/battery and other features
-			// device.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
-			// device.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
+			if (features.hasRefresh()) {
+				device.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
+			}
+			if (features.hasBattery()) {
+				device.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
+			}
 
 			mParser.nextTag(); // part tag
 

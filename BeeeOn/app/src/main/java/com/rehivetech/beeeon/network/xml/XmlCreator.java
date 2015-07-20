@@ -474,8 +474,11 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.DID, device.getAddress());
 				if (toSave.contains(SaveModule.SAVE_LOCATION))
 					serializer.attribute(ns, Xconstants.LID, device.getLocationId());
-				if (toSave.contains(SaveModule.SAVE_REFRESH))
-					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
+
+				if (device.getType().getFeatures().hasRefresh()) {
+					if (toSave.contains(SaveModule.SAVE_REFRESH))
+						serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
+				}
 
 				// FIXME: rework this
 				/*
@@ -526,17 +529,20 @@ public class XmlCreator {
 
 			serializer.startTag(ns, Xconstants.MODULE);
 
-			// FIXME: rework this
-			/*if (toSave.contains(SaveModule.SAVE_INITIALIZED))
+			if (toSave.contains(SaveModule.SAVE_INITIALIZED))
 				serializer.attribute(ns, Xconstants.INITIALIZED, (device.isInitialized()) ? Xconstants.ONE : Xconstants.ZERO);
 			// send always
 			serializer.attribute(ns, Xconstants.DID, device.getAddress());
 			if (toSave.contains(SaveModule.SAVE_LOCATION))
 				serializer.attribute(ns, Xconstants.LID, device.getLocationId());
-			if (toSave.contains(Module.SaveModule.SAVE_REFRESH))
-				serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
 
-			if (toSave.contains(SaveModule.SAVE_NAME) || toSave.contains(Module.SaveModule.SAVE_VALUE)) {
+			if (device.getType().getFeatures().hasRefresh()) {
+				if (toSave.contains(Module.SaveModule.SAVE_REFRESH))
+					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
+			}
+
+			// FIXME: rework this
+			/*if (toSave.contains(SaveModule.SAVE_NAME) || toSave.contains(Module.SaveModule.SAVE_VALUE)) {
 				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
 				serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());

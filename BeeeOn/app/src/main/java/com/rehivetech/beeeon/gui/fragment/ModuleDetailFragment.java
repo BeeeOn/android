@@ -39,6 +39,7 @@ import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
@@ -295,11 +296,17 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			time.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
 
+		DeviceFeatures features = device.getType().getFeatures();
+
 		// Set refresh time Text
-		refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
+		if (features.hasRefresh()) {
+			refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
+		}
 
 		// Set battery
-		battery.setText(device.getBattery() + "%");
+		if (features.hasBattery()) {
+			battery.setText(device.getBattery() + "%");
+		}
 
 		// Set signal
 		signal.setText(device.getNetworkQuality() + "%");

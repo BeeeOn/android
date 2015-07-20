@@ -244,8 +244,15 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 				mName.setText(module.getName(mActivity));
 				mLocationSpinner.setSelection(getLocationsIndexFromArray(adapter.getLocations(), device.getLocationId()));
-				mRefreshTimeSeekBar.setProgress(device.getRefresh().getIntervalIndex());
-				mRefreshTimeText.setText(" " + device.getRefresh().getStringInterval(mActivity));
+
+				boolean showRefresh = device.getType().getFeatures().hasRefresh();
+				if (showRefresh) {
+					mRefreshTimeSeekBar.setProgress(device.getRefresh().getIntervalIndex());
+					mRefreshTimeText.setText(" " + device.getRefresh().getStringInterval(mActivity));
+				} else {
+					mRefreshTimeSeekBar.setEnabled(showRefresh);
+					mRefreshTimeText.setEnabled(showRefresh);
+				}
 			}
 		}
 
@@ -324,7 +331,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 		/** Helpers for getting content data */
 
-		private RefreshInterval getRefreshTimeSeekBar() {
+		private RefreshInterval getRefreshTime() {
 			return RefreshInterval.values()[mRefreshTimeSeekBar.getProgress()];
 		}
 
@@ -371,12 +378,14 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 			if (!getName().equals(module.getName())) {
 				what.add(Module.SaveModule.SAVE_NAME);
 				module.setName(getName());
-			}
-
-			if (!getRefreshTimeSeekBar().equals(device.getRefresh())) {
-				what.add(Module.SaveModule.SAVE_REFRESH);
-				device.setRefresh(getRefreshTimeSeekBar());
 			}*/
+
+			if (device.getType().getFeatures().hasRefresh()) {
+				if (!getRefreshTime().equals(device.getRefresh())) {
+					what.add(Module.SaveModule.SAVE_REFRESH);
+					device.setRefresh(getRefreshTime());
+				}
+			}
 
 			if (!getLocationId().equals(device.getLocationId())) {
 				what.add(Module.SaveModule.SAVE_LOCATION);
