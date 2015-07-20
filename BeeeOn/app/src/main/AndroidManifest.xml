@@ -166,13 +166,6 @@
 			android:label="@string/app_name">
 		</activity>
 
-		<!-- Provider for sharing with Facebook -->
-		<provider
-			android:authorities="com.facebook.app.FacebookContentProvider868028889921254"
-			android:name="com.facebook.FacebookContentProvider"
-			android:exported="true"/>
-
-
 		<!-- WIDGETS -->
 		<service
 			android:name=".widget.service.WidgetService"
