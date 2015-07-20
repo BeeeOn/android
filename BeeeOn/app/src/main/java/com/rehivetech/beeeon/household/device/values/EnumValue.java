@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.household.device.values;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 
 import com.rehivetech.beeeon.IconResourceType;
@@ -17,7 +16,7 @@ public class EnumValue extends BaseValue {
 
 	protected final List<Item> mItems;
 
-	protected final Item mUnknownValue = new Item(-1, "", R.drawable.ic_val_unknown, R.drawable.ic_val_unknown_gray, R.string.blank, Color.BLACK);
+	protected final Item mUnknownValue = new Item(-1, "", R.string.blank);
 
 	private Item mValue = mUnknownValue;
 
@@ -26,18 +25,12 @@ public class EnumValue extends BaseValue {
 	public static class Item {
 		private final int mId;
 		private final String mValue;
-		private final int mIconResource;
-		private final int mIconResourceDark;
 		private final int mStringResource;
-		private final int mColor;
 
-		public Item(int id, String value, int iconResource, int iconResourceDark, int stringResource, int color) {
+		public Item(int id, String value,  int stringResource) {
 			mId = id;
 			mValue = value;
-			mIconResource = iconResource;
-			mIconResourceDark = iconResourceDark;
 			mStringResource = stringResource;
-			mColor = color;
 		}
 
 		public int getId() {
@@ -48,16 +41,8 @@ public class EnumValue extends BaseValue {
 			return mValue;
 		}
 
-		public int getIconResource(IconResourceType type) {
-			return type == IconResourceType.WHITE ? mIconResource : mIconResourceDark;
-		}
-
 		public int getStringResource() {
 			return mStringResource;
-		}
-
-		public int getColor() {
-			return mColor;
 		}
 	}
 
@@ -78,13 +63,14 @@ public class EnumValue extends BaseValue {
 
 	@Override
 	public int getIconResource(IconResourceType type) {
-		return mValue.getIconResource(type);
+		// TODO: Support specific icon based on particular value type
+		return (type == IconResourceType.DARK) ? R.drawable.ic_val_state_gray : R.drawable.ic_val_state;
 	}
 
 	@Override
 	public int getActorIconResource(IconResourceType type) {
-		// BaseEnumValues probably won't have special icon for actors
-		return mValue.getIconResource(type);
+		// Enum values probably won't have special icon for actors
+		return getIconResource(type);
 	}
 
 	@Override
@@ -121,13 +107,6 @@ public class EnumValue extends BaseValue {
 			}
 		}
 		return mUnknownValue;
-	}
-
-	/**
-	 * @return Color depending on active value
-	 */
-	public int getStateColor() {
-		return mValue.getColor();
 	}
 
 	/**
