@@ -413,8 +413,12 @@ public class DemoNetwork implements INetwork {
 				address = "10.0.0." + String.valueOf(i++);
 			} while (mDevices.hasObject(gateId, address));
 
-			// FIXME: random type
-			Device device = new Device(DeviceType.TYPE_0, gateId, address);
+			// Get random device type
+			DeviceType[] types = DeviceType.values();
+			DeviceType randType = types[1 + rand.nextInt(types.length - 1)]; // 1+ because we don't want unknown type, which is on beginning
+
+			// Create new device
+			Device device = Device.createDeviceByType(randType.getId(), gateId, address);
 
 			// device.setBattery(rand.nextInt(101));
 			device.setInitialized(rand.nextBoolean());

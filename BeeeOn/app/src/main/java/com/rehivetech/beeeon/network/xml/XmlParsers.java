@@ -369,37 +369,41 @@ public class XmlParsers {
 
 	private void parseInnerDevs(List<Device> result, String aid, boolean init) throws XmlPullParserException, IOException {
 		do { // go through devs (devices)
-			// FIXME: rework this
-			/*Device device = new Device();
-			device.setGateId(aid);
-			// mDevice.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
-			// true);
+			//int type = getSecureInt(Xconstants.TYPE);
+			String type = getSecureAttrValue(Xconstants.TYPE);
+			String address = getSecureAttrValue(Xconstants.DID);
+
+			Device device = Device.createDeviceByType(type, aid, address);
+
+			// mDevice.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
 			device.setInitialized(init);
-			device.setAddress(getSecureAttrValue(Xconstants.DID));
 			device.setLocationId(getSecureAttrValue(Xconstants.LID));
-			device.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
-			device.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
 			device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
 			device.setInvolveTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
 			device.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
 
+			// FIXME: support for refresh/battery and other features
+			// device.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
+			// device.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
+
 			mParser.nextTag(); // part tag
 
-			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in mDevice -> error in DB on server
-				Log.e(TAG, "Missing module in mDevice: " + device.getId());
+			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in device -> error in DB on server
+				Log.e(TAG, "Missing module in device: " + device.getId());
 				continue;
 			}
 
-			do { // go through parts (devices)
-				Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
+			// FIXME: support for modules
+			do { // go through modules
+				/*Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
 				module.setVisibility(!getSecureAttrValue(Xconstants.VISIBILITY).equals(Xconstants.ZERO));
 				module.setName(getSecureAttrValue(Xconstants.NAME));
 				module.setValue(getSecureAttrValue(Xconstants.VALUE));
-				device.addModule(module);
-				mParser.nextTag(); // part endtag
+				device.addModule(module);*/
+				mParser.nextTag(); // module endtag
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
 
-			result.add(device);*/
+			result.add(device);
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
 				&& (!mParser.getName().equals(Xconstants.GATE) || !mParser.getName().equals(Xconstants.COM_ROOT)));
