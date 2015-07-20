@@ -216,11 +216,11 @@ public class SensorListFragment extends BaseApplicationFragment {
 			// all devices from actual location
 			devices = controller.getDevicesModel().getDevicesByLocation(mActiveGateId, loc.getId());
 			for (Device fac : devices) {
-				for (int x = 0; x < fac.getModules().size(); x++) {
-					Module dev = fac.getModules().get(x);
-					mSensorAdapter.addItem(new SensorListItem(dev, dev.getAbsoluteId(), mActivity, x == (fac.getModules().size() - 1)));
+				for (int x = 0; x < fac.getVisibleModules().size(); x++) {
+					Module dev = fac.getVisibleModules().get(x);
+					mSensorAdapter.addItem(new SensorListItem(dev, dev.getAbsoluteId(), mActivity, x == (fac.getVisibleModules().size() - 1)));
 				}
-				modules.addAll(fac.getModules());
+				modules.addAll(fac.getVisibleModules());
 			}
 		}
 

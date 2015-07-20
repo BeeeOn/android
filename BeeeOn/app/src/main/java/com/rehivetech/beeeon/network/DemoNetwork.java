@@ -286,7 +286,7 @@ public class DemoNetwork implements INetwork {
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 				device.setNetworkQuality(rand.nextInt(101));
 
-				for (Module module : device.getModules()) {
+				for (Module module : device.getAllModules()) {
 					setNewValue(module);
 				}
 			}
@@ -379,7 +379,7 @@ public class DemoNetwork implements INetwork {
 			newDevice.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			newDevice.setNetworkQuality(rand.nextInt(101));
 
-			for (Module module : newDevice.getModules()) {
+			for (Module module : newDevice.getAllModules()) {
 				setNewValue(module);
 			}
 		}
@@ -437,7 +437,7 @@ public class DemoNetwork implements INetwork {
 
 				// Determine offset (number of existing devices with this type in the mDevice)
 				int offset = 0;
-				for (Module module : device.getModules()) {
+				for (Module module : device.getAllModules()) {
 					if (module.getType() == randType) {
 						offset++;
 					}

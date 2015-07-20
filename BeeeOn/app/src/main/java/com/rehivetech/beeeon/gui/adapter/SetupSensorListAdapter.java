@@ -27,7 +27,7 @@ public class SetupSensorListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return mDevice.getModules().size();
+		return mDevice.getAllModules().size();
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class SetupSensorListAdapter extends BaseAdapter {
 		ImageView img = (ImageView) itemView.findViewById(R.id.setup_sensor_item_icon);
 		mName = (EditText) itemView.findViewById(R.id.setup_sensor_item_name);
 		// Set image resource by sensor type
-		img.setImageResource(mDevice.getModules().get(position).getIconResource());
+		img.setImageResource(mDevice.getAllModules().get(position).getIconResource());
 		// Set name of sensor
-		mName.setText(mDevice.getModules().get(position).getName(mContext));
+		mName.setText(mDevice.getAllModules().get(position).getName(mContext));
 
 
 		// TODO Auto-generated method stub

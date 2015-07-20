@@ -95,7 +95,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				Device newDevice = Controller.getInstance(SetupSensorActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
 
 				// Controll if Names arent empty
-				for (int i = 0; i < newDevice.getModules().size(); i++) {
+				for (int i = 0; i < newDevice.getAllModules().size(); i++) {
 					// Get new names from EditText
 					String name = ((EditText) listOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
@@ -105,7 +105,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 					}
 					// Set this new name to sensor
 					// FIXME: rework this?
-					// newDevice.getModules().get(i).setName(name);
+					// newDevice.getAllModules().get(i).setName(name);
 
 				}
 

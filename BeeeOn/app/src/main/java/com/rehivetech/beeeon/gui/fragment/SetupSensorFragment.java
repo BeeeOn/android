@@ -153,7 +153,8 @@ public class SetupSensorFragment extends TrackFragment {
 		listOfName.setAdapter(listAdapter);
 		spinner.setAdapter(dataAdapter);
 		// Set listview height, for all
-		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mNewDevices.get(0).getModules().size());
+		float scale = mActivity.getResources().getDisplayMetrics().density;
+		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mNewDevices.get(0).getAllModules().size());
 		listOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, heightPx));
 	}
 

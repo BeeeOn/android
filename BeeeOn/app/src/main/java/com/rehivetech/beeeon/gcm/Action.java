@@ -31,7 +31,7 @@ public final class Action {
 		}
 
 
-		List<Module> modules = device.getModules();
+		List<Module> modules = device.getAllModules();
 		if (modules.size() == 0) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;

@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
 public final class Device implements IIdentifier {
@@ -192,8 +193,26 @@ public final class Device implements IIdentifier {
 	/**
 	 * @return List of modules this device contains.
 	 */
-	public List<Module> getModules() {
+	public List<Module> getAllModules() {
 		return mModules.getObjects();
+	}
+
+	/**
+	 * @return List of actually visible modules this device contains.
+	 */
+	public List<Module> getVisibleModules() {
+		List<Module> modules = mModules.getObjects();
+
+		// Remove invisible modules
+		Iterator<Module> it = modules.iterator();
+		while (it.hasNext()) {
+			Module module = it.next();
+			if (!module.isVisible()) {
+				it.remove();
+			}
+		}
+
+		return modules;
 	}
 
 	/**

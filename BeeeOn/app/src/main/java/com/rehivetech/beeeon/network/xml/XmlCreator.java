@@ -394,7 +394,7 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.ID, device.getAddress());
 
 				// FIXME: rework this
-				/*for (Module module : device.getModules()) {
+				/*for (Module module : device.getAllModules()) {
 					serializer.startTag(ns, Xconstants.PART);
 					serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
 					serializer.endTag(ns, Xconstants.PART);
@@ -479,7 +479,7 @@ public class XmlCreator {
 
 				// FIXME: rework this
 				/*
-				for (Module module : device.getModules()) {
+				for (Module module : device.getAllModules()) {
 					serializer.startTag(ns, Xconstants.PART);
 
 					serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
