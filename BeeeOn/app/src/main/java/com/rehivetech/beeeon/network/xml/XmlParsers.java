@@ -11,7 +11,6 @@ import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -222,9 +221,7 @@ public class XmlParsers {
 			return result;
 
 		do {
-			Gate gate = new Gate();
-			gate.setId(getSecureAttrValue(Xconstants.ID));
-			gate.setName(getSecureAttrValue(Xconstants.NAME));
+			Gate gate = new Gate(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME));
 			gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
 			gate.setUtcOffset(getSecureInt(getSecureAttrValue(Xconstants.UTC)));
 			result.add(gate);

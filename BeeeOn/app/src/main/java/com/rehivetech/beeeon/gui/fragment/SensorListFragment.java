@@ -218,7 +218,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			for (Device fac : devices) {
 				for (int x = 0; x < fac.getModules().size(); x++) {
 					Module dev = fac.getModules().get(x);
-					mSensorAdapter.addItem(new SensorListItem(dev, dev.getId(), mActivity, (x == (fac.getModules().size() - 1))));
+					mSensorAdapter.addItem(new SensorListItem(dev, dev.getAbsoluteId(), mActivity, x == (fac.getModules().size() - 1)));
 				}
 				modules.addAll(fac.getModules());
 			}
@@ -374,7 +374,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 					Module module = mSensorAdapter.getModule(position);
 					Bundle bundle = new Bundle();
 					bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, module.getDevice().getGateId());
-					bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, module.getId());
+					bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
 					Intent intent = new Intent(mActivity, ModuleDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);

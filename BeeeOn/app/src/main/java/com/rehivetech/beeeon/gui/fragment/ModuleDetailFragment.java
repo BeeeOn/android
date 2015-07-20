@@ -503,6 +503,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 			@Override
 			public void onExecute(boolean success) {
+				// Get new module
 				Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
 
 				// Set new data

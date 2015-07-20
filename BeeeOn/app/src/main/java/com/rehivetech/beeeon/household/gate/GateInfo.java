@@ -11,8 +11,7 @@ public class GateInfo extends Gate {
 	protected String mIp = "";
 
 	public GateInfo(String id, String name, User.Role role, int utcOffsetInMinutes, int devicesCount, int usersCount, String version, String ip) {
-		mId = id;
-		mName = name;
+		super(id, name);
 		mRole = role;
 		mUtcOffsetInMinutes = utcOffsetInMinutes;
 		mDevicesCount = devicesCount;

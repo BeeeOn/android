@@ -228,9 +228,7 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(gateId);
 
-		Gate gate = new Gate();
-		gate.setId(gateId);
-		gate.setName(gateName);
+		Gate gate = new Gate(gateId, gateName);
 
 		// Use random role
 		Role[] roles = Role.values();

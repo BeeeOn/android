@@ -232,7 +232,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getModules().size()));
 
 			for (Module module : device.getModules()) {
-				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getName(mActivity), module.getType().getTypeId()));
+				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getAbsoluteId(), module.getType().getTypeId()));
 
 				List<Module> modules = mModules.get(module.getType().getTypeId());
 				if (modules == null) {

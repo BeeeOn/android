@@ -70,8 +70,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	}
 
 	public void doRegisterGateTask(String id, final boolean scanned) {
-		Gate gate = new Gate();
-		gate.setId(id);
+		Gate gate = new Gate(id, null);
 
 		RegisterGateTask registerGateTask = new RegisterGateTask(this);
 		registerGateTask.setListener(new CallbackTask.ICallbackTaskListener() {

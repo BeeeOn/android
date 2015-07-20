@@ -114,11 +114,19 @@ public final class Module implements IOrderIdentifier {
 	}
 
 	/**
+	 * @return id of this module inside the parent device (regarding specification).
+	 */
+	@Override
+	public String getId() {
+		return mId;
+	}
+
+	/**
 	 * Get unique identifier of module (address of mDevice + raw type id containing offset)
 	 *
 	 * @return id
 	 */
-	public String getId() {
+	public String getAbsoluteId() {
 		if (mDevice == null)
 			throw new RuntimeException("Module's mDevice is null!");
 

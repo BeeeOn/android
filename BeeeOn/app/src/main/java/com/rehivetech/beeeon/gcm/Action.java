@@ -40,7 +40,7 @@ public final class Action {
 		int pos = 0;
 		for (int i = 0; i < modules.size(); i++) {
 			// FIXME: now it is comparing id with type, which won't work at all
-			if (modules.get(i).getId().equals(String.valueOf(type))) {
+			if (modules.get(i).getAbsoluteId().equals(String.valueOf(type))) {
 
 				pos = i;
 				break;
@@ -51,7 +51,7 @@ public final class Action {
 
 		// Sensor exists, we can open activity
 		Intent intent = new Intent(context, ModuleDetailActivity.class);
-		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getId());
+		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
 		intent.putExtra(ModuleDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
 		intent.putExtra(ModuleDetailActivity.EXTRA_ACTIVE_POS, pos);
 
