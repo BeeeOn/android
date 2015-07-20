@@ -2,10 +2,10 @@ package com.rehivetech.beeeon;
 
 import java.util.Comparator;
 
-public class SortIdentifierComparator implements Comparator<ISortIdentifier> {
+public class OrderIdentifierComparator implements Comparator<IOrderIdentifier> {
 
 	@Override
-	public int compare(ISortIdentifier lhs, ISortIdentifier rhs) {
+	public int compare(IOrderIdentifier lhs, IOrderIdentifier rhs) {
 		Integer lsort = lhs.getSort();
 		Integer rsort = rhs.getSort();
 

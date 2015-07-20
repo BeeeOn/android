@@ -1,7 +1,7 @@
 package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.SortIdentifierComparator;
+import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
 
 import org.joda.time.DateTime;
@@ -43,7 +43,7 @@ public final class Device implements IIdentifier {
 		// Create modules list
 		List<Module> modules = type.createModules(this);
 		// And sort them by order and id
-		Collections.sort(modules, new SortIdentifierComparator());
+		Collections.sort(modules, new OrderIdentifierComparator());
 		// Them make it immutable
 		mModules = Collections.unmodifiableList(modules);
 	}

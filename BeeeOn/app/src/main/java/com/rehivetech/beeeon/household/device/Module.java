@@ -3,14 +3,14 @@ package com.rehivetech.beeeon.household.device;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
-import com.rehivetech.beeeon.ISortIdentifier;
+import com.rehivetech.beeeon.IOrderIdentifier;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 
 import java.util.List;
 
-public final class Module implements ISortIdentifier {
+public final class Module implements IOrderIdentifier {
 	public static final String ID_SEPARATOR = "---";
 
 	/**
