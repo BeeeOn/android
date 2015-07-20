@@ -4,6 +4,7 @@ import android.support.annotation.StringRes;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 
 import java.util.ArrayList;
@@ -11,8 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum DeviceType implements IIdentifier {
-	// FIXME: Features now share the object... It could have the default refresh but cannot hold the real value. So maybe rework it to enum and mark only exists/not exists? .. hm, but then how to save the default timeout?
-
 	TYPE_UNKNOWN("", "???", R.string.unknown_device, R.string.unknown_manufacturer, new DeviceFeatures(null, false, false)) {
 		@Override
 		public List<Module> createModules(Device device) {

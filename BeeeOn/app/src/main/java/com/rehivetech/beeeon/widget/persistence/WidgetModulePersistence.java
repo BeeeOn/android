@@ -108,7 +108,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 		mUserRole = Utils.getEnumFromId(User.Role.class, mGateRole, User.Role.Guest);
 		lastUpdateTime = module.getDevice().getLastUpdate().getMillis();
-		refresh = module.getDevice().getType().getFeatures().getActualRefresh().getInterval();
+		refresh = module.getDevice().getRefresh().getInterval();
 
 		mModuleType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)

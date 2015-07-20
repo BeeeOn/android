@@ -110,7 +110,7 @@ public class DemoNetwork implements INetwork {
 			module.setValue(item.getValue());
 		} else {
 			double lastValue = module.getValue().getDoubleValue();
-			double range = 2 + Math.log(module.getDevice().getType().getFeatures().getActualRefresh().getInterval());
+			double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
 
 			if (Double.isNaN(lastValue)) {
 				lastValue = rand.nextDouble() * 1000;
@@ -474,7 +474,7 @@ public class DemoNetwork implements INetwork {
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
 		double lastValue = pair.module.getValue().getDoubleValue();
-		double range = 2 + Math.log(module.getDevice().getType().getFeatures().getActualRefresh().getInterval());
+		double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
 
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
@@ -485,7 +485,7 @@ public class DemoNetwork implements INetwork {
 			lastValue = rand.nextDouble() * 1000;
 		}
 
-		int everyMsecs = Math.max(pair.gap.getSeconds(), module.getDevice().getType().getFeatures().getActualRefresh().getInterval()) * 1000;
+		int everyMsecs = Math.max(pair.gap.getSeconds(), module.getDevice().getRefresh().getInterval()) * 1000;
 
 		boolean isEnum = (module.getValue() instanceof EnumValue);
 

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SimpleDataHolder;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -17,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public final class Device implements IIdentifier {
+	public static final String TAG = Device.class.getSimpleName();
 
 	/**
 	 * Properties inherited from device's specification table.
@@ -35,6 +37,9 @@ public final class Device implements IIdentifier {
 	private DateTime mPairedTime;
 	private int mNetworkQuality;
 	private DateTime mLastUpdate;
+
+	private RefreshInterval mRefreshInterval;
+	private int mBatteryValue;
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -95,7 +100,7 @@ public final class Device implements IIdentifier {
 		if (!features.hasRefresh()) {
 			return true;
 		}
-		return mLastUpdate.plusSeconds(features.getActualRefresh().getInterval()).isBeforeNow();
+		return mLastUpdate.plusSeconds(getRefresh().getInterval()).isBeforeNow();
 	}
 
 	/**
@@ -184,6 +189,51 @@ public final class Device implements IIdentifier {
 	 */
 	public void setNetworkQuality(int networkQuality) {
 		mNetworkQuality = networkQuality;
+	}
+
+	/**
+	 * @return Actual RefreshInterval value, or null if this device doesn't have refresh at all.
+	 */
+	@Nullable
+	public RefreshInterval getRefresh() {
+		if (!mType.getFeatures().hasRefresh()) {
+			return RefreshInterval.SEC_1;
+			// FIXME: this should return null, but need to adapt rest of code first
+			//return null;
+		}
+
+		return mRefreshInterval != null ? mRefreshInterval : mType.getFeatures().getDefaultRefresh();
+	}
+
+	/**
+	 * @param refreshInterval New RefreshInterval value, which could be null to reset it to default value.
+	 */
+	public void setRefresh(@Nullable RefreshInterval refreshInterval) {
+		if (!mType.getFeatures().hasRefresh()) {
+			// TODO: Throw exception?
+			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have refresh.");
+			return;
+		}
+		mRefreshInterval = refreshInterval;
+	}
+
+	/**
+	 * @return Actual battery value (0-100%) or -1 when this device has no battery.
+	 */
+	public int getBattery() {
+		return mType.getFeatures().hasBattery() ? mBatteryValue : -1;
+	}
+
+	/**
+	 * @param batteryValue New battery level value.
+	 */
+	public void setBattery(int batteryValue) {
+		if (!mType.getFeatures().hasBattery()) {
+			// TODO: Throw exception?
+			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have battery.");
+			return;
+		}
+		mBatteryValue = batteryValue;
 	}
 
 	/**

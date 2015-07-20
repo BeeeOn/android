@@ -244,8 +244,8 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 				mName.setText(module.getName(mActivity));
 				mLocationSpinner.setSelection(getLocationsIndexFromArray(adapter.getLocations(), device.getLocationId()));
-				mRefreshTimeSeekBar.setProgress(device.getType().getFeatures().getActualRefresh().getIntervalIndex());
-				mRefreshTimeText.setText(" " + device.getType().getFeatures().getActualRefresh().getStringInterval(mActivity));
+				mRefreshTimeSeekBar.setProgress(device.getRefresh().getIntervalIndex());
+				mRefreshTimeText.setText(" " + device.getRefresh().getStringInterval(mActivity));
 			}
 		}
 

@@ -475,7 +475,7 @@ public class XmlCreator {
 				if (toSave.contains(SaveModule.SAVE_LOCATION))
 					serializer.attribute(ns, Xconstants.LID, device.getLocationId());
 				if (toSave.contains(SaveModule.SAVE_REFRESH))
-					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getType().getFeatures().getActualRefresh().getInterval()));
+					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
 
 				// FIXME: rework this
 				/*

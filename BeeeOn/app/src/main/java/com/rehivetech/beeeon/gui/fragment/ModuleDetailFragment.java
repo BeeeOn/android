@@ -296,10 +296,10 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		// Set refresh time Text
-		refreshTimeText.setText(device.getType().getFeatures().getActualRefresh().getStringInterval(mActivity));
+		refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
 
 		// Set battery
-		battery.setText(device.getType().getFeatures().getBatteryValue() + "%");
+		battery.setText(device.getBattery() + "%");
 
 		// Set signal
 		signal.setText(device.getNetworkQuality() + "%");
