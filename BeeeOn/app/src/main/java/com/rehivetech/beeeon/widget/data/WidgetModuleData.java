@@ -64,14 +64,15 @@ public class WidgetModuleData extends WidgetData {
 			}
 
 			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
-			Device device = new Device();
+			// FIXME: rework this
+			/*Device device = new Device();
 			device.setGateId(widgetGateId);
 			device.setAddress(ids[0]);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
 			device.addModule(Module.createFromModuleTypeId(ids[1]));
 
-			mDevices.add(device);
+			mDevices.add(device);*/
 		}
 	}
 

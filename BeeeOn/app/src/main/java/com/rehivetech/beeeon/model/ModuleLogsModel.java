@@ -47,7 +47,7 @@ public class ModuleLogsModel extends BaseModel {
 	private List<Interval> getMissingIntervals(ModuleLog.DataPair pair) {
 		List<Interval> downloadIntervals = new ArrayList<Interval>();
 		Interval interval = pair.interval;
-		String moduleName = pair.module.getName();
+		String moduleName = pair.module.getId();
 
 		Log.d(TAG, String.format("We want interval: %s -> %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd())));
 
@@ -139,9 +139,9 @@ public class ModuleLogsModel extends BaseModel {
 	public synchronized boolean reloadModuleLog(ModuleLog.DataPair pair) throws AppException {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
 
-		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), pair.module.getName()));
+		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), pair.module.getId()));
 		for (Interval interval : downloadIntervals) {
-			Log.d(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), pair.module.getName()));
+			Log.d(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), pair.module.getId()));
 		}
 
 		boolean isDemoNetwork = mNetwork instanceof DemoNetwork;

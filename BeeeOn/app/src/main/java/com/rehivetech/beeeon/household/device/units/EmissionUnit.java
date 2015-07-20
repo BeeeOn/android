@@ -10,7 +10,7 @@ public class EmissionUnit extends BaseUnit {
 	public EmissionUnit() {
 		super();
 
-		mItems.add(this.new Item(DEFAULT, R.string.dev_emission_unit, R.string.dev_emission_unit));
+		mItems.add(this.new Item(DEFAULT, R.string.unit_emission, R.string.unit_emission));
 	}
 
 	@Override

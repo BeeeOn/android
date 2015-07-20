@@ -100,7 +100,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		Gate gate = (Gate) obj2;
 
 		id = module.getId();
-		name = module.getName();
+		name = module.getName(mContext);
 		icon = module.getIconResource(IconResourceType.WHITE);
 		gateId = gate.getId();
 		mGateRole = gate.getRole().getId();
@@ -108,7 +108,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 		mUserRole = Utils.getEnumFromId(User.Role.class, mGateRole, User.Role.Guest);
 		lastUpdateTime = module.getDevice().getLastUpdate().getMillis();
-		refresh = module.getDevice().getRefresh().getInterval();
+		refresh = module.getDevice().getType().getFeatures().getActualRefresh().getInterval();
 
 		mModuleType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)
@@ -186,7 +186,8 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 		Controller controller = Controller.getInstance(mContext);
 
-		if (getType().isActor() && controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue) {
+		// FIXME: rework this
+		if (/*getType().isActor() &&*/ controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue) {
 			containerType = SWITCHCOMPAT;
 
 			mBuilder.loadRootView(R.layout.widget_include_switchcompat);

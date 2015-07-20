@@ -604,7 +604,7 @@ public class Network implements INetwork {
 	// http://stackoverflow.com/a/509288/1642090
 	@Override
 	public ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair) {
-		String msgToSend = XmlCreator.createGetLog(mBT, gateId, module.getDevice().getAddress(), module.getRawTypeId(),
+		String msgToSend = XmlCreator.createGetLog(mBT, gateId, module.getDevice().getAddress(), ""/* FIXME: module.getRawTypeId()*/,
 				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
 				pair.type.getId(), pair.gap.getSeconds());
 

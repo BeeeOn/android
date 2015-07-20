@@ -561,9 +561,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 
 		for (Device device : mDevices)
 			for (Module module : device.getModules()) {
-				if (type == MODULES_ACTORS && !module.getType().isActor()) {
+				if (type == MODULES_ACTORS && !module.isActuator()) {
 					continue;
-				} else if (type == MODULES_SENSORS && module.getType().isActor()) {
+				} else if (type == MODULES_SENSORS && module.isActuator()) {
 					continue;
 				}
 

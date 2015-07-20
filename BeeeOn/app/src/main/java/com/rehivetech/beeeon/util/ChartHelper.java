@@ -15,7 +15,7 @@ import com.github.mikephil.charting.utils.ValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.view.ChartMarkerView;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 
 import java.util.List;
@@ -74,8 +74,8 @@ final public class ChartHelper {
 		//disable right Y axis
 		chart.getAxisRight().setEnabled(false);
 
-		if (baseValue instanceof BaseEnumValue) {
-			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue) baseValue).getEnumItems();
+		if (baseValue instanceof EnumValue) {
+			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
 				if (layout.getVisibility() != View.VISIBLE) {
 					int j = 1;
@@ -137,8 +137,8 @@ final public class ChartHelper {
 	 */
 	public static ValueFormatter getValueFormatterInstance(final BaseValue baseValue, final Context context, Controller controller) {
 		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), context);
-		if (baseValue instanceof BaseEnumValue) {
-			final List<BaseEnumValue.Item> yLabels = ((BaseEnumValue) baseValue).getEnumItems();
+		if (baseValue instanceof EnumValue) {
+			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
 				return new ValueFormatter() {
 					@Override

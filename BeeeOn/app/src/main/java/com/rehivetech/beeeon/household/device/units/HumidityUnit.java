@@ -10,7 +10,7 @@ public class HumidityUnit extends BaseUnit {
 	public HumidityUnit() {
 		super();
 
-		mItems.add(this.new Item(DEFAULT, R.string.dev_humidity_unit, R.string.dev_humidity_unit));
+		mItems.add(this.new Item(DEFAULT, R.string.unit_humidity, R.string.unit_humidity));
 	}
 
 	@Override

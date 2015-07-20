@@ -13,13 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.data.BarData;
@@ -44,13 +42,8 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.household.device.values.BoilerOperationModeValue;
-import com.rehivetech.beeeon.household.device.values.BoilerOperationTypeValue;
-import com.rehivetech.beeeon.household.device.values.BooleanValue;
-import com.rehivetech.beeeon.household.device.values.OnOffValue;
-import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -216,7 +209,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Set name of sensor
 		Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
-		toolbar.setTitle(module.getName());
+		toolbar.setTitle(module.getName(mActivity));
 
 		if (controller.isUserAllowed(gate.getRole())) {
 			// Set value for Actor
@@ -239,7 +232,8 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 					}
 				});
 
-			} else if (module.getValue() instanceof BoilerOperationTypeValue) {
+			} /* // FIXME: WUT? rework this
+			else if (module.getValue() instanceof BoilerOperationTypeValue) {
 				// Set dialog for set Type of  BOILER
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
@@ -289,7 +283,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 								.show();
 					}
 				});
-			}
+			}*/
 
 		}
 
@@ -310,9 +304,10 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		if (mUnitsHelper != null) {
 			mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
 			BaseValue val = module.getValue();
-			if (val instanceof OnOffValue) {
+			// FIXME: rework this
+			/*if (val instanceof OnOffValue) {
 				mValueSwitch.setChecked(((BooleanValue) val).isActive());
-			}
+			}*/
 		}
 
 		// Set icon of sensor
@@ -324,10 +319,10 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		// Set refresh time Text
-		refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
+		refreshTimeText.setText(device.getType().getFeatures().getActualRefresh().getStringInterval(mActivity));
 
 		// Set battery
-		battery.setText(device.getBattery() + "%");
+		battery.setText(device.getType().getFeatures().getBatteryValue() + "%");
 
 		// Set signal
 		signal.setText(device.getNetworkQuality() + "%");
@@ -356,15 +351,16 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 
 		// Show some controls if this module is an actor
-		if (module.getType().isActor() && controller.isUserAllowed(gate.getRole())) {
+		if (module.isActuator() && controller.isUserAllowed(gate.getRole())) {
 			BaseValue value = module.getValue();
 
 			// For actor values of type on/off, open/closed we show switch button
-			if (value instanceof OnOffValue || value instanceof OpenClosedValue) {
+			// FIXME: rework this
+			/*if (value instanceof OnOffValue || value instanceof OpenClosedValue) {
 				mValueSwitch.setVisibility(View.VISIBLE);
 			} else if (value instanceof TemperatureValue || value instanceof BoilerOperationModeValue || value instanceof BoilerOperationTypeValue) {
 				mValueSet.setVisibility(View.VISIBLE);
-			}
+			}*/
 		}
 
 		if (controller.isUserAllowed(gate.getRole())) {
@@ -385,7 +381,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	private void addGraphView(@NonNull final Module module) {
 		Controller controller = Controller.getInstance(mActivity);
 		BaseValue baseValue = module.getValue();
-		boolean barchart = baseValue instanceof BaseEnumValue;
+		boolean barchart = baseValue instanceof EnumValue;
 		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.sen_third_section);
 		String unit = mUnitsHelper.getStringUnit(baseValue);
 		String name = getString(module.getTypeStringResource());
@@ -426,7 +422,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	@SuppressWarnings("unchecked")
 	public void fillGraph(ModuleLog log, Module module) {
-		boolean barGraph = (module.getValue() instanceof BaseEnumValue);
+		boolean barGraph = (module.getValue() instanceof EnumValue);
 		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
 		if (mChart == null) {
 			return;
@@ -489,16 +485,16 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	 */
 
 	protected void doActorAction(final Module module) {
-		if (!module.getType().isActor()) {
+		if (!module.isActuator()) {
 			return;
 		}
 
 		// SET NEW VALUE
 		BaseValue value = module.getValue();
-		if (value instanceof BaseEnumValue) {
-			((BaseEnumValue) value).setNextValue();
+		if (value instanceof EnumValue) {
+			((EnumValue) value).setNextValue();
 		} else {
-			Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
+			Log.e(TAG, "We can't switch actor, which value isn't inherited from EnumValue, yet");
 			return;
 		}
 
@@ -558,7 +554,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 				module, // module
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				(module.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
+				(module.getValue() instanceof EnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
 
 		getModuleLogTask.setListener(new ICallbackTaskListener() {
 			@Override

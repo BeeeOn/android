@@ -2,26 +2,26 @@
 <resources>
 
     <!-- Units of modules -->
-    <string name="dev_temperature_celsius_unit_full">Celzius</string>
-    <string name="dev_temperature_celsius_unit">°C</string>
-    <string name="dev_temperature_fahrenheit_unit_full">Fahrenheit</string>
-    <string name="dev_temperature_fahrenheit_unit">°F</string>
-    <string name="dev_temperature_kelvin_unit_full">Kelvin</string>
-    <string name="dev_temperature_kelvin_unit">K</string>
+    <string name="unit_temperature_celsius_full">Celzius</string>
+    <string name="unit_temperature_celsius">°C</string>
+    <string name="unit_temperature_fahrenheit_full">Fahrenheit</string>
+    <string name="unit_temperature_fahrenheit">°F</string>
+    <string name="unit_temperature_kelvin_full">Kelvin</string>
+    <string name="unit_temperature_kelvin">K</string>
     
-    <string name="dev_noise_decibel_unit">dB</string>
-    <string name="dev_noise_decibel_unit_full">Decibel</string>
-    <string name="dev_noise_bel_unit">B</string>
-    <string name="dev_noise_bel_unit_full">Bel</string>
-    <string name="dev_noise_neper_unit">Np</string>
-    <string name="dev_noise_neper_unit_full">Neper</string>    
+    <string name="unit_noise_decibel">dB</string>
+    <string name="unit_noise_decibel_full">Decibel</string>
+    <string name="unit_noise_bel">B</string>
+    <string name="unit_noise_bel_full">Bel</string>
+    <string name="unit_noise_neper">Np</string>
+    <string name="unit_noise_neper_full">Neper</string>
     
-    <string name="dev_humidity_unit">%</string>
-    <string name="dev_pressure_unit">hPa</string>
-    <string name="dev_illumination_unit">lux</string>
-    <string name="dev_noise_unit">dB</string>
-    <string name="dev_emission_unit">ppm</string>
-    <string name="dev_unknown_unit" />
+    <string name="unit_humidity">%</string>
+    <string name="unit_pressure">hPa</string>
+    <string name="unit_illumination">lux</string>
+    <string name="unit_noise">dB</string>
+    <string name="unit_emission">ppm</string>
+    <string name="unit_unknown" />
 
     <!-- Types of modules -->
     <string name="dev_unknown_type">Neznáme zariadenie</string>

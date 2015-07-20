@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.UnknownValue;
 
@@ -19,8 +19,8 @@ public class UnitsHelper {
 	}
 
 	public String getStringValue(BaseValue item, double value) {
-		if (item instanceof BaseEnumValue) {
-			int resId = ((BaseEnumValue) item).getItemByDoubleValue(value).getStringResource();
+		if (item instanceof EnumValue) {
+			int resId = ((EnumValue) item).getItemByDoubleValue(value).getStringResource();
 			return mContext.getString(resId);
 		}
 
@@ -30,8 +30,8 @@ public class UnitsHelper {
 	}
 
 	public String getStringValue(BaseValue item) {
-		if (item instanceof BaseEnumValue) {
-			int resId = ((BaseEnumValue) item).getStateStringResource();
+		if (item instanceof EnumValue) {
+			int resId = ((EnumValue) item).getStateStringResource();
 			return mContext.getString(resId);
 		} else if (item instanceof UnknownValue) {
 			return item.getRawValue();

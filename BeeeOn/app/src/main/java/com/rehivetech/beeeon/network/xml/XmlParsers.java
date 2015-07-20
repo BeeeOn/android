@@ -369,7 +369,8 @@ public class XmlParsers {
 
 	private void parseInnerDevs(List<Device> result, String aid, boolean init) throws XmlPullParserException, IOException {
 		do { // go through devs (devices)
-			Device device = new Device();
+			// FIXME: rework this
+			/*Device device = new Device();
 			device.setGateId(aid);
 			// mDevice.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false :
 			// true);
@@ -398,7 +399,7 @@ public class XmlParsers {
 				mParser.nextTag(); // part endtag
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
 
-			result.add(device);
+			result.add(device);*/
 
 		} while (mParser.nextTag() != XmlPullParser.END_TAG
 				&& (!mParser.getName().equals(Xconstants.GATE) || !mParser.getName().equals(Xconstants.COM_ROOT)));
@@ -633,7 +634,8 @@ public class XmlParsers {
 			Device device = null;
 			boolean deviceExists = false;
 
-			Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
+			// FIXME: rework this
+			/*Module module = Module.createFromModuleTypeId(getSecureAttrValue(Xconstants.TYPE));
 
 			String id = getSecureAttrValue(Xconstants.ID);
 			for (Device fac : result) {
@@ -654,7 +656,7 @@ public class XmlParsers {
 			device.addModule(module);
 
 			if (!deviceExists)
-				result.add(device);
+				result.add(device);*/
 
 			mParser.nextTag();
 

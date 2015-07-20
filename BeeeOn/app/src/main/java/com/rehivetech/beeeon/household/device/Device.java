@@ -1,68 +1,77 @@
-/**
- * @brief Package for devices that implements sensors
- */
 package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.IdentifierComparator;
+import com.rehivetech.beeeon.SortIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-/**
- * @author Robyer
- * @brief Device class which contains own data and devices (sensors, actors)
- */
-public class Device implements IIdentifier {
-	protected String mAddress;
-	protected String mGateId;
-	protected String mLocationId = Location.NO_LOCATION_ID;
-	protected boolean mInitialized;
-	protected RefreshInterval mRefreshInterval;
-	protected int mBattery;
-	protected DateTime mInvolveTime;
-	protected int mNetworkQuality;
-	protected DateTime mLastUpdate;
-	protected final List<Module> mModules = new ArrayList<Module>();
-
-	private boolean mSorted; // optimization to sort values only when needed
+public final class Device implements IIdentifier {
 
 	/**
-	 * Class constructor
+	 * Properties inherited from device's specification table.
 	 */
-	public Device() {
-	}
+	private final DeviceType mType;
+	private final List<Module> mModules;
 
 	/**
-	 * Represents settings of mDevice which could be saved to server
+	 * Properties belonging to real device.
 	 */
-	public enum SaveDevice {
-		SAVE_NAME, // rename mDevice
-		SAVE_LOCATION, // change location
-		SAVE_VISIBILITY, // change visibility //NOTE: sending always
-		SAVE_REFRESH, // change refresh interval
-		SAVE_VALUE, // change value (of actor)
-		SAVE_TYPE, // change mDevice's icon, etc. //NOTE: what? type cannot be changed
-	}
+	private final String mAddress;
+	private final String mGateId;
+
+	private String mLocationId;
+	private boolean mInitialized;
+	private DateTime mInvolveTime;
+	private int mNetworkQuality;
+	private DateTime mLastUpdate;
 
 	/**
-	 * Get last update time
+	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(int, String)}.
 	 *
+	 * @param type
+	 */
+	public Device(DeviceType type, String gateId, String address) {
+		mType = type;
+		mGateId = gateId;
+		mAddress = address;
+
+		// Create modules list
+		List<Module> modules = type.createModules(this);
+		// And sort them by order and id
+		Collections.sort(modules, new SortIdentifierComparator());
+		// Them make it immutable
+		mModules = Collections.unmodifiableList(modules);
+	}
+
+	/**
+	 * Factory method for creating new Device objects.
+	 *
+	 * @param type
+	 * @param address
 	 * @return
+	 */
+	public static final Device createDeviceByType(int type, String address) {
+		// FIXME: implement this somehow
+		/*Device device = new Device();
+		device.setAddress(address);
+		return device;*/
+		throw new IllegalArgumentException(String.format("Unknown device type: %d", type));
+	}
+
+	/**
+	 * @return time of last update
 	 */
 	public DateTime getLastUpdate() {
 		return mLastUpdate;
 	}
 
 	/**
-	 * Setting last update time
-	 *
-	 * @param lastUpdate
+	 * @param lastUpdate time of last update
 	 */
 	public void setLastUpdate(DateTime lastUpdate) {
 		mLastUpdate = lastUpdate;
@@ -74,47 +83,30 @@ public class Device implements IIdentifier {
 	 * @return true when refresh interval since last update expired
 	 */
 	public boolean isExpired() {
-		return mLastUpdate.plusSeconds(mRefreshInterval.getInterval()).isBeforeNow();
+		DeviceFeatures features = mType.getFeatures();
+		if (!features.hasRefresh()) {
+			return true;
+		}
+		return mLastUpdate.plusSeconds(features.getActualRefresh().getInterval()).isBeforeNow();
 	}
 
-	/**
-	 * Get refresh interval
-	 *
-	 * @return refresh interval
-	 */
-	public RefreshInterval getRefresh() {
-		return mRefreshInterval;
-	}
-
-	/**
-	 * Setting refresh interval
-	 *
-	 * @param interval
-	 */
-	public void setRefresh(RefreshInterval interval) {
-		mRefreshInterval = interval;
-	}
-
-	/**
-	 * Get unique identifier of mDevice
-	 *
-	 * @return id
-	 */
 	public String getId() {
 		return mAddress;
 	}
 
+	public DeviceType getType() {
+		return mType;
+	}
+
 	/**
-	 * Get location of mDevice
-	 *
-	 * @return location
+	 * @return location id of device
 	 */
 	public String getLocationId() {
 		return mLocationId;
 	}
 
 	/**
-	 * Setting location of mDevice
+	 * Setting location of device
 	 *
 	 * @param locationId
 	 */
@@ -127,21 +119,12 @@ public class Device implements IIdentifier {
 	}
 
 	/**
-	 * Get gate id of mDevice
+	 * Get gate id of device
 	 *
 	 * @return gate id
 	 */
 	public String getGateId() {
 		return mGateId;
-	}
-
-	/**
-	 * Setting gate id of mDevice
-	 *
-	 * @param gateId
-	 */
-	public void setGateId(String gateId) {
-		mGateId = gateId;
 	}
 
 	/**
@@ -163,25 +146,7 @@ public class Device implements IIdentifier {
 	}
 
 	/**
-	 * Get state of battery
-	 *
-	 * @return battery
-	 */
-	public int getBattery() {
-		return mBattery;
-	}
-
-	/**
-	 * Setting state of battery
-	 *
-	 * @param battery
-	 */
-	public void setBattery(int battery) {
-		mBattery = battery;
-	}
-
-	/**
-	 * Get time of setting of mDevice to system
+	 * Get time of setting of device to system
 	 *
 	 * @return involve time
 	 */
@@ -199,21 +164,12 @@ public class Device implements IIdentifier {
 	}
 
 	/**
-	 * Get MAC address of mDevice
+	 * Get MAC address of device
 	 *
 	 * @return address
 	 */
 	public String getAddress() {
 		return mAddress;
-	}
-
-	/**
-	 * Setting MAC address
-	 *
-	 * @param address
-	 */
-	public void setAddress(String address) {
-		mAddress = address;
 	}
 
 	/**
@@ -234,38 +190,7 @@ public class Device implements IIdentifier {
 		mNetworkQuality = networkQuality;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("Device: %s", getId());
-	}
-
-	/**
-	 * Debug method
-	 *
-	 * @return
-	 */
-	public String toDebugString() {
-		return String.format("Id: %s\nGate: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mGateId, mLocationId, mInitialized, mBattery,
-				mRefreshInterval.getInterval(), Integer.toString(mModules.size()));
-	}
-
-	public void addModule(Module module) {
-		module.setDevice(this);
-		mModules.add(module);
-		mSorted = false;
-	}
-
-	public void clearModules() {
-		mModules.clear();
-	}
-
 	public List<Module> getModules() {
-		if (!mSorted) {
-			mSorted = true;
-			// Sort devices by offset (= by id, which is combined from mac address + raw type, where type is type id + offset)
-			Collections.sort(mModules, new IdentifierComparator());
-		}
-
 		return mModules;
 	}
 

@@ -17,6 +17,6 @@
 		android:textSize="30sp"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
-		android:text="@string/dev_temperature_celsius_unit"
+		android:text="@string/unit_temperature_celsius"
 		android:id="@+id/beeeon_numberpicker_unit"/>
 </LinearLayout>

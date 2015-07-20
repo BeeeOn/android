@@ -1,58 +1,66 @@
-/**
- * @brief Package for Devices that implements sensors
- */
 package com.rehivetech.beeeon.household.device;
 
-import com.rehivetech.beeeon.INameIdentifier;
+import android.content.Context;
+import android.support.annotation.Nullable;
+
+import com.rehivetech.beeeon.ISortIdentifier;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 
-/**
- * @author Robyer
- * @brief Abstract class for all devices
- */
-public class Module implements INameIdentifier {
+import java.util.List;
+
+public final class Module implements ISortIdentifier {
 	public static final String ID_SEPARATOR = "---";
 
-	protected Device mDevice;
-	protected String mName = "";
-	protected boolean mVisibility;
-
-	public final BaseValue mValue;
-
-	public final ModuleType mType;
-	public final String mRawTypeId;
-	public final int mOffset;
-
 	/**
-	 * Class constructor
+	 * Properties inherited from device's specification table.
 	 */
-	public Module(ModuleType type, BaseValue value, String rawTypeId, int offset) {
-		mType = type;
-		mValue = value;
-		mRawTypeId = rawTypeId;
+	private final String mId;
+	private final ModuleType mType; // type defines what BaseValue should be created and also allows searching/comparing by type + offset
+	private final int mOffset;
+
+	private final Integer mSort;
+	private final int mGroupRes;
+	private final int mNameRes;
+	private final boolean mIsActuator;
+	// private final Constraints mConstraints; // FIXME: implement later
+	// private final Values mValues; // this is not needed, as needed is BaseValue property
+	// private final Rules mRules; // FIXME: implement later
+
+	private final Device mDevice; // parent device
+	private final BaseValue mValue;
+
+
+	public Module(Device device, String id, int typeId, int offset, Integer sort, int groupRes, int nameRes, boolean isActuator) {
+		mDevice = device;
+		mId = id;
+		mSort = sort;
+		mGroupRes = groupRes;
+		mNameRes = nameRes;
+		mIsActuator = isActuator;
 		mOffset = offset;
+
+		mType = ModuleType.fromTypeId(typeId);
+		mValue = BaseValue.createFromModuleType(mType);
 	}
 
-	public static Module createFromModuleTypeId(String typeId) {
-		int iType = -1; // unknown type
-		int offset = 0; // default offset
+	public Module(Device device, String id, int typeId, int offset, Integer sort, int groupRes, int nameRes, boolean isActuator, List<EnumValue.Item> enumValues) {
+		mDevice = device;
+		mId = id;
+		mSort = sort;
+		mGroupRes = groupRes;
+		mNameRes = nameRes;
+		mIsActuator = isActuator;
+		mOffset = offset;
 
-		if (!typeId.isEmpty()) {
-			// Get integer representation of the given string value
-			int value = Integer.parseInt(typeId);
-
-			// Separate combined value to type and offset
-			iType = value % 256;
-			offset = value / 256;
+		mType = ModuleType.fromTypeId(typeId);
+		if (mType.getValueClass() != EnumValue.class) {
+			throw new IllegalStateException("ValueClass received from ModuleType is not EnumValue, but constructor was called with enumValues.");
 		}
-
-		ModuleType type = ModuleType.fromTypeId(iType);
-		BaseValue value = BaseValue.createFromModuleType(type);
-
-		// Create module object with ModuleType, BaseValue, original raw value of type, and offset
-		return new Module(type, value, typeId, offset);
+		mValue = new EnumValue(enumValues);
 	}
+
 
 	/**
 	 * Represents settings of module which could be saved to server
@@ -92,11 +100,7 @@ public class Module implements INameIdentifier {
 	}
 
 	public int getIconResource(IconResourceType type){
-		return getType().isActor() ? mValue.getActorIconResource(type) : mValue.getIconResource(type);
-	}
-
-	public void setDevice(Device device) {
-		mDevice = device;
+		return mIsActuator ? mValue.getActorIconResource(type) : mValue.getIconResource(type);
 	}
 
 	public Device getDevice() {
@@ -112,75 +116,40 @@ public class Module implements INameIdentifier {
 		if (mDevice == null)
 			throw new RuntimeException("Module's mDevice is null!");
 
-		return mDevice.getAddress() + ID_SEPARATOR + getRawTypeId();
-	}
-
-	public String getRawTypeId() {
-		return mRawTypeId;
+		return mDevice.getAddress() + ID_SEPARATOR + mId;
 	}
 
 	public int getOffset() {
 		return mOffset;
 	}
 
-	/**
-	 * Get name of module
-	 *
-	 * @return name
-	 */
-	public String getName() {
-		return mName.length() > 0 ? mName : getId();
+	public String getGroupName(Context context) {
+		return mGroupRes > 0 ? context.getString(mGroupRes) : "";
 	}
 
 	/**
-	 * Get name of module in raw form server (it is for third-part sensors)
-	 *
-	 * @return name
+	 * @return name of module
 	 */
-	public String getServerName() {
-		return mName.length() > 0 ? mName : "";
+	public String getName(Context context) {
+		return mNameRes > 0 ? context.getString(mNameRes) : "";
 	}
 
 	/**
-	 * Setting name of module
-	 *
-	 * @param name
-	 */
-	public void setName(String name) {
-		mName = name;
-	}
-
-
-	/**
-	 * Get visibility of module
-	 *
-	 * @return true if visible
+	 * @return true if module should be visible to the user at this moment
 	 */
 	public boolean isVisible() {
-		return mVisibility;
+		// FIXME: real check based on rules
+		return true;
 	}
 
-	/**
-	 * Setting visibility of module
-	 *
-	 * @param visibility true if visible
-	 */
-	public void setVisibility(boolean visibility) {
-		mVisibility = visibility;
+	public boolean isActuator() {
+		return mIsActuator;
 	}
 
+	@Nullable
 	@Override
-	public String toString() {
-		return getName();
-	}
-
-	/**
-	 * Debug method
-	 *
-	 * @return
-	 */
-	public String toDebugString() {
-		return String.format("Name: %s\nVisibility: %s\nValue: %s", mName, Boolean.toString(mVisibility), mValue);
+	public Integer getSort() {
+		return mSort;
 	}
 
 }

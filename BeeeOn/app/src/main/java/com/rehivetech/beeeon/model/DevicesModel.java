@@ -233,8 +233,8 @@ public class DevicesModel extends BaseModel {
 	 * @return true on success, false otherwise
 	 */
 	public boolean switchActor(Module module) throws AppException {
-		if (!module.getType().isActor()) {
-			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getName()));
+		if (!module.isActuator()) {
+			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getId()));
 			return false;
 		}
 

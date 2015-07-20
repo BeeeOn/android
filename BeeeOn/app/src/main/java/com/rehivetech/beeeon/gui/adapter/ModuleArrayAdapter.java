@@ -59,7 +59,7 @@ public class ModuleArrayAdapter extends ArrayAdapter<Module> {
 
 		Module module = mModules.get(position);
 
-		holder.ItemLabel.setText(module.getName());
+		holder.ItemLabel.setText(module.getName(getContext()));
 		holder.ItemIcon.setImageResource(module.getIconResource());
 		holder.ItemLocation.setText(mLocations.get(getLocationsIndexFromArray(module.getDevice().getLocationId())).getName());
 
@@ -73,7 +73,7 @@ public class ModuleArrayAdapter extends ArrayAdapter<Module> {
 		Module module = mModules.get(position);
 
 		TextView label = (TextView) row.findViewById(R.id.custom_spinner2_label);
-		label.setText(module.getName());
+		label.setText(module.getName(getContext()));
 
 		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner2_icon);
 		icon.setImageResource(module.getIconResource());

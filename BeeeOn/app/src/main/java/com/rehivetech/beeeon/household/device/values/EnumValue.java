@@ -1,28 +1,29 @@
 package com.rehivetech.beeeon.household.device.values;
 
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.BlankUnit;
 import com.rehivetech.beeeon.util.Log;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public abstract class BaseEnumValue extends BaseValue {
+public class EnumValue extends BaseValue {
 
-	private static final String TAG = BaseEnumValue.class.getSimpleName();
+	private static final String TAG = EnumValue.class.getSimpleName();
 
-	protected final List<Item> mItems = new ArrayList<Item>();
+	protected final List<Item> mItems;
 
-	protected final Item mUnknownValue = this.new Item(-1, "", R.drawable.ic_val_unknown, R.drawable.ic_val_unknown_gray, R.string.dev_unknown_unit, Color.BLACK);
+	protected final Item mUnknownValue = new Item(-1, "", R.drawable.ic_val_unknown, R.drawable.ic_val_unknown_gray, R.string.unit_unknown, Color.BLACK);
 
 	private Item mValue = mUnknownValue;
 
 	private static BlankUnit mUnit = new BlankUnit();
 
-	public class Item {
+	public static class Item {
 		private final int mId;
 		private final String mValue;
 		private final int mIconResource;
@@ -30,7 +31,7 @@ public abstract class BaseEnumValue extends BaseValue {
 		private final int mStringResource;
 		private final int mColor;
 
-		protected Item(int id, String value, int iconResource, int iconResourceDark, int stringResource, int color) {
+		public Item(int id, String value, int iconResource, int iconResourceDark, int stringResource, int color) {
 			mId = id;
 			mValue = value;
 			mIconResource = iconResource;
@@ -58,6 +59,10 @@ public abstract class BaseEnumValue extends BaseValue {
 		public int getColor() {
 			return mColor;
 		}
+	}
+
+	public EnumValue(@NonNull List<Item> items) {
+		mItems = Collections.unmodifiableList(items);
 	}
 
 	@Override

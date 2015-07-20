@@ -1,3 +1,4 @@
+/*
 package com.rehivetech.beeeon.network;
 
 import android.content.Context;
@@ -18,9 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
 
+*/
 /**
  * Created by vico on 8.7.2015.
- */
+ *//*
+
 public class DemoData {
 
 	private static final String GATE_1_ID = "64206";
@@ -746,3 +749,4 @@ public class DemoData {
 	}
 
 }
+*/

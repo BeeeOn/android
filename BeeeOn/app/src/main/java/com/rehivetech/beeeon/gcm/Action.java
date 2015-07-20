@@ -39,7 +39,8 @@ public final class Action {
 
 		int pos = 0;
 		for (int i = 0; i < modules.size(); i++) {
-			if (modules.get(i).getRawTypeId().equals(String.valueOf(type))) {
+			// FIXME: now it is comparing id with type, which won't work at all
+			if (modules.get(i).getId().equals(String.valueOf(type))) {
 
 				pos = i;
 				break;

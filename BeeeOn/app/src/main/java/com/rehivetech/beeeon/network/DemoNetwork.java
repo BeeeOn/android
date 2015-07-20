@@ -6,15 +6,15 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue.Item;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue.Item;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -30,7 +30,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -98,20 +97,20 @@ public class DemoNetwork implements INetwork {
 
 	private void setNewValue(Module module) {
 		// Don't set new values for actors (unless it's the first value to be set during initialization)
-		if (module.getType().isActor() && module.getValue().hasValue())
+		if (module.isActuator() && module.getValue().hasValue())
 			return;
 
 		Random rand = getRandomForGate(module.getDevice().getGateId());
 
-		if (module.getValue() instanceof BaseEnumValue) {
-			BaseEnumValue value = (BaseEnumValue) module.getValue();
+		if (module.getValue() instanceof EnumValue) {
+			EnumValue value = (EnumValue) module.getValue();
 			List<Item> items = value.getEnumItems();
 			Item item = items.get(rand.nextInt(items.size()));
 
 			module.setValue(item.getValue());
 		} else {
 			double lastValue = module.getValue().getDoubleValue();
-			double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
+			double range = 2 + Math.log(module.getDevice().getType().getFeatures().getActualRefresh().getInterval());
 
 			if (Double.isNaN(lastValue)) {
 				lastValue = rand.nextDouble() * 1000;
@@ -136,7 +135,7 @@ public class DemoNetwork implements INetwork {
 		mWatchdogs.clear();
 		mUsers.clear();
 
-		DemoData demoData = new DemoData();
+/*		DemoData demoData = new DemoData();
 		mGates.setObjects(demoData.getGates(mContext));
 		for (Gate gate : mGates.getObjects()) {
 			String gateId = gate.getId();
@@ -146,7 +145,7 @@ public class DemoNetwork implements INetwork {
 
 			mDevices.setObjects(gateId, demoData.getDevices(mContext, gateId));
 			mDevices.setLastUpdate(gateId, DateTime.now());
-			
+
 			mWatchdogs.setObjects(gateId, demoData.getWatchdogs(mContext, gateId));
 			mWatchdogs.setLastUpdate(gateId, DateTime.now());
 
@@ -161,7 +160,7 @@ public class DemoNetwork implements INetwork {
 				// FIXME: is using getObjects() ok? It creates new list. But it should be ok, because inner objects are still only references. Needs test!
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(rand.nextInt(60 * 60 * 26)));
 			}
-		}
+		}*/
 
 		mInitialized = true;
 	}
@@ -285,7 +284,7 @@ public class DemoNetwork implements INetwork {
 		for (Device device : devices) {
 			if (device.isExpired()) {
 				// Set new random values
-				device.setBattery(rand.nextInt(101));
+				// device.setBattery(rand.nextInt(101));
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 				device.setNetworkQuality(rand.nextInt(101));
 
@@ -378,7 +377,7 @@ public class DemoNetwork implements INetwork {
 
 		if (newDevice != null && newDevice.isExpired()) {
 			// Set new random values
-			newDevice.setBattery(rand.nextInt(101));
+			// newDevice.setBattery(rand.nextInt(101));
 			newDevice.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			newDevice.setNetworkQuality(rand.nextInt(101));
 
@@ -407,10 +406,6 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(gateId);
 		if (rand.nextInt(10) == 0) {
-			Device device = new Device();
-
-			device.setGateId(gateId);
-
 			// Create unique mDevice id
 			String address;
 			int i = 0;
@@ -418,8 +413,10 @@ public class DemoNetwork implements INetwork {
 				address = "10.0.0." + String.valueOf(i++);
 			} while (mDevices.hasObject(gateId, address));
 
-			device.setAddress(address);
-			device.setBattery(rand.nextInt(101));
+			// FIXME: random type
+			Device device = new Device(DeviceType.TYPE_0, gateId, address);
+
+			// device.setBattery(rand.nextInt(101));
 			device.setInitialized(rand.nextBoolean());
 			device.setInvolveTime(DateTime.now(DateTimeZone.UTC));
 			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
@@ -427,10 +424,10 @@ public class DemoNetwork implements INetwork {
 			device.setNetworkQuality(rand.nextInt(101));
 
 			RefreshInterval[] refresh = RefreshInterval.values();
-			device.setRefresh(refresh[rand.nextInt(refresh.length)]);
+			// device.setRefresh(refresh[rand.nextInt(refresh.length)]);
 
 			// add random number of devices (max. 5)
-			int count = rand.nextInt(5);
+			/*int count = rand.nextInt(5);
 			do {
 				// Get random module type
 				ModuleType[] types = ModuleType.values();
@@ -457,7 +454,7 @@ public class DemoNetwork implements INetwork {
 				setNewValue(module);
 
 				device.addModule(module);
-			} while (--count >= 0);
+			} while (--count >= 0);*/
 
 			// Add new mDevice to global holder
 			mDevices.addObject(gateId, device);
@@ -475,7 +472,7 @@ public class DemoNetwork implements INetwork {
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
 		double lastValue = pair.module.getValue().getDoubleValue();
-		double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
+		double range = 2 + Math.log(module.getDevice().getType().getFeatures().getActualRefresh().getInterval());
 
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
@@ -486,9 +483,9 @@ public class DemoNetwork implements INetwork {
 			lastValue = rand.nextDouble() * 1000;
 		}
 
-		int everyMsecs = Math.max(pair.gap.getSeconds(), module.getDevice().getRefresh().getInterval()) * 1000;
+		int everyMsecs = Math.max(pair.gap.getSeconds(), module.getDevice().getType().getFeatures().getActualRefresh().getInterval()) * 1000;
 
-		boolean isEnum = (module.getValue() instanceof BaseEnumValue);
+		boolean isEnum = (module.getValue() instanceof EnumValue);
 
 		if (isEnum) {
 			// For enums we want fixed number of steps (because application surely wants raw values)
@@ -497,7 +494,7 @@ public class DemoNetwork implements INetwork {
 
 		while (start < end) {
 			if (isEnum) {
-				BaseEnumValue value = (BaseEnumValue) module.getValue();
+				EnumValue value = (EnumValue) module.getValue();
 				List<Item> items = value.getEnumItems();
 
 				int pos = 0;

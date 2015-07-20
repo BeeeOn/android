@@ -242,10 +242,10 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 				Device device = module.getDevice();
 				LocationArrayAdapter adapter = (LocationArrayAdapter) mLocationSpinner.getAdapter();
 
-				mName.setText(module.getName());
+				mName.setText(module.getName(mActivity));
 				mLocationSpinner.setSelection(getLocationsIndexFromArray(adapter.getLocations(), device.getLocationId()));
-				mRefreshTimeSeekBar.setProgress(device.getRefresh().getIntervalIndex());
-				mRefreshTimeText.setText(" " + device.getRefresh().getStringInterval(mActivity));
+				mRefreshTimeSeekBar.setProgress(device.getType().getFeatures().getActualRefresh().getIntervalIndex());
+				mRefreshTimeText.setText(" " + device.getType().getFeatures().getActualRefresh().getStringInterval(mActivity));
 			}
 		}
 
@@ -367,6 +367,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 			EnumSet<Module.SaveModule> what = EnumSet.noneOf(Module.SaveModule.class);
 
+			/* // FIXME: rework this
 			if (!getName().equals(module.getName())) {
 				what.add(Module.SaveModule.SAVE_NAME);
 				module.setName(getName());
@@ -375,7 +376,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 			if (!getRefreshTimeSeekBar().equals(device.getRefresh())) {
 				what.add(Module.SaveModule.SAVE_REFRESH);
 				device.setRefresh(getRefreshTimeSeekBar());
-			}
+			}*/
 
 			if (!getLocationId().equals(device.getLocationId())) {
 				what.add(Module.SaveModule.SAVE_LOCATION);

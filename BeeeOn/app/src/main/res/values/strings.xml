@@ -471,4 +471,7 @@
 	<string name="minus" translatable="false">-</string>
 	<string name="plus" translatable="false">+</string>
 	<string name="doubledots" translatable="false">:</string>
+
+	<string name="unknown_device">Unknown device</string>
+    <string name="unknown_manufacturer">Unknown manufacturer</string>
 </resources>

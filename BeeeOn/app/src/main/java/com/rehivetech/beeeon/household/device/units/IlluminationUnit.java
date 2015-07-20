@@ -10,7 +10,7 @@ public class IlluminationUnit extends BaseUnit {
 	public IlluminationUnit() {
 		super();
 
-		mItems.add(this.new Item(DEFAULT, R.string.dev_illumination_unit, R.string.dev_illumination_unit));
+		mItems.add(this.new Item(DEFAULT, R.string.unit_illumination, R.string.unit_illumination));
 	}
 
 	@Override

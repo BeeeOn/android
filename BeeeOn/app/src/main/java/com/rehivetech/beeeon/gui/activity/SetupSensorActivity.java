@@ -104,7 +104,8 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 						return;
 					}
 					// Set this new name to sensor
-					newDevice.getModules().get(i).setName(name);
+					// FIXME: rework this?
+					// newDevice.getModules().get(i).setName(name);
 
 				}
 

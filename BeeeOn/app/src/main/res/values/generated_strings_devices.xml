@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="devices__type_enum">Enum</string>
+	<string name="devices__type_temperature">Temperature</string>
+	<string name="devices__type_humidity">Humidity</string>
+	<string name="devices__type_pressure">Pressure</string>
+	<string name="devices__type_light">Light</string>
+	<string name="devices__type_noise">Noise</string>
+	<string name="devices__type_co2">Carbon dioxide</string>
+	<string name="devices__manufacturer_but">BUT</string>
+	<string name="devices__manufacturer_thermona">Thermona</string>
+	<string name="devices__dev_temperature_humidity">Temperature and humidity sensor</string>
+	<string name="devices__dev_regulator_vpt">Regulator VPT</string>
+	<string name="devices__mod_room_temperature">Room temperature</string>
+	<string name="devices__mod_outside_temperature">Outside temperature</string>
+	<string name="devices__mod_room_humidity">Room humidity</string>
+	<string name="devices__mod_boiler_status">Boiler status</string>
+	<string name="val_boiler_status_undefined">Undefined</string>
+	<string name="val_boiler_status_heating">Heating</string>
+	<string name="val_boiler_status_hot_water">Hot water</string>
+	<string name="val_boiler_status_failure">Failure</string>
+	<string name="val_boiler_status_shutdown">Shutdown</string>
+	<string name="devices__mod_boiler_operation_type">Boiler operation type</string>
+	<string name="val_boiler_operation_type_off">Off</string>
+	<string name="val_boiler_operation_type_room_regulator">Room regulator</string>
+	<string name="val_boiler_operation_type_equiterm_regulator">Equiterm regulator</string>
+	<string name="val_boiler_operation_type_constant_water_temperature">Constant water temperature</string>
+	<string name="val_boiler_operation_type_hot_water">Hot water</string>
+	<string name="devices__mod_boiler_operation_mode">Boiler operation mode</string>
+	<string name="val_boiler_operation_mode_automatic">Automatic</string>
+	<string name="val_boiler_operation_mode_manual">Manual</string>
+	<string name="val_boiler_operation_mode_vacation">Vacation</string>
+	<string name="devices__mod_requested_room_temperature">Requested room temperature</string>
+	<string name="devices__mod_current_room_temperature">Current room temperature</string>
+	<string name="devices__mod_requested_water_temperature">Requested water temperature</string>
+	<string name="devices__mod_current_water_temperature">Current water temperature</string>
+	<string name="devices__zone_1">Zone 1 - </string>
+	<string name="devices__zone_2">Zone 2 - </string>
+	<string name="devices__zone_3">Zone 3 - </string>
+	<string name="devices__zone_4">Zone 4 - </string>
+</resources>

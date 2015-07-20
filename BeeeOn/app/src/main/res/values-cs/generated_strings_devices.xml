@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="devices__type_enum">Výčet</string>
+	<string name="devices__type_temperature">Teplota</string>
+	<string name="devices__type_humidity">Vlhkost</string>
+	<string name="devices__type_pressure">Tlak</string>
+	<string name="devices__type_light">Světelnost</string>
+	<string name="devices__type_noise">Hluk</string>
+	<string name="devices__type_co2">Oxid uhličitý</string>
+	<string name="devices__manufacturer_but">VUT</string>
+	<string name="devices__manufacturer_thermona">Thermona</string>
+	<string name="devices__dev_temperature_humidity">Senzor teploty a vlhkosti</string>
+	<string name="devices__dev_regulator_vpt">Regulátor VPT</string>
+	<string name="devices__mod_room_temperature">Teplota místnosti</string>
+	<string name="devices__mod_outside_temperature">Teplota venkovní</string>
+	<string name="devices__mod_room_humidity">Vlhkost v místnosti</string>
+	<string name="devices__mod_boiler_status">Stav kotle</string>
+	<string name="val_boiler_status_undefined">Nezjištěno</string>
+	<string name="val_boiler_status_heating">Topení</string>
+	<string name="val_boiler_status_hot_water">Ohřev TUV</string>
+	<string name="val_boiler_status_failure">Porucha</string>
+	<string name="val_boiler_status_shutdown">Odstaveno</string>
+	<string name="devices__mod_boiler_operation_type">Typ provozu</string>
+	<string name="val_boiler_operation_type_off">Vypnuto</string>
+	<string name="val_boiler_operation_type_room_regulator">Pokojový regulátor</string>
+	<string name="val_boiler_operation_type_equiterm_regulator">Ekvitermní regulace</string>
+	<string name="val_boiler_operation_type_constant_water_temperature">Regulace na stálou teplotu vody</string>
+	<string name="val_boiler_operation_type_hot_water">Ohřev TUV</string>
+	<string name="devices__mod_boiler_operation_mode">Režim provozu</string>
+	<string name="val_boiler_operation_mode_automatic">Automaticky</string>
+	<string name="val_boiler_operation_mode_manual">Manuální</string>
+	<string name="val_boiler_operation_mode_vacation">Dovolená</string>
+	<string name="devices__mod_requested_room_temperature">Žádaná teplota místnosti</string>
+	<string name="devices__mod_current_room_temperature">Aktuální teplota místnosti</string>
+	<string name="devices__mod_requested_water_temperature">Žádaná teplota vody</string>
+	<string name="devices__mod_current_water_temperature">Aktuální teplota vody</string>
+	<string name="devices__zone_1">Zóna 1 - </string>
+	<string name="devices__zone_2">Zóna 2 - </string>
+	<string name="devices__zone_3">Zóna 3 - </string>
+	<string name="devices__zone_4">Zóna 4 - </string>
+</resources>

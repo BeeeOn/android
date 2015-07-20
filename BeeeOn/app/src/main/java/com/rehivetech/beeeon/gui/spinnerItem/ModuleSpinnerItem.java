@@ -12,11 +12,13 @@ import com.rehivetech.beeeon.household.location.Location;
 public class ModuleSpinnerItem extends AbstractSpinnerItem {
 	private Module mModule;
 	private Location mLocation;
+	private Context mContext;
 
 	public ModuleSpinnerItem(Module module, Location location, String id, Context context) {
 		super(id, SpinnerItemType.MODULE);
 		mModule = module;
 		mLocation = location;
+		mContext = context;
 	}
 
 	@Override
@@ -32,7 +34,7 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.custom_spinner2_icon);
 
 		// Set the results into TextViews
-		ItemLabel.setText(mModule.getName());
+		ItemLabel.setText(mModule.getName(mContext));
 
 		if (mLocation != null) {
 			ItemSubLabel.setText(mLocation.getName());
@@ -54,7 +56,7 @@ public class ModuleSpinnerItem extends AbstractSpinnerItem {
 		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.custom_spinner2_dropdown_icon);
 
 		// Set the results into TextViews
-		ItemLabel.setText(mModule.getName());
+		ItemLabel.setText(mModule.getName(mContext));
 
 		if (mLocation != null) {
 			ItemSubLabel.setText(mLocation.getName());

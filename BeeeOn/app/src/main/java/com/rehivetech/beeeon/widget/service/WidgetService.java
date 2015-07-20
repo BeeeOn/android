@@ -446,7 +446,7 @@ public class WidgetService extends Service {
 
 		// ----- first get the module and change value
 		final Module module = mController.getDevicesModel().getModule(gateId, actorId);
-		if (module == null || !module.getType().isActor()) {
+		if (module == null || !module.isActuator()) {
 			Log.e(TAG, "MODULE NOT actor OR NOT FOUND --> probably need to refresh controller");
 			return;
 		}
@@ -454,7 +454,7 @@ public class WidgetService extends Service {
 		// ----- check if value is boolean
 		BaseValue value = module.getValue();
 		if (!(value instanceof BooleanValue)) {
-			Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
+			Log.e(TAG, "We can't switch actor, which value isn't inherited from EnumValue, yet");
 			return;
 		}
 

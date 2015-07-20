@@ -12,9 +12,9 @@ public class TemperatureUnit extends BaseUnit {
 	public TemperatureUnit() {
 		super();
 
-		mItems.add(this.new Item(CELSIUS, R.string.dev_temperature_celsius_unit_full, R.string.dev_temperature_celsius_unit));
-		mItems.add(this.new Item(FAHRENHEIT, R.string.dev_temperature_fahrenheit_unit_full, R.string.dev_temperature_fahrenheit_unit));
-		mItems.add(this.new Item(KELVIN, R.string.dev_temperature_kelvin_unit_full, R.string.dev_temperature_kelvin_unit));
+		mItems.add(this.new Item(CELSIUS, R.string.unit_temperature_celsius_full, R.string.unit_temperature_celsius));
+		mItems.add(this.new Item(FAHRENHEIT, R.string.unit_temperature_fahrenheit_full, R.string.unit_temperature_fahrenheit));
+		mItems.add(this.new Item(KELVIN, R.string.unit_temperature_kelvin_full, R.string.unit_temperature_kelvin));
 	}
 
 	@Override

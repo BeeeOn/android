@@ -500,7 +500,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
-				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName());
+				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName(mActivity));
 				String message = getString(R.string.confirm_unregister_device_message);
 				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());
 			}

@@ -1,49 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
-    <!-- Units of modules -->
-    <string name="dev_temperature_celsius_unit_full">Celsius</string>
-    <string name="dev_temperature_celsius_unit">°C</string>
-    <string name="dev_temperature_fahrenheit_unit_full">Fahrenheit</string>
-    <string name="dev_temperature_fahrenheit_unit">°F</string>
-    <string name="dev_temperature_kelvin_unit_full">Kelvin</string>
-    <string name="dev_temperature_kelvin_unit">K</string>
+    <!-- Units -->
+    <string name="unit_temperature_celsius_full">Celsius</string>
+    <string name="unit_temperature_celsius">°C</string>
+    <string name="unit_temperature_fahrenheit_full">Fahrenheit</string>
+    <string name="unit_temperature_fahrenheit">°F</string>
+    <string name="unit_temperature_kelvin_full">Kelvin</string>
+    <string name="unit_temperature_kelvin">K</string>
     
-    <string name="dev_noise_decibel_unit">dB</string>
-    <string name="dev_noise_decibel_unit_full">Decibel</string>
-    <string name="dev_noise_bel_unit">B</string>
-    <string name="dev_noise_bel_unit_full">Bel</string>
-    <string name="dev_noise_neper_unit">Np</string>
-    <string name="dev_noise_neper_unit_full">Neper</string>    
+    <string name="unit_noise_decibel">dB</string>
+    <string name="unit_noise_decibel_full">Decibel</string>
+    <string name="unit_noise_bel">B</string>
+    <string name="unit_noise_bel_full">Bel</string>
+    <string name="unit_noise_neper">Np</string>
+    <string name="unit_noise_neper_full">Neper</string>
     
-    <string name="dev_humidity_unit">%</string>
-    <string name="dev_pressure_unit">hPa</string>
-    <string name="dev_illumination_unit">lux</string>
-    <string name="dev_noise_unit">dB</string>
-    <string name="dev_emission_unit">ppm</string>
-    <string name="dev_unknown_unit" />
+    <string name="unit_humidity">%</string>
+    <string name="unit_pressure">hPa</string>
+    <string name="unit_illumination">lux</string>
+    <string name="unit_noise">dB</string>
+    <string name="unit_emission">ppm</string>
+    <string name="unit_unknown"/>
 
     <!-- Types of modules -->
-    <string name="dev_unknown_type">Unknown module</string>
-    <!-- Sensors -->
-    <string name="dev_temperature_type">Thermometer</string>
-    <string name="dev_humidity_type">Hygrometer</string>
-    <string name="dev_pressure_type">Barometer</string>
-    <string name="dev_open_closed_type">Open/closed sensor</string>
-    <string name="dev_on_off_type">On/Off sensor</string>
-    <string name="dev_illumination_type">Photometer</string>
-    <string name="dev_noise_type">Sound meter</string>
-    <string name="dev_emission_type">Emission meter</string>
-    <string name="dev_boiler_status_type">Boiler status</string>
-    <!-- Actors -->
-    <string name="dev_actor_on_off_type">On/Off actuator</string>
-    <string name="dev_actor_push_type">Push actuator</string>
-    <string name="dev_actor_toggle_type">Toggle actuator</string>
-    <string name="dev_actor_range_type">Range actuator</string>
-    <string name="dev_actor_rgb_type">RGB actuator</string>
-	<string name="dev_actor_temperature">Temperature actuator</string>
-	<string name="dev_actor_boiler_operation_type">Boiler operation type</string>
-	<string name="dev_actor_boiler_operation_mode">Boiler operation mode</string>
+    <string name="dev_unknown_type">Unknown type</string>
+    <string name="dev_enum_type">Enum type</string>
+    <string name="dev_temperature_type">Temperature type</string>
+    <string name="dev_humidity_type">Humidity type</string>
+    <string name="dev_pressure_type">Pressure type</string>
+    <string name="dev_illumination_type">Illumination type</string>
+    <string name="dev_noise_type">Noise type</string>
+    <string name="dev_emission_type">Emission type</string>
+
+
+
 
     <!-- Special values of modules -->
     <string name="dev_enum_value_open">Open</string>
