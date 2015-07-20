@@ -40,6 +40,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
@@ -48,6 +49,7 @@ import com.rehivetech.beeeon.util.TutorialHelper;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -210,17 +212,19 @@ public class SensorListFragment extends BaseApplicationFragment {
 		// All locations on gate
 		locations = controller.getLocationsModel().getLocationsByGate(mActiveGateId);
 
-		List<Module> modules = new ArrayList<Module>();
+		DevicesModel devicesModel = controller.getDevicesModel();
+
+		List<Module> modules = new ArrayList<>();
 		for (Location loc : locations) {
 			mSensorAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
 			// all devices from actual location
-			devices = controller.getDevicesModel().getDevicesByLocation(mActiveGateId, loc.getId());
-			for (Device fac : devices) {
-				for (int x = 0; x < fac.getVisibleModules().size(); x++) {
-					Module dev = fac.getVisibleModules().get(x);
-					mSensorAdapter.addItem(new SensorListItem(dev, dev.getAbsoluteId(), mActivity, x == (fac.getVisibleModules().size() - 1)));
+			for (Device device : devicesModel.getDevicesByLocation(mActiveGateId, loc.getId())) {
+				Iterator<Module> it = device.getVisibleModules().iterator();
+				while (it.hasNext()) {
+					Module module = it.next();
+					mSensorAdapter.addItem(new SensorListItem(module, module.getAbsoluteId(), mActivity, !it.hasNext()));
+					modules.add(module);
 				}
-				modules.addAll(fac.getVisibleModules());
 			}
 		}
 
