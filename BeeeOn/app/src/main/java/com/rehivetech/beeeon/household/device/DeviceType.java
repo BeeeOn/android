@@ -52,9 +52,9 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
 							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
 					)),
-					new Module(device, "2", 0x02, 0, null, R.string.devices__zone_1, R.string.devices__mod_requested_room_temperature, true, null),
+					new Module(device, "2", 0x02, 0, null, R.string.devices__zone_1, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "3", 0x02, 0, null, R.string.devices__zone_1, R.string.devices__mod_current_room_temperature, false, null),
-					new Module(device, "4", 0x02, 1, null, R.string.devices__zone_1, R.string.devices__mod_requested_water_temperature, true, null),
+					new Module(device, "4", 0x02, 1, null, R.string.devices__zone_1, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "5", 0x02, 1, null, R.string.devices__zone_1, R.string.devices__mod_current_water_temperature, false, null),
 					new Module(device, "6", 0x01, 2, null, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(1, new int[] {10, 11}),
@@ -73,9 +73,9 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
 							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
 					)),
-					new Module(device, "8", 0x02, 2, null, R.string.devices__zone_2, R.string.devices__mod_requested_room_temperature, true, null),
+					new Module(device, "8", 0x02, 2, null, R.string.devices__zone_2, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "9", 0x02, 2, null, R.string.devices__zone_2, R.string.devices__mod_current_room_temperature, false, null),
-					new Module(device, "10", 0x02, 3, null, R.string.devices__zone_2, R.string.devices__mod_requested_water_temperature, true, null),
+					new Module(device, "10", 0x02, 3, null, R.string.devices__zone_2, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "11", 0x02, 3, null, R.string.devices__zone_2, R.string.devices__mod_current_water_temperature, false, null),
 					new Module(device, "12", 0x01, 4, null, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(1, new int[] {16, 17}),
@@ -94,9 +94,9 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
 							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
 					)),
-					new Module(device, "14", 0x02, 4, null, R.string.devices__zone_3, R.string.devices__mod_requested_room_temperature, true, null),
+					new Module(device, "14", 0x02, 4, null, R.string.devices__zone_3, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "15", 0x02, 4, null, R.string.devices__zone_3, R.string.devices__mod_current_room_temperature, false, null),
-					new Module(device, "16", 0x02, 5, null, R.string.devices__zone_3, R.string.devices__mod_requested_water_temperature, true, null),
+					new Module(device, "16", 0x02, 5, null, R.string.devices__zone_3, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "17", 0x02, 5, null, R.string.devices__zone_3, R.string.devices__mod_current_water_temperature, false, null),
 					new Module(device, "18", 0x01, 6, null, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(1, new int[] {22, 23}),
@@ -115,9 +115,9 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
 							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
 					)),
-					new Module(device, "20", 0x02, 6, null, R.string.devices__zone_4, R.string.devices__mod_requested_room_temperature, true, null),
+					new Module(device, "20", 0x02, 6, null, R.string.devices__zone_4, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "21", 0x02, 6, null, R.string.devices__zone_4, R.string.devices__mod_current_room_temperature, false, null),
-					new Module(device, "22", 0x02, 7, null, R.string.devices__zone_4, R.string.devices__mod_requested_water_temperature, true, null),
+					new Module(device, "22", 0x02, 7, null, R.string.devices__zone_4, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(-20.0, 100.0, 0.5)),
 					new Module(device, "23", 0x02, 7, null, R.string.devices__zone_4, R.string.devices__mod_current_water_temperature, false, null),
 					new Module(device, "24", 0x01, 8, 0, null, R.string.devices__mod_boiler_status, false, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_status_undefined),
@@ -129,6 +129,13 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	};
+
+	/** Version from specification of this devices list */
+	public static final String DEVICES_VERSION = "1";
+
+	/** Generation time (GMT) of this devices list */
+	public static final long DEVICES_DATE = 1433932548981l;
+
 	/** END OF GENERATED CONTENT **/
 
 	private final String mTypeId;

@@ -26,7 +26,6 @@ public final class Module implements IOrderIdentifier {
 	private final int mGroupRes;
 	private final int mNameRes;
 	private final boolean mIsActuator;
-	// private final Constraints mConstraints; // FIXME: implement later
 	private final List<Rule> mRules;
 
 	private final Device mDevice; // parent device
@@ -37,6 +36,11 @@ public final class Module implements IOrderIdentifier {
 	}
 
 	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules) {
+		this(device, id, typeId, offset, sort, groupRes, nameRes, isActuator, rules, (BaseValue.Constraints) null);
+	}
+
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
+				  BaseValue.Constraints constraints) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
 		mOffset = offset;
@@ -46,14 +50,19 @@ public final class Module implements IOrderIdentifier {
 		mIsActuator = isActuator;
 		mRules = rules != null ? Collections.unmodifiableList(rules) : null;
 
+		if (isActuator && constraints == null) {
+			throw new IllegalArgumentException("Module is actuator, but constructor was called without constraints nor enumValues.");
+		}
+
 		mType = ModuleType.fromTypeId(typeId);
 		if (mType.getValueClass() == EnumValue.class) {
 			throw new IllegalArgumentException("ValueClass received from ModuleType is EnumValue, but constructor was called without enumValues.");
 		}
-		mValue = BaseValue.createFromModuleType(mType);
+		mValue = BaseValue.createFromModuleType(mType, constraints);
 	}
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules, List<EnumValue.Item> enumValues) {
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
+				  List<EnumValue.Item> enumValues) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
 		mOffset = offset;
