@@ -17,7 +17,7 @@ public class EnumValue extends BaseValue {
 
 	protected final List<Item> mItems;
 
-	protected final Item mUnknownValue = new Item(-1, "", R.drawable.ic_val_unknown, R.drawable.ic_val_unknown_gray, R.string.unit_unknown, Color.BLACK);
+	protected final Item mUnknownValue = new Item(-1, "", R.drawable.ic_val_unknown, R.drawable.ic_val_unknown_gray, R.string.blank, Color.BLACK);
 
 	private Item mValue = mUnknownValue;
 

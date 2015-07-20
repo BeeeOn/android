@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dev_enum_type">Zoznamový typ</string>
 
     <!-- Units of modules -->
     <string name="unit_temperature_celsius_full">Celzius</string>
@@ -21,7 +22,6 @@
     <string name="unit_illumination">lux</string>
     <string name="unit_noise">dB</string>
     <string name="unit_emission">ppm</string>
-    <string name="unit_unknown" />
 
     <!-- Types of modules -->
     <string name="dev_unknown_type">Neznáme zariadenie</string>

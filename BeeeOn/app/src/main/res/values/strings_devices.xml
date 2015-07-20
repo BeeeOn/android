@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+<resources>
+    <string name="dev_enum_type">Enum type</string>
 
     <!-- Units -->
     <string name="unit_temperature_celsius_full">Celsius</string>
@@ -21,42 +22,6 @@
     <string name="unit_illumination">lux</string>
     <string name="unit_noise">dB</string>
     <string name="unit_emission">ppm</string>
-    <string name="unit_unknown"/>
-
-    <!-- Types of modules -->
-    <string name="dev_unknown_type">Unknown type</string>
-    <string name="dev_enum_type">Enum type</string>
-    <string name="dev_temperature_type">Temperature type</string>
-    <string name="dev_humidity_type">Humidity type</string>
-    <string name="dev_pressure_type">Pressure type</string>
-    <string name="dev_illumination_type">Illumination type</string>
-    <string name="dev_noise_type">Noise type</string>
-    <string name="dev_emission_type">Emission type</string>
-
-
-
-
-    <!-- Special values of modules -->
-    <string name="dev_enum_value_open">Open</string>
-    <string name="dev_enum_value_closed">Closed</string>
-    <string name="dev_enum_value_on">On</string>
-    <string name="dev_enum_value_off">Off</string>
-
-	<string name="dev_boiler_operation_type_value_off">Off</string>
-	<string name="dev_boiler_operation_type_value_room">Room regulator</string>
-	<string name="dev_boiler_operation_type_value_equiterm">Equiterm regulation</string>
-	<string name="dev_boiler_operation_type_value_stable">Regulation for constant water temperature</string>
-	<string name="dev_boiler_operation_type_value_tuv">TUV heating</string>
-
-	<string name="dev_boiler_operation_mode_value_automatic">Automatic</string>
-	<string name="dev_boiler_operation_mode_value_manual">Manual</string>
-	<string name="dev_boiler_operation_mode_value_vacation">Vacation</string>
-
-    <string name="dev_boiler_status_undefined">Undefined</string>
-    <string name="dev_boiler_status_heating">Heating</string>
-    <string name="dev_boiler_status_hot_water">Hot water</string>
-    <string name="dev_boiler_status_failure">Failure</string>
-    <string name="dev_boiler_status_shutdown">Shutdown</string>
 
     <!-- Names of default locations -->
 	<string name="loc_none">- None -</string>
