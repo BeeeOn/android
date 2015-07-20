@@ -3,8 +3,7 @@
 	<!-- Name of Demo Gates -->
 
 	<string name="gate_1_name">Home</string>
-	<string name="gate_2_name">Weekend House</string>
-	<string name="gate_3_name">Regulator VPT</string>
+	<string name="gate_2_name">Regulator VPT</string>
 
 	<!-- Name of location  and id-->
 	<string name="loc_name_demo_living_room">Living Room</string>
@@ -63,16 +62,10 @@
 	<string name="demo_name_module_air">Air</string>
 
 	<!-- Names of Watchdog and notification messages-->
-	<string name="demo_name_watchdog_temp_stove">Monitoring stove\'s temperature</string>
-	<string name="demo_notif_watchdog_temp_stove">Stove is too hot!</string>
-	<string name="demo_name_watchdog_humidity">Humidity Soil</string>
-	<string name="demo_notif_watchdog_humidity">Soil humidity has dropped below 50%.</string>
-	<string name="demo_name_watchdog_cry">Babysitting</string>
-	<string name="demo_notif_watchdog_cry">Baby crying. It needs something.</string>
-	<string name="demo_name_watchdog_radiator">Wrong heating</string>
-	<string name="demo_notif_watchdog_radiator">Something is wrong with heating.</string>
-	<string name="demo_name_watchdog_temperature">Higher temperature Z1</string>
-	<string name="demo_notif_watchdog_temperature">Current temperature is greater than the desired temperature</string>
+	<string name="demo_name_watchdog_outdoor_temp">Monitoring outside temperature</string>
+	<string name="demo_notif_watchdog_outdoor_temp">Outside is very cold.</string>
+	<string name="demo_name_watchdog_humidity">Low humidity</string>
+	<string name="demo_notif_watchdog_humidity">Humidity is very low</string>
 
 
 </resources>

@@ -31,6 +31,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -140,7 +141,7 @@ public class DemoNetwork implements INetwork {
 		mWatchdogs.clear();
 		mUsers.clear();
 
-/*		DemoData demoData = new DemoData();
+		DemoData demoData = new DemoData();
 		mGates.setObjects(demoData.getGates(mContext));
 		for (Gate gate : mGates.getObjects()) {
 			String gateId = gate.getId();
@@ -148,7 +149,7 @@ public class DemoNetwork implements INetwork {
 			mLocations.setObjects(gateId, demoData.getLocation(mContext, gateId));
 			mLocations.setLastUpdate(gateId, DateTime.now());
 
-			mDevices.setObjects(gateId, demoData.getDevices(mContext, gateId));
+			mDevices.setObjects(gateId, demoData.getDevices(gateId));
 			mDevices.setLastUpdate(gateId, DateTime.now());
 
 			mWatchdogs.setObjects(gateId, demoData.getWatchdogs(mContext, gateId));
@@ -165,7 +166,7 @@ public class DemoNetwork implements INetwork {
 				// FIXME: is using getObjects() ok? It creates new list. But it should be ok, because inner objects are still only references. Needs test!
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(rand.nextInt(60 * 60 * 26)));
 			}
-		}*/
+		}
 
 		mInitialized = true;
 	}

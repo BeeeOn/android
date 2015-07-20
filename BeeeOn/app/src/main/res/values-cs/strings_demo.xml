@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="gate_1_name">Doma</string>
-	<string name="gate_2_name">Chalupa</string>
-	<string name="gate_3_name">Regulátor VPT</string>
+	<string name="gate_2_name">Regulátor VPT</string>
 
 	<!-- Name of location  and id-->
 	<string name="loc_name_demo_living_room">Obývací pokoj</string>
@@ -60,15 +59,9 @@
 	<string name="demo_name_module_air">Ovzduší</string>
 
 	<!-- Names of Watchdog and notification messages-->
-	<string name="demo_name_watchdog_temp_stove">Hlídaní teploty kamna</string>
-	<string name="demo_notif_watchdog_temp_stove">Kamna jsou příliš horká!</string>
-	<string name="demo_name_watchdog_humidity">Vlhkost půdy</string>
-	<string name="demo_notif_watchdog_humidity">Vlhkost půdy klesla pod 50%.</string>
-	<string name="demo_name_watchdog_cry">Dětská chůvička</string>
-	<string name="demo_notif_watchdog_cry">Miminko pláče. Potřebuje něco.</string>
-	<string name="demo_name_watchdog_radiator">Špatné topení</string>
-	<string name="demo_notif_watchdog_radiator">Něco je špatně s topením</string>
-	<string name="demo_name_watchdog_temperature">Vyšší teplota Z1</string>
-	<string name="demo_notif_watchdog_temperature">Aktuální teplota je větší než žádaná teplota.</string>
+	<string name="demo_name_watchdog_outdoor_temp">Hlídaní venkovní teploty</string>
+	<string name="demo_notif_watchdog_outdoor_temp">Venku je velká zima.</string>
+	<string name="demo_name_watchdog_humidity">Nízka vlhkost</string>
+	<string name="demo_notif_watchdog_humidity">Vlhkost je velmi nízká.</string>
 
 </resources>

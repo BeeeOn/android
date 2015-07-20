@@ -3,8 +3,7 @@
 	<!-- Name of Demo Gates -->
 
 	<string name="gate_1_name">Doma</string>
-	<string name="gate_2_name">Chalupa</string>
-	<string name="gate_3_name">Regulátor VPT</string>
+	<string name="gate_2_name">Regulátor VPT</string>
 
 	<!-- Name of location  and id-->
 	<string name="loc_name_demo_living_room">Obývacia izba</string>
@@ -62,13 +61,8 @@
 
 
 	<!-- Names of Watchdog and notification messages-->
-	<string name="demo_name_watchdog_temp_stove">Stráženie teploty kachlí</string>
-	<string name="demo_name_watchdog_humidity">Vlhkosť pôdy</string>
-	<string name="demo_notif_watchdog_humidity">Vlhkosť pôdy klesla pod 50%.</string>
-	<string name="demo_name_watchdog_cry">Detská pestúnka</string>
-	<string name="demo_notif_watchdog_cry">Bábätko plače. Potrebuje niečo.</string>
-	<string name="demo_name_watchdog_radiator">Zlé kúrenie</string>
-	<string name="demo_notif_watchdog_radiator">Niečo je zle s kúrením.</string>
-	<string name="demo_name_watchdog_temperature">Vyššia teplota Z1</string>
-	<string name="demo_notif_watchdog_temperature">Aktuálna teplota je väčšia ako žiadaná teplota.</string>
+	<string name="demo_name_watchdog_outdoor_temp">Stráženie vonkajšej teploty</string>
+	<string name="demo_notif_watchdog_outdoor_temp">Vonku je veľká zima.</string>
+	<string name="demo_name_watchdog_humidity">Nízka vlhkosť</string>
+	<string name="demo_notif_watchdog_humidity">Vlhkosť je veľmi nízka.</string>
 </resources>
