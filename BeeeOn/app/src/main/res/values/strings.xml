@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="blank" translatable="false"/>
-	<string name="app_name" translatable="false">BeeeOn (debug)</string>
+	<string name="app_name" translatable="false">BeeeOn (beta)</string>
 	<string name="demo_mode">DEMO MODE</string>
 	<string name="demo_mode_email" translatable="false">demo@beeeon.com</string>
 
