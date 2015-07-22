@@ -346,7 +346,7 @@
 	<string name="tut_intro_text_3">Wireless devices are of two types - sensors and actuators. Sensors sense variables values from environs. Actuators are used to adjust their desired values.</string>
 	<string name="tut_intro_text_4">The gateway receives and transmits data toward the wireless devices.</string>
 	<string name="tut_intro_text_5">Mobile application displays information about the household and allows you to control it anywhere, anytime.</string>
-	<string name="tut_intro_title">Beeeon Introduction</string>
+	<string name="tut_intro_title">BeeeOn Introduction</string>
 
 	<string name="tutorial_next">NEXT</string>
 	<string name="tutorial_add">ADD</string>
