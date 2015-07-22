@@ -7,10 +7,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
@@ -62,8 +64,28 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 		final Spinner role = (Spinner) findViewById(R.id.add_user_role);
 		Button button = (Button) findViewById(R.id.add_user_gate_save);
 
-		ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, User.Role.values());
-		// Specify the layout to use when the list of choices appears
+		ArrayAdapter adapter = new ArrayAdapter<User.Role>(this, android.R.layout.simple_spinner_item, User.Role.values()){
+			private View changeText(View view, int position) {
+				User.Role item = getItem(position);
+				int nameResourceRole = item.getStringResource();
+				String name = getString(nameResourceRole);
+				((TextView) view).setText(name);
+				return view;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				return changeText(super.getView(position, convertView, parent), position);
+			}
+
+			@Override
+			public View getDropDownView(int position, View convertView, ViewGroup parent) {
+				return changeText(super.getDropDownView(position, convertView, parent), position);
+			}
+		};
+
+
+
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the gate to the spinner
 		role.setAdapter(adapter);
@@ -85,7 +107,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 				mNewRole = User.Role.values()[role.getSelectedItemPosition()];
 
 				// if superuser -- need to show dialog to confirm
-				if (mNewRole == User.Role.Owner) {
+				if (mNewRole == User.Role.Superuser) {
 					SimpleDialogFragment
 							.createBuilder(AddGateUserActivity.this, getSupportFragmentManager())
 							.setTitle(R.string.confirm_add_owner_title)
@@ -132,7 +154,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 
 	@Override
 	public void onPositiveButtonClicked(int i) {
-		mNewUser.setRole(User.Role.Owner);
+		mNewUser.setRole(User.Role.Superuser);
 		doAddGateUserTask(mNewUser);
 		mNewUser = null;
 		mNewRole = null;
