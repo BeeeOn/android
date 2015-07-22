@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,7 +129,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		int offsetInMillis = gateInfo.getUtcOffset() * 60 * 1000;
 
 		mDetailsItemList.get(0).text = gateInfo.getId();
-		mDetailsItemList.get(1).text = gateInfo.getRole().toString();
+		mDetailsItemList.get(1).text = getString(gateInfo.getRole().getStringResource());
 		mDetailsItemList.get(2).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
 
 		int usersCount = gateInfo.getUsersCount();
