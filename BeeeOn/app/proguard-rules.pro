@@ -34,7 +34,7 @@
 # Optimization is turned off by default. Dex does not like code run
 # through the ProGuard optimize and preverify steps (and performs some
 # of these optimizations on its own).
--dontshrink
+#-dontshrink
 -dontoptimize
 -dontpreverify
 
@@ -87,11 +87,11 @@
 }
 
 #To remove debug logs:
--assumenosideeffects class android.util.Log {
-    public static *** d(...);
-    public static *** v(...);
-    public static *** w(...);
-}
+#-assumenosideeffects class android.util.Log {
+#    public static *** d(...);
+#    public static *** v(...);
+#    public static *** w(...);
+#}
 
 #To avoid changing names of methods invoked on layout's onClick.
 # Uncomment and add specific method names if using onClick on layouts
@@ -147,6 +147,16 @@
 #Keep exception classes to display correct error message
 -keep class com.rehivetech.beeeon.exception.ClientError
 -keep class com.rehivetech.beeeon.exception.NetworkError
+
+# Keep constructors in BaseModel classes
+-keepclassmembers public class * extends com.rehivetech.beeeon.model.BaseModel{
+   public <init>(...);
+}
+
+# Keep google maps classes
+-keep class com.google.android.gms.maps.** { *; }
+-keep interface com.google.android.gms.maps.** { *; }
+
 
 ###### ADDITIONAL OPTIONS NOT USED NORMALLY
 
