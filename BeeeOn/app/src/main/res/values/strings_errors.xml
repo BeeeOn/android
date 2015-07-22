@@ -3,8 +3,6 @@
 	<string name="unknown_error">Unknown error</string>
 	<string name="error_message">%1$s (Error: %2$s)</string>
 
-	<string name="social_no_connection">No connection</string>
-
 	<string name="ClientError___CERTIFICATE">Server certificate is invalid.</string>
 	<string name="ClientError___INTERNET_CONNECTION">Internet connection is not available.\n\n Check settings.</string>
 	<string name="ClientError___NO_RESPONSE">No response was received from server.\n\n Try again later.</string>

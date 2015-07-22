@@ -3,8 +3,6 @@
 	<string name="unknown_error">Neznámá chyba</string>
 	<string name="error_message">%1$s (Chyba: %2$s)</string>
 
-	<string name="social_no_connection">Nelze se připojit</string>
-
 	<string name="ClientError___CERTIFICATE">Certifikát serveru je neplatný.</string>
 	<string name="ClientError___INTERNET_CONNECTION">Není dostupné připojení k Internetu.\n\nZkontrolujte vaše nastavení.</string>
 	<string name="ClientError___NO_RESPONSE">Ze serveru nebyla přijata žádná odpověď.\n\nZkuste to prosím znovu.</string>

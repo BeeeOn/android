@@ -235,7 +235,6 @@
     <string name="temperature">Teplota</string>
     <string name="noise">Hluk</string>
     <string name="connections">Pripojenia</string>
-    <string name="smartwatches">Smartwatch-hodinky</string>
     <string name="choose_default_location">Zvoľte východzie umiestnenie</string>
     <string name="choose_default_adapter">Zvoľte východziu bránu</string>
     <string name="default_location">Východzie umiestnenie</string>

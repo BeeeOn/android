@@ -243,7 +243,6 @@
 				android:resource="@xml/widget_device_3x1_info"/>
 		</receiver>
 
-		<service android:name=".extension.watches.smartwatch2.SW2ExtensionService"/>
 		<service android:name=".geofence.GeofenceIntentService"/>
 		<!-- GOOGLE CLOUD MESSAGING -->
 		<receiver
@@ -273,47 +272,6 @@
 
 		<service android:name=".gcm.GcmMessageHandler"/>
 		<service android:name=".gcm.GcmReRegistrationHandler"/>
-
-		<!-- SMARTWATCHES -->
-		<receiver
-			android:name=".extension.watches.smartwatch2.SW2ExtensionReceiver"
-			android:permission="com.sonyericsson.extras.liveware.aef.HOSTAPP_PERMISSION">
-			<intent-filter>
-
-				<!-- Generic extension intents. -->
-				<action android:name="com.sonyericsson.extras.liveware.aef.registration.EXTENSION_REGISTER_REQUEST"/>
-				<action android:name="com.sonyericsson.extras.liveware.aef.registration.ACCESSORY_CONNECTION"/>
-				<action android:name="android.intent.action.LOCALE_CHANGED"/>
-
-				<!-- Notification intents -->
-				<action android:name="com.sonyericsson.extras.liveware.aef.notification.VIEW_EVENT_DETAIL"/>
-				<action android:name="com.sonyericsson.extras.liveware.aef.notification.REFRESH_REQUEST"/>
-
-				<!-- Widget intents -->
-				<action android:name="com.sonyericsson.extras.aef.widget.START_REFRESH_IMAGE_REQUEST"/>
-				<action android:name="com.sonyericsson.extras.aef.widget.STOP_REFRESH_IMAGE_REQUEST"/>
-				<action android:name="com.sonyericsson.extras.aef.widget.ONTOUCH"/>
-				<action android:name="com.sonyericsson.extras.liveware.extension.util.widget.scheduled.refresh"/>
-
-				<!-- Control intents -->
-				<action android:name="com.sonyericsson.extras.aef.control.START"/>
-				<action android:name="com.sonyericsson.extras.aef.control.STOP"/>
-				<action android:name="com.sonyericsson.extras.aef.control.PAUSE"/>
-				<action android:name="com.sonyericsson.extras.aef.control.RESUME"/>
-				<action android:name="com.sonyericsson.extras.aef.control.ERROR"/>
-				<action android:name="com.sonyericsson.extras.aef.control.KEY_EVENT"/>
-				<action android:name="com.sonyericsson.extras.aef.control.TOUCH_EVENT"/>
-				<action android:name="com.sonyericsson.extras.aef.control.SWIPE_EVENT"/>
-				<action android:name="com.sonyericsson.extras.aef.control.OBJECT_CLICK_EVENT"/>
-				<action android:name="com.sonyericsson.extras.aef.control.LIST_REFERESH_REQUEST"/>
-				<action android:name="com.sonyericsson.extras.aef.control.LIST_REQUEST_ITEM"/>
-				<action android:name="com.sonyericsson.extras.aef.control.LIST_ITEM_CLICK"/>
-				<action android:name="com.sonyericsson.extras.aef.control.LIST_ITEM_SELECTED"/>
-				<action android:name="com.sonyericsson.extras.aef.control.MENU_ITEM_SELECTED"/>
-				<action android:name="com.sonyericsson.extras.aef.control.MENU_SHOW"/>
-			</intent-filter>
-		</receiver>
-
 
 	</application>
 

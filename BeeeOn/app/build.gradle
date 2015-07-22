@@ -56,7 +56,6 @@ dependencies {
     compile 'net.i2p.android.ext:floatingactionbutton:1.8.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
-    compile 'com.sonyericsson.extras.liveware:utils:3.0'
     compile 'joda-time:joda-time:2.7'
     compile 'com.github.amlcurran.showcaseview:showcaseview:5.1.1@aar'
 	compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
