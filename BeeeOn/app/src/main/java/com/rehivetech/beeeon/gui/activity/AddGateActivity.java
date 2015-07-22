@@ -4,8 +4,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.support.design.widget.TextInputLayout;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -146,11 +146,11 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, EditTextDialog fragment) {
-		EditText editText = (EditText) view.findViewById(R.id.dialog_edit_text);
-		if(!Utils.validateInput(this, editText)){
+		TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_text_input_layout);
+		if(!Utils.validateInput(this, textInputLayout)){
 			return;
 		}
 
-		doRegisterGateTask(editText.getText().toString(), false);
+		doRegisterGateTask(textInputLayout.getEditText().getText().toString(), false);
 	}
 }

@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.widget.EditText;
@@ -37,6 +38,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -470,13 +472,14 @@ final public class Utils {
 	/**
 	 * Enum for validation types
 	 */
-	public enum ValidationType{
+	public enum ValidationType {
 		INTEGER,
 		EMAIL
 	}
 
 	/**
 	 * Helper function for validating EditText
+	 * FIXME: don't have 2 implementations of validation
 	 *
 	 * @param eText
 	 * @param additional Array of additional rules to validate: parseInt
@@ -503,7 +506,7 @@ final public class Utils {
 					break;
 
 				case EMAIL:
-					if(!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()){
+					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
 						eText.requestFocus();
 						eText.setError(context.getString(R.string.toast_field_must_be_email));
 						return false;
@@ -514,4 +517,44 @@ final public class Utils {
 		return true;
 	}
 
+	/**
+	 * Validating TextInputLayout
+	 * FIXME: don't have 2 implementations of validation
+	 *
+	 * @param context
+	 * @param textInputLayout
+	 * @param additional
+	 * @return
+	 */
+	public static boolean validateInput(Context context, TextInputLayout textInputLayout, ValidationType... additional) {
+		String inputText = textInputLayout.getEditText().getText().toString().trim();
+		if (inputText.length() == 0) {
+			textInputLayout.requestFocus();
+			textInputLayout.setError(context.getString(R.string.toast_field_must_be_filled));
+			return false;
+		}
+
+		for (ValidationType type : additional) {
+			switch (type) {
+				case INTEGER:
+					try {
+						int num = Integer.parseInt(inputText);
+					} catch (NumberFormatException e) {
+						textInputLayout.requestFocus();
+						textInputLayout.setError(context.getString(R.string.toast_field_must_be_number));
+						return false;
+					}
+					break;
+
+				case EMAIL:
+					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
+						textInputLayout.requestFocus();
+						textInputLayout.setError(context.getString(R.string.toast_field_must_be_email));
+						return false;
+					}
+			}
+		}
+
+		return true;
+	}
 }

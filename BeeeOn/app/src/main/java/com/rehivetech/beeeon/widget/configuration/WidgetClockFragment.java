@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.widget.configuration;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -164,7 +165,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 				.setTitle(mActivity.getString(R.string.dialog_location_select))
 				.setEditTextValue(mWeatherCity != null ? mWeatherCity.name : mWidgetData.weather.cityName)
-				.setEditTextHint(mActivity.getString(R.string.dialog_location_country))
+				.setHint(mActivity.getString(R.string.dialog_location_country))
 				.setPositiveButtonText(mActivity.getString(R.string.ok))
 				.setNegativeButtonText(mActivity.getString(R.string.action_close))
 				.showKeyboard()
@@ -174,13 +175,13 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, final EditTextDialog dialog) {
-		EditText cityEditText = (EditText) view.findViewById(R.id.dialog_edit_text);
-		if(!Utils.validateInput(mActivity, cityEditText)){
+		TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_text_input_layout);
+		if(!Utils.validateInput(mActivity, cityTextInputLayout)){
 			return;
 		}
 
 		// city name
-		final String cityInput = cityEditText.getText().toString();
+		final String cityInput = cityTextInputLayout.getEditText().getText().toString();
 
 		// show dialog of loading
 		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
