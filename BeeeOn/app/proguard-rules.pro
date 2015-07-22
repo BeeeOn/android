@@ -143,7 +143,6 @@
 -keep class net.simonvt.**{*;}
 -keep class com.avast.**{*;}
 -keep class com.facebook.**{*;}
--keep class com.vk.**{*;}
 
 #Keep exception classes to display correct error message
 -keep class com.rehivetech.beeeon.exception.ClientError
