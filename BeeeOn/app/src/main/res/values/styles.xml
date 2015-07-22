@@ -150,18 +150,20 @@
         <item name="android:background">@drawable/beeeon_divider_inset</item>
     </style>
 
-    <style name="BeeeOn.DividerListView">
-        <item name="android:divider">@drawable/beeeon_divider_inset</item>
-        <item name="android:dividerHeight">@dimen/divider_size</item>
-    </style>
+	<style name="BeeeOn.Divider.Full">
+		<item name="android:background">@color/beeeon_divider</item>
+	</style>
 
-    <style name="BeeeOn.Divider.Full">
-        <item name="android:background">@color/beeeon_divider</item>
-    </style>
+	<style name="BeeeOn.DividerListView">
+		<item name="android:divider">@drawable/beeeon_divider_inset</item>
+		<item name="android:dividerHeight">@dimen/divider_size</item>
+	</style>
 
-    <style name="BeeeOn.DividerListView.Full">
-        <item name="android:background">@color/beeeon_divider</item>
-    </style>
+	<style name="BeeeOn.DividerListView.Full">
+		<item name="android:divider">@color/beeeon_divider</item>
+	</style>
+
+
 
     <!-- FAB -->
 
