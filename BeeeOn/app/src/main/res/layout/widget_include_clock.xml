@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/widget_clock_time_layout"
 	android:orientation="horizontal"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
+	tools:showIn="@layout/widget_clock_3x2"
 	>
 
 	<TextView
@@ -14,6 +16,7 @@
 		android:textSize="@dimen/widget_textsize_clock"
 		android:textStyle="bold"
 		android:textColor="@color/beeeon_primary"
+		tools:text="23"
 		/>
 
 	<TextView
@@ -24,6 +27,7 @@
 		android:textStyle="bold"
 		android:layout_marginTop="-4dp"
 		android:textColor="@color/beeeon_primary"
+		android:text="@string/doubledots"
 		/>
 
 	<TextView
@@ -33,6 +37,7 @@
 		android:textSize="@dimen/widget_textsize_clock"
 		android:textStyle="bold"
 		android:textColor="@color/beeeon_primary"
+		tools:text="59"
 		/>
 
 	<TextView
@@ -41,7 +46,6 @@
 		android:layout_height="wrap_content"
 		android:textColor="@color/beeeon_primary"
 		android:textSize="@dimen/abc_text_size_subhead_material"
-		android:text="AM"
 		android:visibility="gone"
 		/>
 </LinearLayout>

@@ -469,5 +469,5 @@
 	<string name="dialog_code_title">Enter gateway code</string>
 	<string name="minus" translatable="false">-</string>
 	<string name="plus" translatable="false">+</string>
-
+	<string name="doubledots" translatable="false">:</string>
 </resources>

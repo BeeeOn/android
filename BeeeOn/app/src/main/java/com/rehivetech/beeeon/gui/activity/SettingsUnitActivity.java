@@ -41,6 +41,7 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 		pref.setEntryValues(unit.getEntryValues());
 		pref.setSummary(unit.fromSettings(mPrefs).getSettingsName(this));
 
+
 		mPreferences.put(unit.getPersistenceKey(), pref);
 	}
 
