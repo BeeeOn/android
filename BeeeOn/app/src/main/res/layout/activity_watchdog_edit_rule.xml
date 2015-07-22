@@ -116,7 +116,6 @@
 				  - margin is less cause the shadow
 				-->
 				<com.melnykov.fab.FloatingActionButton
-					xmlns:fab="http://schemas.android.com/apk/res-auto"
 					android:id="@+id/watchdog_edit_operator"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"

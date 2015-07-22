@@ -52,9 +52,7 @@
     <string name="loc_bedroom">Spáľňa</string>
     <string name="loc_dining_room">Jedáleň</string>
     <string name="loc_garden">Záhrada</string>
-    <string name="loc_kitchen">Kuchyňa</string>
     <string name="loc_living_room">Obývacia izba</string>
     <string name="loc_wc">WC</string>
-    <string name="loc_loft">Podkrovie</string>
 
 </resources>

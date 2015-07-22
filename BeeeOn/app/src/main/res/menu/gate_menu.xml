@@ -5,7 +5,7 @@
         android:id="@+id/ada_menu_details"
         android:title="@string/gate_detail_title"
         android:icon="@drawable/ic_description_white_24dp"
-        app:showAsAction="always|collapseActionView"/>1
+        app:showAsAction="always|collapseActionView"/>
     <item android:id="@+id/ada_menu_edit"
         android:title="@string/update_gateway"
         android:icon="@drawable/ic_mode_edit_white_24dp"

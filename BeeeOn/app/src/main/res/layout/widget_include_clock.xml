@@ -13,7 +13,6 @@
 		android:layout_height="wrap_content"
 		android:textSize="@dimen/widget_textsize_clock"
 		android:textStyle="bold"
-		android:text="00"
 		android:textColor="@color/beeeon_primary"
 		/>
 
@@ -23,7 +22,6 @@
 		android:layout_height="wrap_content"
 		android:textSize="@dimen/widget_textsize_clock"
 		android:textStyle="bold"
-		android:text=":"
 		android:layout_marginTop="-4dp"
 		android:textColor="@color/beeeon_primary"
 		/>
@@ -34,7 +32,6 @@
 		android:layout_height="wrap_content"
 		android:textSize="@dimen/widget_textsize_clock"
 		android:textStyle="bold"
-		android:text="00"
 		android:textColor="@color/beeeon_primary"
 		/>
 

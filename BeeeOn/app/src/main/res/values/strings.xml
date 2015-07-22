@@ -148,8 +148,6 @@
 	<string name="progress_loading_gate">Loading gateway data&#8230;</string>
 	<string name="progress_loading_demo">Loading demo data&#8230;</string>
 	<string name="progress_saving_data">Saving data&#8230;</string>
-	<string name="progress_loading_devices">Loading your modules&#8230;</string>
-	<string name="progress_loading_locations">Loading your locations&#8230;</string>
 	<string name="progress_checking_location">Checking location&#8230;</string>
 
 
@@ -253,13 +251,11 @@
 	<string name="widget_sensor_title_small">BeeeOn module small</string>
 	<string name="widget_sensor_title_medium">BeeeOn module medium</string>
 	<string name="widget_sensor_title_large">BeeeOn module large</string>
-	<string name="widget_graph_title">BeeeOn module with graph</string>
 	<string name="widget_clock_title">BeeeOn-Time</string>
 
 	<!-- WidgetConfigurationActivity -->
 	<string name="widget_configuration_adapter">Gateway</string>
 	<string name="widget_configuration_sensor">Device to be shown</string>
-	<string name="widget_configuration_interval_sensor">Household update interval</string>
 	<string name="widget_configuration_interval_widget">Widget update interval</string>
 	<string name="widget_configuration_login_first">You must be logged in first</string>
 	<string name="widget_configuration_no_adapters">You have no gateways and thus no module to show in widget</string>
@@ -269,7 +265,6 @@
 
 	<string name="widget_configuration_widget_clock">Configuration BeeeOn-Time</string>
 	<string name="widget_configuration_widget_device">Configuration module widget</string>
-	<string name="widget_configuration_widget_graph">Configuration graph widget</string>
 	<string name="widget_configuration_widget_location">Configuration location widget</string>
 
 	<!-- Widgets other -->
@@ -297,10 +292,8 @@
 	<string name="company_web" translatable="false">http://rehivetech.com/</string>
 	<string name="copyright">\u00A9 2014–15 RehiveTech. All rights reserved.</string>
 	<string name="version">Version</string>
-	<string name="logo">Logo</string>
 	<string name="rate">Rate</string>
 	<string name="ok">OK</string>
-	<string name="website">Website</string>
 
 	<!-- Refresh intervals -->
 	<plurals name="interval_seconds">
@@ -324,7 +317,6 @@
 	<string name="temperature">Temperature</string>
 	<string name="noise">Noise</string>
 	<string name="connections">Connections</string>
-	<string name="smartwatches">Smartwatches</string>
 	<string name="choose_default_location">Choose default location</string>
 	<string name="choose_default_adapter">Choose default gateway</string>
 	<string name="default_location">Default location</string>
@@ -475,5 +467,7 @@
 	<string name="chart_y_axis">Y axis labels</string>
 	<string name="chart_no_data">No device data available.</string>
 	<string name="dialog_code_title">Enter gateway code</string>
+	<string name="minus" translatable="false">-</string>
+	<string name="plus" translatable="false">+</string>
 
 </resources>

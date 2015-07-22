@@ -63,10 +63,8 @@
     <string name="loc_bedroom">Ložnice</string>
     <string name="loc_dining_room">Jídelna</string>
     <string name="loc_garden">Zahrada</string>
-    <string name="loc_kitchen">Kuchyň</string>
     <string name="loc_living_room">Obývací pokoj</string>
     <string name="loc_wc">WC</string>
-    <string name="loc_loft">Podkroví</string>
     <string name="loc_cellar">Sklep</string>
 
 </resources>

@@ -3,7 +3,6 @@
 	android:orientation="horizontal"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:contentDescription="Number picker dialog"
 	android:gravity="center">
 	<net.simonvt.numberpicker.NumberPicker
 		android:id="@+id/beeeon_numberPicker"
@@ -17,6 +16,7 @@
 		android:textColor="@color/beeeon_primary"
 		android:textSize="30sp"
 		android:layout_marginLeft="8dp"
-		android:text="°C"
+		android:layout_marginStart="8dp"
+		android:text="@string/dev_temperature_celsius_unit"
 		android:id="@+id/beeeon_numberpicker_unit"/>
 </LinearLayout>

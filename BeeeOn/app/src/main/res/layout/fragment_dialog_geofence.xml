@@ -16,7 +16,6 @@
 		android:id="@+id/geofence_radius_title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="Lorem ipsum"
 		android:paddingTop="8dp"
 		android:textSize="17sp"
 		/>
@@ -32,7 +31,7 @@
 			android:id="@+id/geofence_radius_minus"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="-"
+			android:text="@string/minus"
 			android:textStyle="bold"
 			android:textSize="30sp"/>
 
@@ -42,14 +41,13 @@
 			android:layout_width="0px"
 			android:layout_height="match_parent"
 			android:layout_weight="5"
-			android:inputType="numberDecimal"
-			android:text="50"/>
+			android:inputType="numberDecimal"/>
 
 		<Button
 			android:id="@+id/geofence_radius_plus"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="+"
+			android:text="@string/plus"
 			android:textStyle="bold"
 			android:textSize="30sp"/>
 

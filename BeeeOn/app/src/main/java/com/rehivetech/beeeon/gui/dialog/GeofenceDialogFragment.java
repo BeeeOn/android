@@ -87,6 +87,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 
 		mName = (EditText) view.findViewById(R.id.geofence_name);
 		mRadius = (EditText) view.findViewById(R.id.geofence_radius_input);
+		mRadius.setText(String.valueOf(DEFAULT_RADIUS));
 
 		mRadiusTitle = (TextView) view.findViewById(R.id.geofence_radius_title);
 		mRadiusTitle.setText(getString(R.string.radius) + " (" + getString(R.string.unit_meter_short) + ")");

@@ -25,11 +25,6 @@
     <!-- New sensor dialog -->
     <string name="notification_title">Nové zariadenie</string>
 
-    <plurals name="notification_new_sensors">
-        <item quantity="one">Nájdené jedno neinicializované zaradenie vo Vašej domácnosti</item>
-        <item quantity="other">Nájdených viacero (%d) neinicializovaných zaradení vo Vašej domácnosti</item>
-    </plurals>
-
     <string name="notification_ingore">Ignorovať</string>
     <string name="notification_add">Pridať</string>
     <string name="notification_cancel">Zrušiť</string>
@@ -193,13 +188,11 @@
     <string name="widget_sensor_title_medium">BeeeOn zariadenie stredné</string>
     <string name="widget_sensor_title_large">BeeeOn zariadenie veľké</string>
     <string name="widget_cached">(cached)</string>
-    <string name="widget_graph_title">BeeeOn zariadenie s grafom</string>
     <string name="widget_location_list_empty">Prázdné umiestnenie</string>
 
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Brána</string>
     <string name="widget_configuration_sensor">Zariadenie pre zobrazenie</string>
-    <string name="widget_configuration_interval_sensor">Interval aktualizácie zariadenia</string>
     <string name="widget_configuration_interval_widget">Interval aktualizácie widgetu</string>
     <string name="widget_configuration_no_adapters">K nastaveniu widgetu je nutné byť používateľom brány</string>
     <string name="widget_configuration_select_gate">Vyberte bránu zo zoznamu</string>
@@ -208,10 +201,8 @@
     <!-- About -->
     <string name="copyright">\u00A9 2014–15 RehiveTech. Všetky práva vyhradené.</string>
     <string name="version">Verzia</string>
-    <string name="logo">Logo</string>
     <string name="rate">Hodnotenie</string>
     <string name="ok">OK</string>
-    <string name="website">Webová stránka</string>
 
     <!-- Refresh intervals -->
     <plurals name="interval_seconds">
@@ -375,8 +366,6 @@
     <string name="place_must_be_filled">Poloha musí byť vyplnená</string>
     <string name="profile_category_friends">Priatelia</string>
     <string name="progress_checking_location">Overujem poloha&#8230;</string>
-    <string name="progress_loading_devices">Nahrávam dáta zo zariadenia&#8230;</string>
-    <string name="progress_loading_locations">Nahrávam umiestnenia&#8230;</string>
     <string name="title_activity_profile_detail">Detaily účtu</string>
     <string name="users_pending_header">Žiadosť o pridanie</string>
     <string name="weather">Počasie</string>
@@ -389,7 +378,6 @@
     <string name="widget_configuration_select_location">Vyberte umiestnenie zo zoznamu</string>
     <string name="widget_configuration_widget_clock">Nastavenie widgetu hodin</string>
     <string name="widget_configuration_widget_device">Nastavenie widgetu zariadenia</string>
-    <string name="widget_configuration_widget_graph">Nastavenie widgetu s grafom</string>
     <string name="widget_configuration_widget_location">Nastavenie widgetu umiestnenia</string>
     <string name="widget_location_list_title">BeeeOn umiestnenie</string>
     <string name="watchdog_create">Vytvoriť strážneho psa</string>

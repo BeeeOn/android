@@ -73,10 +73,8 @@
     <string name="loc_bedroom">Bedroom</string>
     <string name="loc_dining_room">Dining room</string>
     <string name="loc_garden">Garden</string>
-    <string name="loc_kitchen">Kitchen</string>
     <string name="loc_living_room">Living room</string>
     <string name="loc_wc">WC</string>
-    <string name="loc_loft">Loft</string>
     <string name="loc_cellar">Cellar</string>
 
 </resources>

@@ -223,14 +223,12 @@
     <string name="widget_sensor_title_medium">BeeeOn zařízení střední</string>
     <string name="widget_sensor_title_large">BeeeOn zařízení velký</string>
     <string name="widget_location_list_title">BeeeOn umístění</string>
-    <string name="widget_graph_title">BeeeOn zařízení s grafem</string>
     <string name="widget_clock_title">BeeeOn-Time</string>
 
 
     <!-- WidgetConfigurationActivity -->
     <string name="widget_configuration_adapter">Brána</string>
     <string name="widget_configuration_sensor">Zařízení pro zobrazení</string>
-    <string name="widget_configuration_interval_sensor">Interval probuzení zařízení</string>
     <string name="widget_configuration_interval_widget">Interval aktualizace widgetu</string>
     <string name="widget_configuration_login_first">Je třeba se nejprve přihlásit</string>
     <string name="widget_configuration_no_adapters">K nastavení widgetu je nutné být uživatelem brány</string>
@@ -240,7 +238,6 @@
 
     <string name="widget_configuration_widget_clock">Nastavení widgetu hodin</string>
     <string name="widget_configuration_widget_device">Nastavení widgetu zařízení</string>
-    <string name="widget_configuration_widget_graph">Nastavení widgetu s grafem</string>
     <string name="widget_configuration_widget_location">Nastavení widgetu umístění</string>
 
     <!-- Widgets other -->
@@ -264,10 +261,8 @@
     <!-- About -->
     <string name="copyright">\u00A9 2014–15 RehiveTech. Všechna práva vyhrazena.</string>
     <string name="version">Verze</string>
-    <string name="logo">Logo</string>
     <string name="rate">Hodnocení</string>
     <string name="ok">OK</string>
-    <string name="website">Webová stránka</string>
 
     <!-- Refresh intervals -->
     <plurals name="interval_seconds">
@@ -395,8 +390,6 @@
 	<string name="dev_boiler_status_shutdown">Vypnuto</string>
 	<string name="dev_boiler_status_type">Stav kotle</string>
 	<string name="dev_boiler_status_undefined">Nedefinováno</string>
-	<string name="progress_loading_devices">Nahrávám data ze zařízení&#8230;</string>
-	<string name="progress_loading_locations">Nahrávám umístění&#8230;</string>
 	<string name="action_notification">Notifikace</string>
 	<string name="dev_actor_boiler_operation_mode">Režim provozu kotle</string>
 	<string name="dev_actor_boiler_operation_type">Typ provozu kotle</string>
