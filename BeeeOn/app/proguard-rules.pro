@@ -87,11 +87,11 @@
 }
 
 #To remove debug logs:
-#-assumenosideeffects class android.util.Log {
-#    public static *** d(...);
-#    public static *** v(...);
-#    public static *** w(...);
-#}
+-assumenosideeffects class android.util.Log {
+    public static *** d(...);
+    public static *** v(...);
+    public static *** w(...);
+}
 
 #To avoid changing names of methods invoked on layout's onClick.
 # Uncomment and add specific method names if using onClick on layouts
@@ -152,10 +152,6 @@
 -keepclassmembers public class * extends com.rehivetech.beeeon.model.BaseModel{
    public <init>(...);
 }
-
-# Keep google maps classes
--keep class com.google.android.gms.maps.** { *; }
--keep interface com.google.android.gms.maps.** { *; }
 
 
 ###### ADDITIONAL OPTIONS NOT USED NORMALLY
