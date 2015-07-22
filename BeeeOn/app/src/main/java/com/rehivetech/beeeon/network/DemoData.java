@@ -51,7 +51,7 @@ public class DemoData {
 		String demoGateName2 = context.getString(R.string.gate_2_name);
 		demoGate2.setName(demoGateName2);
 		demoGate2.setId(GATE_2_ID);
-		demoGate2.setRole(User.Role.Superuser);
+		demoGate2.setRole(User.Role.Owner);
 		demoGate2.setUtcOffset(60);
 		gateList.add(demoGate2);
 
@@ -59,7 +59,7 @@ public class DemoData {
 		String demoGateName3 = context.getString(R.string.gate_3_name);
 		demoGate3.setId(GATE_3_ID);
 		demoGate3.setName(demoGateName3);
-		demoGate3.setRole(User.Role.Superuser);
+		demoGate3.setRole(User.Role.Owner);
 		demoGate3.setUtcOffset(60);
 		gateList.add(demoGate3);
 

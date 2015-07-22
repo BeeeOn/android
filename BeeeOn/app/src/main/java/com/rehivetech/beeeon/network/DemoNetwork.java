@@ -70,7 +70,7 @@ public class DemoNetwork implements INetwork {
 		String demoModeEmail = mContext.getString(R.string.demo_mode_email);
 
 		// Set user
-		mUser = new User(DEMO_USER_ID, demoModeName, "", demoModeEmail, Gender.UNKNOWN, Role.Superuser);
+		mUser = new User(DEMO_USER_ID, demoModeName, "", demoModeEmail, Gender.UNKNOWN, Role.Owner);
 
 		// Set session token
 		mBT = DEMO_USER_BT;
@@ -151,7 +151,7 @@ public class DemoNetwork implements INetwork {
 			mWatchdogs.setLastUpdate(gateId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(gateId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
+			mUsers.setObjects(gateId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Owner)}));
 			mUsers.setLastUpdate(gateId, DateTime.now());
 
 			Random rand = getRandomForGate(gate.getId());
@@ -666,7 +666,7 @@ public class DemoNetwork implements INetwork {
 		mUsers.addObject(gateId, user);
 
 		// We can have only one superuser, so unset all other superusers of this gate (this does classic server too)
-		if (user.getRole() == Role.Superuser) {
+		if (user.getRole() == Role.Owner) {
 			for (User otherUser : mUsers.getObjects(gateId)) {
 				// Change only other users, except me
 				if (!otherUser.getId().equals(user.getId())) {
@@ -674,7 +674,7 @@ public class DemoNetwork implements INetwork {
 				}
 
 				// If their role is superuser, switch them to just admin
-				if (otherUser.getRole() == Role.Superuser) {
+				if (otherUser.getRole() == Role.Owner) {
 					otherUser.setRole(Role.Admin);
 				}
 			}

@@ -4,7 +4,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,19 +14,14 @@ import android.widget.Spinner;
 
 import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.AddUserTask;
 import com.rehivetech.beeeon.util.Utils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddGateUserActivity extends BaseApplicationActivity implements IPositiveButtonDialogListener {
 
@@ -91,7 +85,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 				mNewRole = User.Role.values()[role.getSelectedItemPosition()];
 
 				// if superuser -- need to show dialog to confirm
-				if (mNewRole == User.Role.Superuser) {
+				if (mNewRole == User.Role.Owner) {
 					SimpleDialogFragment
 							.createBuilder(AddGateUserActivity.this, getSupportFragmentManager())
 							.setTitle(R.string.confirm_add_owner_title)
@@ -138,7 +132,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 
 	@Override
 	public void onPositiveButtonClicked(int i) {
-		mNewUser.setRole(User.Role.Superuser);
+		mNewUser.setRole(User.Role.Owner);
 		doAddGateUserTask(mNewUser);
 		mNewUser = null;
 		mNewRole = null;

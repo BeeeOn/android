@@ -1,8 +1,6 @@
 package com.rehivetech.beeeon.household.user;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.IIdentifier;
@@ -10,7 +8,6 @@ import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Utils;
 
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 
 /**
@@ -58,7 +55,7 @@ public class User implements INameIdentifier {
 		Guest("guest", R.string.user_role_guest), // can only read gate and devices' data
 		User("user", R.string.user_role_user), // = guest + can switch state of switch devices
 		Admin("admin", R.string.user_role_admin), // = user + can change devices' settings (rename, logging, refresh,...)
-		Superuser("superuser", R.string.user_role_superuser); // = admin + can change whole gate's settings (devices, users,...)
+		Owner("owner", R.string.user_role_superuser); // = admin + can change whole gate's settings (devices, users,...)
 
 		private final String mRole;
 		private final int mStringRes;
