@@ -55,7 +55,7 @@ public class User implements INameIdentifier {
 		Guest("guest", R.string.user_role_guest), // can only read gate and devices' data
 		User("user", R.string.user_role_user), // = guest + can switch state of switch devices
 		Admin("admin", R.string.user_role_admin), // = user + can change devices' settings (rename, logging, refresh,...)
-		Owner("owner", R.string.user_role_superuser); // = admin + can change whole gate's settings (devices, users,...)
+		Owner("owner", R.string.user_role_owner); // = admin + can change whole gate's settings (devices, users,...)
 
 		private final String mRole;
 		private final int mStringRes;

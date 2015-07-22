@@ -206,7 +206,7 @@
         <item>Vlastní</item>
     </string-array>
 
-    <string name="user_role_superuser">Vlastník</string>
+    <string name="user_role_owner">Vlastník</string>
     <string name="user_role_admin">Administrátor</string>
     <string name="user_role_user">Uživatel</string>
     <string name="user_role_guest">Host</string>

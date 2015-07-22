@@ -241,7 +241,7 @@
 		<item>Custom</item>
 	</string-array>
 
-	<string name="user_role_superuser">Owner</string>
+	<string name="user_role_owner">Owner</string>
 	<string name="user_role_admin">Admin</string>
 	<string name="user_role_user">User</string>
 	<string name="user_role_guest">Guest</string>
