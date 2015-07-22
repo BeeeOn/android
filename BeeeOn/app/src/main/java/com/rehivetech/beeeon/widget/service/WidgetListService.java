@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
@@ -85,28 +86,28 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		// We construct a remote views item based on our widget item xml file, and set the  text based on the position.
 		RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_location_list_item);
 
-		Module dev = mModules.get(position);
-		if (dev == null) {
+		Module module = mModules.get(position);
+		if (module == null) {
 			Log.d(TAG, "NOT FOUND MODULE BY POS");
 			return rv;
 		}
 
-		Gate gate = mController.getGatesModel().getGate(dev.getDevice().getGateId());
+		Gate gate = mController.getGatesModel().getGate(module.getDevice().getGateId());
 
-		rv.setTextViewText(R.id.widget_loc_item_name, dev.getName());
-		rv.setImageViewResource(R.id.widget_loc_item_icon, dev.getIconResource());
+		rv.setTextViewText(R.id.widget_loc_item_name, module.getName());
+		rv.setImageViewResource(R.id.widget_loc_item_icon, module.getIconResource(IconResourceType.DARK));
 
-		rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(dev.getDevice().getLastUpdate(), gate));
-		rv.setTextViewText(R.id.widget_loc_item_value, mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(dev.getValue()) : dev.getValue().getRawValue());
+		rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), gate));
+		rv.setTextViewText(R.id.widget_loc_item_value, mUnitsHelper != null ? mUnitsHelper.getStringValueUnit(module.getValue()) : module.getValue().getRawValue());
 
 		// send broadcast to widgetprovider with information about clicked item
 		Bundle extras = new Bundle();
-		extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, dev.getId());
-		extras.putString(WidgetLocationData.EXTRA_ITEM_GATE_ID, dev.getDevice().getGateId());
+		extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, module.getId());
+		extras.putString(WidgetLocationData.EXTRA_ITEM_GATE_ID, module.getDevice().getGateId());
 		Intent fillInIntent = new Intent();
 		fillInIntent.putExtras(extras);
 		rv.setOnClickFillInIntent(R.id.widget_loc_item, fillInIntent);
-
+		//*/
 
 		// Return the remote views object.
 		return rv;

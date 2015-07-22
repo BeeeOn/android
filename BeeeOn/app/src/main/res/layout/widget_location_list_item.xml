@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:background="@color/white"
-    android:id="@+id/widget_loc_item"
-    >
+				xmlns:tools="http://schemas.android.com/tools"
+				android:layout_width="match_parent"
+				android:layout_height="56dp"
+				android:background="@color/white"
+				android:id="@+id/widget_loc_item"
+	>
 
     <ImageView
         android:id="@+id/widget_loc_item_icon"
@@ -16,7 +17,7 @@
         android:paddingLeft="8dp"
         android:paddingStart="8dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_val_unknown"
+        android:src="@drawable/ic_val_unknown_gray"
         />
 
     <TextView
@@ -31,6 +32,7 @@
         android:paddingTop="8dp"
         android:layout_toStartOf="@+id/widget_loc_item_value"
         android:layout_toLeftOf="@+id/widget_loc_item_value"
+		android:singleLine="true"
         />
 
     <TextView
@@ -44,6 +46,7 @@
         android:layout_below="@+id/widget_loc_item_name"
         android:textColor="@color/beeeon_secondary_text"
         android:textSize="@dimen/abc_text_size_caption_material"
+		android:singleLine="true"
         />
 
     <TextView
@@ -60,10 +63,4 @@
         android:textSize="@dimen/abc_text_size_subhead_material"
         android:textStyle="bold"
         />
-
-    <!-- separator -->
-    <View
-        style="@style/BeeeOn.Divider.Full"
-        android:layout_alignParentBottom="true" />
-
 </RelativeLayout>
