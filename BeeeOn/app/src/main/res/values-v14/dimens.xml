@@ -1,4 +1,5 @@
 <resources>
 	<!-- because on API >= 14 is provided automatically -->
 	<dimen name="widget_margin">0dp</dimen>
+	<dimen name="widget_textsize_clock_large">70sp</dimen>
 </resources>

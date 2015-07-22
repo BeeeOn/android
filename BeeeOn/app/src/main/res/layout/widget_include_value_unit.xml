@@ -23,7 +23,8 @@
 		android:id="@+id/value"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+		android:textSize="@dimen/abc_text_size_body_2_material"
+		android:textStyle="bold"
 		android:singleLine="true"
 		android:textColor="@color/beeeon_accent"
 		android:text="@string/placeholder_none"
@@ -33,10 +34,11 @@
 		android:id="@+id/unit"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:layout_marginLeft="2dp"
 		android:layout_marginStart="2dp"
 		android:singleLine="true"
+		android:textSize="@dimen/abc_text_size_body_1_material"
 		android:textColor="@color/beeeon_accent"
 		/>
+
 </LinearLayout>

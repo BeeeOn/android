@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:textColor="@color/beeeon_primary_text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="@dimen/abc_text_size_body_1_material"
         android:layout_marginLeft="48dp"
         android:layout_marginStart="48dp"
         android:paddingTop="8dp"
@@ -43,7 +43,7 @@
         android:layout_toLeftOf="@+id/widget_loc_item_value"
         android:layout_below="@+id/widget_loc_item_name"
         android:textColor="@color/beeeon_secondary_text"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textSize="@dimen/abc_text_size_caption_material"
         />
 
     <TextView
@@ -57,7 +57,7 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:textColor="@color/beeeon_accent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textSize="@dimen/abc_text_size_subhead_material"
         android:textStyle="bold"
         />
 

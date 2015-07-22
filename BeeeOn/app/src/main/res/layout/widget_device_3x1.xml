@@ -49,7 +49,7 @@
                 android:singleLine="true"
                 android:text="@string/placeholder_none"
                 android:textColor="@color/white"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="@dimen/abc_text_size_caption_material"
                 android:textStyle="bold"
                 />
 
@@ -107,7 +107,7 @@
             android:layout_below="@+id/toolbar_shadow"
             android:text="@string/placeholder_none"
             android:textColor="@color/gray_dark"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textSize="@dimen/abc_text_size_caption_material"
             android:layout_alignRight="@+id/widget_header"
             android:layout_alignEnd="@+id/widget_header"
             android:layout_marginRight="8dp"

@@ -19,7 +19,7 @@
 		android:id="@+id/name"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
-		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+		android:textSize="@dimen/abc_text_size_caption_material"
 		android:singleLine="true"
 		android:textColor="@color/beeeon_primary_text"
 		android:gravity="center_vertical"

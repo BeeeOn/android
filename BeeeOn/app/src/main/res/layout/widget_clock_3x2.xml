@@ -51,7 +51,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:text="@string/household"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+				android:textSize="@dimen/abc_text_size_body_1_material"
 				android:singleLine="true"
 				android:ellipsize="end"
 				android:textColor="@color/beeeon_primary"
@@ -107,7 +107,7 @@
 				android:layout_height="wrap_content"
 				android:singleLine="true"
 				android:ellipsize="end"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+				android:textSize="@dimen/abc_text_size_body_1_material"
 				android:textColor="@color/beeeon_primary"
 				android:text="@string/placeholder_none"
 				/>
@@ -117,7 +117,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:textStyle="bold"
-				android:textAppearance="@style/TextAppearance.AppCompat.Title"
+				android:textSize="@dimen/abc_text_size_title_material"
 				android:layout_marginTop="-4dp"
 				android:textColor="@color/beeeon_accent"
 				android:layout_below="@+id/widget_clock_weather_city"
@@ -136,7 +136,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/beeeon_primary"
-					android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+					android:textSize="@dimen/abc_text_size_caption_material"
 					/>
 
 				<ImageView
@@ -156,7 +156,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/beeeon_primary"
-					android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+					android:textSize="@dimen/abc_text_size_caption_material"
 					/>
 			</LinearLayout>
 

@@ -18,7 +18,7 @@
 	<dimen name="widget_clock_width">160dp</dimen>
 
 	<dimen name="widget_textsize_clock">40sp</dimen>
-	<dimen name="widget_textsize_clock_large">70sp</dimen>
+	<dimen name="widget_textsize_clock_large">55sp</dimen>
 
 	<dimen name="widget_textsize_weather_icon">50dp</dimen>
 	<dimen name="widget_weather_icon">60dp</dimen>
