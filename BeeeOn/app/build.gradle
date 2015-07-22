@@ -20,6 +20,7 @@ android {
         versionCode 61
         versionName "1.0.1"
         signingConfig signingConfigs.debug
+        resConfigs "en", "cs", "sk"
     }
 
     signingConfigs {
@@ -38,6 +39,7 @@ android {
 
         release {
             minifyEnabled true
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

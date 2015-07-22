@@ -145,6 +145,9 @@
 -keep class com.facebook.**{*;}
 -keep class com.vk.**{*;}
 
+#Keep exception classes to display correct error message
+-keep class com.rehivetech.beeeon.exception.ClientError
+-keep class com.rehivetech.beeeon.exception.NetworkError
 
 ###### ADDITIONAL OPTIONS NOT USED NORMALLY
 
