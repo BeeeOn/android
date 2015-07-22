@@ -126,6 +126,7 @@
 		</activity>
 		<activity
 			android:name=".gui.activity.SettingsUnitActivity"
+			android:theme="@style/SettingsActivity"
 			android:label="@string/units">
 		</activity>
 		<activity
