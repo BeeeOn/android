@@ -4,17 +4,12 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -114,11 +109,11 @@ public class WidgetModuleData extends WidgetData {
 			dev.renderView(mBuilder, getIsCached(), "");
 
 			switch (widgetLayout) {
-				case R.layout.widget_device_3x1:
-				case R.layout.widget_device_2x1:
+				case R.layout.widget_data_module_3x1:
+				case R.layout.widget_data_module_2x1:
 					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
 					break;
-				case R.layout.widget_device_1x1:
+				case R.layout.widget_data_module_1x1:
 					dev.setValueUnitSize(R.dimen.abc_text_size_caption_material);
 					break;
 			}
@@ -167,15 +162,15 @@ public class WidgetModuleData extends WidgetData {
 		int layout;
 		// 1 cell
 		if (minWidth < 170) {
-			layout = R.layout.widget_device_1x1;
+			layout = R.layout.widget_data_module_1x1;
 		}
 		// 2 cells
 		else if (minWidth < 200) {
-			layout = R.layout.widget_device_2x1;
+			layout = R.layout.widget_data_module_2x1;
 		}
 		// 3 cells
 		else {
-			layout = R.layout.widget_device_3x1;
+			layout = R.layout.widget_data_module_3x1;
 		}
 
 		changeLayout(layout);

@@ -35,7 +35,7 @@ public class AddGateFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_add_gate, container, false);
+		View view = inflater.inflate(R.layout.fragment_gate_add, container, false);
 
 		view.findViewById(R.id.add_gate_qr_button).setOnClickListener(new OnClickListener() {
 			@Override

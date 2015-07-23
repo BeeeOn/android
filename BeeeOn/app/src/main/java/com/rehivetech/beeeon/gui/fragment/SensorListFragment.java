@@ -121,7 +121,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "OnCreateView");
-		mView = inflater.inflate(R.layout.listofsensors, container, false);
+		mView = inflater.inflate(R.layout.fragment_module_list, container, false);
 
 		return mView;
 	}
@@ -491,7 +491,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.sensorlist_actionmode, menu);
+			inflater.inflate(R.menu.fragment_module_list_actionmode, menu);
 			return true;
 		}
 

@@ -91,7 +91,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
+		mView = inflater.inflate(R.layout.fragment_watchdog_list, container, false);
 		return mView;
 	}
 
@@ -382,7 +382,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
 			MenuInflater inflater = actionMode.getMenuInflater();
-			inflater.inflate(R.menu.watchdoglist_actionmode, menu);
+			inflater.inflate(R.menu.fragment_watchdog_list_actionmode, menu);
 			return true;
 		}
 

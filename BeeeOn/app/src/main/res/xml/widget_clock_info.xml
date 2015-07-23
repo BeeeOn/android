@@ -5,7 +5,7 @@
 	android:minResizeWidth="110dp"
 	android:minResizeHeight="60dp"
 	android:updatePeriodMillis="1800000"
-	android:initialLayout="@layout/widget_clock_3x2"
+	android:initialLayout="@layout/widget_data_clock_3x2"
 	android:resizeMode="horizontal|vertical"
 	android:widgetCategory="home_screen"
 	android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"

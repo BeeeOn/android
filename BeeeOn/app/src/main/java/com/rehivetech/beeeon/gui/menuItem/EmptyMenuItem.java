@@ -24,7 +24,7 @@ public class EmptyMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_empty;
+		return R.layout.item_menu_empty_listview;
 	}
 
 	@Override

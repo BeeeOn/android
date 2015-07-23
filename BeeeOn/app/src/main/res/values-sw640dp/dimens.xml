@@ -1,5 +1,5 @@
 <resources>
-	<!-- Size of activity_add_sensor_activity_dialog -->
+	<!-- Size of fragment_device_add -->
 	<dimen name="content_view_size">300dp</dimen>
 	<dimen name="addgate_image_size">225dp</dimen>
 	<dimen name="addgate_button_width">185dp</dimen>

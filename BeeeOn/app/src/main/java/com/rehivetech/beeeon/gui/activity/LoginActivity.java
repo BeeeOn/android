@@ -308,7 +308,7 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.login_menu, menu);
+		inflater.inflate(R.menu.activity_login_menu, menu);
 
 		// Set choose server item (un)checked
 		boolean checked = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);

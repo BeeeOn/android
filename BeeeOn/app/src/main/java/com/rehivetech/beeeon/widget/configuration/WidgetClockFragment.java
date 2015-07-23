@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -235,9 +234,9 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.spinner_icon_twoline_item, mModules, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.item_spinner_module_icon_twoline, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
-		dataAdapter.setDropDownViewResource(R.layout.spinner_icon_twoline_dropdown_item);
+		dataAdapter.setDropDownViewResource(R.layout.item_spinner_module_icon_twoline_dropdown);
 
 		int index = 0;
 		for (WidgetModulePersistence wDev : mWidgetModules) {

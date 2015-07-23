@@ -84,7 +84,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		// position will always range from 0 to getCount() - 1.
 
 		// We construct a remote views item based on our widget item xml file, and set the  text based on the position.
-		RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_location_list_item);
+		RemoteViews rv = new RemoteViews(mContext.getPackageName(), R.layout.widget_service_factory_views_remote_location_list);
 
 		Module module = mModules.get(position);
 		if (module == null) {

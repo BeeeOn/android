@@ -6,7 +6,7 @@
     android:minWidth="40dp"
     android:minHeight="40dp"
     android:updatePeriodMillis="1800000"
-    android:initialLayout="@layout/widget_device_1x1"
+    android:initialLayout="@layout/widget_data_module_1x1"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"
     android:configure="com.rehivetech.beeeon.widget.configuration.WidgetConfigurationActivity"

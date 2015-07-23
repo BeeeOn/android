@@ -95,7 +95,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_watchdog_edit_rule);
+		setContentView(R.layout.activity_watchdog_rule_edit);
 		Log.d(TAG, "onCreate()");
 
 		// prepare toolbar
@@ -301,9 +301,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		}
 
 		// ------- choose actor
-		final ModuleArrayAdapter actorAdapter = new ModuleArrayAdapter(this, R.layout.custom_spinner2_item, getModulesArray(MODULES_ACTORS), mLocations);
+		final ModuleArrayAdapter actorAdapter = new ModuleArrayAdapter(this, R.layout.activity_watchdog_rule_edit_spinner2_item, getModulesArray(MODULES_ACTORS), mLocations);
 		actorAdapter.setLayoutInflater(getLayoutInflater());
-		actorAdapter.setDropDownViewResource(R.layout.custom_spinner2_dropdown_item);
+		actorAdapter.setDropDownViewResource(R.layout.activity_watchdog_rule_edit_spinner2_dropdown_item);
 		actorSpinner.setAdapter(actorAdapter);
 	}
 
@@ -386,7 +386,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.watchdog_edit_menu, menu);
+		inflater.inflate(R.menu.activity_watchdog_edit_menu, menu);
 		mOptionsMenu = menu;
 
 		onUpdateOptionsMenu();

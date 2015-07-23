@@ -188,7 +188,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
-		getMenuInflater().inflate(R.menu.map_menu, menu);
+		getMenuInflater().inflate(R.menu.activity_map_geofence_map_menu, menu);
 
 
 		// Get the SearchView and set the searchable configuration
@@ -483,7 +483,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.geofence_actionmode, menu);
+			inflater.inflate(R.menu.activity_map_geofence_actionmode, menu);
 			return true;
 		}
 

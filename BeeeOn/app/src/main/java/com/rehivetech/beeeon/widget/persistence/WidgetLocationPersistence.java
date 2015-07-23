@@ -73,7 +73,7 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 			parentBuilder.setTextViewText(R.id.name, name);
 			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
 		} else {
-			mBuilder.loadRootView(R.layout.widget_include_location);
+			mBuilder.loadRootView(R.layout.widget_persistence_location);
 			mBuilder.setTextViewText(R.id.name, name);
 			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
 			parentBuilder.removeAllViews(mBoundView);

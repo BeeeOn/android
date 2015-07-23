@@ -11,7 +11,7 @@ import android.widget.CheckedTextView;
 import android.widget.LinearLayout;
 
 /**
- * Layout for customListView, used in custom_spinner_dropdown_item.xml
+ * Layout for customListView, used in activity_module_edit_spinner_dropdown_item_dropdown_item.xml
  *
  * @author ThinkDeep
  */

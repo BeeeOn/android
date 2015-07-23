@@ -142,7 +142,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		super.onCreateOptionsMenu(menu);
 
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.gate_detail_menu, menu);
+		inflater.inflate(R.menu.activity_gate_detail_menu, menu);
 		return true;
 	}
 

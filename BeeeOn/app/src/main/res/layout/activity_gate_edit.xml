@@ -8,7 +8,7 @@
 	tools:context="com.rehivetech.beeeon.gui.activity.GateEditActivity"
 	>
 
-	<include layout="@layout/beeeon_toolbar"/>
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
 	<ScrollView
 		android:id="@+id/container"

@@ -102,7 +102,7 @@ final public class ChartHelper {
 			chart.setDoubleTapToZoomEnabled(false);
 			chart.setScaleYEnabled(false);
 		} else {
-			ChartMarkerView markerView = new ChartMarkerView(context, R.layout.chart_markerview);
+			ChartMarkerView markerView = new ChartMarkerView(context, R.layout.util_chart_helper_markerview);
 			chart.setMarkerView(markerView);
 		}
 	}

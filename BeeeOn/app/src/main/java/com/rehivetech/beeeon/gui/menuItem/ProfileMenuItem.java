@@ -42,7 +42,7 @@ public class ProfileMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_profile;
+		return R.layout.item_menu_profile_listview;
 	}
 
 	@Override

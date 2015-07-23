@@ -38,7 +38,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_gate_user);
+		setContentView(R.layout.activity_gate_user_add);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {

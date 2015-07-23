@@ -93,7 +93,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_location_screen);
+		setContentView(R.layout.activity_main);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		if (toolbar != null) {
@@ -375,7 +375,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu items for use in the action bar
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_menu, menu);
+		inflater.inflate(R.menu.activity_main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

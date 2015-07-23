@@ -46,7 +46,7 @@ public class NotificationAdapter extends BaseAdapter {
 		ViewHolder holder;
 		if (convertView == null) {
 			LayoutInflater inflater = mFragment.getActivity().getLayoutInflater();
-			convertView = inflater.inflate(R.layout.item_notification, parent, false);
+			convertView = inflater.inflate(R.layout.adapter_notification, parent, false);
 
 			holder = new ViewHolder();
 			holder.img = (ImageView) convertView.findViewById(R.id.item_notification_img);

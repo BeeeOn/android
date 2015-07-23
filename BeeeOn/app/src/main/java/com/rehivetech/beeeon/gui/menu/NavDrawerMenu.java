@@ -80,9 +80,9 @@ public class NavDrawerMenu {
 	}
 
 	private void getGUIElements() {
-		// Locate DrawerLayout in activity_location_screen.xml
+		// Locate DrawerLayout in activity_main.xml
 		mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
-		// Locate ListView in activity_location_screen.xml
+		// Locate ListView in activity_main.xml
 		mDrawerList = (StickyListHeadersListView) mActivity.findViewById(R.id.listview_drawer);
 		// Locate navigationView layout
 		mNavigationView = (NavigationView) mActivity.findViewById(R.id.relative_layout_drawer);
@@ -324,7 +324,7 @@ public class NavDrawerMenu {
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.gate_menu, menu);
+			inflater.inflate(R.menu.nav_drawer_gate_menu, menu);
 			Controller controller = Controller.getInstance(mActivity);
 
 			if (!controller.isUserAllowed(controller.getGatesModel().getGate(mSelectedMenuItem.getId()).getRole())) {

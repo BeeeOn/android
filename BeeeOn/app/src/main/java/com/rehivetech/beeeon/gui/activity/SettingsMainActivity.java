@@ -36,7 +36,7 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 
 	@Override
 	protected int getPreferencesXmlId() {
-		return R.xml.main_preferences;
+		return R.xml.activity_settings_main_preferences;
 	}
 
 	// added suppressWarnings because of support of lower version

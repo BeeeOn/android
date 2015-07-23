@@ -26,7 +26,7 @@ public class LocationListItem extends AbstractListItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.sensor_listview_header;
+		return R.layout.item_list_location_header;
 	}
 
 	@Override

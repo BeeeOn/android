@@ -32,7 +32,7 @@ public class InfoDialogFragment extends TrackDialogFragment {
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
 		LayoutInflater factory = LayoutInflater.from(getActivity());
-		final View view = factory.inflate(R.layout.fragment_info, null);
+		final View view = factory.inflate(R.layout.fragment_dialog_info, null);
 
 		version = (TextView) view.findViewById(R.id.version);
 		try {

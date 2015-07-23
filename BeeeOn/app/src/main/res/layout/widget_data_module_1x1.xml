@@ -63,7 +63,7 @@
             android:layout_height="0dp"
             android:layout_weight="0.4"
             android:gravity="center">
-                <include layout="@layout/widget_include_value_unit" />
+                <include layout="@layout/widget_persistence_module_value_unit" />
         </RelativeLayout>
 
         <!-- hidden views cause on old api causing problems -->

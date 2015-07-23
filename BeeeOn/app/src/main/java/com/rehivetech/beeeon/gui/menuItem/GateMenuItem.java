@@ -39,7 +39,7 @@ public class GateMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_gate;
+		return R.layout.item_menu_gate_listview;
 	}
 
 	@Override

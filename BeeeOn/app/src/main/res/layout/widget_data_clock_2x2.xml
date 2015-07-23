@@ -17,7 +17,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="-8dp"
 		>
-		<include layout="@layout/widget_include_clock" />
+		<include layout="@layout/widget_data_include_clock" />
 	</RelativeLayout>
 
 	<!-- date -->
@@ -27,7 +27,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginTop="-10dp"
 		>
-		<include layout="@layout/widget_include_date" />
+		<include layout="@layout/widget_data_include_date" />
 	</RelativeLayout>
 
 	<LinearLayout
@@ -114,7 +114,7 @@
 			android:layout_toLeftOf="@+id/widget_clock_separator_2"
 			android:layout_toStartOf="@+id/widget_clock_separator_2"
 			>
-			<include layout="@layout/widget_include_value_unit" />
+			<include layout="@layout/widget_persistence_module_value_unit" />
 		</RelativeLayout>
 
 		<!-- separator -->
@@ -138,7 +138,7 @@
 			android:layout_toRightOf="@+id/widget_clock_separator_2"
 			android:layout_toEndOf="@+id/widget_clock_separator_2"
 			>
-			<include layout="@layout/widget_include_value_unit" />
+			<include layout="@layout/widget_persistence_module_value_unit" />
 		</RelativeLayout>
 	</RelativeLayout>
 </LinearLayout>

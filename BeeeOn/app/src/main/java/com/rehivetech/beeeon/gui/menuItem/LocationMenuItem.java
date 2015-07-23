@@ -47,7 +47,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_location;
+		return R.layout.item_menu_location_listview;
 	}
 
 	@Override

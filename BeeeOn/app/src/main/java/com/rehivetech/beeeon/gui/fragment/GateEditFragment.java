@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,7 @@ public class GateEditFragment extends BaseApplicationFragment {
 		mGateIdTextView = ((TextView) view.findViewById(R.id.fragment_gate_edit_gate_id));
 		mTimezoneSpinner = ((Spinner) view.findViewById(R.id.fragment_gate_edit_spinner));
 
-		ArrayAdapter<TimezoneWrapper> adapter = new ArrayAdapter<>(mActivity, R.layout.update_gate_spinner_item, mTimezones);
+		ArrayAdapter<TimezoneWrapper> adapter = new ArrayAdapter<>(mActivity, R.layout.fragment_gate_edit_update_gate_spinner, mTimezones);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mTimezoneSpinner.setAdapter(adapter);
 

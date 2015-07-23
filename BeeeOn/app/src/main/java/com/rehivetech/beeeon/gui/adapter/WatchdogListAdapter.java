@@ -73,7 +73,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 		Controller controller = Controller.getInstance(mContext);
 		// when first time inflating layout (not when scrolling)
 		if (convertView == null) {
-			convertView = mInflater.inflate(R.layout.watchdog_listview_item, parent, false);
+			convertView = mInflater.inflate(R.layout.adapter_list_watchdog, parent, false);
 
 			holder = new ViewHolder();
 

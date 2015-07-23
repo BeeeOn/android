@@ -208,7 +208,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.gateuser_menu, menu);
+			inflater.inflate(R.menu.activity_gate_user_menu, menu);
 			return true;
 		}
 

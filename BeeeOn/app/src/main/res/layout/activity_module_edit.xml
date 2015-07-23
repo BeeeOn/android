@@ -5,7 +5,7 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<include layout="@layout/beeeon_toolbar"/>
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
 	<ScrollView
 		android:layout_width="match_parent"

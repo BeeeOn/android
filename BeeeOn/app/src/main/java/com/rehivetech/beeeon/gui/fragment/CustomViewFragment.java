@@ -67,7 +67,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.graphofsensors, container, false);
+		View view = inflater.inflate(R.layout.fragment_custom_view_graph_modules, container, false);
 
 		mLayout = (LinearLayout) view.findViewById(R.id.container);
 
@@ -80,7 +80,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	private void addChart(final Module module) {
 		// Inflate Layout
 		LayoutInflater inflater = getLayoutInflater(null);
-		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
+		View row = inflater.inflate(R.layout.fragment_custom_view, mLayout, false);
 		// Create and set chart
 		BarLineChartBase chart;
 		VerticalChartLegend legend = new VerticalChartLegend(mActivity);

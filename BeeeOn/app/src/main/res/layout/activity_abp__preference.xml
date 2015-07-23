@@ -5,7 +5,7 @@
     android:orientation="vertical"
     tools:context="com.antonioleiva.materialeverywhere.SettingsActivity" >
 
-    <include layout="@layout/beeeon_toolbar" />
+    <include layout="@layout/layout_beeeon_toolbar" />
 
     <FrameLayout 
         android:layout_width="match_parent"

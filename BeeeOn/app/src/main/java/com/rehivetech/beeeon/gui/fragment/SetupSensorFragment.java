@@ -79,7 +79,7 @@ public class SetupSensorFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.activity_setup_sensor_activity_dialog, container, false);
+		mView = inflater.inflate(R.layout.fragment_module_setup, container, false);
 
 		initViews();
 
@@ -106,10 +106,10 @@ public class SetupSensorFragment extends TrackFragment {
 
 		// Create gate for setting names of new sensors
 		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity, mNewDevices.get(0));
-		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.custom_spinner_item);
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
 
 		// Set layout to DataAdapter for locations
-		dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+		dataAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
 
 		// Set listener for hide or unhide layout for add new location
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -177,8 +177,8 @@ public class SetupSensorFragment extends TrackFragment {
 		}
 
 		// first call need to add gate
-		LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.custom_spinner_icon_item);
-		iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
+		LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.activity_module_edit_custom_spinner_icon_item);
+		iconAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_icon_dropdown_item);
 		newIconSpinner.setAdapter(iconAdapter);
 
 

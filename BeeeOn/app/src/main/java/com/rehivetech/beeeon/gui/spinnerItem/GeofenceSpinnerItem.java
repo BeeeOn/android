@@ -31,7 +31,7 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public int getDropDownLayout() {
-		return R.layout.spinner_no_icon_dropdown_item;
+		return R.layout.item_spinner_geofence_no_icon_dropdown;
 	}
 
 
@@ -45,7 +45,7 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 	}
 
 	public int getLayout() {
-		return R.layout.spinner_icon_item;
+		return R.layout.item_spinner_geofence_icon;
 	}
 
 	@Override

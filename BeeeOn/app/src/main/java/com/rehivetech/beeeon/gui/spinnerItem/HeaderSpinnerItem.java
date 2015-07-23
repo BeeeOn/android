@@ -30,7 +30,7 @@ public class HeaderSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.custom_spinner_header;
+		return R.layout.item_spinner_header;
 	}
 
 	@Override

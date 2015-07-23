@@ -78,7 +78,7 @@ public class SensorListItem extends AbstractListItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.sensor_listview_item;
+		return R.layout.item_list_module_item;
 	}
 
 	@Override

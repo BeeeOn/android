@@ -44,7 +44,7 @@ public class SetupSensorListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// Create basic View
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View itemView = mInflater.inflate(R.layout.setup_sensor_listview_item, parent, false);
+		View itemView = mInflater.inflate(R.layout.adapter_list_module_setup, parent, false);
 		// Get GUI elements
 		ImageView img = (ImageView) itemView.findViewById(R.id.setup_sensor_item_icon);
 		mName = (EditText) itemView.findViewById(R.id.setup_sensor_item_name);

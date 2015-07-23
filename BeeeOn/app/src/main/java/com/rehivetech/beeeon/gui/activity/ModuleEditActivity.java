@@ -91,7 +91,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_module_edit, menu);
+		getMenuInflater().inflate(R.menu.activity_module_edit_menu, menu);
 		return true;
 	}
 
@@ -269,8 +269,8 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 		private void initLayout() {
 			// Location adapter
-			LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.custom_spinner_item);
-			dataAdapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+			LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
+			dataAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
 			mLocationSpinner.setAdapter(dataAdapter);
 
 			// Set listener to (un)hide layout for adding new location
@@ -294,8 +294,8 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 			});
 
 			// Icon adapter
-			LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.custom_spinner_icon_item);
-			iconAdapter.setDropDownViewResource(R.layout.custom_spinner_icon_dropdown_item);
+			LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.activity_module_edit_custom_spinner_icon_item);
+			iconAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_icon_dropdown_item);
 			mNewLocationIconSpinner.setAdapter(iconAdapter);
 
 			// Set max value by length of array with values
