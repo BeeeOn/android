@@ -99,6 +99,8 @@ final public class ChartHelper {
 			yAxis.setLabelCount(yLabels.size() - 1);
 			yAxis.setAxisMinValue(0);
 			yAxis.setAxisMaxValue(yLabels.size() - 1);
+			chart.setDoubleTapToZoomEnabled(false);
+			chart.setScaleYEnabled(false);
 		} else {
 			ChartMarkerView markerView = new ChartMarkerView(context, R.layout.chart_markerview);
 			chart.setMarkerView(markerView);
