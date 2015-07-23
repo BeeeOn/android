@@ -158,18 +158,18 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			return;
 		}
 
-		// Get View for sensor location
+		// Get View for module location
 		TextView location = (TextView) view.findViewById(R.id.sen_detail_loc_name);
 		ImageView locationIcon = (ImageView) view.findViewById(R.id.sen_detail_loc_icon);
-		// Get View for sensor value
+		// Get View for module value
 		mValue = (TextView) view.findViewById(R.id.sen_detail_value);
 		mValueSwitch = (SwitchCompat) view.findViewById(R.id.sen_detail_value_switch);
 		mValueSet = (Button) view.findViewById(R.id.sen_detail_value_set);
 		// Get FAB for edit
 		mFABedit = (FloatingActionButton) view.findViewById(R.id.sen_detail_edit_fab);
-		// Get View for sensor time
+		// Get View for module time
 		TextView time = (TextView) view.findViewById(R.id.sen_detail_time);
-		// Get Image for sensor
+		// Get Image for module
 		mIcon = (ImageView) view.findViewById(R.id.sen_detail_icon);
 		// Get TextView for refresh time
 		TextView refreshTimeText = (TextView) view.findViewById(R.id.sen_refresh_time_value);
@@ -206,7 +206,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 		final Device device = module.getDevice();
 
-		// Set name of sensor
+		// Set name of module
 		Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
 		toolbar.setTitle(module.getName(mActivity));
 
@@ -274,7 +274,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
-		// Set value of sensor
+		// Set value of module
 		if (mUnitsHelper != null) {
 			mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
 			// FIXME: rework this better
@@ -288,10 +288,10 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		}
 
-		// Set icon of sensor
+		// Set icon of module
 		mIcon.setImageResource(module.getIconResource(IconResourceType.WHITE));
 
-		// Set time of sensor
+		// Set time of module
 		if (mTimeHelper != null) {
 			time.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}

@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
-import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
+import com.rehivetech.beeeon.gui.fragment.ModuleListFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
@@ -26,7 +26,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 			// Open FragmentTab2.java
 			case 0:
-				SensorListFragment fragmenttab2 = new SensorListFragment();
+				ModuleListFragment fragmenttab2 = new ModuleListFragment();
 				return fragmenttab2;
 
 			// Open FragmentTab1.java

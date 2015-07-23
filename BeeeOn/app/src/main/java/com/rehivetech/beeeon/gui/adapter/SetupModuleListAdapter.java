@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Device;
 
-public class SetupSensorListAdapter extends BaseAdapter {
+public class SetupModuleListAdapter extends BaseAdapter {
 
 	private Context mContext;
 	private Device mDevice;
@@ -19,7 +19,7 @@ public class SetupSensorListAdapter extends BaseAdapter {
 
 	private LayoutInflater mInflater;
 
-	public SetupSensorListAdapter(Context context, Device device) {
+	public SetupModuleListAdapter(Context context, Device device) {
 		mContext = context;
 		mDevice = device;
 
@@ -48,9 +48,9 @@ public class SetupSensorListAdapter extends BaseAdapter {
 		// Get GUI elements
 		ImageView img = (ImageView) itemView.findViewById(R.id.setup_sensor_item_icon);
 		mName = (EditText) itemView.findViewById(R.id.setup_sensor_item_name);
-		// Set image resource by sensor type
+		// Set image resource by module type
 		img.setImageResource(mDevice.getAllModules().get(position).getIconResource());
-		// Set name of sensor
+		// Set name of module
 		mName.setText(mDevice.getAllModules().get(position).getName(mContext));
 
 

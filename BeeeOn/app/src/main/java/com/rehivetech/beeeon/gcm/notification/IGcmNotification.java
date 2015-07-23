@@ -18,9 +18,9 @@ public interface IGcmNotification {
 		WATCHDOG("watchdog", WatchdogNotification.class),
 		DELETE_NOTIF("delete_not", DeleteNotification.class),
 		URI("uri", UriNotification.class),
-		SENSOR_ADDED("sensor_add", SensorAddedNotification.class),
-		SENSOR_LOW_BATTERY("sensor_bat", SensorLowBatteryNotification.class),
-		SENSOR_LOW_SIGNAL("sensor_sig", SensorLowSignalNotification.class),
+		DEVICE_ADDED("sensor_add", DeviceAddedNotification.class),
+		DEVICE_LOW_BATTERY("sensor_bat", DeviceLowBatteryNotification.class),
+		DEVICE_LOW_SIGNAL("sensor_sig", DeviceLowSignalNotification.class),
 		GATE_ADDED("adapter_add", GateAddedNotification.class),
 		GATE_OFFLINE("adapter_off", GateOfflineNotification.class);
 

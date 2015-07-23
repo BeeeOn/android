@@ -99,7 +99,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 		holder.ItemRuleName.setText(rule.getName());
 
 		switch (rule.getType()) {
-			case Watchdog.TYPE_SENSOR:
+			case Watchdog.TYPE_MODULE:
 				List<String> modulesIds = rule.getModules();
 				if (modulesIds.size() > 0) {
 					Module moduleFirst = controller.getDevicesModel().getModule(rule.getGateId(), modulesIds.get(0));

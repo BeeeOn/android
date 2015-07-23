@@ -352,7 +352,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean prepareGateToListenNewSensors(String gateId) {
+	public boolean prepareGateToListenNewDevices(String gateId) {
 		return isGateAllowed(gateId);
 	}
 

@@ -19,10 +19,10 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
-import com.rehivetech.beeeon.gui.activity.SetupSensorActivity;
+import com.rehivetech.beeeon.gui.activity.SetupDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
-import com.rehivetech.beeeon.gui.adapter.SetupSensorListAdapter;
+import com.rehivetech.beeeon.gui.adapter.SetupModuleListAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -33,9 +33,9 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetupSensorFragment extends TrackFragment {
+public class SetupDeviceFragment extends TrackFragment {
 
-	public SetupSensorActivity mActivity;
+	public SetupDeviceActivity mActivity;
 	private View mView;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -48,10 +48,10 @@ public class SetupSensorFragment extends TrackFragment {
 		super.onAttach(activity);
 
 		try {
-			mActivity = (SetupSensorActivity) getActivity();
+			mActivity = (SetupDeviceActivity) getActivity();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must be subclass of SetupSensorActivity");
+					+ " must be subclass of SetupDeviceActivity");
 		}
 	}
 
@@ -90,7 +90,7 @@ public class SetupSensorFragment extends TrackFragment {
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
-			Log.d(TAG, "SETUP SENSOR fragment is visible");
+			Log.d(TAG, "SETUP MODULE fragment is visible");
 			mActivity.setFragment(this);
 		}
 	}
@@ -105,7 +105,7 @@ public class SetupSensorFragment extends TrackFragment {
 		final TextView time = (TextView) mView.findViewById(R.id.setup_sensor_info_text);
 
 		// Create gate for setting names of new sensors
-		SetupSensorListAdapter listAdapter = new SetupSensorListAdapter(mActivity, mNewDevices.get(0));
+		SetupModuleListAdapter listAdapter = new SetupModuleListAdapter(mActivity, mNewDevices.get(0));
 		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
 
 		// Set layout to DataAdapter for locations

@@ -174,7 +174,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				return;
 			}
 		} else {
-			mWatchdog = new Watchdog(Watchdog.TYPE_SENSOR);
+			mWatchdog = new Watchdog(Watchdog.TYPE_MODULE);
 			mWatchdog.setGateId(gate.getId());
 		}
 
@@ -240,7 +240,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				switch (selected.getType()) {
 					case MODULE:
 						mWatchdogOperator = new WatchdogSensorType(mWatchdogOperator.getIndex());
-						mWatchdog.setType(Watchdog.TYPE_SENSOR);
+						mWatchdog.setType(Watchdog.TYPE_MODULE);
 						mWatchdog.setGeoRegionId("");
 						break;
 
@@ -400,7 +400,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		if (mOptionsMenu == null) return;
 
 		MenuItem deleteActionButton = mOptionsMenu.findItem(R.id.wat_menu_delete);
-		deleteActionButton.setVisible(mIsNew ? false : true);
+		deleteActionButton.setVisible(!mIsNew);
 	}
 
 	/**

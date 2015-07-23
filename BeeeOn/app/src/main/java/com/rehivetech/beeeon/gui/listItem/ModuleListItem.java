@@ -14,13 +14,13 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
-public class SensorListItem extends AbstractListItem {
+public class ModuleListItem extends AbstractListItem {
 	private final Context mContext;
 	private Module mModule;
 	private boolean mSeparatorVisible;
 
-	public SensorListItem(Module module, String id, Context context, boolean separator) {
-		super(id, ListItemType.SENSOR);
+	public ModuleListItem(Module module, String id, Context context, boolean separator) {
+		super(id, ListItemType.MODULE);
 		mModule = module;
 		mSeparatorVisible = separator;
 		mContext = context;

@@ -19,8 +19,8 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.SetupSensorFragmentAdapter;
-import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
+import com.rehivetech.beeeon.gui.adapter.SetupDeviceFragmentAdapter;
+import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -33,11 +33,11 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 import java.util.EnumSet;
 
-public class SetupSensorActivity extends BaseApplicationActivity {
-	private static final String TAG = SetupSensorActivity.class.getSimpleName();
+public class SetupDeviceActivity extends BaseApplicationActivity {
+	private static final String TAG = SetupDeviceActivity.class.getSimpleName();
 	private Gate mPairGate;
 
-	private SetupSensorFragment mFragment;
+	private SetupDeviceFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 		mPairGate = Controller.getInstance(this).getActiveGate();
 
-		SetupSensorFragmentAdapter adapter = new SetupSensorFragmentAdapter(getSupportFragmentManager());
+		SetupDeviceFragmentAdapter adapter = new SetupDeviceFragmentAdapter(getSupportFragmentManager());
 
 		ViewPager viewPager = (ViewPager) findViewById(R.id.intro_pager);
 		viewPager.setAdapter(adapter);
@@ -77,7 +77,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onClick(View v) {
-				InputMethodManager imm = (InputMethodManager) SetupSensorActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+				InputMethodManager imm = (InputMethodManager) SetupDeviceActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				setResult(Activity.RESULT_CANCELED);
 				finish();
@@ -92,7 +92,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 				ListView listOfName = mFragment.getListOfName();
 				TextView newLocation = mFragment.getNewLocation();
 				Spinner newIconSpinner = mFragment.getNewIconSpinner();
-				Device newDevice = Controller.getInstance(SetupSensorActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
+				Device newDevice = Controller.getInstance(SetupDeviceActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
 
 				// Controll if Names arent empty
 				for (int i = 0; i < newDevice.getAllModules().size(); i++) {
@@ -100,10 +100,10 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 					String name = ((EditText) listOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
 					if (name.isEmpty()) {
-						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupDeviceActivity.this, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
 						return;
 					}
-					// Set this new name to sensor
+					// Set this new name to module
 					// FIXME: rework this?
 					// newDevice.getAllModules().get(i).setName(name);
 
@@ -115,11 +115,11 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 					// check new location name
 					if (newLocation != null && newLocation.length() < 1) {
-						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupDeviceActivity.this, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
 						return;
 					}
 					if ((newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
-						Toast.makeText(SetupSensorActivity.this, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupDeviceActivity.this, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
 						return;
 					}
 
@@ -145,7 +145,7 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 
 	}
 
-	public void setFragment(SetupSensorFragment fragment) {
+	public void setFragment(SetupDeviceFragment fragment) {
 		mFragment = fragment;
 	}
 
@@ -157,13 +157,13 @@ public class SetupSensorActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(SetupSensorActivity.this, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
+					Toast.makeText(SetupDeviceActivity.this, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
 
 					Intent intent = new Intent();
-					intent.putExtra(Constants.SETUP_SENSOR_ACT_LOC, pair.location.getId());
+					intent.putExtra(Constants.SETUP_DEVICE_ACT_LOC, pair.location.getId());
 					setResult(Activity.RESULT_OK, intent);
 					//HIDE keyboard
-					InputMethodManager imm = (InputMethodManager) SetupSensorActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+					InputMethodManager imm = (InputMethodManager) SetupDeviceActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
 					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 					finish();
 				}

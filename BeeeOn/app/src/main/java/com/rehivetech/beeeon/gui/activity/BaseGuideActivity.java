@@ -11,7 +11,7 @@ import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.viewpagerindicator.CirclePageIndicator;
 
 /**
- * Class that provides the common features for AddSensorAcitivity and AddGateActivity, both Activities inherit from this one
+ * Class that provides the common features for AddDeviceAcitivity and AddGateActivity, both Activities inherit from this one
  */
 public abstract class BaseGuideActivity extends BaseApplicationActivity{
 	protected Button mSkip;

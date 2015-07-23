@@ -186,7 +186,7 @@ public interface INetwork {
 	 * @param gateId
 	 * @return
 	 */
-	boolean prepareGateToListenNewSensors(String gateId);
+	boolean prepareGateToListenNewDevices(String gateId);
 
 	/**
 	 * Method delete mDevice from server

@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.util;
 
-import android.content.res.Configuration;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -9,7 +8,6 @@ import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.LoginActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 
 public class TutorialHelper {
@@ -103,7 +101,7 @@ public class TutorialHelper {
 		});
 	}*/
 
-	public static void showAddSensorTutorial(final MainActivity activity, View layout) {
+	public static void showAddDeviceTutorial(final MainActivity activity, View layout) {
 		final RelativeLayout.LayoutParams lps = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
 		lps.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -117,7 +115,7 @@ public class TutorialHelper {
 
 			@Override
 			public void onShowcaseViewShow(ShowcaseView showcaseView) {
-				Log.d(TAG, "OnShowCase show ADD SENSOR");
+				Log.d(TAG, "OnShowCase show ADD MODULE");
 
 			}
 

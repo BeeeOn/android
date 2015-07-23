@@ -32,10 +32,10 @@ import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
-import com.rehivetech.beeeon.gui.adapter.SenListAdapter;
+import com.rehivetech.beeeon.gui.adapter.ModuleListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.listItem.LocationListItem;
-import com.rehivetech.beeeon.gui.listItem.SensorListItem;
+import com.rehivetech.beeeon.gui.listItem.ModuleListItem;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -54,9 +54,9 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class SensorListFragment extends BaseApplicationFragment {
+public class ModuleListFragment extends BaseApplicationFragment {
 
-	private static final String TAG = SensorListFragment.class.getSimpleName();
+	private static final String TAG = ModuleListFragment.class.getSimpleName();
 
 	private static final String LCTN = "lastlocation";
 	private static final String GATE_ID = "lastGateId";
@@ -65,7 +65,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	private SwipeRefreshLayout mSwipeLayout;
 	private MainActivity mActivity;
 
-	private SenListAdapter mSensorAdapter;
+	private ModuleListAdapter mModuleAdapter;
 	private ArrayList<Integer> mFABMenuIcon = new ArrayList<>();
 	private ArrayList<String> mFABMenuLabels = new ArrayList<>();
 
@@ -81,12 +81,12 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 	// For tutorial
 	private boolean mFirstUseAddGate = true;
-	private boolean mFirstUseAddSensor = true;
+	private boolean mFirstUseAddDevice = true;
 
 	private Module mSelectedItem;
 	private int mSelectedItemPos;
 
-	public SensorListFragment() {
+	public ModuleListFragment() {
 	}
 
 	@Override
@@ -113,7 +113,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 		if (prefs != null) {
 			mFirstUseAddGate = prefs.getBoolean(Constants.TUTORIAL_ADD_GATE_SHOWED, true);
-			mFirstUseAddSensor = prefs.getBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, true);
+			mFirstUseAddDevice = prefs.getBoolean(Constants.TUTORIAL_ADD_DEVICE_SHOWED, true);
 		}
 
 	}
@@ -142,7 +142,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 			@Override
 			public void onRefresh() {
-				Log.d(TAG, "Refreshing list of sensors");
+				Log.d(TAG, "Refreshing list of modules");
 				Gate gate = Controller.getInstance(mActivity).getActiveGate();
 				if (gate == null) {
 					mSwipeLayout.setRefreshing(false);
@@ -182,7 +182,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mView = getView();
 		// get UI elements
 		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
-		final StickyListHeadersListView sensorList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
+		final StickyListHeadersListView moduleList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
 		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
 		Button refreshBtn = (Button) mView.findViewById(R.id.sensor_list_refresh_btn);
 
@@ -193,7 +193,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 				doFullReloadTask(true);
 			}
 		};
-		OnClickListener refreshNoSensor = new OnClickListener() {
+		OnClickListener refreshNoModule = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Gate gate = controller.getActiveGate();
@@ -205,7 +205,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		};
 
-		mSensorAdapter = new SenListAdapter(mActivity);
+		mModuleAdapter = new ModuleListAdapter(mActivity);
 
 		final FloatingActionButton floatingActionButton = (FloatingActionButton) mView.findViewById(R.id.fab);
 
@@ -216,19 +216,19 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		List<Module> modules = new ArrayList<>();
 		for (Location loc : locations) {
-			mSensorAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
+			mModuleAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
 			// all devices from actual location
 			for (Device device : devicesModel.getDevicesByLocation(mActiveGateId, loc.getId())) {
 				Iterator<Module> it = device.getVisibleModules().iterator();
 				while (it.hasNext()) {
 					Module module = it.next();
-					mSensorAdapter.addItem(new SensorListItem(module, module.getAbsoluteId(), mActivity, !it.hasNext()));
+					mModuleAdapter.addItem(new ModuleListItem(module, module.getAbsoluteId(), mActivity, !it.hasNext()));
 					modules.add(module);
 				}
 			}
 		}
 
-		if (sensorList == null) {
+		if (moduleList == null) {
 			Log.e(TAG, "LifeCycle: bad timing or what?");
 			return false; // TODO: this happens when we're in different activity
 			// (detail), fix that by changing that activity
@@ -245,7 +245,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_gate_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
-			sensorList.setVisibility(View.GONE);
+			moduleList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.GONE);
 			// FAB
@@ -271,29 +271,29 @@ public class SensorListFragment extends BaseApplicationFragment {
 			noItem.setVisibility(View.VISIBLE);
 			noItem.setText(R.string.no_sensor_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
-			sensorList.setVisibility(View.GONE);
+			moduleList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.GONE);
 
-			refreshBtn.setOnClickListener(refreshNoSensor);
+			refreshBtn.setOnClickListener(refreshNoModule);
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addgate));
 			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
-			if (mFirstUseAddSensor && !controller.isDemoMode()) {
-				mFirstUseAddSensor = false;
+			if (mFirstUseAddDevice && !controller.isDemoMode()) {
+				mFirstUseAddDevice = false;
 				mActivity.getMenu().closeMenu();
-				TutorialHelper.showAddSensorTutorial((MainActivity) mActivity, mView);
+				TutorialHelper.showAddDeviceTutorial(mActivity, mView);
 				SharedPreferences prefs = controller.getUserSettings();
 				if (prefs != null) {
-					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_SENSOR_SHOWED, false).apply();
+					prefs.edit().putBoolean(Constants.TUTORIAL_ADD_DEVICE_SHOWED, false).apply();
 				}
 			}
 		} else { // Have gate and modules
 			noItem.setVisibility(View.GONE);
 			refreshBtn.setVisibility(View.GONE);
-			sensorList.setVisibility(View.VISIBLE);
+			moduleList.setVisibility(View.VISIBLE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.VISIBLE);
 			// FAB
@@ -308,7 +308,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			@Override
 			public void onClick(View v) {
 				if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addsensor))) {
-					showAddSensorDialog();
+					showAddDeviceDialog();
 				} else if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addgate))) {
 					showAddGateDialog();
 				}
@@ -316,7 +316,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		};
 
-		sensorList.setAdapter(mSensorAdapter);
+		moduleList.setAdapter(mModuleAdapter);
 
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) { // API 14 +
@@ -331,7 +331,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			});
 		} else {
 			// API 10 to 13
-			// Show dialof to select Add Gate or Add sensor
+			// Show dialof to select Add Gate or Add device
 
 			floatingActionButton.setOnClickListener(new OnClickListener() {
 				@Override
@@ -351,13 +351,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				int topRowVerticalPosition = (sensorList == null || sensorList.getListChildCount() == 0) ?
-						0 : sensorList.getListChildAt(0).getTop();
+				int topRowVerticalPosition = (moduleList == null || moduleList.getListChildCount() == 0) ?
+						0 : moduleList.getListChildAt(0).getTop();
 				mSwipeLayout.setEnabled((topRowVerticalPosition >= 0));
 			}
 		};
 
-		floatingActionButton.attachToListView(sensorList.getWrappedList(), new ScrollDirectionListener() {
+		floatingActionButton.attachToListView(moduleList.getWrappedList(), new ScrollDirectionListener() {
 			@Override
 			public void onScrollDown() {
 
@@ -372,10 +372,10 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		if (haveModules) {
 			// Capture listview menu item click
-			sensorList.setOnItemClickListener(new ListView.OnItemClickListener() {
+			moduleList.setOnItemClickListener(new ListView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Module module = mSensorAdapter.getModule(position);
+					Module module = mModuleAdapter.getModule(position);
 					Bundle bundle = new Bundle();
 					bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, module.getDevice().getGateId());
 					bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
@@ -387,13 +387,13 @@ public class SensorListFragment extends BaseApplicationFragment {
 			Gate tmpAda = controller.getGatesModel().getGate(mActiveGateId);
 			if (tmpAda != null) {
 				if (controller.isUserAllowed(tmpAda.getRole())) {
-					sensorList.setOnItemLongClickListener(new OnItemLongClickListener() {
+					moduleList.setOnItemLongClickListener(new OnItemLongClickListener() {
 						@Override
 						public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-							mMode = mActivity.startSupportActionMode(new ActionModeEditSensors());
-							mSelectedItem = mSensorAdapter.getModule(position);
+							mMode = mActivity.startSupportActionMode(new ActionModeEditModules());
+							mSelectedItem = mModuleAdapter.getModule(position);
 							mSelectedItemPos = position;
-							mSensorAdapter.getItem(mSelectedItemPos).setIsSelected();
+							mModuleAdapter.getItem(mSelectedItemPos).setIsSelected();
 							return true;
 						}
 					});
@@ -401,7 +401,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 			}
 		}
 
-		Log.d(TAG, "LifeCycle: getsensors end");
+		Log.d(TAG, "LifeCycle: getModules end");
 		return true;
 	}
 
@@ -411,10 +411,10 @@ public class SensorListFragment extends BaseApplicationFragment {
 		mActivity.startActivityForResult(intent, Constants.ADD_GATE_REQUEST_CODE);
 	}
 
-	public void showAddSensorDialog() {
-		Log.d(TAG, "HERE ADD SENSOR +");
+	public void showAddDeviceDialog() {
+		Log.d(TAG, "HERE ADD DEVICE +");
 		Intent intent = new Intent(mActivity, AddDeviceActivity.class);
-		mActivity.startActivityForResult(intent, Constants.ADD_SENSOR_REQUEST_CODE);
+		mActivity.startActivityForResult(intent, Constants.ADD_DEVICE_REQUEST_CODE);
 	}
 
 	public void setMenuID(String locId) {
@@ -486,7 +486,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 	}
 
 
-	class ActionModeEditSensors implements ActionMode.Callback {
+	class ActionModeEditModules implements ActionMode.Callback {
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -514,7 +514,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-			mSensorAdapter.getItem(mSelectedItemPos).setNotSelected();
+			mModuleAdapter.getItem(mSelectedItemPos).setNotSelected();
 			mSelectedItem = null;
 			mSelectedItemPos = 0;
 			mMode = null;

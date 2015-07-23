@@ -80,7 +80,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		listActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				startSupportActionMode(new ActionModeEditSensors());
+				startSupportActionMode(new ActionModeEditModules());
 				mSelectedItem = (User) listActUsers.getAdapter().getItem(position);
 				mSelectedItemPos = position;
 				setUserSelected();
@@ -202,7 +202,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		callbackTaskManager.executeTask(editUserTask, pair);
 	}
 
-	class ActionModeEditSensors implements ActionMode.Callback {
+	class ActionModeEditModules implements ActionMode.Callback {
 
 
 		@Override

@@ -46,17 +46,17 @@ public abstract class VisibleNotification extends BaseNotification {
 			case GATE_ADDED:
 				notification = GateAddedNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
-			case SENSOR_ADDED:
-				notification = SensorAddedNotification.getInstance(msgId, time, type, isRead, parser);
+			case DEVICE_ADDED:
+				notification = DeviceAddedNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 			case URI:
 				notification = UriNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
-			case SENSOR_LOW_BATTERY:
-				notification = SensorLowBatteryNotification.getInstance(msgId, time, type, isRead, parser);
+			case DEVICE_LOW_BATTERY:
+				notification = DeviceLowBatteryNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
-			case SENSOR_LOW_SIGNAL:
-				notification = SensorLowSignalNotification.getInstance(msgId, time, type, isRead, parser);
+			case DEVICE_LOW_SIGNAL:
+				notification = DeviceLowSignalNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
 			case GATE_OFFLINE:
 				notification = GateOfflineNotification.getInstance(msgId, time, type, isRead, parser);

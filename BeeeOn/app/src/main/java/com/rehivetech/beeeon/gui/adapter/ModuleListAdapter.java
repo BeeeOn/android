@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
 import com.rehivetech.beeeon.gui.listItem.IListItem;
-import com.rehivetech.beeeon.gui.listItem.SensorListItem;
+import com.rehivetech.beeeon.gui.listItem.ModuleListItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.Log;
 
@@ -18,10 +18,10 @@ import java.util.List;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
- * Class for list of sensors
+ * Class for list of modules
  */
-public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdapter, SectionIndexer {
-	private static final String TAG = SenListAdapter.class.getSimpleName();
+public class ModuleListAdapter extends BaseAdapter implements StickyListHeadersAdapter, SectionIndexer {
+	private static final String TAG = ModuleListAdapter.class.getSimpleName();
 
 	private final Context mContext;
 
@@ -33,7 +33,7 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 
 	private List<Integer> mListHeaderPos;
 
-	public SenListAdapter(Context context) {
+	public ModuleListAdapter(Context context) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
 		mListHeader = new ArrayList<IListItem>();
@@ -78,7 +78,7 @@ public class SenListAdapter extends BaseAdapter implements StickyListHeadersAdap
 	}
 
 	public Module getModule(int position) {
-		return ((SensorListItem) mListItem.get(position)).getModule();
+		return ((ModuleListItem) mListItem.get(position)).getModule();
 	}
 
 	@Override

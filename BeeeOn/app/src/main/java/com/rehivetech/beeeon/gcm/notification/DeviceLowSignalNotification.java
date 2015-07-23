@@ -15,31 +15,34 @@ import java.io.IOException;
 /**
  * Created by Martin on 22. 4. 2015.
  */
-public class SensorAddedNotification extends VisibleNotification {
-	public static final String TAG = SensorAddedNotification.class.getSimpleName();
+public class DeviceLowSignalNotification extends VisibleNotification {
+	public static final String TAG = DeviceLowSignalNotification.class.getSimpleName();
 
 	private int mGateId;
-	private String mSensorId;
+	private String mModuleId;
+	private int mSignalLevel;
 
-	private SensorAddedNotification(int msgid, long time, NotificationType type, boolean read, int gateId, String sensorId) {
+	private DeviceLowSignalNotification(int msgid, long time, NotificationType type, boolean read, int gateId, String moduleId, int signalLevel) {
 		super(msgid, time, type, read);
 		mGateId = gateId;
-		mSensorId = sensorId;
+		mModuleId = moduleId;
+		mSignalLevel = signalLevel;
 	}
 
-	protected static SensorAddedNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		SensorAddedNotification instance = null;
+	protected static DeviceLowSignalNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+		DeviceLowSignalNotification instance = null;
 
 		try {
 			Integer gateId = Integer.valueOf(bundle.getString(Xconstants.AID));
 			String moduleId = bundle.getString(Xconstants.DID);
+			Integer batterylevel = Integer.valueOf(bundle.getString(Xconstants.BATTERY));
 
-			if (gateId == null || moduleId == null) {
-				Log.d(TAG, "SensorAdded: some compulsory value is missing.");
+			if (gateId == null || moduleId == null || batterylevel == null) {
+				Log.d(TAG, "DeviceAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new SensorAddedNotification(msgId, time, type, false, gateId, moduleId);
+			instance = new DeviceLowSignalNotification(msgId, time, type, false, gateId, moduleId, batterylevel);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -50,6 +53,7 @@ public class SensorAddedNotification extends VisibleNotification {
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
 		Integer gateId = null;
 		String moduleId = null;
+		Integer signalLevel = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -73,6 +77,8 @@ public class SensorAddedNotification extends VisibleNotification {
 						gateId = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
 						moduleId = text;
+					} else if (tagname.equalsIgnoreCase(Xconstants.BATTERY)) {
+						signalLevel = Integer.valueOf(text);
 					}
 					break;
 				default:
@@ -81,12 +87,12 @@ public class SensorAddedNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (gateId == null || moduleId == null) {
+		if (gateId == null || moduleId == null || signalLevel == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new SensorAddedNotification(msgId, time, type, isRead, gateId, moduleId);
+		return new DeviceLowSignalNotification(msgId, time, type, isRead, gateId, moduleId, signalLevel);
 
 	}
 

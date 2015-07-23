@@ -22,8 +22,8 @@ public class WatchdogNotification extends VisibleNotification {
 	public static final String TAG = WatchdogNotification.class.getSimpleName();
 
 	private int mGateId;
-	private String mSensorId;
-	private int mSensorType;
+	private String mModuleId;
+	private int mModuleType;
 	private String mMsg;
 	private int mAlgId;
 
@@ -35,11 +35,11 @@ public class WatchdogNotification extends VisibleNotification {
 	 * @param type
 	 * @param read
 	 */
-	private WatchdogNotification(int msgid, long time, NotificationType type, boolean read, String message, int gateId, String sensorId, int sensorType, int algId) {
+	private WatchdogNotification(int msgid, long time, NotificationType type, boolean read, String message, int gateId, String moduleId, int moduleType, int algId) {
 		super(msgid, time, type, read);
 		mGateId = gateId;
-		mSensorId = sensorId;
-		mSensorType = sensorType;
+		mModuleId = moduleId;
+		mModuleType = moduleType;
 		mMsg = message;
 		mAlgId = algId;
 
@@ -151,7 +151,7 @@ public class WatchdogNotification extends VisibleNotification {
 
 	@Override
 	protected void onClickHandle(Context context) {
-		Action.getSensorDetailIntent(context, mGateId, mSensorId, mSensorType);
+		Action.getModuleDetailIntent(context, mGateId, mModuleId, mModuleType);
 	}
 
 	@Override

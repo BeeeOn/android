@@ -417,7 +417,7 @@ public class XmlCreator {
 	 * @param bt         userID of user
 	 * @param aid        gateId of actual gate
 	 * @param did        deviceID of wanted module
-	 * @param moduleType is type of sensor
+	 * @param moduleType is type of module
 	 * @param from       date in unix timestamp
 	 * @param to         date in unix timestamp
 	 * @param funcType   is aggregation function type {avg, median, ...}
@@ -544,7 +544,7 @@ public class XmlCreator {
 			// FIXME: rework this
 			/*if (toSave.contains(SaveModule.SAVE_NAME) || toSave.contains(Module.SaveModule.SAVE_VALUE)) {
 				serializer.startTag(ns, Xconstants.PART);
-				// send always if sensor changed
+				// send always if module changed
 				serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
 				if (toSave.contains(SaveModule.SAVE_NAME))
 					serializer.attribute(ns, Xconstants.NAME, module.getName());

@@ -3,23 +3,23 @@ package com.rehivetech.beeeon.gui.listItem;
 import android.view.View;
 
 public interface IListItem {
-	public static final String ID_UNDEFINED = "id_undefined";
+	String ID_UNDEFINED = "id_undefined";
 
 	// TODO test pryc -> presunout do sekce Applications
 
-	public enum ListItemType {
-		LOCATION, SENSOR
+	enum ListItemType {
+		LOCATION, MODULE
 	}
 
-	public void setView(View view);
+	void setView(View view);
 
-	public int getLayout();
+	int getLayout();
 
-	public String getId();
+	String getId();
 
-	public ListItemType getType();
+	ListItemType getType();
 
-	public void setIsSelected();
+	void setIsSelected();
 
-	public void setNotSelected();
+	void setNotSelected();
 }

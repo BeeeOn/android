@@ -7,13 +7,13 @@ import android.graphics.Paint;
 import android.support.annotation.IntDef;
 import android.support.annotation.StyleRes;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -77,7 +77,7 @@ public class VerticalChartLegend<T extends DataSet<? extends Entry>> extends Vie
 		mLegendShape = LEGEND_SHAPE_CIRCLE;
 		mChartDatasets = new ArrayList<>();
 
-		mEntrySpace = convertDpToPx(context, 5f);
+		mEntrySpace = Utils.convertDpToPixel(5f);
 	}
 
 	@Override
@@ -130,16 +130,5 @@ public class VerticalChartLegend<T extends DataSet<? extends Entry>> extends Vie
 	public void setTextAppearance(@StyleRes int resId) {
 		mTextResId = resId;
 		init(mContext);
-	}
-
-	/**
-	 * Helper method to convert Dp to Px
-	 * @param context activity context
-	 * @param dpValue Dp value to convert
-	 * @return value in Px
-	 */
-	private float convertDpToPx(Context context, float dpValue) {
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		return dpValue * (metrics.densityDpi / 160f);
 	}
 }

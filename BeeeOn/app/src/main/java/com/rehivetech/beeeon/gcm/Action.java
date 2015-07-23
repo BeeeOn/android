@@ -22,9 +22,9 @@ public final class Action {
 	}
 
 	@Nullable
-	static public void getSensorDetailIntent(Context context, int gateId, String sensorId, int type) {
+	static public void getModuleDetailIntent(Context context, int gateId, String moduleId, int type) {
 		Controller controller = Controller.getInstance(context);
-		Device device = controller.getDevicesModel().getDevice(String.valueOf(gateId), sensorId);
+		Device device = controller.getDevicesModel().getDevice(String.valueOf(gateId), moduleId);
 		if (device == null) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
@@ -49,7 +49,7 @@ public final class Action {
 
 		Module module = modules.get(pos);
 
-		// Sensor exists, we can open activity
+		// Module exists, we can open activity
 		Intent intent = new Intent(context, ModuleDetailActivity.class);
 		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
 		intent.putExtra(ModuleDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));

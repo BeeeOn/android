@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Created by ThinkDeep on 8.3.2015.
  */
 public class Watchdog implements INameIdentifier {
-	public static final int TYPE_SENSOR = 1;
+	public static final int TYPE_MODULE = 1;
 	public static final int TYPE_QUALITY_OF_LIFE = 2; // TODO not sure if usable here (specified on page)
 	public static final int TYPE_GEOFENCE = 3;
 
@@ -31,7 +31,7 @@ public class Watchdog implements INameIdentifier {
 	public static final int PAR_ACTION_VALUE = 4;
 
 	private boolean mEnabled = true;
-	private int mType = TYPE_SENSOR;
+	private int mType = TYPE_MODULE;
 	private WatchdogBaseType mOperatorType;
 	private String mId;
 	private String mName;
@@ -56,7 +56,7 @@ public class Watchdog implements INameIdentifier {
 		mType = operatorType;
 		switch (operatorType) {
 			default:
-			case TYPE_SENSOR:
+			case TYPE_MODULE:
 				mOperatorType = new WatchdogSensorType();
 				break;
 

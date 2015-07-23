@@ -5,10 +5,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.fragment.SetupSensorFragment;
+import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
-public class SetupSensorFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
+public class SetupDeviceFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
 	protected static final String[] CONTENT = new String[]{"Welcome", "to", "BeeeOn", "Test",};
 	protected static final int[] ICONS = new int[]{
 			R.drawable.ic_loc_bathroom_gray,
@@ -19,7 +19,7 @@ public class SetupSensorFragmentAdapter extends FragmentPagerAdapter implements 
 
 	private int mCount = 1;
 
-	public SetupSensorFragmentAdapter(FragmentManager fm) {
+	public SetupDeviceFragmentAdapter(FragmentManager fm) {
 		super(fm);
 	}
 
@@ -27,8 +27,8 @@ public class SetupSensorFragmentAdapter extends FragmentPagerAdapter implements 
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				// setup senzor
-				return new SetupSensorFragment();
+				// setup device
+				return new SetupDeviceFragment();
 		}
 		return null;
 	}
@@ -40,7 +40,7 @@ public class SetupSensorFragmentAdapter extends FragmentPagerAdapter implements 
 
 	@Override
 	public CharSequence getPageTitle(int position) {
-		return SetupSensorFragmentAdapter.CONTENT[position % CONTENT.length];
+		return SetupDeviceFragmentAdapter.CONTENT[position % CONTENT.length];
 	}
 
 	@Override
