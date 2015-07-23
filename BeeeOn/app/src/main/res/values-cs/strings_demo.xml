@@ -30,20 +30,20 @@
 	<string name="demo_name_module_wc_lamp">Světlo na záchodě</string>
 
 	<!-- Modules of Regulator VPT -->
-	<string name="demo_name_module_boiler">Stav kotla</string>
-	<string name="demo_name_module_actual_temp1">Z1: Aktuálni teplota</string>
+	<string name="demo_name_module_boiler">Stav kotle</string>
+	<string name="demo_name_module_actual_temp1">Z1: Aktuální teplota</string>
 	<string name="demo_name_module_desired_temp1">Z1: Žádaná teplota</string>
 	<string name="demo_name_module_type_operation1">Z1: Typ provozu</string>
 	<string name="demo_name_module_mode_operation1">Z1: Režim provozu</string>
-	<string name="demo_name_module_actual_temp2">Z2: Aktuálni teplota</string>
+	<string name="demo_name_module_actual_temp2">Z2: Aktuální teplota</string>
 	<string name="demo_name_module_desired_temp2">Z2: Žádaná teplota</string>
 	<string name="demo_name_module_type_operation2">Z2: Typ provozu</string>
 	<string name="demo_name_module_mode_operation2">Z2: Režim provozu</string>
-	<string name="demo_name_module_actual_temp3">Z3: Aktuálni teplota</string>
+	<string name="demo_name_module_actual_temp3">Z3: Aktuální teplota</string>
 	<string name="demo_name_module_desired_temp3">Z3: Žádaná teplota</string>
 	<string name="demo_name_module_type_operation3">Z3: Typ provozu</string>
 	<string name="demo_name_module_mode_operation3">Z3: Režim provozu</string>
-	<string name="demo_name_module_actual_temp4">Z4: Aktuálni teplota</string>
+	<string name="demo_name_module_actual_temp4">Z4: Aktuální teplota</string>
 	<string name="demo_name_module_desired_temp4">Z4: Žádaná teplota</string>
 	<string name="demo_name_module_type_operation4">Z4: Typ provozu</string>
 	<string name="demo_name_module_mode_operation4">Z4: Režim provozu</string>

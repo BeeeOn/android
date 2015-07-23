@@ -317,7 +317,7 @@
     <string name="tutorial_next">DALŠÍ</string>
     <string name="tutorial_add">PŘIDAT</string>
 
-    <string name="tutorial_open_menu">Otevřte nabídku</string>
+    <string name="tutorial_open_menu">Otevřete nabídku</string>
     <string name="tutorial_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
     <!-- Help in Add dialogs -->
     <string name="tut_add_gate_text_1">Připojte bránu k internetu</string>
@@ -347,7 +347,7 @@
     <string name="preference_set_default_location">Nastavit výchozí umístění</string>
     <string name="preference_set_default_adapter">Nastavit výchozí bránu</string>
     <string name="preference_activity_title">Nastavení</string>
-    <string name="please_log_in">Přihlašte se</string>
+    <string name="please_log_in">Přihlaste se</string>
     <string name="no_sensor_available">Žádné dostupné zařízení</string>
     <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí bránu</string>
     <string name="users_pending_header">Žádost o přidání</string>
@@ -371,11 +371,11 @@
 	<string name="tut_intro_text_2">BeeeOn domácnost se skládá z jednotlivých bezdrátových zařízení a brány do této domácnosti.</string>
 	<string name="tut_intro_text_3">Bezdrátová zařízení jsou dvojího typu - senzory a aktory. Senzory slouží ke snímání okolních veličin, aktory k nastavení jejich požadovaných hodnot.</string>
 	<string name="tut_intro_text_4">Brána inteligentní domácnosti přijímá a vysílá data směrem k bezdrátovým zařízením.</string>
-	<string name="tut_intro_text_5">Mobilní aplikace zobrazuje informace o domácnosti a umožnuje její ovládání odkukoliv a kdykoliv.</string>
+	<string name="tut_intro_text_5">Mobilní aplikace zobrazuje informace o domácnosti a umožňuje její ovládání odkudkoliv a kdykoliv.</string>
 	<string name="tutorial_go_to_app">START</string>
 	<string name="tutorial_skip">PŘESKOČIT</string>
 	<string name="radius">Poloměr</string>
-	<string name="dialog_choose_provider_title">Vyběr poskytovatele účtu</string>
+	<string name="dialog_choose_provider_title">Výběr poskytovatele účtu</string>
 	<string name="addsensor_stoped">zastaveno</string>
 	<string name="add_action_dialog_title">Co chcete přidat?</string>
 	<string name="toast_need_module_location_icon">Vyberte ikonu nového umístění</string>
@@ -411,7 +411,7 @@
     <string name="addadapter_title">Přidávání nové brány</string>
     <string name="adddevice_title">Přidávání nového zařízení</string>
     <string name="addsensor_device_found">Zařízení bylo nalezeno</string>
-    <string name="addsensor_device_not_found_in_time">Zařízení nebylo nalezeno, ověřtě, zda je skutečně zapnuto, a zkuste to znovu</string>
+    <string name="addsensor_device_not_found_in_time">Zařízení nebylo nalezeno, ověřte, zda je skutečně zapnuto, a zkuste to znovu</string>
     <string name="addsensor_request_task_not_successful">Úloha byla neúspěšná, zkuste to znovu</string>
     <string name="addsensor_time_left_unit">sekundy</string>
     <string name="addsensor_waiting">Čekám na start</string>
@@ -430,7 +430,7 @@
     <string name="interval_weekly">Týdně</string>
     <string name="interval_daily">Denně</string>
     <string name="interval_monthly">Měsíčně</string>
-    <string name="delete_gate_failure">Brána nebyla úspěsně odstraněna</string>
+    <string name="delete_gate_failure">Brána nebyla úspěšně odstraněna</string>
     <string name="fragment_gate_edit_gate_name">Název brány</string>
     <string name="fragment_gate_details_gate_id">ID brány</string>
     <string name="fragment_gate_edit_gate_id_read_only">ID brány (pouze ke čtení)</string>
@@ -449,7 +449,7 @@
     <string name="confirm_remove_gate_message">Nebudete mít přístup k této bráně a jejím zařízením.\n\nPokud jste vlastníkem, brána bude odstraněna ze serveru a všechna nastavení (uživatelé, zařízení, historická data) budou ztraceny.</string>
     <string name="confirm_remove_title">Odstranit \"%1$s\"</string>
     <string name="confirm_remove_gate_title_default">Odstranit bránu</string>
-    <string name="confirm_remove_user_message">Uživatel ztratí přístup k této bráně a nebude moct přistupovat k datám a měnit je.</string>
+    <string name="confirm_remove_user_message">Uživatel ztratí přístup k této bráně a nebude moci přistupovat k datům a měnit je.</string>
     <string name="confirm_unregister_device_title">Odregistrovat \"%1$s\</string>
     <string name="confirm_unregister_device_message">Zařízení bude odregistrováno ze serveru a jeho historická data budou ztracena.</string>
     <string name="edit_gate_failure">Brána nebyla upravena</string>
