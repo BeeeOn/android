@@ -337,19 +337,6 @@
     <string name="notification_text">Text notifikace</string>
 
     <string name="button_remove">Odstranit</string>
-    <string name="adapter_isnt_set">Nastavit výchozí bránu</string>
-    <string name="adapter_doest_exist">Výchozí brána již neexistuje. Nastavte novou výchozí bránu.</string>
-    <string name="choose_adapter">Vyberte bránu:</string>
-    <string name="choose_location">Vyberte umístění:</string>
-    <string name="choose_sensor">Vyberte zařízení:</string>
-    <string name="no_adapter_available">Žádná dostupná brána</string>
-    <string name="no_location_available">Žádné dostupné umístění</string>
-    <string name="preference_set_default_location">Nastavit výchozí umístění</string>
-    <string name="preference_set_default_adapter">Nastavit výchozí bránu</string>
-    <string name="preference_activity_title">Nastavení</string>
-    <string name="please_log_in">Přihlaste se</string>
-    <string name="no_sensor_available">Žádné dostupné zařízení</string>
-    <string name="no_location_available_def_adapter">Žádné dostupné umístění pro výchozí bránu</string>
     <string name="users_pending_header">Žádost o přidání</string>
     <string name="title_activity_location_detail_screen">Detail umístění</string>
     <string name="dialog_register_new_account_title">Nemáte účet</string>
@@ -472,5 +459,6 @@
     <string name="toast_wrong_or_no_device">Nebylo zadané žádné zařízení nebo je zvolené zařízení nesprávné</string>
     <string name="update_gateway">Upravit bránu</string>
     <string name="dialog_code_title">Zadejte kód brány</string>
+    <string name="title_activity_settings">Nastavení</string>
 
 </resources>

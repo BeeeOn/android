@@ -276,23 +276,10 @@
     <string name="notification_text">Text notifikácie</string>
 
     <string name="button_remove">Odstrániť</string>
-    <string name="preference_set_default_location">Nastaviť východzie umiestnenie</string>
-    <string name="preference_set_default_adapter">Nastaviť východziu bránu</string>
-    <string name="preference_activity_title">Nastavenia</string>
-    <string name="please_log_in">Prihláste sa</string>
-    <string name="no_sensor_available">Nie je dostupné žiadne zariadenie</string>
-    <string name="no_location_available_def_adapter">Nie je k dispozícii umiestnenie predvolenej brány.</string>
-    <string name="no_location_available">Nie je k dispozícii umiestenie.</string>
-    <string name="no_adapter_available">Nie je k dispozícii žiadna brána</string>
     <string name="loc_cellar">Pivnica</string>
-    <string name="choose_sensor">Zvoľte zariadenie:</string>
-    <string name="choose_location">Zvoľte umiestnenie:</string>
-    <string name="choose_adapter">Zvoľte bránu:</string>
     <string name="adausr_menu_edit">Upraviť používateľa</string>
     <string name="adausr_menu_del">Odstrániť používateľa</string>
     <string name="gate_user_title_change_role">Zmeniť úlohu používateľa</string>
-    <string name="adapter_isnt_set">Nastavte východziu bránu</string>
-    <string name="adapter_doest_exist">Východzia brána už neexistuje. Nastavte novú východziu bránu.</string>
     <string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>
 
     <string name="title_activity_location_detail_screen">Detail umiestnenia</string>
@@ -465,4 +452,5 @@
     <string name="toast_not_users_found">Nenájdený žiadny používateľ</string>
     <string name="tut_add_sensor_title_1">Vytiahnite izolačný prúžok batérii</string>
     <string name="update_gateway">Upraviť bránu</string>
+    <string name="title_activity_settings">Nastavenie</string>
 </resources>

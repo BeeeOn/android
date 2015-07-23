@@ -118,7 +118,7 @@
 
 		<activity
 			android:name=".gui.activity.SettingsMainActivity"
-			android:label="@string/preference_activity_title"
+			android:label="@string/title_activity_settings"
 			android:theme="@style/SettingsActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>

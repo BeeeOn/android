@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 	<string name="blank" translatable="false"/>
-	<string name="app_name" translatable="false">BeeeOn (beta)</string>
+	<string name="app_name" translatable="false">BeeeOn Beta</string>
 	<string name="demo_mode">DEMO MODE</string>
 	<string name="demo_mode_email" translatable="false">demo@beeeon.com</string>
 
@@ -23,6 +23,7 @@
 	<string name="title_activity_add_adapter_user">Add user</string>
 	<string name="title_activity_setup_sensor">Device setup</string>
 	<string name="title_activity_profile_detail">Account info</string>
+	<string name="title_activity_settings">Settings</string>
 
 	<!-- Buttons -->
 	<string name="login_login">Login</string>
