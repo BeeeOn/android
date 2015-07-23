@@ -31,38 +31,38 @@
 		    >
 		    <Button 
 		        android:id="@+id/add_gate_skip"
-		        android:layout_width="90dp"
+		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:background="@android:color/transparent"
+				android:layout_weight="1"
+                android:background="@android:color/transparent"
 		        android:text="@string/tutorial_skip"
-		        android:layout_margin="10dp"
 		        android:textSize="16sp"
 		        android:textColor="@color/white"
-		        android:layout_gravity="center_vertical"/>
+		        android:layout_gravity="center_vertical"
+				android:singleLine="true"/>
 		    <Button 
 		        android:id="@+id/add_gate_cancel"
-		        android:layout_width="0dp"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+		        android:text="@string/notification_cancel"
+		        android:textSize="16sp"
+		        android:textColor="@color/white"
+		        android:layout_gravity="center_vertical"
+				tools:ignore="ButtonOrder"
+				android:singleLine="true"/>
+		    <Button 
+		        android:id="@+id/add_gate_next"
+		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
 				android:layout_weight="1"
 		        android:background="@android:color/transparent"
-		        android:text="@string/notification_cancel"
-		        android:layout_margin="10dp"
+		        android:text="@string/tutorial_next"
 		        android:textSize="16sp"
 		        android:textStyle="bold"
 		        android:textColor="@color/white"
 		        android:layout_gravity="center_vertical"
-				tools:ignore="ButtonOrder"/>
-		    <Button 
-		        android:id="@+id/add_gate_next"
-		        android:layout_width="90dp"
-		        android:layout_height="wrap_content"
-		        android:background="@android:color/transparent"
-		        android:text="@string/tutorial_next"
-		        android:layout_margin="10dp"
-		        android:textSize="16sp"
-		        android:textStyle="bold"
-		        android:textColor="@color/white"
-		        android:layout_gravity="center_vertical"/>
+				android:singleLine="true"/>
 		</LinearLayout>
 	</LinearLayout>
 	
