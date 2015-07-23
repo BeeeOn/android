@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+<resources>
+    <string name="dev_enum_type">Enum type</string>
 
     <!-- Units of modules -->
-    <string name="dev_temperature_celsius_unit_full">Celsius</string>
-    <string name="dev_temperature_celsius_unit">°C</string>
-    <string name="dev_temperature_fahrenheit_unit_full">Fahrenheit</string>
-    <string name="dev_temperature_fahrenheit_unit">°F</string>
-    <string name="dev_temperature_kelvin_unit_full">Kelvin</string>
-    <string name="dev_temperature_kelvin_unit">K</string>
+    <string name="unit_temperature_celsius_full">Celsius</string>
+    <string name="unit_temperature_celsius">°C</string>
+    <string name="unit_temperature_fahrenheit_full">Fahrenheit</string>
+    <string name="unit_temperature_fahrenheit">°F</string>
+    <string name="unit_temperature_kelvin_full">Kelvin</string>
+    <string name="unit_temperature_kelvin">K</string>
     
-    <string name="dev_noise_decibel_unit">dB</string>
-    <string name="dev_noise_decibel_unit_full">Decibel</string>
-    <string name="dev_noise_bel_unit">B</string>
-    <string name="dev_noise_bel_unit_full">Bel</string>
-    <string name="dev_noise_neper_unit">Np</string>
-    <string name="dev_noise_neper_unit_full">Neper</string>    
+    <string name="unit_noise_decibel">dB</string>
+    <string name="unit_noise_decibel_full">Decibel</string>
+    <string name="unit_noise_bel">B</string>
+    <string name="unit_noise_bel_full">Bel</string>
+    <string name="unit_noise_neper">Np</string>
+    <string name="unit_noise_neper_full">Neper</string>
     
-    <string name="dev_humidity_unit">%</string>
-    <string name="dev_pressure_unit">hPa</string>
-    <string name="dev_illumination_unit">lux</string>
-    <string name="dev_noise_unit">dB</string>
-    <string name="dev_emission_unit">ppm</string>
-    <string name="dev_unknown_unit" />
+    <string name="unit_humidity">%</string>
+    <string name="unit_pressure">hPa</string>
+    <string name="unit_illumination">lux</string>
+    <string name="unit_noise">dB</string>
+    <string name="unit_emission">ppm</string>
+
+    <!-- Names of default locations -->
+	<string name="loc_none">- None -</string>
+	<string name="loc_bathroom">Bathroom</string>
+    <string name="loc_bedroom">Bedroom</string>
+    <string name="loc_dining_room">Dining room</string>
+    <string name="loc_garden">Garden</string>
+    <string name="loc_living_room">Living room</string>
+    <string name="loc_wc">WC</string>
+    <string name="loc_cellar">Cellar</string>
 
     <!-- Types of modules -->
     <string name="dev_unknown_type">Unknown module</string>
@@ -34,47 +44,4 @@
     <string name="dev_illumination_type">Photometer</string>
     <string name="dev_noise_type">Sound meter</string>
     <string name="dev_emission_type">Emission meter</string>
-    <string name="dev_boiler_status_type">Boiler status</string>
-    <!-- Actors -->
-    <string name="dev_actor_on_off_type">On/Off actuator</string>
-    <string name="dev_actor_push_type">Push actuator</string>
-    <string name="dev_actor_toggle_type">Toggle actuator</string>
-    <string name="dev_actor_range_type">Range actuator</string>
-    <string name="dev_actor_rgb_type">RGB actuator</string>
-	<string name="dev_actor_temperature">Temperature actuator</string>
-	<string name="dev_actor_boiler_operation_type">Boiler operation type</string>
-	<string name="dev_actor_boiler_operation_mode">Boiler operation mode</string>
-
-    <!-- Special values of modules -->
-    <string name="dev_enum_value_open">Open</string>
-    <string name="dev_enum_value_closed">Closed</string>
-    <string name="dev_enum_value_on">On</string>
-    <string name="dev_enum_value_off">Off</string>
-
-	<string name="dev_boiler_operation_type_value_off">Off</string>
-	<string name="dev_boiler_operation_type_value_room">Room regulator</string>
-	<string name="dev_boiler_operation_type_value_equiterm">Equiterm regulation</string>
-	<string name="dev_boiler_operation_type_value_stable">Regulation for constant water temperature</string>
-	<string name="dev_boiler_operation_type_value_tuv">TUV heating</string>
-
-	<string name="dev_boiler_operation_mode_value_automatic">Automatic</string>
-	<string name="dev_boiler_operation_mode_value_manual">Manual</string>
-	<string name="dev_boiler_operation_mode_value_vacation">Vacation</string>
-
-    <string name="dev_boiler_status_undefined">Undefined</string>
-    <string name="dev_boiler_status_heating">Heating</string>
-    <string name="dev_boiler_status_hot_water">Hot water</string>
-    <string name="dev_boiler_status_failure">Failure</string>
-    <string name="dev_boiler_status_shutdown">Shutdown</string>
-
-    <!-- Names of default locations -->
-	<string name="loc_none">- None -</string>
-	<string name="loc_bathroom">Bathroom</string>
-    <string name="loc_bedroom">Bedroom</string>
-    <string name="loc_dining_room">Dining room</string>
-    <string name="loc_garden">Garden</string>
-    <string name="loc_living_room">Living room</string>
-    <string name="loc_wc">WC</string>
-    <string name="loc_cellar">Cellar</string>
-
 </resources>

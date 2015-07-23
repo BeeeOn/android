@@ -106,12 +106,12 @@ public class WatchdogListAdapter extends BaseAdapter {
 					if (moduleFirst == null) return convertView;
 
 					holder.ItemIcon.setImageResource(moduleFirst.getIconResource());
-					holder.ItemSubLabel.setText(moduleFirst.getName());
+					holder.ItemSubLabel.setText(moduleFirst.getName(mContext));
 
 					String par_treshold = rule.getParam(Watchdog.PAR_TRESHOLD);
 					if (par_treshold != null) {
 						if (mUnitsHelper != null) {
-							BaseValue valueObj = BaseValue.createFromModuleType(moduleFirst.getType());
+							BaseValue valueObj = BaseValue.createFromModuleType(moduleFirst.getType(), null);
 							valueObj.setValue(par_treshold);
 							holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
 						} else {

@@ -144,7 +144,7 @@ public class SetupSensorFragment extends TrackFragment {
 		if (timeHelper != null) {
 			Device device = mNewDevices.get(0);
 			Gate gate = controller.getGatesModel().getGate(device.getGateId());
-			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getInvolveTime(), gate)));
+			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getPairedTime(), gate)));
 		}
 
 		// Set involved time of mDevice
@@ -153,7 +153,8 @@ public class SetupSensorFragment extends TrackFragment {
 		listOfName.setAdapter(listAdapter);
 		spinner.setAdapter(dataAdapter);
 		// Set listview height, for all
-		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mNewDevices.get(0).getModules().size());
+		float scale = mActivity.getResources().getDisplayMetrics().density;
+		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mNewDevices.get(0).getAllModules().size());
 		listOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, heightPx));
 	}
 

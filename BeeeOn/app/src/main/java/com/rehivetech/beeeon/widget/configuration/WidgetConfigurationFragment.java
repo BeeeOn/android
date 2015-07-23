@@ -245,7 +245,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		for (Location loc : mLocations) {
 			List<Device> tempFac = controller.getDevicesModel().getDevicesByLocation(gateId, loc.getId());
 			for (Device device : tempFac) {
-				mModules.addAll(device.getModules());
+				mModules.addAll(device.getAllModules());
 			}
 		}
 	}

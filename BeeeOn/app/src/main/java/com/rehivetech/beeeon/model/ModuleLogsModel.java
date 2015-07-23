@@ -47,17 +47,17 @@ public class ModuleLogsModel extends BaseModel {
 	private List<Interval> getMissingIntervals(ModuleLog.DataPair pair) {
 		List<Interval> downloadIntervals = new ArrayList<Interval>();
 		Interval interval = pair.interval;
-		String moduleName = pair.module.getName();
+		String moduleName = pair.module.getAbsoluteId();
 
 		Log.d(TAG, String.format("We want interval: %s -> %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd())));
 
-		if (!mModulesLogs.containsKey(pair.module.getId())) {
+		if (!mModulesLogs.containsKey(pair.module.getAbsoluteId())) {
 			// No log for this module, download whole interval
 			Log.d(TAG, String.format("No cached log for module %s", moduleName));
 			downloadIntervals.add(interval);
 		} else {
 			// We have this ModuleLog with (not necessarily all) values
-			ModuleLog data = mModulesLogs.get(pair.module.getId());
+			ModuleLog data = mModulesLogs.get(pair.module.getAbsoluteId());
 
 			// Values are returned as sorted
 			SortedMap<Long, Float> rows = data.getValues();
@@ -119,9 +119,9 @@ public class ModuleLogsModel extends BaseModel {
 	public ModuleLog getModuleLog(ModuleLog.DataPair pair) {
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
-		if (mModulesLogs.containsKey(pair.module.getId())) {
+		if (mModulesLogs.containsKey(pair.module.getAbsoluteId())) {
 			// We have this ModuleLog, lets load wanted values from it
-			ModuleLog data = mModulesLogs.get(pair.module.getId());
+			ModuleLog data = mModulesLogs.get(pair.module.getAbsoluteId());
 			for (Entry<Long, Float> entry : data.getValues(pair.interval).entrySet()) {
 				log.addValue(entry.getKey(), entry.getValue());
 			}
@@ -139,9 +139,9 @@ public class ModuleLogsModel extends BaseModel {
 	public synchronized boolean reloadModuleLog(ModuleLog.DataPair pair) throws AppException {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
 
-		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), pair.module.getName()));
+		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), pair.module.getAbsoluteId()));
 		for (Interval interval : downloadIntervals) {
-			Log.d(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), pair.module.getName()));
+			Log.d(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), pair.module.getAbsoluteId()));
 		}
 
 		boolean isDemoNetwork = mNetwork instanceof DemoNetwork;
@@ -152,7 +152,7 @@ public class ModuleLogsModel extends BaseModel {
 				ModuleLog log = mNetwork.getLog(downPair.module.getDevice().getGateId(), downPair.module, downPair);
 
 				// Save it
-				saveModuleLog(downPair.module.getId(), log);
+				saveModuleLog(downPair.module.getAbsoluteId(), log);
 			}
 		} catch (AppException e) {
 			throw AppException.wrap(e);

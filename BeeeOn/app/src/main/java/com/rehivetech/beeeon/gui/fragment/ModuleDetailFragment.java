@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -40,18 +39,13 @@ import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.household.device.values.BoilerOperationModeValue;
-import com.rehivetech.beeeon.household.device.values.BoilerOperationTypeValue;
-import com.rehivetech.beeeon.household.device.values.BooleanValue;
-import com.rehivetech.beeeon.household.device.values.OnOffValue;
-import com.rehivetech.beeeon.household.device.values.OpenClosedValue;
-import com.rehivetech.beeeon.household.device.values.TemperatureValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -80,9 +74,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_MODULE_ID = "module_id";
 
-
-	private static final int REQUEST_BOILER_TYPE = 7894;
-	private static final int REQUEST_BOILER_MODE = 1236;
+	private static final int REQUEST_SET_ACTUATOR = 7894;
 
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
@@ -131,7 +123,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			mActivity = (ModuleDetailActivity) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must be subclass of SensorDetailActivity");
+					+ " must be subclass of ModuleDetailActivity");
 		}
 	}
 
@@ -216,7 +208,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 		// Set name of sensor
 		Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
-		toolbar.setTitle(module.getName());
+		toolbar.setTitle(module.getName(mActivity));
 
 		if (controller.isUserAllowed(gate.getRole())) {
 			// Set value for Actor
@@ -229,68 +221,44 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 					doActorAction(module);
 				}
 			});
-			final Fragment frg = this;
-			if (module.getValue() instanceof TemperatureValue) {
-				// Set listner for dialog with NumberPicker
-				mValueSet.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						NumberPickerDialogFragment.show(mActivity, module, frg);
-					}
-				});
 
-			} else if (module.getValue() instanceof BoilerOperationTypeValue) {
-				// Set dialog for set Type of  BOILER
+			if (module.getValue() instanceof EnumValue) {
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						String[] tmp = new String[]{
-								getString(R.string.dev_boiler_operation_type_value_off),
-								getString(R.string.dev_boiler_operation_type_value_room),
-								getString(R.string.dev_boiler_operation_type_value_equiterm),
-								getString(R.string.dev_boiler_operation_type_value_stable),
-								getString(R.string.dev_boiler_operation_type_value_tuv),
-						};
+						EnumValue value = (EnumValue) module.getValue();
+						List<EnumValue.Item> items = value.getEnumItems();
+
+						List<String> namesList = new ArrayList<>();
+						for (EnumValue.Item item : items) {
+							namesList.add(getString(item.getStringResource()));
+						}
 
 						ListDialogFragment
 								.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-								.setTitle(getString(R.string.dialog_title_set_bioler_type))
-								.setItems(tmp)
-								.setSelectedItem(((BoilerOperationTypeValue) module.getValue()).getActive().getId())
-								.setRequestCode(REQUEST_BOILER_TYPE)
+								.setTitle(getString(R.string.dialog_actuator_set_value))
+								.setItems(namesList.toArray(new CharSequence[namesList.size()]))
+								.setSelectedItem(value.getActive().getId())
+								.setRequestCode(REQUEST_SET_ACTUATOR)
 								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-								.setConfirmButtonText(R.string.dialog_set_boiler_setaction)
-								.setCancelButtonText(R.string.notification_cancel)
-								.setTargetFragment(frg, REQUEST_BOILER_TYPE)
+								.setConfirmButtonText(R.string.dialog_actuator_action)
+								.setCancelButtonText(R.string.dialog_actuator_cancel)
+								.setTargetFragment(ModuleDetailFragment.this, REQUEST_SET_ACTUATOR)
 								.show();
 					}
 				});
-			} else if (module.getValue() instanceof BoilerOperationModeValue) {
-				// Set dialog for set Mode of Boiler
+			} else {
+				// FIXME: support all kinds of value types and units etc.
+				// BaseValue value = mModule.getValue();
+
 				mValueSet.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						String[] tmp = new String[]{
-								getString(R.string.dev_boiler_operation_mode_value_automatic),
-								getString(R.string.dev_boiler_operation_mode_value_manual),
-								getString(R.string.dev_boiler_operation_mode_value_vacation)
-						};
-
-						ListDialogFragment
-								.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-								.setTitle(getString(R.string.dialog_title_set_bioler_mode))
-								.setItems(tmp)
-								.setSelectedItem(((BoilerOperationModeValue) module.getValue()).getActive().getId())
-								.setRequestCode(REQUEST_BOILER_MODE)
-								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-								.setConfirmButtonText(R.string.dialog_set_boiler_setaction)
-								.setCancelButtonText(R.string.notification_cancel)
-								.setTargetFragment(frg, REQUEST_BOILER_MODE)
-								.show();
+						Log.d(TAG, "SET TEMPERATURE");
+						NumberPickerDialogFragment.show(mActivity, module, ModuleDetailFragment.this);
 					}
 				});
 			}
-
 		}
 
 		// Set name of location
@@ -309,9 +277,14 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		// Set value of sensor
 		if (mUnitsHelper != null) {
 			mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
-			BaseValue val = module.getValue();
-			if (val instanceof OnOffValue) {
-				mValueSwitch.setChecked(((BooleanValue) val).isActive());
+			// FIXME: rework this better
+			if (module.getValue() instanceof EnumValue) {
+				EnumValue value = (EnumValue) module.getValue();
+				List<EnumValue.Item> items = value.getEnumItems();
+				if (items.size() == 2) {
+					int index = items.indexOf(value.getActive());
+					mValueSwitch.setChecked(index == 1);
+				}
 			}
 		}
 
@@ -323,11 +296,17 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			time.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
 
+		DeviceFeatures features = device.getType().getFeatures();
+
 		// Set refresh time Text
-		refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
+		if (features.hasRefresh()) {
+			refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
+		}
 
 		// Set battery
-		battery.setText(device.getBattery() + "%");
+		if (features.hasBattery()) {
+			battery.setText(device.getBattery() + "%");
+		}
 
 		// Set signal
 		signal.setText(device.getNetworkQuality() + "%");
@@ -356,13 +335,16 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 
 		// Show some controls if this module is an actor
-		if (module.getType().isActor() && controller.isUserAllowed(gate.getRole())) {
+		if (module.isActuator() && controller.isUserAllowed(gate.getRole())) {
 			BaseValue value = module.getValue();
 
-			// For actor values of type on/off, open/closed we show switch button
-			if (value instanceof OnOffValue || value instanceof OpenClosedValue) {
+			// FIXME: rework this better
+			// Show specific control view
+			if (value instanceof EnumValue && ((EnumValue) value).getEnumItems().size() == 2) {
+				// For enum actuators with 2 values show a switch Button
 				mValueSwitch.setVisibility(View.VISIBLE);
-			} else if (value instanceof TemperatureValue || value instanceof BoilerOperationModeValue || value instanceof BoilerOperationTypeValue) {
+			} else {
+				// For other actuators show value set button
 				mValueSet.setVisibility(View.VISIBLE);
 			}
 		}
@@ -385,7 +367,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	private void addGraphView(@NonNull final Module module) {
 		Controller controller = Controller.getInstance(mActivity);
 		BaseValue baseValue = module.getValue();
-		boolean barchart = baseValue instanceof BaseEnumValue;
+		boolean barchart = baseValue instanceof EnumValue;
 		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.sen_third_section);
 		String unit = mUnitsHelper.getStringUnit(baseValue);
 		String name = getString(module.getTypeStringResource());
@@ -426,7 +408,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	@SuppressWarnings("unchecked")
 	public void fillGraph(ModuleLog log, Module module) {
-		boolean barGraph = (module.getValue() instanceof BaseEnumValue);
+		boolean barGraph = (module.getValue() instanceof EnumValue);
 		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
 		if (mChart == null) {
 			return;
@@ -489,16 +471,16 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	 */
 
 	protected void doActorAction(final Module module) {
-		if (!module.getType().isActor()) {
+		if (!module.isActuator()) {
 			return;
 		}
 
 		// SET NEW VALUE
 		BaseValue value = module.getValue();
-		if (value instanceof BaseEnumValue) {
-			((BaseEnumValue) value).setNextValue();
+		if (value instanceof EnumValue) {
+			((EnumValue) value).setNextValue();
 		} else {
-			Log.e(TAG, "We can't switch actor, which value isn't inherited from BaseEnumValue, yet");
+			Log.e(TAG, "We can't switch actor, which value isn't inherited from EnumValue, yet");
 			return;
 		}
 
@@ -507,6 +489,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 			@Override
 			public void onExecute(boolean success) {
+				// Get new module
 				Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
 
 				// Set new data
@@ -558,7 +541,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 				module, // module
 				new Interval(start, end), // interval from-to
 				DataType.AVERAGE, // type
-				(module.getValue() instanceof BaseEnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
+				(module.getValue() instanceof EnumValue) ? DataInterval.RAW : DataInterval.TEN_MINUTES); // interval
 
 		getModuleLogTask.setListener(new ICallbackTaskListener() {
 			@Override
@@ -589,7 +572,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	@Override
 	public void onListItemSelected(CharSequence value, int number, int requestCode) {
-		if (requestCode == REQUEST_BOILER_MODE || requestCode == REQUEST_BOILER_TYPE) {
+		if (requestCode == REQUEST_SET_ACTUATOR || requestCode == REQUEST_SET_ACTUATOR) {
 			Module module = Controller.getInstance(mActivity).getDevicesModel().getModule(mGateId, mModuleId);
 			if (module == null) {
 				Log.e(TAG, "Can't load module for changing its value");

@@ -2,13 +2,13 @@ package com.rehivetech.beeeon.household.device.values;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.device.units.UnknownUnit;
+import com.rehivetech.beeeon.household.device.units.BlankUnit;
 
 public final class UnknownValue extends BaseValue {
 
 	private String mValue = "";
 
-	private static UnknownUnit mUnit = new UnknownUnit();
+	private static BlankUnit mUnit = new BlankUnit();
 
 	@Override
 	public void setValue(String value) {
@@ -28,7 +28,7 @@ public final class UnknownValue extends BaseValue {
 	}
 
 	@Override
-	public UnknownUnit getUnit() {
+	public BlankUnit getUnit() {
 		return mUnit;
 	}
 

@@ -1,58 +1,84 @@
-/**
- * @brief Package for Devices that implements sensors
- */
 package com.rehivetech.beeeon.household.device;
 
-import com.rehivetech.beeeon.INameIdentifier;
+import android.content.Context;
+import android.support.annotation.Nullable;
+
+import com.rehivetech.beeeon.IOrderIdentifier;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 
-/**
- * @author Robyer
- * @brief Abstract class for all devices
- */
-public class Module implements INameIdentifier {
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public final class Module implements IOrderIdentifier {
 	public static final String ID_SEPARATOR = "---";
 
-	protected Device mDevice;
-	protected String mName = "";
-	protected boolean mVisibility;
-
-	public final BaseValue mValue;
-
-	public final ModuleType mType;
-	public final String mRawTypeId;
-	public final int mOffset;
-
 	/**
-	 * Class constructor
+	 * Properties inherited from device's specification table.
 	 */
-	public Module(ModuleType type, BaseValue value, String rawTypeId, int offset) {
-		mType = type;
-		mValue = value;
-		mRawTypeId = rawTypeId;
-		mOffset = offset;
+	private final String mId;
+	private final ModuleType mType; // type defines what BaseValue should be created and also allows searching/comparing by type + offset
+	private final int mOffset;
+
+	private final Integer mSort;
+	private final int mGroupRes;
+	private final int mNameRes;
+	private final boolean mIsActuator;
+	private final List<Rule> mRules;
+
+	private final Device mDevice; // parent device
+	private final BaseValue mValue;
+
+	public static Module createUnknownModule(Device device, String id) {
+		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), 0, null, null, null, false, null);
 	}
 
-	public static Module createFromModuleTypeId(String typeId) {
-		int iType = -1; // unknown type
-		int offset = 0; // default offset
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules) {
+		this(device, id, typeId, offset, sort, groupRes, nameRes, isActuator, rules, (BaseValue.Constraints) null);
+	}
 
-		if (!typeId.isEmpty()) {
-			// Get integer representation of the given string value
-			int value = Integer.parseInt(typeId);
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
+				  BaseValue.Constraints constraints) throws IllegalArgumentException {
+		mDevice = device;
+		mId = id;
+		mOffset = offset;
+		mSort = sort;
+		mGroupRes = groupRes != null ? groupRes : 0;
+		mNameRes = nameRes != null ? nameRes : 0;
+		mIsActuator = isActuator;
+		mRules = rules != null ? Collections.unmodifiableList(rules) : null;
 
-			// Separate combined value to type and offset
-			iType = value % 256;
-			offset = value / 256;
+		if (isActuator && constraints == null) {
+			throw new IllegalArgumentException("Module is actuator, but constructor was called without constraints nor enumValues.");
 		}
 
-		ModuleType type = ModuleType.fromTypeId(iType);
-		BaseValue value = BaseValue.createFromModuleType(type);
-
-		// Create module object with ModuleType, BaseValue, original raw value of type, and offset
-		return new Module(type, value, typeId, offset);
+		mType = ModuleType.fromTypeId(typeId);
+		if (mType.getValueClass() == EnumValue.class) {
+			throw new IllegalArgumentException("ValueClass received from ModuleType is EnumValue, but constructor was called without enumValues.");
+		}
+		mValue = BaseValue.createFromModuleType(mType, constraints);
 	}
+
+	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
+				  List<EnumValue.Item> enumValues) throws IllegalArgumentException {
+		mDevice = device;
+		mId = id;
+		mOffset = offset;
+		mSort = sort;
+		mGroupRes = groupRes != null ? groupRes : 0;
+		mNameRes = nameRes != null ? nameRes : 0;
+		mIsActuator = isActuator;
+		mRules = rules != null ? Collections.unmodifiableList(rules) : null;
+
+		mType = ModuleType.fromTypeId(typeId);
+		if (mType.getValueClass() != EnumValue.class) {
+			throw new IllegalArgumentException("ValueClass received from ModuleType is not EnumValue, but constructor was called with enumValues.");
+		}
+		mValue = new EnumValue(enumValues);
+	}
+
 
 	/**
 	 * Represents settings of module which could be saved to server
@@ -92,11 +118,7 @@ public class Module implements INameIdentifier {
 	}
 
 	public int getIconResource(IconResourceType type){
-		return getType().isActor() ? mValue.getActorIconResource(type) : mValue.getIconResource(type);
-	}
-
-	public void setDevice(Device device) {
-		mDevice = device;
+		return mIsActuator ? mValue.getActorIconResource(type) : mValue.getIconResource(type);
 	}
 
 	public Device getDevice() {
@@ -104,19 +126,23 @@ public class Module implements INameIdentifier {
 	}
 
 	/**
+	 * @return id of this module inside the parent device (regarding specification).
+	 */
+	@Override
+	public String getId() {
+		return mId;
+	}
+
+	/**
 	 * Get unique identifier of module (address of mDevice + raw type id containing offset)
 	 *
 	 * @return id
 	 */
-	public String getId() {
+	public String getAbsoluteId() {
 		if (mDevice == null)
 			throw new RuntimeException("Module's mDevice is null!");
 
-		return mDevice.getAddress() + ID_SEPARATOR + getRawTypeId();
-	}
-
-	public String getRawTypeId() {
-		return mRawTypeId;
+		return mDevice.getAddress() + ID_SEPARATOR + mId;
 	}
 
 	public int getOffset() {
@@ -124,63 +150,77 @@ public class Module implements INameIdentifier {
 	}
 
 	/**
-	 * Get name of module
-	 *
-	 * @return name
+	 * @param context
+	 * @return name of group
 	 */
-	public String getName() {
-		return mName.length() > 0 ? mName : getId();
+	public String getGroupName(Context context) {
+		return mGroupRes > 0 ? context.getString(mGroupRes) : "";
 	}
 
 	/**
-	 * Get name of module in raw form server (it is for third-part sensors)
-	 *
-	 * @return name
+	 * @param context
+	 * @param withGroup
+	 * @return name of module, optionally prefixed with name of group
 	 */
-	public String getServerName() {
-		return mName.length() > 0 ? mName : "";
+	public String getName(Context context, boolean withGroup) {
+		String group = mGroupRes > 0 ? context.getString(mGroupRes) : "";
+		String name = mNameRes > 0 ? context.getString(mNameRes) : "";
+
+		return withGroup ? String.format("%s %s", group, name).trim() : name;
 	}
 
 	/**
-	 * Setting name of module
-	 *
-	 * @param name
+	 * @param context
+	 * @return name of module
 	 */
-	public void setName(String name) {
-		mName = name;
-	}
-
-
-	/**
-	 * Get visibility of module
-	 *
-	 * @return true if visible
-	 */
-	public boolean isVisible() {
-		return mVisibility;
+	public String getName(Context context) {
+		return getName(context, false);
 	}
 
 	/**
-	 * Setting visibility of module
-	 *
-	 * @param visibility true if visible
+	 * @return true if module should be visible to the user at this moment
 	 */
-	public void setVisibility(boolean visibility) {
-		mVisibility = visibility;
+	public List<String> getHideModuleIdsFromRules() {
+		List<String> list = new ArrayList<>();
+
+		// Without rules is everyone visible
+		if (mRules == null)
+			return list;
+
+		// Get actual value
+		int value = (mValue instanceof EnumValue) ? ((EnumValue) mValue).getActive().getId() : (int) mValue.getDoubleValue();
+
+		// Find rule with this value
+		for (Rule rule : mRules) {
+			if (rule.value == value) {
+				// Process rule for actual value
+				for (int id : rule.hideModulesIds) {
+					list.add(String.valueOf(id));
+				}
+			}
+		}
+
+		return list;
 	}
 
+	public boolean isActuator() {
+		return mIsActuator;
+	}
+
+	@Nullable
 	@Override
-	public String toString() {
-		return getName();
+	public Integer getSort() {
+		return mSort;
 	}
 
-	/**
-	 * Debug method
-	 *
-	 * @return
-	 */
-	public String toDebugString() {
-		return String.format("Name: %s\nVisibility: %s\nValue: %s", mName, Boolean.toString(mVisibility), mValue);
+	public static class Rule {
+		public final int value;
+		public final int[] hideModulesIds;
+
+		public Rule(int value, int[] hideModulesIds) {
+			this.value = value;
+			this.hideModulesIds = hideModulesIds;
+		}
 	}
 
 }

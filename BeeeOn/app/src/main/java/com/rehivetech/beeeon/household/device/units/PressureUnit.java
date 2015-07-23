@@ -10,7 +10,7 @@ public class PressureUnit extends BaseUnit {
 	public PressureUnit() {
 		super();
 
-		mItems.add(this.new Item(DEFAULT, R.string.dev_pressure_unit, R.string.dev_pressure_unit));
+		mItems.add(this.new Item(DEFAULT, R.string.unit_pressure, R.string.unit_pressure));
 	}
 
 	@Override

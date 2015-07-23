@@ -31,7 +31,7 @@ public final class Action {
 		}
 
 
-		List<Module> modules = device.getModules();
+		List<Module> modules = device.getAllModules();
 		if (modules.size() == 0) {
 			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
@@ -39,7 +39,8 @@ public final class Action {
 
 		int pos = 0;
 		for (int i = 0; i < modules.size(); i++) {
-			if (modules.get(i).getRawTypeId().equals(String.valueOf(type))) {
+			// FIXME: now it is comparing id with type, which won't work at all
+			if (modules.get(i).getAbsoluteId().equals(String.valueOf(type))) {
 
 				pos = i;
 				break;
@@ -50,7 +51,7 @@ public final class Action {
 
 		// Sensor exists, we can open activity
 		Intent intent = new Intent(context, ModuleDetailActivity.class);
-		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getId());
+		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
 		intent.putExtra(ModuleDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
 		intent.putExtra(ModuleDetailActivity.EXTRA_ACTIVE_POS, pos);
 

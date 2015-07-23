@@ -51,27 +51,15 @@ public class DevicesModel extends BaseModel {
 	public Module getModule(String gateId, String id) {
 		String[] ids = id.split(Module.ID_SEPARATOR, 2);
 
+		if (ids.length != 2) {
+			throw new IllegalArgumentException(String.format("Id of module must have 2 parts, given: '%s'", id));
+		}
+
 		Device device = getDevice(gateId, ids[0]);
 		if (device == null)
 			return null;
 
-		// FIXME: cleanup this after demo
-
-		int iType = -1; // unknown type
-		int offset = 0; // default offset
-
-		if (!ids[1].isEmpty()) {
-			// Get integer representation of the given string value
-			int value = Integer.parseInt(ids[1]);
-
-			// Separate combined value to type and offset
-			iType = value % 256;
-			offset = value / 256;
-		}
-
-		ModuleType type = ModuleType.fromTypeId(iType);
-
-		return device.getModuleByType(type, offset);
+		return device.getModuleById(ids[1]);
 	}
 
 	/**
@@ -233,8 +221,8 @@ public class DevicesModel extends BaseModel {
 	 * @return true on success, false otherwise
 	 */
 	public boolean switchActor(Module module) throws AppException {
-		if (!module.getType().isActor()) {
-			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getName()));
+		if (!module.isActuator()) {
+			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getAbsoluteId()));
 			return false;
 		}
 

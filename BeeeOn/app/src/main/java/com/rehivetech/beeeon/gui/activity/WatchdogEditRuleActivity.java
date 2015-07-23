@@ -211,7 +211,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 			mSpinnerMultiAdapter.addHeader(getString(R.string.modules));
 			for (Module dev : moduleSensors) {
 				Location loc = Utils.getFromList(dev.getDevice().getLocationId(), mLocations);
-				mSpinnerMultiAdapter.addItem(new ModuleSpinnerItem(dev, loc, dev.getId(), this));
+				mSpinnerMultiAdapter.addItem(new ModuleSpinnerItem(dev, loc, dev.getAbsoluteId(), this));
 			}
 			isAnyIfInput = true;
 		}
@@ -455,8 +455,8 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				if (!Utils.validateInput(this, ruleTreshold, Utils.ValidationType.INTEGER)) return;
 
 				Module selectedModule = (Module) selected.getObject();
-				devsIds.add(selectedModule.getId());
-				newParams.add(selectedModule.getId());
+				devsIds.add(selectedModule.getAbsoluteId());
+				newParams.add(selectedModule.getAbsoluteId());
 
 				tresholdValue = ruleTreshold.getText().toString();
 				break;
@@ -496,7 +496,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				}
 
 				Module selectedActor = getModulesArray(MODULES_ACTORS).get(actorSpinner.getSelectedItemPosition());
-				newParams.add(selectedActor.getId());
+				newParams.add(selectedActor.getAbsoluteId());
 				break;
 		}
 
@@ -560,10 +560,10 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		List<Module> modules = new ArrayList<Module>();
 
 		for (Device device : mDevices)
-			for (Module module : device.getModules()) {
-				if (type == MODULES_ACTORS && !module.getType().isActor()) {
+			for (Module module : device.getAllModules()) {
+				if (type == MODULES_ACTORS && !module.isActuator()) {
 					continue;
-				} else if (type == MODULES_SENSORS && module.getType().isActor()) {
+				} else if (type == MODULES_SENSORS && module.isActuator()) {
 					continue;
 				}
 

@@ -393,11 +393,12 @@ public class XmlCreator {
 				serializer.startTag(ns, Xconstants.MODULE);
 				serializer.attribute(ns, Xconstants.ID, device.getAddress());
 
-				for (Module module : device.getModules()) {
+				// FIXME: rework this
+				/*for (Module module : device.getAllModules()) {
 					serializer.startTag(ns, Xconstants.PART);
 					serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
 					serializer.endTag(ns, Xconstants.PART);
-				}
+				}*/
 				serializer.endTag(ns, Xconstants.MODULE);
 			}
 			serializer.endTag(ns, Xconstants.GATE);
@@ -473,10 +474,15 @@ public class XmlCreator {
 				serializer.attribute(ns, Xconstants.DID, device.getAddress());
 				if (toSave.contains(SaveModule.SAVE_LOCATION))
 					serializer.attribute(ns, Xconstants.LID, device.getLocationId());
-				if (toSave.contains(SaveModule.SAVE_REFRESH))
-					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
 
-				for (Module module : device.getModules()) {
+				if (device.getType().getFeatures().hasRefresh()) {
+					if (toSave.contains(SaveModule.SAVE_REFRESH))
+						serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
+				}
+
+				// FIXME: rework this
+				/*
+				for (Module module : device.getAllModules()) {
 					serializer.startTag(ns, Xconstants.PART);
 
 					serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
@@ -488,7 +494,7 @@ public class XmlCreator {
 					// serializer.attribute(ns, Xconstants.VALUE, String.valueOf(module.getId().getDoubleValue()));
 
 					serializer.endTag(ns, Xconstants.PART);
-				}
+				}*/
 				serializer.endTag(ns, Xconstants.MODULE);
 			}
 
@@ -529,10 +535,14 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.DID, device.getAddress());
 			if (toSave.contains(SaveModule.SAVE_LOCATION))
 				serializer.attribute(ns, Xconstants.LID, device.getLocationId());
-			if (toSave.contains(Module.SaveModule.SAVE_REFRESH))
-				serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
 
-			if (toSave.contains(SaveModule.SAVE_NAME) || toSave.contains(Module.SaveModule.SAVE_VALUE)) {
+			if (device.getType().getFeatures().hasRefresh()) {
+				if (toSave.contains(Module.SaveModule.SAVE_REFRESH))
+					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
+			}
+
+			// FIXME: rework this
+			/*if (toSave.contains(SaveModule.SAVE_NAME) || toSave.contains(Module.SaveModule.SAVE_VALUE)) {
 				serializer.startTag(ns, Xconstants.PART);
 				// send always if sensor changed
 				serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
@@ -542,7 +552,7 @@ public class XmlCreator {
 					serializer.attribute(ns, Xconstants.VALUE, String.valueOf(module.getValue().getDoubleValue()));
 
 				serializer.endTag(ns, Xconstants.PART);
-			}
+			}*/
 
 			serializer.endTag(ns, Xconstants.MODULE);
 
@@ -564,8 +574,9 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSwitch(String bt, String aid, Module module) {
-		return createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.DID, module.getDevice().getAddress(), Xconstants.DTYPE,
-				module.getRawTypeId(), Xconstants.VALUE, String.valueOf(module.getValue().getDoubleValue()));
+		// FIXME: rework this
+		return "";/*createComAttribsVariant(Xconstants.STATE, SWITCH, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.DID, module.getDevice().getAddress(), Xconstants.DTYPE,
+				module.getRawTypeId(), Xconstants.VALUE, String.valueOf(module.getValue().getDoubleValue()));*/
 	}
 
 	/**

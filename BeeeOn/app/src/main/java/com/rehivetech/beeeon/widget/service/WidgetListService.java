@@ -94,7 +94,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 		Gate gate = mController.getGatesModel().getGate(module.getDevice().getGateId());
 
-		rv.setTextViewText(R.id.widget_loc_item_name, module.getName());
+		rv.setTextViewText(R.id.widget_loc_item_name, module.getName(mContext));
 		rv.setImageViewResource(R.id.widget_loc_item_icon, module.getIconResource(IconResourceType.DARK));
 
 		rv.setTextViewText(R.id.widget_loc_item_update, mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), gate));
@@ -154,8 +154,8 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		for (Device fac : mDevices) {
 			if (fac == null) continue;
 
-			Log.d("FAC: ", fac.getModules().get(0).getName());
-			mModules.addAll(fac.getModules());
+			Log.d("FAC: ", fac.getAllModules().get(0).getName(mContext));
+			mModules.addAll(fac.getAllModules());
 		}
 	}
 }

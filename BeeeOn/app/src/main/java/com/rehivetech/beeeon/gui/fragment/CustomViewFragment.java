@@ -29,7 +29,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.GetModulesLogsTask;
@@ -84,7 +84,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		// Create and set chart
 		BarLineChartBase chart;
 		VerticalChartLegend legend = new VerticalChartLegend(mActivity);
-		if (module.getValue() instanceof BaseEnumValue) {
+		if (module.getValue() instanceof EnumValue) {
 			chart = new BarChart(mActivity);
 		} else {
 			chart = new LineChart(mActivity);
@@ -128,7 +128,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, controller.getActiveGate());
 
-		boolean isBarChart = (module.getValue() instanceof BaseEnumValue);
+		boolean isBarChart = (module.getValue() instanceof EnumValue);
 
 		//get chart
 		BarLineChartBase chart = mCharts.get(module.getType().getTypeId());
@@ -142,7 +142,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 
 		String unit = unitsHelper.getStringUnit(module.getValue());
-		String name = module.getName();
+		String name = module.getName(mActivity);
 
 		List dataSetList;
 		ArrayList<String> xVals = new ArrayList<>();
@@ -229,10 +229,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		Log.d(TAG, String.format("Preparing custom view for gate %s", gate.getId()));
 
 		for (Device device : controller.getDevicesModel().getDevicesByGate(gate.getId())) {
-			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getModules().size()));
+			Log.d(TAG, String.format("Preparing mDevice with %d modules", device.getAllModules().size()));
 
-			for (Module module : device.getModules()) {
-				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getName(), module.getType().getTypeId()));
+			for (Module module : device.getAllModules()) {
+				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getAbsoluteId(), module.getType().getTypeId()));
 
 				List<Module> modules = mModules.get(module.getType().getTypeId());
 				if (modules == null) {

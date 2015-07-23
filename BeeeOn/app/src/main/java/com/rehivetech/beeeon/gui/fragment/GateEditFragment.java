@@ -120,11 +120,8 @@ public class GateEditFragment extends BaseApplicationFragment {
 		if (view == null)
 			return null;
 
-		Gate gate = new Gate();
-		gate.setId(mGateId);
-
 		String newGateName = ((TextView) view.findViewById(R.id.fragment_gate_edit_text)).getText().toString();
-		gate.setName(newGateName);
+		Gate gate = new Gate(mGateId, newGateName);
 
 		Spinner spinner = (Spinner) getView().findViewById(R.id.fragment_gate_edit_spinner);
 		TimezoneWrapper timezone = (TimezoneWrapper) spinner.getSelectedItem();

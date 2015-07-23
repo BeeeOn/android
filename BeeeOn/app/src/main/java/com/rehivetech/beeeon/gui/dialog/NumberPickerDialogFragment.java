@@ -40,7 +40,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 
 	@Override
 	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder) {
-		builder.setTitle(getString(R.string.dialog_title_set_temperature));
+		builder.setTitle(getString(R.string.dialog_actuator_set_value));
 		LayoutInflater li = LayoutInflater.from(getActivity());
 		View view = li.inflate(R.layout.beeeon_dialog_numberpicker, null);
 
@@ -64,7 +64,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 		unitView.setText(mUnitsHelper.getStringUnit(sMModule.getValue()));
 
 		builder.setView(view);
-		builder.setPositiveButton(getString(R.string.dialog_set_boiler_setaction), new View.OnClickListener() {
+		builder.setPositiveButton(getString(R.string.dialog_actuator_action), new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//

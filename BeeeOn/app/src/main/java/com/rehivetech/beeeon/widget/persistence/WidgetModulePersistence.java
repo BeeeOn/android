@@ -5,6 +5,7 @@ import android.content.Context;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -83,7 +84,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		refresh = mPrefs.getInt(getProperty(PREF_REFRESH), 0);
 
 		mModuleType = ModuleType.fromTypeId(type);
-		moduleValue = BaseValue.createFromModuleType(mModuleType);
+		moduleValue = BaseValue.createFromModuleType(mModuleType, null);
 
 		// we don't set value when creating new widget
 		if (!rawValue.isEmpty()) {
@@ -99,16 +100,21 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		Module module = (Module) obj1;
 		Gate gate = (Gate) obj2;
 
-		id = module.getId();
-		name = module.getName();
+		id = module.getAbsoluteId();
+		name = module.getName(mContext);
 		icon = module.getIconResource(IconResourceType.WHITE);
 		gateId = gate.getId();
 		mGateRole = gate.getRole().getId();
 		type = module.getType().getTypeId();
 
+		Device device = module.getDevice();
+
 		mUserRole = Utils.getEnumFromId(User.Role.class, mGateRole, User.Role.Guest);
-		lastUpdateTime = module.getDevice().getLastUpdate().getMillis();
-		refresh = module.getDevice().getRefresh().getInterval();
+		lastUpdateTime = device.getLastUpdate().getMillis();
+
+		if (device.getType().getFeatures().hasRefresh()) {
+			refresh = device.getRefresh().getInterval();
+		}
 
 		mModuleType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)
@@ -124,7 +130,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		// Check if we can format module's last update (timeHelper is null when user is not logged in)
 		if (mTimeHelper != null) {
 			// NOTE: This should use always absolute time, because widgets aren't updated so often
-			lastUpdateText = mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), gate);
+			lastUpdateText = mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate);
 		}
 	}
 
@@ -186,7 +192,8 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 		Controller controller = Controller.getInstance(mContext);
 
-		if (getType().isActor() && controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue) {
+		// FIXME: rework this
+		if (/*getType().isActor() &&*/ controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue) {
 			containerType = SWITCHCOMPAT;
 
 			mBuilder.loadRootView(R.layout.widget_include_switchcompat);

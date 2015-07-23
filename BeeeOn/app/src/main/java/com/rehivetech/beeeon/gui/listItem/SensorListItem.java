@@ -48,7 +48,7 @@ public class SensorListItem extends AbstractListItem {
 		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
 
 		// Set the results into TextViews
-		txtTitle.setText(mModule.getName());
+		txtTitle.setText(mModule.getName(mContext));
 
 		if (unitsHelper != null) {
 			txtValue.setText(unitsHelper.getStringValue(mModule.getValue()));

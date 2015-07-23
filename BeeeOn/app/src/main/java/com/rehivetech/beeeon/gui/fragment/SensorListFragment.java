@@ -40,6 +40,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
@@ -48,6 +49,7 @@ import com.rehivetech.beeeon.util.TutorialHelper;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
@@ -210,17 +212,19 @@ public class SensorListFragment extends BaseApplicationFragment {
 		// All locations on gate
 		locations = controller.getLocationsModel().getLocationsByGate(mActiveGateId);
 
-		List<Module> modules = new ArrayList<Module>();
+		DevicesModel devicesModel = controller.getDevicesModel();
+
+		List<Module> modules = new ArrayList<>();
 		for (Location loc : locations) {
 			mSensorAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
 			// all devices from actual location
-			devices = controller.getDevicesModel().getDevicesByLocation(mActiveGateId, loc.getId());
-			for (Device fac : devices) {
-				for (int x = 0; x < fac.getModules().size(); x++) {
-					Module dev = fac.getModules().get(x);
-					mSensorAdapter.addItem(new SensorListItem(dev, dev.getId(), mActivity, (x == (fac.getModules().size() - 1))));
+			for (Device device : devicesModel.getDevicesByLocation(mActiveGateId, loc.getId())) {
+				Iterator<Module> it = device.getVisibleModules().iterator();
+				while (it.hasNext()) {
+					Module module = it.next();
+					mSensorAdapter.addItem(new SensorListItem(module, module.getAbsoluteId(), mActivity, !it.hasNext()));
+					modules.add(module);
 				}
-				modules.addAll(fac.getModules());
 			}
 		}
 
@@ -374,7 +378,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 					Module module = mSensorAdapter.getModule(position);
 					Bundle bundle = new Bundle();
 					bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, module.getDevice().getGateId());
-					bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, module.getId());
+					bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
 					Intent intent = new Intent(mActivity, ModuleDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);
@@ -500,7 +504,7 @@ public class SensorListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.sensor_menu_del) {
-				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName());
+				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName(mActivity));
 				String message = getString(R.string.confirm_unregister_device_message);
 				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());
 			}

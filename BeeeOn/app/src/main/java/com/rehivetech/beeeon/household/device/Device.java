@@ -1,122 +1,130 @@
-/**
- * @brief Package for devices that implements sensors
- */
 package com.rehivetech.beeeon.household.device;
 
+import android.support.annotation.Nullable;
+
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.IdentifierComparator;
+import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.Log;
+import com.rehivetech.beeeon.util.SimpleDataHolder;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
-/**
- * @author Robyer
- * @brief Device class which contains own data and devices (sensors, actors)
- */
-public class Device implements IIdentifier {
-	protected String mAddress;
-	protected String mGateId;
-	protected String mLocationId = Location.NO_LOCATION_ID;
-	protected boolean mInitialized;
-	protected RefreshInterval mRefreshInterval;
-	protected int mBattery;
-	protected DateTime mInvolveTime;
-	protected int mNetworkQuality;
-	protected DateTime mLastUpdate;
-	protected final List<Module> mModules = new ArrayList<Module>();
-
-	private boolean mSorted; // optimization to sort values only when needed
+public final class Device implements IIdentifier {
+	public static final String TAG = Device.class.getSimpleName();
 
 	/**
-	 * Class constructor
+	 * Properties inherited from device's specification table.
 	 */
-	public Device() {
-	}
+	private final DeviceType mType;
+	private final SimpleDataHolder<Module> mModules = new SimpleDataHolder<>();
 
 	/**
-	 * Represents settings of mDevice which could be saved to server
+	 * Properties belonging to real device.
 	 */
-	public enum SaveDevice {
-		SAVE_NAME, // rename mDevice
-		SAVE_LOCATION, // change location
-		SAVE_VISIBILITY, // change visibility //NOTE: sending always
-		SAVE_REFRESH, // change refresh interval
-		SAVE_VALUE, // change value (of actor)
-		SAVE_TYPE, // change mDevice's icon, etc. //NOTE: what? type cannot be changed
-	}
+	private final String mAddress;
+	private final String mGateId;
+
+	private String mLocationId;
+	private boolean mInitialized;
+	private DateTime mPairedTime;
+	private int mNetworkQuality;
+	private DateTime mLastUpdate;
+
+	private RefreshInterval mRefreshInterval;
+	private int mBatteryValue;
 
 	/**
-	 * Get last update time
+	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
 	 *
-	 * @return
+	 * @param type
+	 * @param gateId
+	 * @param address
 	 */
+	private Device(DeviceType type, String gateId, String address) {
+		mType = type;
+		mGateId = gateId;
+		mAddress = address;
+
+		// Create modules list
+		mModules.setObjects(type.createModules(this));
+	}
+
+	/**
+	 * Factory method for creating new Device objects.
+	 *
+	 * @param typeId
+	 * @param gateId
+	 * @param address
+	 * @return Properly initialized new instance of Device.
+	 */
+	public static final Device createDeviceByType(String typeId, String gateId, String address) {
+		DeviceType type = Utils.getEnumFromId(DeviceType.class, typeId, DeviceType.TYPE_UNKNOWN);
+		return new Device(type, gateId, address);
+	}
+
+	/**
+	 * @return True if this device has unknown type, false otherwise.
+	 */
+	public boolean isUnknownType() {
+		return mType == DeviceType.TYPE_UNKNOWN;
+	}
+
+	/**
+	 * @return Time of last update.
+	 */
+	@Nullable
 	public DateTime getLastUpdate() {
 		return mLastUpdate;
 	}
 
 	/**
-	 * Setting last update time
-	 *
-	 * @param lastUpdate
+	 * @param lastUpdate Time of last update.
 	 */
-	public void setLastUpdate(DateTime lastUpdate) {
+	public void setLastUpdate(@Nullable DateTime lastUpdate) {
 		mLastUpdate = lastUpdate;
 	}
 
 	/**
-	 * Check if actual value of this sensor is expired
-	 *
-	 * @return true when refresh interval since last update expired
+	 * @return True when refresh interval since last update has expired, false otherwise.
 	 */
 	public boolean isExpired() {
-		return mLastUpdate.plusSeconds(mRefreshInterval.getInterval()).isBeforeNow();
+		if (!mType.getFeatures().hasRefresh()) {
+			return true;
+		}
+		return mLastUpdate.plusSeconds(getRefresh().getInterval()).isBeforeNow();
 	}
 
 	/**
-	 * Get refresh interval
-	 *
-	 * @return refresh interval
-	 */
-	public RefreshInterval getRefresh() {
-		return mRefreshInterval;
-	}
-
-	/**
-	 * Setting refresh interval
-	 *
-	 * @param interval
-	 */
-	public void setRefresh(RefreshInterval interval) {
-		mRefreshInterval = interval;
-	}
-
-	/**
-	 * Get unique identifier of mDevice
-	 *
-	 * @return id
+	 * @return Unique identifier of this device. Currently is used device address.
 	 */
 	public String getId() {
 		return mAddress;
 	}
 
 	/**
-	 * Get location of mDevice
-	 *
-	 * @return location
+	 * @return Object representing type of this device from specification.
+	 */
+	public DeviceType getType() {
+		return mType;
+	}
+
+	/**
+	 * @return Id of location where this device is placed.
 	 */
 	public String getLocationId() {
 		return mLocationId;
 	}
 
 	/**
-	 * Setting location of mDevice
-	 *
-	 * @param locationId
+	 * @param locationId Id of location where this device is placed.
 	 */
 	public void setLocationId(String locationId) {
 		// From server we've got "", but internally we need to use Location.NO_LOCATION_ID
@@ -127,158 +135,176 @@ public class Device implements IIdentifier {
 	}
 
 	/**
-	 * Get gate id of mDevice
-	 *
-	 * @return gate id
+	 * @return Id of parent gate of this device.
 	 */
 	public String getGateId() {
 		return mGateId;
 	}
 
 	/**
-	 * Setting gate id of mDevice
-	 *
-	 * @param gateId
-	 */
-	public void setGateId(String gateId) {
-		mGateId = gateId;
-	}
-
-	/**
-	 * Returning flag if mDevice has been initialized yet
-	 *
-	 * @return
+	 * @return True if this device has been initialized already, false otherwise.
 	 */
 	public boolean isInitialized() {
 		return mInitialized;
 	}
 
 	/**
-	 * Setting flag for mDevice initialization state
-	 *
-	 * @param initialized
+	 * @param initialized State of initialization of this device.
 	 */
 	public void setInitialized(boolean initialized) {
 		mInitialized = initialized;
 	}
 
 	/**
-	 * Get state of battery
-	 *
-	 * @return battery
+	 * @return Time when device was paired to gate
 	 */
-	public int getBattery() {
-		return mBattery;
+	public DateTime getPairedTime() {
+		return mPairedTime;
 	}
 
 	/**
-	 * Setting state of battery
-	 *
-	 * @param battery
+	 * @param pairedTime Time when device was paired to gate
 	 */
-	public void setBattery(int battery) {
-		mBattery = battery;
+	public void setPairedTime(DateTime pairedTime) {
+		mPairedTime = pairedTime;
 	}
 
 	/**
-	 * Get time of setting of mDevice to system
-	 *
-	 * @return involve time
-	 */
-	public DateTime getInvolveTime() {
-		return mInvolveTime;
-	}
-
-	/**
-	 * Setting involve time
-	 *
-	 * @param involved
-	 */
-	public void setInvolveTime(DateTime involved) {
-		mInvolveTime = involved;
-	}
-
-	/**
-	 * Get MAC address of mDevice
-	 *
-	 * @return address
+	 * @return unique (mac) address of this device
 	 */
 	public String getAddress() {
 		return mAddress;
 	}
 
 	/**
-	 * Setting MAC address
-	 *
-	 * @param address
-	 */
-	public void setAddress(String address) {
-		mAddress = address;
-	}
-
-	/**
-	 * Get value of signal quality
-	 *
-	 * @return quality
+	 * @return quality of network signal in percents (0-100%)
 	 */
 	public int getNetworkQuality() {
 		return mNetworkQuality;
 	}
 
 	/**
-	 * Setting quality
-	 *
-	 * @param networkQuality
+	 * @param networkQuality quality of network signal in percents (0-100%)
 	 */
 	public void setNetworkQuality(int networkQuality) {
 		mNetworkQuality = networkQuality;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("Device: %s", getId());
+	/**
+	 * @return Actual RefreshInterval value, or null if this device doesn't have refresh at all.
+	 */
+	@Nullable
+	public RefreshInterval getRefresh() {
+		if (!mType.getFeatures().hasRefresh()) {
+			return null;
+		}
+		return mRefreshInterval != null ? mRefreshInterval : mType.getFeatures().getDefaultRefresh();
 	}
 
 	/**
-	 * Debug method
-	 *
-	 * @return
+	 * @param refreshInterval New RefreshInterval value, which could be null to reset it to default value.
 	 */
-	public String toDebugString() {
-		return String.format("Id: %s\nGate: %s\nLocation: %s\nInitialized: %s\nBattery: %s\nRefresh: %s\nDevices: %s", getId(), mGateId, mLocationId, mInitialized, mBattery,
-				mRefreshInterval.getInterval(), Integer.toString(mModules.size()));
+	public void setRefresh(@Nullable RefreshInterval refreshInterval) {
+		if (!mType.getFeatures().hasRefresh()) {
+			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have refresh.");
+			return;
+		}
+		mRefreshInterval = refreshInterval;
 	}
 
-	public void addModule(Module module) {
-		module.setDevice(this);
-		mModules.add(module);
-		mSorted = false;
+	/**
+	 * @return Actual battery value (0-100%) or -1 when this device has no battery.
+	 */
+	public int getBattery() {
+		return mType.getFeatures().hasBattery() ? mBatteryValue : -1;
 	}
 
-	public void clearModules() {
-		mModules.clear();
+	/**
+	 * @param batteryValue New battery level value.
+	 */
+	public void setBattery(int batteryValue) {
+		if (!mType.getFeatures().hasBattery()) {
+			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have battery.");
+			return;
+		}
+		mBatteryValue = batteryValue;
 	}
 
-	public List<Module> getModules() {
-		if (!mSorted) {
-			mSorted = true;
-			// Sort devices by offset (= by id, which is combined from mac address + raw type, where type is type id + offset)
-			Collections.sort(mModules, new IdentifierComparator());
+	/**
+	 * @return List of modules this device contains.
+	 */
+	public List<Module> getAllModules() {
+		List<Module> modules = mModules.getObjects();
+
+		// Sort modules by proper order
+		Collections.sort(modules, new OrderIdentifierComparator());
+
+		return modules;
+	}
+
+	/**
+	 * @return List of actually visible modules this device contains.
+	 */
+	public List<Module> getVisibleModules() {
+		// This will give us correctly sorted modules
+		List<Module> modules = getAllModules();
+
+		List<String> hideModuleIds = new ArrayList<>();
+
+		// Get info from all the modules about what modules they propose to hide based on their own value
+		for (Module module : modules) {
+			hideModuleIds.addAll(module.getHideModuleIdsFromRules());
 		}
 
-		return mModules;
-	}
-
-	public Module getModuleByType(ModuleType type, int offset) {
-		for (Module module : getModules()) {
-			if (module.getType().equals(type) && module.getOffset() == offset) {
-				return module;
+		// Remove modules that should be hidden
+		Iterator<Module> it = modules.iterator();
+		while (it.hasNext()) {
+			Module module = it.next();
+			if (hideModuleIds.contains(module.getId())) {
+				it.remove();
 			}
 		}
 
-		return null;
+		return modules;
 	}
 
+	/**
+	 * @param id
+	 * @return Module from this device with specified id.
+	 */
+	public Module getModuleById(String id) {
+		return mModules.getObject(id);
+	}
+
+	/**
+	 * Set value of module from this device, specified by id.
+	 * If module with specified id doesn't exists, for Devices with unknown type is new unknown module automatically created and its value set.
+	 *
+	 * @param id
+	 * @param value
+	 * @throws IllegalStateException When module with specified id doesn't exists and this device has not unknown type.
+	 */
+	public void setModuleValue(String id, String value) throws IllegalStateException {
+		synchronized (mModules) {
+			if (!mModules.hasObject(id)) {
+				if (!isUnknownType()) {
+					// TODO: have it here this way? It could be possible to support such circumstances without a crash - but on other hand, such situation shouldn't happen when everything is regard our specifications.
+					throw new IllegalStateException(String.format("Module #%s doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId()));
+				}
+
+				// Automatically create new unknown module for this device
+				mModules.addObject(Module.createUnknownModule(this, id));
+			}
+
+			// At this moment module will surely exist in data holder
+			Module module = mModules.getObject(id);
+			module.setValue(value);
+		}
+	}
+
+	/**
+	 * Data holder used for saving device data to server.
+	 */
 	public static class DataPair {
 		public final Device mDevice;
 		public final EnumSet<Module.SaveModule> what;

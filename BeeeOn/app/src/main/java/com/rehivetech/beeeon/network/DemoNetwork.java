@@ -6,15 +6,16 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceFeatures;
+import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue;
-import com.rehivetech.beeeon.household.device.values.BaseEnumValue.Item;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue.Item;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -98,20 +99,24 @@ public class DemoNetwork implements INetwork {
 
 	private void setNewValue(Module module) {
 		// Don't set new values for actors (unless it's the first value to be set during initialization)
-		if (module.getType().isActor() && module.getValue().hasValue())
+		if (module.isActuator() && module.getValue().hasValue())
 			return;
 
 		Random rand = getRandomForGate(module.getDevice().getGateId());
 
-		if (module.getValue() instanceof BaseEnumValue) {
-			BaseEnumValue value = (BaseEnumValue) module.getValue();
+		if (module.getValue() instanceof EnumValue) {
+			EnumValue value = (EnumValue) module.getValue();
 			List<Item> items = value.getEnumItems();
 			Item item = items.get(rand.nextInt(items.size()));
 
 			module.setValue(item.getValue());
 		} else {
 			double lastValue = module.getValue().getDoubleValue();
-			double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
+			double range = 5;
+
+			if (module.getDevice().getType().getFeatures().hasRefresh()) {
+				range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
+			}
 
 			if (Double.isNaN(lastValue)) {
 				lastValue = rand.nextDouble() * 1000;
@@ -144,9 +149,9 @@ public class DemoNetwork implements INetwork {
 			mLocations.setObjects(gateId, demoData.getLocation(mContext, gateId));
 			mLocations.setLastUpdate(gateId, DateTime.now());
 
-			mDevices.setObjects(gateId, demoData.getDevices(mContext, gateId));
+			mDevices.setObjects(gateId, demoData.getDevices(gateId));
 			mDevices.setLastUpdate(gateId, DateTime.now());
-			
+
 			mWatchdogs.setObjects(gateId, demoData.getWatchdogs(mContext, gateId));
 			mWatchdogs.setLastUpdate(gateId, DateTime.now());
 
@@ -229,9 +234,7 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(gateId);
 
-		Gate gate = new Gate();
-		gate.setId(gateId);
-		gate.setName(gateName);
+		Gate gate = new Gate(gateId, gateName);
 
 		// Use random role
 		Role[] roles = Role.values();
@@ -285,11 +288,13 @@ public class DemoNetwork implements INetwork {
 		for (Device device : devices) {
 			if (device.isExpired()) {
 				// Set new random values
-				device.setBattery(rand.nextInt(101));
+				if (device.getType().getFeatures().hasBattery()) {
+					device.setBattery(rand.nextInt(101));
+				}
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 				device.setNetworkQuality(rand.nextInt(101));
 
-				for (Module module : device.getModules()) {
+				for (Module module : device.getAllModules()) {
 					setNewValue(module);
 				}
 			}
@@ -378,11 +383,13 @@ public class DemoNetwork implements INetwork {
 
 		if (newDevice != null && newDevice.isExpired()) {
 			// Set new random values
-			newDevice.setBattery(rand.nextInt(101));
+			if (newDevice.getType().getFeatures().hasBattery()) {
+				newDevice.setBattery(rand.nextInt(101));
+			}
 			newDevice.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			newDevice.setNetworkQuality(rand.nextInt(101));
 
-			for (Module module : newDevice.getModules()) {
+			for (Module module : newDevice.getAllModules()) {
 				setNewValue(module);
 			}
 		}
@@ -407,10 +414,6 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(gateId);
 		if (rand.nextInt(10) == 0) {
-			Device device = new Device();
-
-			device.setGateId(gateId);
-
 			// Create unique mDevice id
 			String address;
 			int i = 0;
@@ -418,19 +421,30 @@ public class DemoNetwork implements INetwork {
 				address = "10.0.0." + String.valueOf(i++);
 			} while (mDevices.hasObject(gateId, address));
 
-			device.setAddress(address);
-			device.setBattery(rand.nextInt(101));
+			// Get random device type
+			DeviceType[] types = DeviceType.values();
+			DeviceType randType = types[1 + rand.nextInt(types.length - 1)]; // 1+ because we don't want unknown type, which is on beginning
+
+			// Create new device
+			Device device = Device.createDeviceByType(randType.getId(), gateId, address);
+
+			DeviceFeatures features = device.getType().getFeatures();
+			if (features.hasBattery()) {
+				device.setBattery(rand.nextInt(101));
+			}
+			if (features.hasRefresh()) {
+				RefreshInterval[] refresh = RefreshInterval.values();
+				device.setRefresh(refresh[rand.nextInt(refresh.length)]);
+			}
+
 			device.setInitialized(rand.nextBoolean());
-			device.setInvolveTime(DateTime.now(DateTimeZone.UTC));
+			device.setPairedTime(DateTime.now(DateTimeZone.UTC));
 			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			// mDevice.setLocationId(locationId); // uninitialized mDevice has no location
 			device.setNetworkQuality(rand.nextInt(101));
 
-			RefreshInterval[] refresh = RefreshInterval.values();
-			device.setRefresh(refresh[rand.nextInt(refresh.length)]);
-
 			// add random number of devices (max. 5)
-			int count = rand.nextInt(5);
+			/*int count = rand.nextInt(5);
 			do {
 				// Get random module type
 				ModuleType[] types = ModuleType.values();
@@ -438,7 +452,7 @@ public class DemoNetwork implements INetwork {
 
 				// Determine offset (number of existing devices with this type in the mDevice)
 				int offset = 0;
-				for (Module module : device.getModules()) {
+				for (Module module : device.getAllModules()) {
 					if (module.getType() == randType) {
 						offset++;
 					}
@@ -457,7 +471,7 @@ public class DemoNetwork implements INetwork {
 				setNewValue(module);
 
 				device.addModule(module);
-			} while (--count >= 0);
+			} while (--count >= 0);*/
 
 			// Add new mDevice to global holder
 			mDevices.addObject(gateId, device);
@@ -474,30 +488,35 @@ public class DemoNetwork implements INetwork {
 		// Generate random values for log in demo mode
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
-		double lastValue = pair.module.getValue().getDoubleValue();
-		double range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
-
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
 
 		Random rand = getRandomForGate(gateId);
 
+		double lastValue = pair.module.getValue().getDoubleValue();
 		if (Double.isNaN(lastValue)) {
 			lastValue = rand.nextDouble() * 1000;
 		}
 
-		int everyMsecs = Math.max(pair.gap.getSeconds(), module.getDevice().getRefresh().getInterval()) * 1000;
+		boolean isEnum = (module.getValue() instanceof EnumValue);
+		boolean hasRefresh = module.getDevice().getType().getFeatures().hasRefresh();
 
-		boolean isEnum = (module.getValue() instanceof BaseEnumValue);
+		int everyMsecs;
+		double range = 5;
 
-		if (isEnum) {
+		if (isEnum || !hasRefresh) {
 			// For enums we want fixed number of steps (because application surely wants raw values)
+			// For devices without refresh it is the similar situation
 			everyMsecs = (int) (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
+		} else {
+			int refreshInterval = module.getDevice().getRefresh().getInterval();
+			everyMsecs = Math.max(pair.gap.getSeconds(), refreshInterval) * 1000;
+			range = 2 + Math.log(refreshInterval);
 		}
 
 		while (start < end) {
 			if (isEnum) {
-				BaseEnumValue value = (BaseEnumValue) module.getValue();
+				EnumValue value = (EnumValue) module.getValue();
 				List<Item> items = value.getEnumItems();
 
 				int pos = 0;

@@ -6,10 +6,15 @@ import com.rehivetech.beeeon.household.user.User;
 public class Gate implements INameIdentifier {
 	public static final String TAG = Gate.class.getSimpleName();
 
-	protected String mId = "";
-	protected String mName = "";
+	protected final String mId;
+	protected String mName;
 	protected User.Role mRole;
 	protected int mUtcOffsetInMinutes;
+
+	public Gate(String id, String name) {
+		mId = id;
+		mName = name;
+	}
 
 	@Override
 	public String toString() {
@@ -46,13 +51,6 @@ public class Gate implements INameIdentifier {
 	 */
 	public User.Role getRole() {
 		return mRole;
-	}
-
-	/**
-	 * @param id
-	 */
-	public void setId(String id) {
-		mId = id;
 	}
 
 	/**

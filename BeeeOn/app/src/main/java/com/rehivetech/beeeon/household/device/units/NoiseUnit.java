@@ -12,9 +12,9 @@ public class NoiseUnit extends BaseUnit {
 	public NoiseUnit() {
 		super();
 
-		mItems.add(this.new Item(DECIBEL, R.string.dev_noise_decibel_unit_full, R.string.dev_noise_decibel_unit));
-		mItems.add(this.new Item(BEL, R.string.dev_noise_bel_unit_full, R.string.dev_noise_bel_unit));
-		mItems.add(this.new Item(NEPER, R.string.dev_noise_neper_unit_full, R.string.dev_noise_neper_unit));
+		mItems.add(this.new Item(DECIBEL, R.string.unit_noise_decibel_full, R.string.unit_noise_decibel));
+		mItems.add(this.new Item(BEL, R.string.unit_noise_bel_full, R.string.unit_noise_bel));
+		mItems.add(this.new Item(NEPER, R.string.unit_noise_neper_full, R.string.unit_noise_neper));
 	}
 
 	@Override
