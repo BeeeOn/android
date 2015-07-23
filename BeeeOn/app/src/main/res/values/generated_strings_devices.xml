@@ -11,6 +11,7 @@
 	<string name="devices__manufacturer_thermona">Thermona</string>
 	<string name="devices__dev_temperature_humidity">Temperature and humidity sensor</string>
 	<string name="devices__dev_regulator_vpt">Regulator VPT</string>
+	<string name="devices__dev_internal_pressure_sensors">Air pressure sensor</string>
 	<string name="devices__mod_room_temperature">Room temperature</string>
 	<string name="devices__mod_outside_temperature">Outside temperature</string>
 	<string name="devices__mod_room_humidity">Room humidity</string>

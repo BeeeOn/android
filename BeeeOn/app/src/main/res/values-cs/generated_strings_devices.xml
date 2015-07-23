@@ -11,6 +11,7 @@
 	<string name="devices__manufacturer_thermona">Thermona</string>
 	<string name="devices__dev_temperature_humidity">Senzor teploty a vlhkosti</string>
 	<string name="devices__dev_regulator_vpt">Regulátor VPT</string>
+	<string name="devices__dev_internal_pressure_sensors">Senzor tlaku vzduchu</string>
 	<string name="devices__mod_room_temperature">Teplota místnosti</string>
 	<string name="devices__mod_outside_temperature">Teplota venkovní</string>
 	<string name="devices__mod_room_humidity">Vlhkost v místnosti</string>

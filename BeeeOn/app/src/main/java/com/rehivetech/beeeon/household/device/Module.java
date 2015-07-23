@@ -19,8 +19,7 @@ public final class Module implements IOrderIdentifier {
 	 * Properties inherited from device's specification table.
 	 */
 	private final String mId;
-	private final ModuleType mType; // type defines what BaseValue should be created and also allows searching/comparing by type + offset
-	private final int mOffset;
+	private final ModuleType mType; // type defines what BaseValue should be created
 
 	private final Integer mSort;
 	private final int mGroupRes;
@@ -32,18 +31,17 @@ public final class Module implements IOrderIdentifier {
 	private final BaseValue mValue;
 
 	public static Module createUnknownModule(Device device, String id) {
-		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), 0, null, null, null, false, null);
+		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), null, null, null, false, null);
 	}
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules) {
-		this(device, id, typeId, offset, sort, groupRes, nameRes, isActuator, rules, (BaseValue.Constraints) null);
+	public Module(Device device, String id, int typeId, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules) {
+		this(device, id, typeId, sort, groupRes, nameRes, isActuator, rules, (BaseValue.Constraints) null);
 	}
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
+	public Module(Device device, String id, int typeId, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
 				  BaseValue.Constraints constraints) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
-		mOffset = offset;
 		mSort = sort;
 		mGroupRes = groupRes != null ? groupRes : 0;
 		mNameRes = nameRes != null ? nameRes : 0;
@@ -61,11 +59,10 @@ public final class Module implements IOrderIdentifier {
 		mValue = BaseValue.createFromModuleType(mType, constraints);
 	}
 
-	public Module(Device device, String id, int typeId, int offset, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
+	public Module(Device device, String id, int typeId, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
 				  List<EnumValue.Item> enumValues) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
-		mOffset = offset;
 		mSort = sort;
 		mGroupRes = groupRes != null ? groupRes : 0;
 		mNameRes = nameRes != null ? nameRes : 0;
@@ -134,19 +131,15 @@ public final class Module implements IOrderIdentifier {
 	}
 
 	/**
-	 * Get unique identifier of module (address of mDevice + raw type id containing offset)
+	 * Get unique identifier of module (device address + module id)
 	 *
 	 * @return id
 	 */
 	public String getAbsoluteId() {
 		if (mDevice == null)
-			throw new RuntimeException("Module's mDevice is null!");
+			throw new RuntimeException("Module's device is null!");
 
 		return mDevice.getAddress() + ID_SEPARATOR + mId;
-	}
-
-	public int getOffset() {
-		return mOffset;
 	}
 
 	/**
