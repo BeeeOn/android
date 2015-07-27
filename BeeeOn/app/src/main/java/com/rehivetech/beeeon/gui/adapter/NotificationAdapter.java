@@ -46,13 +46,13 @@ public class NotificationAdapter extends BaseAdapter {
 		ViewHolder holder;
 		if (convertView == null) {
 			LayoutInflater inflater = mFragment.getActivity().getLayoutInflater();
-			convertView = inflater.inflate(R.layout.item_notification, parent, false);
+			convertView = inflater.inflate(R.layout.adapter_notification, parent, false);
 
 			holder = new ViewHolder();
-			holder.img = (ImageView) convertView.findViewById(R.id.item_notification_img);
-			holder.text = (TextView) convertView.findViewById(R.id.item_notification_text);
-			holder.time = (TextView) convertView.findViewById(R.id.item_notification_time);
-			holder.name = (TextView) convertView.findViewById(R.id.item_notification_name);
+			holder.img = (ImageView) convertView.findViewById(R.id.notification_item_imageview);
+			holder.text = (TextView) convertView.findViewById(R.id.notification_item_text);
+			holder.time = (TextView) convertView.findViewById(R.id.notification_item_time_text);
+			holder.name = (TextView) convertView.findViewById(R.id.notification_item_name);
 			holder.separator = convertView.findViewById(R.id.item_notification_separator);
 
 			convertView.setTag(holder);

@@ -24,9 +24,9 @@ public class LocationMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
-		ImageView iconView = (ImageView) view.findViewById(com.rehivetech.beeeon.R.id.icon);
-		View separatorView = view.findViewById(R.id.top_separator);
+		TextView nameView = (TextView) view.findViewById(R.id.menu_location_listview_name);
+		ImageView iconView = (ImageView) view.findViewById(R.id.menu_location_listview_icon);
+		View separatorView = view.findViewById(R.id.menu_location_listview_top_separator);
 
 		nameView.setText(mName);
 		iconView.setImageResource(mIconRes);
@@ -47,7 +47,7 @@ public class LocationMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_location;
+		return R.layout.item_menu_location_listview;
 	}
 
 	@Override

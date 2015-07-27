@@ -1,0 +1,36 @@
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	tools:ignore="UseCompoundDrawables"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	android:minHeight="48dp"
+	>
+
+	<ImageView
+		android:id="@+id/config_widget_location_spinner_dropdown_icon"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:contentDescription="@string/placeholder_icon"
+		android:layout_centerVertical="true"
+		android:src="@drawable/ic_loc_unknown_gray"
+		/>
+
+	<CheckedTextView
+		android:id="@+id/config_widget_location_spinner_dropdown_label"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@color/beeeon_primary_text"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+		android:layout_centerVertical="true"
+		android:layout_toRightOf="@+id/config_widget_location_spinner_dropdown_icon"
+		android:layout_toEndOf="@+id/config_widget_location_spinner_dropdown_icon"
+		android:layout_marginLeft="16dp"
+		android:layout_marginStart="16dp"
+		android:singleLine="true"
+		android:ellipsize="marquee"
+		/>
+
+</RelativeLayout>

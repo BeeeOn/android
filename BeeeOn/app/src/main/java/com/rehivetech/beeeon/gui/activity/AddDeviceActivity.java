@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.util.Log;
 import java.util.Arrays;
 import java.util.List;
 
-public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFragment.OnAddSensorListener {
+public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFragment.OnAddDeviceListener {
 
 	private static final String TAG = AddDeviceActivity.class.getSimpleName();
 
@@ -46,7 +46,7 @@ public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFra
 	}
 
 	@Override
-	public void onAddSensor(boolean success) {
+	public void onAddDevice(boolean success) {
 		setResult(success ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
 		if (success) {
 			finish();

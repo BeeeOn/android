@@ -119,7 +119,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	public synchronized void setBeeeOnProgressBarVisibility(boolean visible) {
 		if (mProgressBar == null) {
-			mProgressBar = findViewById(R.id.toolbar_progress);
+			mProgressBar = findViewById(R.id.beeeon_toolbar_progress);
 
 			if (mProgressBar == null) {
 				// This activity probably doesn't have progressbar in layout

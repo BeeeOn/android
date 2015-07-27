@@ -90,25 +90,21 @@ public final class Constants {
 	 */
 
 	public static final int ADD_GATE_REQUEST_CODE = 1000;
-	public static final int EDIT_SENSOR_REQUEST_CODE = 1001;
-	public static final int ADD_SENSOR_REQUEST_CODE = 1002;
-	public static final int SETUP_SENSOR_REQUEST_CODE = 1003;
+	public static final int EDIT_MODULE_REQUEST_CODE = 1001;
+	public static final int ADD_DEVICE_REQUEST_CODE = 1002;
+	public static final int SETUP_DEVICE_REQUEST_CODE = 1003;
 
-	public static final int SHARE_TWITTER = 1050;
-	public static final int SHARE_GOOGLE = 1051;
-	public static final int SHARE_VKONTAKTE = 1052;
-
-	public static final String SETUP_SENSOR_ACT_LOC = "SETUP_SENSOR_ACT_LOC";
+	public static final String SETUP_DEVICE_ACT_LOC = "SETUP_DEVICE_ACT_LOC";
 
 	public static final boolean GUI_DEBUG = true;
 
 	public static final String TUTORIAL_ADD_GATE_SHOWED = "TUTORIAL_ADD_GATE_SHOWED";
 
-	public static final String TUTORIAL_ADD_SENSOR_SHOWED = "TUTORIAL_ADD_SENSOR_SHOWED";
+	public static final String TUTORIAL_ADD_DEVICE_SHOWED = "TUTORIAL_ADD_DEVICE_SHOWED";
 
 	public static final String TUTORIAL_LOGIN_SHOWED = "TUTORIAL_LOGIN_SHOWED";
 
-	public static final String GUI_MENU_ALL_SENSOR_ID = "GUI_MENU_ALL_SENSOR_ID";
+	public static final String GUI_MENU_ALL_MODULES_ID = "GUI_MENU_ALL_MODULES_ID";
 
 	public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
 
@@ -120,7 +116,7 @@ public final class Constants {
 
 	public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
 
-	public static final String GUI_EDIT_SENSOR_ID = "GUI_EDIT_SENSOR_ID";
+	public static final String GUI_EDIT_MODULE_ID = "GUI_EDIT_MODULE_ID";
 
 	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY";
 
@@ -131,28 +127,6 @@ public final class Constants {
 	public static final String BROADCAST_PREFERENCE_CHANGED = "com.rehivetech.beeeon.BROADCAST_PREFERENCE_CHANGED";
 	public static final String BROADCAST_USER_LOGIN = "com.rehivetech.beeeon.BROADCAST_USER_LOGIN";
 	public static final String BROADCAST_USER_LOGOUT = "com.rehivetech.beeeon.BROADCAST_USER_LOGOUT";
-
-	/**
-	 * Achievements ID
-	 */
-	public static final String ACHIEVEMENT_LOGIN = "1";
-	public static final String ACHIEVEMENT_ROOM = "4";
-	public static final String ACHIEVEMENT_TUTORIAL = "6";
-	public static final String ACHIEVEMENT_WIDGET_CLOCK = "7";
-	public static final String ACHIEVEMENT_WIDGET_ANY = "8";
-	public static final String ACHIEVEMENT_GEOFENCE = "9";
-	public static final String ACHIEVEMENT_FACEBOOK_LOGIN = "31";
-	public static final String ACHIEVEMENT_FACEBOOK_SHARE = "32";
-	public static final String ACHIEVEMENT_TWITTER_LOGIN = "34";
-	public static final String ACHIEVEMENT_TWITTER_SHARE = "35";
-	public static final String ACHIEVEMENT_VKONTAKTE_LOGIN = "37";
-	public static final String ACHIEVEMENT_VKONTAKTE_SHARE = "38";
-	public static final String ACHIEVEMENT_GPLUS_SHARE = "40";
-	public static final String ACHIEVEMENT_USER_ADMIN = "50";
-	public static final String ACHIEVEMENT_USER_NORMAL = "51";
-	public static final String ACHIEVEMENT_USER_GUEST = "52";
-	public static final String ACHIEVEMENT_ADD_GATEWAY = "61";
-	public static final String ACHIEVEMENT_ADD_SENSOR = "64";
 
 	// actor change
 	public static final String BROADCAST_ACTOR_CHANGED = "com.rehivetech.beeeon.BROADCAST_ACTOR_CHANGED";

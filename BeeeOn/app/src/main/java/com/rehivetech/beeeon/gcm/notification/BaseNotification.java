@@ -97,8 +97,8 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 			case GATE_ADDED:
 				notification = GateAddedNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case SENSOR_ADDED:
-				notification = SensorAddedNotification.getInstance(msgId, time, type, bundle);
+			case DEVICE_ADDED:
+				notification = DeviceAddedNotification.getInstance(msgId, time, type, bundle);
 				break;
 			case DELETE_NOTIF:
 				notification = DeleteNotification.getInstance(msgId, time, type, bundle);
@@ -106,11 +106,11 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 			case URI:
 				notification = UriNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case SENSOR_LOW_BATTERY:
-				notification = SensorLowBatteryNotification.getInstance(msgId, time, type, bundle);
+			case DEVICE_LOW_BATTERY:
+				notification = DeviceLowBatteryNotification.getInstance(msgId, time, type, bundle);
 				break;
-			case SENSOR_LOW_SIGNAL:
-				notification = SensorLowSignalNotification.getInstance(msgId, time, type, bundle);
+			case DEVICE_LOW_SIGNAL:
+				notification = DeviceLowSignalNotification.getInstance(msgId, time, type, bundle);
 				break;
 			case GATE_OFFLINE:
 				notification = GateOfflineNotification.getInstance(msgId, time, type, bundle);

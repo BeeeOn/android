@@ -3,20 +3,16 @@ package com.rehivetech.beeeon.gui.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class UsersListAdapter extends BaseAdapter {
 
@@ -52,13 +48,13 @@ public class UsersListAdapter extends BaseAdapter {
 		ViewHolder holder;
 
 		if(convertView == null){
-			convertView = mInflater.inflate(R.layout.user_listview_item, parent, false);
+			convertView = mInflater.inflate(R.layout.adapter_list_user, parent, false);
 			holder = new ViewHolder();
 
-			holder.UserName = (TextView) convertView.findViewById(R.id.adapter_user_name);
-			holder.UserEmail = (TextView) convertView.findViewById(R.id.adapter_user_email);
-			holder.UserRole = (TextView) convertView.findViewById(R.id.adapter_user_role);
-			holder.UserIcon = (ImageView) convertView.findViewById(R.id.adapter_user_icon);
+			holder.UserName = (TextView) convertView.findViewById(R.id.adapter_list_user_name);
+			holder.UserEmail = (TextView) convertView.findViewById(R.id.adapter_list_user_email);
+			holder.UserRole = (TextView) convertView.findViewById(R.id.adapter_list_user_role);
+			holder.UserIcon = (ImageView) convertView.findViewById(R.id.adapter_list_user_icon);
 
 			convertView.setTag(holder);
 		}

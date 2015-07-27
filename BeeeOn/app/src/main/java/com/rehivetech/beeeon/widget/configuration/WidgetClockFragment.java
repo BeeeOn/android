@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -84,7 +83,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		LinearLayout moduleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
+		LinearLayout moduleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices_layout);
 		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		int marginBottomPx = Utils.convertDpToPixel(SPACE_BETWEEN_MODULE_SPINNERS);
 		spinnerLayoutParams.setMargins(0, 0, 0, marginBottomPx);
@@ -124,7 +123,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 		mCityLabel = (TextView) mActivity.findViewById(R.id.widget_config_location_label);
 
-		RelativeLayout locationChooseLine = (RelativeLayout) mActivity.findViewById(R.id.widget_config_location);
+		RelativeLayout locationChooseLine = (RelativeLayout) mActivity.findViewById(R.id.widget_config_location_layout);
 		locationChooseLine.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -175,7 +174,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, final EditTextDialog dialog) {
-		TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_text_input_layout);
+		TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		if(!Utils.validateInput(mActivity, cityTextInputLayout)){
 			return;
 		}
@@ -235,9 +234,9 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.spinner_icon_twoline_item, mModules, mLocations);
+		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.item_spinner_module_icon_twoline, mModules, mLocations);
 		dataAdapter.setLayoutInflater(mActivity.getLayoutInflater());
-		dataAdapter.setDropDownViewResource(R.layout.spinner_icon_twoline_dropdown_item);
+		dataAdapter.setDropDownViewResource(R.layout.item_spinner_module_icon_twoline_dropdown);
 
 		int index = 0;
 		for (WidgetModulePersistence wDev : mWidgetModules) {

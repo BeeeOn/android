@@ -16,7 +16,7 @@ public class NotificationActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notification);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.title_activity_notification);
 			setSupportActionBar(toolbar);

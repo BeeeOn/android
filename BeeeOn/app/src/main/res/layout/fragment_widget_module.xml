@@ -21,22 +21,22 @@
 		android:text="@string/widget_configuration_adapter"
 		/>
 
-    <Spinner
-		android:id="@+id/widget_config_gateway"
+	<Spinner
+		android:id="@+id/widget_config_gateway_spinner"
 		style="@style/BeeeOn.Spinner"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
 		/>
 
-    <!-- gate emptyview-->
-    <TextView
-        android:id="@+id/widget_config_gateway_emptyview"
-        style="@style/LinearRow.Row"
-        android:text="@string/no_gate_cap"
-        android:textColor="@color/beeeon_secondary_text"
-        />
+	<!-- gate emptyview-->
+	<TextView
+		android:id="@+id/widget_config_gateway_emptyview"
+		style="@style/LinearRow.Row"
+		android:text="@string/no_gate_cap"
+		android:textColor="@color/beeeon_secondary_text"
+		/>
 
-    <!-- separator -->
+	<!-- separator -->
 	<View
 		style="@style/BeeeOn.Divider.Full"
 		android:layout_marginTop="8dp"
@@ -55,13 +55,13 @@
 		android:layout_marginStart="8dp"
 		/>
 
-    <!-- module emptyview-->
-    <TextView
-        android:id="@+id/widget_config_device_emptyview"
-        style="@style/LinearRow.Row"
-        android:text="@string/no_sensor_cap"
-        android:textColor="@color/beeeon_secondary_text"
-        />
+	<!-- module emptyview-->
+	<TextView
+		android:id="@+id/widget_config_device_emptyview"
+		style="@style/LinearRow.Row"
+		android:text="@string/no_sensor_cap"
+		android:textColor="@color/beeeon_secondary_text"
+		/>
 
 	<!-- separator -->
 	<View
@@ -102,7 +102,7 @@
 		/>
 
 	<RelativeLayout
-		android:id="@+id/widget_config_wifi_wrapper"
+		android:id="@+id/widget_config_wifi_wrapper_layout"
 		android:clickable="true"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"

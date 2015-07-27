@@ -19,14 +19,14 @@ public class LocationListItem extends AbstractListItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.sensor_header_text);
+		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.list_location_header_text);
 		nameView.setText(mName);
 		setMView(view);
 	}
 
 	@Override
 	public int getLayout() {
-		return R.layout.sensor_listview_header;
+		return R.layout.item_list_location_header;
 	}
 
 	@Override

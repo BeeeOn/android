@@ -7,13 +7,13 @@
 				android:padding="10dp">
 
 	<EditText
-		android:id="@+id/geofence_name"
+		android:id="@+id/dialog_geofence_name"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:hint="@string/name"/>
 
 	<TextView
-		android:id="@+id/geofence_radius_title"
+		android:id="@+id/dialog_geofence_radius_title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:paddingTop="8dp"
@@ -28,7 +28,7 @@
 		android:weightSum="10">
 
 		<Button
-			android:id="@+id/geofence_radius_minus"
+			android:id="@+id/dialog_geofence_radius_minus_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/minus"
@@ -37,14 +37,14 @@
 
 		<EditText
 			android:gravity="center"
-			android:id="@+id/geofence_radius_input"
+			android:id="@+id/dialog_geofence_radius_input"
 			android:layout_width="0px"
 			android:layout_height="match_parent"
 			android:layout_weight="5"
 			android:inputType="numberDecimal"/>
 
 		<Button
-			android:id="@+id/geofence_radius_plus"
+			android:id="@+id/dialog_geofence_radius_plus_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:text="@string/plus"

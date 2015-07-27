@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
 
-    <include layout="@layout/beeeon_toolbar" />
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
 	<ListView
-		android:layout_below="@+id/toolbar"
+		android:layout_below="@+id/beeeon_toolbar"
 		android:id="@+id/gate_users_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -17,17 +17,17 @@
 		android:clipToPadding="false"
 		/>
 
-    <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/fab_add_user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        android:src="@drawable/ic_add_white_24dp"
-        style="@style/BeeeOn.Fab"
-        />
+	<com.melnykov.fab.FloatingActionButton
+		android:id="@+id/gate_users_add_user_fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentBottom="true"
+		android:layout_marginBottom="16dp"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:src="@drawable/ic_add_white_24dp"
+		style="@style/BeeeOn.Fab"
+		/>
 </RelativeLayout>

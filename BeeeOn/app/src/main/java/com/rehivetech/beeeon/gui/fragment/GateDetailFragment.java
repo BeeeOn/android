@@ -67,7 +67,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		View view = inflater.inflate(R.layout.fragment_gate_detail, container, false);
 
 		mDetailsListView = (ListView) view.findViewById(R.id.gate_detail_listview);
-		mTitleText = (TextView) view.findViewById(R.id.gate_detail_fragment_title);
+		mTitleText = (TextView) view.findViewById(R.id.gate_detail_title);
 
 		String loadingText = getString(R.string.loading_data);
 
@@ -94,7 +94,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		mGateDetailsAdapter = new GateDetailsAdapter(getActivity(), mDetailsItemList);
 		mDetailsListView.setAdapter(mGateDetailsAdapter);
 
-		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.gate_detail_swipe_layout);
 		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -185,14 +185,14 @@ public class GateDetailFragment extends BaseApplicationFragment {
 
 			// Check if an existing view is being reused, otherwise inflate the view
 			if (convertView == null) {
-				convertView = LayoutInflater.from(getContext()).inflate(R.layout.simple_list_item_layout, parent, false);
+				convertView = LayoutInflater.from(getContext()).inflate(R.layout.fragment_gate_detail_list_item_layout, parent, false);
 			}
 
 			// Lookup view for data population
-			ImageView image = (ImageView) convertView.findViewById(R.id.simple_list_layout_icon);
-			TextView text = (TextView) convertView.findViewById(R.id.simple_list_layout_text);
-			TextView title = (TextView) convertView.findViewById(R.id.simple_list_layout_title);
-			Button button = (Button) convertView.findViewById(R.id.simple_list_layout_button_details);
+			ImageView image = (ImageView) convertView.findViewById(R.id.gate_detail_list_item_icon);
+			TextView text = (TextView) convertView.findViewById(R.id.gate_detail_list_item_text);
+			TextView title = (TextView) convertView.findViewById(R.id.gate_detail_list_title);
+			Button button = (Button) convertView.findViewById(R.id.gate_detail_list_item_button_details);
 
 			// Populate the data into the template view using the data object
 			if (detailsItem.imageRes > 0)

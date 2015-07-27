@@ -15,7 +15,7 @@ public class HeaderSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public void setView(View convertView) {
-		TextView ItemLabel = (TextView) convertView.findViewById(com.rehivetech.beeeon.R.id.name);
+		TextView ItemLabel = (TextView) convertView.findViewById(R.id.spinner_header_name);
 		ItemLabel.setText(mName);
 
 		convertView.setEnabled(false);
@@ -30,7 +30,7 @@ public class HeaderSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.custom_spinner_header;
+		return R.layout.item_spinner_header;
 	}
 
 	@Override

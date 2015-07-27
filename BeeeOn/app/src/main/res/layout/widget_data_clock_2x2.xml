@@ -1,0 +1,149 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:minWidth="110dp"
+	android:minHeight="120dp"
+	android:padding="@dimen/widget_margin"
+	android:layout_gravity="center"
+	android:orientation="vertical"
+	android:gravity="center_horizontal"
+	>
+
+	<!-- clock -->
+	<RelativeLayout
+		android:id="@+id/widget_clock_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="-8dp"
+		>
+
+		<include layout="@layout/widget_data_include_clock"/>
+	</RelativeLayout>
+
+	<!-- date -->
+	<RelativeLayout
+		android:id="@+id/widget_date_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="-10dp"
+		>
+
+		<include layout="@layout/widget_data_include_date"/>
+	</RelativeLayout>
+
+	<LinearLayout
+		android:id="@+id/widget_weather_container"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:gravity="center"
+		>
+		<!-- weather city -->
+		<TextView
+			android:id="@+id/widget_clock_weather_city"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:singleLine="true"
+			android:ellipsize="end"
+			android:textSize="@dimen/abc_text_size_body_1_material"
+			android:layout_marginTop="-4dp"
+			android:textColor="@color/beeeon_primary"
+			android:text="@string/placeholder_none"
+			/>
+
+		<!-- weather value -->
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:gravity="center_vertical"
+			>
+
+			<TextView
+				android:id="@+id/widget_clock_weather_temperature"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:textSize="@dimen/abc_text_size_body_2_material"
+				android:textStyle="bold"
+				android:textColor="@color/beeeon_accent"
+				/>
+
+			<!-- weather icon -->
+			<ImageView
+				android:id="@+id/widget_weather_icon"
+				android:layout_width="@dimen/widget_weather_icon_small"
+				android:layout_height="@dimen/widget_weather_icon_small"
+				android:src="@drawable/weather"
+				android:layout_marginLeft="4dp"
+				android:layout_marginStart="4dp"
+				android:scaleType="fitCenter"
+				/>
+		</LinearLayout>
+
+		<!-- separator -->
+		<ImageView
+			android:id="@+id/widget_clock_separator_1"
+			android:layout_width="30dp"
+			android:layout_height="@dimen/divider_size"
+			android:src="@color/beeeon_primary"
+			android:layout_marginTop="2dp"
+			/>
+	</LinearLayout>
+
+	<!-- household -->
+	<TextView
+		android:id="@+id/widget_clock_household_label"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/household"
+		android:textSize="@dimen/abc_text_size_body_1_material"
+		android:singleLine="true"
+		android:ellipsize="end"
+		android:textColor="@color/beeeon_primary"
+		/>
+
+	<!-- values -->
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:minWidth="110dp"
+		>
+
+		<RelativeLayout
+			android:id="@+id/value_container_inside_temp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@+id/widget_clock_separator_2"
+			android:layout_toStartOf="@+id/widget_clock_separator_2"
+			>
+
+			<include layout="@layout/widget_persistence_module_value_unit"/>
+		</RelativeLayout>
+
+		<!-- separator -->
+		<ImageView
+			android:id="@+id/widget_clock_separator_2"
+			android:layout_width="@dimen/divider_size"
+			android:layout_height="16dp"
+			android:src="@color/beeeon_primary"
+			android:layout_marginLeft="4dp"
+			android:layout_marginStart="4dp"
+			android:layout_marginRight="4dp"
+			android:layout_marginEnd="4dp"
+			android:layout_centerHorizontal="true"
+			android:scaleType="center"
+			/>
+
+		<RelativeLayout
+			android:id="@+id/value_container_inside_humid"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toRightOf="@+id/widget_clock_separator_2"
+			android:layout_toEndOf="@+id/widget_clock_separator_2"
+			>
+
+			<include layout="@layout/widget_persistence_module_value_unit"/>
+		</RelativeLayout>
+	</RelativeLayout>
+</LinearLayout>

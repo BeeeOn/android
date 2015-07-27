@@ -196,7 +196,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		if (/*getType().isActor() &&*/ controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue) {
 			containerType = SWITCHCOMPAT;
 
-			mBuilder.loadRootView(R.layout.widget_include_switchcompat);
+			mBuilder.loadRootView(R.layout.widget_persistence_module_switchcompat);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), gateId));
 			moduleValueChecked = ((BooleanValue) moduleValue).isActiveValue(BooleanValue.TRUE);
 
@@ -213,7 +213,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 			}
 		} else {
 			containerType = VALUE_UNIT;
-			mBuilder.loadRootView(R.layout.widget_include_value_unit);
+			mBuilder.loadRootView(R.layout.widget_persistence_module_value_unit);
 
 			// if location set, show the icon
 			if (locationIcon > 0) mBuilder.setImage(R.id.icon, locationIcon);

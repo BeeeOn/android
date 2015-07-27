@@ -56,7 +56,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	private SparseArray<BarLineChartBase> mCharts = new SparseArray<>();
 	private SparseArray<VerticalChartLegend> mLegends = new SparseArray<>();
 
-	private String mGraphDateTimeFormat = "dd.MM. kk:mm";
+	private String mChartDateTimeFormat = "dd.MM. kk:mm";
 
 	private LinearLayout mLayout;
 
@@ -67,9 +67,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.graphofsensors, container, false);
+		View view = inflater.inflate(R.layout.fragment_custom_view_chart_modules, container, false);
 
-		mLayout = (LinearLayout) view.findViewById(R.id.container);
+		mLayout = (LinearLayout) view.findViewById(R.id.custom_view_container);
 
 		prepareModules();
 		loadData();
@@ -80,7 +80,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	private void addChart(final Module module) {
 		// Inflate Layout
 		LayoutInflater inflater = getLayoutInflater(null);
-		View row = inflater.inflate(R.layout.custom_graph_item, mLayout, false);
+		View row = inflater.inflate(R.layout.fragment_custom_view, mLayout, false);
 		// Create and set chart
 		BarLineChartBase chart;
 		VerticalChartLegend legend = new VerticalChartLegend(mActivity);
@@ -89,7 +89,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		} else {
 			chart = new LineChart(mActivity);
 		}
-		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.graph_layout);
+		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.customview_chart_layout);
 		chartLayout.setVisibility(View.INVISIBLE);
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
@@ -111,7 +111,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(legend);
 
 		// Set title
-		TextView tv = (TextView) row.findViewById(R.id.graph_label);
+		TextView tv = (TextView) row.findViewById(R.id.custom_view_chart_label);
 		tv.setText(getString(module.getType().getStringResource()));
 
 		mCharts.put(module.getType().getTypeId(), chart);
@@ -122,11 +122,11 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void fillGraph(ModuleLog log, Module module) {
+	private void fillChart(ModuleLog log, Module module) {
 		Controller controller = Controller.getInstance(mActivity);
 		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mGraphDateTimeFormat, controller.getActiveGate());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(mChartDateTimeFormat, controller.getActiveGate());
 
 		boolean isBarChart = (module.getValue() instanceof EnumValue);
 
@@ -180,7 +180,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		SortedMap<Long, Float> values = log.getValues();
 		int size = values.size();
 
-		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
+		Log.d(TAG, String.format("Filling chart with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			Long dateMillis = entry.getKey();
@@ -215,7 +215,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		}
 		chart.invalidate();
 
-		Log.d(TAG, "Filling graph finished");
+		Log.d(TAG, "Filling chart finished");
 	}
 
 	private void prepareModules() {
@@ -252,7 +252,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		DateTime start = end.minusDays(3);// end.minusWeeks(1);
 
 		for (int i = 0; i < mModules.size(); i++) {
-			// Prepare data for this graph
+			// Prepare data for this chart
 			final List<ModuleLog.DataPair> pairs = new ArrayList<>();
 
 			for (Module module : mModules.valueAt(i)) {
@@ -277,12 +277,12 @@ public class CustomViewFragment extends BaseApplicationFragment {
 				@Override
 				@SuppressWarnings("unchecked")
 				public void onExecute(boolean success) {
-					// Remember type of graph we're downloading data for
+					// Remember type of chart we're downloading data for
 					int typeId = pairs.get(0).module.getType().getTypeId();
 
 					for (ModuleLog.DataPair pair : pairs) {
 						ModuleLog log = Controller.getInstance(getActivity()).getModuleLogsModel().getModuleLog(pair);
-						fillGraph(log, pair.module);
+						fillChart(log, pair.module);
 					}
 
 					// start chart animation

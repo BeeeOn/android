@@ -23,9 +23,9 @@ public class ProfileMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
-		TextView emailView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.email);
-		ImageView iconView = (ImageView) view.findViewById(com.rehivetech.beeeon.R.id.icon);
+		TextView nameView = (TextView) view.findViewById(R.id.menu_profile_listview_name);
+		TextView emailView = (TextView) view.findViewById(R.id.menu_profile_listview_email);
+		ImageView iconView = (ImageView) view.findViewById(R.id.menu_profile_listview_icon);
 
 		nameView.setText(mName);
 		emailView.setText(mEmail);
@@ -42,7 +42,7 @@ public class ProfileMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_profile;
+		return R.layout.item_menu_profile_listview;
 	}
 
 	@Override

@@ -40,7 +40,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_detail);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle("");
 			setSupportActionBar(toolbar);
@@ -60,7 +60,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 		if (savedInstanceState == null) {
 			GateDetailFragment gateDetailFragment = GateDetailFragment.newInstance(mGateId);
-			getSupportFragmentManager().beginTransaction().replace(R.id.container, gateDetailFragment, FRAGMENT_DETAILS).commit();
+			getSupportFragmentManager().beginTransaction().replace(R.id.gate_detail_container, gateDetailFragment, FRAGMENT_DETAILS).commit();
 		}
 	}
 
@@ -109,7 +109,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				finish();
 				break;
 			}
-			case R.id.ada_menu_delete: {
+			case R.id.gate_detail_menu_delete: {
 				String title = getString(R.string.confirm_remove_gate_title_default);
 				String message = getString(R.string.confirm_remove_gate_message);
 
@@ -121,13 +121,13 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
 				break;
 			}
-			case R.id.ada_menu_edit: {
+			case R.id.gate_detail_menu_edit: {
 				Intent intent = new Intent(this, GateEditActivity.class);
 				intent.putExtra(GateEditActivity.EXTRA_GATE_ID, mGateId);
 				startActivity(intent);
 				break;
 			}
-			case R.id.ada_menu_users: {
+			case R.id.gate_detail_menu_users: {
 				Intent intent = new Intent(this, GateUsersActivity.class);
 				intent.putExtra(GateUsersActivity.EXTRA_GATE_ID, mGateId);
 				startActivity(intent);
@@ -142,7 +142,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		super.onCreateOptionsMenu(menu);
 
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.gate_detail_menu, menu);
+		inflater.inflate(R.menu.activity_gate_detail_menu, menu);
 		return true;
 	}
 

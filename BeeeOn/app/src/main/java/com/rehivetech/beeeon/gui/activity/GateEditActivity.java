@@ -40,7 +40,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_edit);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle("");
 			setSupportActionBar(toolbar);
@@ -61,7 +61,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 
 		if (savedInstanceState == null) {
 			GateEditFragment gateEditFragment = GateEditFragment.newInstance(mGateId);
-			getSupportFragmentManager().beginTransaction().replace(R.id.container, gateEditFragment, FRAGMENT_EDIT).commit();
+			getSupportFragmentManager().beginTransaction().replace(R.id.gate_edit_container, gateEditFragment, FRAGMENT_EDIT).commit();
 		}
 	}
 
@@ -105,7 +105,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu_gate_edit, menu);
+		getMenuInflater().inflate(R.menu.activity_gate_edit_menu, menu);
 		return true;
 	}
 
@@ -116,7 +116,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				finish();
 				break;
 			}
-			case R.id.action_delete: {
+			case R.id.gate_edit_action_delete: {
 				String title = getString(R.string.confirm_remove_gate_title_default);
 				String message = getString(R.string.confirm_remove_gate_message);
 
@@ -128,7 +128,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
 				break;
 			}
-			case R.id.action_save: {
+			case R.id.gate_edit_action_save: {
 				if (mFragment != null) {
 					Gate gate = mFragment.getNewGate();
 					doEditGateTask(gate);

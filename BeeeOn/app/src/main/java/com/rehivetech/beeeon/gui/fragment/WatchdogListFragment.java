@@ -91,7 +91,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_watchdog, container, false);
+		mView = inflater.inflate(R.layout.fragment_watchdog_list, container, false);
 		return mView;
 	}
 
@@ -105,7 +105,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(TAG, "onActivityCreated()");
 
-		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
+		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.watchdog_list_swipe_layout);
 
 		initLayout();
 
@@ -172,7 +172,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 * Sets empty elements for design without filling with data
 	 */
 	private void initLayout() {
-		mWatchdogListView = (ListView) mView.findViewById(R.id.watchdog_list);
+		mWatchdogListView = (ListView) mView.findViewById(R.id.watchdog_listview);
 		mWatchdogAdapter = new WatchdogListAdapter(mActivity, mActivity.getLayoutInflater());
 		mWatchdogListView.setAdapter(mWatchdogAdapter);
 
@@ -193,7 +193,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		});
 
 		// when listview is empty
-		TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty);
+		TextView emptyView = (TextView) mView.findViewById(R.id.watchdog_list_empty_text);
 		mWatchdogListView.setEmptyView(emptyView);
 
 		// refresh button
@@ -206,7 +206,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		});
 
 		// add new watchdog rule
-		FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.fab);
+		FloatingActionButton fab = (FloatingActionButton) mView.findViewById(R.id.watchdog_list_fab);
 		fab.attachToListView(mWatchdogListView);
 
 		fab.setOnClickListener(new View.OnClickListener() {
@@ -349,11 +349,11 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 * Changes color of selected item row
 	 */
 	private void setRuleSelected() {
-		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
+		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.list_watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.gray_light));
 	}
 
 	private void setRuleUnselected() {
-		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
+		getViewByPosition(mSelectedItemPos, mWatchdogListView).findViewById(R.id.list_watchdog_item_layout).setBackgroundColor(mActivity.getResources().getColor(R.color.white));
 	}
 
 	/**
@@ -382,7 +382,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
 			MenuInflater inflater = actionMode.getMenuInflater();
-			inflater.inflate(R.menu.watchdoglist_actionmode, menu);
+			inflater.inflate(R.menu.fragment_watchdog_list_actionmode, menu);
 			return true;
 		}
 
@@ -393,7 +393,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-			if (menuItem.getItemId() == R.id.action_delete) {
+			if (menuItem.getItemId() == R.id.watchdog_list_action_delete) {
 				String title = getString(R.string.confirm_remove_title, mSelectedItem.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
 				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());

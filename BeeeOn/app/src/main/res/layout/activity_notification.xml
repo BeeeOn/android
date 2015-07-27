@@ -3,11 +3,11 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<include layout="@layout/beeeon_toolbar"/>
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
 	<RelativeLayout
 		android:id="@+id/container"
-		android:layout_below="@+id/toolbar"
+		android:layout_below="@+id/beeeon_toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
 

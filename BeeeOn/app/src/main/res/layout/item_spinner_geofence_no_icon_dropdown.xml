@@ -1,0 +1,25 @@
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	tools:ignore="UseCompoundDrawables"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	android:minHeight="48dp"
+	>
+
+	<CheckedTextView
+		android:id="@+id/spinner_geofence_no_icon_dropdown_label"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textColor="@color/beeeon_primary_text"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+		android:layout_centerVertical="true"
+		android:layout_marginLeft="40dp"
+		android:layout_marginStart="40dp"
+		android:singleLine="true"
+		android:ellipsize="marquee"
+		/>
+
+</RelativeLayout>

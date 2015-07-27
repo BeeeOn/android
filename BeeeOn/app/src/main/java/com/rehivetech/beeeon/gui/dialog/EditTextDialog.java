@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
 import com.avast.android.dialogs.core.BaseDialogFragment;
@@ -45,7 +44,7 @@ public class EditTextDialog extends BaseDialogFragment {
 		LayoutInflater inflater = builder.getLayoutInflater();
 		final View view = inflater.inflate(R.layout.fragment_dialog_edit_text, null, false);
 
-		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_text_input_layout);
+		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 
 		// setting EditText options
 		textInputLayout.getEditText().setText(this.getArguments().getString(ARG_EDIT_TEXT_VALUE));

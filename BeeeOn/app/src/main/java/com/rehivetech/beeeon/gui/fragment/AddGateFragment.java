@@ -35,9 +35,9 @@ public class AddGateFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_add_gate, container, false);
+		View view = inflater.inflate(R.layout.fragment_gate_add, container, false);
 
-		view.findViewById(R.id.add_gate_qr_button).setOnClickListener(new OnClickListener() {
+		view.findViewById(R.id.gate_add_qr_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				setScanQrButtonEnabled(false);
@@ -45,7 +45,7 @@ public class AddGateFragment extends TrackFragment {
 			}
 		});
 
-		view.findViewById(R.id.add_gate_write_it_button).setOnClickListener(new OnClickListener() {
+		view.findViewById(R.id.gate_add_write_it_button).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// overlay dialog must popup here
@@ -68,7 +68,7 @@ public class AddGateFragment extends TrackFragment {
 		if (view == null)
 			return;
 
-		Button button = (Button) view.findViewById(R.id.add_gate_qr_button);
+		Button button = (Button) view.findViewById(R.id.gate_add_qr_button);
 		if (button == null)
 			return;
 

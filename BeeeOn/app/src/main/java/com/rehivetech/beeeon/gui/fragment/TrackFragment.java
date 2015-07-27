@@ -8,7 +8,6 @@ import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 
-//import com.actionbarsherlock.app.SherlockFragment;
 
 public abstract class TrackFragment extends Fragment {
 

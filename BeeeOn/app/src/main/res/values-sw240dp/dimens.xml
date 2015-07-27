@@ -3,7 +3,7 @@
 	<dimen name="custom_spinner_icon_size">35dp</dimen>
 	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>
 	
-	<!-- Size of activity_add_sensor_activity_dialog -->
+	<!-- Size of fragment_device_add -->
 	<dimen name="content_view_size">175dp</dimen>
 	<dimen name="addgate_button_width">150dp</dimen>
 	<dimen name="addgate_button_height">65dp</dimen>

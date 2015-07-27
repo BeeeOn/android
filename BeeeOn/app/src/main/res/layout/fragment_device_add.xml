@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:circular="http://schemas.android.com/apk/res-auto"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+	<!-- content of both textviews and imageview is set in java code -->
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:gravity="center_horizontal"
+		android:padding="@dimen/adddevice_padding">
+
+		<TextView
+			android:id="@+id/device_add_intro_image_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="20dp"
+			android:textSize="@dimen/adddevice_title_size"
+			android:textStyle="bold"
+			android:gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:text="@string/title_activity_add_sensor"/>
+
+		<com.github.lzyzsd.circleprogress.DonutProgress
+			android:id="@+id/device_add_circle_progress"
+			android:layout_marginBottom="20dp"
+			android:layout_width="@dimen/content_view_size"
+			android:layout_height="@dimen/content_view_size"
+			android:layout_gravity="center"
+			circular:donut_text_color="@color/white"
+			circular:donut_inner_bottom_text_color="@color/white"
+			circular:donut_inner_bottom_text_size="@dimen/donut_inside_bottom_text_size"
+			circular:donut_text_size="@dimen/donut_inside_text_size"
+			circular:donut_suffix_text=""
+			circular:donut_finished_color="@color/white"
+			circular:donut_unfinished_color="@color/white"
+			circular:donut_finished_stroke_width="@dimen/donut_stroke_width"
+			circular:donut_unfinished_stroke_width="@dimen/donut_stroke_width"
+			/>
+
+		<TextView
+			android:id="@+id/device_add_intro_image_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textSize="@dimen/adddevice_text_size"
+			android:gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:text="@string/activity_add_device_dialog_text"
+			/>
+
+
+	</LinearLayout>
+</ScrollView>

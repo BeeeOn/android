@@ -1,70 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  xmlns:tools="http://schemas.android.com/tools"
-			  android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/beeeon_primary">
-    
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:background="@color/beeeon_primary">
+
 	<android.support.v4.view.ViewPager
-		android:id="@+id/intro_pager"
+		android:id="@+id/base_guide_intro_pager"
 		android:layout_width="fill_parent"
 		android:layout_height="0dp"
 		android:layout_weight="1"
-	/>
-	
+		/>
+
 	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical" >
-	    <com.viewpagerindicator.CirclePageIndicator
-			android:id="@+id/intro_indicator"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<com.viewpagerindicator.CirclePageIndicator
+			android:id="@+id/base_guide_intro_indicator"
 			android:padding="10dip"
 			android:layout_gravity="center_vertical"
 			android:layout_height="wrap_content"
 			android:layout_width="fill_parent"
-		/>
-	    <LinearLayout 
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal"
-		    >
-		    <Button 
-		        android:id="@+id/add_gate_skip"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+			/>
+
+		<LinearLayout
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			>
+
+			<Button
+				android:id="@+id/base_guide_add_gate_skip_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:layout_weight="1"
-                android:background="@android:color/transparent"
-		        android:text="@string/tutorial_skip"
-		        android:textSize="16sp"
-		        android:textColor="@color/white"
-		        android:layout_gravity="center_vertical"
+				android:background="@android:color/transparent"
+				android:text="@string/tutorial_skip"
+				android:textSize="16sp"
+				android:textColor="@color/white"
+				android:layout_gravity="center_vertical"
 				android:singleLine="true"/>
-		    <Button 
-		        android:id="@+id/add_gate_cancel"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-		        android:text="@string/notification_cancel"
-		        android:textSize="16sp"
-		        android:textColor="@color/white"
-		        android:layout_gravity="center_vertical"
+
+			<Button
+				android:id="@+id/base_guide_add_gate_cancel_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@android:color/transparent"
+				android:text="@string/notification_cancel"
+				android:textSize="16sp"
+				android:textColor="@color/white"
+				android:layout_gravity="center_vertical"
 				tools:ignore="ButtonOrder"
 				android:singleLine="true"/>
-		    <Button 
-		        android:id="@+id/add_gate_next"
-		        android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
+
+			<Button
+				android:id="@+id/base_guide_add_gate_next_button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
 				android:layout_weight="1"
-		        android:background="@android:color/transparent"
-		        android:text="@string/tutorial_next"
-		        android:textSize="16sp"
-		        android:textStyle="bold"
-		        android:textColor="@color/white"
-		        android:layout_gravity="center_vertical"
+				android:background="@android:color/transparent"
+				android:text="@string/tutorial_next"
+				android:textSize="16sp"
+				android:textStyle="bold"
+				android:textColor="@color/white"
+				android:layout_gravity="center_vertical"
 				android:singleLine="true"/>
 		</LinearLayout>
 	</LinearLayout>
-	
-	
+
+
 </LinearLayout>

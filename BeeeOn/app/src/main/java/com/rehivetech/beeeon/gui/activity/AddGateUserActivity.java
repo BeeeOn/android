@@ -38,9 +38,9 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_add_gate_user);
+		setContentView(R.layout.activity_gate_user_add);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.app_name);
 			setSupportActionBar(toolbar);
@@ -60,9 +60,9 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 	}
 
 	private void initLayout() {
-		final EditText email = (EditText) findViewById(R.id.add_user_email);
-		final Spinner role = (Spinner) findViewById(R.id.add_user_role);
-		Button button = (Button) findViewById(R.id.add_user_gate_save);
+		final EditText email = (EditText) findViewById(R.id.gate_user_add_user_email);
+		final Spinner role = (Spinner) findViewById(R.id.gate_user_add_user_role);
+		Button button = (Button) findViewById(R.id.gate_user_add_user_gate_save_button);
 
 		ArrayAdapter adapter = new ArrayAdapter<User.Role>(this, android.R.layout.simple_spinner_item, User.Role.values()){
 			private View changeText(View view, int position) {

@@ -1,0 +1,38 @@
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	tools:ignore="UseCompoundDrawables"
+	android:paddingLeft="8dp"
+	android:paddingRight="8dp"
+	android:minHeight="48dp"
+	>
+
+	<ImageView
+		android:id="@+id/spinner_geofence_icon_icon"
+		android:layout_width="24dp"
+		android:layout_height="24dp"
+		android:contentDescription="@string/placeholder_icon"
+		android:layout_centerVertical="true"
+		android:src="@drawable/ic_loc_unknown_gray"
+		/>
+
+	<TextView
+		android:id="@+id/spinner_geofence_icon_label"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textColor="@color/beeeon_primary_text"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+		android:layout_centerVertical="true"
+		android:layout_toRightOf="@+id/spinner_geofence_icon_icon"
+		android:layout_toEndOf="@+id/spinner_geofence_icon_icon"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
+		android:singleLine="true"
+		android:ellipsize="marquee"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		/>
+
+</RelativeLayout>

@@ -12,7 +12,7 @@
 		android:padding="10dp">
 
 		<ImageView
-			android:id="@+id/logo"
+			android:id="@+id/login_logo_imageview"
 			android:layout_width="120dp"
 			android:layout_height="120dp"
 			android:layout_gravity="center"
@@ -27,9 +27,9 @@
 			android:contentDescription="@string/login_image_description_logo"/>
 
 		<TextView
-			android:id="@+id/name"
-			android:layout_toRightOf="@id/logo"
-			android:layout_toEndOf="@id/logo"
+			android:id="@+id/menu_empty_listview_login_name_text"
+			android:layout_toRightOf="@id/login_logo_imageview"
+			android:layout_toEndOf="@id/login_logo_imageview"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="@color/white"
@@ -46,9 +46,9 @@
 			android:layout_gravity="center_horizontal"
 			android:text="@string/login_app_slogan"
 			android:textSize="@dimen/activity_login_app_slogan_size"
-			android:layout_below="@+id/name"
-			android:layout_toRightOf="@+id/logo"
-			android:layout_toEndOf="@+id/logo"/>
+			android:layout_below="@+id/menu_empty_listview_login_name_text"
+			android:layout_toRightOf="@+id/login_logo_imageview"
+			android:layout_toEndOf="@+id/login_logo_imageview"/>
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -58,7 +58,7 @@
 		android:padding="5dp">
 
 		<LinearLayout
-			android:id="@+id/select_server"
+			android:id="@+id/login_select_server_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:orientation="horizontal"
@@ -67,7 +67,7 @@
 			android:layout_marginRight="10dp">
 
 			<TextView
-				android:id="@+id/label_select_server"
+				android:id="@+id/login_label_select_server_textview"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:layout_marginRight="10dp"
@@ -75,24 +75,24 @@
 				android:textColor="@android:color/secondary_text_light"
 				android:gravity="center_vertical"
 				android:text="@string/login_label_server"
-				android:textSize="14sp" />
+				android:textSize="14sp"/>
 
 			<Spinner
-				android:id="@+id/spinner_select_server"
+				android:id="@+id/login_select_server_spinner"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center_vertical"/>
 		</LinearLayout>
 
 		<TextView
-			android:id="@+id/label_login_or_register"
+			android:id="@+id/login_label_login_textview"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="@android:color/secondary_text_light"
 			android:layout_gravity="start"
 			android:text="@string/login_label_login_or_register"
 			android:textSize="14sp"
-			android:layout_below="@id/select_server"
+			android:layout_below="@id/login_select_server_layout"
 			android:layout_marginTop="15dp"
 			android:layout_marginLeft="10dp"
 			android:layout_marginRight="10dp"
@@ -101,12 +101,12 @@
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/label_login_or_register"
+			android:layout_below="@id/login_label_login_textview"
 			android:gravity="center"
 			android:orientation="horizontal">
 
 			<Button
-				android:id="@+id/login_btn_google"
+				android:id="@+id/login_google_button"
 				android:layout_weight="0.3"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
 				android:text="@string/login_provider_google"/>
 
 			<Button
-				android:id="@+id/login_btn_facebook"
+				android:id="@+id/login_facebook_button"
 				android:layout_weight="0.3"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
@@ -128,7 +128,7 @@
 				android:text="@string/login_provider_facebook"/>
 
 			<Button
-				android:id="@+id/login_btn_choose"
+				android:id="@+id/login_choose_button"
 				android:layout_weight="0.3"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
@@ -147,7 +147,7 @@
 		android:padding="5dp">
 
 		<TextView
-			android:id="@+id/label_work_offline"
+			android:id="@+id/login_label_work_offline_textview"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="@color/white"
@@ -160,14 +160,14 @@
 			android:layout_marginRight="10dp"/>
 
 		<LinearLayout
-			android:layout_below="@id/label_work_offline"
+			android:layout_below="@id/login_label_work_offline_textview"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:gravity="center"
 			android:orientation="horizontal">
 
 			<Button
-				android:id="@+id/login_btn_direct"
+				android:id="@+id/login_direct_button"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0.5"
@@ -177,7 +177,7 @@
 				android:visibility="gone"/>
 
 			<Button
-				android:id="@+id/login_btn_demo"
+				android:id="@+id/login_demo_button"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0.5"

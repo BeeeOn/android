@@ -4,7 +4,6 @@ import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
-import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.DataHolder;
 
@@ -78,7 +77,7 @@ public class GatesModel extends BaseModel {
 	 * @return true on successfully started pairing mode, false otherwise
 	 */
 	public boolean sendPairRequest(String gateId) {
-		return mNetwork.prepareGateToListenNewSensors(gateId);
+		return mNetwork.prepareGateToListenNewDevices(gateId);
 	}
 
 	/**

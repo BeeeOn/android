@@ -89,7 +89,7 @@ public class LoginActivity extends BaseActivity {
 		prepareServerSpinner();
 
 		// Set logo on click listener to show about dialog
-		findViewById(R.id.logo).setOnClickListener(new OnClickListener() {
+		findViewById(R.id.login_logo_imageview).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				showAboutDialog();
@@ -131,28 +131,28 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				switch (v.getId()) {
-					case R.id.login_btn_demo:
+					case R.id.login_demo_button:
 					{
 						mProgress.setMessageResource(R.string.progress_loading_demo);
 						prepareLogin(new DemoAuthProvider());
 						return;
 					}
-					case R.id.login_btn_google:
+					case R.id.login_google_button:
 					{
 						prepareLogin(new GoogleAuthProvider());
 						return;
 					}
-					case R.id.login_btn_facebook:
+					case R.id.login_facebook_button:
 					{
 						prepareLogin(new FacebookAuthProvider());
 						return;
 					}
-					case R.id.login_btn_direct:
+					case R.id.login_direct_button:
 					{
 						Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
 						return;
 					}
-					case R.id.login_btn_choose:
+					case R.id.login_choose_button:
 					{
 						// Show choose dialog for other providers
 						AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
@@ -173,16 +173,16 @@ public class LoginActivity extends BaseActivity {
 			}
 		};
 
-		findViewById(R.id.login_btn_demo).setOnClickListener(onClickListener);
-		findViewById(R.id.login_btn_direct).setOnClickListener(onClickListener);
-		findViewById(R.id.login_btn_google).setOnClickListener(onClickListener);
-		findViewById(R.id.login_btn_facebook).setOnClickListener(onClickListener);
-		findViewById(R.id.login_btn_choose).setOnClickListener(onClickListener);
+		findViewById(R.id.login_demo_button).setOnClickListener(onClickListener);
+		findViewById(R.id.login_direct_button).setOnClickListener(onClickListener);
+		findViewById(R.id.login_google_button).setOnClickListener(onClickListener);
+		findViewById(R.id.login_facebook_button).setOnClickListener(onClickListener);
+		findViewById(R.id.login_choose_button).setOnClickListener(onClickListener);
 	}
 
 	private void prepareServerSpinner() {
 		// Set server spinner items
-		Spinner spinner = (Spinner) findViewById(R.id.spinner_select_server);
+		Spinner spinner = (Spinner) findViewById(R.id.login_select_server_spinner);
 
 		// TODO: This is a bit dirty way to set the name. Use own adapter to have translated "(default)" sufix (and perhaps also server names itself) properly
 		ArrayAdapter adapter = new ArrayAdapter<NetworkServer>(this, android.R.layout.simple_spinner_item, NetworkServer.values()) {
@@ -308,11 +308,11 @@ public class LoginActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.login_menu, menu);
+		inflater.inflate(R.menu.activity_login_menu, menu);
 
 		// Set choose server item (un)checked
 		boolean checked = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
-		MenuItem item = menu.findItem(R.id.action_choose_server_manually);
+		MenuItem item = menu.findItem(R.id.login_menu_action_choose_server_manually);
 		item.setChecked(checked);
 
 		return true;
@@ -323,7 +323,7 @@ public class LoginActivity extends BaseActivity {
 		super.onOptionsItemSelected(item);
 
 		switch (item.getItemId()) {
-			case R.id.action_choose_server_manually:
+			case R.id.login_menu_action_choose_server_manually:
 			{
 				boolean checked = !item.isChecked();
 				item.setChecked(checked);
@@ -331,7 +331,7 @@ public class LoginActivity extends BaseActivity {
 				setSelectServerVisibility(checked);
 				return true;
 			}
-			case R.id.action_about:
+			case R.id.login_menu_action_about:
 			{
 				showAboutDialog();
 				return true;
@@ -343,7 +343,7 @@ public class LoginActivity extends BaseActivity {
 
 	private void setSelectServerVisibility(boolean visible) {
 		if (mSelectServer == null) {
-			mSelectServer = findViewById(R.id.select_server);
+			mSelectServer = findViewById(R.id.login_select_server_layout);
 		}
 		mSelectServer.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
@@ -367,7 +367,7 @@ public class LoginActivity extends BaseActivity {
 		// Get selected server
 		String serverId = "";
 		if (mSelectServer.getVisibility() == View.VISIBLE) {
-			Spinner spinner = (Spinner) mSelectServer.findViewById(R.id.spinner_select_server);
+			Spinner spinner = (Spinner) mSelectServer.findViewById(R.id.login_select_server_spinner);
 			NetworkServer server = (NetworkServer) spinner.getSelectedItem();
 			serverId = server != null ? server.getId() : "";
 		}

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-    
-    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
-         android:id="@+id/custom_spinner_icon_icon"
-         android:contentDescription="@string/placeholder_icon"
-         android:layout_width="@dimen/custom_spinner_icon_size_smaller"
-         android:layout_height="@dimen/custom_spinner_icon_size_smaller"
-         android:src="@drawable/ic_loc_unknown_gray"/>

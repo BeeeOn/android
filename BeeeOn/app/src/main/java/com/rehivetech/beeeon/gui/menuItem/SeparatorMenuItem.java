@@ -17,7 +17,7 @@ public class SeparatorMenuItem extends AbstractMenuItem {
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_separator;
+		return R.layout.item_menu_separator_listview;
 	}
 
 	@Override

@@ -3,12 +3,12 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<include layout="@layout/beeeon_toolbar"/>
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
 	<fragment
-		android:id="@+id/map"
+		android:id="@+id/map_geofence_map"
 		android:layout_width="match_parent"
-		android:layout_below="@+id/toolbar"
+		android:layout_below="@+id/beeeon_toolbar"
 		android:layout_height="match_parent"
 		android:layout_alignParentLeft="true"
 		class="com.google.android.gms.maps.SupportMapFragment"/>

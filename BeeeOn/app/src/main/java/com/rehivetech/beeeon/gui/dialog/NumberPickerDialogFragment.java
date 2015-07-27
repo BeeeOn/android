@@ -42,10 +42,10 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder) {
 		builder.setTitle(getString(R.string.dialog_actuator_set_value));
 		LayoutInflater li = LayoutInflater.from(getActivity());
-		View view = li.inflate(R.layout.beeeon_dialog_numberpicker, null);
+		View view = li.inflate(R.layout.fragment_dialog_number_picker, null);
 
-		final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.beeeon_numberPicker);
-		TextView unitView = (TextView) view.findViewById(R.id.beeeon_numberpicker_unit);
+		final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.dialog_number_picker_numberpicker);
+		TextView unitView = (TextView) view.findViewById(R.id.dialog_number_picker_unit);
 		double value = sMModule.getValue().getDoubleValue();
 		final ArrayList<String> tmp = new ArrayList<>();
 		for (double i = value - 40.0; i < value + 40.0; i += 0.5) {

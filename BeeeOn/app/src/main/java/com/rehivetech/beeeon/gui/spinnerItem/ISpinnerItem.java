@@ -3,27 +3,27 @@ package com.rehivetech.beeeon.gui.spinnerItem;
 import android.view.View;
 
 public interface ISpinnerItem {
-	public static final String ID_UNDEFINED = "id_undefined";
+	String ID_UNDEFINED = "id_undefined";
 
-	public enum SpinnerItemType {
+	enum SpinnerItemType {
 		HEADER, MODULE, GEOFENCE
 	}
 
-	public void setDropDownView(View view);
+	void setDropDownView(View view);
 
-	public void setView(View view);
+	void setView(View view);
 
-	public Object getObject();
+	Object getObject();
 
-	public int getDropDownLayout();
+	int getDropDownLayout();
 
-	public int getLayout();
+	int getLayout();
 
-	public String getId();
+	String getId();
 
-	public SpinnerItemType getType();
+	SpinnerItemType getType();
 
-	public void setIsSelected();
+	void setIsSelected();
 
-	public void setNotSelected();
+	void setNotSelected();
 }

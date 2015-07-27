@@ -143,7 +143,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.activity_sensor_detail_screen, container, false);
+		return inflater.inflate(R.layout.fragment_module_detail, container, false);
 	}
 
 	@Override
@@ -158,27 +158,27 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			return;
 		}
 
-		// Get View for sensor location
-		TextView location = (TextView) view.findViewById(R.id.sen_detail_loc_name);
-		ImageView locationIcon = (ImageView) view.findViewById(R.id.sen_detail_loc_icon);
-		// Get View for sensor value
-		mValue = (TextView) view.findViewById(R.id.sen_detail_value);
-		mValueSwitch = (SwitchCompat) view.findViewById(R.id.sen_detail_value_switch);
-		mValueSet = (Button) view.findViewById(R.id.sen_detail_value_set);
+		// Get View for module location
+		TextView location = (TextView) view.findViewById(R.id.module_detail_loc_name);
+		ImageView locationIcon = (ImageView) view.findViewById(R.id.module_detail_loc_icon);
+		// Get View for module value
+		mValue = (TextView) view.findViewById(R.id.module_detail_header_value);
+		mValueSwitch = (SwitchCompat) view.findViewById(R.id.module_detail_header_value_switch);
+		mValueSet = (Button) view.findViewById(R.id.module_detail_header_value_set_button);
 		// Get FAB for edit
-		mFABedit = (FloatingActionButton) view.findViewById(R.id.sen_detail_edit_fab);
-		// Get View for sensor time
-		TextView time = (TextView) view.findViewById(R.id.sen_detail_time);
-		// Get Image for sensor
-		mIcon = (ImageView) view.findViewById(R.id.sen_detail_icon);
+		mFABedit = (FloatingActionButton) view.findViewById(R.id.module_detail_edit_fab);
+		// Get View for module time
+		TextView time = (TextView) view.findViewById(R.id.module_detail_time);
+		// Get Image for module
+		mIcon = (ImageView) view.findViewById(R.id.module_detail_header_icon);
 		// Get TextView for refresh time
-		TextView refreshTimeText = (TextView) view.findViewById(R.id.sen_refresh_time_value);
+		TextView refreshTimeText = (TextView) view.findViewById(R.id.module_detail_refresh_time_value);
 		// Get battery value
-		TextView battery = (TextView) view.findViewById(R.id.sen_detail_battery_value);
+		TextView battery = (TextView) view.findViewById(R.id.module_detail_battery_value);
 		// Get signal value
-		TextView signal = (TextView) view.findViewById(R.id.sen_detail_signal_value);
+		TextView signal = (TextView) view.findViewById(R.id.module_detail_signal_value);
 		// Get chart view
-		mChart = (CombinedChart) view.findViewById(R.id.sen_graph);
+		mChart = (CombinedChart) view.findViewById(R.id.module_detail_chart);
 
 		// Set title selected for animation if is text long
 		location.setSelected(true);
@@ -206,8 +206,8 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 		final Device device = module.getDevice();
 
-		// Set name of sensor
-		Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.toolbar);
+		// Set name of module
+		Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.beeeon_toolbar);
 		toolbar.setTitle(module.getName(mActivity));
 
 		if (controller.isUserAllowed(gate.getRole())) {
@@ -274,7 +274,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
-		// Set value of sensor
+		// Set value of module
 		if (mUnitsHelper != null) {
 			mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
 			// FIXME: rework this better
@@ -288,10 +288,10 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			}
 		}
 
-		// Set icon of sensor
+		// Set icon of module
 		mIcon.setImageResource(module.getIconResource(IconResourceType.WHITE));
 
-		// Set time of sensor
+		// Set time of module
 		if (mTimeHelper != null) {
 			time.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
@@ -326,12 +326,12 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		View view = getView();
 
 		//HIDE progress
-		view.findViewById(R.id.sensor_progress).setVisibility(View.GONE);
+		view.findViewById(R.id.module_detail_progress_layout).setVisibility(View.GONE);
 		// VISIBLE other stuff
-		view.findViewById(R.id.sen_header).setVisibility(View.VISIBLE);
-		view.findViewById(R.id.sen_first_section).setVisibility(View.VISIBLE);
-		view.findViewById(R.id.sen_second_section).setVisibility(View.VISIBLE);
-		view.findViewById(R.id.sen_third_section).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.module_detail_header_layout).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.module_detail_first_section_layout).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.module_detail_second_section_layout).setVisibility(View.VISIBLE);
+		view.findViewById(R.id.module_detail_third_section_layout).setVisibility(View.VISIBLE);
 
 
 		// Show some controls if this module is an actor
@@ -354,7 +354,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		}
 
 		// Init swipe-refreshig layout
-		mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+		mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.module_detail_swipe_layout);
 		mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
@@ -368,7 +368,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		Controller controller = Controller.getInstance(mActivity);
 		BaseValue baseValue = module.getValue();
 		boolean barchart = baseValue instanceof EnumValue;
-		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.sen_third_section);
+		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.module_detail_third_section_layout);
 		String unit = mUnitsHelper.getStringUnit(baseValue);
 		String name = getString(module.getTypeStringResource());
 
@@ -464,7 +464,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			mLegend.setPadding(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.customview_text_padding));
 		}
 
-		mActivity.findViewById(R.id.sen_third_section).invalidate();
+		mActivity.findViewById(R.id.module_detail_third_section_layout).invalidate();
 	}
 	/*
 	 * ================================= ASYNC TASK ===========================

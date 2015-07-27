@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
-import com.rehivetech.beeeon.gui.fragment.SensorListFragment;
+import com.rehivetech.beeeon.gui.fragment.ModuleListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.household.device.Device;
@@ -45,16 +45,16 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public static final String EXTRA_GATE_ID = "gate_id";
 
 	public static final String ADD_GATE_TAG = "addGateDialog";
-	public static final String ADD_SENSOR_TAG = "addSensorDialog";
+	public static final String ADD_DEVICE_TAG = "addDeviceDialog";
 	public static final String FRG_TAG_LOC = "Loc";
 	public static final String FRG_TAG_CUS = "Cus";
 	public static final String FRG_TAG_WAT = "WAT";
 	private static final String FRG_TAG_PRF = "PRF";
 	private static final int ADD_ACTION_CODE = 987654;
 	private NavDrawerMenu mNavDrawerMenu;
-	private SensorListFragment mListModules;
-	private CustomViewFragment mCustomView;
-	private WatchdogListFragment mWatchdogApp;
+	private ModuleListFragment mModuleListFragment;
+	private CustomViewFragment mCustomViewFragment;
+	private WatchdogListFragment mWatchdogListFragment;
 
 	private static final int BACK_TIME_INTERVAL = 2100;
 	private Toast mExitToast;
@@ -93,9 +93,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_location_screen);
+		setContentView(R.layout.activity_main);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.app_name);
 			setSupportActionBar(toolbar);
@@ -105,9 +105,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mNavDrawerMenu = new NavDrawerMenu(this, toolbar);
 
 		// creates fragments
-		mListModules = new SensorListFragment();
-		mCustomView = new CustomViewFragment();
-		mWatchdogApp = new WatchdogListFragment();
+		mModuleListFragment = new ModuleListFragment();
+		mCustomViewFragment = new CustomViewFragment();
+		mWatchdogListFragment = new WatchdogListFragment();
 
 		if (savedInstanceState != null) {
 			if (!savedInstanceState.getBoolean(IS_DRAWER_OPEN))
@@ -128,13 +128,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (mActiveMenuId == null) { // Default screen
-			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
-			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-			ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
+			ft.replace(R.id.main_content_frame, mWatchdogListFragment, FRG_TAG_WAT);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_GATEWAY)) {
 			mActiveMenuId = null;
 
@@ -205,7 +205,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 				doRedraw = false;
 				break;
 			}
-			case Constants.ADD_SENSOR_REQUEST_CODE: {
+			case Constants.ADD_DEVICE_REQUEST_CODE: {
 				redraw();
 				break;
 			}
@@ -219,7 +219,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					// Redraw Activity - probably list of sensors
+					// Redraw Activity - probably list of modules
 					Log.d(TAG, "After reload task - go to redraw mainActivity");
 					setActiveGateAndMenu();
 					if (Controller.getInstance(MainActivity.this).getActiveGate() == null) {
@@ -268,10 +268,10 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			Log.d(TAG, "Add dialog selected: " + val);
 			if (getString(R.string.action_addgate).equals(val)) {
 				// ADD GATE
-				mListModules.showAddGateDialog();
+				mModuleListFragment.showAddGateDialog();
 			} else {
-				// ADD SENSOR
-				mListModules.showAddSensorDialog();
+				// ADD DEVICE
+				mModuleListFragment.showAddDeviceDialog();
 			}
 		}
 	}
@@ -306,29 +306,29 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		// set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (mActiveMenuId == null) {
-			mListModules = new SensorListFragment();
-			mListModules.setIsPaused(isPaused);
-			mListModules.setMenuID(mActiveMenuId);
-			mListModules.setGateId(mActiveGateId);
+			mModuleListFragment = new ModuleListFragment();
+			mModuleListFragment.setIsPaused(isPaused);
+			mModuleListFragment.setMenuID(mActiveMenuId);
+			mModuleListFragment.setGateId(mActiveGateId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setGateId(mActiveGateId);
 
-			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
-			mListModules = new SensorListFragment();
-			mListModules.setIsPaused(isPaused);
-			mListModules.setMenuID(mActiveMenuId);
-			mListModules.setGateId(mActiveGateId);
+			mModuleListFragment = new ModuleListFragment();
+			mModuleListFragment.setIsPaused(isPaused);
+			mModuleListFragment.setMenuID(mActiveMenuId);
+			mModuleListFragment.setGateId(mActiveGateId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setGateId(mActiveGateId);
 
-			ft.replace(R.id.content_frame, mListModules, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-			mCustomView = new CustomViewFragment();
-			ft.replace(R.id.content_frame, mCustomView, FRG_TAG_CUS);
+			mCustomViewFragment = new CustomViewFragment();
+			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-			mWatchdogApp = new WatchdogListFragment();
-			ft.replace(R.id.content_frame, mWatchdogApp, FRG_TAG_WAT);
+			mWatchdogListFragment = new WatchdogListFragment();
+			ft.replace(R.id.main_content_frame, mWatchdogListFragment, FRG_TAG_WAT);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_GATEWAY)) {
 			mActiveMenuId = null;
 			Intent intent = new Intent(this, GateDetailActivity.class);
@@ -375,7 +375,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu items for use in the action bar
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_menu, menu);
+		inflater.inflate(R.menu.activity_main_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -389,7 +389,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 					mNavDrawerMenu.openMenu();
 				}
 				break;
-			case R.id.action_notification:
+			case R.id.main_menu_action_notification:
 				// Notification
 				Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
 				startActivity(intent);
@@ -401,15 +401,15 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void setActiveGateId(String gateId) {
 		mActiveGateId = gateId;
 		mNavDrawerMenu.setGateId(gateId);
-		if (mListModules != null)
-			mListModules.setGateId(gateId);
+		if (mModuleListFragment != null)
+			mModuleListFragment.setGateId(gateId);
 	}
 
 	public void setActiveMenuID(String id) {
 		mActiveMenuId = id;
 		mNavDrawerMenu.setActiveMenuID(id);
-		if (mListModules != null)
-			mListModules.setMenuID(id);
+		if (mModuleListFragment != null)
+			mModuleListFragment.setMenuID(id);
 	}
 
 	public void logout() {
@@ -463,12 +463,12 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
 			Watchdog watchdog = Controller.getInstance(this).getWatchdogsModel().getWatchdog(mActiveGateId, dataId);
 			if (watchdog != null) {
-				mWatchdogApp.doRemoveWatchdogTask(watchdog);
+				mWatchdogListFragment.doRemoveWatchdogTask(watchdog);
 			}
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
 			Device device = Controller.getInstance(this).getDevicesModel().getDevice(mActiveGateId, dataId);
 			if (device != null) {
-				mListModules.doRemoveDeviceTask(device);
+				mModuleListFragment.doRemoveDeviceTask(device);
 			}
 		}
 	}

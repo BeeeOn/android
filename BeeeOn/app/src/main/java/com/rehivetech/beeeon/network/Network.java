@@ -541,7 +541,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean prepareGateToListenNewSensors(String gateId) {
+	public boolean prepareGateToListenNewDevices(String gateId) {
 		ParsedMessage msg = doRequest(XmlCreator.createGateScanMode(mBT, gateId));
 
 		if (msg.getState() == State.TRUE)

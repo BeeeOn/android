@@ -9,10 +9,11 @@
 				tools:context="com.rehivetech.beeeon.gui.activity.ModuleEditActivity$ModuleEditFragment">
 
 	<LinearLayout
+		android:id="@+id/module_edit_first_section_layout"
 		android:layout_width="match_parent"
 		android:layout_height="72dp"
-		android:id="@+id/sen_edit_first_section"
 		android:orientation="vertical">
+
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -20,20 +21,23 @@
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
 			android:text="@string/sensor_name_label"/>
+
 		<EditText
+			android:id="@+id/module_edit_name"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:id="@+id/sen_edit_name"
 			android:textSize="16sp"
 			android:textColor="@color/beeeon_primary_text"/>
-		
+
 	</LinearLayout>
+
 	<LinearLayout
+		android:id="@+id/module_edit_second_section_layout"
 		android:layout_width="match_parent"
 		android:layout_height="72dp"
-		android:id="@+id/sen_edit_second_section"
-		android:layout_below="@+id/sen_edit_first_section"
+		android:layout_below="@+id/module_edit_first_section_layout"
 		android:orientation="vertical">
+
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -42,18 +46,21 @@
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
 			android:text="@string/sensordetail_location_label"/>
+
 		<Spinner
+			android:id="@+id/module_edit_location_spinner"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:id="@+id/sen_edit_location"/>
+			android:layout_height="wrap_content"/>
 	</LinearLayout>
+
 	<LinearLayout
+		android:id="@+id/module_edit_third_section_layout"
 		android:layout_width="match_parent"
 		android:layout_height="72dp"
-		android:id="@+id/sen_edit_third_section"
-		android:layout_below="@+id/sen_edit_second_section"
+		android:layout_below="@+id/module_edit_second_section_layout"
 		android:orientation="vertical"
 		android:visibility="gone">
+
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -61,26 +68,31 @@
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
 			android:text="@string/addsensor_new_location_hint"/>
+
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
+
 			<Spinner
+				android:id="@+id/module_edit_new_loc_icon"
 				android:layout_width="60dp"
 				android:layout_height="40dp"
-				android:layout_gravity="center"
-				android:id="@+id/sen_edit_new_loc_icon"/>
+				android:layout_gravity="center"/>
+
 			<EditText
+				android:id="@+id/module_edit_new_loc_text"
 				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/sen_edit_new_loc_text"/>
+				android:layout_height="wrap_content"/>
 		</LinearLayout>
 	</LinearLayout>
+
 	<LinearLayout
+		android:id="@+id/module_edit_fourth_section_layout"
 		android:layout_width="match_parent"
 		android:layout_height="72dp"
-		android:id="@+id/sen_edit_fourth_section"
-		android:layout_below="@+id/sen_edit_third_section"
+		android:layout_below="@+id/module_edit_third_section_layout"
 		android:orientation="vertical">
+
 		<TextView
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -89,20 +101,23 @@
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
 			android:text="@string/refresh_time"/>
+
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
+
 			<TextView
+				android:id="@+id/module_edit_refreshtime_val"
 				android:layout_width="100dp"
 				android:layout_height="wrap_content"
-				android:id="@+id/sen_edit_refreshtime_val"
 				android:textSize="16sp"
 				android:layout_gravity="center"
 				android:textColor="@color/beeeon_primary_text"/>
+
 			<SeekBar
+				android:id="@+id/module_edit_refreshtime_seekbar"
 				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/sen_edit_refreshtime"/>
+				android:layout_height="wrap_content"/>
 		</LinearLayout>
 
 	</LinearLayout>

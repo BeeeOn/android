@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/beeeon_primary">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center"
+		android:orientation="vertical"
+		android:padding="@dimen/adddevice_padding">
+
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="20dp"
+			android:textSize="@dimen/adddevice_title_size"
+			android:textStyle="bold"
+			android:gravity="center"
+			android:textColor="@color/white"
+			android:text="@string/addadapter_last_fragment_title"
+			android:paddingBottom="10dp"
+			/>
+
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			>
+
+			<Button
+				android:id="@+id/gate_add_qr_button"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:background="@color/beeeon_accent"
+				android:text="@string/addadapter_qr_button"
+				android:textColor="@color/white"
+				android:textSize="15sp"
+				android:padding="10dp"
+				android:layout_marginRight="10dp"
+				android:drawablePadding="10dp"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:drawableTop="@drawable/qrcode"/>
+
+			<Button
+				android:id="@+id/gate_add_write_it_button"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="1"
+				android:background="@color/beeeon_secondary_text"
+				android:text="@string/addadapter_manual_edit"
+				android:textColor="@color/white"
+				android:textSize="15sp"
+				android:padding="10dp"
+				android:drawableTop="@drawable/pen"
+				android:drawablePadding="10dp"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:singleLine="false"/>
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_horizontal"
+			android:text="@string/addadapter_last_fragment_text"
+			android:textColor="@color/white"
+			android:textSize="@dimen/adddevice_text_size"
+			android:padding="10dp"
+			android:layout_marginTop="10dp"/>
+
+	</LinearLayout>
+</ScrollView>

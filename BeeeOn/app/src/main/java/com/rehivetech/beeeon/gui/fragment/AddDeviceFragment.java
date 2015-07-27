@@ -14,7 +14,7 @@ import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
-import com.rehivetech.beeeon.gui.activity.SetupSensorActivity;
+import com.rehivetech.beeeon.gui.activity.SetupDeviceActivity;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
@@ -23,12 +23,12 @@ import com.rehivetech.beeeon.util.Log;
 
 public class AddDeviceFragment extends TrackFragment {
 	private static final String TAG = AddDeviceFragment.class.getSimpleName();
-	private static final String TIMER_VALUE_PAUSE = "AddSensorTimerValueOnPause";
-	private static final String TIMER_BOOL_PAUSE = "AddSensorTimerBooleanOnPause";
+	private static final String TIMER_VALUE_PAUSE = "AddDeviceTimerValueOnPause";
+	private static final String TIMER_BOOL_PAUSE = "AddDeviceTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
 	private long mStartTimeMSec = 0;
 
-	private OnAddSensorListener mCallback;
+	private OnAddDeviceListener mCallback;
 
 	private String mGateId;
 	private TextView mSendPairTextView;
@@ -59,7 +59,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 		try {
 			// Get activity and controller
-			mCallback = (OnAddSensorListener) getActivity();
+			mCallback = (OnAddDeviceListener) getActivity();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(String.format("%s must implement OnAddSensorListener", activity.toString()));
 		}
@@ -68,10 +68,10 @@ public class AddDeviceFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.activity_add_sensor_activity_dialog, container, false);
+		View view = inflater.inflate(R.layout.fragment_device_add, container, false);
 
-		mSendPairTextView = (TextView) view.findViewById(R.id.intro_image_text);
-		mDonutProgress = (DonutProgress) view.findViewById(R.id.progress);
+		mSendPairTextView = (TextView) view.findViewById(R.id.device_add_intro_image_text);
+		mDonutProgress = (DonutProgress) view.findViewById(R.id.device_add_circle_progress);
 		resetTimer();
 
 		return view;
@@ -80,9 +80,9 @@ public class AddDeviceFragment extends TrackFragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == Constants.SETUP_SENSOR_REQUEST_CODE) {
+		if (requestCode == Constants.SETUP_DEVICE_REQUEST_CODE) {
 			resetTimer();
-			mCallback.onAddSensor(resultCode == Activity.RESULT_OK);
+			mCallback.onAddDevice(resultCode == Activity.RESULT_OK);
 		}
 	}
 
@@ -149,9 +149,9 @@ public class AddDeviceFragment extends TrackFragment {
 
 					mCountDownTimer.cancel();
 
-					// go to setup uninit sensor
-					Intent intent = new Intent(getActivity(), SetupSensorActivity.class);
-					startActivityForResult(intent, Constants.SETUP_SENSOR_REQUEST_CODE);
+					// go to setup uninit device
+					Intent intent = new Intent(getActivity(), SetupDeviceActivity.class);
+					startActivityForResult(intent, Constants.SETUP_DEVICE_REQUEST_CODE);
 				} else {
 					Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
 					mCountDownTimer.cancel();
@@ -207,8 +207,8 @@ public class AddDeviceFragment extends TrackFragment {
 		mSendPairTextView.setText(R.string.activity_add_device_dialog_text);
 	}
 
-	public interface OnAddSensorListener {
-		void onAddSensor(boolean success);
+	public interface OnAddDeviceListener {
+		void onAddDevice(boolean success);
 
 		void setNextButtonEnabled(boolean enabled);
 	}

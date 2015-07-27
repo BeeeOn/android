@@ -15,13 +15,13 @@ public class SettingMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
+		TextView nameView = (TextView) view.findViewById(R.id.menu_setting_listview_name);
 		nameView.setText(mName);
 	}
 
 	@Override
 	public int getLayout() {
-		return R.layout.drawer_listview_setting;
+		return R.layout.item_menu_setting_listview;
 	}
 
 	@Override

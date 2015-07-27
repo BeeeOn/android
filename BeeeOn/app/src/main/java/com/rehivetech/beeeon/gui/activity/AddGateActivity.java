@@ -145,7 +145,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, EditTextDialog fragment) {
-		TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_text_input_layout);
+		TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		if(!Utils.validateInput(this, textInputLayout)){
 			return;
 		}

@@ -5,7 +5,6 @@ import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.View;
@@ -21,15 +20,15 @@ public abstract class ActionBarPreferenceActivity extends PreferenceActivity {
 	protected abstract int getPreferencesXmlId();
 
 	public Toolbar getToolbar() {
-		return ((Toolbar) findViewById(R.id.toolbar));
+		return ((Toolbar) findViewById(R.id.beeeon_toolbar));
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.abp__activity_preference);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setContentView(R.layout.activity_abp__preference);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
 			View shadowView = findViewById(R.id.abp__shadowView);
 			final ViewGroup parent = (ViewGroup) shadowView.getParent();

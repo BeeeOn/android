@@ -11,7 +11,7 @@ import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.viewpagerindicator.CirclePageIndicator;
 
 /**
- * Class that provides the common features for AddSensorAcitivity and AddGateActivity, both Activities inherit from this one
+ * Class that provides the common features for AddDeviceAcitivity and AddGateActivity, both Activities inherit from this one
  */
 public abstract class BaseGuideActivity extends BaseApplicationActivity{
 	protected Button mSkip;
@@ -30,11 +30,11 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 
 		setContentView(R.layout.activity_base_guide);
 
-		mPager = (ViewPager) findViewById(R.id.intro_pager);
+		mPager = (ViewPager) findViewById(R.id.base_guide_intro_pager);
 		mPager.setAdapter(mPagerAdapter);
 		mPager.setOffscreenPageLimit(mPagerAdapter.getCount());
 
-		mIndicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
+		mIndicator = (CirclePageIndicator) findViewById(R.id.base_guide_intro_indicator);
 		mIndicator.setViewPager(mPager);
 
 		mIndicator.setPageColor(0x88FFFFFF);
@@ -66,9 +66,9 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 	}
 
 	protected void initButtons() {
-		mSkip = (Button) findViewById(R.id.add_gate_skip);
-		Cancel = (Button) findViewById(R.id.add_gate_cancel);
-		mNext = (Button) findViewById(R.id.add_gate_next);
+		mSkip = (Button) findViewById(R.id.base_guide_add_gate_skip_button);
+		Cancel = (Button) findViewById(R.id.base_guide_add_gate_cancel_button);
+		mNext = (Button) findViewById(R.id.base_guide_add_gate_next_button);
 
 		mSkip.setOnClickListener(new View.OnClickListener() {
 

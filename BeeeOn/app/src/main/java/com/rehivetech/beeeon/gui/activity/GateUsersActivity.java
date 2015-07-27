@@ -51,7 +51,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_users);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.title_activity_gate_users);
 			setSupportActionBar(toolbar);
@@ -80,7 +80,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		listActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				startSupportActionMode(new ActionModeEditSensors());
+				startSupportActionMode(new ActionModeEditModules());
 				mSelectedItem = (User) listActUsers.getAdapter().getItem(position);
 				mSelectedItemPos = position;
 				setUserSelected();
@@ -88,7 +88,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 			}
 		});
 
-		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.fab_add_user);
+		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.gate_users_add_user_fab);
 		mButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -120,11 +120,11 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 
 	private void setUserSelected() {
-		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.user_item_layout).setBackgroundColor(getResources().getColor(R.color.gray_light));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(getResources().getColor(R.color.gray_light));
 	}
 
 	private void setUserUnselected() {
-		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.user_item_layout).setBackgroundColor(getResources().getColor(R.color.white));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(getResources().getColor(R.color.white));
 	}
 
 
@@ -202,13 +202,13 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		callbackTaskManager.executeTask(editUserTask, pair);
 	}
 
-	class ActionModeEditSensors implements ActionMode.Callback {
+	class ActionModeEditModules implements ActionMode.Callback {
 
 
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.gateuser_menu, menu);
+			inflater.inflate(R.menu.activity_gate_user_menu, menu);
 			return true;
 		}
 
@@ -220,7 +220,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if (item.getItemId() == R.id.adausr_menu_del) {
+			if (item.getItemId() == R.id.gate_user_menu_del) {
 				if (mSelectedItem != null) {
 					User user = Controller.getInstance(GateUsersActivity.this).getUsersModel().getUser(mGate.getId(), mSelectedItem.getId());
 					String userName = user.getName();
@@ -229,7 +229,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_USER, user.getId());
 				}
-			} else if (item.getItemId() == R.id.adausr_menu_edit) {
+			} else if (item.getItemId() == R.id.gate_user_menu_edit) {
 				changeUserRole();
 			}
 			mode.finish();

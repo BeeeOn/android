@@ -23,7 +23,7 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public void setDropDownView(View convertView) {
-		TextView ItemLabel = (TextView) convertView.findViewById(R.id.custom_spinner_dropdown_label);
+		TextView ItemLabel = (TextView) convertView.findViewById(R.id.spinner_geofence_no_icon_dropdown_label);
 		ItemLabel.setText(mGeofence.getName());
 
 		setMView(convertView);
@@ -31,21 +31,21 @@ public class GeofenceSpinnerItem extends AbstractSpinnerItem {
 
 	@Override
 	public int getDropDownLayout() {
-		return R.layout.spinner_no_icon_dropdown_item;
+		return R.layout.item_spinner_geofence_no_icon_dropdown;
 	}
 
 
 	@Override
 	public void setView(View convertView) {
-		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.custom_spinner_icon);
+		ImageView ItemIcon = (ImageView) convertView.findViewById(R.id.spinner_geofence_icon_icon);
 		ItemIcon.setImageResource(R.drawable.ic_val_geofence_gray);
 
-		TextView ItemLabel = (TextView) convertView.findViewById(R.id.custom_spinner_label);
+		TextView ItemLabel = (TextView) convertView.findViewById(R.id.spinner_geofence_icon_label);
 		ItemLabel.setText(mGeofence.getName());
 	}
 
 	public int getLayout() {
-		return R.layout.spinner_icon_item;
+		return R.layout.item_spinner_geofence_icon;
 	}
 
 	@Override

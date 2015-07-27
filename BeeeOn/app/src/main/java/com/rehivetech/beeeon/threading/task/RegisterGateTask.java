@@ -5,16 +5,14 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.model.GatesModel;
 import com.rehivetech.beeeon.threading.CallbackTask;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Vector;
 
 /**
- * Registers new gate. It automatically reloads list of gates and then we set this gate as active which also load all its sensors.
+ * Registers new gate. It automatically reloads list of gates and then we set this gate as active which also load all its modules.
  */
 public class RegisterGateTask extends CallbackTask<Gate> {
 

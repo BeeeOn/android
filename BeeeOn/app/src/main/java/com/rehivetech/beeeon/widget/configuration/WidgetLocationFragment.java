@@ -51,7 +51,7 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		mLocationSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_location);
+		mLocationSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_location_layout);
         TextView locationEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_location_emptyview);
         mLocationSpinner.setEmptyView(locationEmptyView);
 	}
@@ -67,8 +67,8 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	 */
 	protected void updateLayout() {
 		// fill sensor spinner
-		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.spinner_icon_item, mLocations);
-		dataAdapter.setDropDownViewResource(R.layout.spinner_icon_dropdown_item);
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.item_spinner_geofence_icon, mLocations);
+		dataAdapter.setDropDownViewResource(R.layout.fragment_config_widget_location_spinner_icon_dropdown);
 		mLocationSpinner.setAdapter(dataAdapter);
 
 		// set selection
