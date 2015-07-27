@@ -30,10 +30,10 @@ public class IntroActivity extends BaseActivity {
 
 		IntroFragmentPagerAdapter adapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,null);
 
-		mPager = (ViewPager) findViewById(R.id.intro_pager);
+		mPager = (ViewPager) findViewById(R.id.base_guide_intro_pager);
 		mPager.setAdapter(adapter);
 
-		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
+		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.base_guide_intro_indicator);
 		indicator.setViewPager(mPager);
 
 		indicator.setPageColor(0x88FFFFFF);
@@ -45,9 +45,9 @@ public class IntroActivity extends BaseActivity {
 
 	private void initLayout() {
 		// Get buttons
-		Button skipBtn = (Button) findViewById(R.id.add_gate_skip);
-		Button cancelBtn = (Button) findViewById(R.id.add_gate_cancel);
-		Button nextBtn = (Button) findViewById(R.id.add_gate_next);
+		Button skipBtn = (Button) findViewById(R.id.base_guide_add_gate_skip_button);
+		Button cancelBtn = (Button) findViewById(R.id.base_guide_add_gate_cancel_button);
+		Button nextBtn = (Button) findViewById(R.id.base_guide_add_gate_next_button);
 
 		skipBtn.setVisibility(View.INVISIBLE);
 		cancelBtn.setVisibility(View.INVISIBLE);
@@ -70,10 +70,10 @@ public class IntroActivity extends BaseActivity {
 	}
 
 	public void resetBtn() {
-		((Button) findViewById(R.id.add_gate_next)).setText(this.getString(R.string.tutorial_next));
+		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.tutorial_next));
 	}
 
 	public void setLastFragmentBtn() {
-		((Button) findViewById(R.id.add_gate_next)).setText(this.getString(R.string.tutorial_go_to_app));
+		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.tutorial_go_to_app));
 	}
 }

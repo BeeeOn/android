@@ -70,8 +70,8 @@ public class AddDeviceFragment extends TrackFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_device_add, container, false);
 
-		mSendPairTextView = (TextView) view.findViewById(R.id.intro_image_text);
-		mDonutProgress = (DonutProgress) view.findViewById(R.id.progress);
+		mSendPairTextView = (TextView) view.findViewById(R.id.device_add_intro_image_text);
+		mDonutProgress = (DonutProgress) view.findViewById(R.id.device_add_circle_progress);
 		resetTimer();
 
 		return view;

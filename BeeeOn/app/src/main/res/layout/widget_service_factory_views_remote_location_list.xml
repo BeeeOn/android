@@ -1,66 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-				xmlns:tools="http://schemas.android.com/tools"
 				android:layout_width="match_parent"
 				android:layout_height="56dp"
 				android:background="@color/white"
 				android:id="@+id/widget_loc_item"
 	>
 
-    <ImageView
-        android:id="@+id/widget_loc_item_icon"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="8dp"
-        android:paddingStart="8dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_val_unknown_gray"
-        />
+	<ImageView
+		android:id="@+id/widget_loc_item_icon"
+		android:layout_width="40dp"
+		android:layout_height="match_parent"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true"
+		android:paddingLeft="8dp"
+		android:paddingStart="8dp"
+		android:scaleType="fitCenter"
+		android:src="@drawable/ic_val_unknown_gray"
+		/>
 
-    <TextView
-        android:id="@+id/widget_loc_item_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:textColor="@color/beeeon_primary_text"
-        android:textSize="@dimen/abc_text_size_body_1_material"
-        android:layout_marginLeft="48dp"
-        android:layout_marginStart="48dp"
-        android:paddingTop="8dp"
-        android:layout_toStartOf="@+id/widget_loc_item_value"
-        android:layout_toLeftOf="@+id/widget_loc_item_value"
+	<TextView
+		android:id="@+id/widget_loc_item_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:textColor="@color/beeeon_primary_text"
+		android:textSize="@dimen/abc_text_size_body_1_material"
+		android:layout_marginLeft="48dp"
+		android:layout_marginStart="48dp"
+		android:paddingTop="8dp"
+		android:layout_toStartOf="@+id/widget_loc_item_value"
+		android:layout_toLeftOf="@+id/widget_loc_item_value"
 		android:singleLine="true"
-        />
+		/>
 
-    <TextView
-        android:id="@+id/widget_loc_item_update"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/widget_loc_item_name"
-        android:layout_alignStart="@+id/widget_loc_item_name"
-        android:layout_toStartOf="@+id/widget_loc_item_value"
-        android:layout_toLeftOf="@+id/widget_loc_item_value"
-        android:layout_below="@+id/widget_loc_item_name"
-        android:textColor="@color/beeeon_secondary_text"
-        android:textSize="@dimen/abc_text_size_caption_material"
+	<TextView
+		android:id="@+id/widget_loc_item_update"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@+id/widget_loc_item_name"
+		android:layout_alignStart="@+id/widget_loc_item_name"
+		android:layout_toStartOf="@+id/widget_loc_item_value"
+		android:layout_toLeftOf="@+id/widget_loc_item_value"
+		android:layout_below="@+id/widget_loc_item_name"
+		android:textColor="@color/beeeon_secondary_text"
+		android:textSize="@dimen/abc_text_size_caption_material"
 		android:singleLine="true"
-        />
+		/>
 
-    <TextView
-        android:id="@+id/widget_loc_item_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:paddingEnd="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:textColor="@color/beeeon_accent"
-        android:textSize="@dimen/abc_text_size_subhead_material"
-        android:textStyle="bold"
-        />
+	<TextView
+		android:id="@+id/widget_loc_item_value"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:paddingEnd="8dp"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		android:textColor="@color/beeeon_accent"
+		android:textSize="@dimen/abc_text_size_subhead_material"
+		android:textStyle="bold"
+		/>
 </RelativeLayout>

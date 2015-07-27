@@ -96,12 +96,12 @@ public class WidgetModuleData extends WidgetData {
 		for (WidgetModulePersistence dev : widgetModules) {
 			// detail activity
 			mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
-			mBuilder.setOnClickListener(R.id.name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.menu_empty_listview_login_name_text, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
 
 			// when only 1 module is in the widget - we assume that we need icon and name
 			if (isOnlyOne) {
 				mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.ic_val_unknown : dev.icon);
-				mBuilder.setTextViewText(R.id.name, dev.getName());
+				mBuilder.setTextViewText(R.id.menu_empty_listview_login_name_text, dev.getName());
 				isOnlyOne = false;
 			}
 

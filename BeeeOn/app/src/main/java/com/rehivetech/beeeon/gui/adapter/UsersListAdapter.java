@@ -51,10 +51,10 @@ public class UsersListAdapter extends BaseAdapter {
 			convertView = mInflater.inflate(R.layout.adapter_list_user, parent, false);
 			holder = new ViewHolder();
 
-			holder.UserName = (TextView) convertView.findViewById(R.id.adapter_user_name);
-			holder.UserEmail = (TextView) convertView.findViewById(R.id.adapter_user_email);
-			holder.UserRole = (TextView) convertView.findViewById(R.id.adapter_user_role);
-			holder.UserIcon = (ImageView) convertView.findViewById(R.id.adapter_user_icon);
+			holder.UserName = (TextView) convertView.findViewById(R.id.adapter_list_user_name);
+			holder.UserEmail = (TextView) convertView.findViewById(R.id.adapter_list_user_email);
+			holder.UserRole = (TextView) convertView.findViewById(R.id.adapter_list_user_role);
+			holder.UserIcon = (ImageView) convertView.findViewById(R.id.adapter_list_user_icon);
 
 			convertView.setTag(holder);
 		}

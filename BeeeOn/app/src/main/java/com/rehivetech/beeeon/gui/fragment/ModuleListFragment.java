@@ -134,7 +134,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 		redrawModules();
 
 		// Init swipe-refreshig layout
-		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.swipe_container);
+		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.module_list_swipe_layout);
 		if (mSwipeLayout == null) {
 			return;
 		}
@@ -181,10 +181,10 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 		mView = getView();
 		// get UI elements
-		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.swipe_container);
-		final StickyListHeadersListView moduleList = (StickyListHeadersListView) mView.findViewById(R.id.listviewofsensors);
-		TextView noItem = (TextView) mView.findViewById(R.id.nosensorlistview);
-		Button refreshBtn = (Button) mView.findViewById(R.id.sensor_list_refresh_btn);
+		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.module_list_swipe_layout);
+		final StickyListHeadersListView moduleList = (StickyListHeadersListView) mView.findViewById(R.id.module_list_stickylistheader);
+		TextView noItem = (TextView) mView.findViewById(R.id.module_list_nomodules_text);
+		Button refreshBtn = (Button) mView.findViewById(R.id.module_list_refresh_button);
 
 		// REFRESH listener
 		OnClickListener refreshNoGate = new OnClickListener() {
@@ -207,7 +207,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 		mModuleAdapter = new ModuleListAdapter(mActivity);
 
-		final FloatingActionButton floatingActionButton = (FloatingActionButton) mView.findViewById(R.id.fab);
+		final FloatingActionButton floatingActionButton = (FloatingActionButton) mView.findViewById(R.id.module_list_fab);
 
 		// All locations on gate
 		locations = controller.getLocationsModel().getLocationsByGate(mActiveGateId);
@@ -503,7 +503,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if (item.getItemId() == R.id.sensor_menu_del) {
+			if (item.getItemId() == R.id.module_list_actionmode_del) {
 				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName(mActivity));
 				String message = getString(R.string.confirm_unregister_device_message);
 				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());

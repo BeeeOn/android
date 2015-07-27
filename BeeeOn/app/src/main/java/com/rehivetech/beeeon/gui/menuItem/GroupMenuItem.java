@@ -20,7 +20,7 @@ public class GroupMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
+		TextView nameView = (TextView) view.findViewById(R.id.menu_group_listview_name);
 		nameView.setText(mName);
 
 		view.setEnabled(false);

@@ -1,118 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/widget_margin"
-    >
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:minWidth="200dp"
-        android:layout_height="80dp"
-        android:background="@drawable/widget_bg"
-        android:id="@+id/layout"
-        android:layout_gravity="center"
-        >
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/widget_margin"
+	>
 
-        <LinearLayout
-            android:minWidth="200dp"
-            android:id="@+id/widget_header"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/widget_header_height"
-            android:gravity="center_horizontal|left"
-            android:background="@drawable/widget_inside_bg"
-            android:layout_alignParentTop="true"
-            >
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:minWidth="200dp"
+		android:layout_height="80dp"
+		android:background="@drawable/widget_bg"
+		android:id="@+id/layout"
+		android:layout_gravity="center"
+		>
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="38dp"
-                android:layout_height="match_parent"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingRight="8dp"
-                android:paddingEnd="8dp"
-                android:scaleType="fitCenter"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_val_unknown"
-                android:contentDescription="@string/placeholder_icon"
-                />
+		<LinearLayout
+			android:minWidth="200dp"
+			android:id="@+id/widget_header"
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="@dimen/widget_header_height"
+			android:gravity="center_horizontal|left"
+			android:background="@drawable/widget_inside_bg"
+			android:layout_alignParentTop="true"
+			>
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/placeholder_none"
-                android:textColor="@color/white"
-                android:textSize="@dimen/abc_text_size_caption_material"
-                android:textStyle="bold"
-                />
+			<ImageView
+				android:id="@+id/icon"
+				android:layout_width="38dp"
+				android:layout_height="match_parent"
+				android:paddingLeft="8dp"
+				android:paddingStart="8dp"
+				android:paddingRight="8dp"
+				android:paddingEnd="8dp"
+				android:scaleType="fitCenter"
+				android:layout_gravity="center"
+				android:src="@drawable/ic_val_unknown"
+				android:contentDescription="@string/placeholder_icon"
+				/>
 
-            <ImageView
-                android:id="@+id/refresh"
-                style="@style/AppWidget.ActionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/placeholder_icon"
-                android:src="@drawable/ic_action_refresh"
-                />
+			<TextView
+				android:id="@+id/name"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0.5"
+				android:ellipsize="end"
+				android:gravity="center_vertical"
+				android:singleLine="true"
+				android:text="@string/placeholder_none"
+				android:textColor="@color/white"
+				android:textSize="@dimen/abc_text_size_caption_material"
+				android:textStyle="bold"
+				/>
 
-            <ImageView
-                android:id="@+id/options"
-                style="@style/AppWidget.ActionButton.Overflow"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/placeholder_icon"
-                />
+			<ImageView
+				android:id="@+id/refresh"
+				style="@style/AppWidget.ActionButton"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:contentDescription="@string/placeholder_icon"
+				android:src="@drawable/ic_action_refresh"
+				/>
 
-        </LinearLayout>
+			<ImageView
+				android:id="@+id/options"
+				style="@style/AppWidget.ActionButton.Overflow"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:contentDescription="@string/placeholder_icon"
+				/>
 
-        <!-- shadow -->
-        <ImageView
-            android:id="@+id/toolbar_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="6dp"
-            android:layout_below="@id/widget_header"
-            android:layout_alignLeft="@+id/widget_header"
-            android:layout_alignStart="@+id/widget_header"
-            android:layout_alignRight="@+id/widget_header"
-            android:layout_alignEnd="@+id/widget_header"
-            android:src="@drawable/toolbar_dropshadow"
-            />
+		</LinearLayout>
 
-        <!-- value inflated programmatically -->
-        <RelativeLayout
-            android:id="@+id/value_container"
-            android:layout_below="@id/toolbar_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/widget_header"
-            android:layout_alignStart="@+id/widget_header"
-            android:gravity="center_vertical"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            >
-            <include layout="@layout/widget_persistence_module_value_unit" />
-        </RelativeLayout>
+		<!-- shadow -->
+		<ImageView
+			android:id="@+id/toolbar_shadow"
+			android:layout_width="wrap_content"
+			android:layout_height="6dp"
+			android:layout_below="@id/widget_header"
+			android:layout_alignLeft="@+id/widget_header"
+			android:layout_alignStart="@+id/widget_header"
+			android:layout_alignRight="@+id/widget_header"
+			android:layout_alignEnd="@+id/widget_header"
+			android:src="@drawable/toolbar_dropshadow"
+			/>
 
-        <TextView
-            android:id="@+id/widget_last_update"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar_shadow"
-            android:text="@string/placeholder_none"
-            android:textColor="@color/gray_dark"
-            android:textSize="@dimen/abc_text_size_caption_material"
-            android:layout_alignRight="@+id/widget_header"
-            android:layout_alignEnd="@+id/widget_header"
-            android:layout_marginRight="8dp"
-            android:layout_marginEnd="8dp"
-            />
+		<!-- value inflated programmatically -->
+		<RelativeLayout
+			android:id="@+id/value_container"
+			android:layout_below="@id/toolbar_shadow"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignLeft="@+id/widget_header"
+			android:layout_alignStart="@+id/widget_header"
+			android:gravity="center_vertical"
+			android:paddingLeft="8dp"
+			android:paddingRight="8dp"
+			>
 
-    </RelativeLayout>
+			<include layout="@layout/widget_persistence_module_value_unit"/>
+		</RelativeLayout>
+
+		<TextView
+			android:id="@+id/widget_last_update"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/toolbar_shadow"
+			android:text="@string/placeholder_none"
+			android:textColor="@color/gray_dark"
+			android:textSize="@dimen/abc_text_size_caption_material"
+			android:layout_alignRight="@+id/widget_header"
+			android:layout_alignEnd="@+id/widget_header"
+			android:layout_marginRight="8dp"
+			android:layout_marginEnd="8dp"
+			/>
+
+	</RelativeLayout>
 </FrameLayout>

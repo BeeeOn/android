@@ -5,6 +5,7 @@
 	android:layout_height="match_parent"
 	android:padding="@dimen/widget_margin"
 	>
+
 	<RelativeLayout
 		android:layout_width="wrap_content"
 		android:minWidth="170dp"
@@ -88,7 +89,8 @@
 			android:paddingLeft="8dp"
 			android:paddingRight="8dp"
 			>
-			<include layout="@layout/widget_persistence_module_value_unit" />
+
+			<include layout="@layout/widget_persistence_module_value_unit"/>
 		</RelativeLayout>
 
 		<TextView

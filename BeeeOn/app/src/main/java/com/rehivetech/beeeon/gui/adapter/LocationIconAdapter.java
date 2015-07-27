@@ -56,7 +56,7 @@ public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(mDropDownLayoutResource, parent, false);
 
-		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_dropdown_icon);
+		ImageView icon = (ImageView) row.findViewById(R.id.module_edit_custom_spinner_icon_dropdown_imageview);
 		icon.setImageResource(mIcons.get(position).getIconResource(IconResourceType.DARK));
 
 		return row;
@@ -67,7 +67,7 @@ public class LocationIconAdapter extends ArrayAdapter<Location.LocationIcon> {
 		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(mLayoutResource, parent, false);
 
-		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon_icon);
+		ImageView icon = (ImageView) row.findViewById(R.id.module_edit_custom_spinner_icon_imageview);
 		icon.setImageResource(mIcons.get(position).getIconResource(IconResourceType.DARK));
 
 		return row;

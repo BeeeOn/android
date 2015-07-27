@@ -10,7 +10,7 @@
 	>
 
 	<ImageView
-		android:id="@+id/custom_spinner_dropdown_icon"
+		android:id="@+id/config_widget_location_spinner_dropdown_icon"
 		android:layout_width="24dp"
 		android:layout_height="24dp"
 		android:contentDescription="@string/placeholder_icon"
@@ -19,14 +19,14 @@
 		/>
 
 	<CheckedTextView
-		android:id="@+id/custom_spinner_dropdown_label"
+		android:id="@+id/config_widget_location_spinner_dropdown_label"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:textColor="@color/beeeon_primary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:layout_centerVertical="true"
-		android:layout_toRightOf="@+id/custom_spinner_dropdown_icon"
-		android:layout_toEndOf="@+id/custom_spinner_dropdown_icon"
+		android:layout_toRightOf="@+id/config_widget_location_spinner_dropdown_icon"
+		android:layout_toEndOf="@+id/config_widget_location_spinner_dropdown_icon"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
 		android:singleLine="true"

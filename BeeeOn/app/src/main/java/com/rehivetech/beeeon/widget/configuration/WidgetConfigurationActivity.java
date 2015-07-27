@@ -50,7 +50,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		// prepare toolbar with button instead of "HOME" arrow
-		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		mToolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (mToolbar != null) {
 			mToolbar.setTitle(R.string.title_activity_widget_configuration);
 			setSupportActionBar(mToolbar);
@@ -102,7 +102,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		// create fragment only first time (it will persist)
 		if(savedInstanceState == null) {
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			ft.replace(R.id.widget_config_fragment, mConfigFragment);
+			ft.replace(R.id.widget_configuration_fragment, mConfigFragment);
 			ft.commit();
 		}
 	}

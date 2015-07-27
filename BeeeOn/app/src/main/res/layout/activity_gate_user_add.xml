@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:orientation="vertical">
 
-    <include layout="@layout/layout_beeeon_toolbar" />
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
-    <ScrollView 
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		android:paddingLeft="8dp"
 		android:paddingRight="8dp"
 		>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
 
-            <TextView 
-	            android:text="@string/add_user_email_header"
+			<TextView
+				android:text="@string/add_user_email_header"
 				style="@style/LinearRow.Caption"
 				/>
 
-            <EditText
-                android:id="@+id/add_user_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textEmailAddress"
+			<EditText
+				android:id="@+id/gate_user_add_user_email"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:ems="10"
+				android:inputType="textEmailAddress"
 				>
-                <requestFocus />
-            </EditText>
+
+				<requestFocus/>
+			</EditText>
 
 			<View
 				style="@style/BeeeOn.Divider.Full"
 				android:layout_marginTop="8dp"
 				/>
 
-	        <TextView
-	            android:text="@string/add_user_role_header"
+			<TextView
+				android:text="@string/add_user_role_header"
 				style="@style/LinearRow.Caption"
-			 />
+				/>
 
-	        <Spinner
-	            android:id="@+id/add_user_role"
+			<Spinner
+				android:id="@+id/gate_user_add_user_role"
 				style="@style/BeeeOn.Spinner"
 				/>
 
@@ -53,15 +54,15 @@
 				android:layout_marginTop="8dp"
 				/>
 
-	        <Button
-				android:id="@+id/add_user_gate_save"
+			<Button
+				android:id="@+id/gate_user_add_user_gate_save_button"
 				android:layout_gravity="right|bottom"
 				android:layout_width="wrap_content"
 				android:layout_height="48dp"
 				android:text="@string/add_users_adapter"
-	            />
-        </LinearLayout>
-        
-    </ScrollView>
+				/>
+		</LinearLayout>
+
+	</ScrollView>
 
 </LinearLayout>

@@ -49,7 +49,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_edit);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.title_activity_module_edit);
 			setSupportActionBar(toolbar);
@@ -73,7 +73,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, ModuleEditFragment.newInstance(mGateId, mModuleId), ModuleEditFragment.TAG)
+					.replace(R.id.module_edit_container, ModuleEditFragment.newInstance(mGateId, mModuleId), ModuleEditFragment.TAG)
 					.commit();
 		}
 	}
@@ -98,7 +98,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.action_save: {
+			case R.id.module_edit_action_save: {
 				if (mFragment == null) {
 					return false;
 				}
@@ -208,14 +208,14 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			View view = inflater.inflate(R.layout.fragment_module_edit, container, false);
 
-			mName = (EditText) view.findViewById(R.id.sen_edit_name);
-			mLocationSpinner = (Spinner) view.findViewById(R.id.sen_edit_location);
-			mRefreshTimeSeekBar = (SeekBar) view.findViewById(R.id.sen_edit_refreshtime);
-			mRefreshTimeText = (TextView) view.findViewById(R.id.sen_edit_refreshtime_val);
-			mNewLocationIconSpinner = (Spinner) view.findViewById(R.id.sen_edit_new_loc_icon);
-			mNewLocationName = (TextView) view.findViewById(R.id.sen_edit_new_loc_text);
+			mName = (EditText) view.findViewById(R.id.module_edit_name);
+			mLocationSpinner = (Spinner) view.findViewById(R.id.module_edit_location_spinner);
+			mRefreshTimeSeekBar = (SeekBar) view.findViewById(R.id.module_edit_refreshtime_seekbar);
+			mRefreshTimeText = (TextView) view.findViewById(R.id.module_edit_refreshtime_val);
+			mNewLocationIconSpinner = (Spinner) view.findViewById(R.id.module_edit_new_loc_icon);
+			mNewLocationName = (TextView) view.findViewById(R.id.module_edit_new_loc_text);
 
-			mNewLocationLayout = view.findViewById(R.id.sen_edit_third_section);
+			mNewLocationLayout = view.findViewById(R.id.module_edit_third_section_layout);
 
 			return view;
 		}

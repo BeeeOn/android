@@ -1,15 +1,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+				android:layout_width="match_parent"
+				android:orientation="vertical"
+				android:layout_height="match_parent">
 
-    <include layout="@layout/layout_beeeon_toolbar" />
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
-    <FrameLayout
-        android:id="@+id/sensor_detail_wraper"
-		android:layout_below="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+	<FrameLayout
+		android:id="@+id/module_detail_container"
+		android:layout_below="@+id/beeeon_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
 
 </RelativeLayout>
 

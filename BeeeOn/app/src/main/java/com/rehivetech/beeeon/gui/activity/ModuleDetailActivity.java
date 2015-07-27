@@ -28,7 +28,7 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_detail);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle("");
 			setSupportActionBar(toolbar);
@@ -53,7 +53,7 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 		}
 
 		ModuleDetailFragment moduleDetailFragment = ModuleDetailFragment.newInstance(mActiveGateId, mActiveModuleId);
-		getSupportFragmentManager().beginTransaction().replace(R.id.sensor_detail_wraper, moduleDetailFragment).commit();
+		getSupportFragmentManager().beginTransaction().replace(R.id.module_detail_container, moduleDetailFragment).commit();
 
 	}
 

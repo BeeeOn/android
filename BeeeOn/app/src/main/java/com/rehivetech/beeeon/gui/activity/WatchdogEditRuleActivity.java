@@ -99,7 +99,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		Log.d(TAG, "onCreate()");
 
 		// prepare toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.watchdog_rule);
 			setSupportActionBar(toolbar);
@@ -196,9 +196,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 	private void initLayout() {
 		// init gui elements
 		final Spinner ifItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
-		final FloatingActionButton operatorButton = (FloatingActionButton) findViewById(R.id.watchdog_edit_operator);
-		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
-		final TextView ruleTresholdUnit = (TextView) findViewById(R.id.watchdog_edit_treshold_unit);
+		final FloatingActionButton operatorButton = (FloatingActionButton) findViewById(R.id.watchdog_edit_operator_fab);
+		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold_edittext);
+		final TextView ruleTresholdUnit = (TextView) findViewById(R.id.watchdog_edit_treshold_unit_textview);
 		final RadioGroup actionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
 		final Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
 
@@ -274,7 +274,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		actionType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				RelativeLayout NotifLayout = (RelativeLayout) findViewById(R.id.watchdog_detail_notification);
+				RelativeLayout NotifLayout = (RelativeLayout) findViewById(R.id.watchdog_detail_notification_layout);
 				RelativeLayout ActionLayout = (RelativeLayout) findViewById(R.id.watchdog_edit_actor_layout);
 
 				switch (checkedId) {
@@ -312,12 +312,12 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 	 */
 	private void setValues() {
 		final Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
-		final EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
-		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
-		final FloatingActionButton operatorButton = (FloatingActionButton) findViewById(R.id.watchdog_edit_operator);
+		final EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_edittext);
+		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold_edittext);
+		final FloatingActionButton operatorButton = (FloatingActionButton) findViewById(R.id.watchdog_edit_operator_fab);
 		final Spinner ifItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
 		final SwitchCompat ruleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
-		final EditText ruleName = (EditText) findViewById(R.id.watchdog_edit_name);
+		final EditText ruleName = (EditText) findViewById(R.id.watchdog_edit_name_textview);
 		final RadioGroup actionType = (RadioGroup) findViewById(R.id.watchdog_edit_action_radiogroup);
 		// check first if sent geofence id as extra, then if watchdog already has it
 		String geoId = "";
@@ -399,7 +399,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 	private void onUpdateOptionsMenu() {
 		if (mOptionsMenu == null) return;
 
-		MenuItem deleteActionButton = mOptionsMenu.findItem(R.id.wat_menu_delete);
+		MenuItem deleteActionButton = mOptionsMenu.findItem(R.id.watchdog_edit_action_delete);
 		deleteActionButton.setVisible(!mIsNew);
 	}
 
@@ -415,10 +415,10 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 			case android.R.id.home:
 				finish();
 				break;
-			case R.id.wat_menu_save:
+			case R.id.watchdog_edit_action_save:
 				doSaveWatchdogTask();
 				break;
-			case R.id.wat_menu_delete:
+			case R.id.watchdog_edit_action_delete:
 				String title = getString(R.string.confirm_remove_title, mWatchdog.getName());
 				String message = getString(R.string.confirm_remove_watchdog_message);
 				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mWatchdog.getId());
@@ -434,11 +434,11 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 	 */
 	private void doSaveWatchdogTask() {
 		final Spinner actorSpinner = (Spinner) findViewById(R.id.watchdog_edit_actor_spinner);
-		final EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_text);
-		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold);
+		final EditText notificationText = (EditText) findViewById(R.id.watchdog_edit_notification_edittext);
+		final EditText ruleTreshold = (EditText) findViewById(R.id.watchdog_edit_treshold_edittext);
 		final Spinner ifItemSpinner = (Spinner) findViewById(R.id.watchdog_edit_if_item_spinner);
 		final SwitchCompat ruleEnabled = (SwitchCompat) findViewById(R.id.watchdog_edit_switch);
-		final EditText ruleName = (EditText) findViewById(R.id.watchdog_edit_name);
+		final EditText ruleName = (EditText) findViewById(R.id.watchdog_edit_name_textview);
 		if (!Utils.validateInput(this, ruleName)) {
 			return;
 		}

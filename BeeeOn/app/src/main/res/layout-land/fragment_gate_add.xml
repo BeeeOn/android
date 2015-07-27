@@ -10,7 +10,7 @@
 		android:padding="@dimen/adddevice_padding_land">
 
 		<RelativeLayout
-			android:id="@+id/add_gate_buttons"
+			android:id="@+id/gate_add_buttons_layout"
 			android:layout_width="@dimen/content_view_size_land"
 			android:layout_height="@dimen/content_view_size_land"
 			android:gravity="center_horizontal"
@@ -18,7 +18,7 @@
 			android:layout_margin="25dp">
 
 			<Button
-				android:id="@+id/add_gate_qr_button"
+				android:id="@+id/gate_add_qr_button"
 				android:layout_width="@dimen/addgate_button_width"
 				android:layout_height="@dimen/addgate_button_height"
 				android:background="@color/beeeon_accent"
@@ -29,18 +29,19 @@
 				android:padding="10dp"/>
 
 			<Button
-				android:id="@+id/add_gate_write_it_button"
+				android:id="@+id/gate_add_write_it_button"
 				android:layout_width="@dimen/addgate_button_width"
 				android:layout_height="@dimen/addgate_button_height"
 				android:background="@color/gray_dark"
 				android:text="@string/addadapter_manual_edit"
 				android:textColor="@color/white"
 				android:layout_marginTop="25dp"
-				android:layout_below="@id/add_gate_qr_button"
+				android:layout_below="@id/gate_add_qr_button"
 				android:drawableLeft="@drawable/pen"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				android:padding="10dp"/>
 		</RelativeLayout>
+
 		<TextView
 			android:id="@+id/add_gate_title"
 			android:layout_width="wrap_content"
@@ -53,8 +54,8 @@
 			android:padding="10dp"
 			android:layout_marginBottom="25dp"
 
-			android:layout_toEndOf="@id/add_gate_buttons"
-			android:layout_toRightOf="@id/add_gate_buttons"/>
+			android:layout_toEndOf="@id/gate_add_buttons_layout"
+			android:layout_toRightOf="@id/gate_add_buttons_layout"/>
 
 		<TextView
 			android:id="@+id/add_gate_text"
@@ -66,8 +67,8 @@
 			android:textSize="@dimen/adddevice_text_size_land"
 			android:padding="10dp"
 
-			android:layout_toEndOf="@id/add_gate_buttons"
-			android:layout_toRightOf="@id/add_gate_buttons"
+			android:layout_toEndOf="@id/gate_add_buttons_layout"
+			android:layout_toRightOf="@id/gate_add_buttons_layout"
 			android:layout_below="@id/add_gate_title"/>
 
 

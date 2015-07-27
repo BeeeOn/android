@@ -7,12 +7,14 @@
 	android:padding="@dimen/widget_margin"
 	android:layout_gravity="center"
 	>
+
 	<RelativeLayout
 		android:id="@+id/widget_clock_container"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true">
-			<include layout="@layout/widget_data_include_clock"/>
+
+		<include layout="@layout/widget_data_include_clock"/>
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -22,7 +24,8 @@
 		android:layout_below="@+id/widget_clock_container"
 		android:layout_marginTop="-10dp"
 		android:layout_centerHorizontal="true">
-			<include layout="@layout/widget_data_include_date" />
+
+		<include layout="@layout/widget_data_include_date"/>
 	</RelativeLayout>
 </RelativeLayout>
 

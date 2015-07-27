@@ -2,11 +2,11 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="wrap_content"
 	android:layout_height="72dp"
-	android:id="@+id/layoutofsensor"
+	android:id="@+id/list_module_item_layout"
 	>
 
 	<ImageView
-		android:id="@+id/iconofsensor"
+		android:id="@+id/list_module_item_icon"
 		android:layout_width="40dp"
 		android:layout_height="40dp"
 		android:src="@drawable/ic_val_unknown_gray"
@@ -16,42 +16,42 @@
 		/>
 
 	<TextView
-		android:id="@+id/titleofsensor"
+		android:id="@+id/list_module_item_title"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:singleLine="true"
 		android:textColor="@color/beeeon_primary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		android:layout_toRightOf="@+id/iconofsensor"
-		android:layout_toEndOf="@+id/iconofsensor"
-		android:layout_toLeftOf="@+id/valueofsensor"
-		android:layout_toStartOf="@id/valueofsensor"
-		android:layout_alignTop="@+id/iconofsensor"
+		android:layout_toRightOf="@+id/list_module_item_icon"
+		android:layout_toEndOf="@+id/list_module_item_icon"
+		android:layout_toLeftOf="@+id/list_module_item_value"
+		android:layout_toStartOf="@id/list_module_item_value"
+		android:layout_alignTop="@+id/list_module_item_icon"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
 		/>
 
 	<TextView
-		android:id="@+id/timeofsensor"
+		android:id="@+id/list_module_item_time"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="bottom"
 		android:textColor="@color/beeeon_secondary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		android:layout_below="@+id/titleofsensor"
-		android:layout_alignLeft="@+id/titleofsensor"
-		android:layout_alignStart="@+id/titleofsensor"
-		android:layout_toLeftOf="@+id/valueofsensor"
-		android:layout_toStartOf="@id/valueofsensor"
+		android:layout_below="@+id/list_module_item_title"
+		android:layout_alignLeft="@+id/list_module_item_title"
+		android:layout_alignStart="@+id/list_module_item_title"
+		android:layout_toLeftOf="@+id/list_module_item_value"
+		android:layout_toStartOf="@id/list_module_item_value"
 		/>
 
 	<TextView
-		android:id="@+id/valueofsensor"
+		android:id="@+id/list_module_item_value"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
-		android:layout_toLeftOf="@+id/unitofsensor"
-		android:layout_toStartOf="@+id/unitofsensor"
+		android:layout_toLeftOf="@+id/list_module_item_unit"
+		android:layout_toStartOf="@+id/list_module_item_unit"
 		android:gravity="end"
 		android:ellipsize="end"
 		android:scrollHorizontally="true"
@@ -65,11 +65,11 @@
 		/>
 
 	<TextView
-		android:id="@+id/unitofsensor"
+		android:id="@+id/list_module_item_unit"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignBaseline="@+id/valueofsensor"
-		android:layout_alignBottom="@+id/valueofsensor"
+		android:layout_alignBaseline="@+id/list_module_item_value"
+		android:layout_alignBottom="@+id/list_module_item_value"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"
 		android:textColor="@color/beeeon_accent"
@@ -80,7 +80,7 @@
 
 	<!-- divider -->
 	<View
-		android:id="@+id/sensor_sep_middle"
+		android:id="@+id/list_module_item_sep_middle"
 		style="@style/BeeeOn.Divider"
 		android:layout_alignParentBottom="true"
 		android:clickable="false"

@@ -20,7 +20,7 @@ public abstract class ActionBarPreferenceActivity extends PreferenceActivity {
 	protected abstract int getPreferencesXmlId();
 
 	public Toolbar getToolbar() {
-		return ((Toolbar) findViewById(R.id.toolbar));
+		return ((Toolbar) findViewById(R.id.beeeon_toolbar));
 	}
 
 	@SuppressWarnings("deprecation")
@@ -28,7 +28,7 @@ public abstract class ActionBarPreferenceActivity extends PreferenceActivity {
 	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_abp__preference);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (VERSION.SDK_INT >= VERSION_CODES.LOLLIPOP) {
 			View shadowView = findViewById(R.id.abp__shadowView);
 			final ViewGroup parent = (ViewGroup) shadowView.getParent();

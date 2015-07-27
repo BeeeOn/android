@@ -11,7 +11,7 @@
 	<include layout="@layout/layout_beeeon_toolbar"/>
 
 	<ScrollView
-		android:id="@+id/container"
+		android:id="@+id/gate_edit_container"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
 

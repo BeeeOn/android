@@ -30,16 +30,16 @@ public class ModuleListItem extends AbstractListItem {
 	public void setView(View itemView) {
 		Controller controller = Controller.getInstance(mContext);
 		// Locate the TextViews in drawer_list_item.xml
-		TextView txtTitle = (TextView) itemView.findViewById(R.id.titleofsensor);
-		TextView txtValue = (TextView) itemView.findViewById(R.id.valueofsensor);
-		TextView txtUnit = (TextView) itemView.findViewById(R.id.unitofsensor);
-		TextView txtTime = (TextView) itemView.findViewById(R.id.timeofsensor);
+		TextView txtTitle = (TextView) itemView.findViewById(R.id.list_module_item_title);
+		TextView txtValue = (TextView) itemView.findViewById(R.id.list_module_item_value);
+		TextView txtUnit = (TextView) itemView.findViewById(R.id.list_module_item_unit);
+		TextView txtTime = (TextView) itemView.findViewById(R.id.list_module_item_time);
 
 		// Separators
-		View sepMidle = itemView.findViewById(R.id.sensor_sep_middle);
+		View sepMidle = itemView.findViewById(R.id.list_module_item_sep_middle);
 
 		// Locate the ImageView in drawer_list_item.xml
-		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.iconofsensor);
+		ImageView imgIcon = (ImageView) itemView.findViewById(R.id.list_module_item_icon);
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = controller.getUserSettings();

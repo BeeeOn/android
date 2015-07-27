@@ -15,7 +15,7 @@ public class EmptyMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
+		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.menu_empty_listview_login_name_text);
 		nameView.setText(mName);
 
 		view.setEnabled(false);

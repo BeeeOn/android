@@ -81,11 +81,11 @@ public class NavDrawerMenu {
 
 	private void getGUIElements() {
 		// Locate DrawerLayout in activity_main.xml
-		mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer_layout);
+		mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.main_drawer_layout);
 		// Locate ListView in activity_main.xml
 		mDrawerList = (StickyListHeadersListView) mActivity.findViewById(R.id.listview_drawer);
 		// Locate navigationView layout
-		mNavigationView = (NavigationView) mActivity.findViewById(R.id.relative_layout_drawer);
+		mNavigationView = (NavigationView) mActivity.findViewById(R.id.navigationview_layout_drawer);
 	}
 
 	private void settingsMenu() {
@@ -344,7 +344,7 @@ public class NavDrawerMenu {
 		public boolean onActionItemClicked(ActionMode mode, android.view.MenuItem item) {
 			String title;
 			Log.d(TAG, "ActionMode Gate - item id: " + item.getItemId());
-			if (item.getItemId() == R.id.ada_menu_del) { // UNREGIST GATE
+			if (item.getItemId() == R.id.gate_menu_action_delete) { // UNREGIST GATE
 				Controller controller = Controller.getInstance(mActivity);
 				Gate gate = controller.getGatesModel().getGate(mSelectedMenuItem.getId());
 				if (gate == null) {
@@ -356,16 +356,16 @@ public class NavDrawerMenu {
 				String message = mActivity.getString(R.string.confirm_remove_gate_message);
 				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mSelectedMenuItem.getId());
 
-			} else if (item.getItemId() == R.id.ada_menu_users) { // GO TO USERS OF GATE
+			} else if (item.getItemId() == R.id.gate_menu_action_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);
 				intent.putExtra(GateUsersActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
 
-			} else if (item.getItemId() == R.id.ada_menu_edit) { // RENAME GATE
+			} else if (item.getItemId() == R.id.gate_menu_action_edit) { // RENAME GATE
 				Intent intent = new Intent(mActivity, GateEditActivity.class);
 				intent.putExtra(GateEditActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);
-			} else if (item.getItemId() == R.id.ada_menu_details) {
+			} else if (item.getItemId() == R.id.gate_menu_action_details) {
 				Intent intent = new Intent(mActivity, GateDetailActivity.class);
 				intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mSelectedMenuItem.getId());
 				mActivity.startActivity(intent);

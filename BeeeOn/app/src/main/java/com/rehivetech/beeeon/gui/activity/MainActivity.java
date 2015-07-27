@@ -95,7 +95,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.app_name);
 			setSupportActionBar(toolbar);
@@ -128,13 +128,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (mActiveMenuId == null) { // Default screen
-			ft.replace(R.id.content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
-			ft.replace(R.id.content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
-			ft.replace(R.id.content_frame, mCustomViewFragment, FRG_TAG_CUS);
+			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-			ft.replace(R.id.content_frame, mWatchdogListFragment, FRG_TAG_WAT);
+			ft.replace(R.id.main_content_frame, mWatchdogListFragment, FRG_TAG_WAT);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_GATEWAY)) {
 			mActiveMenuId = null;
 
@@ -313,7 +313,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setGateId(mActiveGateId);
 
-			ft.replace(R.id.content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
 			mModuleListFragment = new ModuleListFragment();
 			mModuleListFragment.setIsPaused(isPaused);
@@ -322,13 +322,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setGateId(mActiveGateId);
 
-			ft.replace(R.id.content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
 			mCustomViewFragment = new CustomViewFragment();
-			ft.replace(R.id.content_frame, mCustomViewFragment, FRG_TAG_CUS);
+			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
 			mWatchdogListFragment = new WatchdogListFragment();
-			ft.replace(R.id.content_frame, mWatchdogListFragment, FRG_TAG_WAT);
+			ft.replace(R.id.main_content_frame, mWatchdogListFragment, FRG_TAG_WAT);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_GATEWAY)) {
 			mActiveMenuId = null;
 			Intent intent = new Intent(this, GateDetailActivity.class);
@@ -389,7 +389,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 					mNavDrawerMenu.openMenu();
 				}
 				break;
-			case R.id.action_notification:
+			case R.id.main_menu_action_notification:
 				// Notification
 				Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
 				startActivity(intent);

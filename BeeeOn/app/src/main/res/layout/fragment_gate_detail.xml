@@ -5,7 +5,7 @@
 			  android:layout_height="match_parent">
 
 	<TextView
-		android:id="@+id/gate_detail_fragment_title"
+		android:id="@+id/gate_detail_title"
 		android:layout_width="match_parent"
 		android:layout_height="72dp"
 		android:singleLine="true"
@@ -17,7 +17,7 @@
 		/>
 
 	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/swipe_container"
+		android:id="@+id/gate_detail_swipe_layout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 

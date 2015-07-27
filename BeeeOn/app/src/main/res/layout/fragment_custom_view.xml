@@ -10,24 +10,24 @@
 	android:background="@color/beeeon_background">
 
 	<TextView
-		android:id="@+id/graph_label"
+		android:id="@+id/custom_view_chart_label"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:singleLine="true"
 		android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
 	<LinearLayout
-		android:id="@+id/graph_layout"
+		android:id="@+id/customview_chart_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/graph_label"
+		android:layout_below="@id/custom_view_chart_label"
 		android:orientation="vertical">
 
 	</LinearLayout>
 
 	<View
 		style="@style/BeeeOn.Divider.Full"
-		android:layout_below="@+id/graph_layout"
+		android:layout_below="@+id/customview_chart_layout"
 		android:layout_marginTop="@dimen/activity_vertical_margin"
 		android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 

@@ -46,8 +46,8 @@ public class SetupModuleListAdapter extends BaseAdapter {
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View itemView = mInflater.inflate(R.layout.adapter_list_module_setup, parent, false);
 		// Get GUI elements
-		ImageView img = (ImageView) itemView.findViewById(R.id.setup_sensor_item_icon);
-		mName = (EditText) itemView.findViewById(R.id.setup_sensor_item_name);
+		ImageView img = (ImageView) itemView.findViewById(R.id.list_module_setup_module_item_icon);
+		mName = (EditText) itemView.findViewById(R.id.list_module_setup_sensor_item_name);
 		// Set image resource by module type
 		img.setImageResource(mDevice.getAllModules().get(position).getIconResource());
 		// Set name of module

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	>
 
-    <!-- toolbar -->
-    <include layout="@layout/layout_beeeon_toolbar" />
+	<!-- toolbar -->
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
 
-        <FrameLayout
-            android:id="@+id/widget_config_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </FrameLayout>
+		<FrameLayout
+			android:id="@+id/widget_configuration_fragment"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content">
+		</FrameLayout>
 
-    </ScrollView>
+	</ScrollView>
 </LinearLayout>

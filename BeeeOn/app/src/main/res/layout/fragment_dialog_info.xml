@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@android:color/white" >
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:background="@android:color/white">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:text="@string/app_name"
-            android:textSize="30sp"
-            android:textStyle="bold" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:paddingTop="5dp"
+			android:text="@string/app_name"
+			android:textSize="30sp"
+			android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/version"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textSize="13sp" />
+		<TextView
+			android:id="@+id/dialog_info_version_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:paddingTop="5dp"
+			android:textSize="13sp"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="10dp"
-            android:src="@drawable/beeeon_logo_cyan_border" >
-        </ImageView>
+		<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="200dp"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:padding="10dp"
+			android:src="@drawable/beeeon_logo_cyan_border">
+		</ImageView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:autoLink="web"
-            android:gravity="center"
-            android:text="@string/company_web"
-            android:textSize="17sp" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:autoLink="web"
+			android:gravity="center"
+			android:text="@string/company_web"
+			android:textSize="17sp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:autoLink="email"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:text="@string/company_email"
-            android:textSize="17sp" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:autoLink="email"
+			android:gravity="center"
+			android:paddingTop="5dp"
+			android:text="@string/company_email"
+			android:textSize="17sp"/>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingBottom="5dp"
-            android:paddingTop="10dp"
-            android:text="@string/copyright"
-            android:textSize="12sp" />
-    </LinearLayout>
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:paddingBottom="5dp"
+			android:paddingTop="10dp"
+			android:text="@string/copyright"
+			android:textSize="12sp"/>
+	</LinearLayout>
 
 </ScrollView>

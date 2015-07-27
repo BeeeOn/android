@@ -12,7 +12,7 @@
 		<!-- content of both textviews and imageview is set in java code -->
 
 		<TextView
-			android:id="@+id/intro_image_title"
+			android:id="@+id/device_add_intro_image_title"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/addddevice_title_size_land"
@@ -21,25 +21,25 @@
 			android:textColor="@color/white"
 			android:layout_marginBottom="25dp"
 
-			android:layout_toEndOf="@id/progress"
-			android:layout_toRightOf="@id/progress"
-			android:layout_alignTop="@id/progress"/>
+			android:layout_toEndOf="@id/device_add_circle_progress"
+			android:layout_toRightOf="@id/device_add_circle_progress"
+			android:layout_alignTop="@id/device_add_circle_progress"/>
 
 		<TextView
-			android:id="@+id/intro_image_text"
+			android:id="@+id/device_add_intro_image_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/adddevice_text_size_land"
 			android:textColor="@color/white"
 			android:text="@string/activity_add_device_dialog_text"
 
-			android:layout_toEndOf="@id/progress"
-			android:layout_toRightOf="@id/progress"
-			android:layout_below="@id/intro_image_title"/>
+			android:layout_toEndOf="@id/device_add_circle_progress"
+			android:layout_toRightOf="@id/device_add_circle_progress"
+			android:layout_below="@id/device_add_intro_image_title"/>
 
 
 		<com.github.lzyzsd.circleprogress.DonutProgress
-			android:id="@+id/progress"
+			android:id="@+id/device_add_circle_progress"
 			android:layout_width="@dimen/content_view_size_land"
 			android:layout_height="@dimen/content_view_size_land"
 			android:layout_gravity="center"

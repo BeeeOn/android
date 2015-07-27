@@ -18,7 +18,8 @@
 		android:layout_marginTop="-16dp"
 		tools:layout_marginTop="0dp"
 		>
-		<include layout="@layout/widget_data_include_clock" />
+
+		<include layout="@layout/widget_data_include_clock"/>
 	</RelativeLayout>
 
 	<!-- date -->
@@ -30,7 +31,8 @@
 		android:layout_marginTop="-16dp"
 		android:layout_centerHorizontal="true"
 		>
-		<include layout="@layout/widget_data_include_date" />
+
+		<include layout="@layout/widget_data_include_date"/>
 	</RelativeLayout>
 
 	<RelativeLayout
@@ -66,7 +68,8 @@
 				android:layout_height="wrap_content"
 				android:gravity="center"
 				android:layout_marginTop="-4dp">
-					<include layout="@layout/widget_persistence_module_value_unit" />
+
+				<include layout="@layout/widget_persistence_module_value_unit"/>
 			</RelativeLayout>
 
 			<RelativeLayout
@@ -75,8 +78,9 @@
 				android:layout_height="wrap_content"
 				android:gravity="center"
 				android:layout_marginTop="2dp">
-					<include layout="@layout/widget_persistence_module_value_unit" />
-				</RelativeLayout>
+
+				<include layout="@layout/widget_persistence_module_value_unit"/>
+			</RelativeLayout>
 		</LinearLayout>
 
 		<!-- weather icon -->

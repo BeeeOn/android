@@ -33,7 +33,7 @@
 			>
 
 			<Button
-				android:id="@+id/add_gate_qr_button"
+				android:id="@+id/gate_add_qr_button"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="1"
@@ -48,7 +48,7 @@
 				android:drawableTop="@drawable/qrcode"/>
 
 			<Button
-				android:id="@+id/add_gate_write_it_button"
+				android:id="@+id/gate_add_write_it_button"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="1"

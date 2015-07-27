@@ -82,14 +82,14 @@ public class GeofenceDialogFragment extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		View view = getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_geofence, null);
 
-		mButtonMinus = (Button) view.findViewById(R.id.geofence_radius_minus);
-		mButtonPlus = (Button) view.findViewById(R.id.geofence_radius_plus);
+		mButtonMinus = (Button) view.findViewById(R.id.dialog_geofence_radius_minus_button);
+		mButtonPlus = (Button) view.findViewById(R.id.dialog_geofence_radius_plus_button);
 
-		mName = (EditText) view.findViewById(R.id.geofence_name);
-		mRadius = (EditText) view.findViewById(R.id.geofence_radius_input);
+		mName = (EditText) view.findViewById(R.id.dialog_geofence_name);
+		mRadius = (EditText) view.findViewById(R.id.dialog_geofence_radius_input);
 		mRadius.setText(String.valueOf(DEFAULT_RADIUS));
 
-		mRadiusTitle = (TextView) view.findViewById(R.id.geofence_radius_title);
+		mRadiusTitle = (TextView) view.findViewById(R.id.dialog_geofence_radius_title);
 		mRadiusTitle.setText(getString(R.string.radius) + " (" + getString(R.string.unit_meter_short) + ")");
 
 		mButtonMinus.setOnClickListener(new View.OnClickListener() {

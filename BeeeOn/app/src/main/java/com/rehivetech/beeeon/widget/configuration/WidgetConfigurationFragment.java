@@ -112,7 +112,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mGateSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway);
+		mGateSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway_spinner);
 
         TextView gateEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_gateway_emptyview);
         if(gateEmptyView != null){
@@ -135,7 +135,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 			public void onNothingSelected(AdapterView<?> parent) {}
 		});
 
-		mWidgetWifiLayoutWrapper = (RelativeLayout) mActivity.findViewById(R.id.widget_config_wifi_wrapper);
+		mWidgetWifiLayoutWrapper = (RelativeLayout) mActivity.findViewById(R.id.widget_config_wifi_wrapper_layout);
 		mWidgetUpdateWiFiCheckBox = (CheckBox) mActivity.findViewById(R.id.widget_config_only_wifi);
 
 		if (mWidgetWifiLayoutWrapper != null && mWidgetUpdateWiFiCheckBox != null) {

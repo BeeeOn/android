@@ -7,86 +7,87 @@
 	android:padding="@dimen/widget_margin"
 	>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="140dp"
-        android:background="@drawable/widget_bg"
-        android:id="@+id/layout"
-        android:layout_gravity="center"
-        >
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:minHeight="140dp"
+		android:background="@drawable/widget_bg"
+		android:id="@+id/layout"
+		android:layout_gravity="center"
+		>
 
-        <LinearLayout
-            android:minWidth="240dp"
-            android:id="@+id/widget_header"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/widget_header_height"
-            android:gravity="center_horizontal|left"
-            android:background="@drawable/widget_inside_bg"
-            android:layout_alignParentTop="true"
-            >
+		<LinearLayout
+			android:minWidth="240dp"
+			android:id="@+id/widget_header"
+			android:orientation="horizontal"
+			android:layout_width="wrap_content"
+			android:layout_height="@dimen/widget_header_height"
+			android:gravity="center_horizontal|left"
+			android:background="@drawable/widget_inside_bg"
+			android:layout_alignParentTop="true"
+			>
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="38dp"
-                android:layout_height="match_parent"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingRight="8dp"
-                android:paddingEnd="8dp"
-                android:scaleType="fitCenter"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_val_unknown"
-                android:contentDescription="@string/placeholder_icon"
-                />
+			<ImageView
+				android:id="@+id/icon"
+				android:layout_width="38dp"
+				android:layout_height="match_parent"
+				android:paddingLeft="8dp"
+				android:paddingStart="8dp"
+				android:paddingRight="8dp"
+				android:paddingEnd="8dp"
+				android:scaleType="fitCenter"
+				android:layout_gravity="center"
+				android:src="@drawable/ic_val_unknown"
+				android:contentDescription="@string/placeholder_icon"
+				/>
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:singleLine="true"
-                android:text="@string/placeholder_none"
-                android:textColor="@color/white"
-                android:textSize="@dimen/abc_text_size_caption_material"
-                android:textStyle="bold"
-                />
+			<TextView
+				android:id="@+id/name"
+				android:layout_width="0dp"
+				android:layout_height="match_parent"
+				android:layout_weight="0.5"
+				android:ellipsize="end"
+				android:gravity="center_vertical"
+				android:singleLine="true"
+				android:text="@string/placeholder_none"
+				android:textColor="@color/white"
+				android:textSize="@dimen/abc_text_size_caption_material"
+				android:textStyle="bold"
+				/>
 
-            <ImageView
-                android:id="@+id/refresh"
-                style="@style/AppWidget.ActionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/placeholder_icon"
-                android:src="@drawable/ic_action_refresh"
-                />
+			<ImageView
+				android:id="@+id/refresh"
+				style="@style/AppWidget.ActionButton"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:contentDescription="@string/placeholder_icon"
+				android:src="@drawable/ic_action_refresh"
+				/>
 
-            <ImageView
-                android:id="@+id/options"
-                style="@style/AppWidget.ActionButton.Overflow"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/placeholder_icon"
-                />
+			<ImageView
+				android:id="@+id/options"
+				style="@style/AppWidget.ActionButton.Overflow"
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:contentDescription="@string/placeholder_icon"
+				/>
 
-        </LinearLayout>
+		</LinearLayout>
 
-        <ListView
-            android:layout_below="@id/widget_header"
-            android:id="@+id/widget_sensor_list_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="100dp"
-            android:layout_alignRight="@+id/widget_header"
-            android:layout_alignEnd="@+id/widget_header"
-            android:layout_alignLeft="@+id/widget_header"
-            android:layout_alignStart="@+id/widget_header"
+		<ListView
+			android:layout_below="@id/widget_header"
+			android:id="@+id/widget_sensor_list_view"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:minHeight="100dp"
+			android:layout_alignRight="@+id/widget_header"
+			android:layout_alignEnd="@+id/widget_header"
+			android:layout_alignLeft="@+id/widget_header"
+			android:layout_alignStart="@+id/widget_header"
 			style="@style/BeeeOn.DividerListView.Full"
 			tools:listitem="@layout/widget_location_list_item"
-            />
+			/>
+
 		<TextView
 			android:id="@+id/empty_view"
 			android:layout_width="wrap_content"
@@ -107,17 +108,17 @@
 			/>
 
 
-        <!-- shadow below header -->
-        <ImageView
-            android:id="@+id/toolbar_shadow"
-            android:layout_width="wrap_content"
-            android:layout_height="6dp"
-            android:layout_below="@id/widget_header"
-            android:layout_alignLeft="@+id/widget_header"
-            android:layout_alignStart="@+id/widget_header"
-            android:layout_alignRight="@+id/widget_header"
-            android:layout_alignEnd="@+id/widget_header"
-            android:src="@drawable/toolbar_dropshadow"
-            />
-    </RelativeLayout>
+		<!-- shadow below header -->
+		<ImageView
+			android:id="@+id/toolbar_shadow"
+			android:layout_width="wrap_content"
+			android:layout_height="6dp"
+			android:layout_below="@id/widget_header"
+			android:layout_alignLeft="@+id/widget_header"
+			android:layout_alignStart="@+id/widget_header"
+			android:layout_alignRight="@+id/widget_header"
+			android:layout_alignEnd="@+id/widget_header"
+			android:src="@drawable/toolbar_dropshadow"
+			/>
+	</RelativeLayout>
 </FrameLayout>

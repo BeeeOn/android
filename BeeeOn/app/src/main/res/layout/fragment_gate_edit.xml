@@ -22,7 +22,7 @@
 			/>
 
 		<EditText
-			android:id="@+id/fragment_gate_edit_text"
+			android:id="@+id/gate_edit_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:textAppearance="@style/TextAppearance.AppCompat.Display1"
@@ -52,7 +52,7 @@
 			/>
 
 		<TextView
-			android:id="@+id/fragment_gate_edit_gate_id_label"
+			android:id="@+id/gate_edit_gate_id_label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="@color/beeeon_secondary_text"
@@ -65,13 +65,13 @@
 			/>
 
 		<TextView
-			android:id="@+id/fragment_gate_edit_gate_id"
+			android:id="@+id/gate_edit_gate_id_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-			android:layout_below="@+id/fragment_gate_edit_gate_id_label"
-			android:layout_alignLeft="@+id/fragment_gate_edit_gate_id_label"
-			android:layout_alignStart="@+id/fragment_gate_edit_gate_id_label"
+			android:layout_below="@+id/gate_edit_gate_id_label"
+			android:layout_alignLeft="@+id/gate_edit_gate_id_label"
+			android:layout_alignStart="@+id/gate_edit_gate_id_label"
 			/>
 	</RelativeLayout>
 
@@ -95,7 +95,7 @@
 			/>
 
 		<TextView
-			android:id="@+id/fragment_gate_edit_spinner_label"
+			android:id="@+id/gate_edit_spinner_label"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textColor="@color/beeeon_secondary_text"
@@ -108,18 +108,18 @@
 			/>
 
 		<Spinner
-			android:id="@+id/fragment_gate_edit_spinner"
+			android:id="@+id/gate_edit_spinner"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="16dp"
 			android:layout_marginRight="@dimen/activity_horizontal_margin"
 			android:layout_marginEnd="@dimen/activity_horizontal_margin"
-			android:layout_below="@+id/fragment_gate_edit_spinner_label"
-			android:layout_alignLeft="@+id/fragment_gate_edit_spinner_label"
-			android:layout_alignStart="@+id/fragment_gate_edit_spinner_label"
+			android:layout_below="@+id/gate_edit_spinner_label"
+			android:layout_alignLeft="@+id/gate_edit_spinner_label"
+			android:layout_alignStart="@+id/gate_edit_spinner_label"
 			/>
 
 	</RelativeLayout>
 
-	<View style="@style/BeeeOn.Divider" />
+	<View style="@style/BeeeOn.Divider"/>
 </LinearLayout>

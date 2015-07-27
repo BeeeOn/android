@@ -83,7 +83,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		LinearLayout moduleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices);
+		LinearLayout moduleSpinnersWrapper = (LinearLayout) mActivity.findViewById(R.id.widget_config_devices_layout);
 		LinearLayout.LayoutParams spinnerLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 		int marginBottomPx = Utils.convertDpToPixel(SPACE_BETWEEN_MODULE_SPINNERS);
 		spinnerLayoutParams.setMargins(0, 0, 0, marginBottomPx);
@@ -123,7 +123,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 		mCityLabel = (TextView) mActivity.findViewById(R.id.widget_config_location_label);
 
-		RelativeLayout locationChooseLine = (RelativeLayout) mActivity.findViewById(R.id.widget_config_location);
+		RelativeLayout locationChooseLine = (RelativeLayout) mActivity.findViewById(R.id.widget_config_location_layout);
 		locationChooseLine.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -174,7 +174,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, final EditTextDialog dialog) {
-		TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_text_input_layout);
+		TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		if(!Utils.validateInput(mActivity, cityTextInputLayout)){
 			return;
 		}

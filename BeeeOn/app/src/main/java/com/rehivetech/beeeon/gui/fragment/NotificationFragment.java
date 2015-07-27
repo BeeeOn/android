@@ -41,7 +41,7 @@ public class NotificationFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_notification,
 				container, false);
 
-		mListView = (ListView) view.findViewById(R.id.notification_list);
+		mListView = (ListView) view.findViewById(R.id.notification_listview);
 		mTextNoNotif = (TextView) view.findViewById(R.id.notification_text);
 		mProgressBar = (ProgressBar) view.findViewById(R.id.notification_progress_bar);
 

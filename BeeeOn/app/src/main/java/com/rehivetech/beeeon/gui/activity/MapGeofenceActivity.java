@@ -84,7 +84,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 //		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_map_geofence);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.title_activity_map_geofence);
 			setSupportActionBar(toolbar);
@@ -98,7 +98,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-		((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
+		((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_geofence_map)).getMapAsync(this);
 
 		buildGoogleApiClient();
 	}
@@ -192,7 +192,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 
 		// Get the SearchView and set the searchable configuration
-		mSearchItem = menu.findItem(R.id.action_search);
+		mSearchItem = menu.findItem(R.id.map_geofence_action_search);
 		final SearchView searchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
 
 		searchView.setSubmitButtonEnabled(true);
@@ -494,9 +494,9 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if (item.getItemId() == R.id.geofence_menu_del) {
+			if (item.getItemId() == R.id.map_geofence_menu_del) {
 				deleteGeofence(mHolder);
-			} else if (item.getItemId() == R.id.geofence_menu_create_watchdog) {
+			} else if (item.getItemId() == R.id.map_geofence_menu_create_watchdog) {
 				Intent intent = new Intent(MapGeofenceActivity.this, WatchdogEditRuleActivity.class);
 				intent.putExtra(WatchdogEditRuleActivity.EXTRA_GEOFENCE_ID_PICKED, mHolder.getGeofence().getId());
 				intent.putExtra(WatchdogEditRuleActivity.EXTRA_IS_NEW, true);

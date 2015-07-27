@@ -21,16 +21,16 @@
 		android:text="@string/widget_configuration_adapter"
 		/>
 
-    <!-- gate emptyview-->
-    <TextView
-        android:id="@+id/widget_config_gateway_emptyview"
-        style="@style/LinearRow.Row"
-        android:text="@string/no_gate_cap"
-        android:textColor="@color/beeeon_secondary_text"
-        />
+	<!-- gate emptyview-->
+	<TextView
+		android:id="@+id/widget_config_gateway_emptyview"
+		style="@style/LinearRow.Row"
+		android:text="@string/no_gate_cap"
+		android:textColor="@color/beeeon_secondary_text"
+		/>
 
 	<Spinner
-		android:id="@+id/widget_config_gateway"
+		android:id="@+id/widget_config_gateway_spinner"
 		style="@style/BeeeOn.Spinner"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
@@ -49,7 +49,7 @@
 		/>
 
 	<LinearLayout
-		android:id="@+id/widget_config_devices"
+		android:id="@+id/widget_config_devices_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		style="@style/LinearRow.Row"
@@ -57,13 +57,13 @@
 		android:minHeight="40dp"
 		android:orientation="vertical">
 		<!-- spinners are inflated programmatically -->
-        <!-- module emptyview-->
-        <TextView
-            android:id="@+id/widget_config_device_emptyview"
-            style="@style/LinearRow.Row.NoMargin"
-            android:text="@string/no_sensor_cap"
-            android:textColor="@color/beeeon_secondary_text"
-            />
+		<!-- module emptyview-->
+		<TextView
+			android:id="@+id/widget_config_device_emptyview"
+			style="@style/LinearRow.Row.NoMargin"
+			android:text="@string/no_sensor_cap"
+			android:textColor="@color/beeeon_secondary_text"
+			/>
 	</LinearLayout>
 
 	<!-- separator -->
@@ -83,12 +83,13 @@
 		/>
 
 	<RelativeLayout
-		android:id="@+id/widget_config_location"
+		android:id="@+id/widget_config_location_layout"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:minHeight="48dp"
 		android:gravity="center_vertical"
 		android:clickable="true">
+
 		<TextView
 			style="@style/LinearRow.Item"
 			android:text="@string/weather_place"
@@ -154,6 +155,7 @@
 		android:layout_marginRight="16dp"
 		android:layout_marginEnd="16dp"
 		>
+
 		<TextView
 			style="@style/LinearRow.Item.OneLine"
 			android:text="@string/color_scheme"

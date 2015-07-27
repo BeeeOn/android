@@ -24,7 +24,7 @@ public class ChartMarkerView extends MarkerView {
 	 */
 	public ChartMarkerView(Context context, int layoutResource) {
 		super(context, layoutResource);
-		mTextView = (TextView) findViewById(R.id.chart_markerview_text);
+		mTextView = (TextView) findViewById(R.id.util_chart_helper_markerview_text);
 	}
 
 	@Override

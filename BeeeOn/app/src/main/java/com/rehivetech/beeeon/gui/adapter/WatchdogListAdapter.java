@@ -77,13 +77,13 @@ public class WatchdogListAdapter extends BaseAdapter {
 
 			holder = new ViewHolder();
 
-			holder.ItemIcon = (ImageView) convertView.findViewById(R.id.watchdogItemIcon);
-			holder.ItemRuleName = (TextView) convertView.findViewById(R.id.watchdogItemRuleName);
-			holder.ItemSubLabel = (TextView) convertView.findViewById(R.id.watchdogItemSensorName);
-			holder.ItemOperator = (ImageView) convertView.findViewById(R.id.watchdogItemOperator);
-			holder.ItemTreshold = (TextView) convertView.findViewById(R.id.watchdogItemTreshold);
-			holder.ItemAction = (ImageView) convertView.findViewById(R.id.watchdogItemAction);
-			holder.ItemSwitch = (SwitchCompat) convertView.findViewById(R.id.watchdogItemSwitch);
+			holder.ItemIcon = (ImageView) convertView.findViewById(R.id.list_watchdog_item_icon);
+			holder.ItemRuleName = (TextView) convertView.findViewById(R.id.list_watchdog_item_rule_name);
+			holder.ItemSubLabel = (TextView) convertView.findViewById(R.id.list_watchdog_item_module_name);
+			holder.ItemOperator = (ImageView) convertView.findViewById(R.id.list_watchdog_idtem_operator);
+			holder.ItemTreshold = (TextView) convertView.findViewById(R.id.list_watchdog_item_treshold);
+			holder.ItemAction = (ImageView) convertView.findViewById(R.id.list_watchdog_item_action);
+			holder.ItemSwitch = (SwitchCompat) convertView.findViewById(R.id.list_watchdog_item_switch);
 
 			convertView.setTag(holder);
 		} else {

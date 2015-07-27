@@ -34,7 +34,7 @@ public class InfoDialogFragment extends TrackDialogFragment {
 		LayoutInflater factory = LayoutInflater.from(getActivity());
 		final View view = factory.inflate(R.layout.fragment_dialog_info, null);
 
-		version = (TextView) view.findViewById(R.id.version);
+		version = (TextView) view.findViewById(R.id.dialog_info_version_text);
 		try {
 			version.setText(String.format("%s %s", getString(R.string.version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {

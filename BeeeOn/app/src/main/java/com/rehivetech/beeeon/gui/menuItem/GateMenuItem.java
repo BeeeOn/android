@@ -20,9 +20,9 @@ public class GateMenuItem extends AbstractMenuItem {
 
 	@Override
 	public void setView(View view) {
-		TextView nameView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.name);
-		TextView roleView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.role);
-		RadioButton radioButton = (RadioButton) view.findViewById(R.id.radio_button);
+		TextView nameView = (TextView) view.findViewById(R.id.menu_gate_listview_name);
+		TextView roleView = (TextView) view.findViewById(com.rehivetech.beeeon.R.id.menu_gate_listview_role);
+		RadioButton radioButton = (RadioButton) view.findViewById(R.id.menu_gate_listview_radio_button);
 
 		nameView.setText(mName);
 		roleView.setText(mRole);

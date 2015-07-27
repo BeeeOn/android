@@ -51,7 +51,7 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
 
-		mLocationSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_location);
+		mLocationSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_location_layout);
         TextView locationEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_location_emptyview);
         mLocationSpinner.setEmptyView(locationEmptyView);
 	}

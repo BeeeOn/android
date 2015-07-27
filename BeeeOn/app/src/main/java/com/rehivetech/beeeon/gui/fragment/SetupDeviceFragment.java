@@ -100,9 +100,9 @@ public class SetupDeviceFragment extends TrackFragment {
 
 		Controller controller = Controller.getInstance(mActivity);
 		// Get GUI elements
-		final ListView listOfName = (ListView) mView.findViewById(R.id.setup_sensor_name_list);
-		final Spinner spinner = (Spinner) mView.findViewById(R.id.addsensor_spinner_choose_location);
-		final TextView time = (TextView) mView.findViewById(R.id.setup_sensor_info_text);
+		final ListView listOfName = (ListView) mView.findViewById(R.id.module_setup_name_listview);
+		final Spinner spinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location);
+		final TextView time = (TextView) mView.findViewById(R.id.module_setup_info_text);
 
 		// Create gate for setting names of new sensors
 		SetupModuleListAdapter listAdapter = new SetupModuleListAdapter(mActivity, mNewDevices.get(0));
@@ -165,10 +165,10 @@ public class SetupDeviceFragment extends TrackFragment {
 	 * @return true if is item hidden
 	 */
 	private boolean hideInputForNewLocation(boolean hide) {
-		EditText newLocation = (EditText) mView.findViewById(R.id.addsensor_new_location_name);
-		TextView orLabel = (TextView) mView.findViewById(R.id.addsensor_or);
+		EditText newLocation = (EditText) mView.findViewById(R.id.module_setup_new_location_name);
+		TextView orLabel = (TextView) mView.findViewById(R.id.module_setup_or_text);
 
-		Spinner newIconSpinner = (Spinner) mView.findViewById(R.id.addsensor_spinner_choose_new_location_icon);
+		Spinner newIconSpinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon);
 
 		// Prepare list of icons
 		List<Integer> iconsList = new ArrayList<>();
@@ -191,7 +191,7 @@ public class SetupDeviceFragment extends TrackFragment {
 	}
 
 	private boolean shringSpinner(boolean shrink) {
-		Spinner spinner = (Spinner) mView.findViewById(R.id.addsensor_spinner_choose_location);
+		Spinner spinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location);
 		LayoutParams params = (LayoutParams) spinner.getLayoutParams();
 		if (shrink)
 			params.width = 180;
@@ -203,19 +203,19 @@ public class SetupDeviceFragment extends TrackFragment {
 
 
 	public Spinner getSpinner() {
-		return ((Spinner) mView.findViewById(R.id.addsensor_spinner_choose_location));
+		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location));
 	}
 
 	public ListView getListOfName() {
-		return ((ListView) mView.findViewById(R.id.setup_sensor_name_list));
+		return ((ListView) mView.findViewById(R.id.module_setup_name_listview));
 	}
 
 	public TextView getNewLocation() {
-		return ((EditText) mView.findViewById(R.id.addsensor_new_location_name));
+		return ((EditText) mView.findViewById(R.id.module_setup_new_location_name));
 	}
 
 	public Spinner getNewIconSpinner() {
-		return ((Spinner) mView.findViewById(R.id.addsensor_spinner_choose_new_location_icon));
+		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon));
 	}
 
 }

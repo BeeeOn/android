@@ -43,7 +43,7 @@
 					/>
 
 				<EditText
-					android:id="@+id/watchdog_edit_name"
+					android:id="@+id/watchdog_edit_name_textview"
 					android:layout_width="match_parent"
 					android:layout_height="match_parent"
 					android:textSize="16sp"
@@ -116,7 +116,7 @@
 				  - margin is less cause the shadow
 				-->
 				<com.melnykov.fab.FloatingActionButton
-					android:id="@+id/watchdog_edit_operator"
+					android:id="@+id/watchdog_edit_operator_fab"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:src="@drawable/ic_action_next_item"
@@ -128,15 +128,15 @@
 					/>
 
 				<EditText
-					android:id="@+id/watchdog_edit_treshold"
+					android:id="@+id/watchdog_edit_treshold_edittext"
 					android:layout_width="100dp"
 					android:singleLine="true"
 					android:layout_height="wrap_content"
 					android:textColor="@color/beeeon_accent"
 					android:textSize="16sp"
 					android:gravity="center_horizontal"
-					android:layout_toRightOf="@+id/watchdog_edit_operator"
-					android:layout_toEndOf="@+id/watchdog_edit_operator"
+					android:layout_toRightOf="@+id/watchdog_edit_operator_fab"
+					android:layout_toEndOf="@+id/watchdog_edit_operator_fab"
 					android:hint="@string/treshold_value"
 					android:layout_marginLeft="16dp"
 					android:layout_marginStart="16dp"
@@ -145,14 +145,14 @@
 					/>
 
 				<TextView
-					android:id="@+id/watchdog_edit_treshold_unit"
+					android:id="@+id/watchdog_edit_treshold_unit_textview"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:textColor="@color/beeeon_accent"
 					android:textStyle="bold"
 					android:textSize="16sp"
-					android:layout_toRightOf="@+id/watchdog_edit_treshold"
-					android:layout_alignBaseline="@+id/watchdog_edit_treshold"
+					android:layout_toRightOf="@+id/watchdog_edit_treshold_edittext"
+					android:layout_alignBaseline="@+id/watchdog_edit_treshold_edittext"
 					/>
 			</RelativeLayout>
 
@@ -226,7 +226,7 @@
 
 			<!-- notification -->
 			<RelativeLayout
-				android:id="@+id/watchdog_detail_notification"
+				android:id="@+id/watchdog_detail_notification_layout"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="16dp"
@@ -251,7 +251,7 @@
 					/>
 
 				<TextView
-					android:id="@+id/watchdog_edit_action_text"
+					android:id="@+id/watchdog_edit_action_textview"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:layout_toRightOf="@+id/watchdog_edit_action_icon"
@@ -262,11 +262,11 @@
 
 
 				<EditText
-					android:id="@+id/watchdog_edit_notification_text"
+					android:id="@+id/watchdog_edit_notification_edittext"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:textSize="16sp"
-					android:layout_below="@id/watchdog_edit_action_text"
+					android:layout_below="@id/watchdog_edit_action_textview"
 					android:layout_marginLeft="70dp"
 					android:layout_marginStart="70dp"
 					android:layout_marginRight="16dp"
@@ -302,7 +302,7 @@
 					/>
 
 				<TextView
-					android:id="@+id/watchdog_edit_actor_text"
+					android:id="@+id/watchdog_edit_actor_textview"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:gravity="center_vertical"
@@ -316,9 +316,9 @@
 					android:id="@+id/watchdog_edit_actor_spinner"
 					android:layout_width="match_parent"
 					android:layout_height="36dp"
-					android:layout_below="@id/watchdog_edit_actor_text"
-					android:layout_alignLeft="@id/watchdog_edit_actor_text"
-					android:layout_alignStart="@+id/watchdog_edit_actor_text"
+					android:layout_below="@id/watchdog_edit_actor_textview"
+					android:layout_alignLeft="@id/watchdog_edit_actor_textview"
+					android:layout_alignStart="@+id/watchdog_edit_actor_textview"
 					android:layout_marginEnd="16dp"
 					android:layout_marginRight="16dp"
 					/>

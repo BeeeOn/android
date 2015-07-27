@@ -67,9 +67,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_custom_view_graph_modules, container, false);
+		View view = inflater.inflate(R.layout.fragment_custom_view_chart_modules, container, false);
 
-		mLayout = (LinearLayout) view.findViewById(R.id.container);
+		mLayout = (LinearLayout) view.findViewById(R.id.custom_view_container);
 
 		prepareModules();
 		loadData();
@@ -89,7 +89,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		} else {
 			chart = new LineChart(mActivity);
 		}
-		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.graph_layout);
+		LinearLayout chartLayout = (LinearLayout) row.findViewById(R.id.customview_chart_layout);
 		chartLayout.setVisibility(View.INVISIBLE);
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
@@ -111,7 +111,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(legend);
 
 		// Set title
-		TextView tv = (TextView) row.findViewById(R.id.graph_label);
+		TextView tv = (TextView) row.findViewById(R.id.custom_view_chart_label);
 		tv.setText(getString(module.getType().getStringResource()));
 
 		mCharts.put(module.getType().getTypeId(), chart);

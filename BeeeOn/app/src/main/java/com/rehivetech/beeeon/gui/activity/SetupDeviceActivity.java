@@ -44,7 +44,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base_guide);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			toolbar.setTitle(R.string.title_activity_setup_sensor);
 			setSupportActionBar(toolbar);
@@ -54,11 +54,11 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 		SetupDeviceFragmentAdapter adapter = new SetupDeviceFragmentAdapter(getSupportFragmentManager());
 
-		ViewPager viewPager = (ViewPager) findViewById(R.id.intro_pager);
+		ViewPager viewPager = (ViewPager) findViewById(R.id.base_guide_intro_pager);
 		viewPager.setAdapter(adapter);
 		viewPager.setOffscreenPageLimit(adapter.getCount());
 
-		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.intro_indicator);
+		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.base_guide_intro_indicator);
 		indicator.setViewPager(viewPager);
 		indicator.setVisibility(View.GONE);
 
@@ -67,9 +67,9 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 
 	private void initButtons() {
-		Button skipBtn = (Button) findViewById(R.id.add_gate_skip);
-		Button cancelBtn = (Button) findViewById(R.id.add_gate_cancel);
-		Button nextBtn = (Button) findViewById(R.id.add_gate_next);
+		Button skipBtn = (Button) findViewById(R.id.base_guide_add_gate_skip_button);
+		Button cancelBtn = (Button) findViewById(R.id.base_guide_add_gate_cancel_button);
+		Button nextBtn = (Button) findViewById(R.id.base_guide_add_gate_next_button);
 
 		skipBtn.setVisibility(View.INVISIBLE);
 
@@ -97,7 +97,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 				// Controll if Names arent empty
 				for (int i = 0; i < newDevice.getAllModules().size(); i++) {
 					// Get new names from EditText
-					String name = ((EditText) listOfName.getChildAt(i).findViewById(R.id.setup_sensor_item_name)).getText().toString();
+					String name = ((EditText) listOfName.getChildAt(i).findViewById(R.id.list_module_setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
 					if (name.isEmpty()) {
 						Toast.makeText(SetupDeviceActivity.this, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
