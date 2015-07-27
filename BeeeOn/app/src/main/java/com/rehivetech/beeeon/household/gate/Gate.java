@@ -32,11 +32,11 @@ public class Gate implements INameIdentifier {
 	 * @return name of gate, or id if name is empty (check it with hasName())
 	 */
 	public String getName() {
-		return mName.length() > 0 ? mName : getId();
+		return hasName() ? mName : getId();
 	}
 
 	public boolean hasName() {
-		return !mName.isEmpty();
+		return mName != null && !mName.isEmpty();
 	}
 
 	/**
