@@ -62,5 +62,5 @@ dependencies {
 	compile 'net.simonvt.numberpicker:number-picker@aar'
 	compile 'com.avast:android-styled-dialogs:2.2.0'
 	compile 'com.facebook.android:facebook-android-sdk:4.0.0'
-	compile 'com.github.PhilJay:MPAndroidChart:v2.0.9'
+	compile 'com.github.PhilJay:MPAndroidChart:v2.1.2'
 }

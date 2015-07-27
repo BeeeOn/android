@@ -450,6 +450,10 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			BarData  barData = new BarData(xVals, (BarDataSet)mDataSet);
 			data.setData(barData);
 		} else {
+			if (mDataSet.getYVals().size() < 50) {
+				((LineDataSet) mDataSet).setDrawCubic(true);
+				((LineDataSet) mDataSet).setCubicIntensity(0.05f);
+			}
 			LineData lineData = new LineData(xVals, (LineDataSet)mDataSet);
 			data.setData(lineData);
 		}

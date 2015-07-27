@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.rehivetech.beeeon.R;
 
 /**
@@ -28,7 +29,7 @@ public class ChartMarkerView extends MarkerView {
 	}
 
 	@Override
-	public void refreshContent(Entry e, int dataSetIndex) {
+	public void refreshContent(Entry e, Highlight highlight) {
 		mTextView.setText(Float.toString(e.getVal()));
 	}
 

@@ -96,7 +96,7 @@ final public class ChartHelper {
 			}
 
 			yAxis.setValueFormatter(enumValueFormatter);
-			yAxis.setLabelCount(yLabels.size() - 1);
+			yAxis.setLabelCount(yLabels.size() - 1, true);
 			yAxis.setAxisMinValue(0);
 			yAxis.setAxisMaxValue(yLabels.size() - 1);
 			chart.setDoubleTapToZoomEnabled(false);
