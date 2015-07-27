@@ -25,6 +25,7 @@ android {
             signingConfig signingConfigs.debug
             versionNameSuffix " debug"
             applicationIdSuffix ".debug"
+            resValue "string", "app_name", "BeeeOn Debug"
         }
 
         release {
@@ -38,10 +39,9 @@ android {
 }
 
 repositories {
-    flatDir{ dirs 'libs' }
-    maven { url 'http://dl.bintray.com/goncharov/smart-extension-api/' }
+    flatDir { dirs 'libs' }
+	maven { url "https://jitpack.io" } // MP Android Chart
     mavenCentral()
-	maven { url "https://jitpack.io" } //MP Android Chart
 }
 
 dependencies {
