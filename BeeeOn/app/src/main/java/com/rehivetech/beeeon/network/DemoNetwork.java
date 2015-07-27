@@ -443,35 +443,10 @@ public class DemoNetwork implements INetwork {
 			// mDevice.setLocationId(locationId); // uninitialized mDevice has no location
 			device.setNetworkQuality(rand.nextInt(101));
 
-			// add random number of devices (max. 5)
-			/*int count = rand.nextInt(5);
-			do {
-				// Get random module type
-				ModuleType[] types = ModuleType.values();
-				ModuleType randType = types[rand.nextInt(types.length)];
-
-				// Determine offset (number of existing devices with this type in the mDevice)
-				int offset = 0;
-				for (Module module : device.getAllModules()) {
-					if (module.getType() == randType) {
-						offset++;
-					}
-				}
-
-				// Create combined module type
-				String typeId = String.valueOf(offset * 256 + randType.getTypeId());
-
-				// Create default name
-				String defaultName = String.format("%s %d", mContext.getString(randType.getStringResource()), offset + 1);
-
-				Module module = Module.createFromModuleTypeId(typeId);
-				module.setDevice(device);
-				module.setName(defaultName);
-				module.setVisibility(true);
+			// Set random values for device modules
+			for (Module module : device.getAllModules()) {
 				setNewValue(module);
-
-				device.addModule(module);
-			} while (--count >= 0);*/
+			}
 
 			// Add new mDevice to global holder
 			mDevices.addObject(gateId, device);
