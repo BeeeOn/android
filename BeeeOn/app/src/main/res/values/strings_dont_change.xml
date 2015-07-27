@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- hardcoded strings which probably won't be translated -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
     <string name="icon_if" translatable="false">If</string>
     <string name="icon_then" translatable="false">Then</string>
 </resources>

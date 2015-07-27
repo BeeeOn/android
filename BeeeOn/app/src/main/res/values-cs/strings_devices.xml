@@ -34,28 +34,6 @@
     <string name="dev_illumination_type">Senzor osvětlení</string>
     <string name="dev_noise_type">Senzor hluku</string>
     <string name="dev_emission_type">Senzor emisí</string>
-    <!-- Actors -->
-    <string name="dev_actor_on_off_type">Zapnutý/vypnutý aktor</string>
-    <string name="dev_actor_push_type">Dotykový aktor</string>
-    <string name="dev_actor_toggle_type">Přepínací aktor</string>
-    <string name="dev_actor_range_type">Rozsahový aktor</string>
-    <string name="dev_actor_rgb_type">RGB aktor</string>
-
-    <!-- Special values of modules -->
-    <string name="dev_enum_value_open">Otevřeno</string>
-    <string name="dev_enum_value_closed">Zavřeno</string>
-    <string name="dev_enum_value_on">Zapnuto</string>
-    <string name="dev_enum_value_off">Vypnuto</string>
-
-	<string name="dev_boiler_operation_type_value_off">Vypnuto</string>
-	<string name="dev_boiler_operation_type_value_room">Pokojový regulátor</string>
-	<string name="dev_boiler_operation_type_value_equiterm">Ekvitermní regulace</string>
-	<string name="dev_boiler_operation_type_value_stable">Regulace na stálou teplotu vody</string>
-	<string name="dev_boiler_operation_type_value_tuv">Ohřev TUV</string>
-
-	<string name="dev_boiler_operation_mode_value_automatic">Automaticky</string>
-	<string name="dev_boiler_operation_mode_value_manual">Ručně</string>
-	<string name="dev_boiler_operation_mode_value_vacation">Dovolená</string>
 
     <!-- Names of default locations -->
 	<string name="loc_none">- Nezařazené -</string>

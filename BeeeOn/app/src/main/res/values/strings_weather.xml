@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 	<!-- Put your own APP ID here -->
 	<string name="open_weather_maps_app_id" translatable="false">e83217b46bd62b1fcea4f846b44af643</string>
 

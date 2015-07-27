@@ -366,20 +366,7 @@
 	<string name="addsensor_stoped">zastaveno</string>
 	<string name="add_action_dialog_title">Co chcete přidat?</string>
 	<string name="toast_need_module_location_icon">Vyberte ikonu nového umístění</string>
-	<string name="dialog_title_set_bioler_type">Volba typu provozu okruhu</string>
-	<string name="dialog_set_boiler_setaction">nastavit</string>
-	<string name="dialog_title_set_bioler_mode">Volba režimu okruhu</string>
-	<string name="dialog_title_set_temperature">Volba teploty</string>
-	<string name="dev_actor_temperature">Regulátor teploty</string>
-	<string name="dev_boiler_status_failure">Selhání</string>
-	<string name="dev_boiler_status_heating">Vytápění</string>
-	<string name="dev_boiler_status_hot_water">Ohřev vody</string>
-	<string name="dev_boiler_status_shutdown">Vypnuto</string>
-	<string name="dev_boiler_status_type">Stav kotle</string>
-	<string name="dev_boiler_status_undefined">Nedefinováno</string>
 	<string name="action_notification">Notifikace</string>
-	<string name="dev_actor_boiler_operation_mode">Režim provozu kotle</string>
-	<string name="dev_actor_boiler_operation_type">Typ provozu kotle</string>
 	<string name="notification_name_new_gate">Přidána nová brána</string>
 	<string name="notification_name_new_sensor">Přidáno nové zařízení</string>
 	<string name="notification_name_link">Spoj</string>
@@ -461,4 +448,11 @@
     <string name="dialog_code_title">Zadejte kód brány</string>
     <string name="title_activity_settings">Nastavení</string>
 
+
+    <string name="dialog_actuator_set_value">Nastavit novou hodnotu</string>
+    <string name="dialog_actuator_action">Nastavit</string>
+    <string name="dialog_actuator_cancel">Zrušit</string>
+
+    <string name="unknown_device">Neznámé zařízení</string>
+    <string name="unknown_manufacturer">Neznámý výrobce</string>
 </resources>

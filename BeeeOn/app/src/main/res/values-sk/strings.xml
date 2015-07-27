@@ -319,31 +319,10 @@
     <string name="add_new_geofence_area">Pridať oblasť</string>
     <string name="addsensor_stoped">zastavené</string>
     <string name="toast_need_module_location_icon">Vyberte ikonu nového umiestnenia</string>
-    <string name="dialog_title_set_bioler_type">Voľba typu prevádzky okruhu</string>
-    <string name="dialog_set_boiler_setaction">nastaviť</string>
-    <string name="dialog_title_set_bioler_mode">Voľba režimu okruhu</string>
-    <string name="dialog_title_set_temperature">Voľba teploty</string>
     <string name="action_done">Hotovo</string>
     <string name="action_notification">Notifikácie</string>
     <string name="add_action_dialog_title">Čo chcete pridať?</string>
     <string name="color_scheme">Farebná schéma</string>
-    <string name="dev_actor_boiler_operation_mode">Režim prevádzky kotla</string>
-    <string name="dev_actor_boiler_operation_type">Typ prevádzky kotla</string>
-    <string name="dev_actor_temperature">Regulátor teploty</string>
-    <string name="dev_boiler_operation_mode_value_automatic">Automatický</string>
-    <string name="dev_boiler_operation_mode_value_manual">Ručne</string>
-    <string name="dev_boiler_operation_mode_value_vacation">Dovolenka</string>
-    <string name="dev_boiler_operation_type_value_equiterm">ekvitermická regulácia</string>
-    <string name="dev_boiler_operation_type_value_off">Vypnuté</string>
-    <string name="dev_boiler_operation_type_value_room">Izbový regulátor</string>
-    <string name="dev_boiler_operation_type_value_stable">Regulácia na stálu teplotu vody</string>
-    <string name="dev_boiler_operation_type_value_tuv">Ohrev TUV</string>
-    <string name="dev_boiler_status_failure">Zlyhanie</string>
-    <string name="dev_boiler_status_heating">Kúrenie</string>
-    <string name="dev_boiler_status_hot_water">Ohrev vody</string>
-    <string name="dev_boiler_status_shutdown">Vypnuté</string>
-    <string name="dev_boiler_status_type">Stav kotla</string>
-    <string name="dev_boiler_status_undefined">Nedefinované</string>
     <string name="dialog_location_country">Mesto, štát</string>
     <string name="dialog_location_select">Vyberte miesto</string>
     <string name="household">Domácnosť</string>
@@ -404,7 +383,6 @@
     <string name="confirm_add_owner_title">Nový používateľ ako vlastník</string>
     <string name="delete_gate_failure">Brána nebola úspešne odstránená</string>
     <string name="demo_name_module_switch">Spínač kachlí</string>
-    <string name="demo_notif_watchdog_temp_stove">Kachle sú príliš horúce!</string>
     <string name="edit_gate_failure">Brána nebola upravená</string>
     <string name="edit_gate_success">Brána bola úspešne upravená</string>
     <string name="enter_text_dialog_title">Zadajte kód brány</string>
@@ -453,4 +431,11 @@
     <string name="tut_add_sensor_title_1">Vytiahnite izolačný prúžok batérii</string>
     <string name="update_gateway">Upraviť bránu</string>
     <string name="title_activity_settings">Nastavenie</string>
+
+    <string name="dialog_actuator_set_value">Nastaviť novú hodnotu</string>
+    <string name="dialog_actuator_action">Nastaviť</string>
+    <string name="dialog_actuator_cancel">Zrušiť</string>
+
+    <string name="unknown_device">Neznáme zariadenie</string>
+    <string name="unknown_manufacturer">Neznámý výrobca</string>
 </resources>
