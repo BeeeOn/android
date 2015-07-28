@@ -167,15 +167,31 @@
 
     <!-- FAB -->
 
+	<!-- TODO fab_type is obsolete and should be deleted later -->
     <style name="BeeeOn.Fab">
         <item name="fab_colorNormal">@color/beeeon_accent</item>
         <item name="fab_colorPressed">@color/beeeon_accent_light</item>
         <item name="fab_colorRipple">@color/beeeon_accent</item>
         <item name="fab_type">normal</item>
+		<item name="fab_size">normal</item>
     </style>
 
-    <style name="BeeeOn.Fab.Mini">
-        <item name="fab_type">mini</item>
-    </style>
+	<style name="BeeeOn.Fab.Mini">
+		<item name="fab_type">mini</item>
+		<item name="fab_size">mini</item>
+	</style>
+
+	<style name="BeeeOn.Fab.Menu">
+		<item name="fab_addButtonColorNormal">@color/beeeon_accent</item>
+		<item name="fab_addButtonColorPressed">@color/beeeon_accent_light</item>
+		<item name="fab_colorRipple">@color/beeeon_accent</item>
+		<item name="fab_addButtonPlusIconColor">@color/white</item>
+	</style>
+
+	<style name="BeeeOn.Fab.Menu.Label" parent="">
+		<item name="android:background">@drawable/fab_background</item>
+		<item name="android:textColor">@color/white</item>
+	</style>
+
 
 </resources>

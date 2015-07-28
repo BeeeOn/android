@@ -20,4 +20,5 @@
     <color name="gray">#DDCFE1</color>
     <color name="gray_dark">#777777</color>
     <color name="gray_light">#E7E9EA</color>
+    <color name="black_semi_transparent">#B2000000</color>
 </resources>
