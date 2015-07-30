@@ -90,7 +90,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 		mRadius.setText(String.valueOf(DEFAULT_RADIUS));
 
 		mRadiusTitle = (TextView) view.findViewById(R.id.dialog_geofence_radius_title);
-		mRadiusTitle.setText(getString(R.string.radius) + " (" + getString(R.string.unit_meter_short) + ")");
+		mRadiusTitle.setText(getString(R.string.map_geofence_radius) + " (" + getString(R.string.map_geofence_unit_meter_short) + ")");
 
 		mButtonMinus.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -177,8 +177,8 @@ public class GeofenceDialogFragment extends DialogFragment {
 
 		return builder
 				.setView(view)
-				.setTitle(R.string.add_new_geofence_area)
-				.setPositiveButton(R.string.ok,
+				.setTitle(R.string.geofence_dialog_title_add_new_geofence_area)
+				.setPositiveButton(R.string.fragment_configuration_widget_dialog_btn_ok,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
 								int radius;
@@ -193,7 +193,7 @@ public class GeofenceDialogFragment extends DialogFragment {
 							}
 						}
 				)
-				.setNegativeButton(R.string.notification_cancel,
+				.setNegativeButton(R.string.activity_fragment_btn_cancel,
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int whichButton) {
 								// nothing to do

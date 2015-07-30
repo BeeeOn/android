@@ -12,13 +12,13 @@
 
 	<TextView
 		android:id="@+id/widget_config_gateway_label"
-		android:text="@string/household"
+		android:text="@string/layout_widget_household"
 		style="@style/LinearRow.Caption"
 		/>
 
 	<TextView
 		style="@style/LinearRow.Item"
-		android:text="@string/widget_configuration_adapter"
+		android:text="@string/widget_clock_location_module_widget_gate"
 		/>
 
 	<Spinner
@@ -32,7 +32,7 @@
 	<TextView
 		android:id="@+id/widget_config_gateway_emptyview"
 		style="@style/LinearRow.Row"
-		android:text="@string/no_gate_cap"
+		android:text="@string/module_list_no_gate_cap"
 		android:textColor="@color/beeeon_secondary_text"
 		/>
 
@@ -45,7 +45,7 @@
 
 	<TextView
 		style="@style/LinearRow.Item"
-		android:text="@string/widget_configuration_sensor"
+		android:text="@string/widget_clock_module_widget_module"
 		/>
 
 	<Spinner
@@ -59,7 +59,7 @@
 	<TextView
 		android:id="@+id/widget_config_device_emptyview"
 		style="@style/LinearRow.Row"
-		android:text="@string/no_sensor_cap"
+		android:text="@string/module_list_no_device_cap"
 		android:textColor="@color/beeeon_secondary_text"
 		/>
 
@@ -74,12 +74,12 @@
 
 	<TextView
 		android:id="@+id/widget_config_widget_label"
-		android:text="@string/widget"
+		android:text="@string/widget_clock_location_module_widget"
 		style="@style/LinearRow.Caption"
 		/>
 
 	<TextView
-		android:text="@string/widget_configuration_interval_widget"
+		android:text="@string/widget_clock_location_module_widget_interval_update"
 		style="@style/LinearRow.Item"
 		/>
 
@@ -112,7 +112,7 @@
 
 		<TextView
 			style="@style/LinearRow.Item.OneLine"
-			android:text="@string/update_over_wifi_only"
+			android:text="@string/widget_location_list_update_over_wifi_only"
 			android:layout_alignParentStart="true"
 			android:layout_alignParentLeft="true"
 			android:layout_toLeftOf="@+id/widget_config_only_wifi"

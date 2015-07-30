@@ -6,7 +6,7 @@
 
 	<ImageView
 		android:id="@+id/custom_spinner2_dropdown_icon"
-		android:contentDescription="@string/placeholder_icon"
+		android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
 		android:layout_width="@dimen/custom_spinner_icon_size"
 		android:layout_height="@dimen/custom_spinner_icon_size"
 		android:paddingLeft="5dp"

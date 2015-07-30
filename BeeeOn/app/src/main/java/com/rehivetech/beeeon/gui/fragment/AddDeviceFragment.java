@@ -112,7 +112,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 	public void continueTimer() {
 		mCallback.setNextButtonEnabled(false);
-		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
+		mSendPairTextView.setText(R.string.device_add_shake_it_text);
 		long diffTimeMSec = (long) (Constants.PAIR_TIME_SEC * 1000) - ((System.nanoTime() / 1000000) - mStartTimeMSec);
 		if (diffTimeMSec < 0) {
 			Log.w(TAG, "diffTimeMSec is less than zero!");
@@ -127,7 +127,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 			@Override
 			public void onFinish() {
-				Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();
 				resetTimer();
 			}
 		}.start();
@@ -145,7 +145,7 @@ public class AddDeviceFragment extends TrackFragment {
 				mStartTimeMSec = 0;
 
 				if (success) {
-					Toast.makeText(getActivity(), R.string.addsensor_device_found, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.device_add_device_found, Toast.LENGTH_LONG).show();
 
 					mCountDownTimer.cancel();
 
@@ -153,7 +153,7 @@ public class AddDeviceFragment extends TrackFragment {
 					Intent intent = new Intent(getActivity(), SetupDeviceActivity.class);
 					startActivityForResult(intent, Constants.SETUP_DEVICE_REQUEST_CODE);
 				} else {
-					Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();
 					mCountDownTimer.cancel();
 					resetTimer();
 				}
@@ -167,12 +167,12 @@ public class AddDeviceFragment extends TrackFragment {
 
 		mCallback.setNextButtonEnabled(false);
 		mDonutProgress.setProgress(Constants.PAIR_TIME_SEC);
-		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_time_left_unit));
+		mDonutProgress.setInnerBottomText(getString(R.string.device_add_time_left_unit));
 		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.beeeon_accent));
 		mDonutProgress.setTextColor(getResources().getColor(R.color.beeeon_accent));
 		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.beeeon_accent));
 		mDonutProgress.setUnfinishedStrokeColor(getResources().getColor(R.color.white));
-		mSendPairTextView.setText(R.string.activity_add_device_shake_it);
+		mSendPairTextView.setText(R.string.device_add_shake_it_text);
 
 		// the timer should start counting down from 30, thats why + 500
 		mCountDownTimer = new CountDownTimer(Constants.PAIR_TIME_SEC * 1000 + 500, 500) {
@@ -183,7 +183,7 @@ public class AddDeviceFragment extends TrackFragment {
 			}
 
 			public void onFinish() {
-				Toast.makeText(getActivity(), R.string.addsensor_device_not_found_in_time, Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();
 				resetTimer();
 			}
 
@@ -198,13 +198,13 @@ public class AddDeviceFragment extends TrackFragment {
 
 	private void resetTimer() {
 		mCallback.setNextButtonEnabled(true);
-		mDonutProgress.setInnerBottomText(getString(R.string.addsensor_waiting));
+		mDonutProgress.setInnerBottomText(getString(R.string.device_add_waiting));
 		mDonutProgress.setInnerBottomTextColor(getResources().getColor(R.color.white));
 		mDonutProgress.setTextColor(getResources().getColor(R.color.white));
 		mDonutProgress.setProgress(Constants.PAIR_TIME_SEC);
 		mDonutProgress.setMax(Constants.PAIR_TIME_SEC);
 		mDonutProgress.setFinishedStrokeColor(getResources().getColor(R.color.white));
-		mSendPairTextView.setText(R.string.activity_add_device_dialog_text);
+		mSendPairTextView.setText(R.string.device_add_dialog_device_add_text);
 	}
 
 	public interface OnAddDeviceListener {

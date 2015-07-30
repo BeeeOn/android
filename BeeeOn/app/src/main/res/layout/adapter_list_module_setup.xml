@@ -20,7 +20,7 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="5dp"
 		android:layout_marginRight="10dp"
-		android:hint="@string/setup_sensor_set_name"
+		android:hint="@string/module_setup_list_module_set_name"
 		android:singleLine="true"
 		android:imeOptions="actionNext">
 

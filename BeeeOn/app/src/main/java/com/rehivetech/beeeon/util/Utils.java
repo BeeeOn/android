@@ -38,7 +38,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -489,7 +488,7 @@ final public class Utils {
 		String inputText = eText.getText().toString().trim();
 		if (inputText.length() == 0) {
 			eText.requestFocus();
-			eText.setError(context.getString(R.string.toast_field_must_be_filled));
+			eText.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
 			return false;
 		}
 
@@ -500,7 +499,7 @@ final public class Utils {
 						int num = Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
 						eText.requestFocus();
-						eText.setError(context.getString(R.string.toast_field_must_be_number));
+						eText.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -508,7 +507,7 @@ final public class Utils {
 				case EMAIL:
 					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
 						eText.requestFocus();
-						eText.setError(context.getString(R.string.toast_field_must_be_email));
+						eText.setError(context.getString(R.string.utils_toast_field_must_be_email));
 						return false;
 					}
 			}
@@ -530,7 +529,7 @@ final public class Utils {
 		String inputText = textInputLayout.getEditText().getText().toString().trim();
 		if (inputText.length() == 0) {
 			textInputLayout.requestFocus();
-			textInputLayout.setError(context.getString(R.string.toast_field_must_be_filled));
+			textInputLayout.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
 			return false;
 		}
 
@@ -541,7 +540,7 @@ final public class Utils {
 						int num = Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
 						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.toast_field_must_be_number));
+						textInputLayout.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -549,7 +548,7 @@ final public class Utils {
 				case EMAIL:
 					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
 						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.toast_field_must_be_email));
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_email));
 						return false;
 					}
 			}

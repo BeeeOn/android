@@ -1,19 +1,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <ListPreference
-        android:dialogTitle="@string/timezone"
+        android:dialogTitle="@string/gate_detail_timezone"
         android:key="pref_timezone"
-        android:title="@string/timezone" >
+        android:title="@string/gate_detail_timezone" >
     </ListPreference>
 
     <PreferenceScreen
         android:key="key_units"
         android:persistent="false"
-        android:title="@string/units" />
+        android:title="@string/settings_unit_unit" />
     <PreferenceScreen
         android:key="key_geofence"
         android:persistent="false"
-        android:title="@string/title_activity_map_geofence" />
+        android:title="@string/map_geofence_title_map_geofence" />
 
     <!-- <PreferenceCategory android:title="@string/smartwatches" > -->
     <!-- <ListPreference -->

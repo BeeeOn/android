@@ -8,7 +8,7 @@
 
 	<ImageView
 		android:id="@+id/custom_spinner2_icon"
-		android:contentDescription="@string/placeholder_icon"
+		android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
 		android:layout_width="34dp"
 		android:layout_height="34dp"
 		android:layout_marginRight="8dp"

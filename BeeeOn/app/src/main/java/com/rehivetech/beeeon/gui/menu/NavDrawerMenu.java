@@ -134,7 +134,7 @@ public class NavDrawerMenu {
 
 		// ActionBarDrawerToggle ties together the the proper interactions
 		// between the sliding drawer and the action bar app icon
-		mDrawerToggle = new ActionBarDrawerToggle(mActivity, mDrawerLayout, mToolbar, R.string.drawer_open, R.string.drawer_close) {
+		mDrawerToggle = new ActionBarDrawerToggle(mActivity, mDrawerLayout, mToolbar, R.string.nav_drawer_menu_drawer_open, R.string.nav_drawer_menu_drawer_close) {
 
 			public void onDrawerClosed(View view) {
 				// Set the title on the action when drawer closed
@@ -146,13 +146,13 @@ public class NavDrawerMenu {
 					if (actionBar != null) {
 						switch (mActiveItem) {
 							case Constants.GUI_MENU_CONTROL:
-								actionBar.setTitle(mActivity.getString(R.string.menu_devices));
+								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_devices));
 								break;
 							case Constants.GUI_MENU_DASHBOARD:
-								actionBar.setTitle(mActivity.getString(R.string.menu_charts));
+								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_charts));
 								break;
 							case Constants.GUI_MENU_WATCHDOG:
-								actionBar.setTitle(mActivity.getString(R.string.menu_watchdog));
+								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_watchdog_notif_menu_watchdog));
 								break;
 						}
 					}
@@ -200,13 +200,13 @@ public class NavDrawerMenu {
 			if (mActivity.getSupportActionBar() != null) {
 				switch (mActiveItem) {
 					case Constants.GUI_MENU_CONTROL:
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_devices));
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_devices));
 						break;
 					case Constants.GUI_MENU_DASHBOARD:
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_charts));
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_charts));
 						break;
 					case Constants.GUI_MENU_WATCHDOG:
-						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.menu_watchdog));
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.nav_drawer_menu_watchdog_notif_menu_watchdog));
 						break;
 				}
 			}
@@ -264,7 +264,7 @@ public class NavDrawerMenu {
 		// Adding separator as item (we don't want to let it float as header)
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
-		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.gate)));
+		mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getResources().getString(R.string.nav_drawer_menu_gate)));
 
 		if (!gates.isEmpty()) {
 			Gate activeGate = controller.getActiveGate();
@@ -279,27 +279,27 @@ public class NavDrawerMenu {
 			mMenuAdapter.addItem(new SeparatorMenuItem());
 
 			// OVERVIEW
-			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.menu_household)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_devices), R.drawable.ic_menu_overview, R.drawable.ic_menu_overview_active, false, Constants.GUI_MENU_CONTROL, (mActiveItem == null) || mActiveItem.equals(Constants.GUI_MENU_CONTROL)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_charts), R.drawable.ic_menu_dashboard, R.drawable.ic_menu_dashboard_active, false, Constants.GUI_MENU_DASHBOARD, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_watchdog), R.drawable.ic_menu_watchdog, R.drawable.ic_menu_watchdog_active, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)));
+			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_household)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_devices), R.drawable.ic_menu_overview, R.drawable.ic_menu_overview_active, false, Constants.GUI_MENU_CONTROL, (mActiveItem == null) || mActiveItem.equals(Constants.GUI_MENU_CONTROL)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_charts), R.drawable.ic_menu_dashboard, R.drawable.ic_menu_dashboard_active, false, Constants.GUI_MENU_DASHBOARD, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_watchdog_notif_menu_watchdog), R.drawable.ic_menu_watchdog, R.drawable.ic_menu_watchdog_active, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)));
 
 			mMenuAdapter.addItem(new SeparatorMenuItem());
 			// MANAGMENT
-			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.menu_management)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.menu_gate), R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_GATEWAY, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_GATEWAY)));
+			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_management)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_gate), R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_GATEWAY, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_GATEWAY)));
 
 		} else {
-			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getString(R.string.no_gates)));
+			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getString(R.string.nav_drawer_menu_no_gates)));
 		}
 
 		// Adding separator as header
 		mMenuAdapter.addItem(new SeparatorMenuItem());
 
 		// Adding settings, about etc.
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_settings), IMenuItem.ID_SETTINGS));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_about), IMenuItem.ID_ABOUT));
-		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.action_logout), IMenuItem.ID_LOGOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.nav_drawer_menu_action_settings), IMenuItem.ID_SETTINGS));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.nav_drawer_menu_action_about), IMenuItem.ID_ABOUT));
+		mMenuAdapter.addItem(new SettingMenuItem(mActivity.getString(R.string.nav_drawer_menu_action_logout), IMenuItem.ID_LOGOUT));
 		return mMenuAdapter;
 	}
 
@@ -348,13 +348,13 @@ public class NavDrawerMenu {
 				Controller controller = Controller.getInstance(mActivity);
 				Gate gate = controller.getGatesModel().getGate(mSelectedMenuItem.getId());
 				if (gate == null) {
-					title = mActivity.getString(R.string.confirm_remove_gate_title_default);
+					title = mActivity.getString(R.string.activity_menu_dialog_title_remove_gate_default);
 				} else {
-					title = mActivity.getString(R.string.confirm_remove_title, gate.getName());
+					title = mActivity.getString(R.string.activity_fragment_menu_dialog_title_remove, gate.getName());
 				}
 
-				String message = mActivity.getString(R.string.confirm_remove_gate_message);
-				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mSelectedMenuItem.getId());
+				String message = mActivity.getString(R.string.activity_menu_dialog_message_remove_gate);
+				ConfirmDialog.confirm(mActivity, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mSelectedMenuItem.getId());
 
 			} else if (item.getItemId() == R.id.gate_menu_action_users) { // GO TO USERS OF GATE
 				Intent intent = new Intent(mActivity, GateUsersActivity.class);

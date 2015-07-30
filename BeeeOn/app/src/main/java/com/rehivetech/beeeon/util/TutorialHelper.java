@@ -135,8 +135,8 @@ public class TutorialHelper {
 
 		ShowcaseView mSV = new ShowcaseView.Builder(activity, true)
 				.setTarget(target)
-				.setContentTitle(activity.getString(R.string.tut_add_sensor_header))
-				.setContentText(activity.getString(R.string.tut_add_sensor_text))
+				.setContentTitle(activity.getString(R.string.tutorial_helper_tut_module_add_header))
+				.setContentText(activity.getString(R.string.tutorial_helper_tut_module_add_text))
 				.setStyle(R.style.CustomShowcaseTheme)
 				.setShowcaseEventListener(listener)
 				.build();
@@ -185,8 +185,8 @@ public class TutorialHelper {
 
 		ShowcaseView mSV = new ShowcaseView.Builder(activity, true)
 				.setTarget(target)
-				.setContentTitle(activity.getString(R.string.tut_add_gate_header))
-				.setContentText(activity.getString(R.string.tut_add_gate_text))
+				.setContentTitle(activity.getString(R.string.tutorial_helper_tut_gate_add_header))
+				.setContentText(activity.getString(R.string.tutorial_helper_tut_gate_add_text))
 				.setStyle(R.style.CustomShowcaseTheme)
 				.setShowcaseEventListener(listener)
 				.build();

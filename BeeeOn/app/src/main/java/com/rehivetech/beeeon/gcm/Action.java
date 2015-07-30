@@ -26,14 +26,14 @@ public final class Action {
 		Controller controller = Controller.getInstance(context);
 		Device device = controller.getDevicesModel().getDevice(String.valueOf(gateId), moduleId);
 		if (device == null) {
-			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, R.string.module_get_detail_intent_toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
 
 		List<Module> modules = device.getAllModules();
 		if (modules.size() == 0) {
-			Toast.makeText(context, R.string.toast_device_not_available, Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, R.string.module_get_detail_intent_toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
 

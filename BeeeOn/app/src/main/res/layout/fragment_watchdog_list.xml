@@ -32,7 +32,7 @@
 			android:id="@+id/watchdog_list_empty_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/no_rules_cap"
+			android:text="@string/watchdog_list_no_rules_cap"
 			android:layout_gravity="center"
 			android:textSize="24sp"
 			android:visibility="gone"
@@ -45,7 +45,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:visibility="gone"
-			android:text="@string/action_refreshlist"/>
+			android:text="@string/layout_module_list_watchdog_list_action_refresh_list"/>
 	</LinearLayout>
 
 	<!-- floating action button -->

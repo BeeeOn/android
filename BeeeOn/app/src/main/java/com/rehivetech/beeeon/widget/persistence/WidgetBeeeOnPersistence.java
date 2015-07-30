@@ -32,7 +32,7 @@ public abstract class WidgetBeeeOnPersistence extends WidgetPersistence {
 	@Override
 	public void load() {
 		id = mPrefs.getString(getProperty(PREF_ID), "");
-		name = mPrefs.getString(getProperty(PREF_NAME), mContext.getString(R.string.placeholder_not_exists));
+		name = mPrefs.getString(getProperty(PREF_NAME), mContext.getString(R.string.persistence_widget_placeholder_not_exists));
 		gateId = mPrefs.getString(getProperty(PREF_GATE_ID), "");
 		mGateRole = mPrefs.getString(getProperty(PREF_GATE_ROLE), User.Role.Guest.getId());
 

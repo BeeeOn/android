@@ -3,14 +3,14 @@
 	  xmlns:app="http://schemas.android.com/apk/res-auto">
 	<item
 		android:id="@+id/watchdog_edit_action_delete"
-		android:title="@string/button_remove"
+		android:title="@string/activity_fragment_menu_btn_remove"
 		android:icon="@drawable/ic_delete_white_24dp"
 		app:showAsAction="ifRoom|collapseActionView|withText"
 		/>
 
 	<item
 		android:id="@+id/watchdog_edit_action_save"
-		android:title="@string/save"
+		android:title="@string/activity_gate_user_setup_device_btn_save"
 		android:icon="@drawable/ic_action_accept"
 		app:showAsAction="always|collapseActionView|withText"
 		/>

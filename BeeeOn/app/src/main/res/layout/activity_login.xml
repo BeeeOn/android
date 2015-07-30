@@ -90,7 +90,7 @@
 			android:layout_height="wrap_content"
 			android:textColor="@android:color/secondary_text_light"
 			android:layout_gravity="start"
-			android:text="@string/login_label_login_or_register"
+			android:text="@string/login_label_login"
 			android:textSize="14sp"
 			android:layout_below="@id/login_select_server_layout"
 			android:layout_marginTop="15dp"

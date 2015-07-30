@@ -16,7 +16,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/addddevice_title_size_land"
-			android:text="@string/title_activity_add_sensor"
+			android:text="@string/manifest_title_device_add"
 			android:textStyle="bold"
 			android:textColor="@color/white"
 			android:layout_marginBottom="25dp"
@@ -31,7 +31,7 @@
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/adddevice_text_size_land"
 			android:textColor="@color/white"
-			android:text="@string/activity_add_device_dialog_text"
+			android:text="@string/device_add_dialog_device_add_text"
 
 			android:layout_toEndOf="@id/device_add_circle_progress"
 			android:layout_toRightOf="@id/device_add_circle_progress"

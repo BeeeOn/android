@@ -53,7 +53,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		if (mGateId == null) {
-			Toast.makeText(this, R.string.toast_not_specified_gate, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.gate_detail_toast_not_specified_gate, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
@@ -110,15 +110,15 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				break;
 			}
 			case R.id.gate_detail_menu_delete: {
-				String title = getString(R.string.confirm_remove_gate_title_default);
-				String message = getString(R.string.confirm_remove_gate_message);
+				String title = getString(R.string.activity_menu_dialog_title_remove_gate_default);
+				String message = getString(R.string.activity_menu_dialog_message_remove_gate);
 
 				GateInfo gateInfo = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
 				if (gateInfo != null) {
-					title = getString(R.string.confirm_remove_title, gateInfo.getName());
+					title = getString(R.string.activity_fragment_menu_dialog_title_remove, gateInfo.getName());
 				}
 
-				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
+				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
 				break;
 			}
 			case R.id.gate_detail_menu_edit: {
@@ -154,7 +154,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(GateDetailActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
+					Toast.makeText(GateDetailActivity.this, R.string.gate_detail_toast_gate_removed, Toast.LENGTH_LONG).show();
 					finish();
 				}
 			}

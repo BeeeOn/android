@@ -312,7 +312,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		if(item.getItemId() == android.R.id.home) {
             if (mGeneralWidgetdata == null) {
                 Log.e(TAG, "There should be widgetData !");
-                Toast.makeText(mActivity, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
+                Toast.makeText(mActivity, R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
                 finishConfiguration();
             }
 

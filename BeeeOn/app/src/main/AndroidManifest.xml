@@ -63,7 +63,7 @@
 			android:value="AIzaSyBCTLpegGSezAdXYuZOLxqzQe1eW9kYvlM"/>
 		<meta-data
 			android:name="com.facebook.sdk.ApplicationId"
-			android:value="@string/facebook_app_id"/>
+			android:value="@string/manifest_facebook_app_id"/>
 		<meta-data
 			android:name="io.fabric.ApiKey"
 			android:value="050bb3e73bcdf2d45c0bf93f2b5595ef82ebc937"/>
@@ -80,37 +80,37 @@
 		</activity>
 		<activity
 			android:name=".gui.activity.WebAuthActivity"
-			android:label="@string/title_activity_location_screen">
+			android:label="@string/manifest_title_main">
 		</activity>
 		<activity
 			android:name=".gui.activity.MainActivity"
-			android:label="@string/title_activity_location_screen"
+			android:label="@string/manifest_title_main"
 			android:theme="@style/MainActivityTheme">
 		</activity>
 		<activity
 			android:name=".gui.activity.AddDeviceActivity"
-			android:label="@string/title_activity_add_sensor">
+			android:label="@string/manifest_title_device_add">
 		</activity>
 		<activity
 			android:name=".gui.activity.SetupDeviceActivity"
-			android:label="@string/title_activity_add_sensor">
+			android:label="@string/manifest_title_device_add">
 		</activity>
 		<activity
 			android:name=".gui.activity.ModuleDetailActivity">
 		</activity>
 		<activity
 			android:name=".gui.activity.AddGateActivity"
-			android:label="@string/title_activity_add_gate">
+			android:label="@string/manifest_title_gate_add">
 		</activity>
 		<activity
 			android:name=".gui.activity.GateEditActivity"
-			android:label="@string/title_activity_gate_edit">
+			android:label="@string/manifest_title_gate_edit">
 		</activity>
 		<activity
 			android:name=".widget.configuration.WidgetConfigurationActivity"
 			android:noHistory="true"
 			android:excludeFromRecents="true"
-			android:label="@string/title_activity_widget_configuration">
+			android:label="@string/widget_configuration_title_widget_config">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
 			</intent-filter>
@@ -118,7 +118,7 @@
 
 		<activity
 			android:name=".gui.activity.SettingsMainActivity"
-			android:label="@string/title_activity_settings"
+			android:label="@string/manifest_title_settings"
 			android:theme="@style/SettingsActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -127,34 +127,34 @@
 		<activity
 			android:name=".gui.activity.SettingsUnitActivity"
 			android:theme="@style/SettingsActivity"
-			android:label="@string/units">
+			android:label="@string/settings_unit_unit">
 		</activity>
 		<activity
 			android:name=".gui.activity.MapGeofenceActivity"
-			android:label="@string/title_activity_map_geofence">
+			android:label="@string/map_geofence_title_map_geofence">
 		</activity>
 		<activity
 			android:name=".gui.activity.GateUsersActivity"
-			android:label="@string/title_activity_gate_users">
+			android:label="@string/gate_users_title_gate_users">
 		</activity>
 		<activity
 			android:name=".gui.activity.AddGateUserActivity"
-			android:label="@string/title_activity_add_adapter_user">
+			android:label="@string/manifest_title_gate_add_user">
 		</activity>
 		<activity
 			android:name=".gui.activity.WatchdogEditRuleActivity"
-			android:label="@string/action_watchdog">
+			android:label="@string/manifest_action_watchdog">
 		</activity>
 		<activity
 			android:name=".gui.activity.NotificationActivity"
-			android:label="@string/action_notification">
+			android:label="@string/manifest_action_notification">
 		</activity>
 		<activity
 			android:name=".gui.activity.ModuleEditActivity"
-			android:label="@string/title_activity_module_edit"/>
+			android:label="@string/module_edit_title_module_edit"/>
 		<activity
 			android:name=".gui.activity.GateDetailActivity"
-			android:label="@string/title_activity_gate_detail"/>
+			android:label="@string/manifest_title_gate_detail"/>
 		<activity
 			android:name=".gui.activity.IntroActivity"
 			android:label="@string/app_name"/>
@@ -184,7 +184,7 @@
 		<receiver
 			android:name=".widget.receivers.WidgetLocationListProvider"
 			android:enabled="@bool/is_api_11"
-			android:label="@string/widget_location_list_title">
+			android:label="@string/manifest_title_widget_location_list">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 			</intent-filter>
@@ -197,7 +197,7 @@
 		<!-- clock widget -->
 		<receiver
 			android:name=".widget.receivers.WidgetClockProvider"
-			android:label="@string/widget_clock_title"
+			android:label="@string/manifest_title_widget_clock"
 			>
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -211,7 +211,7 @@
 		<!-- sensor widget -->
 		<receiver
 			android:name=".widget.receivers.WidgetModuleProvider"
-			android:label="@string/widget_sensor_title_small">
+			android:label="@string/manifest_title_widget_module_small">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 			</intent-filter>
@@ -222,7 +222,7 @@
 		</receiver>
 		<receiver
 			android:name=".widget.receivers.WidgetModuleProviderMedium"
-			android:label="@string/widget_sensor_title_medium">
+			android:label="@string/manifest_title_widget_module_medium">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 			</intent-filter>
@@ -233,7 +233,7 @@
 		</receiver>
 		<receiver
 			android:name=".widget.receivers.WidgetModuleProviderLarge"
-			android:label="@string/widget_sensor_title_large">
+			android:label="@string/manifest_title_widget_module_large">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 			</intent-filter>

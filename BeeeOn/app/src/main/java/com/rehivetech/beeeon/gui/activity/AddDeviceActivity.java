@@ -33,13 +33,13 @@ public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFra
 		// If there is no gate, then the activity ends immediately
 		Gate gate = Controller.getInstance(this).getActiveGate();
 		if (gate == null) {
-			Toast.makeText(this, R.string.toast_no_adapter, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.device_add_toast_no_gate, Toast.LENGTH_LONG).show();
 			finish();
 		}
 
 		//the List and the FragmentManager objects are needed as arguments for the constructor
 		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.tut_add_sensor_text_1, R.string.tut_add_sensor_title_1)
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.device_add_tut_text_add_module, R.string.device_add_tut_title_add_device)
 		);
 
 		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, AddDeviceFragment.newInstance(gate.getId()));
@@ -55,6 +55,6 @@ public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFra
 
 	@Override
 	protected int getLastPageNextTextResource() {
-		return R.string.addsensor_send_pair;
+		return R.string.device_add_btn_send_pair;
 	}
 }

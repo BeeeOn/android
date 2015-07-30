@@ -183,8 +183,8 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		ShowcaseView showcaseView = new ShowcaseView.Builder(this, true)
 				.setTarget(target)
-				.setContentTitle(getString(R.string.tutorial_open_menu))
-				.setContentText(getString(R.string.tutorial_open_menu_text))
+				.setContentTitle(getString(R.string.main_tut_open_menu))
+				.setContentText(getString(R.string.main_tut_open_menu_text))
 						//.setStyle(R.style.CustomShowcaseTheme)
 				.setShowcaseEventListener(listener)
 				.build();
@@ -252,7 +252,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			super.onBackPressed();
 			return;
 		} else {
-			mExitToast = Toast.makeText(getBaseContext(), R.string.toast_tap_again_exit, Toast.LENGTH_SHORT);
+			mExitToast = Toast.makeText(getBaseContext(), R.string.main_toast_tap_again_exit, Toast.LENGTH_SHORT);
 			mExitToast.show();
 
 			if (mNavDrawerMenu != null)
@@ -266,7 +266,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void onListItemSelected(CharSequence val, int i, int code) {
 		if (code == ADD_ACTION_CODE) {
 			Log.d(TAG, "Add dialog selected: " + val);
-			if (getString(R.string.action_addgate).equals(val)) {
+			if (getString(R.string.main_action_gate_add).equals(val)) {
 				// ADD GATE
 				mModuleListFragment.showAddGateDialog();
 			} else {
@@ -427,11 +427,11 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		ListDialogFragment
 				.createBuilder(this, getSupportFragmentManager())
-				.setTitle(getString(R.string.add_action_dialog_title))
+				.setTitle(getString(R.string.main_dialog_title_action_add))
 				.setItems(mStringArray)
 				.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-				.setConfirmButtonText(getString(R.string.notification_add))
-				.setCancelButtonText(getString(R.string.notification_cancel))
+				.setConfirmButtonText(getString(R.string.main_btn_add))
+				.setCancelButtonText(getString(R.string.activity_fragment_btn_cancel))
 				.setRequestCode(ADD_ACTION_CODE)
 				.show();
 
@@ -445,7 +445,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(MainActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
+					Toast.makeText(MainActivity.this, R.string.gate_detail_toast_gate_removed, Toast.LENGTH_LONG).show();
 					setActiveGateAndMenu();
 					redraw();
 				}

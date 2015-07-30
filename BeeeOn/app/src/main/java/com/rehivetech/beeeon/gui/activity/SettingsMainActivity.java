@@ -47,7 +47,7 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 		Controller controller = Controller.getInstance(this);
 
 		final Toolbar toolbar = getToolbar();
-		toolbar.setTitle(R.string.settings);
+		toolbar.setTitle(R.string.settings_main_settings);
 
 
 		// Use own name for sharedPreferences
@@ -85,7 +85,7 @@ public class SettingsMainActivity extends ActionBarPreferenceActivity implements
 			mPrefGeofence.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
-					Toast.makeText(SettingsMainActivity.this, R.string.toast_no_google_play_services, Toast.LENGTH_LONG).show();
+					Toast.makeText(SettingsMainActivity.this, R.string.settings_main_toast_no_google_play_services, Toast.LENGTH_LONG).show();
 					return true;
 				}
 			});

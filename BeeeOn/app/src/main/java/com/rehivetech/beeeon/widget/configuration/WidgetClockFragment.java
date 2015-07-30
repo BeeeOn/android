@@ -58,7 +58,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
     }
 
     protected int getFragmentTitle() {
-        return R.string.widget_configuration_widget_clock;
+        return R.string.widget_clock_widget_configuration_clock;
     }
 
 	@Override
@@ -162,11 +162,11 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
     private void showLocationPickerDialog() {
 		EditTextDialog
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-				.setTitle(mActivity.getString(R.string.dialog_location_select))
+				.setTitle(mActivity.getString(R.string.widget_clock_dialog_location_select))
 				.setEditTextValue(mWeatherCity != null ? mWeatherCity.name : mWidgetData.weather.cityName)
-				.setHint(mActivity.getString(R.string.dialog_location_country))
-				.setPositiveButtonText(mActivity.getString(R.string.ok))
-				.setNegativeButtonText(mActivity.getString(R.string.action_close))
+				.setHint(mActivity.getString(R.string.widget_clock_dialog_location_country))
+				.setPositiveButtonText(mActivity.getString(R.string.fragment_configuration_widget_dialog_btn_ok))
+				.setNegativeButtonText(mActivity.getString(R.string.activity_fragment_btn_cancel))
 				.showKeyboard()
 				.setTargetFragment(this, REQUEST_LOCATION_DIALOG)
 				.show();
@@ -183,7 +183,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		final String cityInput = cityTextInputLayout.getEditText().getText().toString();
 
 		// show dialog of loading
-		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.progress_checking_location)).show();
+		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.widget_clock_progress_checking_location)).show();
 
 		// load city data in background
 		new Thread() {
@@ -214,7 +214,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	private void loadingCityFail() {
-		Toast.makeText(mActivity, mActivity.getString(R.string.weather_place_not_found), Toast.LENGTH_LONG).show();
+		Toast.makeText(mActivity, mActivity.getString(R.string.widget_clock_weather_place_not_found), Toast.LENGTH_LONG).show();
 		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
@@ -254,7 +254,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	protected boolean saveSettings() {
 		Gate gate = (Gate) mGateSpinner.getSelectedItem();
 		if (gate == null) {
-			Toast.makeText(mActivity, R.string.widget_configuration_select_gate, Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, R.string.widget_clock_location_module_widget_toast_select_gate, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
@@ -264,7 +264,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 
 			Module module = (Module) spinner.getSelectedItem();
 			if (module == null) {
-				Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
+				Toast.makeText(mActivity, R.string.widget_clock_module_widget_toast_select_device, Toast.LENGTH_LONG).show();
 				return false;
 			}
 

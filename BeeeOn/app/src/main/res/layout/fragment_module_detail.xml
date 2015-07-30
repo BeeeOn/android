@@ -81,7 +81,7 @@
 					android:background="@color/beeeon_accent"
 					android:textColor="@color/white"
 					android:visibility="gone"
-					android:text="@string/sensordetail_set_button"
+					android:text="@string/activity_fragment_btn_set"
 					/>
 
 			</RelativeLayout>
@@ -133,7 +133,7 @@
 							android:layout_width="fill_parent"
 							android:layout_height="wrap_content"
 							android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-							android:text="@string/sensordetail_location_label"/>
+							android:text="@string/module_edit_label_detail_location"/>
 
 						<TextView
 							android:id="@+id/module_detail_loc_name"
@@ -160,7 +160,7 @@
 							android:layout_width="fill_parent"
 							android:layout_height="wrap_content"
 							android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-							android:text="@string/sensordetail_refresh_time"/>
+							android:text="@string/module_detail_refresh_time"/>
 
 						<TextView
 							android:id="@+id/module_detail_refresh_time_value"
@@ -198,7 +198,7 @@
 							android:layout_width="fill_parent"
 							android:layout_height="wrap_content"
 							android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-							android:text="@string/sensordetail_last_update_label"/>
+							android:text="@string/module_detail_label_last_update"/>
 
 						<TextView
 							android:id="@+id/module_detail_time"
@@ -224,7 +224,7 @@
 							android:layout_width="fill_parent"
 							android:layout_height="wrap_content"
 							android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-							android:text="@string/sensordetail_battery_label"/>
+							android:text="@string/module_detail_label_battery"/>
 
 						<TextView
 							android:id="@+id/module_detail_battery_value"
@@ -250,7 +250,7 @@
 							android:layout_width="fill_parent"
 							android:layout_height="wrap_content"
 							android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-							android:text="@string/sensordetail_signal_label"/>
+							android:text="@string/module_detail_label_signal"/>
 
 						<TextView
 							android:id="@+id/module_detail_signal_value"
@@ -277,7 +277,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="48dp"
 					android:gravity="center"
-					android:text="@string/sen_graph_label"
+					android:text="@string/module_detail_label_graph_data"
 					android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
 
 				<com.github.mikephil.charting.charts.CombinedChart

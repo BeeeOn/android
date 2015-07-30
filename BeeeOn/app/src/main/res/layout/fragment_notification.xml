@@ -23,7 +23,7 @@
 		android:id="@+id/notification_text"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="@string/no_notifications_cap"
+		android:text="@string/notification_no_notifications_cap"
 		android:textAllCaps="true"
 		android:textSize="24sp"
 		android:layout_centerInParent="true"

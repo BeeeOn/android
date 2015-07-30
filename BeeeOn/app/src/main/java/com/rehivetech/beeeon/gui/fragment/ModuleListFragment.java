@@ -243,14 +243,14 @@ public class ModuleListFragment extends BaseApplicationFragment {
 		if (!haveGates) { // NO Gate
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
-			noItem.setText(R.string.no_gate_cap);
+			noItem.setText(R.string.module_list_no_gate_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
 			moduleList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
 				mSwipeLayout.setVisibility(View.GONE);
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
-			mFABMenuLabels.add(mActivity.getString(R.string.action_addgate));
+			mFABMenuLabels.add(mActivity.getString(R.string.main_action_gate_add));
 			refreshBtn.setOnClickListener(refreshNoGate);
 
 			SharedPreferences prefs = controller.getUserSettings();
@@ -269,7 +269,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 		} else if (!haveModules) { // Have Gate but any Modules
 			// Set right visibility
 			noItem.setVisibility(View.VISIBLE);
-			noItem.setText(R.string.no_sensor_cap);
+			noItem.setText(R.string.module_list_no_device_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
 			moduleList.setVisibility(View.GONE);
 			if (mSwipeLayout != null)
@@ -279,8 +279,8 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
-			mFABMenuLabels.add(mActivity.getString(R.string.action_addgate));
-			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
+			mFABMenuLabels.add(mActivity.getString(R.string.main_action_gate_add));
+			mFABMenuLabels.add(mActivity.getString(R.string.module_list_action_module_add));
 			if (mFirstUseAddDevice && !controller.isDemoMode()) {
 				mFirstUseAddDevice = false;
 				mActivity.getMenu().closeMenu();
@@ -299,17 +299,17 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
-			mFABMenuLabels.add(mActivity.getString(R.string.action_addgate));
-			mFABMenuLabels.add(mActivity.getString(R.string.action_addsensor));
+			mFABMenuLabels.add(mActivity.getString(R.string.main_action_gate_add));
+			mFABMenuLabels.add(mActivity.getString(R.string.module_list_action_module_add));
 		}
 
 		// Listener for add dialogs
 		OnClickListener fabMenuListener = new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addsensor))) {
+				if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.module_list_action_module_add))) {
 					showAddDeviceDialog();
-				} else if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.action_addgate))) {
+				} else if (mFABMenuLabels.get(v.getId()).equals(mActivity.getString(R.string.main_action_gate_add))) {
 					showAddGateDialog();
 				}
 				Log.d(TAG, "FAB MENU HERE " + v.getId());
@@ -472,9 +472,9 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			public void onExecute(boolean success) {
 				mActivity.redraw();
 				if (success) {
-					Toast.makeText(mActivity, R.string.toast_delete_success, Toast.LENGTH_SHORT).show();
+					Toast.makeText(mActivity, R.string.activity_fragment_toast_delete_success, Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(mActivity, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
+					Toast.makeText(mActivity, R.string.activity_fragment_toast_delete_fail, Toast.LENGTH_SHORT).show();
 				}
 				doFullReloadTask(true);
 			}
@@ -504,9 +504,9 @@ public class ModuleListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.module_list_actionmode_del) {
-				String title = getString(R.string.confirm_unregister_device_title, mSelectedItem.getName(mActivity));
-				String message = getString(R.string.confirm_unregister_device_message);
-				ConfirmDialog.confirm(mActivity, title, message, R.string.button_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());
+				String title = getString(R.string.module_list_dialog_title_unregister_device, mSelectedItem.getName(mActivity));
+				String message = getString(R.string.module_list_dialog_message_unregister_device);
+				ConfirmDialog.confirm(mActivity, title, message, R.string.module_list_btn_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mSelectedItem.getDevice().getId());
 			}
 			mode.finish();
 			return true;

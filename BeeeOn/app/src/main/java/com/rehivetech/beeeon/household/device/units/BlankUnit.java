@@ -9,7 +9,7 @@ public class BlankUnit extends BaseUnit {
 	public BlankUnit() {
 		super();
 
-		mItems.add(this.new Item(DEFAULT, R.string.blank, R.string.blank));
+		mItems.add(this.new Item(DEFAULT, R.string.unit_blank_blank, R.string.unit_blank_blank));
 	}
 
 	@Override

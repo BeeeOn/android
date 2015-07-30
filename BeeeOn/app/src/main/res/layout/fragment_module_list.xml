@@ -31,7 +31,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:textAlignment="center"
-			android:text="@string/loading_data"
+			android:text="@string/gate_detail_loading_data"
 			android:textSize="24sp"
 			android:visibility="gone"
 			android:textColor="@color/gray_dark"
@@ -43,7 +43,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:visibility="gone"
-			android:text="@string/action_refreshlist"/>
+			android:text="@string/layout_module_list_watchdog_list_action_refresh_list"/>
 	</LinearLayout>
 
 	<com.melnykov.fab.FloatingActionButton

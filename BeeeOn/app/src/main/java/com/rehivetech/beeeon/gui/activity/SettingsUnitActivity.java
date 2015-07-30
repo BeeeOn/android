@@ -59,7 +59,7 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 		Controller controller = Controller.getInstance(this);
 
 		final Toolbar toolbar = getToolbar();
-		toolbar.setTitle(R.string.units);
+		toolbar.setTitle(R.string.settings_unit_unit);
 
 		// Use own name for sharedPreferences
 		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(controller.getActualUser().getId()));

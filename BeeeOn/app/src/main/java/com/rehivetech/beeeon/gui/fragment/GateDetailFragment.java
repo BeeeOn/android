@@ -69,12 +69,12 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		mDetailsListView = (ListView) view.findViewById(R.id.gate_detail_listview);
 		mTitleText = (TextView) view.findViewById(R.id.gate_detail_title);
 
-		String loadingText = getString(R.string.loading_data);
+		String loadingText = getString(R.string.gate_detail_loading_data);
 
 		mDetailsItemList = new ArrayList<>();
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_gray_24dp, R.string.fragment_gate_details_gate_id, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_gray_24dp, R.string.gate_detail_gate_id, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_your_role, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.timezone, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.gate_detail_timezone, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_supervisor_account_gray_24dp, R.string.gate_detail_num_of_users, loadingText, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -124,7 +124,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		if (gateInfo.hasName())
 			mTitleText.setText(gateInfo.getName());
 		else
-			mTitleText.setText(R.string.gate_no_name);
+			mTitleText.setText(R.string.gate_detail_text_gate_no_name);
 
 		int offsetInMillis = gateInfo.getUtcOffset() * 60 * 1000;
 

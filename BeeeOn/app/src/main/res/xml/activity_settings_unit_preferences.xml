@@ -1,15 +1,15 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <ListPreference
-        android:dialogTitle="@string/temperature"
+        android:dialogTitle="@string/settings_unit_preferences_temperature"
         android:key="pref_temperature"
-        android:title="@string/temperature" >
+        android:title="@string/settings_unit_preferences_temperature" >
     </ListPreference>
 
     <ListPreference
-        android:dialogTitle="@string/noise"
+        android:dialogTitle="@string/settings_unit_preferences_noise"
         android:key="pref_noise"
-        android:title="@string/noise" >
+        android:title="@string/settings_unit_preferences_noise" >
     </ListPreference>
     
 </PreferenceScreen>

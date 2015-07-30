@@ -102,7 +102,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		TextView legendHeadline = new TextView(mActivity);
 		legendHeadline.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
 		legendHeadline.setPadding(0, padding, 0, padding);
-		legendHeadline.setText(getString(R.string.chart_legend));
+		legendHeadline.setText(getString(R.string.fragment_module_detail_custom_view_chart_legend));
 		chartLayout.addView(legendHeadline);
 
 		// set legend

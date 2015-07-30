@@ -135,7 +135,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		if (mProgressDialog == null) {
 			// Prepare progress dialog
 			mProgressDialog = new BetterProgressDialog(this);
-			mProgressDialog.setMessageResource(R.string.progress_saving_data);
+			mProgressDialog.setMessageResource(R.string.base_application_progress_saving_data);
 			mProgressDialog.setCancelable(false);
 			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 		}

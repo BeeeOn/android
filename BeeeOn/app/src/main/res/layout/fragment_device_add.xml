@@ -22,7 +22,7 @@
 			android:textStyle="bold"
 			android:gravity="center_horizontal"
 			android:textColor="@color/white"
-			android:text="@string/title_activity_add_sensor"/>
+			android:text="@string/manifest_title_device_add"/>
 
 		<com.github.lzyzsd.circleprogress.DonutProgress
 			android:id="@+id/device_add_circle_progress"
@@ -48,7 +48,7 @@
 			android:textSize="@dimen/adddevice_text_size"
 			android:gravity="center_horizontal"
 			android:textColor="@color/white"
-			android:text="@string/activity_add_device_dialog_text"
+			android:text="@string/device_add_dialog_device_add_text"
 			/>
 
 

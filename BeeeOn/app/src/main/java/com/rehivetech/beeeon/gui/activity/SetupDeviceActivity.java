@@ -46,7 +46,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(R.string.title_activity_setup_sensor);
+			toolbar.setTitle(R.string.device_setup_title_setup_device);
 			setSupportActionBar(toolbar);
 		}
 
@@ -83,7 +83,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 				finish();
 			}
 		});
-		nextBtn.setText(getString(R.string.save));
+		nextBtn.setText(getString(R.string.activity_gate_user_setup_device_btn_save));
 		nextBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -100,7 +100,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 					String name = ((EditText) listOfName.getChildAt(i).findViewById(R.id.list_module_setup_sensor_item_name)).getText().toString();
 					Log.d(TAG, "Name of " + i + " is" + name);
 					if (name.isEmpty()) {
-						Toast.makeText(SetupDeviceActivity.this, getString(R.string.toast_empty_sensor_name), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupDeviceActivity.this, getString(R.string.device_setup_toast_empty_module_name), Toast.LENGTH_LONG).show();
 						return;
 					}
 					// Set this new name to module
@@ -115,11 +115,11 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 					// check new location name
 					if (newLocation != null && newLocation.length() < 1) {
-						Toast.makeText(SetupDeviceActivity.this, getString(R.string.toast_need_sensor_location_name), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupDeviceActivity.this, getString(R.string.device_setup_toast_need_module_location_name), Toast.LENGTH_LONG).show();
 						return;
 					}
 					if ((newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
-						Toast.makeText(SetupDeviceActivity.this, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
+						Toast.makeText(SetupDeviceActivity.this, getString(R.string.activity_module_edit_setup_device_toast_location_icon), Toast.LENGTH_LONG).show();
 						return;
 					}
 
@@ -157,7 +157,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(SetupDeviceActivity.this, R.string.toast_new_sensor_added, Toast.LENGTH_LONG).show();
+					Toast.makeText(SetupDeviceActivity.this, R.string.device_setup_toast_new_module_added, Toast.LENGTH_LONG).show();
 
 					Intent intent = new Intent();
 					intent.putExtra(Constants.SETUP_DEVICE_ACT_LOC, pair.location.getId());

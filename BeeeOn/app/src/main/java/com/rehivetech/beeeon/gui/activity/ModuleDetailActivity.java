@@ -47,7 +47,7 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 		}
 
 		if (mActiveGateId == null || mActiveModuleId == null) {
-			Toast.makeText(this, R.string.toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.module_detail_toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}

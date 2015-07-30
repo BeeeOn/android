@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.network;
 
 import android.content.Context;
 
-import com.rehivetech.beeeon.BuildConfig;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 
@@ -53,7 +52,7 @@ public enum NetworkServer implements INameIdentifier {
 
 	public String getTranslatedName(Context context) {
 		if (this == getDefaultServer()) {
-			return String.format("%s %s", mName, context.getString(R.string.sufix_default));
+			return String.format("%s %s", mName, context.getString(R.string.network_server_sufix_default));
 		}
 		return mName;
 	}

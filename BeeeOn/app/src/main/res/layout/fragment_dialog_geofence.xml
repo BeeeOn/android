@@ -10,7 +10,7 @@
 		android:id="@+id/dialog_geofence_name"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/name"/>
+		android:hint="@string/geofence_dialog_name"/>
 
 	<TextView
 		android:id="@+id/dialog_geofence_radius_title"
@@ -31,7 +31,7 @@
 			android:id="@+id/dialog_geofence_radius_minus_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/minus"
+			android:text="@string/geofence_dialog_minus"
 			android:textStyle="bold"
 			android:textSize="30sp"/>
 
@@ -47,7 +47,7 @@
 			android:id="@+id/dialog_geofence_radius_plus_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="@string/plus"
+			android:text="@string/geofence_dialog_plus"
 			android:textStyle="bold"
 			android:textSize="30sp"/>
 

@@ -110,10 +110,10 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 				if (mNewRole == User.Role.Superuser) {
 					SimpleDialogFragment
 							.createBuilder(AddGateUserActivity.this, getSupportFragmentManager())
-							.setTitle(R.string.confirm_add_owner_title)
-							.setMessage(R.string.confirm_add_owner_message, email.getText())
-							.setPositiveButtonText(R.string.button_add_user_confirm)
-							.setNegativeButtonText(R.string.notification_cancel)
+							.setTitle(R.string.gate_user_add_dialog_title_add_owner)
+							.setMessage(R.string.gate_user_add_dialog_message_add_owner, email.getText())
+							.setPositiveButtonText(R.string.gate_user_add_btn_add_user)
+							.setNegativeButtonText(R.string.activity_fragment_btn_cancel)
 							.show();
 				} else {
 					mNewUser.setRole(mNewRole);

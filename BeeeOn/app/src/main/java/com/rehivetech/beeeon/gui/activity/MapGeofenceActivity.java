@@ -86,7 +86,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(R.string.title_activity_map_geofence);
+			toolbar.setTitle(R.string.map_geofence_title_map_geofence);
 			setSupportActionBar(toolbar);
 		}
 
@@ -320,7 +320,7 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 				new MarkerOptions()
 						.position(new LatLng(fence.getLatitude(), fence.getLongitude()))
 						.title(fence.getName())
-						.snippet(getString(R.string.radius) + ": " + fence.getRadius() + " " + getString(R.string.unit_meter_short))
+						.snippet(getString(R.string.map_geofence_radius) + ": " + fence.getRadius() + " " + getString(R.string.map_geofence_unit_meter_short))
 						.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
 		int fillColor = Utils.setColorAlpha(getResources().getColor(R.color.beeeon_accent), 144);

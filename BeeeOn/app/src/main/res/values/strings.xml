@@ -1,478 +1,379 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
-	<string name="blank" translatable="false"/>
+
+	<!-- Application name -->
 	<!--<string name="app_name" translatable="false">BeeeOn Beta</string>-->
-	<string name="demo_mode">DEMO MODE</string>
-	<string name="demo_mode_email" translatable="false">demo@beeeon.com</string>
 
-	<string name="sufix_default"> (default)</string>
+	<!-- Titles in manifest -->
+	<string name="manifest_action_notification">Notifications</string>
+	<string name="manifest_action_watchdog">Watchdog</string>
+	<string name="manifest_facebook_app_id" translatable="false">868028889921254</string>
+	<string name="manifest_title_device_add">Send the request</string>
+	<string name="manifest_title_gate_add">Add gateway</string>
+	<string name="manifest_title_gate_add_user">Add user</string>
+	<string name="manifest_title_gate_detail">Gateway details</string>
+	<string name="manifest_title_gate_edit">Edit gateway</string>
+	<string name="manifest_title_main">BeeeOn</string>
+	<string name="manifest_title_settings">Settings</string>
+	<string name="manifest_title_widget_clock">BeeeOn-Time</string>
+	<string name="manifest_title_widget_location_list">BeeeOn location</string>
+	<string name="manifest_title_widget_module_small">BeeeOn module small</string>
+	<string name="manifest_title_widget_module_large">BeeeOn module large</string>
+	<string name="manifest_title_widget_module_medium">BeeeOn module medium</string>
 
-	<string name="facebook_app_id" translatable="false">868028889921254</string>
+	<!-- Unit blank -->
+	<string name="unit_blank_blank" translatable="false"/>
 
-	<!-- Titles -->
-	<string name="title_activity_location_screen">BeeeOn</string>
-	<string name="title_activity_notification">Notification</string>
-	<string name="title_activity_add_sensor">Send the request</string>
-	<string name="title_activity_add_gate">Add gateway</string>
-	<string name="title_activity_registration">Registration</string>
-	<string name="title_activity_login_facebook">Facebook</string>
-	<string name="title_activity_widget_configuration">Widget Configuration</string>
-	<string name="title_activity_location_detail_screen">Location Detail</string>
-	<string name="title_activity_map_geofence">Geofence areas</string>
-	<string name="title_activity_gate_users">Manage users</string>
-	<string name="title_activity_add_adapter_user">Add user</string>
-	<string name="title_activity_setup_sensor">Device setup</string>
-	<string name="title_activity_profile_detail">Account info</string>
-	<string name="title_activity_settings">Settings</string>
+	<!-- Demo network -->
+	<string name="demo_network_demo_mode">DEMO MODE</string>
+	<string name="demo_network_demo_mode_email" translatable="false">demo@beeeon.com</string>
 
-	<!-- Buttons -->
-	<string name="login_login">Login</string>
-	<string name="login_demo">Demo mode</string>
-	<string name="registration_button">Registration</string>
-	<string name="alert_neutral">Click me</string>
-	<string name="alert_positive">OK</string>
-	<string name="sensordetail_set_button">set</string>
+	<!-- Network server -->
+	<string name="network_server_sufix_default"> (default)</string>
 
+	<!-- Base application -->
+	<string name="base_application_progress_saving_data">Saving data&#8230;</string>
 
-	<!-- Login activity -->
-	<string name="login_image_description_logo">Application logo</string>
-	<string name="login_app_name">BeeeOn</string>
-	<string name="login_app_slogan">Home under your control.</string>
+	<!-- Util  -->
+	<string name="util_timezone_actual_timezone">Current timezone</string>
+	<string name="util_timezone_gate_timezone">gateway timezone</string>
+	<string name="utils_toast_field_must_be_email">Enter a valid e-mail address</string>
 
-	<string name="action_choose_server_manually">Choose BeeeOn server manually</string>
-	<string name="login_label_server">Select BeeeOn server:</string>
+	<!-- Adapter location -->
+	<string name="adapter_location_array_new_location_spinner">New location</string>
 
-	<string name="login_label_login_or_register">Login with:</string>
-	<string name="login_provider_google">Google</string>
-	<string name="login_provider_facebook">Facebook</string>
-	<string name="login_provider_choose_other">Use other service</string>
-
-	<string name="login_label_work_offline">Or you can work offline:</string>
-	<string name="login_btn_direct_connect">Direct connect to gateway</string>
-	<string name="login_btn_demo_mode">Start in demo mode</string>
-
-	<!-- New sensor dialog -->
-	<string name="notification_title">New module</string>
-
-	<plurals name="notification_new_sensors">
-		<item quantity="one">One uninitialized module found at your home</item>
-		<item quantity="other">%d uninitialized modules found at your home</item>
-	</plurals>
-
-	<string name="notification_ingore">Ignore</string>
-	<string name="notification_add">Add</string>
-	<string name="notification_cancel">Cancel</string>
-
-	<!-- Labels -->
-	<string name="addsensor_add_sensor">Add module</string>
-	<string name="addsensor_setup_sensor">Setup module</string>
-	<string name="addsensor_or">or</string>
-	<string name="sensordetail_last_value">Last value \u0020</string>
-	<string name="sensordetail_refresh_time">Refresh inteval </string>
-	<string name="sensordetail_battery_label">Battery state</string>
-	<string name="sensordetail_location_label">Location</string>
-	<string name="sensordetail_last_update_label">Last update</string>
-	<string name="sensordetail_signal_label">Signal state</string>
-	<string name="update_needed">Update application</string>
-	<string name="addsensor_type">Type of module: </string>
-	<string name="setup_sensor_info_text">Setup your new module which was activated at</string>
-	<string name="setup_sensor_header_names">Device names</string>
-	<string name="setup_sensor_set_name">Set name of module</string>
-	<string name="setup_sensor_header_location">Location</string>
-	<string name="addadapter_add_adapter">Add gateway</string>
-	<string name="registration_label">New account</string>
-	<string name="registration_serial_number">For gateway with serial number: </string>
-	<string name="alert_title">Title</string>
-	<string name="alert_message">Message</string>
-	<string name="refresh_time">Refresh time </string>
-	<string name="last_update">Last update: </string>
-	<string name="sen_graph_label">Historical data</string>
-	<string name="users_header">Users</string>
-	<string name="users_pending_header">Pending request</string>
-	<string name="add_users_adapter">Add user</string>
-	<string name="add_user_email_header">E-mail</string>
-	<string name="add_user_role_header">Role</string>
-	<string name="gate_user_title_change_role">Change user role</string>
-
-	<!-- Hints -->
-	<string name="login_user_name_hint">Login/e-mail</string>
-	<string name="addsensor_sensor_name_hint">Name of new module</string>
-	<string name="addsensor_new_location_hint">New location name</string>
-
-	<!-- Toasts -->
-	<string name="toast_changeto">\u0020changed to: \u0020</string>
-	<string name="toast_new_sensor_added">New module was added</string>
-	<string name="toast_new_sensor_not_added">Error when adding module</string>
-	<string name="toast_need_sensor_name">Write name of module please</string>
-	<string name="toast_need_sensor_location_name">Write name of new location please</string>
-	<string name="toast_bad_password">Wrong name or password</string>
-	<string name="toast_connecting_to_server">Connecting to server &#8230;</string>
-	<string name="toast_welcome_text">Welcome </string>
-	<string name="toast_play_missing">GooglePlay is missing or outdated</string>
-	<string name="toast_internet_connection">Turn internet connection on</string>
-	<string name="toast_no_unregistered_adapter">There is no connected unregistered gateway</string>
-	<string name="toast_communication_error">Communication problem occurred, try again later</string>
-	<string name="toast_tap_again_exit">Tap back again to exit</string>
-	<string name="toast_google_auth">Google authentication</string>
-	<string name="toast_something_wrong">Something went wrong, try again later</string>
-	<string name="toast_not_implemented">Not implemented yet</string>
-	<string name="toast_login_failed">Login failed</string>
-	<string name="toast_registration_failed">Registration failed</string>
-	<string name="toast_auth_provider_error">Error during authorization process</string>
-	<string name="toast_adapter_activate_failed">Failed to activate gateway, try again</string>
-	<string name="toast_adapter_activated">Gateway has been activated</string>
-	<string name="toast_gate_removed">Gateway has been removed</string>
-	<string name="toast_no_adapter">You have no registered gateway</string>
-	<string name="toast_ignore_uninitialized_info">You can add these modules later by clicking on (+)</string>
-	<string name="toast_empty_sensor_name">Please fill names of all modules</string>
-	<string name="toast_not_specified_gate_or_module">Not specified gateway or module</string>
-	<string name="toast_wrong_or_no_device">Wrong or no module selected</string>
-	<string name="toast_no_uninitialized_devices">There are no uninitialized modules</string>
-	<string name="toast_success_save_data">Data saved successfully</string>
-	<string name="toast_fail_save_data">Failed saving data</string>
-	<string name="toast_wrong_or_no_watchdog_rule">Wrong or no Watchdog rule selected</string>
-	<string name="toast_field_must_be_filled">Must be filled</string>
-	<string name="toast_field_must_be_number">Enter a valid number</string>
-	<string name="toast_field_must_be_email">Enter a valid e-mail address</string>
-	<string name="toast_error_no_qr_reader">You don\'t have QR scanner installed</string>
-	<string name="toast_error_no_google_play">Failed to open Google Play</string>
-	<string name="toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
-	<string name="toast_not_specified_gate">Not specified gateway</string>
-	<string name="toast_error_not_supported_yet">This feature is not supported yet.</string>
-	<string name="toast_no_google_play_services">Google Play Services not available.</string>
-
-	<!-- Progress -->
-	<string name="progress_signing">Logging in&#8230;</string>
-	<string name="progress_google">Handshaking with Google&#8230;</string>
-	<string name="progress_signup">Registering new user&#8230;</string>
-	<string name="progress_loading_gates">Loading your gateways&#8230;</string>
-	<string name="progress_loading_gate">Loading gateway data&#8230;</string>
-	<string name="progress_loading_demo">Loading demo data&#8230;</string>
-	<string name="progress_saving_data">Saving data&#8230;</string>
-	<string name="progress_checking_location">Checking location&#8230;</string>
-
-
-	<!-- NavDrawer -->
-	<string name="drawer_open">OPEN</string>
-	<string name="drawer_close">CLOSE</string>
-	<string name="location">Locations</string>
-	<string name="gate">Gateways</string>
-	<string name="no_location">No locations</string>
-	<string name="no_gates">You have no gateways</string>
-	<string name="menu_household">Overview</string>
-	<string name="menu_management">Management</string>
-	<string name="menu_devices">Devices</string>
-	<string name="menu_charts">Charts</string>
-	<string name="menu_gate">Active gateway</string>
-	<string name="menu_applications">Applications</string>
-	<string name="menu_watchdog">Watchdog</string>
-
-	<!-- Add sensor dialog -->
-
-	<string name="addsensor_send_request">Send pair request  </string>
-	<string name="addsensor_active_pair">Active pair mode </string>
-	<string name="addadapter_textview_name">Name</string>
-	<string name="addadapter_qr_button"> Scan QR code </string>
-	<string name="addadapter_manual_edit">Enter manually</string>
-	<string name="addadapter_qr_button_loading">Loading…</string>
-
-	<string name="addsensor_send_pair">SEND PAIR</string>
-	<string name="addsensor_waiting">Waiting for start</string>
-	<string name="addsensor_time_left_unit">seconds</string>
-	<string name="addsensor_device_not_found_in_time">Device was not found, check if it\'s really switched on and try it again</string>
-	<string name="addsensor_device_found">Device was found</string>
-	<string name="addsensor_request_task_not_successful">Request task was not successful, try again</string>
-	<string name="adddevice_title">Adding new device</string>
-	<string name="addadapter_title">Adding new gate</string>
-	<string name="addadapter_last_fragment_title">Enter the code of the gate</string>
-	<string name="addadapter_last_fragment_text">Scan the QR code on the gate or write the code manually</string>
-
-	<!-- Others -->
-	<string name="action_settings">Settings</string>
-	<string name="action_about">About</string>
-	<string name="action_search">Search</string>
-	<string name="action_refreshlist">Refresh list</string>
-	<string name="action_addgate">Add gateway</string>
-	<string name="action_addsensor">Add module</string>
-	<string name="action_logout">Logout</string>
-	<string name="action_unregist_device">Remove module</string>
-	<string name="action_hide_device">Hide module</string>
-	<string name="action_close">Cancel</string>
-	<string name="action_done">Done</string>
-	<string name="action_intro">Intro</string>
-	<string name="action_intro_dialog">Intro dialog</string>
-	<string name="addadapter_qrcode_desc">Get QR code</string>
-	<string name="addsensor_new_location_spinner">New location</string>
-	<string name="sen_detail_graph_info">Tap to Active</string>
-	<string name="loading_data">Loading data&#8230;</string>
-	<string name="no_sensor_cap">NO DEVICE</string>
-	<string name="no_gate_cap">NO GATEWAY</string>
-	<string name="no_rules_cap">NO RULE</string>
-	<string name="no_locations_cap">NO LOCATIONS</string>
-	<string name="no_notifications_cap">NO NOTIFICATIONS</string>
-	<string name="profile_category_senzors">Devices</string>
-	<string name="profile_category_friends">Friends</string>
-	<string name="profile_category_app">Application</string>
-	<string name="profile_level">Level</string>
-	<string name="profile_more_accounts">More accounts</string>
-	<string name="profile_new_account">Pair with selected network</string>
-
-	<!-- Arrays -->
-	<string-array name="registration_spinner">
-		<item>Facebook</item>
-		<item>Google</item>
-		<item>MojeID</item>
-	</string-array>
-	<string-array name="items">
-		<item>Item 1</item>
-		<item>Item 2</item>
-		<item>Item 3</item>
-		<item>Item 4</item>
-		<item>Item 5</item>
-		<item>Item 6</item>
-	</string-array>
-	<string-array name="title_of_main_fragments">
+	<!-- Adapter view pager -->
+	<string-array name="adapter_view_pager_title_of_main_fragments">
 		<item>List</item>
 		<item>Custom</item>
 	</string-array>
 
-	<string name="user_role_owner">Owner</string>
-	<string name="user_role_admin">Admin</string>
-	<string name="user_role_user">User</string>
-	<string name="user_role_guest">Guest</string>
-
-	<string name="log_sc_or">or</string>
-
-	<!-- Placeholders -->
-	<string name="placeholder_icon">Icon</string>
-	<string name="placeholder_none">Loading</string>
-	<string name="placeholder_not_exists">NOT EXISTS</string>
-
-	<!-- Widgets -->
-	<string name="widget_sensor_title_small">BeeeOn module small</string>
-	<string name="widget_sensor_title_medium">BeeeOn module medium</string>
-	<string name="widget_sensor_title_large">BeeeOn module large</string>
-	<string name="widget_clock_title">BeeeOn-Time</string>
-
-	<!-- WidgetConfigurationActivity -->
-	<string name="widget_configuration_adapter">Gateway</string>
-	<string name="widget_configuration_sensor">Device to be shown</string>
-	<string name="widget_configuration_interval_widget">Widget update interval</string>
-	<string name="widget_configuration_login_first">You must be logged in first</string>
-	<string name="widget_configuration_no_adapters">You have no gateways and thus no module to show in widget</string>
-	<string name="widget_configuration_select_gate">Select gateway from list</string>
-	<string name="widget_configuration_select_device">Select module from list</string>
-	<string name="widget_configuration_select_location">Select location from list</string>
-
-	<string name="widget_configuration_widget_clock">Configuration BeeeOn-Time</string>
-	<string name="widget_configuration_widget_device">Configuration module widget</string>
-	<string name="widget_configuration_widget_location">Configuration location widget</string>
-
-	<!-- Widgets other -->
-	<string name="widget_location_list_empty">Empty location</string>
-	<string name="widget_cached">(cached)</string>
-	<string name="widget">Widget</string>
-	<string name="household">Household</string>
-	<string name="widget_configuration_location">Location</string>
-	<string name="update_over_wifi_only">Update over Wi-Fi only</string>
-
-	<!-- Widget Clock -->
-	<string name="weather">Weather</string>
-	<string name="weather_place">Location</string>
-	<string name="weather_place_not_found">Location not found</string>
-	<string name="color_scheme">Color scheme</string>
-
-	<string name="place_must_be_filled">Location must be filled</string>
-	<string name="dialog_location_select">Select your place</string>
-	<string name="dialog_location_country">City name, country</string>
-
-
-	<!-- About -->
-	<string name="play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
-	<string name="company_email" translatable="false">info@BeeeOn.com</string>
-	<string name="company_web" translatable="false">http://rehivetech.com/</string>
-	<string name="copyright">\u00A9 2014–15 RehiveTech. All rights reserved.</string>
-	<string name="version">Version</string>
-	<string name="rate">Rate</string>
-	<string name="ok">OK</string>
-
 	<!-- Refresh intervals -->
-	<plurals name="interval_seconds">
+	<plurals name="refresh_interval_interval_seconds">
 		<item quantity="one">1 second</item>
 		<item quantity="other">%d seconds</item>
 	</plurals>
-	<plurals name="interval_minutes">
+	<plurals name="refresh_interval_interval_minutes">
 		<item quantity="one">1 minute</item>
 		<item quantity="other">%d minutes</item>
 	</plurals>
-	<plurals name="interval_hours">
+	<plurals name="refresh_interval_interval_hours">
 		<item quantity="one">1 hour</item>
 		<item quantity="other">%d hours</item>
 	</plurals>
 
-	<!-- Settings -->
-	<string name="personal">Personal</string>
-	<string name="user_profile">User profile</string>
-	<string name="units">Units</string>
-	<string name="timezone">Timezone</string>
-	<string name="temperature">Temperature</string>
-	<string name="noise">Noise</string>
-	<string name="connections">Connections</string>
-	<string name="choose_default_location">Choose default location</string>
-	<string name="choose_default_adapter">Choose default gateway</string>
-	<string name="default_location">Default location</string>
-	<string name="default_adapter">Default gateway</string>
-	<string name="actual_timezone">Current timezone</string>
-	<string name="gate_timezone">gateway timezone</string>
+	<!-- User role -->
+	<string name="user_role_admin">Admin</string>
+	<string name="user_role_guest">Guest</string>
+	<string name="user_role_owner">Owner</string>
+	<string name="user_role_user">User</string>
 
-	<!-- Default names -->
-	<string name="adapter_default_name">%1$s\'s gateway #%2$d</string>
-	<string name="settings">Settings</string>
-	<string name="save">Save</string>
-	<string name="ada_menu_edit">Edit gateway</string>
-	<string name="ada_menu_users">Manage users</string>
-	<string name="ada_menu_del">Remove gateway</string>
-	<string name="sensor_menu_del">Remove module</string>
-	<string name="adausr_menu_edit">Edit user</string>
-	<string name="adausr_menu_del">Remove user</string>
+	<!-- Main -->
+	<string name="main_action_gate_add">Add gateway</string>
+	<string name="main_btn_add">Add</string>
+	<string name="main_dialog_title_action_add">What to add?</string>
+	<string name="main_toast_tap_again_exit">Tap back again to exit</string>
+	<string name="main_tut_open_menu">Open Menu</string>
+	<string name="main_tut_open_menu_text">For switch location tap to Icon and Menu will rise</string>
 
+	<!-- Notification -->
+	<string name="notification_device_low_battery_low_signal_name_new_module">New module added</string>
+	<string name="notification_gate_added_name_new_gate">New gateway added</string>
+	<string name="notification_no_notifications_cap">NO NOTIFICATIONS</string>
+	<string name="notification_title_notification">Notification</string>
+	<string name="notification_uri_name_link">Link</string>
 
-	<!-- Tutorial -->
-	<string name="tut_add_gate_header">ADD GATEWAY</string>
-	<string name="tut_add_gate_text">To add your new gateway, please click on plus</string>
-	<string name="tut_add_sensor_header">ADD DEVICE</string>
-	<string name="tut_add_sensor_text">To add your new module, please click on plus</string>
-	<string name="tut_intro_text_1">Welcome to BeeeOn intelligent home. In the following guide, you will be introduced intelligent home system and its parts.</string>
-	<string name="tut_intro_text_2">BeeeOn household consists of individual wireless devices and gateway to this household.</string>
-	<string name="tut_intro_text_3">Wireless devices are of two types - sensors and actuators. Sensors sense variables values from environs. Actuators are used to adjust their desired values.</string>
-	<string name="tut_intro_text_4">The gateway receives and transmits data toward the wireless devices.</string>
-	<string name="tut_intro_text_5">Mobile application displays information about the household and allows you to control it anywhere, anytime.</string>
-	<string name="tut_intro_title">BeeeOn Introduction</string>
+	<!-- Geofence dialog -->
+	<string name="geofence_dialog_minus" translatable="false">-</string>
+	<string name="geofence_dialog_name">Name</string>
+	<string name="geofence_dialog_plus" translatable="false">+</string>
+	<string name="geofence_dialog_title_add_new_geofence_area">Add geofence area</string>
 
-	<string name="tutorial_next">NEXT</string>
-	<string name="tutorial_add">ADD</string>
-	<string name="tutorial_skip">SKIP</string>
+	<!-- Map geofence -->
+	<string name="map_geofence_action_mode_delete_geofence">Delete geofence</string>
+	<string name="map_geofence_action_mode_watchdog_create">Create watchdog</string>
+	<string name="map_geofence_action_search">Search</string>
+	<string name="map_geofence_radius">Radius</string>
+	<string name="map_geofence_title_map_geofence">Geofence areas</string>
+	<string name="map_geofence_unit_meter_short" translatable="false">m</string>
 
-	<string name="tutorial_open_menu">Open Menu</string>
-	<string name="tutorial_open_menu_text">For switch location tap to Icon and Menu will rise</string>
-	<!-- Help in Add dialogs -->
-	<string name="tut_add_gate_text_1">Please connect your gateway to the Internet</string>
-	<string name="tut_add_gate_text_2">Please connect your gateway to the AC power</string>
-	<string name="tut_add_gate_text_3">In the next step, give name to your gateway and scan QR code</string>
-	<string name="tut_add_sensor_text_1">Pull out battery stripe</string>
-	<string name="tut_add_sensor_text_2">Shake with new sensor shortly while countdown is running or push pair button on actuator</string>
-	<string name="tut_add_sensor_title_1">Pull out the battery stripe</string>
-	<string name="tut_add_sensor_title_2">Prepare your device</string>
-	<string name="tut_add_gate_title_1">Connect the gate to the internet</string>
-	<string name="tut_add_gate_title_2">Connect the gate to the AC power</string>
-	<string name="tut_add_gate_title_3">Final information</string>
+	<!-- Common Button, texts, titles, toast -->
+	<string name="activity_configuration_toast_something_wrong">Something went wrong, try again later</string>
+	<string name="activity_fragment_btn_cancel">Cancel</string>
+	<string name="activity_fragment_btn_set">Set</string>
+	<string name="activity_fragment_menu_btn_remove">Remove</string>
+	<string name="activity_fragment_menu_dialog_title_remove">Remove \"%1$s\"</string>
+	<string name="activity_fragment_toast_delete_fail">Unable to remove</string>
+	<string name="activity_fragment_toast_delete_success">Successfully removed</string>
+	<string name="activity_gate_user_setup_device_btn_save">Save</string>
+	<string name="activity_menu_dialog_message_remove_gate">You will lost access to the gateway and its devices.\n\nIf you are the owner, whole gateway will be removed from the server and all settings including users, devices and historical data will be lost.</string>
+	<string name="activity_menu_dialog_title_remove_gate_default">Remove gateway</string>
+	<string name="activity_module_edit_setup_device_toast_location_icon">Choose icon of your new location</string>
+	<string name="activity_toast_success_save_data">Data saved successfully</string>
+	<string name="activity_utils_toast_field_must_be_filled">Must be filled</string>
+	<string name="fragment_configuration_widget_dialog_btn_ok">OK</string>
+	<string name="fragment_module_detail_custom_view_chart_legend">Legend</string>
+	<string name="layout_gate_edit">Edit gateway</string>
+	<string name="layout_module_list_watchdog_list_action_refresh_list">Refresh list</string>
+	<string name="layout_widget_household">Household</string>
 
-	<!-- Watchdog -->
-	<string name="action_watchdog">Watchdog</string>
-	<string name="watchdog_rule">Watchdog Rule</string>
-	<string name="watchdog_create">Create watchdog</string>
-	<string name="treshold_value">Threshold</string>
-	<string name="watchdog_actor_change_state">Change actor\'s state</string>
-	<string name="watchdog_notification_send">Send notification</string>
-	<string name="watchdog_activate_rule">Set this rule active</string>
-	<string name="watchdog_rule_name">Rule name</string>
-	<string name="notification_text">Notification text</string>
-	<string name="actor_required">Select actuator</string>
-	<string name="watchdog_no_valid_item">No valid item to check</string>
-	<string name="multiadapter_no_item">- Nothing to select -</string>
+	<!-- Placeholders -->
+	<string name="layout_activity_fragment_widget_placeholder_icon">Icon</string>
+	<string name="layout_widget_placeholder_none">Loading</string>
+	<string name="persistence_widget_placeholder_not_exists">NOT EXISTS</string>
 
-	<string name="title_activity_module_edit">Edit device</string>
-	<string name="sensor_name_label">Name of module</string>
+	<!-- Login -->
+	<string name="login_app_name">BeeeOn</string>
+	<string name="login_app_slogan">Home under your control.</string>
+	<string name="login_btn_demo_mode">Start in demo mode</string>
+	<string name="login_btn_direct_connect">Direct connect to gateway</string>
+	<string name="login_dialog_message_register_new_account">You don\'t have a BeeeOn account yet, do you want to create it now?</string>
+	<string name="login_dialog_title_choose_provider">Choose login provider</string>
+	<string name="login_dialog_title_register_new_account">No account</string>
+	<string name="login_image_description_logo">Application logo</string>
+	<string name="login_label_login">Login with:</string>
+	<string name="login_label_server">Select BeeeOn server:</string>
+	<string name="login_label_work_offline">Or you can work offline:</string>
+	<string name="login_menu_action_choose_server_manually">Choose BeeeOn server manually</string>
+	<string name="login_progress_loading_demo">Loading demo data&#8230;</string>
+	<string name="login_progress_loading_gate">Loading gateway data&#8230;</string>
+	<string name="login_progress_loading_gates">Loading your gateways&#8230;</string>
+	<string name="login_progress_signing">Logging in&#8230;</string>
+	<string name="login_progress_signup">Registering new user&#8230;</string>
+	<string name="login_provider_choose_other">Use other service</string>
+	<string name="login_provider_google">Google</string>
+	<string name="login_provider_facebook">Facebook</string>
+	<string name="login_toast_auth_provider_error">Error during authorization process</string>
+	<string name="login_toast_error_not_supported_yet">This feature is not supported yet.</string>
+	<string name="login_toast_internet_connection">Turn internet connection on</string>
+	<string name="login_toast_login_failed">Login failed</string>
+	<string name="login_toast_registration_failed">Registration failed</string>
 
-	<string name="dialog_register_new_account_title">No account</string>
-	<string name="dialog_register_new_account_message">You don\'t have a BeeeOn account yet, do you want to create it now?</string>
-	<string name="dialog_choose_provider_title">Choose login provider</string>
+	<!-- NavDrawer menu -->
+	<string name="nav_drawer_menu_action_about">About</string>
+	<string name="nav_drawer_menu_action_logout">Logout</string>
+	<string name="nav_drawer_menu_action_settings">Settings</string>
+	<string name="nav_drawer_menu_drawer_close">CLOSE</string>
+	<string name="nav_drawer_menu_drawer_open">OPEN</string>
+	<string name="nav_drawer_menu_gate">Gateways</string>
+	<string name="nav_drawer_menu_gate_menu_gate_detail">Details</string>
+	<string name="nav_drawer_menu_menu_charts">Charts</string>
+	<string name="nav_drawer_menu_menu_devices">Devices</string>
+	<string name="nav_drawer_menu_menu_gate">Active gateway</string>
+	<string name="nav_drawer_menu_menu_household">Overview</string>
+	<string name="nav_drawer_menu_menu_management">Management</string>
+	<string name="nav_drawer_menu_no_gates">You have no gateways</string>
+	<string name="nav_drawer_menu_watchdog_notif_menu_watchdog">Watchdog</string>
 
-	<string name="name">Name</string>
-	<string name="add_new_geofence_area">Add geofence area</string>
+	<!-- Gate menu -->
+	<string name="gate_menu_layout_menu_del">Remove gateway</string>
+	<string name="gate_menu_layout_menu_users">Manage users</string>
+	<string name="gate_menu_user_menu_edit">Edit user</string>
+	<string name="gate_menu_user_menu_del">Remove user</string>
 
-	<string name="radius">Radius</string>
-	<string name="delete_geofence">Delete geofence</string>
-	<string name="unit_meter_short" translatable="false">m</string>
-	<string name="tutorial_go_to_app">START</string>
+	<!-- Gate add -->
+	<string name="gate_add_btn_add">ADD</string>
+	<string name="gate_add_btn_qr"> Scan QR code </string>
+	<string name="gate_add_btn_qr_loading">Loading…</string>
+	<string name="gate_add_dialog_title_enter_text">Enter the code of the gate</string>
+	<string name="gate_add_last_fragment_text">Scan the QR code on the gate or write the code manually</string>
+	<string name="gate_add_last_fragment_title">Enter the code of the gate</string>
+	<string name="gate_add_manual_edit">Enter manually</string>
+	<string name="gate_add_toast_error_invalid_qr_code">This is not a valid BeeeOn QR code</string>
+	<string name="gate_add_toast_error_no_google_play">Failed to open Google Play</string>
+	<string name="gate_add_toast_error_no_qr_reader">You don\'t have QR scanner installed</string>
+	<string name="gate_add_toast_gate_activated">Gateway has been activated</string>
+	<string name="gate_add_toast_gate_activate_failed">Failed to activate gateway, try again</string>
+	<string name="gate_add_tut_add_gate_text_1">Please connect your gateway to the Internet</string>
+	<string name="gate_add_tut_add_gate_text_2">Please connect your gateway to the AC power</string>
+	<string name="gate_add_tut_add_gate_title_1">Connect the gate to the internet</string>
+	<string name="gate_add_tut_add_gate_title_2">Connect the gate to the AC power</string>
 
-	<string name="modules">Devices</string>
-
-	<string name="toast_delete_fail">Unable to remove</string>
-	<string name="toast_delete_success">Successfully removed</string>
-	<string name="addadapter_fill_name">Fill gateway name</string>
-	<string name="addadapter_fill_code">Fill gateway code</string>
-	<string name="addsensor_stoped">stopped</string>
-	<string name="add_action_dialog_title">What to add?</string>
-	<string name="toast_need_module_location_icon">Choose icon of your new location</string>
-
-    <string name="dialog_actuator_set_value">Set new value</string>
-    <string name="dialog_actuator_action">set</string>
-    <string name="dialog_actuator_cancel">cancel</string>
-
-	<string name="action_notification">Notifications</string>
-	<string name="notification_name_new_gate">New gateway added</string>
-	<string name="notification_name_new_sensor">New module added</string>
-	<string name="notification_name_link">Link</string>
-	<string name="widget_location_list_title">BeeeOn location</string>
-	<string name="toast_device_not_available">Device is not available</string>
-	<string name="activity_add_device_dialog_text">Click SEND PAIR</string>
-	<string name="activity_add_device_shake_it">Shake the device or press the button on it.</string>
-
-	<string name="button_remove">Remove</string>
-	<string name="button_change_ownership">Change ownership</string>
-	<string name="button_unregister">Unregister</string>
-	<string name="button_add_user_confirm">Add User</string>
-
-	<!-- Titles and messages for confirm dialog -->
-	<string name="confirm_remove_title">Remove \"%1$s\"</string>
-	<string name="confirm_remove_watchdog_message">Watchdog will be permanently removed.</string>
-	<string name="confirm_unregister_device_title">Unregister \"%1$s\"</string>
-	<string name="confirm_unregister_device_message">Device will be unregistered from server and all its historical data will be lost.</string>
-	<string name="confirm_remove_gate_title_default">Remove gateway</string>
-	<string name="confirm_remove_gate_message">You will lost access to the gateway and its devices.\n\nIf you are the owner, whole gateway will be removed from the server and all settings including users, devices and historical data will be lost.</string>
-	<string name="confirm_change_ownership_title">Change gateway ownership</string>
-	<string name="confirm_change_ownership_message">You will hand over ownership of the gateway. You will not be able to manage users, devices and other settings of this gateway.</string>
-	<string name="confirm_remove_user_message">This user will lost access to your gateway and he won\'t be able to read or interact with your data anymore.</string>
-	<string name="confirm_add_owner_title">New user as Owner</string>
-	<string name="confirm_add_owner_message">You are going to give owner rights to new user. \"%1$s\" get rights to full access of gate and administration.</string>
-
-	<string name="enter_text_dialog_title">Enter the code of the gate</string>
-
-	<string name="graph_interval_values">Graph interval values</string>
-	<string name="interval_weekly">Weekly</string>
-	<string name="interval_daily">Daily</string>
-	<string name="interval_monthly">Monthly</string>
-
-	<string name="title_activity_gate_edit">Edit gateway</string>
-	<string name="fragment_gate_edit_gate_name">Gate name</string>
-	<string name="fragment_gate_details_gate_id">Gate Id</string>
-	<string name="fragment_gate_edit_gate_id_read_only">Gate Id (read-only)</string>
-	<string name="edit_gate_success">Gate updated successfully</string>
-	<string name="edit_gate_failure">Gate not updated</string>
-	<string name="delete_gate_failure">Gateway was not removed successsfully</string>
-	<string name="title_activity_gate_detail">Gateway details</string>
-	<string name="gate_detail_title">Details</string>
-	<string name="gate_name">Gate name</string>
-	<string name="gate_detail_your_role">Your role</string>
-	<string name="gate_detail_user">User</string>
+	<!-- Gate detail -->
+	<string name="gate_detail_gate_id">Gate Id</string>
 	<string name="gate_detail_ip">IP address</string>
-	<string name="gate_detail_version">Communication version</string>
-	<string name="toast_not_users_found">No users found</string>
-	<string name="gate_detail_num_of_users">Number of users</string>
+	<string name="gate_detail_list_btn_details">Details</string>
+	<string name="gate_detail_loading_data">Loading data&#8230;</string>
 	<string name="gate_detail_num_of_devices">Number of devices</string>
-	<string name="reloading_gate_data_not_successful">Reloading gate data not successful</string>
-	<string name="gate_no_name">No name</string>
-	<string name="update_gateway">Edit gateway</string>
-	<string name="layout_simple_list_button_text">Details</string>
-	<string name="chart_legend">Legend</string>
-	<string name="chart_y_axis">Y axis labels</string>
-	<string name="chart_no_data">No device data available.</string>
-	<string name="dialog_code_title">Enter gateway code</string>
-	<string name="minus" translatable="false">-</string>
-	<string name="plus" translatable="false">+</string>
-	<string name="doubledots" translatable="false">:</string>
+	<string name="gate_detail_num_of_users">Number of users</string>
+	<string name="gate_detail_text_gate_no_name">No name</string>
+	<string name="gate_detail_timezone">Timezone</string>
+	<string name="gate_detail_toast_gate_removed">Gateway has been removed</string>
+	<string name="gate_detail_toast_not_specified_gate">Not specified gateway</string>
+	<string name="gate_detail_your_role">Your role</string>
+	<string name="gate_detail_version">Communication version</string>
 
-	<string name="unknown_device">Unknown device</string>
-    <string name="unknown_manufacturer">Unknown manufacturer</string>
+	<!-- Gate edit -->
+	<string name="gate_edit_gate_id_read_only">Gate Id (read-only)</string>
+	<string name="gate_edit_gate_name">Gate name</string>
+	<string name="gate_edit_toast_success">Gate updated successfully</string>
+
+	<!-- Gate user add -->
+	<string name="gate_user_add_add_user_gate">Add user</string>
+	<string name="gate_user_add_add_user_email_header">E-mail</string>
+	<string name="gate_user_add_add_user_role_header">Role</string>
+	<string name="gate_user_add_btn_add_user">Add User</string>
+	<string name="gate_user_add_dialog_message_add_owner">You are going to give owner rights to new user. \"%1$s\" get rights to full access of gate and administration.</string>
+	<string name="gate_user_add_dialog_title_add_owner">New user as Owner</string>
+
+	<!-- Gate users -->
+	<string name="gate_users_btn_change_ownership">Change ownership</string>
+	<string name="gate_users_dialog_message_change_ownership">You will hand over ownership of the gateway. You will not be able to manage users, devices and other settings of this gateway.</string>
+	<string name="gate_users_dialog_message_remove_user">This user will lost access to your gateway and he won\'t be able to read or interact with your data anymore.</string>
+	<string name="gate_users_dialog_title_change_ownership">Change gateway ownership</string>
+	<string name="gate_users_title_change_role">Change user role</string>
+	<string name="gate_users_title_gate_users">Manage users</string>
+
+	<!-- Device  setup -->
+	<string name="device_setup_title_setup_device">Device setup</string>
+	<string name="device_setup_toast_empty_module_name">Please fill names of all modules</string>
+	<string name="device_setup_toast_need_module_location_name">Write name of new location please</string>
+	<string name="device_setup_toast_new_module_added">New module was added</string>
+
+	<!-- Device add -->
+	<string name="device_add_btn_send_pair">SEND PAIR</string>
+	<string name="device_add_device_found">Device was found</string>
+	<string name="device_add_device_not_found_in_time">Device was not found, check if it\'s really switched on and try it again</string>
+	<string name="device_add_dialog_device_add_text">Click SEND PAIR</string>
+	<string name="device_add_shake_it_text">Shake the device or press the button on it.</string>
+	<string name="device_add_time_left_unit">seconds</string>
+	<string name="device_add_toast_no_gate">You have no registered gateway</string>
+	<string name="device_add_tut_title_add_device">Pull out the battery stripe</string>
+	<string name="device_add_tut_text_add_module">Pull out battery stripe</string>
+	<string name="device_add_waiting">Waiting for start</string>
+
+	<!-- Module setup -->
+	<string name="module_setup_module_header_location">Location</string>
+	<string name="module_setup_module_header_names">Device names</string>
+	<string name="module_setup_module_info_text">Setup your new module which was activated at</string>
+	<string name="module_setup_or">or</string>
+	<string name="module_setup_setup_module">Setup module</string>
+
+	<!-- Module setup list -->
+	<string name="module_setup_list_module_set_name">Set name of module</string>
+
+	<!-- Module list -->
+	<string name="module_list_action_mode_module_menu_del">Remove module</string>
+	<string name="module_list_action_module_add">Add module</string>
+	<string name="module_list_btn_unregister">Unregister</string>
+	<string name="module_list_dialog_message_unregister_device">Device will be unregistered from server and all its historical data will be lost.</string>
+	<string name="module_list_dialog_title_unregister_device">Unregister \"%1$s\"</string>
+	<string name="module_list_no_device_cap">NO DEVICE</string>
+	<string name="module_list_no_gate_cap">NO GATEWAY</string>
+
+	<!-- Module detail -->
+	<string name="module_detail_label_battery">Battery state</string>
+	<string name="module_detail_label_graph_data">Historical data</string>
+	<string name="module_detail_label_last_update">Last update</string>
+	<string name="module_detail_label_signal">Signal state</string>
+	<string name="module_detail_refresh_time">Refresh interval </string>
+	<string name="module_detail_toast_not_specified_gate_or_module">Not specified gateway or module</string>
+
+	<!-- Module edit -->
+	<string name="module_edit_label_detail_location">Location</string>
+	<string name="module_edit_label_module_name">Name of module</string>
+	<string name="module_edit_refresh_time">Refresh time </string>
+	<string name="module_edit_setup_new_location_hint">New location name</string>
+	<string name="module_edit_title_module_edit">Edit device</string>
+
+	<!-- Module get detail intent -->
+	<string name="module_get_detail_intent_toast_device_not_available">Device is not available</string>
+
+	<!-- Watchdog rule edit -->
+	<string name="watchdog_rule_edit_devices">Devices</string>
+	<string name="watchdog_rule_edit_message_remove_watchdog">Watchdog will be permanently removed.</string>
+	<string name="watchdog_rule_edit_multi_adapter_no_item">- Nothing to select -</string>
+	<string name="watchdog_rule_edit_notification_text">Notification text</string>
+	<string name="watchdog_rule_edit_threshold_value">Threshold</string>
+	<string name="watchdog_rule_edit_toast_actor_required">Select actuator</string>
+	<string name="watchdog_rule_edit_toast_fail_save_data">Failed saving data</string>
+	<string name="watchdog_rule_edit_toast_field_must_be_number">Enter a valid number</string>
+	<string name="watchdog_rule_edit_toast_not_implemented">Not implemented yet</string>
+	<string name="watchdog_rule_edit_toast_watchdog_no_valid_item">No valid item to check</string>
+	<string name="watchdog_rule_edit_toast_wrong_or_no_watchdog_rule">Wrong or no Watchdog rule selected</string>
+	<string name="watchdog_rule_edit_watchdog_actor_change_state">Change actor\'s state</string>
+	<string name="watchdog_rule_edit_watchdog_notification_send">Send notification</string>
+	<string name="watchdog_rule_edit_watchdog_rule">Watchdog Rule</string>
+	<string name="watchdog_rule_edit_watchdog_rule_name">Rule name</string>
+
+	<!-- Watchdog list -->
+	<string name="watchdog_list_no_rules_cap">NO RULE</string>
+
+	<!-- Widget configuration -->
+	<string name="widget_configuration_title_widget_config">Widget Configuration</string>
+
+	<!-- Widget clock, data, location, module -->
+	<string name="widget_clock_color_scheme">Color scheme</string>
+	<string name="widget_clock_dialog_location_country">City name, country</string>
+	<string name="widget_clock_dialog_location_select">Select your place</string>
+	<string name="widget_clock_location_module_widget" translatable="false">Widget</string>
+	<string name="widget_clock_location_module_widget_gate">Gateway</string>
+	<string name="widget_clock_location_module_widget_interval_update">Widget update interval</string>
+	<string name="widget_clock_location_module_widget_toast_select_gate">Select gateway from list</string>
+	<string name="widget_clock_module_widget_module">Device to be shown</string>
+	<string name="widget_clock_module_widget_toast_select_device">Select module from list</string>
+	<string name="widget_clock_progress_checking_location">Checking location&#8230;</string>
+	<string name="widget_clock_weather">Weather</string>
+	<string name="widget_clock_weather_place">Location</string>
+	<string name="widget_clock_weather_place_not_found">Location not found</string>
+	<string name="widget_clock_widget_configuration_clock">Configuration BeeeOn-Time</string>
+	<string name="widget_data_doubledots" translatable="false">:</string>
+	<string name="widget_location_no_locations_cap">NO LOCATIONS</string>
+	<string name="widget_location_widget_configuration_location">Configuration location widget</string>
+	<string name="widget_location_widget_location">Location</string>
+	<string name="widget_location_widget_toast_select_location">Select location from list</string>
+	<string name="widget_module_data_widget_cached" translatable="false">(cached)</string>
+	<string name="widget_module_widget_configuration_device">Configuration module widget</string>
+
+	<!-- Widget list -->
+	<string name="widget_location_list_update_over_wifi_only">Update over Wi-Fi only</string>
+	<string name="widget_location_list_widget_location_list_empty">Empty location</string>
+
+	<!-- Dialog info -->
+	<string name="dialog_info_btn_rate">Rate</string>
+	<string name="dialog_info_company_email" translatable="false">info@BeeeOn.com</string>
+	<string name="dialog_info_company_web" translatable="false">http://rehivetech.com/</string>
+	<string name="dialog_info_copyright">\u00A9 2014–15 RehiveTech. All rights reserved.</string>
+	<string name="dialog_info_play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
+	<string name="dialog_info_version">Version</string>
+
+	<!-- Settings -->
+	<string name="settings_main_settings">Settings</string>
+	<string name="settings_main_toast_no_google_play_services">Google Play Services not available.</string>
+	<string name="settings_unit_preferences_noise">Noise</string>
+	<string name="settings_unit_preferences_temperature">Temperature</string>
+	<string name="settings_unit_unit">Units</string>
+
+	<!-- Task register gate -->
+	<string name="task_register_gate_gate_default_name">%1$s\'s gateway #%2$d</string>
+
+	<!-- Tutorial helper-->
+	<string name="tutorial_helper_tut_gate_add_header">ADD GATEWAY</string>
+	<string name="tutorial_helper_tut_gate_add_text">To add your new gateway, please click on plus</string>
+	<string name="tutorial_helper_tut_module_add_header">ADD DEVICE</string>
+	<string name="tutorial_helper_tut_module_add_text">To add your new module, please click on plus</string>
+
+	<!-- Chart helper -->
+	<string name="chart_helper_chart_no_data">No device data available.</string>
+	<string name="chart_helper_chart_y_axis">Y axis labels</string>
+
+	<!-- Intro, baseGuide -->
+	<string name="base_guide_btn_skip">SKIP</string>
+	<string name="intro_base_guide_btn_next">NEXT</string>
+	<string name="intro_tut_btn_start_app">START</string>
+	<string name="intro_tut_intro_text_1">Welcome to BeeeOn intelligent home. In the following guide, you will be introduced intelligent home system and its parts.</string>
+	<string name="intro_tut_intro_text_2">BeeeOn household consists of individual wireless devices and gateway to this household.</string>
+	<string name="intro_tut_intro_text_3">Wireless devices are of two types - sensors and actuators. Sensors sense variables values from environs. Actuators are used to adjust their desired values.</string>
+	<string name="intro_tut_intro_text_4">The gateway receives and transmits data toward the wireless devices.</string>
+	<string name="intro_tut_intro_text_5">Mobile application displays information about the household and allows you to control it anywhere, anytime.</string>
+	<string name="intro_tut_intro_title">BeeeOn Introduction</string>
+
+	<!-- Number picker dialog -->
+	<string name="number_picker_dialog_dialog_title_actuator_set_value">Set new value</string>
+
+	<!-- Device type -->
+	<string name="device_type_unknown_device">Unknown device</string>
+	<string name="device_type_unknown_manufacturer">Unknown manufacturer</string>
+
 </resources>
+

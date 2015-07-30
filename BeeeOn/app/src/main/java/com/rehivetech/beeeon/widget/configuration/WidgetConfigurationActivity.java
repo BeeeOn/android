@@ -45,14 +45,14 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 
 		// Prepare progress dialog
 		mDialog = new ProgressDialog(this);
-		mDialog.setMessage(getString(R.string.progress_loading_gates));
+		mDialog.setMessage(getString(R.string.login_progress_loading_gates));
 		mDialog.setCancelable(false);
 		mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		// prepare toolbar with button instead of "HOME" arrow
 		mToolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.title_activity_widget_configuration);
+			mToolbar.setTitle(R.string.widget_configuration_title_widget_config);
 			setSupportActionBar(mToolbar);
 		}
 

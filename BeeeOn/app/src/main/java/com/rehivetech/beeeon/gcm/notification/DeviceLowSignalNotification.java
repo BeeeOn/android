@@ -118,6 +118,6 @@ public class DeviceLowSignalNotification extends VisibleNotification {
 
 	@Override
 	protected String getName(Context context) {
-		return context.getString(com.rehivetech.beeeon.R.string.notification_name_new_sensor);
+		return context.getString(com.rehivetech.beeeon.R.string.notification_device_low_battery_low_signal_name_new_module);
 	}
 }

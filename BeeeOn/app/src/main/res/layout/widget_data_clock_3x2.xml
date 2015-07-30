@@ -54,7 +54,7 @@
 				android:id="@+id/widget_clock_household_label"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:text="@string/household"
+				android:text="@string/layout_widget_household"
 				android:textSize="@dimen/abc_text_size_body_1_material"
 				android:singleLine="true"
 				android:ellipsize="end"
@@ -115,7 +115,7 @@
 				android:ellipsize="end"
 				android:textSize="@dimen/abc_text_size_body_1_material"
 				android:textColor="@color/beeeon_primary"
-				android:text="@string/placeholder_none"
+				android:text="@string/layout_widget_placeholder_none"
 				/>
 
 			<TextView

@@ -55,6 +55,7 @@
 	<string name="demo_name_module_soil">Vlhkosť pôdy</string>
 	<string name="demo_name_module_temp_stove">Teplota kachlí</string>
 	<string name="demo_name_module_humidity_ceiling">Vlhkosť stropu</string>
+	<string name="demo_name_module_switch">Spínač kachlí</string>
 	<string name="demo_name_module_electricity">Hlavný prívod elektrickej energie</string>
 	<string name="demo_name_module_lighting">Osvetlenie</string>
 	<string name="demo_name_module_air">Ovzdušie</string>

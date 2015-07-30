@@ -101,7 +101,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		// prepare toolbar
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(R.string.watchdog_rule);
+			toolbar.setTitle(R.string.watchdog_rule_edit_watchdog_rule);
 			setSupportActionBar(toolbar);
 		}
 
@@ -133,7 +133,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 
 		// it's existing rule
 		if (!mIsNew && (mActiveGateId == null || mActiveGateId.isEmpty() || mActiveRuleId == null || mActiveRuleId.isEmpty())) {
-			Toast.makeText(this, R.string.toast_wrong_or_no_watchdog_rule, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.watchdog_rule_edit_toast_wrong_or_no_watchdog_rule, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
@@ -143,7 +143,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		// get gate
 		Gate gate = (mActiveGateId == null || mActiveGateId.isEmpty()) ? controller.getActiveGate() : controller.getGatesModel().getGate(mActiveGateId);
 		if (gate == null) {
-			Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
@@ -169,7 +169,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		if (!mIsNew) {
 			mWatchdog = controller.getWatchdogsModel().getWatchdog(gate.getId(), mActiveRuleId);
 			if (mWatchdog == null) {
-				Toast.makeText(this, R.string.toast_something_wrong, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
 				finish();
 				return;
 			}
@@ -208,7 +208,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		// modules
 		List<Module> moduleSensors = getModulesArray(MODULES_SENSORS);
 		if (!moduleSensors.isEmpty()) {
-			mSpinnerMultiAdapter.addHeader(getString(R.string.modules));
+			mSpinnerMultiAdapter.addHeader(getString(R.string.watchdog_rule_edit_devices));
 			for (Module dev : moduleSensors) {
 				Location loc = Utils.getFromList(dev.getDevice().getLocationId(), mLocations);
 				mSpinnerMultiAdapter.addItem(new ModuleSpinnerItem(dev, loc, dev.getAbsoluteId(), this));
@@ -218,7 +218,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 
 		// geofence areas
 		if (Utils.isGooglePlayServicesAvailable(this) && !mGeofences.isEmpty()) {
-			mSpinnerMultiAdapter.addHeader(getString(R.string.title_activity_map_geofence));
+			mSpinnerMultiAdapter.addHeader(getString(R.string.map_geofence_title_map_geofence));
 			for (SimpleGeofence geo : mGeofences) {
 				mSpinnerMultiAdapter.addItem(new GeofenceSpinnerItem(geo, geo.getId(), this));
 			}
@@ -227,7 +227,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 
 		// if nothing is to select, we show header with message
 		if (!isAnyIfInput) {
-			mSpinnerMultiAdapter.addHeader(getString(R.string.multiadapter_no_item));
+			mSpinnerMultiAdapter.addHeader(getString(R.string.watchdog_rule_edit_multi_adapter_no_item));
 			ifItemSpinner.setEnabled(false);
 		}
 
@@ -419,9 +419,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				doSaveWatchdogTask();
 				break;
 			case R.id.watchdog_edit_action_delete:
-				String title = getString(R.string.confirm_remove_title, mWatchdog.getName());
-				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mWatchdog.getId());
+				String title = getString(R.string.activity_fragment_menu_dialog_title_remove, mWatchdog.getName());
+				String message = getString(R.string.watchdog_rule_edit_message_remove_watchdog);
+				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mWatchdog.getId());
 				break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -468,11 +468,11 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				break;
 
 			case HEADER:
-				Toast.makeText(this, getString(R.string.watchdog_no_valid_item), Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.watchdog_rule_edit_toast_watchdog_no_valid_item), Toast.LENGTH_LONG).show();
 				return;
 
 			default:
-				Toast.makeText(this, getString(R.string.toast_not_implemented), Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.watchdog_rule_edit_toast_not_implemented), Toast.LENGTH_LONG).show();
 				return;
 		}
 
@@ -491,7 +491,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 
 			case Watchdog.ACTION_ACTOR:
 				if (actorSpinner.getSelectedItem() == null) {
-					Toast.makeText(this, getString(R.string.actor_required), Toast.LENGTH_LONG).show();
+					Toast.makeText(this, getString(R.string.watchdog_rule_edit_toast_actor_required), Toast.LENGTH_LONG).show();
 					return;
 				}
 
@@ -513,7 +513,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		saveWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				Toast.makeText(WatchdogEditRuleActivity.this, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
+				Toast.makeText(WatchdogEditRuleActivity.this, getResources().getString(success ? R.string.activity_toast_success_save_data : R.string.watchdog_rule_edit_toast_fail_save_data), Toast.LENGTH_LONG).show();
 
 				// when new rule, close after done
 				if (success) finish();
@@ -533,7 +533,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		removeWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				Toast.makeText(WatchdogEditRuleActivity.this, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
+				Toast.makeText(WatchdogEditRuleActivity.this, getResources().getString(success ? R.string.activity_fragment_toast_delete_success : R.string.activity_fragment_toast_delete_fail), Toast.LENGTH_SHORT).show();
 				finish();
 			}
 		});
@@ -590,7 +590,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		String inputText = eText.getText().toString().trim();
 		if (inputText.length() == 0) {
 			eText.requestFocus();
-			eText.setError(getString(R.string.toast_field_must_be_filled));
+			eText.setError(getString(R.string.activity_utils_toast_field_must_be_filled));
 			return false;
 		}
 
@@ -601,7 +601,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 						int num = Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
 						eText.requestFocus();
-						eText.setError(getString(R.string.toast_field_must_be_number));
+						eText.setError(getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
 						return false;
 					}
 					break;

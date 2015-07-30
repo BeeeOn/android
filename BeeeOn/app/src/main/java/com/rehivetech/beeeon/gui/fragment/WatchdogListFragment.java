@@ -331,7 +331,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		removeWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_delete_success : R.string.toast_delete_fail), Toast.LENGTH_SHORT).show();
+				Toast.makeText(mActivity, getResources().getString(success ? R.string.activity_fragment_toast_delete_success : R.string.activity_fragment_toast_delete_fail), Toast.LENGTH_SHORT).show();
 				if (success) {
 					redrawRules();
 				}
@@ -394,9 +394,9 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		@Override
 		public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
 			if (menuItem.getItemId() == R.id.watchdog_list_action_delete) {
-				String title = getString(R.string.confirm_remove_title, mSelectedItem.getName());
-				String message = getString(R.string.confirm_remove_watchdog_message);
-				ConfirmDialog.confirm(mActivity, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());
+				String title = getString(R.string.activity_fragment_menu_dialog_title_remove, mSelectedItem.getName());
+				String message = getString(R.string.watchdog_rule_edit_message_remove_watchdog);
+				ConfirmDialog.confirm(mActivity, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_WATCHDOG, mSelectedItem.getId());
 			}
 
 			actionMode.finish();

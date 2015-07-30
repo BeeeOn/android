@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity {
 				switch (v.getId()) {
 					case R.id.login_demo_button:
 					{
-						mProgress.setMessageResource(R.string.progress_loading_demo);
+						mProgress.setMessageResource(R.string.login_progress_loading_demo);
 						prepareLogin(new DemoAuthProvider());
 						return;
 					}
@@ -149,20 +149,20 @@ public class LoginActivity extends BaseActivity {
 					}
 					case R.id.login_direct_button:
 					{
-						Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
+						Toast.makeText(LoginActivity.this, R.string.login_toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
 						return;
 					}
 					case R.id.login_choose_button:
 					{
 						// Show choose dialog for other providers
 						AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-						builder.setTitle(R.string.dialog_choose_provider_title);
+						builder.setTitle(R.string.login_dialog_title_choose_provider);
 						builder.setItems(new String[]{"MojeID"}, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								if (which == 0) {
 									// MojeID
-									Toast.makeText(LoginActivity.this, R.string.toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
+									Toast.makeText(LoginActivity.this, R.string.login_toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
 									// prepareLogin(new MojeIdAuthProvider());
 								}
 							}
@@ -264,7 +264,7 @@ public class LoginActivity extends BaseActivity {
 				mProgress.dismiss();
 
 				// Show common error message
-				String message = getString(R.string.toast_auth_provider_error);
+				String message = getString(R.string.login_toast_auth_provider_error);
 				Utils.showToastOnUiThread(this, message, Toast.LENGTH_LONG);
 				break;
 			}
@@ -385,19 +385,19 @@ public class LoginActivity extends BaseActivity {
 		final boolean demoMode = (authProvider instanceof DemoAuthProvider);
 		if (!demoMode && !Utils.isInternetAvailable(this)) {
 			mProgress.dismiss();
-			Toast.makeText(this, getString(R.string.toast_internet_connection), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.login_toast_internet_connection), Toast.LENGTH_LONG).show();
 			return;
 		}
 
 		mLoginCancel = false;
-		mProgress.setMessageResource(R.string.progress_signing);
+		mProgress.setMessageResource(R.string.login_progress_signing);
 		mProgress.show();
 
 		authProvider.prepareAuth(LoginActivity.this);
 	}
 
 	private void doLogin(final IAuthProvider authProvider) {
-		mProgress.setMessageResource(R.string.progress_signing);
+		mProgress.setMessageResource(R.string.login_progress_signing);
 		mProgress.show();
 
 		new Thread(new Runnable() {
@@ -405,7 +405,7 @@ public class LoginActivity extends BaseActivity {
 			public void run() {
 				setDemoMode(authProvider instanceof DemoAuthProvider);
 
-				String errMessage = getString(R.string.toast_login_failed);
+				String errMessage = getString(R.string.login_toast_login_failed);
 				boolean errFlag = true;
 
 				try {
@@ -416,13 +416,13 @@ public class LoginActivity extends BaseActivity {
 						errFlag = false;
 
 						// Load all gates and data for active one on login
-						mProgress.setMessageResource(R.string.progress_loading_gates);
+						mProgress.setMessageResource(R.string.login_progress_loading_gates);
 						controller.getGatesModel().reloadGates(true);
 
 						Gate active = controller.getActiveGate();
 						if (active != null) {
 							// Load data for active gate
-							mProgress.setMessageResource(R.string.progress_loading_gate);
+							mProgress.setMessageResource(R.string.login_progress_loading_gate);
 							controller.getLocationsModel().reloadLocationsByGate(active.getId(), true);
 							controller.getDevicesModel().reloadDevicesByGate(active.getId(), true);
 						}
@@ -485,7 +485,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	private void doRegister(final IAuthProvider authProvider) {
-		mProgress.setMessageResource(R.string.progress_signup);
+		mProgress.setMessageResource(R.string.login_progress_signup);
 		mProgress.show();
 
 		new Thread(new Runnable() {
@@ -493,7 +493,7 @@ public class LoginActivity extends BaseActivity {
 			public void run() {
 				setDemoMode(authProvider instanceof DemoAuthProvider);
 
-				String errMessage = getString(R.string.toast_registration_failed);
+				String errMessage = getString(R.string.login_toast_registration_failed);
 				boolean errFlag = true;
 
 				try {
@@ -550,8 +550,8 @@ public class LoginActivity extends BaseActivity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder
-				.setTitle(R.string.dialog_register_new_account_title)
-				.setMessage(R.string.dialog_register_new_account_message)
+				.setTitle(R.string.login_dialog_title_register_new_account)
+				.setMessage(R.string.login_dialog_message_register_new_account)
 				.setPositiveButton(android.R.string.yes, dialogClickListener)
 				.setNegativeButton(android.R.string.no, dialogClickListener)
 				.show();

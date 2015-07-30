@@ -22,11 +22,11 @@ public class IntroActivity extends BaseActivity {
 		setContentView(R.layout.activity_base_guide);
 
 		List<IntroImageFragment.ImageTextPair> pairs = new ArrayList<>();
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_border,R.string.tut_intro_text_1, R.string.tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.tut_intro_text_2, R.string.tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.tut_intro_text_3, R.string.tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.tut_intro_text_4, R.string.tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5, R.string.tut_intro_text_5, R.string.tut_intro_title));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_border,R.string.intro_tut_intro_text_1, R.string.intro_tut_intro_title));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.intro_tut_intro_text_2, R.string.intro_tut_intro_title));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.intro_tut_intro_text_3, R.string.intro_tut_intro_title));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.intro_tut_intro_text_4, R.string.intro_tut_intro_title));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5, R.string.intro_tut_intro_text_5, R.string.intro_tut_intro_title));
 
 		IntroFragmentPagerAdapter adapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,null);
 
@@ -70,10 +70,10 @@ public class IntroActivity extends BaseActivity {
 	}
 
 	public void resetBtn() {
-		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.tutorial_next));
+		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.intro_base_guide_btn_next));
 	}
 
 	public void setLastFragmentBtn() {
-		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.tutorial_go_to_app));
+		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.intro_tut_btn_start_app));
 	}
 }
