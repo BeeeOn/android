@@ -36,20 +36,20 @@ public class InfoDialogFragment extends TrackDialogFragment {
 
 		version = (TextView) view.findViewById(R.id.dialog_info_version_text);
 		try {
-			version.setText(String.format("%s %s", getString(R.string.version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
+			version.setText(String.format("%s %s", getString(R.string.dialog_info_version), getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName));
 		} catch (NameNotFoundException e) {
 			version.setText("0.0");
 		}
 
-		return new AlertDialog.Builder(getActivity()).setView(view).setNegativeButton(R.string.rate, new OnClickListener() {
+		return new AlertDialog.Builder(getActivity()).setView(view).setNegativeButton(R.string.dialog_info_btn_rate, new OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				Uri uri = Uri.parse(getActivity().getResources().getString(R.string.play_link));
+				Uri uri = Uri.parse(getActivity().getResources().getString(R.string.dialog_info_play_link));
 				Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(myAppLinkToMarket);
 			}
-		}).setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+		}).setPositiveButton(getString(R.string.fragment_configuration_widget_dialog_btn_ok), new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
 
 			}

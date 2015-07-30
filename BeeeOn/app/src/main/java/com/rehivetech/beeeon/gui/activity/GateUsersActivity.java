@@ -53,7 +53,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(R.string.title_activity_gate_users);
+			toolbar.setTitle(R.string.gate_users_title_gate_users);
 			setSupportActionBar(toolbar);
 		}
 
@@ -167,9 +167,9 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 				// Get all users for gate
 				doReloadGateUsersTask(mGate.getId(), true);
 				if (success) {
-					Toast.makeText(GateUsersActivity.this, R.string.toast_delete_success, Toast.LENGTH_SHORT).show();
+					Toast.makeText(GateUsersActivity.this, R.string.activity_fragment_toast_delete_success, Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(GateUsersActivity.this, R.string.toast_delete_fail, Toast.LENGTH_SHORT).show();
+					Toast.makeText(GateUsersActivity.this, R.string.activity_fragment_toast_delete_fail, Toast.LENGTH_SHORT).show();
 				}
 				mSelectedItem = null;
 				mSelectedItemPos = 0;
@@ -224,10 +224,10 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 				if (mSelectedItem != null) {
 					User user = Controller.getInstance(GateUsersActivity.this).getUsersModel().getUser(mGate.getId(), mSelectedItem.getId());
 					String userName = user.getName();
-					String title = getString(R.string.confirm_remove_title, userName);
-					String message = getString(R.string.confirm_remove_user_message);
+					String title = getString(R.string.activity_fragment_menu_dialog_title_remove, userName);
+					String message = getString(R.string.gate_users_dialog_message_remove_user);
 
-					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_USER, user.getId());
+					ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_USER, user.getId());
 				}
 			} else if (item.getItemId() == R.id.gate_user_menu_edit) {
 				changeUserRole();
@@ -255,12 +255,12 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		}
 
 		ListDialogFragment.createBuilder(this, getSupportFragmentManager())
-				.setTitle(R.string.gate_user_title_change_role)
+				.setTitle(R.string.gate_users_title_change_role)
 				.setItems(userRole)
 				.setSelectedItem(selectedRole)
 				.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-				.setConfirmButtonText(R.string.save)
-				.setCancelButtonText(R.string.notification_cancel)
+				.setConfirmButtonText(R.string.activity_gate_user_setup_device_btn_save)
+				.setCancelButtonText(R.string.activity_fragment_btn_cancel)
 				.show();
 	}
 
@@ -273,10 +273,10 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 		if (newRole == User.Role.Superuser) {
 			// Need confirmation for this change
-			String title = getString(R.string.confirm_change_ownership_title);
-			String message = getString(R.string.confirm_change_ownership_message);
+			String title = getString(R.string.gate_users_dialog_title_change_ownership);
+			String message = getString(R.string.gate_users_dialog_message_change_ownership);
 
-			ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.button_change_ownership, ConfirmDialog.TYPE_CHANGE_OWNERSHIP, mSelectedItem.getId());
+			ConfirmDialog.confirm(GateUsersActivity.this, title, message, R.string.gate_users_btn_change_ownership, ConfirmDialog.TYPE_CHANGE_OWNERSHIP, mSelectedItem.getId());
 		} else {
 			mSelectedItem.setRole(newRole);
 			doEditUserTask(mSelectedItem);

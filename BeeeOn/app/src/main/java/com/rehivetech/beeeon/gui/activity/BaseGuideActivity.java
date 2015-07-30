@@ -53,7 +53,7 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 				} else {
 					mSkip.setVisibility(View.VISIBLE);
 					mNext.setVisibility(View.VISIBLE);
-					mNext.setText(R.string.tutorial_next);
+					mNext.setText(R.string.intro_base_guide_btn_next);
 				}
 			}
 

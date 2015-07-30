@@ -20,7 +20,7 @@
 			android:layout_marginTop="16dp"
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
-			android:text="@string/sensor_name_label"/>
+			android:text="@string/module_edit_label_module_name"/>
 
 		<EditText
 			android:id="@+id/module_edit_name"
@@ -45,7 +45,7 @@
 			android:layout_marginBottom="8dp"
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
-			android:text="@string/sensordetail_location_label"/>
+			android:text="@string/module_edit_label_detail_location"/>
 
 		<Spinner
 			android:id="@+id/module_edit_location_spinner"
@@ -67,7 +67,7 @@
 			android:layout_marginTop="16dp"
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
-			android:text="@string/addsensor_new_location_hint"/>
+			android:text="@string/module_edit_setup_new_location_hint"/>
 
 		<LinearLayout
 			android:layout_width="match_parent"
@@ -100,7 +100,7 @@
 			android:layout_marginBottom="8dp"
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
-			android:text="@string/refresh_time"/>
+			android:text="@string/module_edit_refresh_time"/>
 
 		<LinearLayout
 			android:layout_width="match_parent"

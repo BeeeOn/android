@@ -11,7 +11,7 @@
 		android:id="@+id/custom_spinner2_icon"
 		android:layout_width="24dp"
 		android:layout_height="24dp"
-		android:contentDescription="@string/placeholder_icon"
+		android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
 		android:layout_centerVertical="true"
 		android:src="@drawable/ic_val_unknown_gray"
 		/>

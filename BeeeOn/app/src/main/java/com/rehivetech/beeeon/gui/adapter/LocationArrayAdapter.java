@@ -118,7 +118,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID, mContext.getString(R.string.addsensor_new_location_spinner), gate.getId(), "0"));
+		locations.add(new Location(Location.NEW_LOCATION_ID, mContext.getString(R.string.adapter_location_array_new_location_spinner), gate.getId(), "0"));
 
 		return locations;
 	}

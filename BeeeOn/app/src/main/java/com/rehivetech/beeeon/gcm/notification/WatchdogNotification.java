@@ -161,6 +161,6 @@ public class WatchdogNotification extends VisibleNotification {
 
 	@Override
 	protected String getName(Context context) {
-		return context.getString(R.string.menu_watchdog);
+		return context.getString(R.string.nav_drawer_menu_watchdog_notif_menu_watchdog);
 	}
 }

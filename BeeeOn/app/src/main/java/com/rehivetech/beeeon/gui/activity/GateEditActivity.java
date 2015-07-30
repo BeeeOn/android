@@ -117,15 +117,15 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				break;
 			}
 			case R.id.gate_edit_action_delete: {
-				String title = getString(R.string.confirm_remove_gate_title_default);
-				String message = getString(R.string.confirm_remove_gate_message);
+				String title = getString(R.string.activity_menu_dialog_title_remove_gate_default);
+				String message = getString(R.string.activity_menu_dialog_message_remove_gate);
 
 				GateInfo gate = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
 				if (gate != null) {
-					title = getString(R.string.confirm_remove_title, gate.getName());
+					title = getString(R.string.activity_fragment_menu_dialog_title_remove, gate.getName());
 				}
 
-				ConfirmDialog.confirm(this, title, message, R.string.button_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
+				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
 				break;
 			}
 			case R.id.gate_edit_action_save: {
@@ -145,7 +145,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(GateEditActivity.this, R.string.edit_gate_success, Toast.LENGTH_SHORT).show();
+					Toast.makeText(GateEditActivity.this, R.string.gate_edit_toast_success, Toast.LENGTH_SHORT).show();
 					finish();
 				}
 			}
@@ -161,7 +161,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(GateEditActivity.this, R.string.toast_gate_removed, Toast.LENGTH_LONG).show();
+					Toast.makeText(GateEditActivity.this, R.string.gate_detail_toast_gate_removed, Toast.LENGTH_LONG).show();
 				}
 			}
 		});

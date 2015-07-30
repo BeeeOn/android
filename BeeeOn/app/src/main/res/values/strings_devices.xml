@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
-    <string name="dev_enum_type">Enum type</string>
+	<string name="dev_enum_type">Enum type</string>
 
-    <!-- Units of modules -->
-    <string name="unit_temperature_celsius_full">Celsius</string>
-    <string name="unit_temperature_celsius">°C</string>
-    <string name="unit_temperature_fahrenheit_full">Fahrenheit</string>
-    <string name="unit_temperature_fahrenheit">°F</string>
-    <string name="unit_temperature_kelvin_full">Kelvin</string>
-    <string name="unit_temperature_kelvin">K</string>
-    
-    <string name="unit_noise_decibel">dB</string>
-    <string name="unit_noise_decibel_full">Decibel</string>
-    <string name="unit_noise_bel">B</string>
-    <string name="unit_noise_bel_full">Bel</string>
-    <string name="unit_noise_neper">Np</string>
-    <string name="unit_noise_neper_full">Neper</string>
-    
-    <string name="unit_humidity">%</string>
-    <string name="unit_pressure">hPa</string>
-    <string name="unit_illumination">lux</string>
-    <string name="unit_noise">dB</string>
-    <string name="unit_emission">ppm</string>
+	<!-- Units of modules -->
+	<string name="unit_temperature_celsius_full" translatable="false">Celsius</string>
+	<string name="unit_temperature_celsius" translatable="false">°C</string>
+	<string name="unit_temperature_fahrenheit_full" translatable="false">Fahrenheit</string>
+	<string name="unit_temperature_fahrenheit" translatable="false">°F</string>
+	<string name="unit_temperature_kelvin_full" translatable="false">Kelvin</string>
+	<string name="unit_temperature_kelvin" translatable="false">K</string>
 
-    <!-- Names of default locations -->
+	<string name="unit_noise_decibel" translatable="false">dB</string>
+	<string name="unit_noise_decibel_full" translatable="false">Decibel</string>
+	<string name="unit_noise_bel" translatable="false">B</string>
+	<string name="unit_noise_bel_full" translatable="false">Bel</string>
+	<string name="unit_noise_neper" translatable="false">Np</string>
+	<string name="unit_noise_neper_full" translatable="false">Neper</string>
+
+	<string name="unit_humidity" translatable="false">%</string>
+	<string name="unit_pressure" translatable="false">hPa</string>
+	<string name="unit_illumination" translatable="false">lux</string>
+	<string name="unit_noise" translatable="false">dB</string>
+	<string name="unit_emission" translatable="false">ppm</string>
+
+	<!-- Names of default locations -->
 	<string name="loc_none">- None -</string>
 	<string name="loc_bathroom">Bathroom</string>
-    <string name="loc_bedroom">Bedroom</string>
-    <string name="loc_dining_room">Dining room</string>
-    <string name="loc_garden">Garden</string>
-    <string name="loc_living_room">Living room</string>
-    <string name="loc_wc">WC</string>
-    <string name="loc_cellar">Cellar</string>
+	<string name="loc_bedroom">Bedroom</string>
+	<string name="loc_dining_room">Dining room</string>
+	<string name="loc_garden">Garden</string>
+	<string name="loc_living_room">Living room</string>
+	<string name="loc_wc">WC</string>
+	<string name="loc_cellar">Cellar</string>
 
-    <!-- Types of modules -->
-    <string name="dev_unknown_type">Unknown module</string>
-    <!-- Sensors -->
-    <string name="dev_temperature_type">Thermometer</string>
-    <string name="dev_humidity_type">Hygrometer</string>
-    <string name="dev_pressure_type">Barometer</string>
-    <string name="dev_open_closed_type">Open/closed sensor</string>
-    <string name="dev_on_off_type">On/Off sensor</string>
-    <string name="dev_illumination_type">Photometer</string>
-    <string name="dev_noise_type">Sound meter</string>
-    <string name="dev_emission_type">Emission meter</string>
+	<!-- Types of modules -->
+	<string name="dev_unknown_type">Unknown module</string>
+	<!-- Sensors -->
+	<string name="dev_temperature_type">Thermometer</string>
+	<string name="dev_humidity_type">Hygrometer</string>
+	<string name="dev_pressure_type">Barometer</string>
+	<string name="dev_open_closed_type">Open/closed sensor</string>
+	<string name="dev_on_off_type">On/Off sensor</string>
+	<string name="dev_illumination_type">Photometer</string>
+	<string name="dev_noise_type">Sound meter</string>
+	<string name="dev_emission_type">Emission meter</string>
 </resources>

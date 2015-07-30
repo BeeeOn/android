@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 
 /**
  * Created by vico on 30.6.2015.
@@ -69,7 +67,7 @@ public class ConfirmDialog extends BaseDialogFragment {
 				dismiss();
 			}
 		});
-		builder.setNegativeButton(R.string.notification_cancel, new View.OnClickListener() {
+		builder.setNegativeButton(R.string.activity_fragment_btn_cancel, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();

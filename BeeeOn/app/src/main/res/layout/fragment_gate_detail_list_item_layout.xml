@@ -47,7 +47,7 @@
 		android:layout_height="wrap_content"
 		android:drawablePadding="10dp"
 		style="@style/Widget.AppCompat.Button.Borderless.Colored"
-		android:text="@string/layout_simple_list_button_text"
+		android:text="@string/gate_detail_list_btn_details"
 		android:layout_centerVertical="true"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"

@@ -111,7 +111,7 @@ public class WidgetModuleData extends WidgetData {
 			switch (widgetLayout) {
 				case R.layout.widget_data_module_3x1:
 				case R.layout.widget_data_module_2x1:
-					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
+					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_module_data_widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
 					break;
 				case R.layout.widget_data_module_1x1:
 					dev.setValueUnitSize(R.dimen.abc_text_size_caption_material);

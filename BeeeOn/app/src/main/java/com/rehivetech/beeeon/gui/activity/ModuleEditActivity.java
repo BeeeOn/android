@@ -51,7 +51,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 		setContentView(R.layout.activity_module_edit);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
-			toolbar.setTitle(R.string.title_activity_module_edit);
+			toolbar.setTitle(R.string.module_edit_title_module_edit);
 			setSupportActionBar(toolbar);
 		}
 		ActionBar actionBar = getSupportActionBar();
@@ -132,7 +132,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 			public void onExecute(boolean success) {
 				if (success) {
 					Log.d(TAG, "Success save to server");
-					Toast.makeText(ModuleEditActivity.this, R.string.toast_success_save_data, Toast.LENGTH_LONG).show();
+					Toast.makeText(ModuleEditActivity.this, R.string.activity_toast_success_save_data, Toast.LENGTH_LONG).show();
 					finish();
 				}
 			}
@@ -393,7 +393,7 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 					Location location;
 					if (isSetNewCustomRoom()) {
 						if (getNewLocIcon().equals(Location.LocationIcon.UNKNOWN)) {
-							Toast.makeText(mActivity, getString(R.string.toast_need_module_location_icon), Toast.LENGTH_LONG).show();
+							Toast.makeText(mActivity, getString(R.string.activity_module_edit_setup_device_toast_location_icon), Toast.LENGTH_LONG).show();
 							return null;
 						}
 						// Create new custom room

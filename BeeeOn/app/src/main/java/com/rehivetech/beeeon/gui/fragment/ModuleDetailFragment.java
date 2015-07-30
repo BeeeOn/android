@@ -236,13 +236,13 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 						ListDialogFragment
 								.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-								.setTitle(getString(R.string.dialog_actuator_set_value))
+								.setTitle(getString(R.string.number_picker_dialog_dialog_title_actuator_set_value))
 								.setItems(namesList.toArray(new CharSequence[namesList.size()]))
 								.setSelectedItem(value.getActive().getId())
 								.setRequestCode(REQUEST_SET_ACTUATOR)
 								.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-								.setConfirmButtonText(R.string.dialog_actuator_action)
-								.setCancelButtonText(R.string.dialog_actuator_cancel)
+								.setConfirmButtonText(R.string.activity_fragment_btn_set)
+								.setCancelButtonText(R.string.activity_fragment_btn_cancel)
 								.setTargetFragment(ModuleDetailFragment.this, REQUEST_SET_ACTUATOR)
 								.show();
 					}
@@ -394,7 +394,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
 			TextView legendTitle = new TextView(mActivity);
 			legendTitle.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
-			legendTitle.setText(getString(R.string.chart_legend));
+			legendTitle.setText(getString(R.string.fragment_module_detail_custom_view_chart_legend));
 			legendTitle.setPadding(0, padding, 0, padding);
 			layout.addView(legendTitle);
 

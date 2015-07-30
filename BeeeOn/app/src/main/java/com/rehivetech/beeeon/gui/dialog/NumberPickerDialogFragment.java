@@ -40,7 +40,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 
 	@Override
 	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder) {
-		builder.setTitle(getString(R.string.dialog_actuator_set_value));
+		builder.setTitle(getString(R.string.number_picker_dialog_dialog_title_actuator_set_value));
 		LayoutInflater li = LayoutInflater.from(getActivity());
 		View view = li.inflate(R.layout.fragment_dialog_number_picker, null);
 
@@ -64,7 +64,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 		unitView.setText(mUnitsHelper.getStringUnit(sMModule.getValue()));
 
 		builder.setView(view);
-		builder.setPositiveButton(getString(R.string.dialog_actuator_action), new View.OnClickListener() {
+		builder.setPositiveButton(getString(R.string.activity_fragment_btn_set), new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				//
@@ -73,7 +73,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 				dismiss();
 			}
 		});
-		builder.setNegativeButton(getString(R.string.notification_cancel), new View.OnClickListener() {
+		builder.setNegativeButton(getString(R.string.activity_fragment_btn_cancel), new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dismiss();

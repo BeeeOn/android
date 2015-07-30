@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum DeviceType implements IIdentifier {
-	TYPE_UNKNOWN("", "???", R.string.unknown_device, R.string.unknown_manufacturer, new DeviceFeatures(null, false, false, false)) {
+	TYPE_UNKNOWN("", "???", R.string.device_type_unknown_device, R.string.device_type_unknown_manufacturer, new DeviceFeatures(null, false, false, false)) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return new ArrayList<>();

@@ -48,8 +48,8 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	protected IntroFragmentPagerAdapter initPagerAdapter() {
 		// creating list of objects that will be used as params for the constructor of AddingUniversalFragment
 		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step, R.string.tut_add_gate_text_1, R.string.tut_add_gate_title_1),
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, R.string.tut_add_gate_text_2, R.string.tut_add_gate_title_2)
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_first_step, R.string.gate_add_tut_add_gate_text_1, R.string.gate_add_tut_add_gate_title_1),
+				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, R.string.gate_add_tut_add_gate_text_2, R.string.gate_add_tut_add_gate_title_2)
 		);
 		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, new AddGateFragment());
 	}
@@ -66,7 +66,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	@Override
 	protected int getLastPageNextTextResource() {
 		mNext.setVisibility(View.INVISIBLE);
-		return R.string.tutorial_add;
+		return R.string.gate_add_btn_add;
 	}
 
 	public void doRegisterGateTask(String id, final boolean scanned) {
@@ -78,10 +78,10 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activated, Toast.LENGTH_LONG).show();
+					Toast.makeText(AddGateActivity.this, R.string.gate_add_toast_gate_activated, Toast.LENGTH_LONG).show();
 					finish();
 				} else {
-					Toast.makeText(AddGateActivity.this, R.string.toast_adapter_activate_failed, Toast.LENGTH_SHORT).show();
+					Toast.makeText(AddGateActivity.this, R.string.gate_add_toast_gate_activate_failed, Toast.LENGTH_SHORT).show();
 					if (scanned) {
 						// QR scanning again
 						showQrScanner();
@@ -102,13 +102,13 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			startActivityForResult(intent, SCAN_REQUEST);
 		} catch (ActivityNotFoundException e) {
 			try {
-				Toast.makeText(this, R.string.toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.gate_add_toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
 				// Let user to download e.g. Barcode Scanner
 				Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
 				Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
 				startActivity(marketIntent);
 			} catch (ActivityNotFoundException e1) {
-				Toast.makeText(this, R.string.toast_error_no_google_play, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.gate_add_toast_error_no_google_play, Toast.LENGTH_LONG).show();
 				setScanQrButtonEnabled(true);
 			}
 		}
@@ -132,7 +132,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 		if (matcher.find()) {
 			doRegisterGateTask(matcher.group(1), true);
 		} else {
-			Toast.makeText(this, R.string.toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.gate_add_toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
 		}
 	}
 

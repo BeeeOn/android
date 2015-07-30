@@ -31,7 +31,7 @@ public class RegisterGateTask extends CallbackTask<Gate> {
 
 		int number = 1;
 		do {
-			name = mContext.getString(R.string.adapter_default_name, userName, number++);
+			name = mContext.getString(R.string.task_register_gate_gate_default_name, userName, number++);
 		} while (gateNames.contains(name));
 
 		return name;

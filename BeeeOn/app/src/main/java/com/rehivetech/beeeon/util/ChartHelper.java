@@ -42,7 +42,7 @@ final public class ChartHelper {
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		chart.getLegend().setEnabled(false);
-		chart.setNoDataText(context.getString(R.string.chart_no_data));
+		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
 
 
 		//TextView to get text color and typeface from textAppearance
@@ -80,7 +80,7 @@ final public class ChartHelper {
 				if (layout.getVisibility() != View.VISIBLE) {
 					int j = 1;
 					TextView headline = new TextView(context);
-					headline.setText(context.getString(R.string.chart_y_axis));
+					headline.setText(context.getString(R.string.chart_helper_chart_y_axis));
 					headline.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
 					headline.setPadding(0, padding, 0, padding);
 					layout.addView(headline);

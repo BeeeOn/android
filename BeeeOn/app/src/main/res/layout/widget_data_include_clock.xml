@@ -27,7 +27,7 @@
 		android:textStyle="bold"
 		android:layout_marginTop="-4dp"
 		android:textColor="@color/beeeon_primary"
-		android:text="@string/doubledots"
+		android:text="@string/widget_data_doubledots"
 		/>
 
 	<TextView

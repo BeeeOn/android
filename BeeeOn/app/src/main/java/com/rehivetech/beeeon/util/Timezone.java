@@ -31,8 +31,8 @@ public class Timezone extends SettingsItem {
 	public Timezone() {
 		super();
 
-		mItems.add(this.new Item(ACTUAL, R.string.actual_timezone));
-		mItems.add(this.new Item(GATE, R.string.gate_timezone));
+		mItems.add(this.new Item(ACTUAL, R.string.util_timezone_actual_timezone));
+		mItems.add(this.new Item(GATE, R.string.util_timezone_gate_timezone));
 	}
 
 	@Override

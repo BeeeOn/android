@@ -19,7 +19,7 @@
 			android:orientation="vertical">
 
 			<TextView
-				android:text="@string/add_user_email_header"
+				android:text="@string/gate_user_add_add_user_email_header"
 				style="@style/LinearRow.Caption"
 				/>
 
@@ -40,7 +40,7 @@
 				/>
 
 			<TextView
-				android:text="@string/add_user_role_header"
+				android:text="@string/gate_user_add_add_user_role_header"
 				style="@style/LinearRow.Caption"
 				/>
 
@@ -59,7 +59,7 @@
 				android:layout_gravity="right|bottom"
 				android:layout_width="wrap_content"
 				android:layout_height="48dp"
-				android:text="@string/add_users_adapter"
+				android:text="@string/gate_user_add_add_user_gate"
 				/>
 		</LinearLayout>
 

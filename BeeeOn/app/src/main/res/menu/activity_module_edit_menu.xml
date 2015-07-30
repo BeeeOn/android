@@ -4,7 +4,7 @@
 	  tools:context="com.rehivetech.beeeon.gui.activity.ModuleEditActivity">
 	<item
 		android:id="@+id/module_edit_action_save"
-		android:title="@string/save"
+		android:title="@string/activity_gate_user_setup_device_btn_save"
 		android:orderInCategory="100"
 		app:showAsAction="always"/>
 </menu>

@@ -105,6 +105,6 @@ public class GateAddedNotification extends VisibleNotification {
 
 	@Override
 	protected String getName(Context context) {
-		return context.getString(R.string.notification_name_new_gate);
+		return context.getString(R.string.notification_gate_added_name_new_gate);
 	}
 }

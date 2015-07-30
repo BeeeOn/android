@@ -25,6 +25,6 @@
 		android:gravity="center_vertical"
 		android:paddingLeft="8dp"
 		android:paddingRight="8dp"
-		android:text="@string/placeholder_none"
+		android:text="@string/layout_widget_placeholder_none"
 		/>
 </LinearLayout>

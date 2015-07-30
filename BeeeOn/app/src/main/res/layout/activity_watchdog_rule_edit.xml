@@ -52,7 +52,7 @@
 					android:singleLine="true"
 					android:layout_marginLeft="52dp"
 					android:layout_marginStart="52dp"
-					android:hint="@string/watchdog_rule_name"
+					android:hint="@string/watchdog_rule_edit_watchdog_rule_name"
 					/>
 			</RelativeLayout>
 
@@ -137,7 +137,7 @@
 					android:gravity="center_horizontal"
 					android:layout_toRightOf="@+id/watchdog_edit_operator_fab"
 					android:layout_toEndOf="@+id/watchdog_edit_operator_fab"
-					android:hint="@string/treshold_value"
+					android:hint="@string/watchdog_rule_edit_threshold_value"
 					android:layout_marginLeft="16dp"
 					android:layout_marginStart="16dp"
 					android:layout_marginBottom="16dp"
@@ -211,14 +211,14 @@
 							android:id="@+id/watchdog_edit_notification"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:text="@string/watchdog_notification_send"
+							android:text="@string/watchdog_rule_edit_watchdog_notification_send"
 							/>
 
 						<RadioButton
 							android:id="@+id/watchdog_edit_actor"
 							android:layout_width="match_parent"
 							android:layout_height="wrap_content"
-							android:text="@string/watchdog_actor_change_state"
+							android:text="@string/watchdog_rule_edit_watchdog_actor_change_state"
 							/>
 					</RadioGroup>
 				</LinearLayout>
@@ -256,7 +256,7 @@
 					android:layout_height="wrap_content"
 					android:layout_toRightOf="@+id/watchdog_edit_action_icon"
 					android:layout_toEndOf="@id/watchdog_edit_action_icon"
-					android:text="@string/notification_text"
+					android:text="@string/watchdog_rule_edit_notification_text"
 					android:layout_margin="16dp"
 					/>
 
@@ -309,7 +309,7 @@
 					android:layout_toRightOf="@+id/watchdog_edit_actor_icon"
 					android:layout_toEndOf="@id/watchdog_edit_actor_icon"
 					android:layout_margin="16dp"
-					android:text="@string/watchdog_actor_change_state"
+					android:text="@string/watchdog_rule_edit_watchdog_actor_change_state"
 					/>
 
 				<Spinner

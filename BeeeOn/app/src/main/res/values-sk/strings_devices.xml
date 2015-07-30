@@ -1,46 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dev_enum_type">Zoznamový typ</string>
+	<string name="dev_enum_type">Zoznamový typ</string>
 
-    <!-- Units of modules -->
-    <string name="unit_temperature_celsius_full">Celzius</string>
-    <string name="unit_temperature_celsius">°C</string>
-    <string name="unit_temperature_fahrenheit_full">Fahrenheit</string>
-    <string name="unit_temperature_fahrenheit">°F</string>
-    <string name="unit_temperature_kelvin_full">Kelvin</string>
-    <string name="unit_temperature_kelvin">K</string>
-    
-    <string name="unit_noise_decibel">dB</string>
-    <string name="unit_noise_decibel_full">Decibel</string>
-    <string name="unit_noise_bel">B</string>
-    <string name="unit_noise_bel_full">Bel</string>
-    <string name="unit_noise_neper">Np</string>
-    <string name="unit_noise_neper_full">Neper</string>
-    
-    <string name="unit_humidity">%</string>
-    <string name="unit_pressure">hPa</string>
-    <string name="unit_illumination">lux</string>
-    <string name="unit_noise">dB</string>
-    <string name="unit_emission">ppm</string>
+	<!-- Types of modules -->
+	<string name="dev_unknown_type">Neznáme zariadenie</string>
+	<!-- Sensors -->
+	<string name="dev_temperature_type">Senzor teploty</string>
+	<string name="dev_humidity_type">Senzor vlhkosti</string>
+	<string name="dev_pressure_type">Senzor tlaku</string>
+	<string name="dev_open_closed_type">Senzor otvorenia/zatvorenia</string>
+	<string name="dev_on_off_type">Senzor zapnutia/vypnutia</string>
+	<string name="dev_illumination_type">Senzor osvetlenia</string>
+	<string name="dev_noise_type">Senzor hluku</string>
+	<string name="dev_emission_type">Senzor emisií</string>
 
-    <!-- Types of modules -->
-    <string name="dev_unknown_type">Neznáme zariadenie</string>
-    <!-- Sensors -->
-    <string name="dev_temperature_type">Senzor teploty</string>
-    <string name="dev_humidity_type">Senzor vlhkosti</string>
-    <string name="dev_pressure_type">Senzor tlaku</string>
-    <string name="dev_open_closed_type">Senzor otvorenia/zatvorenia</string>
-    <string name="dev_on_off_type">Senzor zapnutia/vypnutia</string>
-    <string name="dev_illumination_type">Senzor osvetlenia</string>
-    <string name="dev_noise_type">Senzor hluku</string>
-    <string name="dev_emission_type">Senzor emisií</string>
-
-    <!-- Names of default locations -->
-    <string name="loc_bathroom">Kúpeľna</string>
-    <string name="loc_bedroom">Spáľňa</string>
-    <string name="loc_dining_room">Jedáleň</string>
-    <string name="loc_garden">Záhrada</string>
-    <string name="loc_living_room">Obývacia izba</string>
-    <string name="loc_wc">WC</string>
+	<!-- Names of default locations -->
+	<string name="loc_none">- Nezaradené -</string>
+	<string name="loc_bathroom">Kúpeľna</string>
+	<string name="loc_bedroom">Spáľňa</string>
+	<string name="loc_dining_room">Jedáleň</string>
+	<string name="loc_garden">Záhrada</string>
+	<string name="loc_living_room">Obývacia izba</string>
+	<string name="loc_wc">WC</string>
+	<string name="loc_cellar">Pivnica</string>
 
 </resources>

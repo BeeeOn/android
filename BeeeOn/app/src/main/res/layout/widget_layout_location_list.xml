@@ -38,7 +38,7 @@
 				android:scaleType="fitCenter"
 				android:layout_gravity="center"
 				android:src="@drawable/ic_val_unknown"
-				android:contentDescription="@string/placeholder_icon"
+				android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
 				/>
 
 			<TextView
@@ -49,7 +49,7 @@
 				android:ellipsize="end"
 				android:gravity="center_vertical"
 				android:singleLine="true"
-				android:text="@string/placeholder_none"
+				android:text="@string/layout_widget_placeholder_none"
 				android:textColor="@color/white"
 				android:textSize="@dimen/abc_text_size_caption_material"
 				android:textStyle="bold"
@@ -60,7 +60,7 @@
 				style="@style/AppWidget.ActionButton"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:contentDescription="@string/placeholder_icon"
+				android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
 				android:src="@drawable/ic_action_refresh"
 				/>
 
@@ -69,7 +69,7 @@
 				style="@style/AppWidget.ActionButton.Overflow"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
-				android:contentDescription="@string/placeholder_icon"
+				android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
 				/>
 
 		</LinearLayout>
@@ -95,7 +95,7 @@
 			android:gravity="center"
 			android:background="@drawable/widget_bg"
 			android:textStyle="bold"
-			android:text="@string/widget_location_list_empty"
+			android:text="@string/widget_location_list_widget_location_list_empty"
 			android:textSize="@dimen/abc_text_size_caption_material"
 			android:layout_below="@id/widget_header"
 			android:layout_alignRight="@+id/widget_sensor_list_view"

@@ -44,7 +44,7 @@
 			android:layout_gravity="center"
 			android:autoLink="web"
 			android:gravity="center"
-			android:text="@string/company_web"
+			android:text="@string/dialog_info_company_web"
 			android:textSize="17sp"/>
 
 		<TextView
@@ -54,7 +54,7 @@
 			android:autoLink="email"
 			android:gravity="center"
 			android:paddingTop="5dp"
-			android:text="@string/company_email"
+			android:text="@string/dialog_info_company_email"
 			android:textSize="17sp"/>
 
 
@@ -65,7 +65,7 @@
 			android:gravity="center"
 			android:paddingBottom="5dp"
 			android:paddingTop="10dp"
-			android:text="@string/copyright"
+			android:text="@string/dialog_info_copyright"
 			android:textSize="12sp"/>
 	</LinearLayout>
 

@@ -36,7 +36,7 @@
 				android:singleLine="true"
 				android:ellipsize="marquee"
 				android:textColor="@color/white"
-				android:text="@string/placeholder_none"
+				android:text="@string/layout_widget_placeholder_none"
 				/>
 
 			<ImageView
@@ -46,7 +46,7 @@
 				android:scaleType="fitCenter"
 				android:layout_gravity="center"
 				android:src="@drawable/ic_val_unknown"
-				android:contentDescription="@string/placeholder_icon"
+				android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
 				/>
 
 		</LinearLayout>

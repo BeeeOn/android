@@ -126,6 +126,6 @@ public class UriNotification extends VisibleNotification {
 
 	@Override
 	protected String getName(Context context) {
-		return context.getString(R.string.notification_name_link);
+		return context.getString(R.string.notification_uri_name_link);
 	}
 }

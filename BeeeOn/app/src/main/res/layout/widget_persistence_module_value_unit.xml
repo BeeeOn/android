@@ -27,7 +27,7 @@
 		android:textStyle="bold"
 		android:singleLine="true"
 		android:textColor="@color/beeeon_accent"
-		android:text="@string/placeholder_none"
+		android:text="@string/layout_widget_placeholder_none"
 		/>
 
 	<TextView

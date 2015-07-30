@@ -51,11 +51,11 @@ public class AddGateFragment extends TrackFragment {
 				// overlay dialog must popup here
 				EditTextDialog
 						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-						.setTitle(mActivity.getString(R.string.enter_text_dialog_title))
+						.setTitle(mActivity.getString(R.string.gate_add_dialog_title_enter_text))
 						.showKeyboard()
 						.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL)
-						.setPositiveButtonText(mActivity.getString(R.string.ok))
-						.setNegativeButtonText(mActivity.getString(R.string.action_close))
+						.setPositiveButtonText(mActivity.getString(R.string.fragment_configuration_widget_dialog_btn_ok))
+						.setNegativeButtonText(mActivity.getString(R.string.activity_fragment_btn_cancel))
 						.show();
 			}
 		});
@@ -74,11 +74,11 @@ public class AddGateFragment extends TrackFragment {
 
 		if (enabled) {
 			button.setEnabled(true);
-			button.setText(R.string.addadapter_qr_button);
+			button.setText(R.string.gate_add_btn_qr);
 			button.setTextColor(getResources().getColor(R.color.white));
 		} else {
 			button.setEnabled(false);
-			button.setText(R.string.addadapter_qr_button_loading);
+			button.setText(R.string.gate_add_btn_qr_loading);
 			button.setTextColor(getResources().getColor(R.color.gray_light));
 		}
 	}

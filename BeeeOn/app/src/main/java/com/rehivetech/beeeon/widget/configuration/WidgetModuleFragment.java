@@ -41,7 +41,7 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	}
 
 	protected int getFragmentTitle() {
-		return R.string.widget_configuration_widget_device;
+		return R.string.widget_module_widget_configuration_device;
 	}
 
 	@Override
@@ -80,13 +80,13 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	protected boolean saveSettings() {
 		Gate gate = (Gate) mGateSpinner.getSelectedItem();
 		if (gate == null) {
-			Toast.makeText(mActivity, R.string.widget_configuration_select_gate, Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, R.string.widget_clock_location_module_widget_toast_select_gate, Toast.LENGTH_LONG).show();
 			return false;
 		}
 
 		Module module = (Module) mModuleSpinner.getSelectedItem();
 		if (module == null) {
-			Toast.makeText(mActivity, R.string.widget_configuration_select_device, Toast.LENGTH_LONG).show();
+			Toast.makeText(mActivity, R.string.widget_clock_module_widget_toast_select_device, Toast.LENGTH_LONG).show();
 			return false;
 		}
 

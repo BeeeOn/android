@@ -17,7 +17,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
 	public ViewPagerAdapter(FragmentManager fm, Context context) {
 		super(fm);
-		titles = context.getResources().getStringArray(R.array.title_of_main_fragments);
+		titles = context.getResources().getStringArray(R.array.adapter_view_pager_title_of_main_fragments);
 	}
 
 	@Override

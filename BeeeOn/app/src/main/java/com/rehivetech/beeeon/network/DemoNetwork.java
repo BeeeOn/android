@@ -67,8 +67,8 @@ public class DemoNetwork implements INetwork {
 	public DemoNetwork(Context context) {
 		mContext = context;
 
-		String demoModeName = mContext.getString(R.string.demo_mode);
-		String demoModeEmail = mContext.getString(R.string.demo_mode_email);
+		String demoModeName = mContext.getString(R.string.demo_network_demo_mode);
+		String demoModeEmail = mContext.getString(R.string.demo_network_demo_mode_email);
 
 		// Set user
 		mUser = new User(DEMO_USER_ID, demoModeName, "", demoModeEmail, Gender.UNKNOWN, Role.Superuser);
