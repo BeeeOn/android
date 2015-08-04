@@ -4,6 +4,9 @@
 	android:layout_width="wrap_content"
 	android:layout_height="72dp"
 	android:id="@+id/list_module_item_layout"
+	android:background="?attr/selectableItemBackground"
+	android:clickable="true"
+	android:focusable="true"
 	>
 
 	<ImageView
@@ -11,7 +14,7 @@
 		android:layout_width="40dp"
 		android:layout_height="40dp"
 		android:padding="4dp"
-		android:src="@drawable/ic_val_unknown"
+		android:src="@drawable/ic_mod_boiler_state"
 		android:background="@drawable/oval_primary"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
@@ -63,15 +66,6 @@
 		android:layout_marginRight="16dp"
 		android:layout_marginEnd="16dp"
 		tools:text="100%"
-		/>
-
-
-	<!-- divider -->
-	<View
-		android:id="@+id/list_module_item_sep_middle"
-		style="@style/BeeeOn.Divider"
-		android:layout_alignParentBottom="true"
-		android:clickable="false"
 		/>
 
 </RelativeLayout>

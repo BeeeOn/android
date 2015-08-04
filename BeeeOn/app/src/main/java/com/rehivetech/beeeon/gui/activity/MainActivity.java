@@ -331,6 +331,12 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 			intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mActiveGateId);
 			startActivity(intent);
 		}
+		else if(mActiveMenuId.equals(Constants.GUI_MENU_DEVICES)){
+			mActiveMenuId = null;
+			Intent intent = new Intent(this, DevicesListActivity.class);
+			intent.putExtra(DevicesListActivity.EXTRA_GATE_ID, mActiveGateId);
+			startActivity(intent);
+		}
 		ft.commitAllowingStateLoss();
 
 		return true;
