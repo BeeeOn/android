@@ -1,20 +1,20 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.fragment.ModuleDetailFragment;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.fragment.DeviceDetailFragment;
+import com.rehivetech.beeeon.household.device.Device;
 
 /**
  * Class that handle screen with detail of some sensor
  */
-public class ModuleDetailActivity extends BaseApplicationActivity {
+public class DeviceDetailActivity extends BaseApplicationActivity {
 
-	private static final String TAG = ModuleDetailActivity.class.getSimpleName();
+	private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
 	public static final String EXTRA_MODULE_ID = "module_id";
 	public static final String EXTRA_GATE_ID = "gate_id";
@@ -26,13 +26,7 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_module_detail);
-
-		setupToolbar(R.string.empty);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		setContentView(R.layout.activity_device_detail);
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
@@ -46,8 +40,10 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 			return;
 		}
 
-		ModuleDetailFragment moduleDetailFragment = ModuleDetailFragment.newInstance(mActiveGateId, mActiveModuleId);
-		getSupportFragmentManager().beginTransaction().replace(R.id.module_detail_container, moduleDetailFragment).commit();
+		Device device = Controller.getInstance(this).getDevicesModel().getModule(mActiveGateId, mActiveModuleId).getDevice();
+
+		DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mActiveGateId, device.getId());
+		getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
 
 	}
 
@@ -56,7 +52,15 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
-				return true;
+				break;
+
+			case R.id.device_detail_menu_action_refresh:
+				break;
+
+			case R.id.device_detail_menu_action_edit:
+//				Intent intent = new Intent(this, ModuleEditActivity.class);
+				break;
+
 		}
 		return false;
 	}

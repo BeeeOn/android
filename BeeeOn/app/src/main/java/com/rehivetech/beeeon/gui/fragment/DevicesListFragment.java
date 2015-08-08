@@ -24,13 +24,11 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
-import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
-import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
 
@@ -48,7 +46,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_SELECTED_ITEMS = "selected_items";
 
-	private @Nullable ActionMode mActionMode;
+	private
+	@Nullable
+	ActionMode mActionMode;
 	private TextView mNoItemsTextView;
 	private Button mRefreshButton;
 
@@ -57,10 +57,11 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * This way instead of constructor so data is passed properly
+	 *
 	 * @param gateId
 	 * @return
 	 */
-	public static DevicesListFragment newInstance(String gateId){
+	public static DevicesListFragment newInstance(String gateId) {
 		DevicesListFragment fragment = new DevicesListFragment();
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
@@ -71,6 +72,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Get active gate from fragment's arguments
+	 *
 	 * @param savedInstanceState
 	 */
 	@Override
@@ -82,6 +84,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Initializes whole layout (need to findView from rootView)
+	 *
 	 * @param inflater
 	 * @param container
 	 * @param savedInstanceState
@@ -148,6 +151,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Updates data (locally cached) && if savedInstance then recreates ActionMode with selected items
+	 *
 	 * @param savedInstanceState
 	 */
 	@Override
@@ -166,7 +170,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 		// recreates selected items
 		List<Integer> selectedDevices = savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS);
-		if(selectedDevices != null && !selectedDevices.isEmpty()){
+		if (selectedDevices != null && !selectedDevices.isEmpty()) {
 			mActionMode = mActivity.startSupportActionMode(new ActionModeEditModules());
 			mDeviceAdapter.setSelectedItems(selectedDevices);
 		}
@@ -174,6 +178,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Saves selected items
+	 *
 	 * @param outState
 	 */
 	@Override
@@ -195,7 +200,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		Controller controller = Controller.getInstance(getActivity());
 
 		Gate gate = controller.getGatesModel().getGate(mActiveGateId);
-		if(gate == null){
+		if (gate == null) {
 			Toast.makeText(getActivity(), R.string.gate_detail_toast_not_specified_gate, Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -211,13 +216,13 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 		boolean haveDevices = false;
 		ArrayList<Object> devicesLocations = new ArrayList<>();
-		for(Location loc : controller.getLocationsModel().getLocationsByGate(mActiveGateId)){
+		for (Location loc : controller.getLocationsModel().getLocationsByGate(mActiveGateId)) {
 			List<Device> devicesInLocation = controller.getDevicesModel().getDevicesByLocation(mActiveGateId, loc.getId());
 			// if no devices in this location, skip
-			if(devicesInLocation.isEmpty()) continue;
+			if (devicesInLocation.isEmpty()) continue;
 
 			devicesLocations.add(loc);
-			for(Device dev : devicesInLocation){
+			for (Device dev : devicesInLocation) {
 				devicesLocations.add(dev);
 				haveDevices = true;
 			}
@@ -230,14 +235,14 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	/**
 	 * Decides to show emptyView
 	 * TODO should be set after recycleview remove animation is done
+	 *
 	 * @param haveDevices
 	 */
 	private void handleEmptyViewVisibility(boolean haveDevices) {
-		if(!haveDevices) {
+		if (!haveDevices) {
 			mNoItemsTextView.setVisibility(View.VISIBLE);
 			mRefreshButton.setVisibility(View.VISIBLE);
-		}
-		else{
+		} else {
 			mNoItemsTextView.setVisibility(View.GONE);
 			mRefreshButton.setVisibility(View.GONE);
 		}
@@ -245,15 +250,16 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Async task for refreshing data
+	 *
 	 * @param gateId
 	 * @param forceRefresh
 	 */
-	private void doReloadDevicesTask(String gateId, boolean forceRefresh){
+	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
 		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
 		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if(!success) return;
+				if (!success) return;
 
 				// stop refreshing
 				updateData();
@@ -265,6 +271,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Removes device from list & model
+	 *
 	 * @param device
 	 * @param position
 	 */
@@ -282,8 +289,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 				} else {
 					Toast.makeText(mActivity, R.string.activity_fragment_toast_delete_fail, Toast.LENGTH_SHORT).show();
 
-					if(tempLoc != null){
-						mDeviceAdapter.addItem(position -1, tempLoc);
+					if (tempLoc != null) {
+						mDeviceAdapter.addItem(position - 1, tempLoc);
 					}
 					mDeviceAdapter.addItem(position, device);
 				}
@@ -297,26 +304,29 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Calculates if it's needed to remove Location from list
-	 * @param position  Position of deleting item
+	 *
+	 * @param position Position of deleting item
 	 */
-	private @Nullable Location handleRemoveDeviceFromList(int position) {
+	private
+	@Nullable
+	Location handleRemoveDeviceFromList(int position) {
 		int positionToRemove = position;
 		Location tempLoc = null;
-		if(position > 0){
+		if (position > 0) {
 			int itemPrevType = mDeviceAdapter.getItemViewType(position - 1);
 			// if before is location -> position item is first in location
-			if(itemPrevType == DeviceRecycleAdapter.TYPE_LOCATION){
+			if (itemPrevType == DeviceRecycleAdapter.TYPE_LOCATION) {
 				int itemNextType;
 				// if position item is not last (something is below it)
-				if(position < (mDeviceAdapter.getItemCount() - 1))
+				if (position < (mDeviceAdapter.getItemCount() - 1))
 					itemNextType = mDeviceAdapter.getItemViewType(position + 1);
 				else
 					itemNextType = DeviceRecycleAdapter.TYPE_UNKNOWN;
 
 				// next item is location or it is last item in list (means its only one in location)
-				if(itemNextType == DeviceRecycleAdapter.TYPE_LOCATION || position >= (mDeviceAdapter.getItemCount() - 1)){
+				if (itemNextType == DeviceRecycleAdapter.TYPE_LOCATION || position >= (mDeviceAdapter.getItemCount() - 1)) {
 					positionToRemove -= 1;
-					tempLoc	= (Location) mDeviceAdapter.getItem(positionToRemove);
+					tempLoc = (Location) mDeviceAdapter.getItem(positionToRemove);
 					mDeviceAdapter.removeItem(positionToRemove);
 				}
 
@@ -331,13 +341,14 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * Handle item click -> start new Activity
+	 *
 	 * @param position
 	 * @param viewType ViewType based on DeviceRecyclerAdapter.getItemViewType()
 	 */
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
 		// check if we actually clicked DEVICE
-		if(viewType != DeviceRecycleAdapter.TYPE_DEVICE){
+		if (viewType != DeviceRecycleAdapter.TYPE_DEVICE) {
 			Toast.makeText(getActivity(), R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
 			return;
 		}
@@ -346,15 +357,16 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 		// starting detail activity
 		Bundle bundle = new Bundle();
-		bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, dev.getGateId());
-		bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, dev.getAllModules().get(0).getAbsoluteId());
-		Intent intent = new Intent(mActivity, ModuleDetailActivity.class);
-		intent.putExtras(bundle);
-		startActivity(intent);
+//		bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, dev.getGateId());
+//		bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, dev.getAllModules().get(0).getAbsoluteId());
+//		Intent intent = new Intent(mActivity, ModuleDetailActivity.class);
+//		intent.putExtras(bundle);
+//		startActivity(intent);
 	}
 
 	/**
 	 * Long clicked on item in recyclerView -> selection (always ONE ITEM)
+	 *
 	 * @param position
 	 * @param viewType
 	 * @return
@@ -364,9 +376,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		Controller controller = Controller.getInstance(getActivity());
 		// we have to check if user has permission to delete item (so if not, we disable longclick)
 		Gate tmpGate = controller.getGatesModel().getGate(mActiveGateId);
-		if(tmpGate == null || !controller.isUserAllowed(tmpGate.getRole())) return false;
+		if (tmpGate == null || !controller.isUserAllowed(tmpGate.getRole())) return false;
 
-		if(mActionMode == null) {
+		if (mActionMode == null) {
 			mActionMode = mActivity.startSupportActionMode(new ActionModeEditModules());
 		}
 
@@ -378,12 +390,13 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	/**
 	 * When confirmed dialog -> Deleting device from list
+	 *
 	 * @param i requestCode (which dialog)
 	 */
 	@Override
 	public void onPositiveButtonClicked(int i) {
 		Integer selectedFirst = mDeviceAdapter.getFirstSelectedItem();
-		if(mDeviceAdapter.getItemViewType(selectedFirst) == DeviceRecycleAdapter.TYPE_DEVICE) {
+		if (mDeviceAdapter.getItemViewType(selectedFirst) == DeviceRecycleAdapter.TYPE_DEVICE) {
 			Device dev = (Device) mDeviceAdapter.getItem(selectedFirst);
 			doRemoveDeviceTask(dev, selectedFirst);
 		}
@@ -413,7 +426,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.action_delete) {
 				int firstSelected = mDeviceAdapter.getFirstSelectedItem();
-				if(mDeviceAdapter.getItemViewType(firstSelected) == DeviceRecycleAdapter.TYPE_DEVICE){
+				if (mDeviceAdapter.getItemViewType(firstSelected) == DeviceRecycleAdapter.TYPE_DEVICE) {
 					Device dev = (Device) mDeviceAdapter.getItem(firstSelected);
 					// shows confirmation dialog
 					SimpleDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
@@ -421,7 +434,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 							.setMessage(R.string.module_list_dialog_message_unregister_device)
 							.setNegativeButtonText(R.string.activity_fragment_btn_cancel)
 							.setPositiveButtonText(R.string.module_list_btn_unregister)
-							.setTargetFragment(DevicesListFragment.this, 1)		// needs to be here so that we can catch button listeners
+							.setTargetFragment(DevicesListFragment.this, 1)        // needs to be here so that we can catch button listeners
 							.show();
 				}
 			}

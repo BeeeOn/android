@@ -10,7 +10,7 @@ import android.os.SystemClock;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
-import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
+import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -423,10 +423,10 @@ public abstract class WidgetData {
 	 * @return
 	 */
 	public static Intent startDetailActivityIntent(Context context, String gateId, String moduleId) {
-		Intent intent = new Intent(context, ModuleDetailActivity.class);
+		Intent intent = new Intent(context, DeviceDetailActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, moduleId);
-		intent.putExtra(ModuleDetailActivity.EXTRA_GATE_ID, gateId);
+		intent.putExtra(DeviceDetailActivity.EXTRA_MODULE_ID, moduleId);
+		intent.putExtra(DeviceDetailActivity.EXTRA_GATE_ID, gateId);
 		return intent;
 	}
 

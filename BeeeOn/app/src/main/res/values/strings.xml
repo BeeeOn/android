@@ -265,6 +265,8 @@
 	<string name="module_detail_refresh_time">Refresh interval </string>
 	<string name="module_detail_toast_not_specified_gate_or_module">Not specified gateway or module</string>
 
+	<!--Device detail -->
+	<string name="device_detail_menu_edit_title">Edit device</string>
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Location</string>
 	<string name="module_edit_label_module_name">Name of module</string>

@@ -96,7 +96,7 @@
 			android:label="@string/manifest_title_device_add">
 		</activity>
 		<activity
-			android:name=".gui.activity.ModuleDetailActivity">
+			android:name=".gui.activity.DeviceDetailActivity">
 		</activity>
 		<activity
 			android:name=".gui.activity.AddGateActivity"
