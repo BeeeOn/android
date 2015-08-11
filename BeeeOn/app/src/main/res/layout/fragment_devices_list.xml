@@ -20,7 +20,6 @@
 	</android.support.v4.widget.SwipeRefreshLayout>
 
 
-	<!--
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -29,27 +28,25 @@
 		>
 
 		<TextView
-			android:id="@+id/module_list_nomodules_text"
+			android:id="@+id/devices_list_no_items_text"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:text="@string/loading_data"
-			android:visibility="gone"
+			android:text="@string/module_list_no_device_cap"
 			android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 			android:textColor="@color/gray_dark"
+			android:visibility="gone"
 			/>
 
 		<Button
-			android:id="@+id/module_list_refresh_button"
+			android:id="@+id/devices_list_refresh_button"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
+			android:text="@string/layout_module_list_watchdog_list_action_refresh_list"
 			android:visibility="gone"
-			android:text="@string/action_refreshlist"
 			/>
-
 	</LinearLayout>
-	-->
 
 	<net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
 		android:id="@+id/devices_list_fab"
@@ -65,7 +62,7 @@
 			android:id="@+id/devices_list_action_add_device"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			fab:fab_title="@string/action_addsensor"
+			fab:fab_title="@string/manifest_title_device_add"
 			fab:fab_icon="@drawable/ic_add_white_24dp"
 			style="@style/BeeeOn.Fab.Mini"
 			/>
@@ -74,7 +71,7 @@
 			android:id="@+id/devices_list_action_add_gate"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			fab:fab_title="@string/action_addgate"
+			fab:fab_title="@string/main_action_gate_add"
 			fab:fab_icon="@drawable/ic_add_white_24dp"
 			style="@style/BeeeOn.Fab.Mini"
 			/>

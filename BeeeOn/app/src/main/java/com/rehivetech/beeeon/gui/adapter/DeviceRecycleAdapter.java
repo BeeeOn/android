@@ -1,31 +1,30 @@
 package com.rehivetech.beeeon.gui.adapter;
 
-import android.content.Context;
-import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by mlyko on 28. 7. 2015.
  */
-public class DeviceRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<RecyclerView.ViewHolder> {
 
+	public static final int TYPE_UNKNOWN = -1;
 	public static final int TYPE_DEVICE = 0;
 	public static final int TYPE_LOCATION = 1;
 
-	ArrayList<Object> mObjects = new ArrayList<>();
-
+	private ArrayList<Object> mObjects = new ArrayList<>();
 	private IItemClickListener mClickListener;
 
 	public DeviceRecycleAdapter(IItemClickListener listener) {
@@ -103,6 +102,9 @@ public class DeviceRecycleAdapter extends RecyclerView.Adapter<RecyclerView.View
 					deviceHolder.mAdditional.setText(battery + "%");
 					deviceHolder.mAdditional.setVisibility(View.VISIBLE);
 				}
+
+				// setups background resource based on "selected"
+				deviceHolder.itemView.setBackgroundResource(isSelected(position) ? R.color.gray_light: R.color.beeeon_background);
 				break;
 
 			case TYPE_LOCATION:
@@ -122,17 +124,32 @@ public class DeviceRecycleAdapter extends RecyclerView.Adapter<RecyclerView.View
 		return mObjects.size();
 	}
 
+	public Object getItem(int position){
+		return mObjects.get(position);
+	}
 
+	/**
+	 * Adds item & animate it if animator set
+	 * @param position
+	 */
 	public void addItem(int position, Object data){
 		mObjects.add(position, data);
 		notifyItemInserted(position);
 	}
 
+	/**
+	 * Removes item & animate it if animator set
+	 * @param position
+	 */
 	public void removeItem(int position){
 		mObjects.remove(position);
 		notifyItemRemoved(position);
 	}
 
+	/**
+	 * Updates data with new & tries to animate
+	 * @param objs
+	 */
 	public void updateData(ArrayList<Object> objs) {
 		mObjects = objs;
 		notifyDataSetChanged();
@@ -144,12 +161,11 @@ public class DeviceRecycleAdapter extends RecyclerView.Adapter<RecyclerView.View
 	/**
 	 * ViewHolder for Device data
 	 */
-	public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public static class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public TextView mTitle;
 		public TextView mSubTitle;
 		public TextView mAdditional;
 		public IItemClickListener mListener;
-		public boolean mIsSelected;
 
 		public DeviceViewHolder(View itemView, IItemClickListener listener) {
 			super(itemView);
@@ -160,23 +176,22 @@ public class DeviceRecycleAdapter extends RecyclerView.Adapter<RecyclerView.View
 
 			itemView.setOnClickListener(this);
 			itemView.setOnLongClickListener(this);
-			itemView.setSelected(mIsSelected);
 		}
 
 		@Override
 		public void onClick(View v) {
 			if(mListener != null){
-				mListener.onRecyclerViewItemClick();
+				mListener.onRecyclerViewItemClick(getPosition(), getItemViewType());
 			}
-
-			Intent i = new Intent(v.getContext(), ModuleDetailActivity.class);
-			v.getContext().startActivity(i);
 		}
 
 		@Override
 		public boolean onLongClick(View v) {
-			mIsSelected = !mIsSelected;
-			return mListener != null && mListener.onRecyclerViewItemLongClick();
+			if(mListener != null && mListener.onRecyclerViewItemLongClick(getPosition(), getItemViewType())){
+				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -195,7 +210,7 @@ public class DeviceRecycleAdapter extends RecyclerView.Adapter<RecyclerView.View
 	}
 
 	public interface IItemClickListener {
-		void onRecyclerViewItemClick();
-		boolean onRecyclerViewItemLongClick();
+		void onRecyclerViewItemClick(int position, int viewType);
+		boolean onRecyclerViewItemLongClick(int position, int viewType);
 	}
 }

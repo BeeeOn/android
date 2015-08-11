@@ -21,7 +21,7 @@ public class DevicesListActivity extends BaseApplicationActivity {
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		if (mGateId == null) {
-			Toast.makeText(this, R.string.toast_not_specified_gate, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.module_detail_toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}

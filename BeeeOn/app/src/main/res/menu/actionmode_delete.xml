@@ -8,6 +8,6 @@
 		android:orderInCategory="200"
 		app:showAsAction="always"
 		android:icon="@drawable/ic_delete_white_24dp"
-		android:title="@string/button_remove"
+		android:title="@string/activity_fragment_menu_btn_remove"
 		/>
 </menu>
