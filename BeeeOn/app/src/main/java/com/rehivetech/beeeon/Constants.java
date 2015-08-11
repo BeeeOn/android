@@ -42,6 +42,9 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_HUMIDITY = "pref_humidity";
 	public static final String PERSISTENCE_PREF_ILLUMINATION = "pref_illumination";
 	public static final String PERSISTENCE_PREF_PRESSURE = "pref_pressure";
+	public static final String PERSISTENCE_PREF_BATTERY = "pref_battery";
+	public static final String PERSISTENCE_PREF_RSSI = "pref_rssi";
+	public static final String PERSISTENCE_PREF_REFRESH = "pref_refresh";
 
 	public static final String PERSISTENCE_PREF_LAST_USER_ID = "last_user_id";
 	public static final String PERSISTENCE_PREF_LAST_AUTH_PROVIDER = "last_auth_provider";

@@ -22,6 +22,9 @@
 	<string name="unit_illumination" translatable="false">lux</string>
 	<string name="unit_noise" translatable="false">dB</string>
 	<string name="unit_emission" translatable="false">ppm</string>
+	<string name="unit_battery" translatable="false">%</string>
+	<string name="unit_rssi" translatable="false">%</string>
+	<string name="unit_refresh" translatable="false">s</string>
 
 	<!-- Names of default locations -->
 	<string name="loc_none">- None -</string>
