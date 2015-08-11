@@ -94,6 +94,221 @@
 
 	</android.support.design.widget.AppBarLayout>
 
+	<android.support.v4.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginTop="35dp"
+		android:paddingLeft="@dimen/activity_horizontal_margin"
+		android:paddingStart="@dimen/activity_horizontal_margin"
+		android:paddingEnd="@dimen/activity_horizontal_margin"
+		android:paddingRight="@dimen/activity_horizontal_margin"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<HorizontalScrollView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:scrollbarStyle="outsideInset"
+			android:paddingBottom="5dp">
+
+			<LinearLayout
+				android:layout_width="wrap_content"
+				android:layout_height="match_parent"
+				android:orientation="horizontal">
+
+				<LinearLayout
+					android:id="@+id/device_detail_signal_layout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+					android:orientation="vertical"
+					android:visibility="gone">
+
+					<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/round_rectangle"
+						android:orientation="horizontal"
+						android:paddingLeft="8dp"
+						android:paddingStart="8dp"
+						android:paddingRight="8dp"
+						android:paddingEnd="8dp">
+
+						<ImageView
+							android:layout_width="24dp"
+							android:layout_height="24dp"
+							android:src="@drawable/ic_signal"/>
+
+						<TextView
+							android:id="@+id/device_detail_signal_value"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="8dp"
+							android:layout_marginStart="8dp"
+							android:layout_gravity="center_vertical"
+							android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+							android:textColor="@color/white"
+							tools:text="96%"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/module_detail_label_signal"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:id="@+id/device_detail_battery_layout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+					android:orientation="vertical"
+					android:visibility="gone">
+
+					<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/round_rectangle"
+						android:orientation="horizontal"
+						android:paddingLeft="8dp"
+						android:paddingStart="8dp"
+						android:paddingRight="8dp"
+						android:paddingEnd="8dp">
+
+						<ImageView
+							android:layout_width="24dp"
+							android:layout_height="24dp"
+							android:src="@drawable/ic_battery"/>
+
+						<TextView
+							android:id="@+id/device_detail_battery_value"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="8dp"
+							android:layout_marginStart="8dp"
+							android:layout_gravity="center_vertical"
+							android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+							android:textColor="@color/white"
+							tools:text="96%"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/module_detail_label_battery"/>
+
+				</LinearLayout>
+
+
+				<LinearLayout
+					android:id="@+id/device_detail_refresh_layout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+					android:orientation="vertical"
+					android:visibility="gone">
+
+					<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/round_rectangle"
+						android:orientation="horizontal"
+						android:paddingLeft="8dp"
+						android:paddingStart="8dp"
+						android:paddingRight="8dp"
+						android:paddingEnd="8dp">
+
+						<ImageView
+							android:layout_width="24dp"
+							android:layout_height="24dp"
+							android:src="@drawable/ic_refresh"/>
+
+						<TextView
+							android:id="@+id/device_detail_refresh_value"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="8dp"
+							android:layout_marginStart="8dp"
+							android:layout_gravity="center_vertical"
+							android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+							android:textColor="@color/white"
+							tools:text="96%"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/module_detail_refresh_time"/>
+
+				</LinearLayout>
+
+				<LinearLayout
+					android:id="@+id/device_detail_led_layout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+					android:orientation="vertical"
+					android:visibility="gone">
+
+
+					<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/round_rectangle"
+						android:orientation="horizontal"
+						android:paddingLeft="8dp"
+						android:paddingStart="8dp"
+						android:paddingRight="8dp"
+						android:paddingEnd="8dp">
+
+						<ImageView
+							android:layout_width="24dp"
+							android:layout_height="24dp"
+							android:src="@drawable/ic_led"/>
+
+						<TextView
+							android:id="@+id/device_detail_led_value"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="8dp"
+							android:layout_marginStart="8dp"
+							android:layout_gravity="center_vertical"
+							android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+							android:textColor="@color/white"
+							tools:text="LED"
+							android:text="LED"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="LED"/>
+
+				</LinearLayout>
+
+
+			</LinearLayout>
+
+		</HorizontalScrollView>
+
+	</android.support.v4.widget.NestedScrollView>
+
 	<android.support.design.widget.FloatingActionButton
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"

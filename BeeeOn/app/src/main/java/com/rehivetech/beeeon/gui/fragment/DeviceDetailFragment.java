@@ -14,12 +14,15 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceFeatures;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 
@@ -84,6 +87,40 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 
 		TextView deviceLastUpdate = (TextView) view.findViewById(R.id.device_detail_last_update_label);
 		deviceLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
+
+		DeviceFeatures deviceFeatures = device.getType().getFeatures();
+
+		if (deviceFeatures.hasRssi()) {
+			LinearLayout signalLayout = (LinearLayout) view.findViewById(R.id.device_detail_signal_layout);
+			TextView deviceSignal = (TextView) view.findViewById(R.id.device_detail_signal_value);
+			deviceSignal.setText(String.format("%d%%", device.getNetworkQuality()));
+
+			signalLayout.setVisibility(LinearLayout.VISIBLE);
+		}
+
+		if (deviceFeatures.hasBattery()) {
+			LinearLayout batteryLayout = (LinearLayout) view.findViewById(R.id.device_detail_battery_layout);
+			TextView deviceBattery = (TextView) view.findViewById(R.id.device_detail_battery_value);
+			deviceBattery.setText(String.format("%d%%", device.getBattery()));
+
+			batteryLayout.setVisibility(LinearLayout.VISIBLE);
+		}
+
+		if (deviceFeatures.hasRefresh()) {
+			LinearLayout refreshLayout = (LinearLayout) view.findViewById(R.id.device_detail_refresh_layout);
+			TextView deviceRefresh = (TextView) view.findViewById(R.id.device_detail_refresh_value);
+			RefreshInterval refreshInterval = device.getRefresh();
+			if (refreshInterval != null) {
+				deviceRefresh.setText(refreshInterval.getStringInterval(mContext));
+			}
+
+			refreshLayout.setVisibility(LinearLayout.VISIBLE);
+		}
+
+		if (deviceFeatures.hasLed()) {
+			LinearLayout ledLayout = (LinearLayout) view.findViewById(R.id.device_detail_led_layout);
+			ledLayout.setVisibility(LinearLayout.VISIBLE);
+		}
 
 		return view;
 	}
