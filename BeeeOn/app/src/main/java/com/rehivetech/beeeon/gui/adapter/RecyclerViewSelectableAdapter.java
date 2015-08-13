@@ -1,7 +1,11 @@
 package com.rehivetech.beeeon.gui.adapter;
 
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
+
+import com.rehivetech.beeeon.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +14,18 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	@SuppressWarnings("unused")
 	private static final String TAG = RecyclerViewSelectableAdapter.class.getSimpleName();
 
-	private SparseBooleanArray selectedItems = new SparseBooleanArray();
+	private SparseBooleanArray mSelectedItems = new SparseBooleanArray();
+	protected Context mContext;
+	protected int mSelectableItemBackgroundDrawable;
+
+	public RecyclerViewSelectableAdapter(Context context) {
+		mContext = context;
+
+		// set drawable as property so that it's selected only once
+		TypedArray typedArray = mContext.obtainStyledAttributes(new int[]{R.attr.selectableItemBackground});
+		mSelectableItemBackgroundDrawable = typedArray.getResourceId(0, 0);
+		typedArray.recycle();
+	}
 
 	/**
 	 * Indicates if the item at position position is selected
@@ -26,10 +41,10 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	 * @param position Position of the item to toggle the selection status for
 	 */
 	public void toggleSelection(int position) {
-		if (selectedItems.get(position, false)) {
-			selectedItems.delete(position);
+		if (mSelectedItems.get(position, false)) {
+			mSelectedItems.delete(position);
 		} else {
-			selectedItems.put(position, true);
+			mSelectedItems.put(position, true);
 		}
 		notifyItemChanged(position);
 	}
@@ -39,7 +54,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	 */
 	public void clearSelection() {
 		List<Integer> selection = getSelectedItems();
-		selectedItems.clear();
+		mSelectedItems.clear();
 		for (Integer i : selection) {
 			notifyItemChanged(i);
 		}
@@ -50,7 +65,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	 * @return Selected items count
 	 */
 	public int getSelectedItemCount() {
-		return selectedItems.size();
+		return mSelectedItems.size();
 	}
 
 	/**
@@ -58,11 +73,23 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	 * @return List of selected items ids
 	 */
 	public List<Integer> getSelectedItems() {
-		List<Integer> items = new ArrayList<>(selectedItems.size());
-		for (int i = 0; i < selectedItems.size(); ++i) {
-			items.add(selectedItems.keyAt(i));
+		List<Integer> items = new ArrayList<>(mSelectedItems.size());
+		for (int i = 0; i < mSelectedItems.size(); ++i) {
+			items.add(mSelectedItems.keyAt(i));
 		}
 		return items;
+	}
+
+	/**
+	 * Sets selected items sparseArray based on list of selected positions
+	 * @param selectedPositions
+	 */
+	public void setSelectedItems(List<Integer> selectedPositions){
+		mSelectedItems.clear();
+		for(Integer pos : selectedPositions){
+			mSelectedItems.put(pos, true);
+			notifyItemChanged(pos);
+		}
 	}
 
 	/**
@@ -70,6 +97,6 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	 * @return
 	 */
 	public int getFirstSelectedItem(){
-		return selectedItems.keyAt(0);
+		return mSelectedItems.keyAt(0);
 	}
 }

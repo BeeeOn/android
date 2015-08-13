@@ -1,19 +1,25 @@
 package com.rehivetech.beeeon.gui.adapter;
 
-import android.support.annotation.Nullable;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by mlyko on 28. 7. 2015.
@@ -27,8 +33,16 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	private ArrayList<Object> mObjects = new ArrayList<>();
 	private IItemClickListener mClickListener;
 
-	public DeviceRecycleAdapter(IItemClickListener listener) {
+	private TimeHelper mTimeHelper;
+
+	public DeviceRecycleAdapter(Context context, IItemClickListener listener) {
+		super(context);
+
 		mClickListener = listener;
+
+		// UserSettings can be null when user is not logged in!
+		SharedPreferences prefs = Controller.getInstance(context).getUserSettings();
+		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 	}
 
 	/**
@@ -86,13 +100,17 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 			case TYPE_DEVICE:
 				Device device = (Device) mObjects.get(position);
 				if(device == null) return; // TODO should show error view or loading or sth
+				Gate gate = Controller.getInstance(mContext).getGatesModel().getGate(device.getGateId());
+
 				DeviceViewHolder deviceHolder = (DeviceViewHolder) viewHolder;
 
 				deviceHolder.mTitle.setText(device.getType().getNameRes());
 				deviceHolder.mSubTitle.setText(device.getType().getManufacturerRes());
 
-				int battery = device.getBattery();
+				// last update
+				deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "" );
 
+				int battery = device.getBattery();
 				// no battery, hide info
 				if(battery < 0){
 					deviceHolder.mAdditional.setVisibility(View.INVISIBLE);
@@ -104,7 +122,10 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				}
 
 				// setups background resource based on "selected"
-				deviceHolder.itemView.setBackgroundResource(isSelected(position) ? R.color.gray_light: R.color.beeeon_background);
+				deviceHolder.setSelectedBackground(isSelected(position));
+				// setups icon based on selection
+				deviceHolder.setSelectedIcon(isSelected(position), R.drawable.ic_mod_boiler_state);
+
 				break;
 
 			case TYPE_LOCATION:
@@ -117,7 +138,6 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				break;
 		}
 	}
-
 
 	@Override
 	public int getItemCount() {
@@ -153,6 +173,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	public void updateData(ArrayList<Object> objs) {
 		mObjects = objs;
 		notifyDataSetChanged();
+		// TODO this should notify whole list
 		notifyItemRangeChanged(0, mObjects.size());
 	}
 
@@ -161,21 +182,53 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	/**
 	 * ViewHolder for Device data
 	 */
-	public static class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public TextView mTitle;
+		public ImageView mIcon;
 		public TextView mSubTitle;
+		public TextView mSubText;
 		public TextView mAdditional;
 		public IItemClickListener mListener;
 
 		public DeviceViewHolder(View itemView, IItemClickListener listener) {
 			super(itemView);
 			mTitle = (TextView) itemView.findViewById(R.id.list_item_title);
+			mIcon = (ImageView) itemView.findViewById(R.id.list_item_icon);
 			mSubTitle = (TextView) itemView.findViewById(R.id.list_item_subtitle);
+			mSubText = (TextView) itemView.findViewById(R.id.list_item_subtext);
 			mAdditional = (TextView) itemView.findViewById(R.id.list_item_additional);
 			mListener = listener;
 
 			itemView.setOnClickListener(this);
 			itemView.setOnLongClickListener(this);
+		}
+
+		/**
+		 * Based on item selection changes ImageView src & background
+		 * ONLY FOR OVAL_ITEM !
+		 *
+		 * TODO put to abstract parent
+		 * @param isSelected
+		 * @param defaultSrc
+		 */
+		public void setSelectedIcon(boolean isSelected, int defaultSrc){
+			if(isSelected){
+				mIcon.setImageResource(R.drawable.ic_action_accept);
+				mIcon.setBackgroundResource(R.drawable.oval_selected);
+			}
+			else{
+				mIcon.setImageResource(defaultSrc);
+				mIcon.setBackgroundResource(R.drawable.oval_primary);
+			}
+		}
+
+		/**
+		 * Returns background of item (if selected different, otherwise clickable)
+		 * TODO put to abstract parent
+		 * @param isSelected
+		 */
+		public void setSelectedBackground(boolean isSelected) {
+			this.itemView.setBackgroundResource(isSelected ? R.color.gray_light : mSelectableItemBackgroundDrawable);
 		}
 
 		@Override

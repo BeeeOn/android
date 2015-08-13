@@ -2,7 +2,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="wrap_content"
-	android:layout_height="72dp"
+	android:layout_height="88dp"
 	android:id="@+id/list_module_item_layout"
 	android:background="?attr/selectableItemBackground"
 	android:clickable="true"
@@ -10,7 +10,7 @@
 	>
 
 	<ImageView
-		android:id="@+id/list_module_item_icon"
+		android:id="@+id/list_item_icon"
 		android:layout_width="40dp"
 		android:layout_height="40dp"
 		android:padding="4dp"
@@ -28,16 +28,46 @@
 		android:singleLine="true"
 		android:textColor="@color/beeeon_primary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		android:layout_toRightOf="@+id/list_module_item_icon"
-		android:layout_toEndOf="@+id/list_module_item_icon"
+		android:layout_toRightOf="@+id/list_item_icon"
+		android:layout_toEndOf="@+id/list_item_icon"
 		android:layout_toLeftOf="@+id/list_item_additional"
 		android:layout_toStartOf="@+id/list_item_additional"
-		android:layout_alignTop="@+id/list_module_item_icon"
+		android:layout_alignTop="@+id/list_item_icon"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
 		android:layout_marginRight="8dp"
 		android:layout_marginEnd="8dp"
 		tools:text="Device name"
+		/>
+
+	<TextView
+		android:id="@+id/list_item_subtext_label"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="bottom"
+		android:singleLine="true"
+		android:textColor="@color/beeeon_primary"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+		android:layout_below="@+id/list_item_title"
+		android:layout_alignLeft="@+id/list_item_title"
+		android:layout_alignStart="@+id/list_item_title"
+		android:text="@string/module_detail_label_last_update"
+		/>
+
+	<TextView
+		android:id="@+id/list_item_subtext"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="bottom"
+		android:singleLine="true"
+		android:textColor="@color/beeeon_primary"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+		tools:text="04:44"
+		android:layout_below="@+id/list_item_title"
+		android:layout_toRightOf="@+id/list_item_subtext_label"
+		android:layout_toEndOf="@+id/list_item_subtext_label"
+		android:layout_marginLeft="4dp"
+		android:layout_marginStart="4dp"
 		/>
 
 	<TextView
@@ -48,9 +78,9 @@
 		android:singleLine="true"
 		android:textColor="@color/beeeon_secondary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		android:layout_below="@+id/list_item_title"
-		android:layout_alignLeft="@+id/list_item_title"
-		android:layout_alignStart="@+id/list_item_title"
+		android:layout_below="@+id/list_item_subtext_label"
+		android:layout_alignLeft="@+id/list_item_subtext_label"
+		android:layout_alignStart="@+id/list_item_subtext_label"
 		android:layout_alignRight="@+id/list_item_additional"
 		android:layout_alignEnd="@+id/list_item_additional"
 		tools:text="Device manufacturer"
@@ -60,11 +90,12 @@
 		android:id="@+id/list_item_additional"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignTop="@+id/list_module_item_icon"
+		android:layout_alignTop="@+id/list_item_title"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"
 		android:layout_marginRight="16dp"
 		android:layout_marginEnd="16dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
 		tools:text="100%"
 		/>
 

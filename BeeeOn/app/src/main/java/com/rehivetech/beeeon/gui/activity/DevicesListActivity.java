@@ -9,6 +9,7 @@ import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
 
 public class DevicesListActivity extends BaseApplicationActivity {
 	public static final String EXTRA_GATE_ID = "gate_id";
+	public static final String FRG_DEVICE_LIST_TAG = "devices_list_fragment";
 
 	private String mGateId;
 	@Nullable private DevicesListFragment mFragment;
@@ -17,7 +18,7 @@ public class DevicesListActivity extends BaseApplicationActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_devices_list);
-		setupToolbar();
+		setupToolbar(R.string.empty);
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		if (mGateId == null) {
@@ -27,7 +28,14 @@ public class DevicesListActivity extends BaseApplicationActivity {
 		}
 
 		if(savedInstanceState == null){
-			getSupportFragmentManager().beginTransaction().replace(R.id.devices_list_container, DevicesListFragment.newInstance(mGateId)).commit();
+			getSupportFragmentManager()
+					.beginTransaction()
+					.replace(
+						R.id.devices_list_container,
+						DevicesListFragment.newInstance(mGateId),
+						FRG_DEVICE_LIST_TAG
+					)
+					.commit();
 		}
 
 	}

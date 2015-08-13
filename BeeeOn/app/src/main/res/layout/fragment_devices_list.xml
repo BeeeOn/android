@@ -5,20 +5,16 @@
 				android:layout_height="match_parent"
 				tools:context="com.rehivetech.beeeon.gui.fragment.DevicesListFragment">
 
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/devices_list_swiperefresh"
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/devices_list_recyclerview"
+		android:scrollbars="vertical"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		>
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/devices_list_recyclerview"
-			android:scrollbars="vertical"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			tools:listitem="@layout/item_list_module_item"
-			/>
-	</android.support.v4.widget.SwipeRefreshLayout>
-
+		tools:listitem="@layout/item_list_module_item"
+		android:paddingBottom="88dp"
+		android:clipToPadding="false"
+		/>
 
 	<LinearLayout
 		android:layout_width="match_parent"
