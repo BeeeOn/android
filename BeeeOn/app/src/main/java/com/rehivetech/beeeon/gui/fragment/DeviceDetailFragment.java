@@ -41,6 +41,14 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	private String mGateId;
 	private String mDeviceId;
 
+	private TextView mDeviceName;
+	private TextView mDeviceLocation;
+	private TextView mDeviceLastUpdate;
+	private TextView mDeviceSignal;
+	private TextView mDeviceBattery;
+	private TextView mDeviceRefresh;
+	private ImageView mDeviceLocationIcon;
+
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 
 		Bundle args = new Bundle();
@@ -76,42 +84,42 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			actionBar.setDisplayShowTitleEnabled(false);
 		}
 
-		TextView deviceName = (TextView) view.findViewById(R.id.device_detail_device_name);
-		deviceName.setText(device.getType().getNameRes());
+		mDeviceName = (TextView) view.findViewById(R.id.device_detail_device_name);
+		mDeviceName.setText(device.getType().getNameRes());
 
-		TextView deviceLocation = (TextView) view.findViewById(R.id.device_detail_loc_label);
-		deviceLocation.setText(location.getName());
+		mDeviceLocation = (TextView) view.findViewById(R.id.device_detail_loc_label);
+		mDeviceLocation.setText(location.getName());
 
-		ImageView deviceLocationIcon = (ImageView) view.findViewById(R.id.device_detail_loc_icon);
-		deviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
+		mDeviceLocationIcon = (ImageView) view.findViewById(R.id.device_detail_loc_icon);
+		mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
 
-		TextView deviceLastUpdate = (TextView) view.findViewById(R.id.device_detail_last_update_label);
-		deviceLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
+		mDeviceLastUpdate = (TextView) view.findViewById(R.id.device_detail_last_update_label);
+		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
 
 		DeviceFeatures deviceFeatures = device.getType().getFeatures();
 
 		if (deviceFeatures.hasRssi()) {
 			LinearLayout signalLayout = (LinearLayout) view.findViewById(R.id.device_detail_signal_layout);
-			TextView deviceSignal = (TextView) view.findViewById(R.id.device_detail_signal_value);
-			deviceSignal.setText(String.format("%d%%", device.getNetworkQuality()));
+			mDeviceSignal = (TextView) view.findViewById(R.id.device_detail_signal_value);
+			mDeviceSignal.setText(String.format("%d%%", device.getNetworkQuality()));
 
 			signalLayout.setVisibility(LinearLayout.VISIBLE);
 		}
 
 		if (deviceFeatures.hasBattery()) {
 			LinearLayout batteryLayout = (LinearLayout) view.findViewById(R.id.device_detail_battery_layout);
-			TextView deviceBattery = (TextView) view.findViewById(R.id.device_detail_battery_value);
-			deviceBattery.setText(String.format("%d%%", device.getBattery()));
+			mDeviceBattery = (TextView) view.findViewById(R.id.device_detail_battery_value);
+			mDeviceBattery.setText(String.format("%d%%", device.getBattery()));
 
 			batteryLayout.setVisibility(LinearLayout.VISIBLE);
 		}
 
 		if (deviceFeatures.hasRefresh()) {
 			LinearLayout refreshLayout = (LinearLayout) view.findViewById(R.id.device_detail_refresh_layout);
-			TextView deviceRefresh = (TextView) view.findViewById(R.id.device_detail_refresh_value);
+			mDeviceRefresh = (TextView) view.findViewById(R.id.device_detail_refresh_value);
 			RefreshInterval refreshInterval = device.getRefresh();
 			if (refreshInterval != null) {
-				deviceRefresh.setText(refreshInterval.getStringInterval(mContext));
+				mDeviceRefresh.setText(refreshInterval.getStringInterval(mContext));
 			}
 
 			refreshLayout.setVisibility(LinearLayout.VISIBLE);
