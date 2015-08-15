@@ -267,6 +267,9 @@
 
 	<!--Device detail -->
 	<string name="device_detail_menu_edit_title">Edit device</string>
+	<string name="device_detail_module_title">Modules</string>
+	<string name="device_detail_list_modules_no_item_title">NO MODULES</string>
+	<string name="device_detail_label_led">LED status</string>
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Location</string>
 	<string name="module_edit_label_module_name">Name of module</string>

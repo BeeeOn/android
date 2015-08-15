@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,11 +22,15 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceFeatures;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
+
+import java.util.List;
 
 /**
  * @author martin on 4.8.2015.
@@ -48,6 +54,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	private TextView mDeviceBattery;
 	private TextView mDeviceRefresh;
 	private ImageView mDeviceLocationIcon;
+	private RecyclerView mRecyclerView;
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 
@@ -103,7 +110,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			mDeviceSignal = (TextView) view.findViewById(R.id.device_detail_signal_value);
 			mDeviceSignal.setText(String.format("%d%%", device.getNetworkQuality()));
 
-			signalLayout.setVisibility(LinearLayout.VISIBLE);
+			signalLayout.setVisibility(View.VISIBLE);
 		}
 
 		if (deviceFeatures.hasBattery()) {
@@ -111,7 +118,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			mDeviceBattery = (TextView) view.findViewById(R.id.device_detail_battery_value);
 			mDeviceBattery.setText(String.format("%d%%", device.getBattery()));
 
-			batteryLayout.setVisibility(LinearLayout.VISIBLE);
+			batteryLayout.setVisibility(View.VISIBLE);
 		}
 
 		if (deviceFeatures.hasRefresh()) {
@@ -122,14 +129,25 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 				mDeviceRefresh.setText(refreshInterval.getStringInterval(mContext));
 			}
 
-			refreshLayout.setVisibility(LinearLayout.VISIBLE);
+			refreshLayout.setVisibility(View.VISIBLE);
 		}
 
 		if (deviceFeatures.hasLed()) {
 			LinearLayout ledLayout = (LinearLayout) view.findViewById(R.id.device_detail_led_layout);
-			ledLayout.setVisibility(LinearLayout.VISIBLE);
+			ledLayout.setVisibility(View.VISIBLE);
 		}
 
+		List<Module> modules = device.getAllModules();
+		mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+		TextView emptyView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
+		DeviceModuleAdapter adapter = new DeviceModuleAdapter(mActivity, modules);
+		mRecyclerView.setAdapter(adapter);
+		
+		if (adapter.getItemCount() == 0) {
+			mRecyclerView.setVisibility(View.GONE);
+			emptyView.setVisibility(View.VISIBLE);
+		}
 		return view;
 	}
 
