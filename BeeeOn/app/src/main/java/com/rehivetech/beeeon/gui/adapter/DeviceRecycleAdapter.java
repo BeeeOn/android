@@ -121,10 +121,8 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 					deviceHolder.mAdditional.setVisibility(View.VISIBLE);
 				}
 
-				// setups background resource based on "selected"
-				deviceHolder.setSelectedBackground(isSelected(position));
-				// setups icon based on selection
-				deviceHolder.setSelectedIcon(isSelected(position), R.drawable.ic_mod_boiler_state);
+				// sets selected background && icon
+				deviceHolder.setSelected(isSelected(position), deviceHolder.mIcon, R.drawable.ic_mod_boiler_state);
 
 				break;
 
@@ -182,7 +180,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	/**
 	 * ViewHolder for Device data
 	 */
-	public class DeviceViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public class DeviceViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public TextView mTitle;
 		public ImageView mIcon;
 		public TextView mSubTitle;
@@ -201,34 +199,6 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 			itemView.setOnClickListener(this);
 			itemView.setOnLongClickListener(this);
-		}
-
-		/**
-		 * Based on item selection changes ImageView src & background
-		 * ONLY FOR OVAL_ITEM !
-		 *
-		 * TODO put to abstract parent
-		 * @param isSelected
-		 * @param defaultSrc
-		 */
-		public void setSelectedIcon(boolean isSelected, int defaultSrc){
-			if(isSelected){
-				mIcon.setImageResource(R.drawable.ic_action_accept);
-				mIcon.setBackgroundResource(R.drawable.oval_selected);
-			}
-			else{
-				mIcon.setImageResource(defaultSrc);
-				mIcon.setBackgroundResource(R.drawable.oval_primary);
-			}
-		}
-
-		/**
-		 * Returns background of item (if selected different, otherwise clickable)
-		 * TODO put to abstract parent
-		 * @param isSelected
-		 */
-		public void setSelectedBackground(boolean isSelected) {
-			this.itemView.setBackgroundResource(isSelected ? R.color.gray_light : mSelectableItemBackgroundDrawable);
 		}
 
 		@Override

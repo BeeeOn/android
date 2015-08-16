@@ -2,8 +2,11 @@ package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseBooleanArray;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.rehivetech.beeeon.R;
 
@@ -99,4 +102,64 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	public int getFirstSelectedItem(){
 		return mSelectedItems.keyAt(0);
 	}
+
+	public abstract class SelectableViewHolder extends RecyclerView.ViewHolder{
+
+		public SelectableViewHolder(View itemView) {
+			super(itemView);
+		}
+
+		/**
+		 * Returns background of item (if selected different, otherwise clickable)
+		 * @param isSelected
+		 */
+		protected void setSelectedBackground(boolean isSelected) {
+			this.itemView.setBackgroundResource(isSelected ? R.color.gray_light : mSelectableItemBackgroundDrawable);
+		}
+
+		/**
+		 * Based on item selection changes ImageView src & background
+		 * ONLY FOR OVAL_ITEM !
+		 *
+		 * @param icon
+		 * @param isSelected
+		 * @param defaultSrc
+		 */
+		protected void setSelectedIcon(ImageView icon, boolean isSelected, int defaultSrc){
+			if(isSelected){
+				icon.setImageResource(R.drawable.ic_action_accept);
+				icon.setBackgroundResource(R.drawable.oval_selected);
+			}
+			else{
+				icon.setImageResource(defaultSrc);
+				icon.setBackgroundResource(R.drawable.oval_primary);
+			}
+		}
+
+		/**
+		 * Sets selected without icon
+		 * @param isSelected
+		 */
+		public void setSelected(boolean isSelected){
+			setSelected(isSelected, null, 0);
+		}
+
+		/**
+		 * Sets selected item with icon
+		 * @param isSelected
+		 * @param icon
+		 * @param defaultSrc
+		 */
+		public void setSelected(boolean isSelected, @Nullable ImageView icon, int defaultSrc){
+			// setups background resource based on "selected"
+			setSelectedBackground(isSelected);
+			// setups icon based on selection
+			if(icon != null && defaultSrc > 0) {
+				setSelectedIcon(icon, isSelected, defaultSrc);
+			}
+		}
+
+	}
+
+
 }
