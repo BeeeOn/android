@@ -288,7 +288,7 @@ public class NavDrawerMenu {
 			// MANAGMENT
 			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_management)));
 			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_gate), R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_GATEWAY, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_GATEWAY)));
-			mMenuAdapter.addItem(new LocationMenuItem("Správa zařízení", R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_DEVICES, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DEVICES)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_devices), R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_DEVICES, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DEVICES)));
 			
 		} else {
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getString(R.string.nav_drawer_menu_no_gates)));

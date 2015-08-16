@@ -13,8 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,12 +44,12 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	@SuppressWarnings("unused")
 	private static final String TAG = DevicesListFragment.class.getSimpleName();
 
-	private static final String KEY_LOC_ID = "location_id";
+	//private static final String KEY_LOC_ID = "location_id";
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_SELECTED_ITEMS = "selected_items";
 
-	private TextView mNoItemsTextView;
 	private @Nullable ActionMode mActionMode;
+	private TextView mNoItemsTextView;
 	private Button mRefreshButton;
 
 	private DeviceRecycleAdapter mDeviceAdapter;
@@ -92,6 +90,14 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_devices_list, container, false);
+
+		// setup refresh icon callback
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				doReloadDevicesTask(mActiveGateId, true, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+			}
+		});
 
 		// refresh button when no items shown
 		mRefreshButton = (Button) rootView.findViewById(R.id.devices_list_refresh_button);
@@ -218,7 +224,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 
 		mDeviceAdapter.updateData(devicesLocations);
-
 		handleEmptyViewVisibility(haveDevices);
 	}
 
@@ -327,10 +332,11 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	/**
 	 * Handle item click -> start new Activity
 	 * @param position
-	 * @param viewType
+	 * @param viewType ViewType based on DeviceRecyclerAdapter.getItemViewType()
 	 */
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
+		// check if we actually clicked DEVICE
 		if(viewType != DeviceRecycleAdapter.TYPE_DEVICE){
 			Toast.makeText(getActivity(), R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
 			return;
@@ -355,6 +361,11 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 */
 	@Override
 	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
+		Controller controller = Controller.getInstance(getActivity());
+		// we have to check if user has permission to delete item (so if not, we disable longclick)
+		Gate tmpGate = controller.getGatesModel().getGate(mActiveGateId);
+		if(tmpGate == null || !controller.isUserAllowed(tmpGate.getRole())) return false;
+
 		if(mActionMode == null) {
 			mActionMode = mActivity.startSupportActionMode(new ActionModeEditModules());
 		}
@@ -409,7 +420,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 							.setTitle(String.format(getString(R.string.activity_fragment_menu_dialog_title_remove), dev.getType().getTypeName()))
 							.setMessage(R.string.module_list_dialog_message_unregister_device)
 							.setNegativeButtonText(R.string.activity_fragment_btn_cancel)
-							.setPositiveButtonText(R.string.activity_fragment_menu_btn_remove)
+							.setPositiveButtonText(R.string.module_list_btn_unregister)
 							.setTargetFragment(DevicesListFragment.this, 1)		// needs to be here so that we can catch button listeners
 							.show();
 				}
