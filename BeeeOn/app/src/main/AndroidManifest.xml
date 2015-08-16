@@ -169,14 +169,7 @@
 
 		<activity
 			android:name=".gui.activity.DevicesListActivity"
-			android:label="@string/nav_drawer_menu_menu_devices"
-			android:parentActivityName=".gui.activity.MainActivity"
-			>
-			<meta-data
-				android:name="android.support.PARENT_ACTIVITY"
-				android:value=".gui.activity.MainActivity"
-				/>
-		</activity>
+			android:label="@string/nav_drawer_menu_menu_devices" />
 
 		<!-- WIDGETS -->
 		<service

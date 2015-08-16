@@ -2,6 +2,8 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -37,6 +39,14 @@ public class DevicesListActivity extends BaseApplicationActivity {
 					)
 					.commit();
 		}
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// because throught AndroidManifest it's not working on old devices
+		if(item.getItemId() == android.R.id.home) {
+			finish();
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }
