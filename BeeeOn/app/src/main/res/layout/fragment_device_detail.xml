@@ -101,10 +101,6 @@
 		android:orientation="vertical"
 		android:layout_marginTop="35dp"
 		android:layout_marginBottom="10dp"
-		android:paddingLeft="@dimen/activity_horizontal_margin"
-		android:paddingStart="@dimen/activity_horizontal_margin"
-		android:paddingEnd="@dimen/activity_horizontal_margin"
-		android:paddingRight="@dimen/activity_horizontal_margin"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 		<HorizontalScrollView
@@ -313,24 +309,54 @@
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_marginLeft="16dp"
+			android:layout_marginStart="16dp"
+			android:layout_marginBottom="16dp"
 			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 			android:text="@string/device_detail_module_title"/>
 
 
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/device_detail_modules_list"
+		<LinearLayout
+			android:id="@+id/device_detail_viewpager_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:scrollbars="vertical"/>
+			android:orientation="vertical"
+			android:visibility="gone">
 
-		<TextView
-			android:id="@+id/device_detrail_module_list_empty_view"
-			android:layout_width="wrap_content"
-			android:layout_height="100dp"
-			android:visibility="gone"
-			android:gravity="center_vertical"
-			android:layout_gravity="center_horizontal"
-			android:text="@string/device_detail_list_modules_no_item_title"/>
+			<android.support.design.widget.TabLayout
+				android:id="@+id/device_detail_group_tab_layout"
+				style="@style/ModuleGroupTabLayout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"/>
+
+			<android.support.v4.view.ViewPager
+				android:id="@+id/device_detail_group_pager"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"/>
+
+		</LinearLayout>
+
+		<LinearLayout
+			android:id="@+id/device_detail_recyclerview_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<android.support.v7.widget.RecyclerView
+				android:id="@+id/device_detail_modules_list"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:scrollbars="vertical"/>
+
+			<TextView
+				android:id="@+id/device_detrail_module_list_empty_view"
+				android:layout_width="wrap_content"
+				android:layout_height="100dp"
+				android:visibility="gone"
+				android:gravity="center_vertical"
+				android:layout_gravity="center_horizontal"
+				android:text="@string/device_detail_list_modules_no_item_title"/>
+		</LinearLayout>
 	</LinearLayout>
 
 	<android.support.design.widget.FloatingActionButton

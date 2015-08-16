@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,6 +35,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -137,16 +143,26 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			ledLayout.setVisibility(View.VISIBLE);
 		}
 
-		List<Module> modules = device.getAllModules();
-		mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-		TextView emptyView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
-		DeviceModuleAdapter adapter = new DeviceModuleAdapter(mActivity, modules);
-		mRecyclerView.setAdapter(adapter);
-		
-		if (adapter.getItemCount() == 0) {
-			mRecyclerView.setVisibility(View.GONE);
-			emptyView.setVisibility(View.VISIBLE);
+		List<String> moduleGroups = device.getModulesGroups(mContext);
+
+		if (moduleGroups.size() == 1) {
+			List<Module> modules = device.getAllModules();
+			mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
+			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+			TextView emptyView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
+			DeviceModuleAdapter adapter = new DeviceModuleAdapter(mActivity, modules);
+			mRecyclerView.setAdapter(adapter);
+
+			if (adapter.getItemCount() == 0) {
+				mRecyclerView.setVisibility(View.GONE);
+				emptyView.setVisibility(View.VISIBLE);
+			}
+		} else {
+			view.findViewById(R.id.device_detail_recyclerview_layout).setVisibility(View.GONE);
+			view.findViewById(R.id.device_detail_viewpager_layout).setVisibility(View.VISIBLE);
+			ViewPager pager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
+			final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
+			setupViewPager(pager, tabLayout, moduleGroups);
 		}
 		return view;
 	}
@@ -169,5 +185,44 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 		super.onCreateOptionsMenu(menu, inflater);
 
 		inflater.inflate(R.menu.activity_device_detail_menu, menu);
+	}
+
+	private void setupViewPager(ViewPager viewPager, TabLayout tabLayout, List<String> moduleGroups) {
+		ModuleGroupPagerAdapter adapter = new ModuleGroupPagerAdapter(getChildFragmentManager());
+		for (String group : moduleGroups) {
+			DeviceDetailGroupModuleFragment fragment = DeviceDetailGroupModuleFragment.newInstance(mGateId, mDeviceId, group);
+			adapter.addFragment(fragment, group);
+		}
+		viewPager.setAdapter(adapter);
+		tabLayout.setupWithViewPager(viewPager);
+	}
+
+	static class ModuleGroupPagerAdapter extends FragmentPagerAdapter {
+		private final List<Fragment> mFragments = new ArrayList<>();
+		private final List<String> mFragmentTitles = new ArrayList<>();
+
+		public ModuleGroupPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return mFragments.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return mFragments.size();
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return mFragmentTitles.get(position);
+		}
+
+		public void addFragment(Fragment fragment, String title) {
+			mFragments.add(fragment);
+			mFragmentTitles.add(title);
+		}
 	}
 }
