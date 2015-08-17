@@ -85,7 +85,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		refresh = mPrefs.getInt(getProperty(PREF_REFRESH), 0);
 
 		mModuleType = ModuleType.fromTypeId(type);
-		moduleValue = BaseValue.createFromModuleType(mModuleType, null);
+		moduleValue = BaseValue.createFromModuleType(mModuleType, null, null);
 
 		// we don't set value when creating new widget
 		if (!rawValue.isEmpty()) {

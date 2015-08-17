@@ -111,7 +111,7 @@ public class WatchdogListAdapter extends BaseAdapter {
 					String par_treshold = rule.getParam(Watchdog.PAR_TRESHOLD);
 					if (par_treshold != null) {
 						if (mUnitsHelper != null) {
-							BaseValue valueObj = BaseValue.createFromModuleType(moduleFirst.getType(), null);
+							BaseValue valueObj = BaseValue.createFromModuleType(moduleFirst.getType(), null, null);
 							valueObj.setValue(par_treshold);
 							holder.ItemTreshold.setText(mUnitsHelper.getStringValueUnit(valueObj));
 						} else {
