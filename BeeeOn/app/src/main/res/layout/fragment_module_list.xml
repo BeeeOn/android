@@ -4,19 +4,13 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/module_list_swipe_layout"
+	<se.emilsjolander.stickylistheaders.StickyListHeadersListView
+		android:id="@+id/module_list_stickylistheader"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-
-		<se.emilsjolander.stickylistheaders.StickyListHeadersListView
-			android:id="@+id/module_list_stickylistheader"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:divider="@null"
-			android:dividerHeight="0dp">
-		</se.emilsjolander.stickylistheaders.StickyListHeadersListView>
-	</android.support.v4.widget.SwipeRefreshLayout>
+		android:layout_height="match_parent"
+		android:divider="@null"
+		android:dividerHeight="0dp">
+	</se.emilsjolander.stickylistheaders.StickyListHeadersListView>
 
 	<LinearLayout
 		android:layout_width="match_parent"

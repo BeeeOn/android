@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -47,7 +46,6 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	private MainActivity mActivity;
 
-	private SwipeRefreshLayout mSwipeLayout;
 	private ListView mWatchdogListView;
 	private WatchdogListAdapter mWatchdogAdapter;
 	private Button mRefreshBtn;
@@ -105,32 +103,22 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		super.onActivityCreated(savedInstanceState);
 		Log.d(TAG, "onActivityCreated()");
 
-		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.watchdog_list_swipe_layout);
-
 		initLayout();
 
-		// Init swipe-refreshig layout
-		if (mSwipeLayout == null) {
-			return;
-		}
-		mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
-			public void onRefresh() {
+			public void onClick(View v) {
 				refreshListListener();
 			}
 		});
-
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 	}
 
 	private void refreshListListener() {
 		Gate gate = Controller.getInstance(mActivity).getActiveGate();
 		if (gate == null) {
-			mSwipeLayout.setRefreshing(false);
 			return;
 		}
-		doReloadWatchdogsTask(gate.getId(), true, true);
+		doReloadWatchdogsTask(gate.getId(), true);
 	}
 
 	@Override
@@ -148,7 +136,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		// if we don't have any data first time shows button to refresh
 		redrawRules();
 		// try to reload data
-		doReloadWatchdogsTask(mActiveGateId, false, false);
+		doReloadWatchdogsTask(mActiveGateId, false);
 	}
 
 	/**
@@ -257,17 +245,10 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 		if (!haveWatchdogs) {
 			mRefreshBtn.setVisibility(View.VISIBLE);
-
 			mWatchdogListView.setVisibility(View.GONE);
-			if (mSwipeLayout != null) {
-				mSwipeLayout.setVisibility(View.GONE);
-			}
 		} else {
 			mRefreshBtn.setVisibility(View.GONE);
 			mWatchdogListView.setVisibility(View.VISIBLE);
-			if (mSwipeLayout != null) {
-				mSwipeLayout.setVisibility(View.VISIBLE);
-			}
 		}
 
 		mWatchdogAdapter.updateData(mWatchdogs);
@@ -277,8 +258,6 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	private void doSaveWatchdogTask(Watchdog watchdog, final SwitchCompat sw) {
 		// disable so that nobody can change it now
 		sw.setEnabled(false);
-		// progress bar shows automatically; other option is to set Swipe refreshing
-		//mSwipeLayout.setRefreshing(true);
 
 		watchdog.setEnabled(sw.isChecked());
 
@@ -288,8 +267,6 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 			public void onExecute(boolean success) {
 				//Toast.makeText(mActivity, getResources().getString(success ? R.string.toast_success_save_data : R.string.toast_fail_save_data), Toast.LENGTH_LONG).show();
 				sw.setEnabled(true);
-				// other option is to set Swipe refreshing
-				//mSwipeLayout.setRefreshing(false);
 			}
 		});
 
@@ -302,7 +279,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	 *
 	 * @param gateId
 	 */
-	public void doReloadWatchdogsTask(String gateId, boolean forceReload, final boolean isSwipeRefresh) {
+	public void doReloadWatchdogsTask(String gateId, boolean forceReload) {
 		Log.d(TAG, "reloadWatchdogsTask()");
 
 		ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, forceReload, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
@@ -311,8 +288,6 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 			@Override
 			public void onExecute(boolean success) {
 				redrawRules();
-				if (isSwipeRefresh)
-					mSwipeLayout.setRefreshing(false);
 			}
 		});
 

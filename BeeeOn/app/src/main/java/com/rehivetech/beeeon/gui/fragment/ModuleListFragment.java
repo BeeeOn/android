@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -24,12 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
-import com.melnykov.fab.ScrollDirectionListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
+import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.ModuleListAdapter;
@@ -61,8 +57,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 	private static final String LCTN = "lastlocation";
 	private static final String GATE_ID = "lastGateId";
 
-
-	private SwipeRefreshLayout mSwipeLayout;
 	private MainActivity mActivity;
 
 	private ModuleListAdapter mModuleAdapter;
@@ -133,26 +127,18 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 		redrawModules();
 
-		// Init swipe-refreshig layout
-		mSwipeLayout = (SwipeRefreshLayout) mActivity.findViewById(R.id.module_list_swipe_layout);
-		if (mSwipeLayout == null) {
-			return;
-		}
-		mSwipeLayout.setOnRefreshListener(new OnRefreshListener() {
-
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
-			public void onRefresh() {
+			public void onClick(View v) {
 				Log.d(TAG, "Refreshing list of modules");
 				Gate gate = Controller.getInstance(mActivity).getActiveGate();
 				if (gate == null) {
-					mSwipeLayout.setRefreshing(false);
 					return;
 				}
 				mActivity.redraw();
 				doReloadDevicesTask(gate.getId(), true);
 			}
 		});
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 	}
 
 	public void onPause() {
@@ -181,7 +167,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 		mView = getView();
 		// get UI elements
-		mSwipeLayout = (SwipeRefreshLayout) mView.findViewById(R.id.module_list_swipe_layout);
 		final StickyListHeadersListView moduleList = (StickyListHeadersListView) mView.findViewById(R.id.module_list_stickylistheader);
 		TextView noItem = (TextView) mView.findViewById(R.id.module_list_nomodules_text);
 		Button refreshBtn = (Button) mView.findViewById(R.id.module_list_refresh_button);
@@ -246,8 +231,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			noItem.setText(R.string.module_list_no_gate_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
 			moduleList.setVisibility(View.GONE);
-			if (mSwipeLayout != null)
-				mSwipeLayout.setVisibility(View.GONE);
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuLabels.add(mActivity.getString(R.string.main_action_gate_add));
@@ -272,8 +255,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			noItem.setText(R.string.module_list_no_device_cap);
 			refreshBtn.setVisibility(View.VISIBLE);
 			moduleList.setVisibility(View.GONE);
-			if (mSwipeLayout != null)
-				mSwipeLayout.setVisibility(View.GONE);
 
 			refreshBtn.setOnClickListener(refreshNoModule);
 			// FAB
@@ -294,8 +275,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			noItem.setVisibility(View.GONE);
 			refreshBtn.setVisibility(View.GONE);
 			moduleList.setVisibility(View.VISIBLE);
-			if (mSwipeLayout != null)
-				mSwipeLayout.setVisibility(View.VISIBLE);
+
 			// FAB
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
 			mFABMenuIcon.add(R.drawable.ic_add_white_24dp);
@@ -343,32 +323,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			});
 
 		}
-
-		AbsListView.OnScrollListener ListListener = new AbsListView.OnScrollListener() {
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
-
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				int topRowVerticalPosition = (moduleList == null || moduleList.getListChildCount() == 0) ?
-						0 : moduleList.getListChildAt(0).getTop();
-				mSwipeLayout.setEnabled((topRowVerticalPosition >= 0));
-			}
-		};
-
-		floatingActionButton.attachToListView(moduleList.getWrappedList(), new ScrollDirectionListener() {
-			@Override
-			public void onScrollDown() {
-
-			}
-
-			@Override
-			public void onScrollUp() {
-
-			}
-		}, ListListener);
-
 
 		if (haveModules) {
 			// Capture listview menu item click
@@ -440,7 +394,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 					return;
 				Log.d(TAG, "Success -> refresh GUI");
 				mActivity.redraw();
-				mSwipeLayout.setRefreshing(false);
 			}
 		});
 

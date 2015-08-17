@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -99,7 +98,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
 	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	private SwipeRefreshLayout mSwipeLayout;
 
 	private Button mValueSet;
 
@@ -145,6 +143,18 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.fragment_module_detail, container, false);
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				doReloadDevicesTask(mGateId, true);
+			}
+		});
 	}
 
 	@Override
@@ -357,16 +367,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		if (controller.isUserAllowed(gate.getRole())) {
 			mFABedit.setVisibility(View.VISIBLE);
 		}
-
-		// Init swipe-refreshig layout
-		mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.module_detail_swipe_layout);
-		mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				doReloadDevicesTask(mGateId, true);
-			}
-		});
-		mSwipeLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
 	}
 
 	private void addGraphView(@NonNull final Module module) {
@@ -519,9 +519,6 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		reloadDevicesTask.setListener(new ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (mSwipeLayout != null) {
-					mSwipeLayout.setRefreshing(false);
-				}
 				if (success) {
 					initLayout();
 					doLoadGraphData();
