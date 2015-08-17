@@ -4,6 +4,8 @@
 	<!-- Application name -->
 	<!--<string name="app_name" translatable="false">BeeeOn Beta</string>-->
 
+	<string name="empty" translatable="false"/>
+
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifications</string>
 	<string name="manifest_action_watchdog">Watchdog</string>
@@ -20,9 +22,6 @@
 	<string name="manifest_title_widget_module_small">BeeeOn module small</string>
 	<string name="manifest_title_widget_module_large">BeeeOn module large</string>
 	<string name="manifest_title_widget_module_medium">BeeeOn module medium</string>
-
-	<!-- Unit blank -->
-	<string name="unit_blank_blank" translatable="false"/>
 
 	<!-- Demo network -->
 	<string name="demo_network_demo_mode">DEMO MODE</string>
