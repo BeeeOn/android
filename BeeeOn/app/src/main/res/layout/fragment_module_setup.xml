@@ -1,109 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:layout_width="fill_parent"
-			  android:layout_height="wrap_content"
-			  android:background="@color/gray_light"
-			  android:orientation="vertical">
-
-	<ScrollView
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-
-		<LinearLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+			xmlns:tools="http://schemas.android.com/tools"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/gray_light"
 			android:orientation="vertical"
+			android:padding="@dimen/adddevice_layout_padding">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:scrollbars="vertical"
+		android:scrollbarAlwaysDrawVerticalTrack="true"
+		>
+
+		<TextView
+			android:id="@+id/module_setup_header_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="5dp"
+			tools:text="Regulator VPT v1.0"
+			android:textColor="@color/beeeon_primary_text"
+			android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+		<TextView
+			android:id="@+id/module_setup_header_manufacturer"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="15dp"
+			tools:text="Thermona"
+			android:textColor="@color/beeeon_secondary_text"
+			android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+		<TextView
+			android:id="@+id/module_setup_info_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:scrollbars="vertical"
-			android:scrollbarAlwaysDrawVerticalTrack="true"
-			>
+			android:layout_marginBottom="15dp"
+			android:text="@string/device_setup_device_info_text"
+			android:textColor="@color/beeeon_secondary_text"
+			android:textIsSelectable="false"/>
 
-			<TextView
-				android:id="@+id/module_setup_info_text"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="10dp"
-				android:layout_marginLeft="10dp"
-				android:layout_marginRight="10dp"
-				android:text="@string/module_setup_module_info_text"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:textColor="@color/beeeon_secondary_text"
-				android:textIsSelectable="false"/>
+		<View
+			style="@style/BeeeOn.Divider.Full"
+			android:layout_marginBottom="10dp" />
 
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:orientation="vertical">
+		<TextView
+			android:id="@+id/module_setup_header_location"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/device_setup_device_header_location"
+			android:textColor="@color/beeeon_primary_text"
+			android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-				<TextView
-					android:id="@+id/module_setup_header_names"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="5dp"
-					android:text="@string/module_setup_module_header_names"
-					android:textColor="@color/beeeon_primary_text"
-					android:textAppearance="?android:attr/textAppearanceMedium"/>
+		<Spinner
+			android:id="@+id/module_setup_spinner_choose_location"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="5dp"/>
 
-				<ListView
-					android:id="@+id/module_setup_name_listview"
-					android:layout_width="match_parent"
-					android:layout_height="0dp"
-					android:layout_weight="1"
-					android:divider="@null"
-					android:layout_marginBottom="10dp"
-					android:layout_marginLeft="10dp"
-					android:layout_marginRight="10dp">
-				</ListView>
-			</LinearLayout>
-
-			<TextView
-				android:id="@+id/module_setup_header_location"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="5dp"
-				android:text="@string/module_setup_module_header_location"
-				android:textColor="@color/beeeon_primary_text"
-				android:textAppearance="?android:attr/textAppearanceMedium"/>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="15dp"
+			android:orientation="horizontal">
 
 			<Spinner
-				android:id="@+id/module_setup_spinner_choose_location"
+				android:id="@+id/module_setup_spinner_choose_new_location_icon"
+				android:layout_width="60dp"
+				android:layout_height="match_parent"/>
+
+			<EditText
+				android:id="@+id/module_setup_new_location_name"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginLeft="10dp"
-				android:layout_marginRight="10dp"
-				android:layout_marginBottom="15dp"/>
-
-			<TextView
-				android:id="@+id/module_setup_or_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="20dp"
-				android:gravity="center_horizontal"
-				android:text="@string/module_setup_or"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:textColor="@color/beeeon_secondary_text"
-				android:textIsSelectable="false"/>
-
-			<LinearLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginBottom="15dp"
-				android:orientation="horizontal">
-
-				<Spinner
-					android:id="@+id/module_setup_spinner_choose_new_location_icon"
-					android:layout_width="60dp"
-					android:layout_marginLeft="10dp"
-					android:layout_height="match_parent"/>
-
-				<EditText
-					android:id="@+id/module_setup_new_location_name"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:ems="10"
-					android:hint="@string/module_edit_setup_new_location_hint"
-					android:inputType="textNoSuggestions"
-					android:layout_marginRight="10dp"/>
-			</LinearLayout>
+				android:ems="10"
+				android:hint="@string/module_edit_setup_new_location_hint"
+				android:inputType="text"/>
 		</LinearLayout>
-	</ScrollView>
-</LinearLayout>
+	</LinearLayout>
+</ScrollView>

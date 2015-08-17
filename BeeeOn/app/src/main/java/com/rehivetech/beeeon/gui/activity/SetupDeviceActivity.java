@@ -5,13 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +20,6 @@ import com.rehivetech.beeeon.gui.adapter.SetupDeviceFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
@@ -35,7 +31,10 @@ import java.util.EnumSet;
 
 public class SetupDeviceActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupDeviceActivity.class.getSimpleName();
-	private Gate mPairGate;
+
+	public static final String EXTRA_GATE_ID = "gate_id";
+
+	private String mGateId;
 
 	private SetupDeviceFragment mFragment;
 
@@ -46,7 +45,12 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 		setupToolbar(R.string.device_setup_title_setup_device);
 
-		mPairGate = Controller.getInstance(this).getActiveGate();
+		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
+		if (mGateId == null) {
+			Toast.makeText(this, R.string.gate_detail_toast_not_specified_gate, Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 
 		SetupDeviceFragmentAdapter adapter = new SetupDeviceFragmentAdapter(getSupportFragmentManager());
 
@@ -60,7 +64,6 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 		initButtons();
 	}
-
 
 	private void initButtons() {
 		Button skipBtn = (Button) findViewById(R.id.base_guide_add_gate_skip_button);
@@ -85,31 +88,13 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 			@Override
 			public void onClick(View v) {
 				Spinner spinner = mFragment.getSpinner();
-				ListView listOfName = mFragment.getListOfName();
 				TextView newLocation = mFragment.getNewLocation();
 				Spinner newIconSpinner = mFragment.getNewIconSpinner();
-				Device newDevice = Controller.getInstance(SetupDeviceActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mPairGate.getId()).get(0);
-
-				// Controll if Names arent empty
-				for (int i = 0; i < newDevice.getAllModules().size(); i++) {
-					// Get new names from EditText
-					String name = ((EditText) listOfName.getChildAt(i).findViewById(R.id.list_module_setup_sensor_item_name)).getText().toString();
-					Log.d(TAG, "Name of " + i + " is" + name);
-					if (name.isEmpty()) {
-						Toast.makeText(SetupDeviceActivity.this, getString(R.string.device_setup_toast_empty_module_name), Toast.LENGTH_LONG).show();
-						return;
-					}
-					// Set this new name to module
-					// FIXME: rework this?
-					// newDevice.getAllModules().get(i).setName(name);
-
-				}
+				Device newDevice = Controller.getInstance(SetupDeviceActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(0);
 
 				Location location = null;
-				// last location - means new one
 				if (spinner.getSelectedItemPosition() == spinner.getCount() - 1) {
-
-					// check new location name
+					// last location - means new one, so check its name
 					if (newLocation != null && newLocation.length() < 1) {
 						Toast.makeText(SetupDeviceActivity.this, getString(R.string.device_setup_toast_need_module_location_name), Toast.LENGTH_LONG).show();
 						return;
@@ -119,26 +104,23 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 						return;
 					}
 
-					location = new Location(Location.NEW_LOCATION_ID, newLocation.getText().toString(), mPairGate.getId(), ((Location.LocationIcon) newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).getId());
-
+					location = new Location(Location.NEW_LOCATION_ID, newLocation.getText().toString(), mGateId, ((Location.LocationIcon) newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).getId());
 				} else {
 					location = (Location) spinner.getSelectedItem();
 				}
 
-				// Set location to mDevice
+				// Set location to device
 				newDevice.setLocationId(location.getId());
 
-				// Set that mDevice was initialized
+				// Set that device was initialized
 				newDevice.setInitialized(true);
 
-				// Save that mDevice
-				Log.d(TAG, String.format("InitializeDevice - mDevice: %s, loc: %s", newDevice.getId(), location.getId()));
+				// Save that device
+				Log.d(TAG, String.format("InitializeDevice - device: %s, loc: %s", newDevice.getId(), location.getId()));
 				EnumSet<Module.SaveModule> what = EnumSet.of(Module.SaveModule.SAVE_LOCATION, Module.SaveModule.SAVE_NAME, Module.SaveModule.SAVE_INITIALIZED);
 				doInitializeDeviceTask(new Device.DataPair(newDevice, location, what));
 			}
 		});
-
-
 	}
 
 	public void setFragment(SetupDeviceFragment fragment) {

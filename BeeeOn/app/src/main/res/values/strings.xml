@@ -242,15 +242,11 @@
 	<string name="device_add_tut_text_add_module">Pull out battery stripe</string>
 	<string name="device_add_waiting">Waiting for start</string>
 
-	<!-- Module setup -->
-	<string name="module_setup_module_header_location">Location</string>
-	<string name="module_setup_module_header_names">Device names</string>
-	<string name="module_setup_module_info_text">Setup your new module which was activated at</string>
-	<string name="module_setup_or">or</string>
-	<string name="module_setup_setup_module">Setup module</string>
-
-	<!-- Module setup list -->
-	<string name="module_setup_list_module_set_name">Set name of module</string>
+	<!-- Device setup -->
+	<string name="device_setup_device_header_location">Location</string>
+	<string name="device_setup_device_info_text">Device was connected at</string>
+	<string name="device_setup_or">or</string>
+	<string name="device_setup_setup_device">Setup device</string>
 
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Remove module</string>

@@ -235,15 +235,11 @@
 	<string name="device_add_tut_title_add_device">Vytáhněte izolační proužek baterií</string>
 	<string name="device_add_waiting">Čekám na start</string>
 
-	<!-- Module setup -->
-	<string name="module_setup_module_header_location">Umístění</string>
-	<string name="module_setup_module_header_names">Název zařízení</string>
-	<string name="module_setup_module_info_text">Nastavte zařízení inicializován v</string>
-	<string name="module_setup_or">nebo</string>
-	<string name="module_setup_setup_module">Nastavte zařízení</string>
-
-	<!-- Module setup list -->
-	<string name="module_setup_list_module_set_name">Nastavte název zařízení</string>
+	<!-- Devie setup -->
+	<string name="device_setup_device_header_location">Umístění</string>
+	<string name="device_setup_device_info_text">Zařízení bylo připojeno v</string>
+	<string name="device_setup_or">nebo</string>
+	<string name="device_setup_setup_device">Nastavte zařízení</string>
 
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Odstranit zařízení</string>

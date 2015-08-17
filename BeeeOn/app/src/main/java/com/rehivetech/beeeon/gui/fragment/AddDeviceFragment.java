@@ -24,8 +24,8 @@ import com.rehivetech.beeeon.util.Log;
 public class AddDeviceFragment extends TrackFragment {
 	private static final String TAG = AddDeviceFragment.class.getSimpleName();
 	private static final String TIMER_VALUE_PAUSE = "AddDeviceTimerValueOnPause";
-	private static final String TIMER_BOOL_PAUSE = "AddDeviceTimerBooleanOnPause";
 	private static final String KEY_GATE_ID = "Gate_ID";
+
 	private long mStartTimeMSec = 0;
 
 	private OnAddDeviceListener mCallback;
@@ -151,6 +151,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 					// go to setup uninit device
 					Intent intent = new Intent(getActivity(), SetupDeviceActivity.class);
+					intent.putExtra(SetupDeviceActivity.EXTRA_GATE_ID, mGateId);
 					startActivityForResult(intent, Constants.SETUP_DEVICE_REQUEST_CODE);
 				} else {
 					Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();

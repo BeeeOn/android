@@ -235,15 +235,11 @@
 	<string name="device_add_tut_title_add_device">Vytiahnite izolačný prúžok batérii</string>
 	<string name="device_add_waiting">Čakám na štart</string>
 
-	<!-- Module setup -->
-	<string name="module_setup_module_header_location">Umiestnenie</string>
-	<string name="module_setup_module_header_names">Názov zariadení</string>
-	<string name="module_setup_module_info_text">Nastavte zaradenie inicializované v</string>
-	<string name="module_setup_or">alebo</string>
-	<string name="module_setup_setup_module">Nastavte zaradenie</string>
-
-	<!-- Module setup list -->
-	<string name="module_setup_list_module_set_name">Nastavte názov zariadenia</string>
+	<!-- Devie setup -->
+	<string name="device_setup_device_header_location">Umiestnenie</string>
+	<string name="device_setup_device_info_text">Zaradenie bolo pripojeno v</string>
+	<string name="device_setup_or">alebo</string>
+	<string name="device_setup_setup_device">Nastavte zaradenie</string>
 
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Odstrániť zariadenie</string>

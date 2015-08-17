@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.EditText;
 import android.widget.LinearLayout.LayoutParams;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,24 +21,20 @@ import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SetupDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
-import com.rehivetech.beeeon.gui.adapter.SetupModuleListAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SetupDeviceFragment extends TrackFragment {
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	public SetupDeviceActivity mActivity;
 	private View mView;
-
-	private static final String TAG = MainActivity.class.getSimpleName();
-	private static final int NAME_ITEM_HEIGHT = 56;
 
 	private List<Device> mNewDevices;
 
@@ -60,7 +55,6 @@ public class SetupDeviceFragment extends TrackFragment {
 		super.onCreate(savedInstanceState);
 
 		// Get activity and controller
-
 		Controller controller = Controller.getInstance(mActivity);
 
 		Gate gate = controller.getActiveGate();
@@ -70,9 +64,7 @@ public class SetupDeviceFragment extends TrackFragment {
 		}
 		mNewDevices = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(gate.getId());
 
-		// TODO: sent as parameter if we want first uninitialized module or some
-		// module with particular id
-
+		// TODO: sent as parameter if we want first uninitialized module or some module with particular id
 
 		// Create the AlertDialog object and return it
 	}
@@ -97,21 +89,8 @@ public class SetupDeviceFragment extends TrackFragment {
 
 
 	private void initViews() {
-
-		Controller controller = Controller.getInstance(mActivity);
-		// Get GUI elements
-		final ListView listOfName = (ListView) mView.findViewById(R.id.module_setup_name_listview);
-		final Spinner spinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location);
-		final TextView time = (TextView) mView.findViewById(R.id.module_setup_info_text);
-
-		// Create gate for setting names of new sensors
-		SetupModuleListAdapter listAdapter = new SetupModuleListAdapter(mActivity, mNewDevices.get(0));
-		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
-
-		// Set layout to DataAdapter for locations
-		dataAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
-
 		// Set listener for hide or unhide layout for add new location
+		final Spinner spinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -135,27 +114,33 @@ public class SetupDeviceFragment extends TrackFragment {
 			}
 		});
 
+		// Set layout to DataAdapter for locations
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
+		dataAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
+		spinner.setAdapter(dataAdapter);
+
+
+		Device device = mNewDevices.get(0);
+
+		TextView name = (TextView) mView.findViewById(R.id.module_setup_header_name);
+		name.setText(getString(device.getType().getNameRes()));
+
+		TextView manufacturer = (TextView) mView.findViewById(R.id.module_setup_header_manufacturer);
+		manufacturer.setText(getString(device.getType().getManufacturerRes()));
+
+		Controller controller = Controller.getInstance(mActivity);
+
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = controller.getUserSettings();
 
-		TimeHelper timeHelper = (prefs == null) ? null : new TimeHelper(prefs);
-
-		// Set involved time of mDevice
-		if (timeHelper != null) {
-			Device device = mNewDevices.get(0);
+		if (prefs != null) {
+			TimeHelper timeHelper = new TimeHelper(prefs);
 			Gate gate = controller.getGatesModel().getGate(device.getGateId());
+
+			// Set involved time of mDevice
+			TextView time = (TextView) mView.findViewById(R.id.module_setup_info_text);
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getPairedTime(), gate)));
 		}
-
-		// Set involved time of mDevice
-
-		// Set gate to ListView and to Spinner
-		listOfName.setAdapter(listAdapter);
-		spinner.setAdapter(dataAdapter);
-		// Set listview height, for all
-		float scale = mActivity.getResources().getDisplayMetrics().density;
-		int heightPx = Utils.convertDpToPixel(NAME_ITEM_HEIGHT * mNewDevices.get(0).getAllModules().size());
-		listOfName.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, heightPx));
 	}
 
 	/**
@@ -166,7 +151,6 @@ public class SetupDeviceFragment extends TrackFragment {
 	 */
 	private boolean hideInputForNewLocation(boolean hide) {
 		EditText newLocation = (EditText) mView.findViewById(R.id.module_setup_new_location_name);
-		TextView orLabel = (TextView) mView.findViewById(R.id.module_setup_or_text);
 
 		Spinner newIconSpinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon);
 
@@ -184,7 +168,6 @@ public class SetupDeviceFragment extends TrackFragment {
 
 		int visibility = (hide ? View.GONE : View.VISIBLE);
 		newLocation.setVisibility(visibility);
-		orLabel.setVisibility(visibility);
 		newIconSpinner.setVisibility(visibility);
 
 		return hide;
@@ -201,13 +184,8 @@ public class SetupDeviceFragment extends TrackFragment {
 		return false;
 	}
 
-
 	public Spinner getSpinner() {
 		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location));
-	}
-
-	public ListView getListOfName() {
-		return ((ListView) mView.findViewById(R.id.module_setup_name_listview));
 	}
 
 	public TextView getNewLocation() {
