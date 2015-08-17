@@ -6,7 +6,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
@@ -114,8 +113,9 @@ public class DemoNetwork implements INetwork {
 			double lastValue = module.getValue().getDoubleValue();
 			double range = 5;
 
-			if (module.getDevice().getType().getFeatures().hasRefresh()) {
-				range = 2 + Math.log(module.getDevice().getRefresh().getInterval());
+			RefreshInterval refresh = module.getDevice().getRefresh();
+			if (refresh != null) {
+				range = 2 + Math.log(refresh.getInterval());
 			}
 
 			if (Double.isNaN(lastValue)) {
@@ -288,7 +288,8 @@ public class DemoNetwork implements INetwork {
 		for (Device device : devices) {
 			if (device.isExpired()) {
 				// Set new random values
-				if (device.getType().getFeatures().hasBattery()) {
+				Integer battery = device.getBattery();
+				if (battery != null) {
 					device.setBattery(rand.nextInt(101));
 				}
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
@@ -383,7 +384,8 @@ public class DemoNetwork implements INetwork {
 
 		if (newDevice != null && newDevice.isExpired()) {
 			// Set new random values
-			if (newDevice.getType().getFeatures().hasBattery()) {
+			Integer battery = newDevice.getBattery();
+			if (battery != null) {
 				newDevice.setBattery(rand.nextInt(101));
 			}
 			newDevice.setLastUpdate(DateTime.now(DateTimeZone.UTC));
@@ -428,13 +430,14 @@ public class DemoNetwork implements INetwork {
 			// Create new device
 			Device device = Device.createDeviceByType(randType.getId(), gateId, address);
 
-			DeviceFeatures features = device.getType().getFeatures();
-			if (features.hasBattery()) {
+			Integer battery = device.getBattery();
+			if (battery != null) {
 				device.setBattery(rand.nextInt(101));
 			}
-			if (features.hasRefresh()) {
-				RefreshInterval[] refresh = RefreshInterval.values();
-				device.setRefresh(refresh[rand.nextInt(refresh.length)]);
+			RefreshInterval refresh = device.getRefresh();
+			if (refresh != null) {
+				RefreshInterval[] refreshes = RefreshInterval.values();
+				device.setRefresh(refreshes[rand.nextInt(refreshes.length)]);
 			}
 
 			device.setInitialized(rand.nextBoolean());
@@ -474,7 +477,7 @@ public class DemoNetwork implements INetwork {
 		}
 
 		boolean isEnum = (module.getValue() instanceof EnumValue);
-		boolean hasRefresh = module.getDevice().getType().getFeatures().hasRefresh();
+		boolean hasRefresh = (module.getDevice().getRefresh() != null);
 
 		int everyMsecs;
 		double range = 5;

@@ -9,10 +9,8 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -54,7 +52,7 @@ public class XmlParsers {
 		GATES("adapters"),
 		GATEINFO("gateinfo"),
 		ALLDEVICES("alldevs"),
-		DEVICES("devs"),
+		DEVICES("devices"),
 		LOGDATA("logdata"),
 		ACCOUNTS("accounts"),
 		TRUE("true"),
@@ -368,42 +366,24 @@ public class XmlParsers {
 
 	private void parseInnerDevs(List<Device> result, String aid, boolean init) throws XmlPullParserException, IOException {
 		do { // go through devs (devices)
-			//int type = getSecureInt(Xconstants.TYPE);
 			String type = getSecureAttrValue(Xconstants.TYPE);
 			String address = getSecureAttrValue(Xconstants.DID);
 
 			Device device = Device.createDeviceByType(type, aid, address);
-			DeviceFeatures features = device.getType().getFeatures();
-
-			// device.setInitialized(getSecureAttrValue(Xconstants.INITIALIZED).equals(Xconstants.ZERO) ? false : true);
 			device.setInitialized(init);
 			device.setLocationId(getSecureAttrValue(Xconstants.LID));
 			device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
 			device.setPairedTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
-			device.setNetworkQuality(getSecureInt(getSecureAttrValue(Xconstants.RSSI)));
-
-			if (features.hasRefresh()) {
-				device.setRefresh(RefreshInterval.fromInterval(getSecureInt(getSecureAttrValue(Xconstants.REFRESH))));
-			}
-			if (features.hasBattery()) {
-				device.setBattery(getSecureInt(getSecureAttrValue(Xconstants.BATTERY)));
-			}
-
-			mParser.nextTag(); // part tag
-
-			if (!mParser.getName().equals(Xconstants.PART)) { // if there is no module in device -> error in DB on server
-				Log.e(TAG, "Missing module in device: " + device.getId());
-				continue;
-			}
 
 			// Load modules values
-			do { // go through modules
-				String moduleId = getSecureAttrValue(Xconstants.ID);
+			while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE)) {
+				// go through modules
+				String moduleId = getSecureAttrValue(Xconstants.TYPE); // TODO: Rename to ID
 				String moduleValue = getSecureAttrValue(Xconstants.VALUE);
 				device.setModuleValue(moduleId, moduleValue);
 
 				mParser.nextTag(); // module endtag
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE));
+			}
 
 			result.add(device);
 		} while (mParser.nextTag() != XmlPullParser.END_TAG

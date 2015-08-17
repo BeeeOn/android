@@ -245,13 +245,13 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 				mName.setText(module.getName(mActivity));
 				mLocationSpinner.setSelection(getLocationsIndexFromArray(adapter.getLocations(), device.getLocationId()));
 
-				boolean showRefresh = device.getType().getFeatures().hasRefresh();
-				if (showRefresh) {
-					mRefreshTimeSeekBar.setProgress(device.getRefresh().getIntervalIndex());
-					mRefreshTimeText.setText(" " + device.getRefresh().getStringInterval(mActivity));
+				RefreshInterval refresh = device.getRefresh();
+				if (refresh != null) {
+					mRefreshTimeSeekBar.setProgress(refresh.getIntervalIndex());
+					mRefreshTimeText.setText(" " + refresh.getStringInterval(mActivity));
 				} else {
-					mRefreshTimeSeekBar.setEnabled(showRefresh);
-					mRefreshTimeText.setEnabled(showRefresh);
+					mRefreshTimeSeekBar.setEnabled(false);
+					mRefreshTimeText.setEnabled(false);
 				}
 			}
 		}
@@ -380,8 +380,9 @@ public class ModuleEditActivity extends BaseApplicationActivity {
 				module.setName(getName());
 			}*/
 
-			if (device.getType().getFeatures().hasRefresh()) {
-				if (!getRefreshTime().equals(device.getRefresh())) {
+			RefreshInterval refresh = device.getRefresh();
+			if (refresh != null) {
+				if (!getRefreshTime().equals(refresh)) {
 					what.add(Module.SaveModule.SAVE_REFRESH);
 					device.setRefresh(getRefreshTime());
 				}

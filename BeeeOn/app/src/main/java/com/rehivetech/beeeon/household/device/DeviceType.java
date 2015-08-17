@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public enum DeviceType implements IIdentifier {
-	TYPE_UNKNOWN("", "???", R.string.device_type_unknown_device, R.string.device_type_unknown_manufacturer, new DeviceFeatures(null, false, false, false)) {
+	TYPE_UNKNOWN("", "???", R.string.device_type_unknown_device, R.string.device_type_unknown_manufacturer) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return new ArrayList<>();
@@ -20,7 +20,7 @@ public enum DeviceType implements IIdentifier {
 	},
 
 	/** BEGIN OF GENERATED CONTENT **/
-	TYPE_0("0", "BeeeOn v1.0", R.string.devices__dev_temperature_humidity, R.string.devices__manufacturer_but, new DeviceFeatures(30, true, true, true)) {
+	TYPE_0("0", "BeeeOn v1.0", R.string.devices__dev_temperature_humidity, R.string.devices__manufacturer_but) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -30,7 +30,7 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	},
-	TYPE_1("1", "Regulator VPT v1.0", R.string.devices__dev_regulator_vpt, R.string.devices__manufacturer_thermona, new DeviceFeatures(null, false, false, true)) {
+	TYPE_1("1", "Regulator VPT v1.0", R.string.devices__dev_regulator_vpt, R.string.devices__manufacturer_thermona) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -132,7 +132,7 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	},
-	TYPE_2("2", "Beeeon internal pressure sensor v1.0", R.string.devices__dev_internal_pressure_sensors, R.string.devices__manufacturer_but, new DeviceFeatures(30, false, false, false)) {
+	TYPE_2("2", "Beeeon internal pressure sensor v1.0", R.string.devices__dev_internal_pressure_sensors, R.string.devices__manufacturer_but) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -153,14 +153,12 @@ public enum DeviceType implements IIdentifier {
 	private final String mTypeName;
 	private final int mNameRes;
 	private final int mManufacturerRes;
-	private final DeviceFeatures mFeatures;
 
-	DeviceType(String typeId, String typeName, @StringRes int nameRes, @StringRes int manufacturerRes, DeviceFeatures features) {
+	DeviceType(String typeId, String typeName, @StringRes int nameRes, @StringRes int manufacturerRes) {
 		mTypeId = typeId;
 		mTypeName = typeName;
 		mNameRes = nameRes;
 		mManufacturerRes = manufacturerRes;
-		mFeatures = features;
 	}
 
 	public abstract List<Module> createModules(Device device);
@@ -180,9 +178,5 @@ public enum DeviceType implements IIdentifier {
 
 	public int getManufacturerRes() {
 		return mManufacturerRes;
-	}
-
-	public DeviceFeatures getFeatures() {
-		return mFeatures;
 	}
 }
