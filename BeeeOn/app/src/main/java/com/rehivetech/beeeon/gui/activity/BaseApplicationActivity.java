@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
@@ -37,6 +39,9 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	private View mRefreshIcon;
 	@Nullable
 	private BetterProgressDialog mProgressDialog;
+
+	@Nullable
+	protected ActionBar mActionBar;
 
 	protected boolean isPaused = false;
 
@@ -181,6 +186,27 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	public void onFragmentAttached(Fragment fragment) {
 
+	}
+
+	/**
+	 * Helper for initializing toolbar and actionbar
+	 *
+	 * @param titleResId
+	 * @return toolbar or null, if no R.id.beeeon_toolbar was found in layout
+	 */
+	@Nullable
+	public Toolbar setupToolbar(@StringRes int titleResId) {
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
+		if (toolbar != null) {
+			setSupportActionBar(toolbar);
+
+			if (titleResId > 0) {
+				toolbar.setTitle(titleResId);
+			}
+		}
+		mActionBar = getSupportActionBar();
+
+		return toolbar;
 	}
 
 	/**
