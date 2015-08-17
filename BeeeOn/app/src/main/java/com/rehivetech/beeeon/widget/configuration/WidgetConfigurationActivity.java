@@ -50,16 +50,10 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		// prepare toolbar with button instead of "HOME" arrow
-		mToolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (mToolbar != null) {
-			mToolbar.setTitle(R.string.widget_configuration_title_widget_config);
-			setSupportActionBar(mToolbar);
-		}
-
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_accept);
+		setupToolbar(R.string.widget_configuration_title_widget_config);
+		if (mActionBar != null) {
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_accept);
 		}
 
 		// do we edit or create widget

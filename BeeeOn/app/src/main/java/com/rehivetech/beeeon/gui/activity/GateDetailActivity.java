@@ -40,15 +40,10 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_detail);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle("");
-			setSupportActionBar(toolbar);
-		}
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
+		setupToolbar(R.string.empty);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);

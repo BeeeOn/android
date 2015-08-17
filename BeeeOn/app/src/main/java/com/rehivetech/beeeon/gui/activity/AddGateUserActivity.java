@@ -40,17 +40,11 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_user_add);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(R.string.app_name);
-			setSupportActionBar(toolbar);
-		}
-
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+		setupToolbar(R.string.app_name);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 
 		// Get selected gate

@@ -51,16 +51,10 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_users);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(R.string.gate_users_title_gate_users);
-			setSupportActionBar(toolbar);
-		}
-
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
+		setupToolbar(R.string.gate_users_title_gate_users);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		// Get selected gate

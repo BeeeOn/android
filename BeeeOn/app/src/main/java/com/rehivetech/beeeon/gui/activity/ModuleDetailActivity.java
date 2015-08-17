@@ -28,16 +28,10 @@ public class ModuleDetailActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_detail);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle("");
-			setSupportActionBar(toolbar);
-		}
-
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
+		setupToolbar(R.string.empty);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		Bundle bundle = getIntent().getExtras();

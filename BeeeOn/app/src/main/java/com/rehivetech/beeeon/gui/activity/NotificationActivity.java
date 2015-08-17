@@ -16,16 +16,10 @@ public class NotificationActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notification);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(R.string.notification_title_notification);
-			setSupportActionBar(toolbar);
-		}
-
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
+		setupToolbar(R.string.notification_title_notification);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		Fragment fragment = new NotificationFragment();

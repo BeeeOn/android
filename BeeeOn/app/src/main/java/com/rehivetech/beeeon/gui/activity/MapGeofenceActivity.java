@@ -81,21 +81,12 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.activity_map_geofence);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(R.string.map_geofence_title_map_geofence);
-			setSupportActionBar(toolbar);
-		}
-
-//		setSupportProgressBarIndeterminate(true);
-//		setSupportProgressBarIndeterminateVisibility(true);
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
+		setupToolbar(R.string.map_geofence_title_map_geofence);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
 		((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map_geofence_map)).getMapAsync(this);
