@@ -108,6 +108,7 @@
 	<string name="layout_gate_edit">Upravit bránu</string>
 	<string name="layout_module_list_watchdog_list_action_refresh_list">Obnovit seznam</string>
 	<string name="layout_widget_household">Domácnost</string>
+	<string name="toolbar_refresh_title">Obnovit</string>
 
 	<!-- Placeholders -->
 	<string name="layout_activity_fragment_widget_placeholder_icon">Ikona</string>

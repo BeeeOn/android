@@ -95,11 +95,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(R.string.app_name);
-			setSupportActionBar(toolbar);
-		}
+		Toolbar toolbar = setupToolbar(R.string.app_name);
 
 		// Create NavDrawerMenu
 		mNavDrawerMenu = new NavDrawerMenu(this, toolbar);

@@ -40,16 +40,11 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_edit);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle("");
-			setSupportActionBar(toolbar);
-		}
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+		setupToolbar(R.string.empty);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);

@@ -44,11 +44,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base_guide);
 
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(R.string.device_setup_title_setup_device);
-			setSupportActionBar(toolbar);
-		}
+		setupToolbar(R.string.device_setup_title_setup_device);
 
 		mPairGate = Controller.getInstance(this).getActiveGate();
 

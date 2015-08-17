@@ -11,14 +11,35 @@
 	app:popupTheme="@style/Theme.AppCompat.Light"
 	app:titleMarginStart="16dp">
 
-	<ProgressBar
-		android:id="@+id/beeeon_toolbar_progress"
-		android:layout_width="40dp"
-		android:layout_height="40dp"
+	<!-- frame layout so that progress/refresh icon can overlay -->
+	<!-- TODO could be managed by <ViewSwitcher> -->
+	<FrameLayout
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
 		android:layout_gravity="end"
-		android:indeterminate="true"
-		android:layout_marginRight="8dp"
-		android:layout_marginEnd="8dp"
-		android:visibility="gone"/>
+		>
+
+		<!-- refresh icon -->
+		<ImageView
+			android:id="@+id/beeeon_toolbar_refresh"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_action_refresh"
+			android:padding="0dp"
+			style="@style/Widget.AppCompat.ActionButton"
+			android:visibility="invisible"
+			/>
+
+		<!-- refreshing progress bar -->
+		<ProgressBar
+			android:id="@+id/beeeon_toolbar_progress"
+			android:layout_width="30dp"
+			android:layout_height="30dp"
+			android:indeterminate="true"
+			android:layout_gravity="center"
+			android:visibility="invisible"
+			/>
+
+	</FrameLayout>
 
 </android.support.v7.widget.Toolbar>

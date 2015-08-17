@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,6 @@ public class GateDetailFragment extends BaseApplicationFragment {
 	private OnGateDetailsButtonsClickedListener mCallback;
 	private GateDetailsAdapter mGateDetailsAdapter;
 	private ArrayList<DetailsItem> mDetailsItemList;
-	private SwipeRefreshLayout mSwipeRefreshLayout;
 
 	private ListView mDetailsListView;
 	private TextView mTitleText;
@@ -94,22 +92,19 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		mGateDetailsAdapter = new GateDetailsAdapter(getActivity(), mDetailsItemList);
 		mDetailsListView.setAdapter(mGateDetailsAdapter);
 
-		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.gate_detail_swipe_layout);
-		mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				mCallback.onForceReloadData();
-				mSwipeRefreshLayout.setRefreshing(false);
-			}
-		});
-		mSwipeRefreshLayout.setColorSchemeColors(R.color.beeeon_primary, R.color.beeeon_primary_text, R.color.beeeon_accent);
-
 		return view;
 	}
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCallback.onForceReloadData();
+			}
+		});
 
 		fillData();
 	}

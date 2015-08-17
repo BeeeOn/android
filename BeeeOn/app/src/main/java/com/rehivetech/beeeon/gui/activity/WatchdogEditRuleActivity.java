@@ -96,21 +96,13 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_watchdog_rule_edit);
-		Log.d(TAG, "onCreate()");
 
-		// prepare toolbar
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			toolbar.setTitle(R.string.watchdog_rule_edit_watchdog_rule);
-			setSupportActionBar(toolbar);
-		}
-
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setHomeButtonEnabled(true);
-			actionBar.setDisplayHomeAsUpEnabled(true);
+		setupToolbar(R.string.watchdog_rule_edit_watchdog_rule);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
 			// x instead of <- indicating that no changes will be saved upon click
-			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 
 		Bundle bundle = getIntent().getExtras();
