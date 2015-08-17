@@ -95,7 +95,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				doReloadDevicesTask(mActiveGateId, true, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+				doReloadDevicesTask(mActiveGateId, true);
 			}
 		});
 

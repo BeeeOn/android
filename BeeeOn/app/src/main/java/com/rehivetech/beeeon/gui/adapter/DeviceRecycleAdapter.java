@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;
 
@@ -110,9 +108,9 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				// last update
 				deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "" );
 
-				int battery = device.getBattery();
+				Integer battery = device.getBattery();
 				// no battery, hide info
-				if(battery < 0){
+				if (battery == null || battery < 0){
 					deviceHolder.mAdditional.setVisibility(View.INVISIBLE);
 				}
 				// otherwise set text and show

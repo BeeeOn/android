@@ -20,7 +20,12 @@ public class DevicesListActivity extends BaseApplicationActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_devices_list);
+		
 		setupToolbar(R.string.empty);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		if (mGateId == null) {
