@@ -31,15 +31,15 @@ public final class Module implements IOrderIdentifier {
 	private final BaseValue mValue;
 
 	public static Module createUnknownModule(Device device, String id) {
-		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), null, null, null, false, null);
+		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), null, null, null, false, null, null);
 	}
 
-	public Module(Device device, String id, int typeId, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules) {
-		this(device, id, typeId, sort, groupRes, nameRes, isActuator, rules, (BaseValue.Constraints) null);
+	public Module(Device device, String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules, @Nullable String defaultValue) {
+		this(device, id, typeId, sort, groupRes, nameRes, isActuator, rules, (BaseValue.Constraints) null, defaultValue);
 	}
 
-	public Module(Device device, String id, int typeId, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
-				  BaseValue.Constraints constraints) throws IllegalArgumentException {
+	public Module(Device device, String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
+				  @Nullable BaseValue.Constraints constraints, @Nullable String defaultValue) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
 		mSort = sort;
@@ -56,11 +56,11 @@ public final class Module implements IOrderIdentifier {
 		if (mType.getValueClass() == EnumValue.class) {
 			throw new IllegalArgumentException("ValueClass received from ModuleType is EnumValue, but constructor was called without enumValues.");
 		}
-		mValue = BaseValue.createFromModuleType(mType, constraints);
+		mValue = BaseValue.createFromModuleType(mType, constraints, defaultValue);
 	}
 
-	public Module(Device device, String id, int typeId, Integer sort, Integer groupRes, Integer nameRes, boolean isActuator, List<Rule> rules,
-				  List<EnumValue.Item> enumValues) throws IllegalArgumentException {
+	public Module(Device device, String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
+				  @Nullable List<EnumValue.Item> enumValues, @Nullable String defaultValue) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
 		mSort = sort;
@@ -74,6 +74,7 @@ public final class Module implements IOrderIdentifier {
 			throw new IllegalArgumentException("ValueClass received from ModuleType is not EnumValue, but constructor was called with enumValues.");
 		}
 		mValue = new EnumValue(enumValues);
+		mValue.setDefaultValue(defaultValue);
 	}
 
 

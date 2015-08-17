@@ -35,11 +35,7 @@ public final class Device implements IIdentifier {
 	private String mLocationId;
 	private boolean mInitialized;
 	private DateTime mPairedTime;
-	private int mNetworkQuality;
 	private DateTime mLastUpdate;
-
-	private RefreshInterval mRefreshInterval;
-	private int mBatteryValue;
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -96,10 +92,11 @@ public final class Device implements IIdentifier {
 	 * @return True when refresh interval since last update has expired, false otherwise.
 	 */
 	public boolean isExpired() {
-		if (!mType.getFeatures().hasRefresh()) {
+		RefreshInterval refresh = getRefresh();
+		if (refresh == null) {
 			return true;
 		}
-		return mLastUpdate.plusSeconds(getRefresh().getInterval()).isBeforeNow();
+		return mLastUpdate.plusSeconds(refresh.getInterval()).isBeforeNow();
 	}
 
 	/**
@@ -177,60 +174,6 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
-	 * @return quality of network signal in percents (0-100%)
-	 */
-	public int getNetworkQuality() {
-		return mNetworkQuality;
-	}
-
-	/**
-	 * @param networkQuality quality of network signal in percents (0-100%)
-	 */
-	public void setNetworkQuality(int networkQuality) {
-		mNetworkQuality = networkQuality;
-	}
-
-	/**
-	 * @return Actual RefreshInterval value, or null if this device doesn't have refresh at all.
-	 */
-	@Nullable
-	public RefreshInterval getRefresh() {
-		if (!mType.getFeatures().hasRefresh()) {
-			return null;
-		}
-		return mRefreshInterval != null ? mRefreshInterval : mType.getFeatures().getDefaultRefresh();
-	}
-
-	/**
-	 * @param refreshInterval New RefreshInterval value, which could be null to reset it to default value.
-	 */
-	public void setRefresh(@Nullable RefreshInterval refreshInterval) {
-		if (!mType.getFeatures().hasRefresh()) {
-			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have refresh.");
-			return;
-		}
-		mRefreshInterval = refreshInterval;
-	}
-
-	/**
-	 * @return Actual battery value (0-100%) or -1 when this device has no battery.
-	 */
-	public int getBattery() {
-		return mType.getFeatures().hasBattery() ? mBatteryValue : -1;
-	}
-
-	/**
-	 * @param batteryValue New battery level value.
-	 */
-	public void setBattery(int batteryValue) {
-		if (!mType.getFeatures().hasBattery()) {
-			Log.w(TAG, "Trying to set refresh value, but this Device doesn't have battery.");
-			return;
-		}
-		mBatteryValue = batteryValue;
-	}
-
-	/**
 	 * @return List of modules this device contains.
 	 */
 	public List<Module> getAllModules() {
@@ -270,26 +213,43 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * @param id
-	 * @return Module from this device with specified id.
+	 * @return Module from this device with specified id. Or NULL if no such module exists.
 	 */
 	public Module getModuleById(String id) {
 		return mModules.getObject(id);
 	}
 
 	/**
+	 * @param typeId
+	 * @return List of modules from this device with specified type. Or empty list if no such module exists.
+	 */
+	public List<Module> getModulesByType(int typeId) {
+		List<Module> modules = new ArrayList<>();
+
+		for (Module module : getAllModules()) {
+			if (module.getType().getTypeId() == typeId) {
+				modules.add(module);
+			}
+		}
+
+		return modules;
+	}
+
+	/**
 	 * Set value of module from this device, specified by id.
 	 * If module with specified id doesn't exists, for Devices with unknown type is new unknown module automatically created and its value set.
+	 * For unexpected module is just Logged error.
 	 *
 	 * @param id
 	 * @param value
-	 * @throws IllegalStateException When module with specified id doesn't exists and this device has not unknown type.
 	 */
 	public void setModuleValue(String id, String value) throws IllegalStateException {
 		synchronized (mModules) {
 			if (!mModules.hasObject(id)) {
 				if (!isUnknownType()) {
-					// TODO: have it here this way? It could be possible to support such circumstances without a crash - but on other hand, such situation shouldn't happen when everything is regard our specifications.
-					throw new IllegalStateException(String.format("Module #%s doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId()));
+					// Log error of unexpected module
+					Log.e(TAG, String.format("Module #%s doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId()));
+					return;
 				}
 
 				// Automatically create new unknown module for this device
@@ -300,6 +260,79 @@ public final class Device implements IIdentifier {
 			Module module = mModules.getObject(id);
 			module.setValue(value);
 		}
+	}
+
+	@Nullable
+	private Module getFirstModuleByType(ModuleType type) {
+		List<Module> modules = getModulesByType(type.getTypeId());
+		if (modules.isEmpty())
+			return null;
+
+		return modules.get(0);
+	}
+
+	/**
+	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 * @return
+	 */
+	@Nullable
+	public RefreshInterval getRefresh() {
+		Module refresh = getFirstModuleByType(ModuleType.TYPE_REFRESH);
+		if (refresh == null)
+			return null;
+
+		int seconds = (int) refresh.getValue().getDoubleValue();
+		return RefreshInterval.fromInterval(seconds);
+	}
+
+	/**
+	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 * @return
+	 */
+	@Nullable
+	public Integer getBattery() {
+		Module module = getFirstModuleByType(ModuleType.TYPE_BATTERY);
+		return (module == null) ? null : (int) module.getValue().getDoubleValue();
+	}
+
+	/**
+	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 * @return
+	 */
+	@Nullable
+	public Integer getRssi() {
+		Module module = getFirstModuleByType(ModuleType.TYPE_RSSI);
+		return (module == null) ? null : (int) module.getValue().getDoubleValue();
+	}
+
+	/**
+	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 * @param refresh
+	 */
+	public void setRefresh(RefreshInterval refresh) {
+		Module module = getFirstModuleByType(ModuleType.TYPE_REFRESH);
+		if (module != null)
+			module.setValue(String.valueOf(refresh.getInterval()));
+	}
+
+	/**
+	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 * @param battery
+	 */
+	public void setBattery(int battery) {
+		Module module = getFirstModuleByType(ModuleType.TYPE_BATTERY);
+		if (module != null)
+			module.setValue(String.valueOf(battery));
+	}
+
+	/**
+	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 * @param quality
+	 */
+	public void setNetworkQuality(int quality) {
+		Module module = getFirstModuleByType(ModuleType.TYPE_RSSI);
+		if (module != null)
+			module.setValue(String.valueOf(quality));
 	}
 
 	/**

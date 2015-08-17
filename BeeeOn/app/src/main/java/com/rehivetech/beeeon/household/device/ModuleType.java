@@ -2,12 +2,15 @@ package com.rehivetech.beeeon.household.device;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.BatteryValue;
 import com.rehivetech.beeeon.household.device.values.EmissionValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
 import com.rehivetech.beeeon.household.device.values.IlluminationValue;
 import com.rehivetech.beeeon.household.device.values.NoiseValue;
 import com.rehivetech.beeeon.household.device.values.PressureValue;
+import com.rehivetech.beeeon.household.device.values.RefreshValue;
+import com.rehivetech.beeeon.household.device.values.RssiValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.device.values.UnknownValue;
 
@@ -23,6 +26,9 @@ public enum ModuleType {
 	TYPE_LIGHT(0x05, R.string.dev_illumination_type, IlluminationValue.class),
 	TYPE_NOISE(0x06, R.string.dev_noise_type, NoiseValue.class),
 	TYPE_CO2(0x07, R.string.dev_emission_type, EmissionValue.class),
+	TYPE_BATTERY(0x08, R.string.dev_emission_type, BatteryValue.class),
+	TYPE_RSSI(0x09, R.string.dev_emission_type, RssiValue.class),
+	TYPE_REFRESH(0x0A, R.string.dev_emission_type, RefreshValue.class),
 
 	TYPE_UNKNOWN(-1, R.string.dev_unknown_type, UnknownValue.class);
 

@@ -39,11 +39,12 @@ import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
+import com.rehivetech.beeeon.household.device.ModuleType;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -174,9 +175,9 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		// Get TextView for refresh time
 		TextView refreshTimeText = (TextView) view.findViewById(R.id.module_detail_refresh_time_value);
 		// Get battery value
-		TextView battery = (TextView) view.findViewById(R.id.module_detail_battery_value);
+		TextView batteryText = (TextView) view.findViewById(R.id.module_detail_battery_value);
 		// Get signal value
-		TextView signal = (TextView) view.findViewById(R.id.module_detail_signal_value);
+		TextView signalText = (TextView) view.findViewById(R.id.module_detail_signal_value);
 		// Get chart view
 		mChart = (CombinedChart) view.findViewById(R.id.module_detail_chart);
 
@@ -270,21 +271,24 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = controller.getUserSettings();
+		if (prefs == null) {
+			// Can't continue without preferences
+			Log.e(TAG, "User is not logged in, getUserSettings() return null");
+			return;
+		}
 
-		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
-		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mUnitsHelper = new UnitsHelper(prefs, mActivity);
+		mTimeHelper = new TimeHelper(prefs);
 
 		// Set value of module
-		if (mUnitsHelper != null) {
-			mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
-			// FIXME: rework this better
-			if (module.getValue() instanceof EnumValue) {
-				EnumValue value = (EnumValue) module.getValue();
-				List<EnumValue.Item> items = value.getEnumItems();
-				if (items.size() == 2) {
-					int index = items.indexOf(value.getActive());
-					mValueSwitch.setChecked(index == 1);
-				}
+		mValue.setText(mUnitsHelper.getStringValueUnit(module.getValue()));
+		// FIXME: rework this better
+		if (module.getValue() instanceof EnumValue) {
+			EnumValue value = (EnumValue) module.getValue();
+			List<EnumValue.Item> items = value.getEnumItems();
+			if (items.size() == 2) {
+				int index = items.indexOf(value.getActive());
+				mValueSwitch.setChecked(index == 1);
 			}
 		}
 
@@ -296,25 +300,26 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 			time.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 		}
 
-		DeviceFeatures features = device.getType().getFeatures();
-
 		// Set refresh time Text
-		if (features.hasRefresh()) {
-			refreshTimeText.setText(device.getRefresh().getStringInterval(mActivity));
+		RefreshInterval refresh = device.getRefresh();
+		if (refresh != null) {
+			refreshTimeText.setText(refresh.getStringInterval(mActivity));
 		}
 
 		// Set battery
-		if (features.hasBattery()) {
-			battery.setText(device.getBattery() + "%");
+		Integer battery = device.getBattery();
+		if (battery != null) {
+			batteryText.setText(battery + "%");
 		}
 
 		// Set signal
-		signal.setText(device.getNetworkQuality() + "%");
+		Integer rssi = device.getRssi();
+		if (rssi != null) {
+			signalText.setText(rssi + "%");
+		}
 
 		// Add Graph
-		if (mUnitsHelper != null && mTimeHelper != null) {
-			addGraphView(module);
-		}
+		addGraphView(module);
 
 		// Visible all elements
 		visibleAllElements(module, gate);

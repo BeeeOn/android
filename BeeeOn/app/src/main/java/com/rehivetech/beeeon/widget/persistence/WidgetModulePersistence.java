@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -84,7 +85,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		refresh = mPrefs.getInt(getProperty(PREF_REFRESH), 0);
 
 		mModuleType = ModuleType.fromTypeId(type);
-		moduleValue = BaseValue.createFromModuleType(mModuleType, null);
+		moduleValue = BaseValue.createFromModuleType(mModuleType, null, null);
 
 		// we don't set value when creating new widget
 		if (!rawValue.isEmpty()) {
@@ -112,8 +113,9 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		mUserRole = Utils.getEnumFromId(User.Role.class, mGateRole, User.Role.Guest);
 		lastUpdateTime = device.getLastUpdate().getMillis();
 
-		if (device.getType().getFeatures().hasRefresh()) {
-			refresh = device.getRefresh().getInterval();
+		RefreshInterval deviceRefresh = device.getRefresh();
+		if (deviceRefresh != null) {
+			refresh = deviceRefresh.getInterval();
 		}
 
 		mModuleType = module.getType();

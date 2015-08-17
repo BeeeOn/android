@@ -8,6 +8,7 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
@@ -475,9 +476,10 @@ public class XmlCreator {
 				if (toSave.contains(SaveModule.SAVE_LOCATION))
 					serializer.attribute(ns, Xconstants.LID, device.getLocationId());
 
-				if (device.getType().getFeatures().hasRefresh()) {
+				RefreshInterval refresh = device.getRefresh();
+				if (refresh != null) {
 					if (toSave.contains(SaveModule.SAVE_REFRESH))
-						serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
+						serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(refresh.getInterval()));
 				}
 
 				// FIXME: rework this
@@ -486,10 +488,6 @@ public class XmlCreator {
 					serializer.startTag(ns, Xconstants.PART);
 
 					serializer.attribute(ns, Xconstants.TYPE, module.getRawTypeId());
-					if (toSave.contains(SaveModule.SAVE_VISIBILITY))
-						serializer.attribute(ns, Xconstants.VISIBILITY, (module.isVisible()) ? Xconstants.ONE : Xconstants.ZERO);
-					if (toSave.contains(SaveModule.SAVE_NAME))
-						serializer.attribute(ns, Xconstants.NAME, module.getName());
 					// if (toSave.contains(SaveModule.SAVE_VALUE))
 					// serializer.attribute(ns, Xconstants.VALUE, String.valueOf(module.getId().getDoubleValue()));
 
@@ -536,9 +534,10 @@ public class XmlCreator {
 			if (toSave.contains(SaveModule.SAVE_LOCATION))
 				serializer.attribute(ns, Xconstants.LID, device.getLocationId());
 
-			if (device.getType().getFeatures().hasRefresh()) {
+			RefreshInterval refresh = device.getRefresh();
+			if (refresh != null) {
 				if (toSave.contains(Module.SaveModule.SAVE_REFRESH))
-					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(device.getRefresh().getInterval()));
+					serializer.attribute(ns, Xconstants.REFRESH, Integer.toString(refresh.getInterval()));
 			}
 
 			// FIXME: rework this
@@ -646,7 +645,7 @@ public class XmlCreator {
 	 * Method create XML of DelRoom message
 	 *
 	 * @param bt  userID of user
-	 * @param lid locationID of location to delete
+	 * @param location location to delete
 	 * @return DelRoom message
 	 * @since 2.2
 	 */

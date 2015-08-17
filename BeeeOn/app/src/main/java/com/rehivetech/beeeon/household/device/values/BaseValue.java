@@ -11,6 +11,8 @@ public abstract class BaseValue {
 
 	private String mRawValue = null;
 
+	private String mDefaultValue = null;
+
 	private Constraints mConstraints;
 
 	public abstract BaseUnit getUnit();
@@ -48,6 +50,15 @@ public abstract class BaseValue {
 	}
 
 	@Nullable
+	public String getDefaultValue() {
+		return mDefaultValue;
+	}
+
+	public void setDefaultValue(@Nullable String defaultValue) {
+		mDefaultValue = defaultValue;
+	}
+
+	@Nullable
 	public Constraints getConstraints() {
 		return mConstraints;
 	}
@@ -57,11 +68,12 @@ public abstract class BaseValue {
 	}
 
 	@NonNull
-	public static BaseValue createFromModuleType(@NonNull ModuleType type, @Nullable Constraints constraints) {
+	public static BaseValue createFromModuleType(@NonNull ModuleType type, @Nullable Constraints constraints, @Nullable String defaultValue) {
 		try {
 			// Try to create and return new BaseValue object
 			BaseValue value = type.getValueClass().newInstance();
 			value.setConstraints(constraints);
+			value.setDefaultValue(defaultValue);
 			return value;
 		} catch (InstantiationException e) {
 			e.printStackTrace();

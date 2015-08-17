@@ -77,7 +77,7 @@ public enum RefreshInterval {
 	/**
 	 * Return enum object from interval
 	 *
-	 * @param number of seconds
+	 * @param secs number of seconds
 	 * @return
 	 */
 	public static RefreshInterval fromInterval(int secs) {
