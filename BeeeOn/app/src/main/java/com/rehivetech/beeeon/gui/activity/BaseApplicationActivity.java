@@ -226,7 +226,8 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			}
 		}
 
-		mRefreshIcon.setVisibility(View.VISIBLE);
+		boolean show = (mProgressBar == null || mProgressBar.getVisibility() == View.INVISIBLE);
+		mRefreshIcon.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
 		mRefreshIcon.setOnClickListener(onClickListener);
 		mRefreshIcon.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override

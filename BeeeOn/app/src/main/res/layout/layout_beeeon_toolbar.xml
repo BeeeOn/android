@@ -17,8 +17,6 @@
 		android:layout_height="wrap_content"
 		android:layout_width="wrap_content"
 		android:layout_gravity="end"
-		android:layout_marginRight="8dp"
-		android:layout_marginEnd="8dp"
 		>
 
 		<!-- refresh icon -->
@@ -29,7 +27,7 @@
 			android:src="@drawable/ic_action_refresh"
 			android:padding="0dp"
 			style="@style/Widget.AppCompat.ActionButton"
-			android:visibility="visible"
+			android:visibility="invisible"
 			/>
 
 		<!-- refreshing progress bar -->
@@ -39,7 +37,7 @@
 			android:layout_height="30dp"
 			android:indeterminate="true"
 			android:layout_gravity="center"
-			android:visibility="visible"
+			android:visibility="invisible"
 			/>
 
 	</FrameLayout>
