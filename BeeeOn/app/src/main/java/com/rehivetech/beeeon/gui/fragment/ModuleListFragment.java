@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -323,6 +324,9 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			});
 
 		}
+
+		// Auto-hiding of FAB
+		floatingActionButton.attachToListView(moduleList.getWrappedList());
 
 		if (haveModules) {
 			// Capture listview menu item click
