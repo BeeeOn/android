@@ -4,8 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -24,14 +28,19 @@ import com.rehivetech.beeeon.util.Log;
 public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver {
 
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
+
 	private boolean triedLoginAlready = false;
 
-	public CallbackTaskManager callbackTaskManager;
+	@Nullable
+	private View mProgressBar;
+	@Nullable
+	private View mRefreshIcon;
+	@Nullable
+	private BetterProgressDialog mProgressDialog;
 
 	protected boolean isPaused = false;
 
-	private View mProgressBar;
-	private BetterProgressDialog mProgressDialog;
+	public CallbackTaskManager callbackTaskManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,15 +126,25 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		// Empty default method
 	}
 
+	/**
+	 * Called from {@link CallbackTaskManager} when task is started/canceled.
+	 *
+	 * @param visible whether progressbar will be shown/hidden && refresh icon vice versa
+	 */
 	public synchronized void setBeeeOnProgressBarVisibility(boolean visible) {
 		if (mProgressBar == null) {
 			mProgressBar = findViewById(R.id.beeeon_toolbar_progress);
 
 			if (mProgressBar == null) {
 				// This activity probably doesn't have progressbar in layout
-				Log.w(TAG, String.format("Can't set visibility of progressbar in '%s, it wasn't found in layout.", getClass().getSimpleName()));
+				Log.w(TAG, String.format("Can't set visibility of progressbar in '%s', it wasn't found in layout.", getClass().getSimpleName()));
 				return;
 			}
+		}
+
+		// if refresh icon was setup we either show progress or refresh icon
+		if (mRefreshIcon != null) {
+			mRefreshIcon.setVisibility(visible ? View.INVISIBLE : View.VISIBLE);
 		}
 
 		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
@@ -147,7 +166,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		if (mProgressDialog == null || !mProgressDialog.isShowing()) {
 			return;
 		}
-		
+
 		mProgressDialog.dismiss();
 	}
 
@@ -160,7 +179,40 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		return false;
 	}
 
-	public void onFragmentAttached(Fragment fragment){
+	public void onFragmentAttached(Fragment fragment) {
 
+	}
+
+	/**
+	 * When set, refresh icon will be shown in Toolbar and when async task, icon will be hidden/visible
+	 * {@link #setBeeeOnProgressBarVisibility(boolean)} changes visibility of icon
+	 *
+	 * @param onClickListener Callback for refresh icon
+	 */
+	public void setupRefreshIcon(View.OnClickListener onClickListener) {
+		if (mRefreshIcon == null) {
+			mRefreshIcon = findViewById(R.id.beeeon_toolbar_refresh);
+
+			if (mRefreshIcon == null) {
+				// This activity probably doesn't have refreshIcon (or toolbar) in layout
+				Log.w(TAG, String.format("Can't set visibility of refreshIcon in '%s', it wasn't found in layout.", getClass().getSimpleName()));
+				return;
+			}
+		}
+
+		mRefreshIcon.setVisibility(View.VISIBLE);
+		mRefreshIcon.setOnClickListener(onClickListener);
+		mRefreshIcon.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				// show toast right below the view
+				Toast toast = Toast.makeText(v.getContext(), R.string.toolbar_refresh_title, Toast.LENGTH_SHORT);
+				// toast will be under the view and half from right
+				toast.setGravity(Gravity.TOP | Gravity.END, v.getWidth() - (v.getWidth() / 2), v.getBottom());
+				toast.show();
+
+				return true;
+			}
+		});
 	}
 }

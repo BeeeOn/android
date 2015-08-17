@@ -116,6 +116,7 @@
 	<string name="layout_gate_edit">Edit gateway</string>
 	<string name="layout_module_list_watchdog_list_action_refresh_list">Refresh list</string>
 	<string name="layout_widget_household">Household</string>
+	<string name="toolbar_refresh_title">Refresh</string>
 
 	<!-- Placeholders -->
 	<string name="layout_activity_fragment_widget_placeholder_icon">Icon</string>
