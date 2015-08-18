@@ -22,11 +22,15 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
+		android:layout_toLeftOf="@+id/list_module_item_buttons_wrapper"
+		android:layout_toStartOf="@+id/list_module_item_buttons_wrapper"
+		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
 		android:paddingTop="20dp"
 		android:maxLines="1"
 		android:ellipsize="end"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		tools:text="Module Title"/>
+		tools:text="Module Titleasdasdadasdasdasda"/>
 
 	<TextView
 		android:id="@+id/list_module_item_value"
@@ -41,4 +45,32 @@
 		android:textColor="@color/beeeon_accent"
 		tools:text="25 °C"/>
 
+	<FrameLayout
+		android:id="@+id/list_module_item_buttons_wrapper"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:layout_centerVertical="true">
+	<Button
+		android:id="@+id/list_device_module_item_set_button"
+		android:visibility="gone"
+		android:layout_width="wrap_content"
+		android:layout_height="36dp"
+		android:minWidth="64dp"
+		android:textColor="@color/white"
+		android:gravity="center"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:text="@string/activity_fragment_btn_set"
+		tools:text="set"/>
+
+	<android.support.v7.widget.SwitchCompat
+		android:id="@+id/list_device_module_item_switch"
+		android:visibility="gone"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"/>
+</FrameLayout>
 </RelativeLayout>
