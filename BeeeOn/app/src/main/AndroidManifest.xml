@@ -167,6 +167,10 @@
 			android:label="@string/app_name">
 		</activity>
 
+		<activity
+			android:name=".gui.activity.DevicesListActivity"
+			android:label="@string/nav_drawer_menu_menu_devices" />
+
 		<!-- WIDGETS -->
 		<service
 			android:name=".widget.service.WidgetService"

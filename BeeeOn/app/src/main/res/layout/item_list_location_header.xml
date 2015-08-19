@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/list_location_header_layout"
 	android:layout_width="match_parent"
 	android:layout_height="48dp"
 	android:clickable="false">
+
+	<!-- divider -->
+	<View
+		android:id="@+id/list_module_item_sep_middle"
+		style="@style/BeeeOn.Divider"
+		android:layout_alignParentTop="true"
+		android:clickable="false"
+		/>
 
 	<TextView
 		android:id="@+id/list_location_header_text"
@@ -12,8 +21,12 @@
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:singleLine="true"
 		android:textColor="@color/beeeon_secondary_text"
-		android:layout_gravity="center_vertical"
+		android:layout_centerVertical="true"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+		tools:text="Location name"
 		/>
-</LinearLayout>
+</RelativeLayout>

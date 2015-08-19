@@ -123,6 +123,8 @@ public final class Constants {
 
 	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY";
 
+	public static final String GUI_MENU_DEVICES = "GUI_MENU_DEVICES";
+
 	/**
 	 * Broadcasts
 	 */
