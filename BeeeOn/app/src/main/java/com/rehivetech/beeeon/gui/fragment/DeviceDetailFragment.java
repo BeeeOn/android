@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,6 +30,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.household.device.Device;
@@ -245,7 +247,14 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 		return new DeviceModuleAdapter.ItemClickListener() {
 			@Override
 			public void onItemClick(String moduleId) {
-				Log.d(TAG, "onItemClick");
+				Log.d(TAG, "onItemClick:" + moduleId);
+				Bundle args = new Bundle();
+				args.putString(ModuleGraphActivity.EXTRA_GATE_ID, mGateId);
+				args.putString(ModuleGraphActivity.EXTRA_DEVICE_ID, mDeviceId);
+				args.putString(ModuleGraphActivity.EXTRA_MODULE_ID, moduleId);
+				Intent intent = new Intent(mActivity, ModuleGraphActivity.class);
+				intent.putExtras(args);
+				startActivity(intent);
 			}
 
 			@Override

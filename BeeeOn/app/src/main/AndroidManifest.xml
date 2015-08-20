@@ -158,6 +158,8 @@
 		<activity
 			android:name=".gui.activity.IntroActivity"
 			android:label="@string/app_name"/>
+		<activity
+			android:name=".gui.activity.ModuleGraphActivity"/>
 		<!-- Facebook login screen -->
 		<activity
 			android:name="com.facebook.FacebookActivity"

@@ -39,12 +39,6 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 	@Override
 	public DeviceModuleAdapter.DeviceModuleAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_device_module, parent, false);
-		view.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mItemClickListener.onItemClick("adf");
-			}
-		});
 		return new DeviceModuleAdapterViewHolder(view);
 	}
 
@@ -98,6 +92,13 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 			holder.mButton.setVisibility(View.GONE);
 			holder.mSwitch.setVisibility(View.GONE);
 		}
+
+		holder.mView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mItemClickListener.onItemClick(holder.mModuleId);
+			}
+		});
 	}
 
 	@Override
@@ -124,6 +125,7 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 		public final TextView mValue;
 		public final Button mButton;
 		public final SwitchCompat mSwitch;
+		public final View mView;
 
 		public DeviceModuleAdapterViewHolder(View itemView) {
 			super(itemView);
@@ -132,6 +134,7 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 			mValue = (TextView) itemView.findViewById(R.id.list_module_item_value);
 			mButton = (Button) itemView.findViewById(R.id.list_device_module_item_set_button);
 			mSwitch = (SwitchCompat) itemView.findViewById(R.id.list_device_module_item_switch);
+			mView = itemView;
 		}
 	}
 }
