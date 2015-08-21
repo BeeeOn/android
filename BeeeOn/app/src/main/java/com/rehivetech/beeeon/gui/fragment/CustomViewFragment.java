@@ -93,7 +93,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.setVisibility(View.INVISIBLE);
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
-		ChartHelper.prepareChart(chart, mActivity, module.getValue(), chartLayout, Controller.getInstance(mActivity));
+		ChartHelper.prepareChart(chart, mActivity, module.getValue(), new StringBuffer(), Controller.getInstance(mActivity));
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 

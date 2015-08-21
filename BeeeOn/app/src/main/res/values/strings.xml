@@ -278,6 +278,8 @@
 	<string name="module_edit_setup_new_location_hint">New location name</string>
 	<string name="module_edit_title_module_edit">Edit device</string>
 
+	<!--Module graph-->
+	<string name="module_graph_show_x_labels_button">Show X labels</string>
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Device is not available</string>
 

@@ -378,7 +378,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		String name = getString(module.getTypeStringResource());
 
 		//set chart
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, layout, controller);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, null, controller);
 		mChart.setFillFormatter(new CustomFillFormatter());
 
 

@@ -12,6 +12,12 @@
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
 		android:layerType="software"
+		android:layout_weight="10"/>
+
+	<com.rehivetech.beeeon.gui.view.VerticalChartLegend
+		android:id="@+id/module_graph_legend"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
 		android:layout_weight="1"/>
 
 	<Button
@@ -20,5 +26,5 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center_horizontal"
-		android:text="show legend"/>
+		android:text="@string/module_graph_show_x_labels_button"/>
 </LinearLayout>

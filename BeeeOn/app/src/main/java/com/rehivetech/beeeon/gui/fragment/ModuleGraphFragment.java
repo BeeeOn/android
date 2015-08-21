@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -71,6 +73,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private CombinedChart mChart;
 	private DataSet mDataSet;
 	private VerticalChartLegend mLegend;
+	private Button mShowLegendButton;
+	private StringBuffer mXlabels = new StringBuffer();
 
 	public static ModuleGraphFragment newInstance(String gateId, String deviceId, String moduleId) {
 		Bundle args = new Bundle();
@@ -111,6 +115,19 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.fragment_module_graph, container, false);
 		mChart = (CombinedChart) mView.findViewById(R.id.module_graph_chart);
+		mLegend = (VerticalChartLegend) mView.findViewById(R.id.module_graph_legend);
+
+		mShowLegendButton = (Button) mView.findViewById(R.id.module_graph_show_legend_btn);
+		mShowLegendButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
+						.setTitle(getString(R.string.chart_helper_chart_y_axis))
+						.setMessage(mXlabels.toString())
+						.setNeutralButtonText("close")
+						.show();
+			}
+		});
 		return mView;
 	}
 
@@ -126,42 +143,22 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		Module module = controller.getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
 		BaseValue baseValue = module.getValue();
 		boolean barchart = baseValue instanceof EnumValue;
-//		LinearLayout layout = (LinearLayout) mActivity.findViewById(R.id.module_graph_legend_layout);
 		String unit = mUnitsHelper.getStringUnit(baseValue);
-		String name = getString(module.getTypeStringResource());
+		String name = module.getName(mActivity);
 
 		//set chart
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, null, controller);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mXlabels, controller);
 		mChart.setFillFormatter(new CustomFillFormatter());
 
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), name);
 		} else {
-
-
 			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s [%s]", name, unit));
+			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
 		ChartHelper.prepareDataSet(mDataSet, barchart, true, getResources().getColor(R.color.beeeon_primary_medium));
-
-//		int viewCount = layout.getChildCount();
-//		View view = layout.getChildAt(viewCount - 1);
-//		if (!(view instanceof VerticalChartLegend)) {
-////			set legend title
-//			int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
-//			TextView legendTitle = new TextView(mActivity);
-//			legendTitle.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
-//			legendTitle.setText(getString(R.string.fragment_module_detail_custom_view_chart_legend));
-//			legendTitle.setPadding(0, padding, 0, padding);
-//			layout.addView(legendTitle);
-//
-//			//set legend
-//			mLegend = new VerticalChartLegend(mActivity);
-//			mLegend.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-//			layout.addView(mLegend);
-//			layout.invalidate();
-//		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -225,9 +222,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 			mLegend.invalidate();
 			mLegend.setPadding(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.customview_text_padding));
 		}
-
-		mView.invalidate();
-//		mActivity.findViewById(R.id.module_detail_third_section_layout).invalidate();
 	}
 
 	protected void doLoadGraphData() {
