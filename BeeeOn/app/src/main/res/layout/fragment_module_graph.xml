@@ -18,7 +18,7 @@
 		android:id="@+id/module_graph_legend"
 		android:layout_width="match_parent"
 		android:layout_height="0dp"
-		android:layout_weight="1"/>
+		android:layout_weight="1.5"/>
 
 	<Button
 		android:id="@+id/module_graph_show_legend_btn"
