@@ -306,16 +306,6 @@
 
 		</HorizontalScrollView>
 
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="16dp"
-			android:layout_marginStart="16dp"
-			android:layout_marginBottom="16dp"
-			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-			android:text="@string/device_detail_module_title"/>
-
-
 		<LinearLayout
 			android:id="@+id/device_detail_viewpager_layout"
 			android:layout_width="match_parent"
