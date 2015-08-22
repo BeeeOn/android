@@ -36,7 +36,6 @@ import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.DeviceFeatures;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -125,17 +124,17 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 		mDeviceLastUpdate = (TextView) view.findViewById(R.id.device_detail_last_update_label);
 		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
 
-		DeviceFeatures deviceFeatures = mDevice.getType().getFeatures();
+//		DeviceFeatures deviceFeatures = mDevice.getType().getFeatures();
 
-		if (deviceFeatures.hasRssi()) {
+		if (mDevice.getRssi() != null) {
 			LinearLayout signalLayout = (LinearLayout) view.findViewById(R.id.device_detail_signal_layout);
 			mDeviceSignal = (TextView) view.findViewById(R.id.device_detail_signal_value);
-			mDeviceSignal.setText(String.format("%d%%", mDevice.getNetworkQuality()));
+			mDeviceSignal.setText(String.format("%d%%", mDevice.getRssi()));
 
 			signalLayout.setVisibility(View.VISIBLE);
 		}
 
-		if (deviceFeatures.hasBattery()) {
+		if (mDevice.getBattery() != null) {
 			LinearLayout batteryLayout = (LinearLayout) view.findViewById(R.id.device_detail_battery_layout);
 			mDeviceBattery = (TextView) view.findViewById(R.id.device_detail_battery_value);
 			mDeviceBattery.setText(String.format("%d%%", mDevice.getBattery()));
@@ -143,7 +142,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			batteryLayout.setVisibility(View.VISIBLE);
 		}
 
-		if (deviceFeatures.hasRefresh()) {
+		if (mDevice.getRefresh() != null) {
 			LinearLayout refreshLayout = (LinearLayout) view.findViewById(R.id.device_detail_refresh_layout);
 			mDeviceRefresh = (TextView) view.findViewById(R.id.device_detail_refresh_value);
 			RefreshInterval refreshInterval = mDevice.getRefresh();
@@ -154,10 +153,10 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			refreshLayout.setVisibility(View.VISIBLE);
 		}
 
-		if (deviceFeatures.hasLed()) {
-			LinearLayout ledLayout = (LinearLayout) view.findViewById(R.id.device_detail_led_layout);
-			ledLayout.setVisibility(View.VISIBLE);
-		}
+//		if (deviceFeatures.hasLed()) {
+//			LinearLayout ledLayout = (LinearLayout) view.findViewById(R.id.device_detail_led_layout);
+//			ledLayout.setVisibility(View.VISIBLE);
+//		}
 
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
