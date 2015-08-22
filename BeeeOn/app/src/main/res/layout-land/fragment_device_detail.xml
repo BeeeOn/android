@@ -10,16 +10,52 @@
 		android:id="@+id/device_detail_appbar"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		style="@style/Widget.Design.AppBarLayout"
-		android:fitsSystemWindows="true">
-
-		<include layout="@layout/layout_beeeon_toolbar"/>
+		android:background="@color/white">
 
 		<RelativeLayout
+			app:layout_scrollFlags="scroll"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"
+			android:elevation="4dp"
+			android:background="@color/beeeon_primary">
+
+			<android.support.v7.widget.Toolbar
+				app:layout_scrollFlags="scroll"
+				android:id="@+id/beeeon_toolbar"
+				android:minHeight="?attr/actionBarSize"
+				android:background="?attr/colorPrimary"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+				app:popupTheme="@style/Theme.AppCompat.Light">
+
+				<TextView
+					android:id="@+id/device_detail_device_name"
+					android:layout_width="wrap_content"
+					android:layout_height="?attr/actionBarSize"
+					android:layout_marginLeft="16dp"
+					android:layout_marginStart="16dp"
+					android:gravity="center_vertical"
+					android:maxLines="1"
+					android:ellipsize="end"
+					android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+					android:textColor="@color/white"
+					tools:text="Device Name"/>
+
+				<ProgressBar
+					android:id="@+id/beeeon_toolbar_progress"
+					android:layout_width="40dp"
+					android:layout_height="40dp"
+					android:layout_gravity="end"
+					android:indeterminate="true"
+					android:layout_marginRight="8dp"
+					android:layout_marginEnd="8dp"
+					android:visibility="gone"/>
+
+			</android.support.v7.widget.Toolbar>
 
 			<TextView
+				android:layout_below="@id/beeeon_toolbar"
 				android:layout_width="50dp"
 				android:layout_height="50dp"
 				android:layout_marginLeft="16dp"
@@ -30,27 +66,17 @@
 				android:textColor="@color/beeeon_primary"
 				android:background="@drawable/oval_white"/>
 
-			<TextView
-				android:id="@+id/device_detail_device_name"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="72dp"
-				android:layout_marginStart="72dp"
-				android:paddingBottom="16dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-				android:textColor="@color/white"
-				tools:text="Device Name"/>
-
 			<ImageView
+				android:layout_below="@+id/beeeon_toolbar"
 				android:id="@+id/device_detail_loc_icon"
 				android:layout_width="24dp"
 				android:layout_height="24dp"
 				android:layout_marginLeft="72dp"
 				android:layout_marginStart="72dp"
-				android:layout_below="@+id/device_detail_device_name"
 				tools:src="@drawable/ic_loc_bathroom"/>
 
 			<TextView
+				android:layout_below="@+id/beeeon_toolbar"
 				android:id="@+id/device_detail_loc_label"
 				android:layout_width="wrap_content"
 				android:layout_height="24dp"
@@ -59,7 +85,6 @@
 				android:layout_marginStart="8dp"
 				android:layout_toRightOf="@+id/device_detail_loc_icon"
 				android:layout_toEndOf="@+id/device_detail_loc_icon"
-				android:layout_below="@+id/device_detail_device_name"
 				android:textColor="@color/white"
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 				tools:text="Location"/>
@@ -70,7 +95,7 @@
 				android:layout_height="24dp"
 				android:layout_marginLeft="72dp"
 				android:layout_marginStart="72dp"
-				android:layout_marginTop="8dp"
+				android:layout_marginTop="5dp"
 				android:layout_below="@+id/device_detail_loc_icon"
 				android:src="@drawable/ic_clock"/>
 
@@ -79,7 +104,7 @@
 				android:layout_width="wrap_content"
 				android:layout_height="24dp"
 				android:gravity="center_vertical"
-				android:layout_marginTop="8dp"
+				android:layout_marginTop="5dp"
 				android:layout_marginBottom="8dp"
 				android:layout_marginLeft="8dp"
 				android:layout_marginStart="8dp"
@@ -91,27 +116,14 @@
 				tools:text="14:23:34"/>
 
 		</RelativeLayout>
-		<android.support.v4.widget.Space
-			android:id="@+id/device_detail_appbar_space"
-			android:visibility="gone"
-			android:layout_width="match_parent"
-			android:layout_height="8dp"/>
-	</android.support.design.widget.AppBarLayout>
-
-
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical"
-		android:layout_marginTop="35dp"
-		android:layout_marginBottom="10dp"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 		<HorizontalScrollView
+			android:id="@+id/device_detail_features_scrollview"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:scrollbarStyle="outsideInset"
-			android:paddingBottom="5dp">
+			android:layout_marginTop="8dp"
+			android:layout_marginBottom="8dp"
+			app:layout_scrollFlags="scroll">
 
 			<LinearLayout
 				android:layout_width="wrap_content"
@@ -309,59 +321,48 @@
 			</LinearLayout>
 
 		</HorizontalScrollView>
+	</android.support.design.widget.AppBarLayout>
 
-		<FrameLayout
-			app:layout_behavior="@string/appbar_scrolling_view_behavior"
-			android:id="@+id/device_detail_viewpager_layout"
+	<FrameLayout
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		android:id="@+id/device_detail_viewpager_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="vertical"
+		android:visibility="gone">
+
+		<android.support.v4.view.ViewPager
+			android:id="@+id/device_detail_group_pager"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:visibility="gone">
+			android:layout_height="match_parent"/>
 
-			<android.support.v4.view.ViewPager
-				android:id="@+id/device_detail_group_pager"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
-
-			<android.support.design.widget.TabLayout
-				android:layout_gravity="center|top"
-				android:id="@+id/device_detail_group_tab_layout"
-				style="@style/ModuleGroupTabLayout"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"/>
-		</FrameLayout>
-
-		<FrameLayout
-			android:id="@+id/device_detail_recyclerview_layout"
+		<android.support.design.widget.TabLayout
+			android:layout_gravity="center|top"
+			android:id="@+id/device_detail_group_tab_layout"
+			style="@style/ModuleGroupTabLayout"
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
+			android:layout_height="wrap_content"/>
+	</FrameLayout>
 
-			<android.support.v7.widget.RecyclerView
-				android:id="@+id/device_detail_modules_list"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:scrollbars="vertical"/>
+	<FrameLayout
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		android:id="@+id/device_detail_recyclerview_layout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
 
-			<TextView
-				android:id="@+id/device_detrail_module_list_empty_view"
-				android:layout_width="wrap_content"
-				android:layout_height="100dp"
-				android:visibility="gone"
-				android:gravity="center_vertical"
-				android:layout_gravity="center_horizontal"
-				android:text="@string/device_detail_list_modules_no_item_title"/>
-		</FrameLayout>
-	</LinearLayout>
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/device_detail_modules_list"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:scrollbars="vertical"/>
 
-	<android.support.design.widget.FloatingActionButton
-		android:id="@+id/device_detail_floating_action_button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_margin="16dp"
-		app:borderWidth="0dp"
-		app:fabSize="normal"
-		android:clickable="true"
-		android:src="@drawable/ic_menu_chart"
-		app:layout_anchor="@+id/device_detail_appbar"
-		app:layout_anchorGravity="bottom|right|end"/>
-
+		<TextView
+			android:id="@+id/device_detrail_module_list_empty_view"
+			android:layout_width="wrap_content"
+			android:layout_height="100dp"
+			android:visibility="gone"
+			android:gravity="center_vertical"
+			android:layout_gravity="center_horizontal"
+			android:text="@string/device_detail_list_modules_no_item_title"/>
+	</FrameLayout>
 </android.support.design.widget.CoordinatorLayout>

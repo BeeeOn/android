@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -10,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.Space;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -91,7 +93,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mActivity  = (DeviceDetailActivity) activity;
+		mActivity = (DeviceDetailActivity) activity;
 	}
 
 	@Nullable
@@ -177,6 +179,13 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			ViewPager pager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
 			final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
 			setupViewPager(pager, tabLayout, moduleGroups);
+		}
+
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+			Space space = (Space) view.findViewById(R.id.device_detail_appbar_space);
+			if (space != null) {
+				space.setVisibility(View.VISIBLE);
+			}
 		}
 		return view;
 	}
