@@ -43,6 +43,7 @@ import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
+import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 
@@ -74,9 +75,13 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	private TextView mDeviceSignal;
 	private TextView mDeviceBattery;
 	private TextView mDeviceRefresh;
+	private TextView mEmptyTextView;
 	private ImageView mDeviceLocationIcon;
 	private RecyclerView mRecyclerView;
 	private DeviceModuleAdapter mModuleAdapter;
+
+	private ViewPager mViewPager;
+	private TabLayout mTabLayout;
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 
@@ -99,8 +104,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
-		Controller controller = Controller.getInstance(mActivity);
-		Location location = controller.getLocationsModel().getLocation(mGateId, mDevice.getLocationId());
+
 
 		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
 		AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -113,24 +117,13 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 		}
 
 		mDeviceName = (TextView) view.findViewById(R.id.device_detail_device_name);
-		mDeviceName.setText(mDevice.getType().getNameRes());
-
 		mDeviceLocation = (TextView) view.findViewById(R.id.device_detail_loc_label);
-		mDeviceLocation.setText(location.getName());
-
 		mDeviceLocationIcon = (ImageView) view.findViewById(R.id.device_detail_loc_icon);
-		mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
-
 		mDeviceLastUpdate = (TextView) view.findViewById(R.id.device_detail_last_update_label);
-		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
-
-//		DeviceFeatures deviceFeatures = mDevice.getType().getFeatures();
 
 		if (mDevice.getRssi() != null) {
 			LinearLayout signalLayout = (LinearLayout) view.findViewById(R.id.device_detail_signal_layout);
-			mDeviceSignal = (TextView) view.findViewById(R.id.device_detail_signal_value);
-			mDeviceSignal.setText(String.format("%d%%", mDevice.getRssi()));
-
+			mDeviceSignal = (TextView) signalLayout.findViewById(R.id.device_detail_signal_value);
 			signalLayout.setVisibility(View.VISIBLE);
 		}
 
@@ -152,7 +145,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 
 			refreshLayout.setVisibility(View.VISIBLE);
 		}
-
+//		TODO device LED
 //		if (deviceFeatures.hasLed()) {
 //			LinearLayout ledLayout = (LinearLayout) view.findViewById(R.id.device_detail_led_layout);
 //			ledLayout.setVisibility(View.VISIBLE);
@@ -164,20 +157,15 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 			List<Module> modules = mDevice.getAllModules();
 			mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-			TextView emptyView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
+			mEmptyTextView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
 			mModuleAdapter = new DeviceModuleAdapter(mActivity, modules, getRecyclerViewClickListener());
 			mRecyclerView.setAdapter(mModuleAdapter);
 
-			if (mModuleAdapter.getItemCount() == 0) {
-				mRecyclerView.setVisibility(View.GONE);
-				emptyView.setVisibility(View.VISIBLE);
-			}
 		} else {
 			view.findViewById(R.id.device_detail_recyclerview_layout).setVisibility(View.GONE);
 			view.findViewById(R.id.device_detail_viewpager_layout).setVisibility(View.VISIBLE);
-			ViewPager pager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
-			final TabLayout tabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
-			setupViewPager(pager, tabLayout, moduleGroups);
+			mViewPager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
+			mTabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
 		}
 
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
@@ -206,6 +194,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		doReloadDevicesTask(mGateId, false);
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 
@@ -220,6 +214,48 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 		}
 		viewPager.setAdapter(adapter);
 		tabLayout.setupWithViewPager(viewPager);
+	}
+
+	private void updateLayout() {
+		Controller controller = Controller.getInstance(mActivity);
+		Location location = controller.getLocationsModel().getLocation(mGateId, mDevice.getLocationId());
+		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
+
+		mDeviceName.setText(mDevice.getType().getNameRes());
+		mDeviceLocation.setText(location.getName());
+		mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
+		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
+
+		// signal
+		if (mDevice.getRssi() != null) {
+			mDeviceSignal.setText(String.format("%d%%", mDevice.getRssi()));
+		}
+
+		// battery
+		if (mDevice.getBattery() != null) {
+			mDeviceBattery.setText(String.format("%d%%", mDevice.getBattery()));
+		}
+
+		// refresh
+		if (mDevice.getRefresh() != null) {
+			RefreshInterval refreshInterval = mDevice.getRefresh();
+			mDeviceRefresh.setText(refreshInterval.getStringInterval(mActivity));
+		}
+		// TODO device LED initialize
+
+		if (mModuleAdapter != null) {
+			mModuleAdapter.notifyDataSetChanged();
+
+			if (mModuleAdapter.getItemCount() == 0) {
+				mRecyclerView.setVisibility(View.GONE);
+				mEmptyTextView.setVisibility(View.VISIBLE);
+			}
+		}
+
+		if (mViewPager != null && mTabLayout != null) {
+			setupViewPager(mViewPager, mTabLayout, moduleGroups);
+		}
+
 	}
 
 	static class ModuleGroupPagerAdapter extends FragmentPagerAdapter {
@@ -313,6 +349,22 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	private void showNumberPickerDialog(String moduleId) {
 		Module module = mDevice.getModuleById(moduleId);
 		NumberPickerDialogFragment.show(mActivity, module, DeviceDetailFragment.this);
+	}
+
+	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
+
+		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					updateLayout();
+				}
+			}
+		});
+
+		// Remember task so it can be stopped automatically
+		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, gateId);
 	}
 
 	private void doChangeStateModuleTask(final Module module) {
