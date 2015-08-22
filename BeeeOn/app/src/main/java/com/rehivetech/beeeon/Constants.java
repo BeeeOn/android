@@ -17,23 +17,11 @@ public final class Constants {
 	public static final String COM_VER = "2.5";
 
 	/**
-	 * Assets with prepared devices and locations for demo mode
-	 */
-	public static final String ASSET_GATES_FILENAME = "adapters.xml";
-	public static final String ASSET_GATE_DATA_FILENAME = "adapter_%s.xml";
-	public static final String ASSET_LOCATIONS_FILENAME = "locations_%s.xml";
-	public static final String ASSET_WATCHDOGS_FILENAME = "watchdogs_%s.xml";
-	public static final String ASSET_ACHIEVEMENTS_FILENAME = "achievements_%s.xml";
-
-	/**
 	 * Persistence's shared preferences
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
 	public static final String PERSISTENCE_PREF_ACTIVE_GATE = "active_adapter";
 	public static final String PERSISTENCE_PREF_IGNORE_NO_GATE = "ignore_no_adapter";
-	public static final String PERSISTENCE_PREF_LAST_LOCATION = "location_%s";
-	public static final String PERSISTENCE_PREF_SW2_ADAPTER = "pref_sw2_adapter";
-	public static final String PERSISTENCE_PREF_SW2_LOCATION = "pref_sw2_location";
 	public static final String PERSISTENCE_PREF_TIMEZONE = "pref_timezone";
 
 	public static final String PERSISTENCE_PREF_TEMPERATURE = "pref_temperature";
@@ -59,14 +47,8 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_USER_GENDER = "user_gender";
 	public static final String PERSISTENCE_PREF_USER_PICTURE = "user_picture";
 
-	public static final String PERSISTENCE_PREF_LOGIN_FACEBOOK = "login_facebook";
-	public static final String PERSISTENCE_PREF_LOGIN_TWITTER = "login_twitter";
-	public static final String PERSISTENCE_PREF_LOGIN_VKONTAKTE = "login_vkontakte";
-
 	public static final String PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY = "login_choose_server_manually";
 	public static final String PERSISTENCE_PREF_LOGIN_SERVER = "login_server";
-
-	public static final String PERSISTENCE_APP_IMAGE_DIR = "image_dir";
 
 	public static final String KEY_UNITS = "key_units";
 	public static final String KEY_GEOFENCE = "key_geofence";
@@ -91,23 +73,15 @@ public final class Constants {
 	/**
 	 * GUI constants
 	 */
-
 	public static final int ADD_GATE_REQUEST_CODE = 1000;
-	public static final int EDIT_MODULE_REQUEST_CODE = 1001;
-	public static final int ADD_DEVICE_REQUEST_CODE = 1002;
-	public static final int SETUP_DEVICE_REQUEST_CODE = 1003;
+	public static final int ADD_DEVICE_REQUEST_CODE = 1001;
+	public static final int SETUP_DEVICE_REQUEST_CODE = 1002;
 
 	public static final String SETUP_DEVICE_ACT_LOC = "SETUP_DEVICE_ACT_LOC";
-
-	public static final boolean GUI_DEBUG = true;
 
 	public static final String TUTORIAL_ADD_GATE_SHOWED = "TUTORIAL_ADD_GATE_SHOWED";
 
 	public static final String TUTORIAL_ADD_DEVICE_SHOWED = "TUTORIAL_ADD_DEVICE_SHOWED";
-
-	public static final String TUTORIAL_LOGIN_SHOWED = "TUTORIAL_LOGIN_SHOWED";
-
-	public static final String GUI_MENU_ALL_MODULES_ID = "GUI_MENU_ALL_MODULES_ID";
 
 	public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
 
@@ -117,10 +91,6 @@ public final class Constants {
 
 	public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
 
-	public static final String GUI_MENU_PROFILE = "GUI_MENU_PROFILE";
-
-	public static final String GUI_EDIT_MODULE_ID = "GUI_EDIT_MODULE_ID";
-
 	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY";
 
 	public static final String GUI_MENU_DEVICES = "GUI_MENU_DEVICES";
@@ -128,16 +98,19 @@ public final class Constants {
 	/**
 	 * Broadcasts
 	 */
-
 	public static final String BROADCAST_PREFERENCE_CHANGED = "com.rehivetech.beeeon.BROADCAST_PREFERENCE_CHANGED";
 	public static final String BROADCAST_USER_LOGIN = "com.rehivetech.beeeon.BROADCAST_USER_LOGIN";
 	public static final String BROADCAST_USER_LOGOUT = "com.rehivetech.beeeon.BROADCAST_USER_LOGOUT";
 
-	// actor change
+	/**
+	 * Actor change broadcasts
+ 	 */
 	public static final String BROADCAST_ACTOR_CHANGED = "com.rehivetech.beeeon.BROADCAST_ACTOR_CHANGED";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID";
 
-	// The limit time for adding device in addDeviceFragment
+	/**
+	 * The time interval for enabled pairing mode on Gate
+ 	 */
 	public static final int PAIR_TIME_SEC = 30;
 }
