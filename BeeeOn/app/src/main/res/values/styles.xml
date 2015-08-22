@@ -208,4 +208,6 @@
 		<item name="tabGravity">center</item>
 		<item name="tabMode">scrollable</item>
     </style>
+
+    <style name="BeeeOn.Button" parent="AppTheme" />
 </resources>
