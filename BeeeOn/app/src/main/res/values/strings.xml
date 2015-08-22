@@ -279,7 +279,7 @@
 	<string name="module_edit_title_module_edit">Edit device</string>
 
 	<!--Module graph-->
-	<string name="module_graph_show_x_labels_button">Show X labels</string>
+	<string name="module_graph_show_y_labels_button">Show Y labels</string>
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Device is not available</string>
 
