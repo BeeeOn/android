@@ -30,18 +30,18 @@ public interface INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Return beeeon-token used for communication
+	 * Return sessionId used for communication
 	 *
-	 * @return BT of actual user
+	 * @return sessionId of actual user
 	 */
-	String getBT();
+	String getSessionId();
 
 	/**
-	 * Set beeeon-token for communication
+	 * Set sessionId for communication
 	 *
 	 * @return
 	 */
-	void setBT(String token);
+	void setSessionId(String token);
 
 	/**
 	 * Check if beeeon-token is present (but does NOT check if it is still valid on server)

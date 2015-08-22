@@ -124,8 +124,8 @@ public final class Controller {
 			mUser.setId(userId);
 			// Load rest of user details (if available)
 			mPersistence.loadUserDetails(userId, mUser);
-			// Finally load BT (session) - we can call it directly like that because here we doesn't care whether it's empty because it's empty since Network creation
-			mNetwork.setBT(mPersistence.loadLastBT(userId));
+			// Finally load sessionId - we can call it directly like that because here we doesn't care whether it's empty because it's empty since Network creation
+			mNetwork.setSessionId(mPersistence.loadLastBT(userId));
 		}
 	}
 
@@ -364,9 +364,9 @@ public final class Controller {
 		mPersistence.initializeDefaultSettings(userId);
 
 		if (!(mNetwork instanceof DemoNetwork)) {
-			// Save our new BT
-			String bt = mNetwork.getBT();
-			Log.i(TAG, String.format("Loaded for user '%s' fresh new BT: %s", userId, bt));
+			// Save our new sessionId
+			String bt = mNetwork.getSessionId();
+			Log.i(TAG, String.format("Loaded for user '%s' fresh new sessionId: %s", userId, bt));
 			mPersistence.saveLastBT(userId, bt);
 
 			// Remember this email to use with auto login
@@ -405,7 +405,7 @@ public final class Controller {
 	 */
 	public void logout(boolean alsoFromServer) {
 		if (alsoFromServer) {
-			// TODO: Request to logout from server (discard actual BT)
+			// TODO: Request to logout from server (discard actual sessionId)
 		}
 
 		// delete geofences
@@ -419,7 +419,7 @@ public final class Controller {
 		getGcmModel().deleteGCM(mUser.getId(), null);
 
 		// Destroy session
-		mNetwork.setBT("");
+		mNetwork.setSessionId("");
 
 		// Delete session from saved settings
 		SharedPreferences prefs = getUserSettings();

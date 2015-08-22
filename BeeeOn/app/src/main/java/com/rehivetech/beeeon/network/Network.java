@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
@@ -18,15 +19,11 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.xml.FalseAnswer;
-import com.rehivetech.beeeon.network.xml.ParsedMessage;
 import com.rehivetech.beeeon.network.xml.XmlCreator;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.XmlParsers.State;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
-
-import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -43,7 +40,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -80,7 +76,7 @@ public class Network implements INetwork {
 
 	private final Context mContext;
 	private final NetworkServer mServer;
-	private String mBT = "";
+	private String mSessionId = "";
 
 	private final Object mSocketLock = new Object();
 	private SSLSocket mSocket = null;
@@ -124,7 +120,7 @@ public class Network implements INetwork {
 		// Receive response
 		StringBuilder response = new StringBuilder();
 		try {
-			String actRecieved = null;
+			String actRecieved;
 			while ((actRecieved = mSocketReader.readLine()) != null) {
 				response.append(actRecieved);
 				if (actRecieved.endsWith(EOF))
@@ -257,20 +253,11 @@ public class Network implements INetwork {
 	}
 
 	/**
-	 * Just call's {@link #doRequest(String, boolean)} with checkBT = true
-	 *
-	 * @see {#doRequest}
-	 */
-	private synchronized ParsedMessage doRequest(String messageToSend) throws AppException {
-		return doRequest(messageToSend, true);
-	}
-
-	/**
 	 * Just call's {@link #doRequest(String, boolean, int)} with retrues = RETRIES_COUNT
 	 *
 	 * @see {#doRequest}
 	 */
-	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT) throws AppException {
+	private synchronized String doRequest(String messageToSend, boolean checkBT) throws AppException {
 		return doRequest(messageToSend, checkBT, RETRIES_COUNT);
 	}
 
@@ -278,88 +265,115 @@ public class Network implements INetwork {
 	 * Send request to server and return parsedMessage or throw exception on error.
 	 *
 	 * @param messageToSend message in xml
-	 * @param checkBT       - when true and BT is not present in Network, then throws AppException with NetworkError.BAD_BT
-	 *                      - this logically must be false for requests like register or login, which doesn't require BT for working
+	 * @param checkBT       - when true and sessionId is not present in Network, then throws AppException with NetworkError.BAD_BT
+	 *                      - this logically must be false for requests like register or login, which doesn't require sessionId for working
 	 * @param retries       - number of retries to do the request and receive response
-	 * @return object with parsed data
+	 * @return String Result from server
 	 * @throws AppException with error ClientError.INTERNET_CONNECTION, NetworkError.BAD_BT, ClientError.XML,
 	 *                      ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE, ClientError.SOCKET or ClientError.NO_RESPONSE
 	 */
-	private synchronized ParsedMessage doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
+	private synchronized String doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
 		// Check internet connection
 		if (!isAvailable())
 			throw new AppException(ClientError.INTERNET_CONNECTION);
 
-		// Check existence of BT
+		// Check existence of sessionId
 		if (checkBT && !hasBT())
 			throw new AppException(NetworkError.BAD_BT);
 
-		try {
-			Log.i(TAG + " fromApp >>", messageToSend);
-			String result = startCommunication(messageToSend);
-			Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
+		Log.i(TAG + " fromApp >>", messageToSend);
+		String result = startCommunication(messageToSend);
+		Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
 
-			// Check if we received no response and try it again eventually
-			if (result.isEmpty()) {
-				if (retries <= 0) {
-					// We can't try again anymore, just throw error
-					throw new AppException("No response from server.", ClientError.NO_RESPONSE);
-				}
-
-				// Probably connection is lost so we need to reinit socket at next call of doRequest
-				closeCommunicationSocket();
-
-				// Try to do this request again (with decremented retries)
-				Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));
-				return doRequest(messageToSend, checkBT, retries - 1);
+		// Check if we received no response and try it again eventually
+		if (result.isEmpty()) {
+			if (retries <= 0) {
+				// We can't try again anymore, just throw error
+				throw new AppException("No response from server.", ClientError.NO_RESPONSE);
 			}
 
-			return new XmlParsers().parseCommunication(result, false);
-		} catch (IOException | XmlPullParserException | ParseException e) {
-			throw AppException.wrap(e, ClientError.XML);
+			// Probably connection is lost so we need to reinit socket at next call of doRequest
+			closeCommunicationSocket();
+
+			// Try to do this request again (with decremented retries)
+			Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));
+			return doRequest(messageToSend, checkBT, retries - 1);
 		}
+
+		return result;
 	}
 
 	/**
-	 * Return new AppException based on error code from parsed False message from server.
+	 * Just call's {@link #processCommunication(String, State, boolean)} with checkBT = true
 	 *
-	 * @param msg must be message with getState() State.FALSE
-	 * @return AppException object with correct error code set
-	 * @throws AppException with NetworkError.UNEXPECTED_RESPONSE when message is not of State.FALSE
+	 * @see {#processCommunication}
 	 */
-	private AppException processFalse(ParsedMessage msg) throws IllegalStateException {
-		// Check validity of this message
-		if (msg.getState() != State.FALSE)
-			throw new AppException("ParsedMessage is not State.FALSE", ClientError.UNEXPECTED_RESPONSE)
-					.set("State", msg.getState())
-					.set("Data", msg.data);
+	private synchronized XmlParsers processCommunication(String request, State expectedState) throws AppException {
+		return processCommunication(request, expectedState, true);
+	}
 
-		// Parse FalseAnswer data from this message
-		FalseAnswer fa = (FalseAnswer) msg.data;
+	private XmlParsers processCommunication(String request, State expectedState, boolean checkBT) throws AppException {
+		String response = doRequest(request, checkBT);
+		XmlParsers parser = XmlParsers.parse(response);
 
-		// Delete BT when we receive error saying that it is invalid
-		if (fa.getErrCode() == NetworkError.BAD_BT.getNumber())
-			mBT = "";
+		// Check communication protocol version
+		String version = parser.getVersion();
+		if (!version.equals(Constants.PROTOCOL_VERSION)) {
+			String srv[] = version.split("\\.");
+			String app[] = Constants.PROTOCOL_VERSION.split("\\.");
 
-		// Throw AppException for the caller
-		return new AppException(fa.getErrMessage(), Utils.getEnumFromId(NetworkError.class, String.valueOf(fa.getErrCode()), NetworkError.UNKNOWN));
+			if (srv.length != 0 && app.length != 0) {
+				int srv_major = Integer.parseInt(srv[0]);
+				int srv_minor = Integer.parseInt(srv[1]);
+				int app_major = Integer.parseInt(app[0]);
+				int app_minor = Integer.parseInt(app[1]);
+				if (srv_major != app_major || srv_minor < app_minor) {
+					// Server must have same major version as app and same or greater minor version than app
+					throw new AppException(NetworkError.COM_VER_MISMATCH)
+							.set(NetworkError.PARAM_COM_VER_LOCAL, Constants.PROTOCOL_VERSION)
+							.set(NetworkError.PARAM_COM_VER_SERVER, version);
+				}
+			} else {
+				// Server must have same major version as app and same or greater minor version than app
+				throw new AppException(NetworkError.COM_VER_MISMATCH)
+						.set(NetworkError.PARAM_COM_VER_LOCAL, Constants.PROTOCOL_VERSION)
+						.set(NetworkError.PARAM_COM_VER_SERVER, version);
+			}
+		}
+
+		// Check expected state
+		if (parser.getState() != expectedState) {
+			if (parser.getState() != State.FALSE)
+				throw new AppException("ParsedMessage is not State.FALSE", ClientError.UNEXPECTED_RESPONSE)
+						.set("ExpectedState", expectedState)
+						.set("State", parser.getState());
+
+			// Delete COM_SESSION_ID when we receive error saying that it is invalid
+			if (parser.getErrorCode() == NetworkError.BAD_BT.getNumber())
+				mSessionId = "";
+
+			// Throw AppException
+			throw new AppException(Utils.getEnumFromId(NetworkError.class, String.valueOf(parser.getErrorCode()), NetworkError.UNKNOWN));
+		}
+
+		return parser;
 	}
 
 	// /////////////////////////////////////SIGNIN,SIGNUP,GATES//////////////////////
 
 	@Override
-	public String getBT() {
-		return mBT;
+	public String getSessionId() {
+		return mSessionId;
 	}
 
 	@Override
-	public void setBT(String token) {
-		mBT = token;
+	public void setSessionId(String token) {
+		mSessionId = token;
 	}
 
 	@Override
 	public boolean hasBT() {
-		return !mBT.isEmpty();
+		return !mSessionId.isEmpty();
 	}
 
 	@Override
@@ -369,14 +383,13 @@ public class Network implements INetwork {
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		ParsedMessage msg = doRequest(XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneName(), authProvider), false);
+		XmlParsers parser = processCommunication(
+				XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneName(), authProvider),
+				State.BT,
+				false);
 
-		if (msg.getState() == State.BT) {
-			mBT = (String) msg.data;
-			return true;
-		}
-
-		throw processFalse(msg);
+		mSessionId = parser.parseSessionId();
+		return true;
 	}
 
 	@Override
@@ -386,195 +399,171 @@ public class Network implements INetwork {
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		ParsedMessage msg = doRequest(XmlCreator.createSignUp(authProvider), false);
+		processCommunication(
+				XmlCreator.createSignUp(authProvider),
+				State.TRUE,
+				false);
 
-		if (msg.getState() == State.TRUE) {
-			return true;
-		}
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean logout() {
-		ParsedMessage msg = doRequest(XmlCreator.createLogout(mBT));
+		processCommunication(
+				XmlCreator.createLogout(mSessionId),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean addProvider(IAuthProvider authProvider) {
-		ParsedMessage msg = doRequest(XmlCreator.createJoinAccount(mBT, authProvider));
+		processCommunication(
+				XmlCreator.createJoinAccount(mSessionId, authProvider),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean removeProvider(String providerName) {
-		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, providerName));
+		processCommunication(
+				XmlCreator.createCutAccount(mSessionId, providerName),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean deleteMyAccount() {
-		ParsedMessage msg = doRequest(XmlCreator.createCutAccount(mBT, "all"));
+		processCommunication(
+				XmlCreator.createCutAccount(mSessionId, "all"),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public User loadUserInfo() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetUserInfo(mBT));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetUserInfo(mSessionId),
+				State.USERINFO);
 
-		if (msg.getState() == State.USERINFO)
-			return (User) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseUserInfo();
 	}
 
 	@Override
 	public boolean addGate(String gateId, String gateName) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddGate(mBT, gateId, gateName));
+		processCommunication(
+				XmlCreator.createAddGate(mSessionId, gateId, gateName),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
-	// http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
 	public List<Gate> getGates() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetGates(mBT));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetGates(mSessionId),
+				State.GATES);
 
-		if (msg.getState() == State.GATES)
-			return (List<Gate>) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseGates();
 	}
 
 	@Override
 	public GateInfo getGateInfo(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetGateInfo(mBT, gateId));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetGateInfo(mSessionId, gateId),
+				State.GATEINFO);
 
-		if (msg.getState() == State.GATEINFO)
-			return (GateInfo) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseGateInfo();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Device> initGate(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAllDevices(mBT, gateId));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetAllDevices(mSessionId, gateId),
+				State.ALLDEVICES);
 
-		if (msg.getState() == State.ALLDEVICES)
-			return (ArrayList<Device>) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseAllDevices();
 	}
 
 	@Override
 	public boolean updateGate(Gate gate) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetGate(mBT, gate));
+		processCommunication(
+				XmlCreator.createSetGate(mSessionId, gate),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean deleteGate(String gateId){
-		ParsedMessage msg = doRequest(XmlCreator.createDelGate(mBT, gateId));
+		processCommunication(
+				XmlCreator.createDelGate(mSessionId, gateId),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
 
 	@Override
 	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<SaveModule> toSave) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetDevs(mBT, gateId, devices, toSave));
+		processCommunication(
+				XmlCreator.createSetDevs(mSessionId, gateId, devices, toSave),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean updateModule(String gateId, Module module, EnumSet<Module.SaveModule> toSave) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetDev(mBT, gateId, module, toSave));
+		processCommunication(
+				XmlCreator.createSetDev(mSessionId, gateId, module, toSave),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean switchState(String gateId, Module module) {
-		ParsedMessage msg = doRequest(XmlCreator.createSwitch(mBT, gateId, module));
+		processCommunication(
+				XmlCreator.createSwitch(mSessionId, gateId, module),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean prepareGateToListenNewDevices(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGateScanMode(mBT, gateId));
+		processCommunication(
+				XmlCreator.createGateScanMode(mSessionId, gateId),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean deleteDevice(Device device) {
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteDevice(mBT, device));
+		processCommunication(
+				XmlCreator.createDeleteDevice(mSessionId, device),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
-	// http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
 	public List<Device> getDevices(List<Device> devices) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetDevices(mBT, devices));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetDevices(mSessionId, devices),
+				State.DEVICES);
 
-		if (msg.getState() == State.DEVICES)
-			return (List<Device>) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseDevices();
 	}
 
 	@Override
 	public Device getDevice(Device device) {
-
 		ArrayList<Device> list = new ArrayList<>();
 		list.add(device);
 
@@ -583,7 +572,6 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean updateDevice(String gateId, Device device, EnumSet<SaveModule> toSave) {
-
 		ArrayList<Device> list = new ArrayList<>();
 		list.add(device);
 
@@ -591,62 +579,58 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Device> getNewDevices(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetNewDevices(mBT, gateId));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetNewDevices(mSessionId, gateId),
+				State.DEVICES);
 
-		if (msg.getState() == State.DEVICES)
-			return (List<Device>) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseNewDevices(gateId);
 	}
 
-	// http://stackoverflow.com/a/509288/1642090
 	@Override
 	public ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair) {
-		String msgToSend = XmlCreator.createGetLog(mBT, gateId, module.getDevice().getAddress(), module.getId(),
-				String.valueOf(pair.interval.getStartMillis() / 1000), String.valueOf(pair.interval.getEndMillis() / 1000),
-				pair.type.getId(), pair.gap.getSeconds());
+		String request = XmlCreator.createGetLog(
+				mSessionId,
+				gateId,
+				module.getDevice().getAddress(),
+				module.getId(),
+				String.valueOf(pair.interval.getStartMillis() / 1000),
+				String.valueOf(pair.interval.getEndMillis() / 1000),
+				pair.type.getId(),
+				pair.gap.getSeconds());
 
-		ParsedMessage msg = doRequest(msgToSend);
+		XmlParsers parser = processCommunication(
+				request,
+				State.LOGDATA);
 
-		if (msg.getState() == State.LOGDATA) {
-			ModuleLog result = (ModuleLog) msg.data;
-			result.setDataInterval(pair.gap);
-			result.setDataType(pair.type);
-			return result;
-		}
-
-		throw processFalse(msg);
+		ModuleLog result = parser.parseLogData();
+		result.setDataInterval(pair.gap);
+		result.setDataType(pair.type);
+		return result;
 	}
 
-	// /////////////////////////////////////ROOMS///////////////////////////////////////
+	// /////////////////////////////////////LOCATIONS///////////////////////////////////
 
 	@Override
-	// http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
 	public List<Location> getLocations(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetRooms(mBT, gateId));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetRooms(mSessionId, gateId),
+				State.ROOMS);
 
-		if (msg.getState() == State.ROOMS)
-			return (List<Location>) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseLocations();
 	}
 
 	@Override
 	public boolean updateLocations(String gateId, List<Location> locations) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetRooms(mBT, gateId, locations));
+		processCommunication(
+				XmlCreator.createSetRooms(mSessionId, gateId, locations),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean updateLocation(Location location) {
-
 		List<Location> list = new ArrayList<>();
 		list.add(location);
 
@@ -655,42 +639,36 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean deleteLocation(Location location) {
-		ParsedMessage msg = doRequest(XmlCreator.createDeleteRoom(mBT, location));
+		processCommunication(
+				XmlCreator.createDeleteRoom(mSessionId, location),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public Location createLocation(Location location) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddRoom(mBT, location));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createAddRoom(mSessionId, location),
+				State.ROOMCREATED);
 
-		if (msg.getState() == State.ROOMCREATED) {
-			location.setId((String) msg.data);
-			return location;
-		}
-
-		throw processFalse(msg);
+		location.setId((String) parser.parseNewLocationId());
+		return location;
 	}
 
 	// /////////////////////////////////////ACCOUNTS////////////////////////////////////
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean addAccounts(String gateId, ArrayList<User> users) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAccounts(mBT, gateId, users));
+		processCommunication(
+				XmlCreator.createAddAccounts(mSessionId, gateId, users),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean addAccount(String gateId, User user) {
-
 		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
 
@@ -699,17 +677,15 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean deleteAccounts(String gateId, List<User> users) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelAccounts(mBT, gateId, users));
+		processCommunication(
+				XmlCreator.createDelAccounts(mSessionId, gateId, users),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean deleteAccount(String gateId, User user) {
-
 		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
 
@@ -717,30 +693,25 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	// http://stackoverflow.com/a/509288/1642090
-	@SuppressWarnings("unchecked")
 	public List<User> getAccounts(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAccounts(mBT, gateId));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetAccounts(mSessionId, gateId),
+				State.ACCOUNTS);
 
-		if (msg.getState() == State.ACCOUNTS)
-			return (ArrayList<User>) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseConAccountList();
 	}
 
 	@Override
 	public boolean updateAccounts(String gateId, ArrayList<User> users) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetAccounts(mBT, gateId, users));
+		processCommunication(
+				XmlCreator.createSetAccounts(mSessionId, gateId, users),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean updateAccount(String gateId, User user) {
-
 		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
 
@@ -757,22 +728,20 @@ public class Network implements INetwork {
 	 * @return true if id has been deleted, false otherwise
 	 */
 	public boolean deleteGCMID(String userId, String gcmID) {
-		ParsedMessage msg = doRequest(XmlCreator.createDeLGCMID(userId, gcmID));
+		processCommunication(
+				XmlCreator.createDeLGCMID(userId, gcmID),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean NotificationsRead(ArrayList<String> msgID) {
-		ParsedMessage msg = doRequest(XmlCreator.createNotificaionRead(mBT, msgID));
+		processCommunication(
+				XmlCreator.createNotificaionRead(mSessionId, msgID),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	/**
@@ -782,88 +751,92 @@ public class Network implements INetwork {
 	 * @return true if id has been updated, false otherwise
 	 */
 	public boolean setGCMID(String gcmID) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetGCMID(mBT, gcmID));
+		processCommunication(
+				XmlCreator.createSetGCMID(mSessionId, gcmID),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<VisibleNotification> getNotifications() {
-		ParsedMessage msg = doRequest(XmlCreator.createGetNotifications(mBT));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetNotifications(mSessionId),
+				State.NOTIFICATIONS);
 
-		if (msg.getState() == State.NOTIFICATIONS)
-			return (List<VisibleNotification>) msg.data;
-
-		throw processFalse(msg);
+		return parser.parseNotifications();
 	}
 
 	@Override
 	public boolean addWatchdog(Watchdog watchdog, String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createAddAlgor(mBT, watchdog.getName(), gateId, watchdog.getType(), watchdog.getModules(), watchdog.getParams(), watchdog.getGeoRegionId()));
+		String request = XmlCreator.createAddAlgor(mSessionId,
+				watchdog.getName(),
+				gateId,
+				watchdog.getType(),
+				watchdog.getModules(),
+				watchdog.getParams(),
+				watchdog.getGeoRegionId());
 
-		if (msg.getState() == State.ALGCREATED) {
-			watchdog.setId((String) msg.data);
-			return true;
-		}
+		XmlParsers parser = processCommunication(
+				request,
+				State.ALGCREATED);
 
-		throw processFalse(msg);
+		watchdog.setId(parser.parseNewWatchdogId());
+		return true;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAlgs(mBT, gateId, watchdogIds));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetAlgs(mSessionId, gateId, watchdogIds),
+				State.ALGORITHMS);
 
-		if (msg.getState() == State.ALGORITHMS) {
-			return (ArrayList<Watchdog>) msg.data;
-		}
-
-		throw processFalse(msg);
+		return parser.parseWatchdog();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Watchdog> getAllWatchdogs(String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createGetAllAlgs(mBT, gateId));
+		XmlParsers parser = processCommunication(
+				XmlCreator.createGetAllAlgs(mSessionId, gateId),
+				State.ALGORITHMS);
 
-		if (msg.getState() == State.ALGORITHMS) {
-			return (ArrayList<Watchdog>) msg.data;
-		}
-
-		throw processFalse(msg);
+		return parser.parseWatchdog();
 	}
 
 	@Override
 	public boolean updateWatchdog(Watchdog watchdog, String gateId) {
-		ParsedMessage msg = doRequest(XmlCreator.createSetAlgor(mBT, watchdog.getName(), watchdog.getId(), gateId, watchdog.getType(), watchdog.isEnabled(), watchdog.getModules(), watchdog.getParams(), watchdog.getGeoRegionId()));
+		String request = XmlCreator.createSetAlgor(mSessionId,
+				watchdog.getName(),
+				watchdog.getId(),
+				gateId,
+				watchdog.getType(),
+				watchdog.isEnabled(),
+				watchdog.getModules(),
+				watchdog.getParams(),
+				watchdog.getGeoRegionId());
 
-		if (msg.getState() == State.TRUE)
-			return true;
+		processCommunication(
+				request,
+				State.TRUE);
 
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean deleteWatchdog(Watchdog watchdog) {
-		ParsedMessage msg = doRequest(XmlCreator.createDelAlg(mBT, watchdog.getId()));
+		processCommunication(
+				XmlCreator.createDelAlg(mSessionId, watchdog.getId()),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 
 	@Override
 	public boolean passBorder(String regionId, String type) {
-		ParsedMessage msg = doRequest(XmlCreator.createPassBorder(mBT, regionId, type));
+		processCommunication(
+				XmlCreator.createPassBorder(mSessionId, regionId, type),
+				State.TRUE);
 
-		if (msg.getState() == State.TRUE)
-			return true;
-
-		throw processFalse(msg);
+		return true;
 	}
 }

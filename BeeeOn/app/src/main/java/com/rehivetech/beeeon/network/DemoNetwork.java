@@ -177,12 +177,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public String getBT() {
+	public String getSessionId() {
 		return mBT;
 	}
 
 	@Override
-	public void setBT(String token) {
+	public void setSessionId(String token) {
 		mBT = token;
 	}
 

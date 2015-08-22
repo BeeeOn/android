@@ -45,7 +45,7 @@ public class XmlHumCreator extends XmlCreator{
 		serializer.startDocument("UTF-8", null);
 
 		serializer.startTag(ns, Xconstants.COM_ROOT);
-		serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+		serializer.attribute(ns, Xconstants.COM_VERSION, COM_VER); // every time use version
 		serializer.attribute(ns, APP, HUMIDITY); // every time use name of "humidity namespace"
 
 		return serializer;
@@ -83,7 +83,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityOverview(String bt, String aid, String date, String interval){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYOVERVIEW, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
+		return createComAttribsVariant(Xconstants.COM_STATE, GETHUMIDITYOVERVIEW, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
 	}
 
 	/**
@@ -94,7 +94,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityMessageDetail(String bt, String aid, String mid){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYMESSAGEDETAIL, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.MSGID, mid);
+		return createComAttribsVariant(Xconstants.COM_STATE, GETHUMIDITYMESSAGEDETAIL, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid, Xconstants.MSGID, mid);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityLocationDetail(String bt, String aid, String lid, String date, String interval){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYLOCATIONDETAIL, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LID, lid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
+		return createComAttribsVariant(Xconstants.COM_STATE, GETHUMIDITYLOCATIONDETAIL, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid, Xconstants.LID, lid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityLocationStatistics(String bt, String aid, String lid, String date, String interval){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYLOCATIONSTATISTICS, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LID, lid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
+		return createComAttribsVariant(Xconstants.COM_STATE, GETHUMIDITYLOCATIONSTATISTICS, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid, Xconstants.LID, lid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
 	}
 
 	/**
@@ -138,8 +138,8 @@ public class XmlHumCreator extends XmlCreator{
 		try {
 			XmlSerializer serializer = beginXml(writer);
 
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, SETHUMIDITYNOTIFICATIONS);
+			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
+			serializer.attribute(ns, Xconstants.COM_STATE, SETHUMIDITYNOTIFICATIONS);
 
 			for(Map.Entry<String, String> entry : notifs.entrySet()){
 				serializer.startTag(ns, Xconstants.NOTIFICATION);
@@ -164,7 +164,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityNotificatons(String bt, String aid){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYNOTIFICATIONS, Xconstants.BT, bt, Xconstants.AID, aid);
+		return createComAttribsVariant(Xconstants.COM_STATE, GETHUMIDITYNOTIFICATIONS, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
 	/**
@@ -184,8 +184,8 @@ public class XmlHumCreator extends XmlCreator{
 		try {
 			XmlSerializer serializer = beginXml(writer);
 
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, SETHUMIDITYTHRESHOLD);
+			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
+			serializer.attribute(ns, Xconstants.COM_STATE, SETHUMIDITYTHRESHOLD);
 
 
 			endXml(serializer);
@@ -203,7 +203,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityThreshold(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYTHRESHOLD, Xconstants.BT, bt, Xconstants.AID, aid);
+		return createComAttribsVariant(Xconstants.COM_STATE, GETHUMIDITYTHRESHOLD, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
 }

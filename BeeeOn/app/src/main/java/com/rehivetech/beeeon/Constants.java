@@ -14,7 +14,7 @@ public final class Constants {
 	/**
 	 * Network layer version
 	 */
-	public static final String COM_VER = "2.5";
+	public static final String PROTOCOL_VERSION = "2.5";
 
 	/**
 	 * Persistence's shared preferences
