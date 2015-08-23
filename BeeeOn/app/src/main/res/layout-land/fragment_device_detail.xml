@@ -106,6 +106,7 @@
 				android:layout_marginLeft="72dp"
 				android:layout_marginStart="72dp"
 				android:layout_marginTop="5dp"
+				android:paddingBottom="5dp"
 				android:layout_below="@+id/device_detail_loc_icon"
 				android:src="@drawable/ic_clock"/>
 
@@ -115,7 +116,7 @@
 				android:layout_height="24dp"
 				android:gravity="center_vertical"
 				android:layout_marginTop="5dp"
-				android:layout_marginBottom="8dp"
+				android:paddingBottom="8dp"
 				android:layout_marginLeft="8dp"
 				android:layout_marginStart="8dp"
 				android:layout_below="@+id/device_detail_loc_label"
@@ -124,6 +125,7 @@
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 				android:textColor="@color/white"
 				tools:text="14:23:34"/>
+
 
 		</RelativeLayout>
 
@@ -358,8 +360,7 @@
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		android:id="@+id/device_detail_recyclerview_layout"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:visibility="gone">
+		android:layout_height="match_parent">
 
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/device_detail_modules_list"
