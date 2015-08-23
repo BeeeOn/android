@@ -33,7 +33,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleEditActivity;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
@@ -42,7 +42,6 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -79,7 +78,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 	public static final String ARG_CUR_PAGE = "currentpage";
 	public static final String ARG_SEL_PAGE = "selectedpage";
 
-	private DeviceDetailActivity mActivity;
+	private ModuleDetailActivity mActivity;
 	private TimeHelper mTimeHelper;
 
 	// GUI elements
@@ -119,7 +118,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		super.onAttach(activity);
 
 		try {
-			mActivity = (DeviceDetailActivity) activity;
+			mActivity = (ModuleDetailActivity) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must be subclass of ModuleDetailActivity");
