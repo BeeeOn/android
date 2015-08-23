@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.List;
@@ -148,6 +149,11 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 			mModuleList.add(0, mModuleList.get(0));
 		}
 		mFirstItemSpace = useFirstItemSpace;
+	}
+
+	public void swapModules(List<Module> modules) {
+		mModuleList = modules;
+		notifyDataSetChanged();
 	}
 
 	public class DeviceModuleAdapterViewHolder extends RecyclerView.ViewHolder {

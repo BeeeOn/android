@@ -22,35 +22,45 @@
 			<android.support.v7.widget.Toolbar
 				app:layout_scrollFlags="scroll"
 				android:id="@+id/beeeon_toolbar"
+				app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
 				android:minHeight="?attr/actionBarSize"
 				android:background="?attr/colorPrimary"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-				app:popupTheme="@style/Theme.AppCompat.Light">
+				app:popupTheme="@style/Theme.AppCompat.Light"
+				app:titleMarginStart="16dp">
 
-				<TextView
-					android:id="@+id/device_detail_device_name"
+				<!-- frame layout so that progress/refresh icon can overlay -->
+				<!-- TODO could be managed by <ViewSwitcher> -->
+				<FrameLayout
+					android:layout_height="wrap_content"
 					android:layout_width="wrap_content"
-					android:layout_height="?attr/actionBarSize"
-					android:layout_marginLeft="16dp"
-					android:layout_marginStart="16dp"
-					android:gravity="center_vertical"
-					android:maxLines="1"
-					android:ellipsize="end"
-					android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-					android:textColor="@color/white"
-					tools:text="Device Name"/>
-
-				<ProgressBar
-					android:id="@+id/beeeon_toolbar_progress"
-					android:layout_width="40dp"
-					android:layout_height="40dp"
 					android:layout_gravity="end"
-					android:indeterminate="true"
-					android:layout_marginRight="8dp"
-					android:layout_marginEnd="8dp"
-					android:visibility="gone"/>
+					>
+
+					<!-- refresh icon -->
+					<ImageView
+						android:id="@+id/beeeon_toolbar_refresh"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:src="@drawable/ic_action_refresh"
+						android:padding="0dp"
+						style="@style/Widget.AppCompat.ActionButton"
+						android:visibility="invisible"
+						/>
+
+					<!-- refreshing progress bar -->
+					<ProgressBar
+						android:id="@+id/beeeon_toolbar_progress"
+						android:layout_width="30dp"
+						android:layout_height="30dp"
+						android:indeterminate="true"
+						android:layout_gravity="center"
+						android:visibility="invisible"
+						/>
+
+				</FrameLayout>
 
 			</android.support.v7.widget.Toolbar>
 
@@ -122,7 +132,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="8dp"
-			android:layout_marginBottom="8dp"
+			android:paddingBottom="8dp"
 			app:layout_scrollFlags="scroll">
 
 			<LinearLayout
@@ -348,7 +358,8 @@
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		android:id="@+id/device_detail_recyclerview_layout"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:visibility="gone">
 
 		<android.support.v7.widget.RecyclerView
 			android:id="@+id/device_detail_modules_list"

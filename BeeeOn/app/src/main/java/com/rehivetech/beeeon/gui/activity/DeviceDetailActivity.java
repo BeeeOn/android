@@ -54,9 +54,6 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 				finish();
 				break;
 
-			case R.id.device_detail_menu_action_refresh:
-				break;
-
 			case R.id.device_detail_menu_action_edit:
 //				Intent intent = new Intent(this, ModuleEditActivity.class);
 				break;

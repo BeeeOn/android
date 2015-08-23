@@ -59,6 +59,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 
 	private static final String KEY_GATE_ID = "gateId";
 	private static final String KEY_DEVICE_ID = "deviceId";
+	private static final String KEY_VIEW_PAGER_SELECTED_ITEM = "selected_item";
 
 	private static final int REQUEST_SET_ACTUATOR = 7894;
 
@@ -96,6 +97,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 
 	@Override
 	public void onAttach(Activity activity) {
+		Log.d(TAG, "onAttach");
 		super.onAttach(activity);
 		mActivity = (DeviceDetailActivity) activity;
 	}
@@ -103,8 +105,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		Log.d(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
-
 
 		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
 		AppCompatActivity activity = (AppCompatActivity) getActivity();
@@ -179,6 +181,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		Controller controller = Controller.getInstance(mActivity);
 
@@ -194,9 +197,36 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	}
 
 	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		Log.d(TAG, "onActivityCreated");
+		super.onActivityCreated(savedInstanceState);
+
+		if (savedInstanceState != null && mViewPager != null) {
+			mViewPager.setCurrentItem(savedInstanceState.getInt(KEY_VIEW_PAGER_SELECTED_ITEM));
+			Log.d(TAG, "restore instance");
+		}
+	}
+
+	@Override
 	public void onResume() {
+		Log.d(TAG, "onResume");
 		super.onResume();
 		doReloadDevicesTask(mGateId, false);
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				doReloadDevicesTask(mGateId, true);
+			}
+		});
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		Log.d(TAG, "onSaveInstanceState");
+		super.onSaveInstanceState(outState);
+		if (mViewPager != null) {
+			outState.putInt(KEY_VIEW_PAGER_SELECTED_ITEM, mViewPager.getCurrentItem());
+		}
 	}
 
 	@Override
@@ -221,7 +251,15 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 		Location location = controller.getLocationsModel().getLocation(mGateId, mDevice.getLocationId());
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
-		mDeviceName.setText(mDevice.getType().getNameRes());
+		if (mDeviceName != null) {
+			mDeviceName.setText(mDevice.getType().getNameRes());
+		} else {
+			ActionBar actionBar = mActivity.getSupportActionBar();
+			if (actionBar != null) {
+				actionBar.setDisplayShowTitleEnabled(true);
+				actionBar.setTitle(mDevice.getType().getNameRes());
+			}
+		}
 		mDeviceLocation.setText(location.getName());
 		mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
 		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
@@ -244,6 +282,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 		// TODO device LED initialize
 
 		if (mModuleAdapter != null) {
+			mModuleAdapter.swapModules(mDevice.getAllModules());
 			mModuleAdapter.notifyDataSetChanged();
 
 			if (mModuleAdapter.getItemCount() == 0) {
@@ -354,11 +393,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment {
 	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
 		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
 
+		final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
+
 		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
 					updateLayout();
+					if (mViewPager != null) {
+						mViewPager.setCurrentItem(tabPos);
+					}
 				}
 			}
 		});
