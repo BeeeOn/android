@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author martin on 15.8.2015.
  */
-public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener {
+public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener, DeviceModuleAdapter.ItemClickListener {
 
 	private static final String TAG = DeviceDetailGroupModuleFragment.class.getSimpleName();
 
@@ -100,7 +100,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 
 		mRecyclerView = (RecyclerView) mView.findViewById(R.id.device_detail_modules_list);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-		mModuleAdapter = new DeviceModuleAdapter(mActivity, getModulesByGroup(), getRecyclerViewClickListener());
+		mModuleAdapter = new DeviceModuleAdapter(mActivity, getModulesByGroup(), this);
 		mModuleAdapter.setUseFirstItemSpace(true);
 		mRecyclerView.setAdapter(mModuleAdapter);
 
@@ -111,41 +111,37 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 
 	}
 
-	DeviceModuleAdapter.ItemClickListener getRecyclerViewClickListener() {
-		return new DeviceModuleAdapter.ItemClickListener() {
-			@Override
-			public void onItemClick(String moduleId) {
-				Log.d(TAG, "onItemClick:"+moduleId);
-				Bundle args = new Bundle();
-				args.putString(ModuleGraphActivity.EXTRA_GATE_ID, mGateId);
-				args.putString(ModuleGraphActivity.EXTRA_DEVICE_ID, mDeviceId);
-				args.putString(ModuleGraphActivity.EXTRA_MODULE_ID, moduleId);
-				Intent intent = new Intent(mActivity, ModuleGraphActivity.class);
-				intent.putExtras(args);
-				startActivity(intent);
-			}
+	@Override
+	public void onItemClick(String moduleId) {
+		Log.d(TAG, "onItemClick:" + moduleId);
+		Bundle args = new Bundle();
+		args.putString(ModuleGraphActivity.EXTRA_GATE_ID, mGateId);
+		args.putString(ModuleGraphActivity.EXTRA_DEVICE_ID, mDeviceId);
+		args.putString(ModuleGraphActivity.EXTRA_MODULE_ID, moduleId);
+		Intent intent = new Intent(mActivity, ModuleGraphActivity.class);
+		intent.putExtras(args);
+		startActivity(intent);
+	}
 
-			@Override
-			public void onButtonChangeState(String moduleId) {
-				Log.d(TAG, "onButtonChangeState");
-				mModuleId = moduleId;
-				showListDialog(moduleId);
-			}
+	@Override
+	public void onButtonChangeState(String moduleId) {
+		Log.d(TAG, "onButtonChangeState");
+		mModuleId = moduleId;
+		showListDialog(moduleId);
+	}
 
-			@Override
-			public void onButtonSetNewValue(String moduleId) {
-				Log.d(TAG, "onButtonSetNewValue");
-				mModuleId = moduleId;
-				showNumberPickerDialog(moduleId);
-			}
+	@Override
+	public void onButtonSetNewValue(String moduleId) {
+		Log.d(TAG, "onButtonSetNewValue");
+		mModuleId = moduleId;
+		showNumberPickerDialog(moduleId);
+	}
 
-			@Override
-			public void onSwitchChange(String moduleId) {
-				Log.d(TAG, "onSwitchChange");
-				Module module = mDevice.getModuleById(moduleId);
-				doActorAction(module);
-			}
-		};
+	@Override
+	public void onSwitchChange(String moduleId) {
+		Log.d(TAG, "onSwitchChange");
+		Module module = mDevice.getModuleById(moduleId);
+		doActorAction(module);
 	}
 
 	@Override
