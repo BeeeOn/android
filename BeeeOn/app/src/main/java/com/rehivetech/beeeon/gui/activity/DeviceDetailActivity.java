@@ -5,9 +5,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.DeviceDetailFragment;
-import com.rehivetech.beeeon.household.device.Device;
 
 /**
  * Class that handle screen with detail of some sensor
@@ -16,12 +14,11 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 
 	private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
-	public static final String EXTRA_MODULE_ID = "module_id";
+	public static final String EXTRA_DEVICE_ID = "device_id";
 	public static final String EXTRA_GATE_ID = "gate_id";
-	public static final String EXTRA_ACTIVE_POS = "act_module_pos";
 
-	private String mActiveGateId;
-	private String mActiveModuleId;
+	private String mGateId;
+	private String mDeviceId;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,19 +27,17 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
-			mActiveGateId = bundle.getString(EXTRA_GATE_ID);
-			mActiveModuleId = bundle.getString(EXTRA_MODULE_ID);
+			mGateId = bundle.getString(EXTRA_GATE_ID);
+			mDeviceId = bundle.getString(EXTRA_DEVICE_ID);
 		}
 
-		if (mActiveGateId == null || mActiveModuleId == null) {
+		if (mGateId == null || mDeviceId == null) {
 			Toast.makeText(this, R.string.module_detail_toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
 
-		Device device = Controller.getInstance(this).getDevicesModel().getModule(mActiveGateId, mActiveModuleId).getDevice();
-
-		DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mActiveGateId, device.getId());
+		DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
 		getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
 
 	}

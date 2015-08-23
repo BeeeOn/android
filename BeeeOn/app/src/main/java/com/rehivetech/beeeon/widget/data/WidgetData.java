@@ -425,7 +425,7 @@ public abstract class WidgetData {
 	public static Intent startDetailActivityIntent(Context context, String gateId, String moduleId) {
 		Intent intent = new Intent(context, DeviceDetailActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra(DeviceDetailActivity.EXTRA_MODULE_ID, moduleId);
+//		intent.putExtra(DeviceDetailActivity.EXTRA_MODULE_ID, moduleId);
 		intent.putExtra(DeviceDetailActivity.EXTRA_GATE_ID, gateId);
 		return intent;
 	}

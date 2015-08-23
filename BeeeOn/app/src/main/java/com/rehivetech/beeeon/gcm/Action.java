@@ -51,9 +51,8 @@ public final class Action {
 
 		// Module exists, we can open activity
 		Intent intent = new Intent(context, DeviceDetailActivity.class);
-		intent.putExtra(DeviceDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
+		intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, module.getDevice().getId());
 		intent.putExtra(DeviceDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
-		intent.putExtra(DeviceDetailActivity.EXTRA_ACTIVE_POS, pos);
 
 		context.startActivity(intent);
 	}

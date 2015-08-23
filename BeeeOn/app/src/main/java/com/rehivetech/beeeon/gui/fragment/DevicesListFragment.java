@@ -24,6 +24,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
+import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -357,11 +358,11 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 		// starting detail activity
 		Bundle bundle = new Bundle();
-//		bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, dev.getGateId());
-//		bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, dev.getAllModules().get(0).getAbsoluteId());
-//		Intent intent = new Intent(mActivity, ModuleDetailActivity.class);
-//		intent.putExtras(bundle);
-//		startActivity(intent);
+		bundle.putString(DeviceDetailActivity.EXTRA_GATE_ID, dev.getGateId());
+		bundle.putString(DeviceDetailActivity.EXTRA_DEVICE_ID, dev.getId());
+		Intent intent = new Intent(mActivity, DeviceDetailActivity.class);
+		intent.putExtras(bundle);
+		startActivity(intent);
 	}
 
 	/**
