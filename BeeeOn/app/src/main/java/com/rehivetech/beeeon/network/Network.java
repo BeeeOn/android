@@ -615,7 +615,7 @@ public class Network implements INetwork {
 	public List<Location> getLocations(String gateId) {
 		XmlParsers parser = processCommunication(
 				XmlCreator.createGetRooms(mSessionId, gateId),
-				State.ROOMS);
+				State.LOCATIONS);
 
 		return parser.parseLocations();
 	}
@@ -650,7 +650,7 @@ public class Network implements INetwork {
 	public Location createLocation(Location location) {
 		XmlParsers parser = processCommunication(
 				XmlCreator.createAddRoom(mSessionId, location),
-				State.ROOMCREATED);
+				State.LOCATIONID);
 
 		location.setId((String) parser.parseNewLocationId());
 		return location;

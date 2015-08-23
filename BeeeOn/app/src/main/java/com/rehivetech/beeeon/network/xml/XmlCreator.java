@@ -38,48 +38,50 @@ public class XmlCreator {
 
 	// states
 
-	public static final String SIGNIN = "signin";
-	public static final String SIGNUP = "signup";
-	public static final String GETUSERINFO = "getuserinfo";
-	public static final String JOINACCOUNT = "joinaccount";
-	public static final String CUTACCOUNT = "cutaccount";
+	public static final String SIGNIN = "login";
+	public static final String SIGNUP = "register";
 	public static final String LOGOUT = "logout";
 
-	public static final String ADDGATE = "addadapter";
-	public static final String REINITGATE = "reinitadapter";
-	public static final String GETGATES = "getadapters";
-	public static final String GETGATEINFO = "getgateinfo";
-	public static final String DELGATE = "deladapter";
+	public static final String USER_UPDATE = "updateuser";
+	public static final String USER_GETINFO = "getuserinfo";
+
+	public static final String USER_ACCOUNT_CONNECT = "connectAuthProvider";
+	public static final String USER_ACCOUNT_DISCONNECT = "disconnectAuthProvider";
+
+	public static final String GATE_ADD = "addgate";
+	public static final String GATE_DELETE = "deletegate";
+	public static final String GATE_GETINFO = "getgateinfo";
+	public static final String GATE_GETALL = "getGates";
+	public static final String GATE_UPDATE = "updategate";
+
 	public static final String SCANMODE = "scanmode";
-	public static final String SETGATE = "setgate";
 
-	public static final String ADDACCOUNTS = "addaccs";
-	public static final String DELACCOUNTS = "delaccs";
-	public static final String GETACCOUNTS = "getaccs";
-	public static final String SETCCOUNTS = "setaccs";
+	public static final String DEVICE_GETALL = "getalldevices";
+	public static final String DEVICE_GETSOME = "getdevices";
+	public static final String DEVICE_GETNEW = "getnewdevices";
+	public static final String DEVICE_UPDATE = "updatedevice";
+	public static final String DEVICE_DELETE = "deletedevice";
 
-	public static final String SETDEVS = "setdevs";
-	public static final String GETDEVICES = "getdevs";
-	public static final String GETALLDEVICES = "getalldevs";
-	public static final String DELDEVICE = "deldev";
-	public static final String SWITCH = "switch";
-	public static final String GETLOG = "getlog";
-	public static final String GETNEWDEVICES = "getnewdevs";
+	public static final String GETLOGS = "getlogs";
 
-	public static final String SETTIMEZONE = "settimezone";
-	public static final String GETTIMEZONE = "gettimezone";
+	public static final String SWITCH = "switchState";
 
-	public static final String GETROOMS = "getrooms";
-	public static final String SETROOMS = "setrooms";
-	public static final String ADDROOM = "addroom";
-	public static final String DELROOM = "delroom";
+	public static final String LOCATION_ADD = "addlocation";
+	public static final String LOCATION_UPDATE = "updatelocation";
+	public static final String LOCATION_DELETE = "deletelocation";
+	public static final String LOCATION_GETALL = "getlocations";
 
-	public static final String DELGCMID = "delgcmid";
-	public static final String SETGCMID = "setgcmid";
-	public static final String GETNOTIFICATIONS = "getnotifs";
-	public static final String NOTIFICATIONREAD = "notifread";
+	public static final String GATE_USER_INVITE = "invitegateuser";
+	public static final String GATE_USER_UPDATE = "updategateuser";
+	public static final String GATE_USER_DELETE = "deletegateuser";
+	public static final String GATE_USER_GETALL = "getGateUsers";
 
-	public static final String SETLOCALE = "setlocale";
+
+	public static final String GCMID_DELETE = "deletegcmid";
+	public static final String GCMID_UPDATE = "setgcmid";
+
+	public static final String NOTIFICATION_GETALL = "getnotifications";
+	public static final String NOTIFICATION_READ = "notificationreaded";
 
 	public static final String ADDALG = "addalg";
 	public static final String GETALLALGS = "getallalgs";
@@ -88,8 +90,6 @@ public class XmlCreator {
 	public static final String DELALG = "delalg";
 
 	public static final String PASSBORDER = "passborder";
-	public static final String GETALLACHIEVEMENTS = "getallachievements";
-	public static final String SETPROGRESSLVL = "setprogresslvl";
 
 	// end of states
 
@@ -196,7 +196,7 @@ public class XmlCreator {
 		try {
 			XmlSerializer serializer = beginXml(writer);
 
-			serializer.attribute(ns, Xconstants.COM_STATE, JOINACCOUNT);
+			serializer.attribute(ns, Xconstants.COM_STATE, USER_ACCOUNT_CONNECT);
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
 			serializer.attribute(ns, Xconstants.PROVIDER_NAME, authProvider.getProviderName());
 
@@ -226,7 +226,7 @@ public class XmlCreator {
 	 * @return xml with cutAccount message
 	 */
 	public static String createCutAccount(String bt, String providerName) {
-		return createComAttribsVariant(Xconstants.COM_STATE, CUTACCOUNT, Xconstants.COM_SESSION_ID, bt, Xconstants.PROVIDER_NAME, providerName);
+		return createComAttribsVariant(Xconstants.COM_STATE, USER_ACCOUNT_DISCONNECT, Xconstants.COM_SESSION_ID, bt, Xconstants.PROVIDER_NAME, providerName);
 	}
 
 	/**
@@ -246,7 +246,7 @@ public class XmlCreator {
 	 * @return xml with getUserInfo message
 	 */
 	public static String createGetUserInfo(String bt) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETUSERINFO, Xconstants.COM_SESSION_ID, bt);
+		return createComAttribsVariant(Xconstants.COM_STATE, USER_GETINFO, Xconstants.COM_SESSION_ID, bt);
 	}
 
 	/**
@@ -259,7 +259,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddGate(String bt, String aid, String gateName) {
-		return createComAttribsVariant(Xconstants.COM_STATE, ADDGATE, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid, Xconstants.ANAME, gateName);
+		return createComAttribsVariant(Xconstants.COM_STATE, GATE_ADD, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid, Xconstants.ANAME, gateName);
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetGates(String bt) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETGATES, Xconstants.COM_SESSION_ID, bt);
+		return createComAttribsVariant(Xconstants.COM_STATE, GATE_GETALL, Xconstants.COM_SESSION_ID, bt);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class XmlCreator {
 	 */
 	public static String createGetGateInfo(String bt, String gateId) {
 		return createComAttribsVariant(
-				Xconstants.COM_STATE, GETGATEINFO,
+				Xconstants.COM_STATE, GATE_GETINFO,
 				Xconstants.COM_SESSION_ID, bt,
 				Xconstants.AID, gateId);
 	}
@@ -295,7 +295,7 @@ public class XmlCreator {
 	 * @since 2.4
 	 */
 	public static String createDelGate(String bt, String aid){
-		return createComAttribsVariant(Xconstants.COM_STATE, DELGATE, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
+		return createComAttribsVariant(Xconstants.COM_STATE, GATE_DELETE, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class XmlCreator {
 	 */
 	public static String createSetGate(String bt, Gate gate) {
 		return createComAttribsVariant(
-				Xconstants.COM_STATE, SETGATE,
+				Xconstants.COM_STATE, GATE_UPDATE,
 				Xconstants.COM_SESSION_ID, bt,
 				Xconstants.AID, gate.getId(),
 				Xconstants.ANAME, gate.getName(),
@@ -338,7 +338,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetAllDevices(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETALLDEVICES, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
+		return createComAttribsVariant(Xconstants.COM_STATE, DEVICE_GETALL, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
 	/**
@@ -350,7 +350,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetNewDevices(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETNEWDEVICES, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
+		return createComAttribsVariant(Xconstants.COM_STATE, DEVICE_GETNEW, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
 	/**
@@ -369,7 +369,7 @@ public class XmlCreator {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.COM_STATE, GETDEVICES);
+			serializer.attribute(ns, Xconstants.COM_STATE, DEVICE_GETSOME);
 
 			// sort by gate address
 			Collections.sort(devices, new Comparator<Device>() {
@@ -432,7 +432,7 @@ public class XmlCreator {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.COM_STATE, GETLOG);
+			serializer.attribute(ns, Xconstants.COM_STATE, GETLOGS);
 			serializer.attribute(ns, Xconstants.FROM, from);
 			serializer.attribute(ns, Xconstants.TO, to);
 			serializer.attribute(ns, Xconstants.FTYPE, funcType);
@@ -464,7 +464,7 @@ public class XmlCreator {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.COM_STATE, SETDEVS);
+			serializer.attribute(ns, Xconstants.COM_STATE, DEVICE_UPDATE);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Device device : devices) {
@@ -522,7 +522,7 @@ public class XmlCreator {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.COM_STATE, SETDEVS);
+			serializer.attribute(ns, Xconstants.COM_STATE, DEVICE_UPDATE);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			serializer.startTag(ns, Xconstants.MODULE);
@@ -587,10 +587,10 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeleteDevice(String bt, Device device) {
-		return createComAttribsVariant(Xconstants.COM_STATE, DELDEVICE, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, device.getGateId(), Xconstants.DID, device.getAddress());
+		return createComAttribsVariant(Xconstants.COM_STATE, DEVICE_DELETE, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, device.getGateId(), Xconstants.DID, device.getAddress());
 	}
 
-	// /////////////////////////////////////ROOMS//////////////////////////////////////////////////////
+	// /////////////////////////////////////LOCATIONS//////////////////////////////////////////////////////
 
 	/**
 	 * Method create XML of AddRoom message
@@ -601,7 +601,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddRoom(String bt, Location location) {
-		return createComAttribsVariant(Xconstants.COM_STATE, ADDROOM, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, location.getGateId(), Xconstants.LTYPE, location.getType(), Xconstants.LNAME,
+		return createComAttribsVariant(Xconstants.COM_STATE, LOCATION_ADD, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, location.getGateId(), Xconstants.LTYPE, location.getType(), Xconstants.LNAME,
 				location.getName());
 	}
 
@@ -620,7 +620,7 @@ public class XmlCreator {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.COM_STATE, SETROOMS);
+			serializer.attribute(ns, Xconstants.COM_STATE, LOCATION_UPDATE);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (Location location : locations) {
@@ -650,7 +650,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeleteRoom(String bt, Location location) {
-		return createComAttribsVariant(Xconstants.COM_STATE, DELROOM, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, location.getGateId(), Xconstants.LID, location.getId());
+		return createComAttribsVariant(Xconstants.COM_STATE, LOCATION_DELETE, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, location.getGateId(), Xconstants.LID, location.getId());
 	}
 
 	/**
@@ -662,7 +662,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetRooms(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETROOMS, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
+		return createComAttribsVariant(Xconstants.COM_STATE, LOCATION_GETALL, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
 	// /////////////////////////////////////ACCOUNTS///////////////////////////////////////////////////
@@ -677,7 +677,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createAddAccounts(String bt, String aid, ArrayList<User> users) {
-		return createAddSeTAcc(ADDACCOUNTS, bt, aid, users);
+		return createAddSeTAcc(GATE_USER_INVITE, bt, aid, users);
 	}
 
 	/**
@@ -690,7 +690,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetAccounts(String bt, String aid, ArrayList<User> users) {
-		return createAddSeTAcc(SETCCOUNTS, bt, aid, users);
+		return createAddSeTAcc(GATE_USER_UPDATE, bt, aid, users);
 	}
 
 	/**
@@ -708,7 +708,7 @@ public class XmlCreator {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.COM_STATE, DELACCOUNTS);
+			serializer.attribute(ns, Xconstants.COM_STATE, GATE_USER_DELETE);
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (User user : users) {
@@ -734,21 +734,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetAccounts(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETACCOUNTS, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
-	}
-
-	// /////////////////////////////////////LOCALE/////////////////////////////////////////////////////
-
-	/**
-	 * Method create XML of SetLocale message
-	 *
-	 * @param bt     userID of user
-	 * @param locale of phone
-	 * @return message SetLocale
-	 * @since 2.2
-	 */
-	public static String createSetLocale(String bt, String locale) {
-		return createComAttribsVariant(Xconstants.COM_STATE, SETLOCALE, Xconstants.COM_SESSION_ID, bt, Xconstants.LOCALE, locale);
+		return createComAttribsVariant(Xconstants.COM_STATE, GATE_USER_GETALL, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
 	// /////////////////////////////////////NOTIFICATIONS//////////////////////////////////////////////
@@ -762,7 +748,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeLGCMID(String userId, String gcmid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, DELGCMID, Xconstants.UID, userId, Xconstants.GCMID, gcmid);
+		return createComAttribsVariant(Xconstants.COM_STATE, GCMID_DELETE, Xconstants.UID, userId, Xconstants.GCMID, gcmid);
 	}
 
 	/**
@@ -774,7 +760,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetGCMID(String bt, String gcmid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, SETGCMID, Xconstants.COM_SESSION_ID, bt, Xconstants.GCMID, gcmid);
+		return createComAttribsVariant(Xconstants.COM_STATE, GCMID_UPDATE, Xconstants.COM_SESSION_ID, bt, Xconstants.GCMID, gcmid);
 	}
 
 	/**
@@ -785,7 +771,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createGetNotifications(String bt) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETNOTIFICATIONS, Xconstants.COM_SESSION_ID, bt);
+		return createComAttribsVariant(Xconstants.COM_STATE, NOTIFICATION_GETALL, Xconstants.COM_SESSION_ID, bt);
 	}
 
 	/**
@@ -802,7 +788,7 @@ public class XmlCreator {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.COM_STATE, NOTIFICATIONREAD);
+			serializer.attribute(ns, Xconstants.COM_STATE, NOTIFICATION_READ);
 
 			for (String mid : mids) {
 				serializer.startTag(ns, Xconstants.NOTIFICATION);
@@ -958,29 +944,6 @@ public class XmlCreator {
 	 */
 	public static String createPassBorder(String bt, String rid, String type) {
 		return createComAttribsVariant(Xconstants.COM_STATE, PASSBORDER, Xconstants.COM_SESSION_ID, bt, Xconstants.RID, rid, Xconstants.TYPE, type);
-	}
-
-	/**
-	 * Method create message for GetAllAchievements request
-	 *
-	 * @param bt
-	 * @param aid
-	 * @return
-	 */
-	public static String createGetAllAchievements(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GETALLACHIEVEMENTS, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
-	}
-
-	/**
-	 * Method crete message for incrementing progress level of achievement
-	 *
-	 * @param bt
-	 * @param aid
-	 * @param achId
-	 * @return
-	 */
-	public static String createSetProgressLvl(String bt, String aid, String achId) {
-		return createComAttribsVariant(Xconstants.COM_STATE, SETPROGRESSLVL, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid, Xconstants.ID, achId);
 	}
 
 	// /////////////////////////////////////PRIVATE METHODS//////////////////////////////////////////////

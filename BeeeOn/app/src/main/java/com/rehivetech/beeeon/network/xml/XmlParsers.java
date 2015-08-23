@@ -52,22 +52,26 @@ public class XmlParsers {
 	 * @author ThinkDeep
 	 */
 	public enum State implements IIdentifier {
-		GATES("adapters"),
+		BT("SessionId"),
+		USERINFO("userinfo"),
+		GATES("gates"),
 		GATEINFO("gateinfo"),
-		ALLDEVICES("alldevs"),
 		DEVICES("devices"),
+
+		ALLDEVICES("alldevs"),
 		LOGDATA("logdata"),
-		ACCOUNTS("accounts"),
+		LOCATIONS("locations"),
+		LOCATIONID("locationid"),
+		ACCOUNTS("GateUsers"),
+
 		TRUE("true"),
 		FALSE("false"),
-		VIEWS("views"),
-		ROOMS("rooms"),
-		ROOMCREATED("roomid"),
-		NOTIFICATIONS("notifs"),
-		BT("bt"),
+
 		ALGCREATED("algcreated"),
-		USERINFO("userinfo"),
-		ALGORITHMS("algs");
+		ALGORITHMS("algs"),
+
+		VIEWS("views"),
+		NOTIFICATIONS("notifs");
 
 		private final String mValue;
 
@@ -367,7 +371,7 @@ public class XmlParsers {
 		}
 	}
 
-	// /////////////////////////////////ROOMS//////////////////////////////////////////////////////////////////
+	// /////////////////////////////////LOCATIONS//////////////////////////////////////////////////////////////////
 
 	/**
 	 * Method parse inner part of Rooms message
