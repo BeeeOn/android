@@ -64,17 +64,17 @@
 
 			</android.support.v7.widget.Toolbar>
 
-			<TextView
-				android:layout_below="@id/beeeon_toolbar"
-				android:layout_width="50dp"
-				android:layout_height="50dp"
-				android:layout_marginLeft="16dp"
-				android:layout_marginStart="16dp"
-				android:text="icon"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:gravity="center"
-				android:textColor="@color/beeeon_primary"
-				android:background="@drawable/oval_white"/>
+			<!--<TextView-->
+				<!--android:layout_below="@id/beeeon_toolbar"-->
+				<!--android:layout_width="50dp"-->
+				<!--android:layout_height="50dp"-->
+				<!--android:layout_marginLeft="16dp"-->
+				<!--android:layout_marginStart="16dp"-->
+				<!--android:text="icon"-->
+				<!--android:textAppearance="@style/TextAppearance.AppCompat.Caption"-->
+				<!--android:gravity="center"-->
+				<!--android:textColor="@color/beeeon_primary"-->
+				<!--android:background="@drawable/oval_white"/>-->
 
 			<ImageView
 				android:layout_below="@+id/beeeon_toolbar"

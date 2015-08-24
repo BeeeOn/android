@@ -19,16 +19,16 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
 
-			<TextView
-				android:layout_width="50dp"
-				android:layout_height="50dp"
-				android:layout_marginLeft="16dp"
-				android:layout_marginStart="16dp"
-				android:text="icon"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:gravity="center"
-				android:textColor="@color/beeeon_primary"
-				android:background="@drawable/oval_white"/>
+			<!--<TextView-->
+				<!--android:layout_width="50dp"-->
+				<!--android:layout_height="50dp"-->
+				<!--android:layout_marginLeft="16dp"-->
+				<!--android:layout_marginStart="16dp"-->
+				<!--android:text="icon"-->
+				<!--android:textAppearance="@style/TextAppearance.AppCompat.Caption"-->
+				<!--android:gravity="center"-->
+				<!--android:textColor="@color/beeeon_primary"-->
+				<!--android:background="@drawable/oval_white"/>-->
 
 			<TextView
 				android:id="@+id/device_detail_device_name"
