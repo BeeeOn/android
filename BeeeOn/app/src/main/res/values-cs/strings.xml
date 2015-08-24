@@ -153,6 +153,7 @@
 	<string name="nav_drawer_menu_gate_menu_gate_detail">Detaily</string>
 	<string name="nav_drawer_menu_menu_charts">Grafy</string>
 	<string name="nav_drawer_menu_menu_devices">Zařízení</string>
+	<string name="nav_drawer_menu_menu_modules">Moduly</string>
 	<string name="nav_drawer_menu_menu_gate">Aktivní brána</string>
 	<string name="nav_drawer_menu_menu_household">Přehled</string>
 	<string name="nav_drawer_menu_menu_management">Správa domácnosti</string>
