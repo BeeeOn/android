@@ -259,12 +259,21 @@
 	<string name="module_detail_refresh_time">Interval obnovy</string>
 	<string name="module_detail_toast_not_specified_gate_or_module">Nebolo zadané žiadne zariadenie alebo je zvolené zariadenie nesprávne</string>
 
+	<!--Device detail -->
+	<string name="device_detail_menu_edit_title">Editovať zariadenie</string>
+	<string name="device_detail_list_modules_no_item_title">ŽIADNE MODULY</string>
+	<string name="device_detail_label_led">LED status</string>
+	<string name="device_detail_default_group">Východzia</string>
+
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Umiestnenie</string>
 	<string name="module_edit_label_module_name">Názov zariadenia</string>
 	<string name="module_edit_refresh_time">Interval obnovy: </string>
 	<string name="module_edit_setup_new_location_hint">Názov nového umiestnenia</string>
 	<string name="module_edit_title_module_edit">Úprava zariadenia</string>
+
+	<!--Module graph-->
+	<string name="module_graph_show_y_labels_button">Zobraziť Y hodnoty</string>
 
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Zariadenie nie je dostupné</string>
