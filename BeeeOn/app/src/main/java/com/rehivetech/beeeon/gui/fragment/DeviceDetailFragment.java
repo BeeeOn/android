@@ -414,7 +414,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mModuleAdapter.notifyDataSetChanged();
+					mModuleAdapter.swapModules(mDevice.getVisibleModules());
 				}
 			}
 		});
@@ -443,7 +443,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mModuleAdapter.notifyDataSetChanged();
+					mModuleAdapter.swapModules(mDevice.getVisibleModules());
 				}
 			}
 

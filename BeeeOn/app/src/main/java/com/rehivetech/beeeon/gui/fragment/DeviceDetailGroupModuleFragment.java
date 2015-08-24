@@ -233,7 +233,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mModuleAdapter.notifyDataSetChanged();
+					mModuleAdapter.swapModules(mDevice.getVisibleModules());
 				}
 			}
 
