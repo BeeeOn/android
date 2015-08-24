@@ -159,7 +159,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	}
 
 	private List<Module> getModulesByGroup() {
-		List<Module> modules = mDevice.getAllModulesWithoutFeatures();
+		List<Module> modules = mDevice.getVisibleModules();
 		Iterator<Module> iterator = modules.iterator();
 		while (iterator.hasNext()) {
 			Module module = iterator.next();

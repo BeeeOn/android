@@ -204,7 +204,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			mModuleAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
 			// all devices from actual location
 			for (Device device : devicesModel.getDevicesByLocation(mActiveGateId, loc.getId())) {
-				Iterator<Module> it = device.getAllModulesWithoutFeatures().iterator();
+				Iterator<Module> it = device.getVisibleModules().iterator();
 				while (it.hasNext()) {
 					Module module = it.next();
 					mModuleAdapter.addItem(new ModuleListItem(module, module.getAbsoluteId(), mActivity, !it.hasNext()));

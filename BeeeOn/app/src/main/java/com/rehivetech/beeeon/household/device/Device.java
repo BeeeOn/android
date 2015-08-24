@@ -187,33 +187,7 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
-	 * @return List of modules this device contains without features modules
-	 */
-	public List<Module> getAllModulesWithoutFeatures() {
-		List<Module> modules = mModules.getObjects();
-
-		Iterator<Module> iterator = modules.iterator();
-		while (iterator.hasNext()) {
-			Module module = iterator.next();
-			switch (module.getType()) {
-				case TYPE_BATTERY:
-				case TYPE_RSSI:
-				case TYPE_REFRESH:
-					iterator.remove();
-					break;
-				default:
-					break;
-			}
-		}
-
-		// Sort modules by proper order
-		Collections.sort(modules, new OrderIdentifierComparator());
-
-		return modules;
-	}
-
-	/**
-	 * @return List of actually visible modules this device contains.
+	 * @return List of actually visible modules this device contains (without features modules).
 	 */
 	public List<Module> getVisibleModules() {
 		// This will give us correctly sorted modules
@@ -230,8 +204,19 @@ public final class Device implements IIdentifier {
 		Iterator<Module> it = modules.iterator();
 		while (it.hasNext()) {
 			Module module = it.next();
-			if (hideModuleIds.contains(module.getId())) {
-				it.remove();
+			switch (module.getType()) {
+				case TYPE_BATTERY:
+				case TYPE_RSSI:
+				case TYPE_REFRESH:
+					// Remove features modules
+					it.remove();
+					break;
+				default:
+					// Remove modules to be hidden based on rules
+					if (hideModuleIds.contains(module.getId())) {
+						it.remove();
+					}
+					break;
 			}
 		}
 
@@ -369,7 +354,7 @@ public final class Device implements IIdentifier {
 	 */
 	public ArrayList<String> getModulesGroups(Context context) {
 		ArrayList<String> moduleGroups = new ArrayList<>();
-		List<Module> modules = getAllModulesWithoutFeatures();
+		List<Module> modules = getVisibleModules();
 
 		for(Module module: modules) {
 			String groupName = module.getGroupName(context);

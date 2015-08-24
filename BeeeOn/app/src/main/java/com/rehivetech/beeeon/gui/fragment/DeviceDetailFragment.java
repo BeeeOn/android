@@ -156,7 +156,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
 		if (moduleGroups.size() == 1) {
-			List<Module> modules = mDevice.getAllModulesWithoutFeatures();
+			List<Module> modules = mDevice.getVisibleModules();
 			mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 			mEmptyTextView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
@@ -282,7 +282,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		// TODO device LED initialize
 
 		if (mModuleAdapter != null) {
-			mModuleAdapter.swapModules(mDevice.getAllModulesWithoutFeatures());
+			mModuleAdapter.swapModules(mDevice.getVisibleModules());
 			mModuleAdapter.notifyDataSetChanged();
 
 			if (mModuleAdapter.getItemCount() == 0) {
