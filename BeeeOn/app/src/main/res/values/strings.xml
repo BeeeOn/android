@@ -116,6 +116,7 @@
 	<string name="layout_module_list_watchdog_list_action_refresh_list">Refresh list</string>
 	<string name="layout_widget_household">Household</string>
 	<string name="toolbar_refresh_title">Refresh</string>
+	<string name="toast_not_implemented">Not implemented yet</string>
 
 	<!-- Placeholders -->
 	<string name="layout_activity_fragment_widget_placeholder_icon">Icon</string>
@@ -159,6 +160,7 @@
 	<string name="nav_drawer_menu_gate_menu_gate_detail">Details</string>
 	<string name="nav_drawer_menu_menu_charts">Charts</string>
 	<string name="nav_drawer_menu_menu_devices">Devices</string>
+	<string name="nav_drawer_menu_menu_modules">Modules</string>
 	<string name="nav_drawer_menu_menu_gate">Active gateway</string>
 	<string name="nav_drawer_menu_menu_household">Overview</string>
 	<string name="nav_drawer_menu_menu_management">Management</string>
@@ -265,6 +267,11 @@
 	<string name="module_detail_refresh_time">Refresh interval </string>
 	<string name="module_detail_toast_not_specified_gate_or_module">Not specified gateway or module</string>
 
+	<!--Device detail -->
+	<string name="device_detail_menu_edit_title">Edit device</string>
+	<string name="device_detail_list_modules_no_item_title">NO MODULES</string>
+	<string name="device_detail_label_led">LED status</string>
+	<string name="device_detail_default_group">Default</string>
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Location</string>
 	<string name="module_edit_label_module_name">Name of module</string>
@@ -272,6 +279,8 @@
 	<string name="module_edit_setup_new_location_hint">New location name</string>
 	<string name="module_edit_title_module_edit">Edit device</string>
 
+	<!--Module graph-->
+	<string name="module_graph_show_y_labels_button">Show Y labels</string>
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Device is not available</string>
 
@@ -284,7 +293,6 @@
 	<string name="watchdog_rule_edit_toast_actor_required">Select actuator</string>
 	<string name="watchdog_rule_edit_toast_fail_save_data">Failed saving data</string>
 	<string name="watchdog_rule_edit_toast_field_must_be_number">Enter a valid number</string>
-	<string name="watchdog_rule_edit_toast_not_implemented">Not implemented yet</string>
 	<string name="watchdog_rule_edit_toast_watchdog_no_valid_item">No valid item to check</string>
 	<string name="watchdog_rule_edit_toast_wrong_or_no_watchdog_rule">Wrong or no Watchdog rule selected</string>
 	<string name="watchdog_rule_edit_watchdog_actor_change_state">Change actor\'s state</string>

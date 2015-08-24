@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/module_graph_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="16dp"
+	android:orientation="vertical">
+
+	<com.github.mikephil.charting.charts.CombinedChart
+		android:id="@+id/module_graph_chart"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layerType="software"
+		android:layout_weight="10"/>
+
+	<com.rehivetech.beeeon.gui.view.VerticalChartLegend
+		android:id="@+id/module_graph_legend"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1.5"/>
+
+	<Button
+		android:id="@+id/module_graph_show_legend_btn"
+		android:theme="@style/BeeeOn.Button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center_horizontal"
+		android:text="@string/module_graph_show_y_labels_button"/>
+</LinearLayout>

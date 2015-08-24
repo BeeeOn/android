@@ -109,6 +109,7 @@
 	<string name="layout_module_list_watchdog_list_action_refresh_list">Obnovit seznam</string>
 	<string name="layout_widget_household">Domácnost</string>
 	<string name="toolbar_refresh_title">Obnovit</string>
+	<string name="toast_not_implemented">Bude implementováno v příští verzi</string>
 
 	<!-- Placeholders -->
 	<string name="layout_activity_fragment_widget_placeholder_icon">Ikona</string>
@@ -152,6 +153,7 @@
 	<string name="nav_drawer_menu_gate_menu_gate_detail">Detaily</string>
 	<string name="nav_drawer_menu_menu_charts">Grafy</string>
 	<string name="nav_drawer_menu_menu_devices">Zařízení</string>
+	<string name="nav_drawer_menu_menu_modules">Moduly</string>
 	<string name="nav_drawer_menu_menu_gate">Aktivní brána</string>
 	<string name="nav_drawer_menu_menu_household">Přehled</string>
 	<string name="nav_drawer_menu_menu_management">Správa domácnosti</string>
@@ -258,12 +260,21 @@
 	<string name="module_detail_refresh_time">Interval probuzení</string>
 	<string name="module_detail_toast_not_specified_gate_or_module">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
 
+	<!--Device detail -->
+	<string name="device_detail_menu_edit_title">Editovat zařízení</string>
+	<string name="device_detail_list_modules_no_item_title">ŽÁDNE MODULY</string>
+	<string name="device_detail_label_led">LED status</string>
+	<string name="device_detail_default_group">Výchozí</string>
+
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Umístění</string>
 	<string name="module_edit_label_module_name">Název zařízení</string>
 	<string name="module_edit_refresh_time">Interval probuzení:</string>
 	<string name="module_edit_setup_new_location_hint">Název nového umístění</string>
 	<string name="module_edit_title_module_edit">Úprava zařízení</string>
+
+	<!--Module graph-->
+	<string name="module_graph_show_y_labels_button">Zobrazit Y hodnoty</string>
 
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Zařízení není dostupné</string>
@@ -277,7 +288,6 @@
 	<string name="watchdog_rule_edit_toast_actor_required">Vyberte aktor</string>
 	<string name="watchdog_rule_edit_toast_fail_save_data">Uložení údajů selhalo</string>
 	<string name="watchdog_rule_edit_toast_field_must_be_number">Vložte platné číslo</string>
-	<string name="watchdog_rule_edit_toast_not_implemented">Bude implementováno v příští verzi</string>
 	<string name="watchdog_rule_edit_toast_watchdog_no_valid_item">Žádná platná položka</string>
 	<string name="watchdog_rule_edit_toast_wrong_or_no_watchdog_rule">Nebylo zadané žádné pravidlo nebo je zvolené pravidlo nesprávné</string>
 	<string name="watchdog_rule_edit_watchdog_actor_change_state">Změnit stav aktoru</string>

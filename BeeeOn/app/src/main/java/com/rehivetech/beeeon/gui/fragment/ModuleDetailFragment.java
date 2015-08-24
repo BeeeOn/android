@@ -42,7 +42,6 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -378,7 +377,7 @@ public class ModuleDetailFragment extends BaseApplicationFragment implements ILi
 		String name = getString(module.getTypeStringResource());
 
 		//set chart
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, layout, controller);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, null, controller);
 		mChart.setFillFormatter(new CustomFillFormatter());
 
 

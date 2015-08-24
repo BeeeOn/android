@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
@@ -205,7 +204,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			mModuleAdapter.addHeader(new LocationListItem(loc.getName(), loc.getIconResource(), loc.getId()));
 			// all devices from actual location
 			for (Device device : devicesModel.getDevicesByLocation(mActiveGateId, loc.getId())) {
-				Iterator<Module> it = device.getVisibleModules().iterator();
+				Iterator<Module> it = device.getAllModulesWithoutFeatures().iterator();
 				while (it.hasNext()) {
 					Module module = it.next();
 					mModuleAdapter.addItem(new ModuleListItem(module, module.getAbsoluteId(), mActivity, !it.hasNext()));

@@ -2,8 +2,6 @@ package com.rehivetech.beeeon.util;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
@@ -15,8 +13,8 @@ import com.github.mikephil.charting.utils.ValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.view.ChartMarkerView;
-import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 
 import java.util.List;
 
@@ -30,20 +28,18 @@ final public class ChartHelper {
 
 	/**
 	 * Set chart params, legend and value formatter
-	 * @param chart chart instance
-	 * @param context context
+	 *
+	 * @param chart      chart instance
+	 * @param context    context
 	 * @param baseValue
-	 * @param layout layout for adding textviews
+	 * @param xLabels    StringBuffer to save long x labels in bar chart
 	 * @param controller Controller instance
 	 */
-	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, ViewGroup layout, Controller controller) {
-
-		int padding = context.getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
+	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer xLabels, Controller controller) {
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
-
 
 		//TextView to get text color and typeface from textAppearance
 		TextView tempText = new TextView(context);
@@ -56,6 +52,7 @@ final public class ChartHelper {
 		chart.setGridBackgroundColor(context.getResources().getColor(R.color.white));
 		//set bottom X axis style
 		XAxis xAxis = chart.getXAxis();
+		xAxis.setAvoidFirstLastClipping(true);
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		xAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
 		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
@@ -77,26 +74,16 @@ final public class ChartHelper {
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
-				if (layout.getVisibility() != View.VISIBLE) {
-					int j = 1;
-					TextView headline = new TextView(context);
-					headline.setText(context.getString(R.string.chart_helper_chart_y_axis));
-					headline.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
-					headline.setPadding(0, padding, 0, padding);
-					layout.addView(headline);
-					for (int i = yLabels.size() - 1; i > -1; i--) {
-						TextView label = new TextView(context);
-						label.setText(String.format("%d. %s", j++, context.getString(yLabels.get(i).getStringResource())));
-						label.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
-						layout.addView(label);
-					}
+				int j = 1;
+				for (int i = yLabels.size() - 1; i > -1; i--) {
+					xLabels.append(String.format("%d. %s\n", j++, context.getString(yLabels.get(i).getStringResource())));
 				}
 			} else {
 				yAxis.setShowOnlyMinMax(true);
 			}
 
 			yAxis.setValueFormatter(enumValueFormatter);
-			yAxis.setLabelCount(yLabels.size() - 1, true);
+			yAxis.setLabelCount(yLabels.size(), true);
 			yAxis.setAxisMinValue(0);
 			yAxis.setAxisMaxValue(yLabels.size() - 1);
 			chart.setDoubleTapToZoomEnabled(false);
@@ -109,10 +96,11 @@ final public class ChartHelper {
 
 	/**
 	 * Prepare data set for chart
-	 * @param dataset data set to prepare
+	 *
+	 * @param dataset  data set to prepare
 	 * @param barChart bar chart flag
-	 * @param filled fill dataset flag
-	 * @param color line color
+	 * @param filled   fill dataset flag
+	 * @param color    line color
 	 */
 	public static void prepareDataSet(DataSet dataset, boolean barChart, boolean filled, @ColorInt int color) {
 		int fillColor = Utils.setColorAlpha(color, 125);
@@ -130,8 +118,9 @@ final public class ChartHelper {
 
 	/**
 	 * Prepare ValueFormatter for bar and line chart
+	 *
 	 * @param baseValue
-	 * @param context Context
+	 * @param context    Context
 	 * @param controller Controller instance
 	 * @return specific valueFormatter
 	 */

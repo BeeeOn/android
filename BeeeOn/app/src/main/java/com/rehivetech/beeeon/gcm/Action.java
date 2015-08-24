@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -50,10 +51,9 @@ public final class Action {
 		Module module = modules.get(pos);
 
 		// Module exists, we can open activity
-		Intent intent = new Intent(context, ModuleDetailActivity.class);
-		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
+		Intent intent = new Intent(context, DeviceDetailActivity.class);
+		intent.putExtra(ModuleDetailActivity.EXTRA_MODULE_ID, module.getDevice().getId());
 		intent.putExtra(ModuleDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
-		intent.putExtra(ModuleDetailActivity.EXTRA_ACTIVE_POS, pos);
 
 		context.startActivity(intent);
 	}

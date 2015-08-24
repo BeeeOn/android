@@ -2,9 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SwitchCompat;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,7 +39,6 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RemoveWatchdogTask;
 import com.rehivetech.beeeon.threading.task.SaveWatchdogTask;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -464,7 +461,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				return;
 
 			default:
-				Toast.makeText(this, getString(R.string.watchdog_rule_edit_toast_not_implemented), Toast.LENGTH_LONG).show();
+				Toast.makeText(this, getString(R.string.toast_not_implemented), Toast.LENGTH_LONG).show();
 				return;
 		}
 

@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.household.device;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.IIdentifier;
@@ -186,6 +187,32 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
+	 * @return List of modules this device contains without features modules
+	 */
+	public List<Module> getAllModulesWithoutFeatures() {
+		List<Module> modules = mModules.getObjects();
+
+		Iterator<Module> iterator = modules.iterator();
+		while (iterator.hasNext()) {
+			Module module = iterator.next();
+			switch (module.getType()) {
+				case TYPE_BATTERY:
+				case TYPE_RSSI:
+				case TYPE_REFRESH:
+					iterator.remove();
+					break;
+				default:
+					break;
+			}
+		}
+
+		// Sort modules by proper order
+		Collections.sort(modules, new OrderIdentifierComparator());
+
+		return modules;
+	}
+
+	/**
 	 * @return List of actually visible modules this device contains.
 	 */
 	public List<Module> getVisibleModules() {
@@ -333,6 +360,25 @@ public final class Device implements IIdentifier {
 		Module module = getFirstModuleByType(ModuleType.TYPE_RSSI);
 		if (module != null)
 			module.setValue(String.valueOf(quality));
+	}
+
+	/**
+	 * Get all modules groups
+	 * @param context context to get string resource
+	 * @return list of group names
+	 */
+	public ArrayList<String> getModulesGroups(Context context) {
+		ArrayList<String> moduleGroups = new ArrayList<>();
+		List<Module> modules = getAllModulesWithoutFeatures();
+
+		for(Module module: modules) {
+			String groupName = module.getGroupName(context);
+			if (!moduleGroups.contains(groupName)) {
+				moduleGroups.add(groupName);
+			}
+		}
+
+		return moduleGroups;
 	}
 
 	/**

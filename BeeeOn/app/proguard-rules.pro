@@ -153,6 +153,10 @@
    public <init>(...);
 }
 
+# Keep design support library behavior sources
+-keepattributes *Annotation*
+-keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
+-keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }
 
 ###### ADDITIONAL OPTIONS NOT USED NORMALLY
 
