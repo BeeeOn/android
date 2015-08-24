@@ -50,7 +50,8 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 				break;
 
 			case R.id.device_detail_menu_action_edit:
-//				Intent intent = new Intent(this, ModuleEditActivity.class);
+				// TODO Device edit not implemented yet
+				Toast.makeText(this, getString(R.string.toast_not_implemented), Toast.LENGTH_SHORT).show();
 				break;
 
 		}

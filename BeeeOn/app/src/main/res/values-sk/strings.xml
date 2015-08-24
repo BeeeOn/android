@@ -109,6 +109,7 @@
 	<string name="layout_module_list_watchdog_list_action_refresh_list">Obnoviť zoznam</string>
 	<string name="layout_widget_household">Domácnosť</string>
 	<string name="toolbar_refresh_title">Obnoviť</string>
+	<string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>
 
 	<!-- Placeholders -->
 	<string name="layout_activity_fragment_widget_placeholder_icon">Ikona</string>
@@ -277,7 +278,6 @@
 	<string name="watchdog_rule_edit_toast_actor_required">Vyberte aktor</string>
 	<string name="watchdog_rule_edit_toast_fail_save_data">Uloženie údajov zlyhalo</string>
 	<string name="watchdog_rule_edit_toast_field_must_be_number">Vložte platné číslo</string>
-	<string name="watchdog_rule_edit_toast_not_implemented">Bude implementované v budúcej verzii!</string>
 	<string name="watchdog_rule_edit_toast_watchdog_no_valid_item">Žiadna platná položka</string>
 	<string name="watchdog_rule_edit_toast_wrong_or_no_watchdog_rule">Nebolo zadané žiadne pravidlo alebo je zvolené pravidlo nesprávne</string>
 	<string name="watchdog_rule_edit_watchdog_actor_change_state">Zmeniť stav aktoru</string>

@@ -116,6 +116,7 @@
 	<string name="layout_module_list_watchdog_list_action_refresh_list">Refresh list</string>
 	<string name="layout_widget_household">Household</string>
 	<string name="toolbar_refresh_title">Refresh</string>
+	<string name="toast_not_implemented">Not implemented yet</string>
 
 	<!-- Placeholders -->
 	<string name="layout_activity_fragment_widget_placeholder_icon">Icon</string>
@@ -292,7 +293,6 @@
 	<string name="watchdog_rule_edit_toast_actor_required">Select actuator</string>
 	<string name="watchdog_rule_edit_toast_fail_save_data">Failed saving data</string>
 	<string name="watchdog_rule_edit_toast_field_must_be_number">Enter a valid number</string>
-	<string name="watchdog_rule_edit_toast_not_implemented">Not implemented yet</string>
 	<string name="watchdog_rule_edit_toast_watchdog_no_valid_item">No valid item to check</string>
 	<string name="watchdog_rule_edit_toast_wrong_or_no_watchdog_rule">Wrong or no Watchdog rule selected</string>
 	<string name="watchdog_rule_edit_watchdog_actor_change_state">Change actor\'s state</string>
