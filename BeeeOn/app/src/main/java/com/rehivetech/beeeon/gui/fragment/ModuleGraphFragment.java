@@ -74,7 +74,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private DataSet mDataSet;
 	private VerticalChartLegend mLegend;
 	private Button mShowLegendButton;
-	private StringBuffer mXlabels = new StringBuffer();
+	private StringBuffer mYlabels = new StringBuffer();
 
 	public static ModuleGraphFragment newInstance(String gateId, String deviceId, String moduleId) {
 		Bundle args = new Bundle();
@@ -123,7 +123,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 			public void onClick(View v) {
 				SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
 						.setTitle(getString(R.string.chart_helper_chart_y_axis))
-						.setMessage(mXlabels.toString())
+						.setMessage(mYlabels.toString())
 						.setNeutralButtonText("close")
 						.show();
 			}
@@ -147,7 +147,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		String name = module.getName(mActivity);
 
 		//set chart
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mXlabels, controller);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller);
 		mChart.setFillFormatter(new CustomFillFormatter());
 
 

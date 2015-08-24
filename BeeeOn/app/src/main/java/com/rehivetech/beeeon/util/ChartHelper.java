@@ -32,10 +32,10 @@ final public class ChartHelper {
 	 * @param chart      chart instance
 	 * @param context    context
 	 * @param baseValue
-	 * @param xLabels    StringBuffer to save long x labels in bar chart
+	 * @param yLabels    StringBuffer to save long x labels in bar chart
 	 * @param controller Controller instance
 	 */
-	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer xLabels, Controller controller) {
+	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels, Controller controller) {
 		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		chart.getLegend().setEnabled(false);
@@ -72,20 +72,20 @@ final public class ChartHelper {
 		chart.getAxisRight().setEnabled(false);
 
 		if (baseValue instanceof EnumValue) {
-			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
-			if (yLabels.size() > 2) {
+			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
+			if (labels.size() > 2) {
 				int j = 1;
-				for (int i = yLabels.size() - 1; i > -1; i--) {
-					xLabels.append(String.format("%d. %s\n", j++, context.getString(yLabels.get(i).getStringResource())));
+				for (int i = labels.size() - 1; i > -1; i--) {
+					yLabels.append(String.format("%d. %s\n", j++, context.getString(labels.get(i).getStringResource())));
 				}
 			} else {
 				yAxis.setShowOnlyMinMax(true);
 			}
 
 			yAxis.setValueFormatter(enumValueFormatter);
-			yAxis.setLabelCount(yLabels.size(), true);
+			yAxis.setLabelCount(labels.size(), true);
 			yAxis.setAxisMinValue(0);
-			yAxis.setAxisMaxValue(yLabels.size() - 1);
+			yAxis.setAxisMaxValue(labels.size() - 1);
 			chart.setDoubleTapToZoomEnabled(false);
 			chart.setScaleYEnabled(false);
 		} else {
