@@ -48,7 +48,6 @@
 				android:layout_height="24dp"
 				android:layout_marginLeft="72dp"
 				android:layout_marginStart="72dp"
-				android:layout_marginTop="8dp"
 				android:layout_below="@id/device_detail_device_name"
 				android:src="@drawable/ic_clock"/>
 
@@ -57,7 +56,6 @@
 				android:layout_width="wrap_content"
 				android:layout_height="24dp"
 				android:gravity="center_vertical"
-				android:layout_marginTop="8dp"
 				android:layout_marginBottom="8dp"
 				android:layout_marginLeft="8dp"
 				android:layout_marginStart="8dp"
