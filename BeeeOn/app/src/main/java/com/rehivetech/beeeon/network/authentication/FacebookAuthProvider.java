@@ -22,7 +22,7 @@ public class FacebookAuthProvider implements IAuthProvider {
 
 	private static final String PROVIDER_NAME = "facebook";
 
-	private static final String PARAMETER_TOKEN = "fbt";
+	private static final String PARAMETER_TOKEN = "token";
 
 	private static final String AUTH_INTENT_DATA_TOKEN = "token";
 

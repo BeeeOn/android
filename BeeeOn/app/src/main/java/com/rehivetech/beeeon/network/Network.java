@@ -385,7 +385,7 @@ public class Network implements INetwork {
 
 		XmlParsers parser = processCommunication(
 				XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneName(), authProvider),
-				State.BT,
+				State.TOKEN,
 				false);
 
 		mSessionId = parser.parseSessionId();
@@ -656,7 +656,7 @@ public class Network implements INetwork {
 		return location;
 	}
 
-	// /////////////////////////////////////ACCOUNTS////////////////////////////////////
+	// /////////////////////////////////////PROVIDERS////////////////////////////////////
 
 	@Override
 	public boolean addAccounts(String gateId, ArrayList<User> users) {

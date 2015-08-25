@@ -52,7 +52,7 @@ public class XmlParsers {
 	 * @author ThinkDeep
 	 */
 	public enum State implements IIdentifier {
-		BT("SessionId"),
+		TOKEN("token"),
 		USERINFO("userinfo"),
 		GATES("gates"),
 		GATEINFO("gateinfo"),
@@ -62,7 +62,7 @@ public class XmlParsers {
 		LOGDATA("logdata"),
 		LOCATIONS("locations"),
 		LOCATIONID("locationid"),
-		ACCOUNTS("GateUsers"),
+		ACCOUNTS("gateusers"),
 
 		TRUE("true"),
 		FALSE("false"),
@@ -197,24 +197,30 @@ public class XmlParsers {
 	public User parseUserInfo() {
 		try {
 			User user = new User();
-			user.setId(getSecureAttrValue(Xconstants.UID));
-			user.setName(getSecureAttrValue(Xconstants.NAME));
-			user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
-			user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
-			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
-			user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
 
-			mParser.nextTag(); // accounts
+			mParser.nextTag(); // user
+			if (!mParser.getName().equals(Xconstants.USER_ROOT))
+				throw new AppException(ClientError.XML);
 
-			if (!mParser.getName().equals(Xconstants.ACCOUNTS))
+			user.setId(getSecureAttrValue(Xconstants.USER_UID));
+			user.setName(getSecureAttrValue(Xconstants.USER_NAME));
+			user.setSurname(getSecureAttrValue(Xconstants.USER_SURNAME));
+			user.setEmail(getSecureAttrValue(Xconstants.USER_EMAIL));
+			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.USER_GENDER), User.Gender.UNKNOWN));
+			user.setPictureUrl(getSecureAttrValue(Xconstants.USER_IMGURL));
+
+			mParser.nextTag(); // providers
+			if (!mParser.getName().equals(Xconstants.USER_PROVIDERS_ROOT))
 				return user;
 
 			HashMap<String, String> providers = user.getJoinedProviders();
 
-			while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ACCOUNTS)) { //srv
+			while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.USER_PROVIDERS_PROVIDER)) { // provider
 				providers.put(getSecureAttrValue(Xconstants.NAME), getSecureAttrValue(Xconstants.ID));
-				mParser.nextTag(); // end srv
+				mParser.nextTag(); // end provider
 			}
+
+			mParser.nextTag(); // end providers
 
 			return user;
 		} catch (IOException | XmlPullParserException e) {
@@ -403,7 +409,7 @@ public class XmlParsers {
 		}
 	}
 
-	// /////////////////////////////////ACCOUNTS///////////////////////////////////////////////////////////////
+	// /////////////////////////////////PROVIDERS///////////////////////////////////////////////////////////////
 
 	/**
 	 * Method parse inner part of ConAccountList message
@@ -413,18 +419,18 @@ public class XmlParsers {
 	public List<User> parseConAccountList() {
 		try {
 			mParser.nextTag();
-			mParser.require(XmlPullParser.START_TAG, ns, Xconstants.USER);
+			mParser.require(XmlPullParser.START_TAG, ns, Xconstants.USER_ROOT);
 
 			List<User> result = new ArrayList<>();
 			do {
 				User user = new User();
 				user.setId(getSecureAttrValue(Xconstants.ID));
-				user.setEmail(getSecureAttrValue(Xconstants.EMAIL));
+				user.setEmail(getSecureAttrValue(Xconstants.USER_EMAIL));
 				user.setName(getSecureAttrValue(Xconstants.NAME));
-				user.setSurname(getSecureAttrValue(Xconstants.SURNAME));
+				user.setSurname(getSecureAttrValue(Xconstants.USER_SURNAME));
 				user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
-				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.GENDER), User.Gender.UNKNOWN));
-				user.setPictureUrl(getSecureAttrValue(Xconstants.IMGURL));
+				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.USER_GENDER), User.Gender.UNKNOWN));
+				user.setPictureUrl(getSecureAttrValue(Xconstants.USER_IMGURL));
 
 				result.add(user);
 				mParser.nextTag();

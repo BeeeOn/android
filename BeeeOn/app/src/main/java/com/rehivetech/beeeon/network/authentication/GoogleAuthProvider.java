@@ -36,7 +36,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 	private static final String PROVIDER_NAME = "google";
 
-	private static final String PARAMETER_TOKEN = "gt";
+	private static final String PARAMETER_TOKEN = "token";
 
 	private static final String AUTH_INTENT_DATA_TOKEN = "token";
 

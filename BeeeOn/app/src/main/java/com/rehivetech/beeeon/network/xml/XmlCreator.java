@@ -45,13 +45,13 @@ public class XmlCreator {
 	public static final String USER_UPDATE = "updateuser";
 	public static final String USER_GETINFO = "getuserinfo";
 
-	public static final String USER_ACCOUNT_CONNECT = "connectAuthProvider";
-	public static final String USER_ACCOUNT_DISCONNECT = "disconnectAuthProvider";
+	public static final String USER_ACCOUNT_CONNECT = "connectauthprovider";
+	public static final String USER_ACCOUNT_DISCONNECT = "disconnectauthprovider";
 
 	public static final String GATE_ADD = "addgate";
 	public static final String GATE_DELETE = "deletegate";
 	public static final String GATE_GETINFO = "getgateinfo";
-	public static final String GATE_GETALL = "getGates";
+	public static final String GATE_GETALL = "getgates";
 	public static final String GATE_UPDATE = "updategate";
 
 	public static final String SCANMODE = "scanmode";
@@ -64,7 +64,7 @@ public class XmlCreator {
 
 	public static final String GETLOGS = "getlogs";
 
-	public static final String SWITCH = "switchState";
+	public static final String SWITCH = "switchstate";
 
 	public static final String LOCATION_ADD = "addlocation";
 	public static final String LOCATION_UPDATE = "updatelocation";
@@ -74,7 +74,7 @@ public class XmlCreator {
 	public static final String GATE_USER_INVITE = "invitegateuser";
 	public static final String GATE_USER_UPDATE = "updategateuser";
 	public static final String GATE_USER_DELETE = "deletegateuser";
-	public static final String GATE_USER_GETALL = "getGateUsers";
+	public static final String GATE_USER_GETALL = "getgateusers";
 
 
 	public static final String GCMID_DELETE = "deletegcmid";
@@ -126,10 +126,9 @@ public class XmlCreator {
 
 			serializer.attribute(ns, Xconstants.COM_STATE, SIGNUP);
 
-			// NOTE: Ok, i did it like that, but i do not like it
+			serializer.startTag(ns, Xconstants.PROVIDER_ROOT);
 			serializer.attribute(ns, Xconstants.PROVIDER_NAME, authProvider.getProviderName());
 
-			serializer.startTag(ns, Xconstants.PARAM);
 			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
@@ -137,7 +136,7 @@ public class XmlCreator {
 				if (key != null && value != null)
 					serializer.attribute(ns, key, value);
 			}
-			serializer.endTag(ns, Xconstants.PARAM);
+			serializer.endTag(ns, Xconstants.PROVIDER_ROOT);
 
 			endXml(serializer);
 
@@ -151,31 +150,35 @@ public class XmlCreator {
 	 * Method create message for login
 	 *
 	 * @param locale       localization of phone
-	 * @param pid          unique id of phone
+	 * @param phone        name of phone model
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with signIn message
 	 */
-	public static String createSignIn(String locale, String pid, IAuthProvider authProvider) {
+	public static String createSignIn(String locale, String phone, IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer);
 
 			serializer.attribute(ns, Xconstants.COM_STATE, SIGNIN);
-			serializer.attribute(ns, Xconstants.LOCALE, locale);
-			serializer.attribute(ns, Xconstants.PID, pid);
 
-			// NOTE: Ok, i did it like that, but i do not like it
-			serializer.attribute(ns, Xconstants.PROVIDER_NAME, authProvider.getProviderName());
+			serializer.startTag(ns, Xconstants.PROVIDER_ROOT);
+				serializer.attribute(ns, Xconstants.PROVIDER_NAME, authProvider.getProviderName());
 
-			serializer.startTag(ns, Xconstants.PARAM);
-			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
-				String key = entry.getKey();
-				String value = entry.getValue();
+				for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
 
-				if (key != null && value != null)
-					serializer.attribute(ns, key, value);
-			}
-			serializer.endTag(ns, Xconstants.PARAM);
+					if (key != null && value != null)
+						serializer.attribute(ns, key, value);
+				}
+			serializer.endTag(ns, Xconstants.PROVIDER_ROOT);
+
+			serializer.startTag(ns, Xconstants.PHONE_ROOT);
+			serializer.attribute(ns, Xconstants.PHONE_NAME, phone);
+			serializer.endTag(ns, Xconstants.PHONE_ROOT);
+
+			// FIXME: this is removed completely?
+			// serializer.attribute(ns, Xconstants.LOCALE, locale);
 
 			endXml(serializer);
 
@@ -665,7 +668,7 @@ public class XmlCreator {
 		return createComAttribsVariant(Xconstants.COM_STATE, LOCATION_GETALL, Xconstants.COM_SESSION_ID, bt, Xconstants.AID, aid);
 	}
 
-	// /////////////////////////////////////ACCOUNTS///////////////////////////////////////////////////
+	// /////////////////////////////////////PROVIDERS///////////////////////////////////////////////////
 
 	/**
 	 * Method create XML for AddAcount message
@@ -712,9 +715,9 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (User user : users) {
-				serializer.startTag(ns, Xconstants.USER);
-				serializer.attribute(ns, Xconstants.EMAIL, user.getEmail());
-				serializer.endTag(ns, Xconstants.USER);
+				serializer.startTag(ns, Xconstants.USER_ROOT);
+				serializer.attribute(ns, Xconstants.USER_EMAIL, user.getEmail());
+				serializer.endTag(ns, Xconstants.USER_ROOT);
 			}
 
 			endXml(serializer);
@@ -748,7 +751,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createDeLGCMID(String userId, String gcmid) {
-		return createComAttribsVariant(Xconstants.COM_STATE, GCMID_DELETE, Xconstants.UID, userId, Xconstants.GCMID, gcmid);
+		return createComAttribsVariant(Xconstants.COM_STATE, GCMID_DELETE, Xconstants.USER_UID, userId, Xconstants.GCMID, gcmid);
 	}
 
 	/**
@@ -979,11 +982,11 @@ public class XmlCreator {
 			serializer.attribute(ns, Xconstants.AID, aid);
 
 			for (User user : users) {
-				serializer.startTag(ns, Xconstants.USER);
+				serializer.startTag(ns, Xconstants.USER_ROOT);
 
-				serializer.attribute(ns, Xconstants.EMAIL, user.getEmail());
+				serializer.attribute(ns, Xconstants.USER_EMAIL, user.getEmail());
 				serializer.attribute(ns, Xconstants.ROLE, user.getRole().getId());
-				serializer.endTag(ns, Xconstants.USER);
+				serializer.endTag(ns, Xconstants.USER_ROOT);
 			}
 
 			endXml(serializer);

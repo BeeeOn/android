@@ -54,7 +54,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		try {
 			NotificationName name = NotificationName.fromValue(bundle.getString(Xconstants.NOTIFICATION_NAME));
 			Integer msgId = Integer.valueOf(bundle.getString(Xconstants.MSGID));
-			String userId = bundle.getString(Xconstants.UID);
+			String userId = bundle.getString(Xconstants.USER_UID);
 			Long time = Long.valueOf(bundle.getString(Xconstants.TIME));
 			NotificationType type = NotificationType.fromValue(bundle.getString(Xconstants.TYPE));
 
