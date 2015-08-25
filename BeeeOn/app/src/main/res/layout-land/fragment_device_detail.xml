@@ -17,7 +17,8 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:elevation="4dp"
-			android:background="@color/beeeon_primary">
+			android:background="@color/beeeon_primary"
+			android:paddingBottom="5dp">
 
 			<android.support.v7.widget.Toolbar
 				app:layout_scrollFlags="scroll"
@@ -76,28 +77,7 @@
 				<!--android:textColor="@color/beeeon_primary"-->
 				<!--android:background="@drawable/oval_white"/>-->
 
-			<ImageView
-				android:layout_below="@+id/beeeon_toolbar"
-				android:id="@+id/device_detail_loc_icon"
-				android:layout_width="24dp"
-				android:layout_height="24dp"
-				android:layout_marginLeft="72dp"
-				android:layout_marginStart="72dp"
-				tools:src="@drawable/ic_loc_bathroom"/>
 
-			<TextView
-				android:layout_below="@+id/beeeon_toolbar"
-				android:id="@+id/device_detail_loc_label"
-				android:layout_width="wrap_content"
-				android:layout_height="24dp"
-				android:gravity="center_vertical"
-				android:layout_marginLeft="8dp"
-				android:layout_marginStart="8dp"
-				android:layout_toRightOf="@+id/device_detail_loc_icon"
-				android:layout_toEndOf="@+id/device_detail_loc_icon"
-				android:textColor="@color/white"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-				tools:text="Location"/>
 
 			<ImageView
 				android:id="@+id/device_detail_last_update_icon"
@@ -105,9 +85,8 @@
 				android:layout_height="24dp"
 				android:layout_marginLeft="72dp"
 				android:layout_marginStart="72dp"
-				android:layout_marginTop="5dp"
-				android:paddingBottom="5dp"
-				android:layout_below="@+id/device_detail_loc_icon"
+				android:layout_marginTop="8dp"
+				android:layout_below="@+id/beeeon_toolbar"
 				android:src="@drawable/ic_clock"/>
 
 			<TextView
@@ -115,13 +94,13 @@
 				android:layout_width="wrap_content"
 				android:layout_height="24dp"
 				android:gravity="center_vertical"
-				android:layout_marginTop="5dp"
-				android:paddingBottom="8dp"
+				android:layout_marginTop="8dp"
+				android:layout_marginBottom="8dp"
 				android:layout_marginLeft="8dp"
 				android:layout_marginStart="8dp"
-				android:layout_below="@+id/device_detail_loc_label"
 				android:layout_toRightOf="@+id/device_detail_last_update_icon"
 				android:layout_toEndOf="@+id/device_detail_last_update_icon"
+				android:layout_below="@+id/beeeon_toolbar"
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 				android:textColor="@color/white"
 				tools:text="14:23:34"/>
@@ -143,6 +122,54 @@
 				android:orientation="horizontal">
 
 				<LinearLayout
+					android:id="@+id/device_detail_location_layout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+
+					android:orientation="vertical">
+
+					<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/round_rectangle"
+						android:orientation="horizontal"
+						android:paddingLeft="8dp"
+						android:paddingStart="8dp"
+						android:paddingRight="8dp"
+						android:paddingEnd="8dp"
+						android:paddingTop="5dp"
+						android:paddingBottom="5dp">
+
+						<ImageView
+							android:id="@+id/device_detail_loc_icon"
+							android:layout_width="24dp"
+							android:layout_height="24dp"/>
+
+						<TextView
+							android:id="@+id/device_detail_loc_label"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="8dp"
+							android:layout_marginStart="8dp"
+							android:layout_gravity="center_vertical"
+							android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+							android:textColor="@color/white"
+							tools:text="96%"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/module_edit_label_detail_location"/>
+
+				</LinearLayout>
+
+				<LinearLayout
 					android:id="@+id/device_detail_signal_layout"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
@@ -159,7 +186,9 @@
 						android:paddingLeft="8dp"
 						android:paddingStart="8dp"
 						android:paddingRight="8dp"
-						android:paddingEnd="8dp">
+						android:paddingEnd="8dp"
+						android:paddingTop="5dp"
+						android:paddingBottom="5dp">
 
 						<ImageView
 							android:layout_width="24dp"
@@ -205,7 +234,9 @@
 						android:paddingLeft="8dp"
 						android:paddingStart="8dp"
 						android:paddingRight="8dp"
-						android:paddingEnd="8dp">
+						android:paddingEnd="8dp"
+						android:paddingTop="5dp"
+						android:paddingBottom="5dp">
 
 						<ImageView
 							android:layout_width="24dp"
@@ -252,7 +283,9 @@
 						android:paddingLeft="8dp"
 						android:paddingStart="8dp"
 						android:paddingRight="8dp"
-						android:paddingEnd="8dp">
+						android:paddingEnd="8dp"
+						android:paddingTop="5dp"
+						android:paddingBottom="5dp">
 
 						<ImageView
 							android:layout_width="24dp"
