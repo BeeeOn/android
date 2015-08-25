@@ -132,11 +132,12 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			public void onClick(View v) {
 				Log.d(TAG, "Refreshing list of modules");
 				Gate gate = Controller.getInstance(mActivity).getActiveGate();
-				if (gate == null) {
-					return;
+				if (gate != null) {
+					doReloadDevicesTask(gate.getId(), true);
+				} else {
+					doFullReloadTask(true);
 				}
 				mActivity.redraw();
-				doReloadDevicesTask(gate.getId(), true);
 			}
 		});
 	}
