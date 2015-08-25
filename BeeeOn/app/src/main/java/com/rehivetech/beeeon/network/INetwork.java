@@ -161,16 +161,6 @@ public interface INetwork {
 	boolean updateDevices(String gateId, List<Device> devices, EnumSet<SaveModule> toSave);
 
 	/**
-	 * Method send wanted fields of module to server
-	 *
-	 * @param gateId id of gate
-	 * @param module to save
-	 * @param toSave ENUMSET specified fields to save
-	 * @return true if fields has been updated, false otherwise
-	 */
-	boolean updateModule(String gateId, Module module, EnumSet<SaveModule> toSave);
-
-	/**
 	 * Method toggle or set actor to new value
 	 *
 	 * @param gateId
@@ -240,14 +230,6 @@ public interface INetwork {
 	 * @return List with locations
 	 */
 	List<Location> getLocations(String gateId);
-
-	/**
-	 * Method call to server to update location
-	 *
-	 * @param locations to update
-	 * @return true if everything is OK, false otherwise
-	 */
-	boolean updateLocations(String gateId, List<Location> locations);
 
 	/**
 	 * Method call to server to update location

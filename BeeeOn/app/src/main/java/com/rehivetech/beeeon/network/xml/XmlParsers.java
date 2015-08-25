@@ -133,10 +133,6 @@ public class XmlParsers {
 		return getSecureAttrValue(Xconstants.COM_SESSION_ID);
 	}
 
-	public String parseNewLocationId() {
-		return getSecureAttrValue(Xconstants.LID);
-	}
-
 	public String parseNewWatchdogId() {
 		return getSecureAttrValue(Xconstants.ALGID);
 	}
@@ -154,13 +150,13 @@ public class XmlParsers {
 			mParser.nextTag();
 			List<Gate> result = new ArrayList<>();
 
-			if (!mParser.getName().equals(Xconstants.GATE))
+			if (!mParser.getName().equals("gate"))
 				return result;
 
 			do {
-				Gate gate = new Gate(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME));
-				gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
-				gate.setUtcOffset(getSecureInt(getSecureAttrValue(Xconstants.UTC)));
+				Gate gate = new Gate(getSecureAttrValue("id"), getSecureAttrValue("name"));
+				gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue("role"), User.Role.Guest));
+				gate.setUtcOffset(getSecureInt(getSecureAttrValue("utc")));
 				result.add(gate);
 
 				mParser.nextTag();
@@ -180,16 +176,25 @@ public class XmlParsers {
 	 * @since 2.5
 	 */
 	public GateInfo parseGateInfo() {
-		String id = getSecureAttrValue(Xconstants.AID);
-		User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest);
-		String name = getSecureAttrValue(Xconstants.ANAME);
-		int devicesCount = getSecureInt(getSecureAttrValue(Xconstants.NFACS));
-		int usersCount = getSecureInt(getSecureAttrValue(Xconstants.NUSERS));
-		String ip = getSecureAttrValue(Xconstants.IP);
-		String version = getSecureAttrValue(Xconstants.AVERSION);
-		int utcOffsetInMinutes = getSecureInt(getSecureAttrValue(Xconstants.UTC));
+		try {
+			mParser.nextTag();
 
-		return new GateInfo(id, name, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
+			if (!mParser.getName().equals("gate"))
+				throw new AppException(ClientError.XML);
+
+			String id = getSecureAttrValue("id");
+			User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttrValue("accessrole"), User.Role.Guest);
+			String name = getSecureAttrValue("name");
+			int devicesCount = getSecureInt(getSecureAttrValue("devices"));
+			int usersCount = getSecureInt(getSecureAttrValue("users"));
+			String ip = getSecureAttrValue("ip");
+			String version = getSecureAttrValue("version");
+			int utcOffsetInMinutes = getSecureInt("utc");
+
+			return new GateInfo(id, name, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
+		} catch (IOException | XmlPullParserException e) {
+			throw AppException.wrap(e, ClientError.XML);
+		}
 	}
 
 	/**
@@ -303,20 +308,24 @@ public class XmlParsers {
 	private void parseInnerDevs(List<Device> result, String aid, boolean init) {
 		try {
 			do { // go through devs (devices)
-				String type = getSecureAttrValue(Xconstants.TYPE);
-				String address = getSecureAttrValue(Xconstants.DID);
+				String type = getSecureAttrValue("type");
+				String address = getSecureAttrValue("id");
 
 				Device device = Device.createDeviceByType(type, aid, address);
 				device.setInitialized(init);
-				device.setLocationId(getSecureAttrValue(Xconstants.LID));
-				device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.TIME)) * 1000, DateTimeZone.UTC));
-				device.setPairedTime(new DateTime((long) getSecureInt(getSecureAttrValue(Xconstants.INVOLVED)) * 1000, DateTimeZone.UTC));
+				// Alternatively get it from XML
+				// device.setInitialized(getSecureAttrValue("init").equals("1"));
+
+				device.setLocationId(getSecureAttrValue("locationid"));
+				device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue("time")) * 1000, DateTimeZone.UTC));
+				// PairedTime is not used always...
+				device.setPairedTime(new DateTime((long) getSecureInt(getSecureAttrValue("involved")) * 1000, DateTimeZone.UTC));
 
 				// Load modules values
-				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.MODULE)) {
+				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("module")) {
 					// go through modules
-					String moduleId = getSecureAttrValue(Xconstants.ID);
-					String moduleValue = getSecureAttrValue(Xconstants.VALUE);
+					String moduleId = getSecureAttrValue("id");
+					String moduleValue = getSecureAttrValue("value");
 					device.setModuleValue(moduleId, moduleValue);
 
 					mParser.nextTag(); // module endtag
@@ -324,7 +333,7 @@ public class XmlParsers {
 
 				result.add(device);
 			} while (mParser.nextTag() != XmlPullParser.END_TAG
-					&& (!mParser.getName().equals(Xconstants.GATE) || !mParser.getName().equals(Xconstants.COM_ROOT)));
+					&& (!mParser.getName().equals("gate") || !mParser.getName().equals(Xconstants.COM_ROOT)));
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -388,17 +397,19 @@ public class XmlParsers {
 	 */
 	public List<Location> parseLocations() {
 		try {
-			String aid = getSecureAttrValue(Xconstants.AID);
+			String gateId = getSecureAttrValue("gateid");
 			mParser.nextTag();
 
 			List<Location> result = new ArrayList<>();
 
-			if (!mParser.getName().equals(Xconstants.LOCATION))
+			if (!mParser.getName().equals("location"))
 				return result;
 
 			do {
-				String type = getSecureAttrValue(Xconstants.TYPE);
-				Location location = new Location(getSecureAttrValue(Xconstants.ID), getSecureAttrValue(Xconstants.NAME), aid, type.isEmpty() ? "0" : type);
+				String id = getSecureAttrValue("id");
+				String type = getSecureAttrValue("type");
+				String name = getSecureAttrValue("name");
+				Location location = new Location(id, name, gateId, type.isEmpty() ? "0" : type);
 				result.add(location);
 
 				mParser.nextTag(); // loc end tag
@@ -411,6 +422,19 @@ public class XmlParsers {
 		}
 	}
 
+	public String parseNewLocationId() {
+		try {
+			mParser.nextTag();
+
+			if (!mParser.getName().equals("location"))
+				throw new AppException(ClientError.XML);
+
+			return getSecureAttrValue("id");
+		} catch (IOException | XmlPullParserException e) {
+			throw AppException.wrap(e, ClientError.XML);
+		}
+	}
+
 	// /////////////////////////////////PROVIDERS///////////////////////////////////////////////////////////////
 
 	/**
@@ -418,21 +442,21 @@ public class XmlParsers {
 	 *
 	 * @return list of users
 	 */
-	public List<User> parseConAccountList() {
+	public List<User> parseGateUsers() {
 		try {
 			mParser.nextTag();
-			mParser.require(XmlPullParser.START_TAG, ns, Xconstants.USER_ROOT);
+			mParser.require(XmlPullParser.START_TAG, ns, "user");
 
 			List<User> result = new ArrayList<>();
 			do {
 				User user = new User();
-				user.setId(getSecureAttrValue(Xconstants.ID));
-				user.setEmail(getSecureAttrValue(Xconstants.USER_EMAIL));
-				user.setName(getSecureAttrValue(Xconstants.NAME));
-				user.setSurname(getSecureAttrValue(Xconstants.USER_SURNAME));
-				user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue(Xconstants.ROLE), User.Role.Guest));
-				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.USER_GENDER), User.Gender.UNKNOWN));
-				user.setPictureUrl(getSecureAttrValue(Xconstants.USER_IMGURL));
+				user.setId(getSecureAttrValue("id"));
+				user.setEmail(getSecureAttrValue("email"));
+				user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue("role"), User.Role.Guest)); // FIXME: probably this should have different name
+				user.setName(getSecureAttrValue("name"));
+				user.setSurname(getSecureAttrValue("surname"));
+				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue("gender"), User.Gender.UNKNOWN));
+				user.setPictureUrl(getSecureAttrValue("imgurl")); // FIXME: this isn't in specification but it should be here...
 
 				result.add(user);
 				mParser.nextTag();
@@ -454,17 +478,17 @@ public class XmlParsers {
 
 			List<VisibleNotification> result = new ArrayList<>();
 
-			if (!mParser.getName().equals(Xconstants.NOTIFICATION))
+			if (!mParser.getName().equals("notif"))
 				return result;
 
 			do {
 				VisibleNotification ntfc;
 
-				String name = getSecureAttrValue(Xconstants.NAME); // name
-				String id = getSecureAttrValue(Xconstants.MID); // message id
-				String time = getSecureAttrValue(Xconstants.TIME); // time
-				String type = getSecureAttrValue(Xconstants.TYPE); // type
-				boolean read = (getSecureInt(getSecureAttrValue(Xconstants.READ)) != 0); // read
+				String name = getSecureAttrValue("name");
+				String id = getSecureAttrValue("mid");
+				String time = getSecureAttrValue("time");
+				String type = getSecureAttrValue("type");
+				boolean read = (getSecureInt(getSecureAttrValue("read")) != 0);
 
 				//TODO
 				// call here some method from gcm/notification part

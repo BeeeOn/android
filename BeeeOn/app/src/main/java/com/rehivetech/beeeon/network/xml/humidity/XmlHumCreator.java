@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.network.xml.humidity;
 
 import android.util.Xml;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.network.xml.Xconstants;
@@ -45,7 +46,7 @@ public class XmlHumCreator extends XmlCreator{
 		serializer.startDocument("UTF-8", null);
 
 		serializer.startTag(ns, Xconstants.COM_ROOT);
-		serializer.attribute(ns, Xconstants.COM_VERSION, COM_VER); // every time use version
+		serializer.attribute(ns, Xconstants.COM_VERSION, Constants.PROTOCOL_VERSION); // every time use version
 		serializer.attribute(ns, APP, HUMIDITY); // every time use name of "humidity namespace"
 
 		return serializer;
@@ -64,9 +65,7 @@ public class XmlHumCreator extends XmlCreator{
 				serializer.attribute(ns, args[i], args[i + 1]);
 			}
 
-			endXml(serializer);
-
-			return writer.toString();
+			return endXml(writer, serializer);
 		} catch (Exception e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -149,9 +148,7 @@ public class XmlHumCreator extends XmlCreator{
 
 				serializer.endTag(ns, Xconstants.NOTIFICATION);
 			}
-			endXml(serializer);
-
-			return writer.toString();
+			return endXml(writer, serializer);
 		} catch (Exception e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -188,9 +185,7 @@ public class XmlHumCreator extends XmlCreator{
 			serializer.attribute(ns, Xconstants.COM_STATE, SETHUMIDITYTHRESHOLD);
 
 
-			endXml(serializer);
-
-			return writer.toString();
+			return endXml(writer, serializer);
 		} catch (Exception e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}

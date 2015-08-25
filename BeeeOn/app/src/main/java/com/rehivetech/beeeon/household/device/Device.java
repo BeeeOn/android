@@ -37,6 +37,7 @@ public final class Device implements IIdentifier {
 	private boolean mInitialized;
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
+	private String mName;
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -137,6 +138,14 @@ public final class Device implements IIdentifier {
 	 */
 	public String getGateId() {
 		return mGateId;
+	}
+
+	public String getName() {
+		return mName;
+	}
+
+	public void setName(String name) {
+		mName = name;
 	}
 
 	/**

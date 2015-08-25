@@ -195,24 +195,6 @@ public class DevicesModel extends BaseModel {
 	}
 
 	/**
-	 * Save specified settings of module to server.
-	 * <p/>
-	 * This CAN'T be called on UI thread!
-	 *
-	 * @param module
-	 * @param what   type of settings to save
-	 * @return true on success, false otherwise
-	 */
-	public boolean saveModule(Module module, EnumSet<SaveModule> what) throws AppException {
-		Device device = module.getDevice();
-
-		mNetwork.updateModule(device.getGateId(), module, what);
-		refreshDevice(device, true);
-
-		return true;
-	}
-
-	/**
 	 * Send request to server to switch Actor value.
 	 * <p/>
 	 * This CAN'T be called on UI thread!
