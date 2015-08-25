@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -33,9 +32,9 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 		DeviceLowBatteryNotification instance = null;
 
 		try {
-			Integer gateId = Integer.valueOf(bundle.getString(Xconstants.AID));
-			String moduleId = bundle.getString(Xconstants.DID);
-			Integer batterylevel = Integer.valueOf(bundle.getString(Xconstants.BATTERY));
+			Integer gateId = Integer.valueOf(bundle.getString("gateid"));
+			String moduleId = bundle.getString("did");
+			Integer batterylevel = Integer.valueOf(bundle.getString("batt"));
 
 			if (gateId == null || moduleId == null || batterylevel == null) {
 				Log.d(TAG, "DeviceAdded: some compulsory value is missing.");
@@ -59,7 +58,7 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 		int eventType = parser.getEventType();
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			if (eventType == XmlPullParser.END_TAG &&
-					parser.getName().equals(Xconstants.NOTIFICATION)) {
+					parser.getName().equals("notif")) {
 				break;
 			}
 			String tagname = parser.getName();
@@ -73,11 +72,11 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if (tagname.equalsIgnoreCase(Xconstants.AID)) {
+					if (tagname.equalsIgnoreCase("gateid")) {
 						gateId = Integer.valueOf(text);
-					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
+					} else if (tagname.equalsIgnoreCase("did")) {
 						moduleId = text;
-					} else if (tagname.equalsIgnoreCase(Xconstants.BATTERY)) {
+					} else if (tagname.equalsIgnoreCase("batt")) {
 						batteryLevel = Integer.valueOf(text);
 					}
 					break;

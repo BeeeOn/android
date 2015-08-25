@@ -104,11 +104,11 @@ public class XmlParsers {
 	private void parseRoot() throws IOException, XmlPullParserException, AppException {
 		mParser.nextTag();
 
-		mParser.require(XmlPullParser.START_TAG, ns, Xconstants.COM_ROOT);
+		mParser.require(XmlPullParser.START_TAG, ns, "com");
 
-		String state = getSecureAttrValue(Xconstants.COM_STATE);
-		String version = getSecureAttrValue(Xconstants.COM_VERSION);
-		String errorCode = getSecureAttrValue(Xconstants.COM_ERRCODE);
+		String state = getSecureAttrValue("state");
+		String version = getSecureAttrValue("version");
+		String errorCode = getSecureAttrValue("errcode");
 
 		mState = Utils.getEnumFromId(State.class, state);
 		mErrorCode = !errorCode.isEmpty() ? Integer.parseInt(errorCode) : -1;
@@ -130,11 +130,11 @@ public class XmlParsers {
 	// /////////////////////////////////SIMPLE RESULTS///////////////////////////////////////////
 
 	public String parseSessionId() {
-		return getSecureAttrValue(Xconstants.COM_SESSION_ID);
+		return getSecureAttrValue("sessionid");
 	}
 
 	public String parseNewWatchdogId() {
-		return getSecureAttrValue(Xconstants.ALGID);
+		return getSecureAttrValue("algid");
 	}
 
 	// /////////////////////////////////GATES, USERINFO///////////////////////////////////////////
@@ -161,7 +161,7 @@ public class XmlParsers {
 
 				mParser.nextTag();
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -244,12 +244,12 @@ public class XmlParsers {
 	 */
 	public List<Device> parseAllDevices() {
 		try {
-			String aid = getSecureAttrValue(Xconstants.AID);
+			String aid = getSecureAttrValue("gateid");
 			mParser.nextTag(); // dev start tag
 
 			List<Device> result = new ArrayList<>();
 
-			if (!mParser.getName().equals(Xconstants.MODULE))
+			if (!mParser.getName().equals("dev"))
 				return result;
 
 			parseInnerDevs(result, aid, true);
@@ -266,7 +266,7 @@ public class XmlParsers {
 
 			List<Device> result = new ArrayList<>();
 
-			if (!mParser.getName().equals(Xconstants.MODULE))
+			if (!mParser.getName().equals("dev"))
 				return result;
 
 			parseInnerDevs(result, aid, false);
@@ -287,17 +287,17 @@ public class XmlParsers {
 
 			List<Device> result = new ArrayList<>();
 
-			if (!mParser.getName().equals(Xconstants.GATE))
+			if (!mParser.getName().equals("gate"))
 				return result;
 
 			do { // go through gates
-				String aid = getSecureAttrValue(Xconstants.ID);
+				String aid = getSecureAttrValue("id");
 				mParser.nextTag(); // dev tag
 
 				parseInnerDevs(result, aid, true);
 
 				mParser.nextTag(); // gate endtag
-			} while (!mParser.getName().equals(Xconstants.COM_ROOT) && mParser.nextTag() != XmlPullParser.END_TAG);
+			} while (!mParser.getName().equals("com") && mParser.nextTag() != XmlPullParser.END_TAG);
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -333,7 +333,7 @@ public class XmlParsers {
 
 				result.add(device);
 			} while (mParser.nextTag() != XmlPullParser.END_TAG
-					&& (!mParser.getName().equals("gate") || !mParser.getName().equals(Xconstants.COM_ROOT)));
+					&& (!mParser.getName().equals("gate") || !mParser.getName().equals("com")));
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -347,22 +347,22 @@ public class XmlParsers {
 	public ModuleLog parseLogData() {
 		try {
 			mParser.nextTag();
-			// mParser.require(XmlPullParser.START_TAG, ns, Xconstants.ROW); // strict solution
+			// mParser.require(XmlPullParser.START_TAG, ns, "row); // strict solution
 
 			ModuleLog log = new ModuleLog();
 
-			if (!mParser.getName().equals(Xconstants.ROW))
+			if (!mParser.getName().equals("row"))
 				return log;
 
 			do {
 				try {
 
-					String repeat = getSecureAttrValue(Xconstants.REPEAT);
-					String interval = getSecureAttrValue(Xconstants.INTERVAL);
-					String row = readText(Xconstants.ROW);
+					String repeat = getSecureAttrValue("repeat");
+					String interval = getSecureAttrValue("interval");
+					String row = readText("row");
 
 					// Split row data
-					String[] parts = row.split(Xconstants.ROW_DATA_SEPARATOR);
+					String[] parts = row.split("\\s+");
 					if (parts.length != 2) {
 						Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
 						throw new AppException(ClientError.XML).set("parts", parts);
@@ -380,7 +380,7 @@ public class XmlParsers {
 				} catch (NumberFormatException e) {
 					throw AppException.wrap(e, ClientError.XML);
 				}
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 
 			return log;
 		} catch (IOException | XmlPullParserException e) {
@@ -414,7 +414,7 @@ public class XmlParsers {
 
 				mParser.nextTag(); // loc end tag
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -461,7 +461,7 @@ public class XmlParsers {
 				result.add(user);
 				mParser.nextTag();
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -503,7 +503,7 @@ public class XmlParsers {
 					result.add(ntfc);
 				}
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -520,44 +520,44 @@ public class XmlParsers {
 	 */
 	public ArrayList<Watchdog> parseWatchdog() {
 		try {
-			getSecureAttrValue(Xconstants.ATYPE); // not used yet
+			getSecureAttrValue("atype"); // not used yet
 
-			String aid = getSecureAttrValue(Xconstants.AID);
+			String aid = getSecureAttrValue("gateid");
 			mParser.nextTag();
 
 			ArrayList<Watchdog> result = new ArrayList<>();
 
-			if (!mParser.getName().equals(Xconstants.ALGORITHM))
+			if (!mParser.getName().equals("alg"))
 				return result;
 
 			do {
-				Watchdog watchdog = new Watchdog(getSecureInt(getSecureAttrValue(Xconstants.ATYPE)));
-				watchdog.setId(getSecureAttrValue(Xconstants.ID));
+				Watchdog watchdog = new Watchdog(getSecureInt(getSecureAttrValue("atype")));
+				watchdog.setId(getSecureAttrValue("id"));
 				watchdog.setGateId(aid);
-				watchdog.setEnabled(getSecureInt(getSecureAttrValue(Xconstants.ENABLE)) > 0);
-				watchdog.setName(getSecureAttrValue(Xconstants.NAME));
+				watchdog.setEnabled(getSecureInt(getSecureAttrValue("enable")) > 0);
+				watchdog.setName(getSecureAttrValue("name"));
 
 				TreeMap<String, String> tDevices = new TreeMap<>();
 				TreeMap<String, String> tParams = new TreeMap<>();
 
 				mParser.nextTag();
 
-				if (!mParser.getName().equals(Xconstants.MODULE) && !mParser.getName().equals(Xconstants.PARAM) && !mParser.getName().equals(Xconstants.GEOFENCE))
+				if (!mParser.getName().equals("dev") && !mParser.getName().equals("par") && !mParser.getName().equals("geo"))
 					Log.e(TAG, "someone send bad xml");//TODO do something
 
 				do {
-					String position = getSecureAttrValue(Xconstants.POSITION);
+					String position = getSecureAttrValue("pos");
 
-					if (mParser.getName().equals(Xconstants.MODULE)) {
-						String module = getSecureAttrValue(Xconstants.ID) + Module.ID_SEPARATOR + getSecureAttrValue(Xconstants.TYPE);
+					if (mParser.getName().equals("dev")) {
+						String module = getSecureAttrValue("id") + Module.ID_SEPARATOR + getSecureAttrValue("type");
 						tDevices.put(position, module);
 
 						mParser.nextTag();
-					} else if (mParser.getName().equals(Xconstants.GEOFENCE)) {
-						watchdog.setGeoRegionId(getSecureAttrValue(Xconstants.RID));
+					} else if (mParser.getName().equals("geo")) {
+						watchdog.setGeoRegionId(getSecureAttrValue("rid"));
 						mParser.nextTag();
 					} else {
-						String param = readText(Xconstants.PARAM);
+						String param = readText("par");
 						tParams.put(position, param);
 						// FIXME: this is workaround cause server not returning <geo> tag .. when it's added, this will not be necessary
 						if (position.equals("1") && watchdog.getType() == Watchdog.TYPE_GEOFENCE && watchdog.getGeoRegionId() == null) {
@@ -565,14 +565,14 @@ public class XmlParsers {
 						}
 					}
 
-				} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.ALGORITHM));
+				} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("alg"));
 
 				watchdog.setModules(new ArrayList<>(tDevices.values()));
 				watchdog.setParams(new ArrayList<>(tParams.values()));
 
 				result.add(watchdog);
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.COM_ROOT));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {

@@ -6,7 +6,6 @@ import android.support.v4.app.NotificationCompat;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gcm.Action;
-import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -49,11 +48,11 @@ public class WatchdogNotification extends VisibleNotification {
 		WatchdogNotification instance = null;
 
 		try {
-			String message = bundle.getString(Xconstants.MESSAGE);
-			Integer gateId = Integer.valueOf(bundle.getString(Xconstants.AID));
-			String moduleId = bundle.getString(Xconstants.DID);
-			Integer deviceType = Integer.valueOf(bundle.getString(Xconstants.DTYPE));
-			Integer algId = Integer.valueOf(bundle.getString(Xconstants.ALGID));
+			String message = bundle.getString("msg");
+			Integer gateId = Integer.valueOf(bundle.getString("gateid"));
+			String moduleId = bundle.getString("did");
+			Integer deviceType = Integer.valueOf(bundle.getString("dtype"));
+			Integer algId = Integer.valueOf(bundle.getString("algid"));
 
 			if (message == null || gateId == null || moduleId == null || deviceType == null || algId == null) {
 				Log.d(TAG, "Json: Some compulsory value is missing.");
@@ -79,7 +78,7 @@ public class WatchdogNotification extends VisibleNotification {
 		int eventType = parser.getEventType();
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			if (eventType == XmlPullParser.END_TAG &&
-					parser.getName().equals(Xconstants.NOTIFICATION)) {
+					parser.getName().equals("notif")) {
 				break;
 			}
 			String tagname = parser.getName();
@@ -93,15 +92,15 @@ public class WatchdogNotification extends VisibleNotification {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if (tagname.equalsIgnoreCase(Xconstants.MESSAGE)) {
+					if (tagname.equalsIgnoreCase("msg")) {
 						message = text;
-					} else if (tagname.equalsIgnoreCase(Xconstants.AID)) {
+					} else if (tagname.equalsIgnoreCase("gateid")) {
 						gateId = Integer.valueOf(text);
-					} else if (tagname.equalsIgnoreCase(Xconstants.DID)) {
+					} else if (tagname.equalsIgnoreCase("did")) {
 						moduleId = text;
-					} else if (tagname.equalsIgnoreCase(Xconstants.DTYPE)) {
+					} else if (tagname.equalsIgnoreCase("dtype")) {
 						deviceType = Integer.valueOf(text);
-					} else if (tagname.equalsIgnoreCase(Xconstants.ALGID)) {
+					} else if (tagname.equalsIgnoreCase("algid")) {
 						algId = Integer.valueOf(text);
 					}
 					break;

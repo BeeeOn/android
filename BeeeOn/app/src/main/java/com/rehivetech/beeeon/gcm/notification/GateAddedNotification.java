@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -31,7 +30,7 @@ public class GateAddedNotification extends VisibleNotification {
 		GateAddedNotification instance = null;
 
 		try {
-			Integer gateId = Integer.valueOf(bundle.getString(Xconstants.AID));
+			Integer gateId = Integer.valueOf(bundle.getString("gateid"));
 
 			if (gateId == null) {
 				Log.d(TAG, "Gate added: some compulsory value is missing.");
@@ -53,7 +52,7 @@ public class GateAddedNotification extends VisibleNotification {
 		int eventType = parser.getEventType();
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			if (eventType == XmlPullParser.END_TAG &&
-					parser.getName().equals(Xconstants.NOTIFICATION)) {
+					parser.getName().equals("notif")) {
 				break;
 			}
 			String tagname = parser.getName();
@@ -67,7 +66,7 @@ public class GateAddedNotification extends VisibleNotification {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if (tagname.equalsIgnoreCase(Xconstants.AID)) {
+					if (tagname.equalsIgnoreCase("gateid")) {
 						gateId = Integer.valueOf(text);
 					}
 					break;
