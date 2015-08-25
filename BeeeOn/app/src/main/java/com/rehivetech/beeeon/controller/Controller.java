@@ -343,13 +343,13 @@ public final class Controller {
 		}
 
 		// We don't have beeeon-token yet, try to login
-		mNetwork.loginMe(authProvider); // throws exception on error
+		mNetwork.login(authProvider); // throws exception on error
 
 		// Load user data so we will know our userId
 		loadUserData(null);
 
 		// Do we have session now?
-		if (!mNetwork.hasBT()) {
+		if (!mNetwork.hasSessionId()) {
 			Log.e(TAG, "BeeeOn token wasn't received. We are not logged in.");
 			return false;
 		}
@@ -395,7 +395,7 @@ public final class Controller {
 	 */
 	public boolean register(IAuthProvider authProvider) throws AppException {
 		// We don't have beeeon-token yet, try to login
-		return mNetwork.registerMe(authProvider); // throws exception on error
+		return mNetwork.register(authProvider); // throws exception on error
 	}
 
 	/**
@@ -441,7 +441,7 @@ public final class Controller {
 	 * @return true if user is logged in, false otherwise
 	 */
 	public boolean isLoggedIn() {
-		return mNetwork.hasBT();
+		return mNetwork.hasSessionId();
 	}
 
 	/**

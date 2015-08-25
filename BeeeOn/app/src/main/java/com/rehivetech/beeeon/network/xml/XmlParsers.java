@@ -52,7 +52,7 @@ public class XmlParsers {
 	 * @author ThinkDeep
 	 */
 	public enum State implements IIdentifier {
-		TOKEN("token"),
+		SESSION_ID("sessionid"),
 		USERINFO("userinfo"),
 		GATES("gates"),
 		GATEINFO("gateinfo"),
@@ -127,6 +127,8 @@ public class XmlParsers {
 		return mErrorCode;
 	}
 
+	// /////////////////////////////////SIMPLE RESULTS///////////////////////////////////////////
+
 	public String parseSessionId() {
 		return getSecureAttrValue(Xconstants.COM_SESSION_ID);
 	}
@@ -199,24 +201,24 @@ public class XmlParsers {
 			User user = new User();
 
 			mParser.nextTag(); // user
-			if (!mParser.getName().equals(Xconstants.USER_ROOT))
+			if (!mParser.getName().equals("user"))
 				throw new AppException(ClientError.XML);
 
-			user.setId(getSecureAttrValue(Xconstants.USER_UID));
-			user.setName(getSecureAttrValue(Xconstants.USER_NAME));
-			user.setSurname(getSecureAttrValue(Xconstants.USER_SURNAME));
-			user.setEmail(getSecureAttrValue(Xconstants.USER_EMAIL));
-			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue(Xconstants.USER_GENDER), User.Gender.UNKNOWN));
-			user.setPictureUrl(getSecureAttrValue(Xconstants.USER_IMGURL));
+			user.setId(getSecureAttrValue("uid"));
+			user.setName(getSecureAttrValue("name"));
+			user.setSurname(getSecureAttrValue("surname"));
+			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue("gender"), User.Gender.UNKNOWN));
+			user.setEmail(getSecureAttrValue("email"));
+			user.setPictureUrl(getSecureAttrValue("imgurl"));
 
 			mParser.nextTag(); // providers
-			if (!mParser.getName().equals(Xconstants.USER_PROVIDERS_ROOT))
+			if (!mParser.getName().equals("providers"))
 				return user;
 
 			HashMap<String, String> providers = user.getJoinedProviders();
 
-			while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals(Xconstants.USER_PROVIDERS_PROVIDER)) { // provider
-				providers.put(getSecureAttrValue(Xconstants.NAME), getSecureAttrValue(Xconstants.ID));
+			while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("provider")) { // provider
+				providers.put(getSecureAttrValue("name"), getSecureAttrValue("id"));
 				mParser.nextTag(); // end provider
 			}
 

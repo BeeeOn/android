@@ -43,7 +43,6 @@ import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
@@ -278,7 +277,7 @@ public class Network implements INetwork {
 			throw new AppException(ClientError.INTERNET_CONNECTION);
 
 		// Check existence of sessionId
-		if (checkBT && !hasBT())
+		if (checkBT && !hasSessionId())
 			throw new AppException(NetworkError.BAD_BT);
 
 		Log.i(TAG + " fromApp >>", messageToSend);
@@ -372,20 +371,20 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean hasBT() {
+	public boolean hasSessionId() {
 		return !mSessionId.isEmpty();
 	}
 
 	@Override
-	public boolean loginMe(IAuthProvider authProvider) {
+	public boolean login(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
 		XmlParsers parser = processCommunication(
-				XmlCreator.createSignIn(Locale.getDefault().getLanguage(), Utils.getPhoneName(), authProvider),
-				State.TOKEN,
+				XmlCreator.createLogin(Utils.getPhoneName(), authProvider),
+				State.SESSION_ID,
 				false);
 
 		mSessionId = parser.parseSessionId();
@@ -393,14 +392,14 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean registerMe(IAuthProvider authProvider) {
+	public boolean register(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
 		processCommunication(
-				XmlCreator.createSignUp(authProvider),
+				XmlCreator.createRegister(authProvider),
 				State.TRUE,
 				false);
 

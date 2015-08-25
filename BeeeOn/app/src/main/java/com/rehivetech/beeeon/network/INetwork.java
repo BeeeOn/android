@@ -48,7 +48,7 @@ public interface INetwork {
 	 *
 	 * @return
 	 */
-	boolean hasBT();
+	boolean hasSessionId();
 
 	/**
 	 * Logouts actual user, i.e. invalidate beeeon-token of actual user on server.
@@ -70,7 +70,7 @@ public interface INetwork {
 	 * @param authProvider provider object with data for authentication
 	 * @return true if user has been logged in with this provider, false otherwise
 	 */
-	boolean loginMe(IAuthProvider authProvider);
+	boolean login(IAuthProvider authProvider);
 
 	/**
 	 * Method register user to server by specified provider
@@ -78,7 +78,7 @@ public interface INetwork {
 	 * @param authProvider provider object with data for authentication
 	 * @return true if user has beed added to database with this provider, false otherwise
 	 */
-	boolean registerMe(IAuthProvider authProvider);
+	boolean register(IAuthProvider authProvider);
 
 	/**
 	 * Method add new provider information (join your accounts) to your account

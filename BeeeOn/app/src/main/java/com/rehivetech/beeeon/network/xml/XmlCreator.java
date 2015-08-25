@@ -96,16 +96,16 @@ public class XmlCreator {
 		serializer.setOutput(writer);
 		serializer.startDocument("UTF-8", null);
 
-		serializer.startTag(ns, Xconstants.COM_ROOT);
-		serializer.attribute(ns, Xconstants.COM_VERSION, Constants.PROTOCOL_VERSION); // every time use version
-		serializer.attribute(ns, Xconstants.COM_STATE, state);
+		serializer.startTag(ns, "com");
+		serializer.attribute(ns, "version", Constants.PROTOCOL_VERSION); // every time use version
+		serializer.attribute(ns, "state", state);
 
 		return serializer;
 	}
 
 	protected static String endXml(StringWriter writer, XmlSerializer serializer) throws IOException {
 		serializer.text("");
-		serializer.endTag(ns, Xconstants.COM_ROOT);
+		serializer.endTag(ns, "com");
 		serializer.endDocument();
 
 		return writer.toString();
@@ -119,13 +119,13 @@ public class XmlCreator {
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with signUp message
 	 */
-	public static String createSignUp(IAuthProvider authProvider) {
+	public static String createRegister(IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
 		try {
-			XmlSerializer serializer = beginXml(writer, STATE_REGISTER);
+			XmlSerializer serializer = beginXml(writer, "register");
 
-			serializer.startTag(ns, Xconstants.PROVIDER_ROOT);
-				serializer.attribute(ns, Xconstants.PROVIDER_NAME, authProvider.getProviderName());
+			serializer.startTag(ns, "provider");
+				serializer.attribute(ns, "name", authProvider.getProviderName());
 
 				for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
 					String key = entry.getKey();
@@ -134,7 +134,7 @@ public class XmlCreator {
 					if (key != null && value != null)
 						serializer.attribute(ns, key, value);
 				}
-			serializer.endTag(ns, Xconstants.PROVIDER_ROOT);
+			serializer.endTag(ns, "provider");
 
 			return endXml(writer, serializer);
 		} catch (Exception e) {
@@ -149,13 +149,13 @@ public class XmlCreator {
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with signIn message
 	 */
-	public static String createSignIn(String locale, String phone, IAuthProvider authProvider) {
+	public static String createLogin(String phone, IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
 		try {
-			XmlSerializer serializer = beginXml(writer, STATE_LOGIN);
+			XmlSerializer serializer = beginXml(writer, "login");
 
-			serializer.startTag(ns, Xconstants.PROVIDER_ROOT);
-				serializer.attribute(ns, Xconstants.PROVIDER_NAME, authProvider.getProviderName());
+			serializer.startTag(ns, "provider");
+				serializer.attribute(ns, "name", authProvider.getProviderName());
 
 				for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
 					String key = entry.getKey();
@@ -164,11 +164,68 @@ public class XmlCreator {
 					if (key != null && value != null)
 						serializer.attribute(ns, key, value);
 				}
-			serializer.endTag(ns, Xconstants.PROVIDER_ROOT);
+			serializer.endTag(ns, "provider");
 
-			serializer.startTag(ns, Xconstants.PHONE_ROOT);
-				serializer.attribute(ns, Xconstants.PHONE_NAME, phone);
-			serializer.endTag(ns, Xconstants.PHONE_ROOT);
+			serializer.startTag(ns, "phone");
+				serializer.attribute(ns, "name", phone);
+			serializer.endTag(ns, "phone");
+
+			return endXml(writer, serializer);
+		} catch (Exception e) {
+			throw AppException.wrap(e, ClientError.XML);
+		}
+	}
+
+	public static String createUpdateUser(String bt, User user) {
+		StringWriter writer = new StringWriter();
+		try {
+			XmlSerializer serializer = beginXml(writer, "updateuser");
+
+			serializer.startTag(ns, "user");
+			serializer.attribute(ns, "name", user.getName());
+				serializer.attribute(ns, "surname", user.getSurname());
+				serializer.attribute(ns, "gender", user.getGender().getId());
+				serializer.attribute(ns, "email", user.getEmail());
+				serializer.attribute(ns, "imgurl", user.getPictureUrl());
+			serializer.endTag(ns, "user");
+
+			return endXml(writer, serializer);
+		} catch (Exception e) {
+			throw AppException.wrap(e, ClientError.XML);
+		}
+	}
+
+	/**
+	 * Method create message for obtain information about user
+	 *
+	 * @param bt beeeon Token (session Id)
+	 * @return xml with getUserInfo message
+	 */
+	public static String createGetUserInfo(String bt) {
+		StringWriter writer = new StringWriter();
+		try {
+			XmlSerializer serializer = beginXml(writer, "getuserinfo");
+
+			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
+
+			return endXml(writer, serializer);
+		} catch (Exception e) {
+			throw AppException.wrap(e, ClientError.XML);
+		}
+	}
+
+	/**
+	 * Method create message for loging out user
+	 * @param bt beeeon Token (session Id)
+	 * @return xml with logout message
+	 * @since 2.5
+	 */
+	public static String createLogout(String bt){
+		StringWriter writer = new StringWriter();
+		try {
+			XmlSerializer serializer = beginXml(writer, "logout");
+
+			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
 
 			return endXml(writer, serializer);
 		} catch (Exception e) {
@@ -185,26 +242,30 @@ public class XmlCreator {
 	public static String createJoinAccount(String bt, IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
 		try {
-			XmlSerializer serializer = beginXml(writer, STATE_USER_ACCOUNT_CONNECT);
+			XmlSerializer serializer = beginXml(writer, "connectauthprovider");
 
 			serializer.attribute(ns, Xconstants.COM_SESSION_ID, bt);
-			serializer.attribute(ns, Xconstants.PROVIDER_NAME, authProvider.getProviderName());
 
-			serializer.startTag(ns, Xconstants.PARAM);
-			for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
-				String key = entry.getKey();
-				String value = entry.getValue();
+			serializer.startTag(ns, "provider");
+				serializer.attribute(ns, "name", authProvider.getProviderName());
 
-				if (key != null && value != null)
-					serializer.attribute(ns, key, value);
-			}
-			serializer.endTag(ns, Xconstants.PARAM);
+				for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
+
+					if (key != null && value != null)
+						serializer.attribute(ns, key, value);
+				}
+			serializer.endTag(ns, "provider");
 
 			return endXml(writer, serializer);
 		} catch (Exception e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
+
+
+	aaaaaaaaaa
 
 	/**
 	 * Method create message for removing part of account (or whole account)
@@ -215,26 +276,6 @@ public class XmlCreator {
 	 */
 	public static String createCutAccount(String bt, String providerName) {
 		return createComAttribsVariant(Xconstants.COM_STATE, STATE_USER_ACCOUNT_DISCONNECT, Xconstants.COM_SESSION_ID, bt, Xconstants.PROVIDER_NAME, providerName);
-	}
-
-	/**
-	 * Method create message for loging out user
-	 * @param bt beeeon Token (session Id)
-	 * @return xml with logout message
-	 * @since 2.5
-	 */
-	public static String createLogout(String bt){
-		return createComAttribsVariant(Xconstants.COM_STATE, STATE_LOGOUT, Xconstants.COM_SESSION_ID, bt);
-	}
-
-	/**
-	 * Method create message for obtain information about user
-	 *
-	 * @param bt beeeon Token (session Id)
-	 * @return xml with getUserInfo message
-	 */
-	public static String createGetUserInfo(String bt) {
-		return createComAttribsVariant(Xconstants.COM_STATE, STATE_USER_GETINFO, Xconstants.COM_SESSION_ID, bt);
 	}
 
 	/**
@@ -663,7 +704,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	public static String createSetAccounts(String bt, String aid, ArrayList<User> users) {
-		return createAddSeTAcc(STATE_GATE_USER_UPDATE, bt, aid, users);
+		return createAddSetAcc(STATE_GATE_USER_UPDATE, bt, aid, users);
 	}
 
 	/**
@@ -907,7 +948,7 @@ public class XmlCreator {
 
 	// /////////////////////////////////////PRIVATE METHODS//////////////////////////////////////////////
 
-	protected static String createComAttribsVariant(String state, String... args) {
+	protected static String createComAttribsVariant(String state, String innerRoot, String... args) {
 		if (0 != (args.length % 2)) { // odd
 			throw new RuntimeException("Bad params count");
 		}
@@ -916,9 +957,11 @@ public class XmlCreator {
 		try {
 			XmlSerializer serializer = beginXml(writer, state);
 
-			for (int i = 0; i < args.length; i += 2) { // take pair of args
-				serializer.attribute(ns, args[i], args[i + 1]);
-			}
+			serializer.startTag(ns, innerRoot);
+				for (int i = 0; i < args.length; i += 2) { // take pair of args
+					serializer.attribute(ns, args[i], args[i + 1]);
+				}
+			serializer.endTag(ns, innerRoot);
 
 			return endXml(writer, serializer);
 		} catch (Exception e) {
@@ -926,7 +969,7 @@ public class XmlCreator {
 		}
 	}
 
-	private static String createAddSeTAcc(String state, String bt, String aid, ArrayList<User> users) {
+	private static String createAddSetAcc(String state, String bt, String aid, ArrayList<User> users) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, state);

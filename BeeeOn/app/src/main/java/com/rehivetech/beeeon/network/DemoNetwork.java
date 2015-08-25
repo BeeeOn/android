@@ -187,7 +187,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean hasBT() {
+	public boolean hasSessionId() {
 		return !mBT.isEmpty();
 	}
 
@@ -202,12 +202,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean loginMe(IAuthProvider authProvider) {
+	public boolean login(IAuthProvider authProvider) {
 		return true;
 	}
 
 	@Override
-	public boolean registerMe(IAuthProvider authProvider) {
+	public boolean register(IAuthProvider authProvider) {
 		return true;
 	}
 
