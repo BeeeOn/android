@@ -41,28 +41,6 @@
 				android:textColor="@color/white"
 				tools:text="Device Name"/>
 
-			<ImageView
-				android:id="@+id/device_detail_loc_icon"
-				android:layout_width="24dp"
-				android:layout_height="24dp"
-				android:layout_marginLeft="72dp"
-				android:layout_marginStart="72dp"
-				android:layout_below="@+id/device_detail_device_name"
-				tools:src="@drawable/ic_loc_bathroom"/>
-
-			<TextView
-				android:id="@+id/device_detail_loc_label"
-				android:layout_width="wrap_content"
-				android:layout_height="24dp"
-				android:gravity="center_vertical"
-				android:layout_marginLeft="8dp"
-				android:layout_marginStart="8dp"
-				android:layout_toRightOf="@+id/device_detail_loc_icon"
-				android:layout_toEndOf="@+id/device_detail_loc_icon"
-				android:layout_below="@+id/device_detail_device_name"
-				android:textColor="@color/white"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-				tools:text="Location"/>
 
 			<ImageView
 				android:id="@+id/device_detail_last_update_icon"
@@ -71,7 +49,7 @@
 				android:layout_marginLeft="72dp"
 				android:layout_marginStart="72dp"
 				android:layout_marginTop="8dp"
-				android:layout_below="@+id/device_detail_loc_icon"
+				android:layout_below="@+id/device_detail_device_name"
 				android:src="@drawable/ic_clock"/>
 
 			<TextView
@@ -83,9 +61,9 @@
 				android:layout_marginBottom="8dp"
 				android:layout_marginLeft="8dp"
 				android:layout_marginStart="8dp"
-				android:layout_below="@+id/device_detail_loc_label"
 				android:layout_toRightOf="@+id/device_detail_last_update_icon"
 				android:layout_toEndOf="@+id/device_detail_last_update_icon"
+				android:layout_below="@+id/device_detail_device_name"
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 				android:textColor="@color/white"
 				tools:text="14:23:34"/>
@@ -117,6 +95,51 @@
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:orientation="horizontal">
+
+				<LinearLayout
+					android:id="@+id/device_detail_location_layout"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="15dp"
+					android:layout_marginStart="15dp"
+					android:orientation="vertical">
+
+					<LinearLayout
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:background="@drawable/round_rectangle"
+						android:orientation="horizontal"
+						android:paddingLeft="8dp"
+						android:paddingStart="8dp"
+						android:paddingRight="8dp"
+						android:paddingEnd="8dp">
+
+						<ImageView
+							android:id="@+id/device_detail_loc_icon"
+							android:layout_width="24dp"
+							android:layout_height="24dp"/>
+
+						<TextView
+							android:id="@+id/device_detail_loc_label"
+							android:layout_width="wrap_content"
+							android:layout_height="wrap_content"
+							android:layout_marginLeft="8dp"
+							android:layout_marginStart="8dp"
+							android:layout_gravity="center_vertical"
+							android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+							android:textColor="@color/white"
+							tools:text="96%"/>
+
+					</LinearLayout>
+
+					<TextView
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_gravity="center_horizontal"
+						android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+						android:text="@string/module_edit_label_detail_location"/>
+
+				</LinearLayout>
 
 				<LinearLayout
 					android:id="@+id/device_detail_signal_layout"
