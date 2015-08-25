@@ -26,8 +26,8 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
+import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
-import com.rehivetech.beeeon.gui.activity.ModuleDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.ModuleListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.listItem.LocationListItem;
@@ -334,9 +334,9 @@ public class ModuleListFragment extends BaseApplicationFragment {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 					Module module = mModuleAdapter.getModule(position);
 					Bundle bundle = new Bundle();
-					bundle.putString(ModuleDetailActivity.EXTRA_GATE_ID, module.getDevice().getGateId());
-					bundle.putString(ModuleDetailActivity.EXTRA_MODULE_ID, module.getAbsoluteId());
-					Intent intent = new Intent(mActivity, ModuleDetailActivity.class);
+					bundle.putString(DeviceDetailActivity.EXTRA_GATE_ID, module.getDevice().getGateId());
+					bundle.putString(DeviceDetailActivity.EXTRA_DEVICE_ID, module.getDevice().getId());
+					Intent intent = new Intent(mActivity, DeviceDetailActivity.class);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
