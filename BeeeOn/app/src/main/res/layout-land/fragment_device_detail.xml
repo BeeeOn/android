@@ -86,7 +86,7 @@
 				android:layout_marginLeft="72dp"
 				android:layout_marginStart="72dp"
 				android:layout_marginTop="8dp"
-				android:layout_below="@+id/beeeon_toolbar"
+				android:layout_below="@id/beeeon_toolbar"
 				android:src="@drawable/ic_clock"/>
 
 			<TextView
@@ -98,9 +98,9 @@
 				android:layout_marginBottom="8dp"
 				android:layout_marginLeft="8dp"
 				android:layout_marginStart="8dp"
-				android:layout_toRightOf="@+id/device_detail_last_update_icon"
-				android:layout_toEndOf="@+id/device_detail_last_update_icon"
-				android:layout_below="@+id/beeeon_toolbar"
+				android:layout_toRightOf="@id/device_detail_last_update_icon"
+				android:layout_toEndOf="@id/device_detail_last_update_icon"
+				android:layout_below="@id/beeeon_toolbar"
 				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 				android:textColor="@color/white"
 				tools:text="14:23:34"/>
