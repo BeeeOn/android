@@ -317,26 +317,30 @@ public class Network implements INetwork {
 
 		// Check communication protocol version
 		String version = parser.getVersion();
-		if (!version.equals(Constants.PROTOCOL_VERSION)) {
+		if (version.isEmpty()) {
+			throw new AppException("Get no protocol version from response.", ClientError.XML);
+		} else if (!version.equals(Constants.PROTOCOL_VERSION)) {
 			String srv[] = version.split("\\.");
 			String app[] = Constants.PROTOCOL_VERSION.split("\\.");
 
-			if (srv.length != 0 && app.length != 0) {
-				int srv_major = Integer.parseInt(srv[0]);
-				int srv_minor = Integer.parseInt(srv[1]);
-				int app_major = Integer.parseInt(app[0]);
-				int app_minor = Integer.parseInt(app[1]);
-				if (srv_major != app_major || srv_minor < app_minor) {
-					// Server must have same major version as app and same or greater minor version than app
-					throw new AppException(NetworkError.COM_VER_MISMATCH)
-							.set(NetworkError.PARAM_COM_VER_LOCAL, Constants.PROTOCOL_VERSION)
-							.set(NetworkError.PARAM_COM_VER_SERVER, version);
+			if (srv.length >= 2 && app.length >= 2) {
+				try {
+					int srv_major = Integer.parseInt(srv[0]);
+					int srv_minor = Integer.parseInt(srv[1]);
+					int app_major = Integer.parseInt(app[0]);
+					int app_minor = Integer.parseInt(app[1]);
+
+					if (srv_major != app_major || srv_minor < app_minor) {
+						// Server must have same major version as app and same or greater minor version than app
+						throw new AppException(NetworkError.COM_VER_MISMATCH)
+								.set(NetworkError.PARAM_COM_VER_LOCAL, Constants.PROTOCOL_VERSION)
+								.set(NetworkError.PARAM_COM_VER_SERVER, version);
+					}
+				} catch (NumberFormatException e) {
+					throw new AppException("Get invalid protocol version from response.", ClientError.XML);
 				}
 			} else {
-				// Server must have same major version as app and same or greater minor version than app
-				throw new AppException(NetworkError.COM_VER_MISMATCH)
-						.set(NetworkError.PARAM_COM_VER_LOCAL, Constants.PROTOCOL_VERSION)
-						.set(NetworkError.PARAM_COM_VER_SERVER, version);
+				throw new AppException("Get invalid protocol version from response.", ClientError.XML);
 			}
 		}
 
@@ -575,7 +579,7 @@ public class Network implements INetwork {
 				XmlCreator.createGetNewDevices(mSessionId, gateId),
 				State.DEVICES);
 
-		return parser.parseNewDevices(gateId);
+		return parser.parseNewDevices();
 	}
 
 	@Override

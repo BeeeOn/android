@@ -10,6 +10,7 @@ import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -58,8 +59,8 @@ public class XmlParsers {
 		GATEINFO("gateinfo"),
 		DEVICES("devices"),
 
-		ALLDEVICES("alldevs"),
-		LOGDATA("logdata"),
+		ALLDEVICES("alldevices"),
+		LOGDATA("logs"),
 		LOCATIONS("locations"),
 		LOCATIONID("locationid"),
 		ACCOUNTS("gateusers"),
@@ -244,33 +245,26 @@ public class XmlParsers {
 	 */
 	public List<Device> parseAllDevices() {
 		try {
-			String aid = getSecureAttrValue("gateid");
-			mParser.nextTag(); // dev start tag
+			mParser.nextTag(); // device start tag
 
-			List<Device> result = new ArrayList<>();
+			if (!mParser.getName().equals("device"))
+				return new ArrayList<>();
 
-			if (!mParser.getName().equals("dev"))
-				return result;
-
-			parseInnerDevs(result, aid, true);
-			return result;
+			return parseInnerDevices();
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
 	// special case of parseDevice
-	public List<Device> parseNewDevices(String aid) {
+	public List<Device> parseNewDevices() {
 		try {
-			mParser.nextTag(); // dev start tag
+			mParser.nextTag(); // device start tag
 
-			List<Device> result = new ArrayList<>();
+			if (!mParser.getName().equals("device"))
+				return new ArrayList<>();
 
-			if (!mParser.getName().equals("dev"))
-				return result;
-
-			parseInnerDevs(result, aid, false);
-			return result;
+			return parseInnerDevices();
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -283,46 +277,43 @@ public class XmlParsers {
 	 */
 	public List<Device> parseDevices() {
 		try {
-			mParser.nextTag(); // gate tag
+			mParser.nextTag(); // device start tag
 
-			List<Device> result = new ArrayList<>();
+			if (!mParser.getName().equals("device"))
+				return new ArrayList<>();
 
-			if (!mParser.getName().equals("gate"))
-				return result;
-
-			do { // go through gates
-				String aid = getSecureAttrValue("id");
-				mParser.nextTag(); // dev tag
-
-				parseInnerDevs(result, aid, true);
-
-				mParser.nextTag(); // gate endtag
-			} while (!mParser.getName().equals("com") && mParser.nextTag() != XmlPullParser.END_TAG);
-
-			return result;
+			return parseInnerDevices();
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
 	}
 
-	private void parseInnerDevs(List<Device> result, String aid, boolean init) {
+	private List<Device> parseInnerDevices() {
+		List<Device> result = new ArrayList<>();
+
 		try {
-			do { // go through devs (devices)
+			do { // go through devices
 				String type = getSecureAttrValue("type");
 				String address = getSecureAttrValue("id");
+				String gateId = getSecureAttrValue("gateid");
 
-				Device device = Device.createDeviceByType(type, aid, address);
-				device.setInitialized(init);
-				// Alternatively get it from XML
-				// device.setInitialized(getSecureAttrValue("init").equals("1"));
+				Device device = Device.createDeviceByType(type, gateId, address);
 
+				device.setName(getSecureAttrValue("name"));
+				device.setInitialized(getSecureAttrValue("init").equals("1"));
 				device.setLocationId(getSecureAttrValue("locationid"));
 				device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue("time")) * 1000, DateTimeZone.UTC));
 				// PairedTime is not used always...
 				device.setPairedTime(new DateTime((long) getSecureInt(getSecureAttrValue("involved")) * 1000, DateTimeZone.UTC));
 
+				// FIXME: Temporary workaround
+				int refresh = getSecureInt(getSecureAttrValue("refresh"));
+				if (refresh > 0) {
+					device.setRefresh(RefreshInterval.fromInterval(refresh));
+				}
+
 				// Load modules values
-				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("module")) {
+				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("device")) {
 					// go through modules
 					String moduleId = getSecureAttrValue("id");
 					String moduleValue = getSecureAttrValue("value");
@@ -332,11 +323,12 @@ public class XmlParsers {
 				}
 
 				result.add(device);
-			} while (mParser.nextTag() != XmlPullParser.END_TAG
-					&& (!mParser.getName().equals("gate") || !mParser.getName().equals("com")));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
+
+		return result;
 	}
 
 	/**
@@ -356,7 +348,6 @@ public class XmlParsers {
 
 			do {
 				try {
-
 					String repeat = getSecureAttrValue("repeat");
 					String interval = getSecureAttrValue("interval");
 					String row = readText("row");
