@@ -124,6 +124,9 @@
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
 		</activity>
+		<activity android:name=".gui.activity.SettingsActivity"
+				  android:label="@string/manifest_title_settings">
+		</activity>
 		<activity
 			android:name=".gui.activity.SettingsUnitActivity"
 			android:theme="@style/SettingsActivity"

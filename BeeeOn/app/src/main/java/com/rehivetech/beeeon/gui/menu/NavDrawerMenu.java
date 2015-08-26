@@ -21,6 +21,7 @@ import com.rehivetech.beeeon.gui.activity.GateDetailActivity;
 import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
+import com.rehivetech.beeeon.gui.activity.SettingsActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
@@ -118,7 +119,7 @@ public class NavDrawerMenu {
 							InfoDialogFragment dialog = new InfoDialogFragment();
 							dialog.show(mActivity.getSupportFragmentManager(), TAG_INFO);
 						} else if (mSelectedMenuItem.getId().equals(IMenuItem.ID_SETTINGS)) {
-							Intent intent = new Intent(mActivity, SettingsMainActivity.class);
+							Intent intent = new Intent(mActivity, SettingsActivity.class);
 							mActivity.startActivity(intent);
 						} else if (mSelectedMenuItem.getId().equals(IMenuItem.ID_LOGOUT)) {
 							mActivity.logout();
