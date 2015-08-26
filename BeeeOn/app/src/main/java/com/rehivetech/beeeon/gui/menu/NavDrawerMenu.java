@@ -22,7 +22,6 @@ import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.gui.activity.GateUsersActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsActivity;
-import com.rehivetech.beeeon.gui.activity.SettingsMainActivity;
 import com.rehivetech.beeeon.gui.adapter.MenuListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
@@ -290,7 +289,7 @@ public class NavDrawerMenu {
 			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_management)));
 			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_gate), R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_GATEWAY, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_GATEWAY)));
 			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_devices), R.drawable.ic_router_gray_24dp, R.drawable.ic_router_active_24dp, false, Constants.GUI_MENU_DEVICES, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DEVICES)));
-			
+
 		} else {
 			mMenuAdapter.addItem(new EmptyMenuItem(mActivity.getString(R.string.nav_drawer_menu_no_gates)));
 		}
