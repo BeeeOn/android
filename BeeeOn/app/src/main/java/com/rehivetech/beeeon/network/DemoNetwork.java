@@ -177,17 +177,17 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public String getBT() {
+	public String getSessionId() {
 		return mBT;
 	}
 
 	@Override
-	public void setBT(String token) {
+	public void setSessionId(String token) {
 		mBT = token;
 	}
 
 	@Override
-	public boolean hasBT() {
+	public boolean hasSessionId() {
 		return !mBT.isEmpty();
 	}
 
@@ -202,12 +202,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean loginMe(IAuthProvider authProvider) {
+	public boolean login(IAuthProvider authProvider) {
 		return true;
 	}
 
 	@Override
-	public boolean registerMe(IAuthProvider authProvider) {
+	public boolean register(IAuthProvider authProvider) {
 		return true;
 	}
 
@@ -339,12 +339,6 @@ public class DemoNetwork implements INetwork {
 		}
 
 		return true;
-	}
-
-	@Override
-	public boolean updateModule(String gateId, Module module, EnumSet<SaveModule> toSave) {
-		// NOTE: this replaces (or add) whole mDevice, not only module's fields marked as toSave
-		return updateDevice(gateId, module.getDevice(), toSave);
 	}
 
 	@Override
@@ -523,17 +517,6 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public List<Location> getLocations(String gateId) {
 		return mLocations.getObjects(gateId);
-	}
-
-	@Override
-	public boolean updateLocations(String gateId, List<Location> locations) {
-		for (Location location : locations) {
-			if (!updateLocation(location)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	@Override

@@ -30,25 +30,25 @@ public interface INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Return beeeon-token used for communication
+	 * Return sessionId used for communication
 	 *
-	 * @return BT of actual user
+	 * @return sessionId of actual user
 	 */
-	String getBT();
+	String getSessionId();
 
 	/**
-	 * Set beeeon-token for communication
+	 * Set sessionId for communication
 	 *
 	 * @return
 	 */
-	void setBT(String token);
+	void setSessionId(String token);
 
 	/**
 	 * Check if beeeon-token is present (but does NOT check if it is still valid on server)
 	 *
 	 * @return
 	 */
-	boolean hasBT();
+	boolean hasSessionId();
 
 	/**
 	 * Logouts actual user, i.e. invalidate beeeon-token of actual user on server.
@@ -70,7 +70,7 @@ public interface INetwork {
 	 * @param authProvider provider object with data for authentication
 	 * @return true if user has been logged in with this provider, false otherwise
 	 */
-	boolean loginMe(IAuthProvider authProvider);
+	boolean login(IAuthProvider authProvider);
 
 	/**
 	 * Method register user to server by specified provider
@@ -78,7 +78,7 @@ public interface INetwork {
 	 * @param authProvider provider object with data for authentication
 	 * @return true if user has beed added to database with this provider, false otherwise
 	 */
-	boolean registerMe(IAuthProvider authProvider);
+	boolean register(IAuthProvider authProvider);
 
 	/**
 	 * Method add new provider information (join your accounts) to your account
@@ -161,16 +161,6 @@ public interface INetwork {
 	boolean updateDevices(String gateId, List<Device> devices, EnumSet<SaveModule> toSave);
 
 	/**
-	 * Method send wanted fields of module to server
-	 *
-	 * @param gateId id of gate
-	 * @param module to save
-	 * @param toSave ENUMSET specified fields to save
-	 * @return true if fields has been updated, false otherwise
-	 */
-	boolean updateModule(String gateId, Module module, EnumSet<SaveModule> toSave);
-
-	/**
 	 * Method toggle or set actor to new value
 	 *
 	 * @param gateId
@@ -231,7 +221,7 @@ public interface INetwork {
 	ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair);
 
 	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////ROOMS///////////////////////////////////////
+	// /////////////////////////////////////LOCATIONS///////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -240,14 +230,6 @@ public interface INetwork {
 	 * @return List with locations
 	 */
 	List<Location> getLocations(String gateId);
-
-	/**
-	 * Method call to server to update location
-	 *
-	 * @param locations to update
-	 * @return true if everything is OK, false otherwise
-	 */
-	boolean updateLocations(String gateId, List<Location> locations);
 
 	/**
 	 * Method call to server to update location
@@ -268,7 +250,7 @@ public interface INetwork {
 	Location createLocation(Location location);
 
 	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////ACCOUNTS////////////////////////////////////
+	// /////////////////////////////////////PROVIDERS////////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
 
 	boolean addAccounts(String gateId, ArrayList<User> users);

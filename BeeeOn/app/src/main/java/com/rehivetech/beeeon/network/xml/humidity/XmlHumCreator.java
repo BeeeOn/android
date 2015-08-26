@@ -2,9 +2,9 @@ package com.rehivetech.beeeon.network.xml.humidity;
 
 import android.util.Xml;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
-import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.network.xml.XmlCreator;
 
 import org.xmlpull.v1.XmlSerializer;
@@ -44,8 +44,8 @@ public class XmlHumCreator extends XmlCreator{
 		serializer.setOutput(writer);
 		serializer.startDocument("UTF-8", null);
 
-		serializer.startTag(ns, Xconstants.COM_ROOT);
-		serializer.attribute(ns, Xconstants.VERSION, COM_VER); // every time use version
+		serializer.startTag(ns, "com");
+		serializer.attribute(ns, "version", Constants.PROTOCOL_VERSION); // every time use version
 		serializer.attribute(ns, APP, HUMIDITY); // every time use name of "humidity namespace"
 
 		return serializer;
@@ -64,9 +64,7 @@ public class XmlHumCreator extends XmlCreator{
 				serializer.attribute(ns, args[i], args[i + 1]);
 			}
 
-			endXml(serializer);
-
-			return writer.toString();
+			return endXml(writer, serializer);
 		} catch (Exception e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -83,7 +81,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityOverview(String bt, String aid, String date, String interval){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYOVERVIEW, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
+		return createComAttribsVariant("state", GETHUMIDITYOVERVIEW, "sessionid", bt, "gateid", aid, "date", date, "interval", interval);
 	}
 
 	/**
@@ -94,7 +92,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityMessageDetail(String bt, String aid, String mid){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYMESSAGEDETAIL, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.MSGID, mid);
+		return createComAttribsVariant("state", GETHUMIDITYMESSAGEDETAIL, "sessionid", bt, "gateid", aid, "mid", mid);
 	}
 
 	/**
@@ -107,7 +105,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityLocationDetail(String bt, String aid, String lid, String date, String interval){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYLOCATIONDETAIL, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LID, lid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
+		return createComAttribsVariant("state", GETHUMIDITYLOCATIONDETAIL, "sessionid", bt, "gateid", aid, "lid", lid, "date", date, "interval", interval);
 	}
 
 	/**
@@ -120,7 +118,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityLocationStatistics(String bt, String aid, String lid, String date, String interval){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYLOCATIONSTATISTICS, Xconstants.BT, bt, Xconstants.AID, aid, Xconstants.LID, lid, Xconstants.DATE, date, Xconstants.INTERVAL, interval);
+		return createComAttribsVariant("state", GETHUMIDITYLOCATIONSTATISTICS, "sessionid", bt, "gateid", aid, "lid", lid, "date", date, "interval", interval);
 	}
 
 	/**
@@ -138,20 +136,18 @@ public class XmlHumCreator extends XmlCreator{
 		try {
 			XmlSerializer serializer = beginXml(writer);
 
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, SETHUMIDITYNOTIFICATIONS);
+			serializer.attribute(ns, "sessionid", bt);
+			serializer.attribute(ns, "state", SETHUMIDITYNOTIFICATIONS);
 
 			for(Map.Entry<String, String> entry : notifs.entrySet()){
-				serializer.startTag(ns, Xconstants.NOTIFICATION);
+				serializer.startTag(ns, "notif");
 
-				serializer.attribute(ns, Xconstants.TYPE, entry.getKey());
-				serializer.attribute(ns, Xconstants.ENABLE, entry.getValue());
+				serializer.attribute(ns, "type", entry.getKey());
+				serializer.attribute(ns, "enable", entry.getValue());
 
-				serializer.endTag(ns, Xconstants.NOTIFICATION);
+				serializer.endTag(ns, "notif");
 			}
-			endXml(serializer);
-
-			return writer.toString();
+			return endXml(writer, serializer);
 		} catch (Exception e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -164,7 +160,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityNotificatons(String bt, String aid){
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYNOTIFICATIONS, Xconstants.BT, bt, Xconstants.AID, aid);
+		return createComAttribsVariant("state", GETHUMIDITYNOTIFICATIONS, "sessionid", bt, "gateid", aid);
 	}
 
 	/**
@@ -184,13 +180,11 @@ public class XmlHumCreator extends XmlCreator{
 		try {
 			XmlSerializer serializer = beginXml(writer);
 
-			serializer.attribute(ns, Xconstants.BT, bt);
-			serializer.attribute(ns, Xconstants.STATE, SETHUMIDITYTHRESHOLD);
+			serializer.attribute(ns, "sessionid", bt);
+			serializer.attribute(ns, "state", SETHUMIDITYTHRESHOLD);
 
 
-			endXml(serializer);
-
-			return writer.toString();
+			return endXml(writer, serializer);
 		} catch (Exception e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -203,7 +197,7 @@ public class XmlHumCreator extends XmlCreator{
 	 * @return xml with request
 	 */
 	public static String createGetHumidityThreshold(String bt, String aid) {
-		return createComAttribsVariant(Xconstants.STATE, GETHUMIDITYTHRESHOLD, Xconstants.BT, bt, Xconstants.AID, aid);
+		return createComAttribsVariant("state", GETHUMIDITYTHRESHOLD, "sessionid", bt, "gateid", aid);
 	}
 
 }

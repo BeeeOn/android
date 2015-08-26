@@ -25,7 +25,7 @@ public enum RefreshInterval {
 
 	private final int mSecs;
 
-	private RefreshInterval(int secs) {
+	RefreshInterval(int secs) {
 		mSecs = secs;
 	}
 

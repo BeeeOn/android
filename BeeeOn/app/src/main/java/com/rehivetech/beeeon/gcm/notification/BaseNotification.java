@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.Calendar;
@@ -52,11 +51,11 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		Log.d(TAG, bundle.toString());
 		BaseNotification notification = null;
 		try {
-			NotificationName name = NotificationName.fromValue(bundle.getString(Xconstants.NOTIFICATION_NAME));
-			Integer msgId = Integer.valueOf(bundle.getString(Xconstants.MSGID));
-			String userId = bundle.getString(Xconstants.UID);
-			Long time = Long.valueOf(bundle.getString(Xconstants.TIME));
-			NotificationType type = NotificationType.fromValue(bundle.getString(Xconstants.TYPE));
+			NotificationName name = NotificationName.fromValue(bundle.getString("name"));
+			Integer msgId = Integer.valueOf(bundle.getString("mid"));
+			String userId = bundle.getString("uid");
+			Long time = Long.valueOf(bundle.getString("time"));
+			NotificationType type = NotificationType.fromValue(bundle.getString("type"));
 
 			// control validity of message
 			if (name == null || msgId == null || userId == null || time == null || type == null) {

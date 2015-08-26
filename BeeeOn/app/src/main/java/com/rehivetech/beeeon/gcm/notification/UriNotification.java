@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.network.xml.Xconstants;
 import com.rehivetech.beeeon.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -36,8 +35,8 @@ public class UriNotification extends VisibleNotification {
 		UriNotification instance = null;
 
 		try {
-			String message = bundle.getString(Xconstants.MESSAGE);
-			String uri = bundle.getString(Xconstants.URL);
+			String message = bundle.getString("msg");
+			String uri = bundle.getString("url");
 
 			if (message == null || uri == null) {
 				Log.d(TAG, "Watdog: some compulsory value is missing.");
@@ -60,7 +59,7 @@ public class UriNotification extends VisibleNotification {
 		int eventType = parser.getEventType();
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 			if (eventType == XmlPullParser.END_TAG &&
-					parser.getName().equals(Xconstants.NOTIFICATION)) {
+					parser.getName().equals("notif")) {
 				break;
 			}
 			String tagname = parser.getName();
@@ -74,9 +73,9 @@ public class UriNotification extends VisibleNotification {
 					break;
 
 				case XmlPullParser.END_TAG:
-					if (tagname.equalsIgnoreCase(Xconstants.MESSAGE)) {
+					if (tagname.equalsIgnoreCase("msg")) {
 						message = text;
-					} else if (tagname.equalsIgnoreCase(Xconstants.URL)) {
+					} else if (tagname.equalsIgnoreCase("url")) {
 						uri = text;
 					}
 					break;
