@@ -7,8 +7,8 @@ android {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 62
-        versionName "1.0.2"
+        versionCode 63
+        versionName "1.1.1"
         signingConfig signingConfigs.debug
         resConfigs "en", "cs", "sk"
     }
