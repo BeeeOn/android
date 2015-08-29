@@ -378,6 +378,7 @@
 	<!-- Device type -->
 	<string name="device_type_unknown_device">Unknown device</string>
 	<string name="device_type_unknown_manufacturer">Unknown manufacturer</string>
+	<string name="prefs_choose_language">Language</string>
 
 </resources>
 

@@ -1,9 +1,19 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <ListPreference
+		android:dialogTitle="@string/prefs_choose_language"
+		android:key="pref_language"
+		android:title="@string/prefs_choose_language"
+		android:entries="@array/language_pref_entry_value"
+		android:entryValues="@array/language_pref_entry">
+	</ListPreference>
+
+    <ListPreference
         android:dialogTitle="@string/gate_detail_timezone"
         android:key="pref_timezone"
-        android:title="@string/gate_detail_timezone" >
+        android:title="@string/gate_detail_timezone"
+		android:entries="@array/timezone_pref_array"
+		android:entryValues="@array/timezone_pref_array">
     </ListPreference>
 
     <PreferenceScreen

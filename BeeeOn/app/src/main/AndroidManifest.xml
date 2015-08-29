@@ -125,7 +125,8 @@
 			</intent-filter>
 		</activity>
 		<activity android:name=".gui.activity.SettingsActivity"
-				  android:label="@string/manifest_title_settings">
+				  android:label="@string/manifest_title_settings"
+				  android:configChanges="locale|orientation">
 		</activity>
 		<activity
 			android:name=".gui.activity.SettingsUnitActivity"
