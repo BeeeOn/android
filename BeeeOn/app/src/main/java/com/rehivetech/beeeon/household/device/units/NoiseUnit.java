@@ -17,6 +17,8 @@ public class NoiseUnit extends BaseUnit {
 		mItems.add(this.new Item(NEPER, R.string.unit_noise_neper_full, R.string.unit_noise_neper));
 	}
 
+
+
 	@Override
 	public int getDefaultId() {
 		return DECIBEL;

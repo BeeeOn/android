@@ -38,6 +38,7 @@ public class SettingsActivity extends BaseApplicationActivity implements MainSet
 		conf.locale = locale;
 		res.updateConfiguration(conf, dm);
 		Intent refresh = new Intent(this, SettingsActivity.class);
+		refresh.setFlags(refresh.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
 		startActivity(refresh);
 		finish();
 	}
