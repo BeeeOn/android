@@ -107,9 +107,9 @@ public class XmlParsers {
 
 		mParser.require(XmlPullParser.START_TAG, ns, "com");
 
-		String state = getSecureAttrValue("state");
-		String version = getSecureAttrValue("version");
-		String errorCode = getSecureAttrValue("errcode");
+		String state = getSecureAttributeString("state");
+		String version = getSecureAttributeString("version");
+		String errorCode = getSecureAttributeString("errcode");
 
 		mState = Utils.getEnumFromId(State.class, state);
 		mErrorCode = !errorCode.isEmpty() ? Integer.parseInt(errorCode) : -1;
@@ -131,11 +131,11 @@ public class XmlParsers {
 	// /////////////////////////////////SIMPLE RESULTS///////////////////////////////////////////
 
 	public String parseSessionId() {
-		return getSecureAttrValue("sessionid");
+		return getSecureAttributeString("sessionid");
 	}
 
 	public String parseNewWatchdogId() {
-		return getSecureAttrValue("algid");
+		return getSecureAttributeString("algid");
 	}
 
 	// /////////////////////////////////GATES, USERINFO///////////////////////////////////////////
@@ -155,9 +155,9 @@ public class XmlParsers {
 				return result;
 
 			do {
-				Gate gate = new Gate(getSecureAttrValue("id"), getSecureAttrValue("name"));
-				gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue("role"), User.Role.Guest));
-				gate.setUtcOffset(getSecureInt(getSecureAttrValue("utc")));
+				Gate gate = new Gate(getSecureAttributeString("id"), getSecureAttributeString("name"));
+				gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttributeString("role"), User.Role.Guest));
+				gate.setUtcOffset(getSecureAttributeInt("utc"));
 				result.add(gate);
 
 				mParser.nextTag();
@@ -183,14 +183,14 @@ public class XmlParsers {
 			if (!mParser.getName().equals("gate"))
 				throw new AppException(ClientError.XML);
 
-			String id = getSecureAttrValue("id");
-			User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttrValue("accessrole"), User.Role.Guest);
-			String name = getSecureAttrValue("name");
-			int devicesCount = getSecureInt(getSecureAttrValue("devices"));
-			int usersCount = getSecureInt(getSecureAttrValue("users"));
-			String ip = getSecureAttrValue("ip");
-			String version = getSecureAttrValue("version");
-			int utcOffsetInMinutes = getSecureInt("utc");
+			String id = getSecureAttributeString("id");
+			User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttributeString("accessrole"), User.Role.Guest);
+			String name = getSecureAttributeString("name");
+			int devicesCount = getSecureAttributeInt("devices");
+			int usersCount = getSecureAttributeInt("users");
+			String ip = getSecureAttributeString("ip");
+			String version = getSecureAttributeString("version");
+			int utcOffsetInMinutes = getSecureAttributeInt("utc");
 
 			return new GateInfo(id, name, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
 		} catch (IOException | XmlPullParserException e) {
@@ -210,12 +210,12 @@ public class XmlParsers {
 			if (!mParser.getName().equals("user"))
 				throw new AppException(ClientError.XML);
 
-			user.setId(getSecureAttrValue("uid"));
-			user.setName(getSecureAttrValue("name"));
-			user.setSurname(getSecureAttrValue("surname"));
-			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue("gender"), User.Gender.UNKNOWN));
-			user.setEmail(getSecureAttrValue("email"));
-			user.setPictureUrl(getSecureAttrValue("imgurl"));
+			user.setId(getSecureAttributeString("uid"));
+			user.setName(getSecureAttributeString("name"));
+			user.setSurname(getSecureAttributeString("surname"));
+			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttributeString("gender"), User.Gender.UNKNOWN));
+			user.setEmail(getSecureAttributeString("email"));
+			user.setPictureUrl(getSecureAttributeString("imgurl"));
 
 			mParser.nextTag(); // providers
 			if (!mParser.getName().equals("providers"))
@@ -224,7 +224,7 @@ public class XmlParsers {
 			HashMap<String, String> providers = user.getJoinedProviders();
 
 			while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("provider")) { // provider
-				providers.put(getSecureAttrValue("name"), getSecureAttrValue("id"));
+				providers.put(getSecureAttributeString("name"), getSecureAttributeString("id"));
 				mParser.nextTag(); // end provider
 			}
 
@@ -293,21 +293,21 @@ public class XmlParsers {
 
 		try {
 			do { // go through devices
-				String type = getSecureAttrValue("type");
-				String address = getSecureAttrValue("id");
-				String gateId = getSecureAttrValue("gateid");
+				String type = getSecureAttributeString("type");
+				String address = getSecureAttributeString("id");
+				String gateId = getSecureAttributeString("gateid");
 
 				Device device = Device.createDeviceByType(type, gateId, address);
 
-				device.setName(getSecureAttrValue("name"));
-				device.setInitialized(getSecureAttrValue("init").equals("1"));
-				device.setLocationId(getSecureAttrValue("locationid"));
-				device.setLastUpdate(new DateTime((long) getSecureInt(getSecureAttrValue("time")) * 1000, DateTimeZone.UTC));
+				device.setName(getSecureAttributeString("name"));
+				device.setInitialized(getSecureAttributeString("init").equals("1"));
+				device.setLocationId(getSecureAttributeString("locationid"));
+				device.setLastUpdate(new DateTime((long) getSecureAttributeInt("time") * 1000, DateTimeZone.UTC));
 				// PairedTime is not used always...
-				device.setPairedTime(new DateTime((long) getSecureInt(getSecureAttrValue("involved")) * 1000, DateTimeZone.UTC));
+				device.setPairedTime(new DateTime((long) getSecureAttributeInt("involved") * 1000, DateTimeZone.UTC));
 
 				// FIXME: Temporary workaround
-				int refresh = getSecureInt(getSecureAttrValue("refresh"));
+				int refresh = getSecureAttributeInt("refresh");
 				if (refresh > 0) {
 					device.setRefresh(RefreshInterval.fromInterval(refresh));
 				}
@@ -315,8 +315,8 @@ public class XmlParsers {
 				// Load modules values
 				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("device")) {
 					// go through modules
-					String moduleId = getSecureAttrValue("id");
-					String moduleValue = getSecureAttrValue("value");
+					String moduleId = getSecureAttributeString("id");
+					String moduleValue = getSecureAttributeString("value");
 					device.setModuleValue(moduleId, moduleValue);
 
 					mParser.nextTag(); // module endtag
@@ -348,8 +348,8 @@ public class XmlParsers {
 
 			do {
 				try {
-					String repeat = getSecureAttrValue("repeat");
-					String interval = getSecureAttrValue("interval");
+					String repeat = getSecureAttributeString("repeat");
+					String interval = getSecureAttributeString("interval");
 					String row = readText("row");
 
 					// Split row data
@@ -388,7 +388,7 @@ public class XmlParsers {
 	 */
 	public List<Location> parseLocations() {
 		try {
-			String gateId = getSecureAttrValue("gateid");
+			String gateId = getSecureAttributeString("gateid");
 			mParser.nextTag();
 
 			List<Location> result = new ArrayList<>();
@@ -397,9 +397,9 @@ public class XmlParsers {
 				return result;
 
 			do {
-				String id = getSecureAttrValue("id");
-				String type = getSecureAttrValue("type");
-				String name = getSecureAttrValue("name");
+				String id = getSecureAttributeString("id");
+				String type = getSecureAttributeString("type");
+				String name = getSecureAttributeString("name");
 				Location location = new Location(id, name, gateId, type.isEmpty() ? "0" : type);
 				result.add(location);
 
@@ -420,7 +420,7 @@ public class XmlParsers {
 			if (!mParser.getName().equals("location"))
 				throw new AppException(ClientError.XML);
 
-			return getSecureAttrValue("id");
+			return getSecureAttributeString("id");
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -441,13 +441,13 @@ public class XmlParsers {
 			List<User> result = new ArrayList<>();
 			do {
 				User user = new User();
-				user.setId(getSecureAttrValue("id"));
-				user.setEmail(getSecureAttrValue("email"));
-				user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttrValue("role"), User.Role.Guest)); // FIXME: probably this should have different name
-				user.setName(getSecureAttrValue("name"));
-				user.setSurname(getSecureAttrValue("surname"));
-				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttrValue("gender"), User.Gender.UNKNOWN));
-				user.setPictureUrl(getSecureAttrValue("imgurl")); // FIXME: this isn't in specification but it should be here...
+				user.setId(getSecureAttributeString("id"));
+				user.setEmail(getSecureAttributeString("email"));
+				user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttributeString("role"), User.Role.Guest)); // FIXME: probably this should have different name
+				user.setName(getSecureAttributeString("name"));
+				user.setSurname(getSecureAttributeString("surname"));
+				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttributeString("gender"), User.Gender.UNKNOWN));
+				user.setPictureUrl(getSecureAttributeString("imgurl")); // FIXME: this isn't in specification but it should be here...
 
 				result.add(user);
 				mParser.nextTag();
@@ -475,11 +475,11 @@ public class XmlParsers {
 			do {
 				VisibleNotification ntfc;
 
-				String name = getSecureAttrValue("name");
-				String id = getSecureAttrValue("mid");
-				String time = getSecureAttrValue("time");
-				String type = getSecureAttrValue("type");
-				boolean read = (getSecureInt(getSecureAttrValue("read")) != 0);
+				String name = getSecureAttributeString("name");
+				String id = getSecureAttributeString("mid");
+				String time = getSecureAttributeString("time");
+				String type = getSecureAttributeString("type");
+				boolean read = (getSecureAttributeInt("read") != 0);
 
 				//TODO
 				// call here some method from gcm/notification part
@@ -511,9 +511,9 @@ public class XmlParsers {
 	 */
 	public ArrayList<Watchdog> parseWatchdog() {
 		try {
-			getSecureAttrValue("atype"); // not used yet
+			getSecureAttributeString("atype"); // not used yet
 
-			String aid = getSecureAttrValue("gateid");
+			String aid = getSecureAttributeString("gateid");
 			mParser.nextTag();
 
 			ArrayList<Watchdog> result = new ArrayList<>();
@@ -522,11 +522,11 @@ public class XmlParsers {
 				return result;
 
 			do {
-				Watchdog watchdog = new Watchdog(getSecureInt(getSecureAttrValue("atype")));
-				watchdog.setId(getSecureAttrValue("id"));
+				Watchdog watchdog = new Watchdog(getSecureAttributeInt("atype"));
+				watchdog.setId(getSecureAttributeString("id"));
 				watchdog.setGateId(aid);
-				watchdog.setEnabled(getSecureInt(getSecureAttrValue("enable")) > 0);
-				watchdog.setName(getSecureAttrValue("name"));
+				watchdog.setEnabled(getSecureAttributeInt("enable") > 0);
+				watchdog.setName(getSecureAttributeString("name"));
 
 				TreeMap<String, String> tDevices = new TreeMap<>();
 				TreeMap<String, String> tParams = new TreeMap<>();
@@ -537,15 +537,15 @@ public class XmlParsers {
 					Log.e(TAG, "someone send bad xml");//TODO do something
 
 				do {
-					String position = getSecureAttrValue("pos");
+					String position = getSecureAttributeString("pos");
 
 					if (mParser.getName().equals("dev")) {
-						String module = getSecureAttrValue("id") + Module.ID_SEPARATOR + getSecureAttrValue("type");
+						String module = getSecureAttributeString("id") + Module.ID_SEPARATOR + getSecureAttributeString("type");
 						tDevices.put(position, module);
 
 						mParser.nextTag();
 					} else if (mParser.getName().equals("geo")) {
-						watchdog.setGeoRegionId(getSecureAttrValue("rid"));
+						watchdog.setGeoRegionId(getSecureAttributeString("rid"));
 						mParser.nextTag();
 					} else {
 						String param = readText("par");
@@ -626,7 +626,7 @@ public class XmlParsers {
 	 * @param name of the attribute
 	 * @return parsed attribute or empty string
 	 */
-	private String getSecureAttrValue(String name) {
+	private String getSecureAttributeString(String name) {
 		String result = mParser.getAttributeValue(ns, name);
 		return (result == null) ? "" : result;
 	}
@@ -634,10 +634,11 @@ public class XmlParsers {
 	/**
 	 * Method return integer value of string, or zero if length is 0
 	 *
-	 * @param value that should be proccess
-	 * @return integer value of zero if length is 0
+	 * @param name of the attribute
+	 * @return integer value of attribute or zero if empty
 	 */
-	private int getSecureInt(String value) {
+	private int getSecureAttributeInt(String name) {
+		String value = getSecureAttributeString(name);
 		return (value.length() < 1) ? 0 : Integer.parseInt(value);
 	}
 }
