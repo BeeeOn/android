@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -28,13 +29,14 @@ public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFra
 		fragment.doAction();
 	}
 
+	@Nullable
 	@Override
 	protected IntroFragmentPagerAdapter initPagerAdapter() {
 		// If there is no gate, then the activity ends immediately
 		Gate gate = Controller.getInstance(this).getActiveGate();
 		if (gate == null) {
 			Toast.makeText(this, R.string.device_add_toast_no_gate, Toast.LENGTH_LONG).show();
-			finish();
+			return null;
 		}
 
 		//the List and the FragmentManager objects are needed as arguments for the constructor

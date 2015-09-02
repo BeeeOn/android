@@ -41,6 +41,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
@@ -559,10 +560,8 @@ public class Network implements INetwork {
 
 	@Override
 	public Device getDevice(Device device) {
-		ArrayList<Device> list = new ArrayList<>();
-		list.add(device);
-
-		return getDevices(list).get(0);
+		List<Device> devices = getDevices(Arrays.asList(device));
+		return devices.isEmpty() ? null : devices.get(0);
 	}
 
 	@Override
