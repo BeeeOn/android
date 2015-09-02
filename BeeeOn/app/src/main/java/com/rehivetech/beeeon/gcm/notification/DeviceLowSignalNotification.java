@@ -17,14 +17,14 @@ import java.io.IOException;
 public class DeviceLowSignalNotification extends VisibleNotification {
 	public static final String TAG = DeviceLowSignalNotification.class.getSimpleName();
 
-	private int mGateId;
-	private String mModuleId;
-	private int mSignalLevel;
+	private String mGateId;
+	private String mDeviceId;
+	private String mSignalLevel;
 
-	private DeviceLowSignalNotification(int msgid, long time, NotificationType type, boolean read, int gateId, String moduleId, int signalLevel) {
+	private DeviceLowSignalNotification(int msgid, long time, NotificationType type, boolean read, String gateId, String deviceId, String signalLevel) {
 		super(msgid, time, type, read);
 		mGateId = gateId;
-		mModuleId = moduleId;
+		mDeviceId = deviceId;
 		mSignalLevel = signalLevel;
 	}
 
@@ -32,16 +32,16 @@ public class DeviceLowSignalNotification extends VisibleNotification {
 		DeviceLowSignalNotification instance = null;
 
 		try {
-			Integer gateId = Integer.valueOf(bundle.getString("gateid"));
-			String moduleId = bundle.getString("did");
-			Integer batterylevel = Integer.valueOf(bundle.getString("batt"));
+			String gateId = bundle.getString("gateid");
+			String deviceId = bundle.getString("did");
+			String batterylevel = bundle.getString("batt");
 
-			if (gateId == null || moduleId == null || batterylevel == null) {
+			if (gateId == null || deviceId == null || batterylevel == null) {
 				Log.d(TAG, "DeviceAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new DeviceLowSignalNotification(msgId, time, type, false, gateId, moduleId, batterylevel);
+			instance = new DeviceLowSignalNotification(msgId, time, type, false, gateId, deviceId, batterylevel);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -50,9 +50,9 @@ public class DeviceLowSignalNotification extends VisibleNotification {
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
-		Integer gateId = null;
-		String moduleId = null;
-		Integer signalLevel = null;
+		String gateId = null;
+		String deviceId = null;
+		String signalLevel = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -73,11 +73,11 @@ public class DeviceLowSignalNotification extends VisibleNotification {
 
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase("gateid")) {
-						gateId = Integer.valueOf(text);
+						gateId = text;
 					} else if (tagname.equalsIgnoreCase("did")) {
-						moduleId = text;
+						deviceId = text;
 					} else if (tagname.equalsIgnoreCase("batt")) {
-						signalLevel = Integer.valueOf(text);
+						signalLevel = text;
 					}
 					break;
 				default:
@@ -86,12 +86,12 @@ public class DeviceLowSignalNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (gateId == null || moduleId == null || signalLevel == null) {
+		if (gateId == null || deviceId == null || signalLevel == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new DeviceLowSignalNotification(msgId, time, type, isRead, gateId, moduleId, signalLevel);
+		return new DeviceLowSignalNotification(msgId, time, type, isRead, gateId, deviceId, signalLevel);
 
 	}
 

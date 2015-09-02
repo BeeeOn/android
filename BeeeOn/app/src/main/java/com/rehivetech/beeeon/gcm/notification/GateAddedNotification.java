@@ -19,9 +19,9 @@ public class GateAddedNotification extends VisibleNotification {
 
 	public static final String TAG = GateAddedNotification.class.getSimpleName();
 
-	private int mGateId;
+	private String mGateId;
 
-	private GateAddedNotification(int msgid, long time, NotificationType type, boolean read, int gateId) {
+	private GateAddedNotification(int msgid, long time, NotificationType type, boolean read, String gateId) {
 		super(msgid, time, type, read);
 		mGateId = gateId;
 	}
@@ -30,7 +30,7 @@ public class GateAddedNotification extends VisibleNotification {
 		GateAddedNotification instance = null;
 
 		try {
-			Integer gateId = Integer.valueOf(bundle.getString("gateid"));
+			String gateId = bundle.getString("gateid");
 
 			if (gateId == null) {
 				Log.d(TAG, "Gate added: some compulsory value is missing.");
@@ -46,7 +46,7 @@ public class GateAddedNotification extends VisibleNotification {
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
-		Integer gateId = null;
+		String gateId = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -67,7 +67,7 @@ public class GateAddedNotification extends VisibleNotification {
 
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase("gateid")) {
-						gateId = Integer.valueOf(text);
+						gateId = text;
 					}
 					break;
 				default:

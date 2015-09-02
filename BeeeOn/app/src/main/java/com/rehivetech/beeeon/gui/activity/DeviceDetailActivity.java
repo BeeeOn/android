@@ -14,8 +14,9 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 
 	private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
-	public static final String EXTRA_DEVICE_ID = "device_id";
 	public static final String EXTRA_GATE_ID = "gate_id";
+	public static final String EXTRA_DEVICE_ID = "device_id";
+	public static final String EXTRA_MODULE_ID = "module_id"; // NOTE: For future use
 
 	private String mGateId;
 	private String mDeviceId;

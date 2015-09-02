@@ -17,14 +17,14 @@ import java.io.IOException;
 public class DeviceLowBatteryNotification extends VisibleNotification {
 	public static final String TAG = DeviceLowBatteryNotification.class.getSimpleName();
 
-	private int mGateId;
-	private String mModuleId;
-	private int mBatteryLevel;
+	private String mGateId;
+	private String mDeviceId;
+	private String mBatteryLevel;
 
-	private DeviceLowBatteryNotification(int msgid, long time, NotificationType type, boolean read, int gateId, String moduleId, int batteryLevel) {
+	private DeviceLowBatteryNotification(int msgid, long time, NotificationType type, boolean read, String gateId, String deviceId, String batteryLevel) {
 		super(msgid, time, type, read);
 		mGateId = gateId;
-		mModuleId = moduleId;
+		mDeviceId = deviceId;
 		mBatteryLevel = batteryLevel;
 	}
 
@@ -32,16 +32,16 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 		DeviceLowBatteryNotification instance = null;
 
 		try {
-			Integer gateId = Integer.valueOf(bundle.getString("gateid"));
-			String moduleId = bundle.getString("did");
-			Integer batterylevel = Integer.valueOf(bundle.getString("batt"));
+			String gateId = bundle.getString("gateid");
+			String deviceId = bundle.getString("did");
+			String batterylevel = bundle.getString("batt");
 
-			if (gateId == null || moduleId == null || batterylevel == null) {
+			if (gateId == null || deviceId == null || batterylevel == null) {
 				Log.d(TAG, "DeviceAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new DeviceLowBatteryNotification(msgId, time, type, false, gateId, moduleId, batterylevel);
+			instance = new DeviceLowBatteryNotification(msgId, time, type, false, gateId, deviceId, batterylevel);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -50,9 +50,9 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
-		Integer gateId = null;
-		String moduleId = null;
-		Integer batteryLevel = null;
+		String gateId = null;
+		String deviceId = null;
+		String batteryLevel = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -73,11 +73,11 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase("gateid")) {
-						gateId = Integer.valueOf(text);
+						gateId = text;
 					} else if (tagname.equalsIgnoreCase("did")) {
-						moduleId = text;
+						deviceId = text;
 					} else if (tagname.equalsIgnoreCase("batt")) {
-						batteryLevel = Integer.valueOf(text);
+						batteryLevel = text;
 					}
 					break;
 				default:
@@ -86,12 +86,12 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (gateId == null || moduleId == null || batteryLevel == null) {
+		if (gateId == null || deviceId == null || batteryLevel == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new DeviceLowBatteryNotification(msgId, time, type, isRead, gateId, moduleId, batteryLevel);
+		return new DeviceLowBatteryNotification(msgId, time, type, isRead, gateId, deviceId, batteryLevel);
 
 	}
 

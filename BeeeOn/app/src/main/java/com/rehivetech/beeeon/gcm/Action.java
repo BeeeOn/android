@@ -22,37 +22,25 @@ public final class Action {
 	}
 
 	@Nullable
-	static public void getModuleDetailIntent(Context context, int gateId, String moduleId, int type) {
+	static public void getModuleDetailIntent(Context context, String gateId, String deviceId, String moduleId) {
 		Controller controller = Controller.getInstance(context);
-		Device device = controller.getDevicesModel().getDevice(String.valueOf(gateId), moduleId);
+		Device device = controller.getDevicesModel().getDevice(gateId, deviceId);
 		if (device == null) {
 			Toast.makeText(context, R.string.module_get_detail_intent_toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-
-		List<Module> modules = device.getAllModules();
-		if (modules.size() == 0) {
+		Module module = device.getModuleById(moduleId);
+		if (module == null) {
 			Toast.makeText(context, R.string.module_get_detail_intent_toast_device_not_available, Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		int pos = 0;
-		for (int i = 0; i < modules.size(); i++) {
-			// FIXME: now it is comparing id with type, which won't work at all
-			if (modules.get(i).getAbsoluteId().equals(String.valueOf(type))) {
-
-				pos = i;
-				break;
-			}
-		}
-
-		Module module = modules.get(pos);
-
 		// Module exists, we can open activity
 		Intent intent = new Intent(context, DeviceDetailActivity.class);
-		intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, module.getDevice().getId());
 		intent.putExtra(DeviceDetailActivity.EXTRA_GATE_ID, String.valueOf(gateId));
+		intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, device.getId());
+		intent.putExtra(DeviceDetailActivity.EXTRA_MODULE_ID, module.getId());
 
 		context.startActivity(intent);
 	}

@@ -17,28 +17,28 @@ import java.io.IOException;
 public class DeviceAddedNotification extends VisibleNotification {
 	public static final String TAG = DeviceAddedNotification.class.getSimpleName();
 
-	private int mGateId;
-	private String mModuleId;
+	private String mGateId;
+	private String mDeviceId;
 
-	private DeviceAddedNotification(int msgid, long time, NotificationType type, boolean read, int gateId, String moduleId) {
+	private DeviceAddedNotification(int msgid, long time, NotificationType type, boolean read, String gateId, String deviceId) {
 		super(msgid, time, type, read);
 		mGateId = gateId;
-		mModuleId = moduleId;
+		mDeviceId = deviceId;
 	}
 
 	protected static DeviceAddedNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		DeviceAddedNotification instance = null;
 
 		try {
-			Integer gateId = Integer.valueOf(bundle.getString("gateid"));
-			String moduleId = bundle.getString("did");
+			String gateId = bundle.getString("gateid");
+			String deviceId = bundle.getString("did");
 
-			if (gateId == null || moduleId == null) {
+			if (gateId == null || deviceId == null) {
 				Log.d(TAG, "DeviceAdded: some compulsory value is missing.");
 				return null;
 			}
 
-			instance = new DeviceAddedNotification(msgId, time, type, false, gateId, moduleId);
+			instance = new DeviceAddedNotification(msgId, time, type, false, gateId, deviceId);
 		} catch (IllegalArgumentException | NullPointerException e) {
 			return instance;
 		}
@@ -47,8 +47,8 @@ public class DeviceAddedNotification extends VisibleNotification {
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {
-		Integer gateId = null;
-		String moduleId = null;
+		String gateId = null;
+		String deviceId = null;
 
 		String text = null;
 		int eventType = parser.getEventType();
@@ -69,9 +69,9 @@ public class DeviceAddedNotification extends VisibleNotification {
 
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase("gateid")) {
-						gateId = Integer.valueOf(text);
+						gateId = text;
 					} else if (tagname.equalsIgnoreCase("did")) {
-						moduleId = text;
+						deviceId = text;
 					}
 					break;
 				default:
@@ -80,12 +80,12 @@ public class DeviceAddedNotification extends VisibleNotification {
 			eventType = parser.next();
 		}
 
-		if (gateId == null || moduleId == null) {
+		if (gateId == null || deviceId == null) {
 			Log.d(TAG, "Xml: Some compulsory value is missing.");
 			return null;
 		}
 
-		return new DeviceAddedNotification(msgId, time, type, isRead, gateId, moduleId);
+		return new DeviceAddedNotification(msgId, time, type, isRead, gateId, deviceId);
 
 	}
 
