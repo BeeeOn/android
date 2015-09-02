@@ -441,38 +441,11 @@ public class XmlCreator {
 		try {
 			XmlSerializer serializer = beginXml(writer, "getdevices", bt);
 
-			// FIXME: Remove this when Pavel will prepare server
-			{
-				// sort by gate address
-				Collections.sort(devices, new Comparator<Device>() {
-					@Override
-					public int compare(Device left, Device right) {
-						return Integer.valueOf(left.getGateId()).compareTo(Integer.valueOf(right.getGateId()));
-					}
-				});
-
-				String aid = "";
-				for (Device device : devices) {
-					boolean isSameGate = aid.equals(device.getGateId());
-					if (!isSameGate) { // new gate
-						if (aid.length() > 0)
-							serializer.endTag(ns, "gate");
-						aid = device.getGateId();
-						startTag(serializer, "gate");
-						addAttribute(serializer, "id", aid);
-					}
-					addTag(serializer, "device",
-							"id", device.getAddress());
-				}
-				serializer.endTag(ns, "gate");
-			}
-
-			// FIXME: Use this new variant when Pavel will prepare server
-			/* for (Device device : devices) {
+			for (Device device : devices) {
 				addTag(serializer, "device",
 						"gateid", device.getGateId(),
 						"id", device.getAddress());
-			}*/
+			}
 
 			return endXml(writer, serializer);
 		} catch (Exception e) {
