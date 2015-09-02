@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -21,7 +23,6 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 
 	public static final String EXTRA_WIDGET_EDITING = "com.rehivetech.beeeon.widget.EXTRA_WIDGET_EDITING";
 
-	private Toolbar mToolbar;
 	private ProgressDialog mDialog;
 	private Fragment mConfigFragment;
 
@@ -136,15 +137,17 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		return mWidgetId;
 	}
 
-	public Toolbar getToolbar() {
-		return mToolbar;
-	}
-
 	public boolean isReturnResult() {
 		return mReturnResult;
 	}
 
 	public boolean isAppWidgetEditing() {
 		return mAppWidgetEditing;
+	}
+
+	public void setToolbarTitle(@StringRes int titleRes) {
+		if (mActionBar != null) {
+			mActionBar.setTitle(titleRes);
+		}
 	}
 }

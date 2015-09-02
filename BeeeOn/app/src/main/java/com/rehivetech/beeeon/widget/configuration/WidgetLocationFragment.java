@@ -36,10 +36,12 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 		mWidgetLocation = mWidgetData.widgetLocation;
 	}
 
+	@Override
 	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_location;
 	}
 
+	@Override
 	protected int getFragmentTitle() {
 		return R.string.widget_location_widget_configuration_location;
 	}
@@ -65,6 +67,7 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
     /**
 	 * Updates layout and expects to have all data fresh
 	 */
+	@Override
 	protected void updateLayout() {
 		// fill sensor spinner
 		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.item_spinner_geofence_icon, mLocations);

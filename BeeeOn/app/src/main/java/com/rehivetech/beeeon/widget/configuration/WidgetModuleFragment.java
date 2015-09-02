@@ -36,10 +36,12 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 		mWidgetModule = mWidgetData.widgetModules.get(0);
 	}
 
+	@Override
 	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_module;
 	}
 
+	@Override
 	protected int getFragmentTitle() {
 		return R.string.widget_module_widget_configuration_device;
 	}
@@ -65,6 +67,7 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	/**
 	 * Updates layout and expects to have all data fresh
 	 */
+	@Override
 	protected void updateLayout() {
 		// fill sensor spinner
 		ModuleArrayAdapter dataAdapter = new ModuleArrayAdapter(mActivity, R.layout.item_spinner_module_icon_twoline, mModules, mLocations);

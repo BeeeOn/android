@@ -1,6 +1,9 @@
 package com.rehivetech.beeeon.widget.configuration;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +20,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.fragment.BaseApplicationFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -73,15 +77,22 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		mRefreshIntervalLength = RefreshInterval.values().length - minRefresh.getIntervalIndex();
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+			mActivity = (WidgetConfigurationActivity) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must be subclass of WidgetConfigurationActivity");
+		}
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-
-		if (!(getActivity() instanceof WidgetConfigurationActivity)) {
-			throw new IllegalStateException(String.format("Activity holding %s must be WidgetConfigurationActivity", TAG));
-		}
-
-		mActivity = (WidgetConfigurationActivity) getActivity();
 	}
 
     /**
@@ -98,14 +109,16 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	 *
 	 * @return layout resource
 	 */
+	@LayoutRes
 	protected abstract int getFragmentLayoutResource();
 
+	@StringRes
 	protected abstract int getFragmentTitle();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(getFragmentLayoutResource(), container, false);
-		mActivity.getToolbar().setTitle(getFragmentTitle());
+		mActivity.setToolbarTitle(getFragmentTitle());
 		return mView;
 	}
 

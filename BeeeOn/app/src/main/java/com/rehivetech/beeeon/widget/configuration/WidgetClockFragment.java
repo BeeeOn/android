@@ -53,10 +53,12 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		mHandler = new Handler();
 	}
 
+	@Override
     protected int getFragmentLayoutResource() {
         return R.layout.fragment_widget_clock;
     }
 
+	@Override
     protected int getFragmentTitle() {
         return R.string.widget_clock_widget_configuration_clock;
     }
