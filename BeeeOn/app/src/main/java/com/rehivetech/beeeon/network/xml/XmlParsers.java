@@ -72,7 +72,7 @@ public class XmlParsers {
 		ALGORITHMS("algs"),
 
 		VIEWS("views"),
-		NOTIFICATIONS("notifs");
+		NOTIFICATIONS("notifications");
 
 		private final String mValue;
 
@@ -210,7 +210,7 @@ public class XmlParsers {
 			if (!mParser.getName().equals("user"))
 				throw new AppException(ClientError.XML);
 
-			user.setId(getSecureAttributeString("uid"));
+			user.setId(getSecureAttributeString("id"));
 			user.setName(getSecureAttributeString("name"));
 			user.setSurname(getSecureAttributeString("surname"));
 			user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttributeString("gender"), User.Gender.UNKNOWN));

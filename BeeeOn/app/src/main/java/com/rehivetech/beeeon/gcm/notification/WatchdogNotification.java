@@ -45,7 +45,7 @@ public class WatchdogNotification extends VisibleNotification {
 	}
 
 	protected static WatchdogNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		WatchdogNotification instance = null;
+		WatchdogNotification instance;
 
 		try {
 			String message = bundle.getString("msg");
@@ -94,7 +94,7 @@ public class WatchdogNotification extends VisibleNotification {
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase("msg")) {
 						message = text;
-					} else if (tagname.equalsIgnoreCase("gateid")) {
+					} else if (tagname.equalsIgnoreCase("aid")) {
 						gateId = Integer.valueOf(text);
 					} else if (tagname.equalsIgnoreCase("did")) {
 						moduleId = text;
