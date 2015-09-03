@@ -3,12 +3,16 @@ package com.rehivetech.beeeon.gui.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
@@ -19,7 +23,10 @@ import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.util.Language;
 import com.rehivetech.beeeon.util.Log;
+
+import java.util.Locale;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
@@ -52,6 +59,28 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		super.onCreate(savedInstanceState);
 
 		callbackTaskManager = new CallbackTaskManager(this);
+
+		setLocale();
+	}
+
+	private void setLocale() {
+		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
+		String lang = prefs.getString(Language.PERSISTENCE_PREF_LANGUAGE, null);
+
+		Toast.makeText(this,lang,Toast.LENGTH_LONG).show();
+
+		Locale locale = new Locale(lang);
+		Resources res = getResources();
+		DisplayMetrics dm = res.getDisplayMetrics();
+		Configuration conf = res.getConfiguration();
+		conf.locale = locale;
+		res.updateConfiguration(conf, dm);
+		/*
+		Intent refresh = new Intent(this, SettingsActivity.class);
+		refresh.setFlags(refresh.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+		startActivity(refresh);
+			finish();*/
+
 	}
 
 	@Override

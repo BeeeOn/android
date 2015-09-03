@@ -348,6 +348,9 @@
 	<string name="settings_unit_preferences_temperature">Temperature</string>
 	<string name="settings_unit_unit">Units</string>
 	<string name="settings_language_default">Default(from system)</string>
+	<string name="settings_actualization_category_title">Actualization settings</string>
+	<string name="settings_actualization_screen_title">Automatic data actualization interval</string>
+	<string name="settings_cache_reload_title">Cache reload time</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s\'s gateway #%2$d</string>

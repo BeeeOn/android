@@ -1,6 +1,6 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ListPreference
+	<ListPreference
 		android:dialogTitle="@string/prefs_choose_language"
 		android:key="pref_language"
 		android:title="@string/prefs_choose_language"
@@ -8,30 +8,50 @@
 		android:entryValues="@array/language_pref_entry">
 	</ListPreference>
 
-    <ListPreference
-        android:dialogTitle="@string/gate_detail_timezone"
-        android:key="pref_timezone"
-        android:title="@string/gate_detail_timezone">
-    </ListPreference>
+	<ListPreference
+		android:dialogTitle="@string/gate_detail_timezone"
+		android:key="pref_timezone"
+		android:title="@string/gate_detail_timezone">
+	</ListPreference>
 
-    <PreferenceScreen
-        android:key="key_units"
-        android:persistent="false"
-        android:title="@string/settings_unit_unit" />
-    <PreferenceScreen
-        android:key="key_geofence"
-        android:persistent="false"
-        android:title="@string/map_geofence_title_map_geofence" />
+	<PreferenceScreen
+		android:key="key_units"
+		android:persistent="false"
+		android:title="@string/settings_unit_unit"/>
 
-    <!-- <PreferenceCategory android:title="@string/smartwatches" > -->
-    <!-- <ListPreference -->
-    <!-- android:dialogTitle="@string/choose_default_adapter" -->
-    <!-- android:key="pref_sw2_adapter" -->
-    <!-- android:title="@string/default_adapter" /> -->
-    <!-- <ListPreference -->
-    <!-- android:dialogTitle="@string/choose_default_location" -->
-    <!-- android:key="pref_sw2_location" -->
-    <!-- android:title="@string/default_location" /> -->
-    <!-- </PreferenceCategory> -->
+	<PreferenceScreen
+		android:key="key_geofence"
+		android:persistent="false"
+		android:title="@string/map_geofence_title_map_geofence"/>
+
+	<PreferenceCategory
+		android:title="@string/settings_actualization_category_title">
+
+		<ListPreference
+			android:key="key_actualization"
+			android:persistent="false"
+			android:title="@string/settings_actualization_screen_title"
+			android:entries="@array/actualizaton_pref_entry"
+			android:entryValues="@array/actualization_pref_entry_value"/>
+
+		<ListPreference
+			android:key="key_cache"
+			android:persistent="false"
+			android:title="@string/settings_cache_reload_title"
+			android:entries="@array/cache_reload_pref_entry"
+			android:entryValues="@array/cache_reload_pref_entry_value"/>
+
+	</PreferenceCategory>
+
+	<!-- <PreferenceCategory android:title="@string/smartwatches" > -->
+	<!-- <ListPreference -->
+	<!-- android:dialogTitle="@string/choose_default_adapter" -->
+	<!-- android:key="pref_sw2_adapter" -->
+	<!-- android:title="@string/default_adapter" /> -->
+	<!-- <ListPreference -->
+	<!-- android:dialogTitle="@string/choose_default_location" -->
+	<!-- android:key="pref_sw2_location" -->
+	<!-- android:title="@string/default_location" /> -->
+	<!-- </PreferenceCategory> -->
 
 </PreferenceScreen>

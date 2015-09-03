@@ -15,6 +15,8 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MapGeofenceActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsUnitActivity;
+import com.rehivetech.beeeon.util.Language;
+import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Timezone;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -64,6 +66,7 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 				}
 			});
 		}
+
 	}
 
 	@Override
@@ -78,7 +81,7 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (key.equals("pref_language")) {
+		if (key.equals(Language.PERSISTENCE_PREF_LANGUAGE)) {
 			mOnPreferenceChangedListener.setLocale(sharedPreferences.getString(key, null));
 		}
 		if (mTimezone != null && key.equals(mTimezone.getPersistenceKey())) {
