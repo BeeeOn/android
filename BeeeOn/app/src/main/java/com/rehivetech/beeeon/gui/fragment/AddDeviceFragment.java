@@ -137,7 +137,7 @@ public class AddDeviceFragment extends TrackFragment {
 
 	private void doPairRequestTask(long timeLimitMSec) {
 		// function creates and starts Task that handles pairing between the gate and the account
-		PairDeviceTask pairDeviceTask = new PairDeviceTask(getActivity(), mGateId, timeLimitMSec);
+		final PairDeviceTask pairDeviceTask = new PairDeviceTask(getActivity(), mGateId, timeLimitMSec);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -154,7 +154,9 @@ public class AddDeviceFragment extends TrackFragment {
 					intent.putExtra(SetupDeviceActivity.EXTRA_GATE_ID, mGateId);
 					startActivityForResult(intent, Constants.SETUP_DEVICE_REQUEST_CODE);
 				} else {
-					Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();
+					if (pairDeviceTask.getException() == null) {
+						Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();
+					}
 					mCountDownTimer.cancel();
 					resetTimer();
 				}
