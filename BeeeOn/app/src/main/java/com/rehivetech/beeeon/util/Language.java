@@ -38,10 +38,10 @@ public class Language extends SettingsItem {
 	public Language() {
 		super();
 
-		mItems.add(this.new Item(FROM_SYSTEM, R.string.unit_noise_decibel_full));
-		mItems.add(this.new Item(ENGLISH, R.string.unit_noise_bel_full));
-		mItems.add(this.new Item(CZECH, R.string.unit_noise_neper_full));
-		mItems.add(this.new Item(SLOVAK, R.string.unit_noise_neper_full));
+		mItems.add(this.new Item(FROM_SYSTEM, 0));
+		mItems.add(this.new Item(ENGLISH, 0));
+		mItems.add(this.new Item(CZECH, 0));
+		mItems.add(this.new Item(SLOVAK, 0));
 	}
 
 	@Override

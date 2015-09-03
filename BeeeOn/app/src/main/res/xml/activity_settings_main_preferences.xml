@@ -28,15 +28,13 @@
 		android:title="@string/settings_actualization_category_title">
 
 		<ListPreference
-			android:key="key_actualization"
-			android:persistent="false"
+			android:key="pref_actualization"
 			android:title="@string/settings_actualization_screen_title"
 			android:entries="@array/actualizaton_pref_entry"
 			android:entryValues="@array/actualization_pref_entry_value"/>
 
 		<ListPreference
-			android:key="key_cache"
-			android:persistent="false"
+			android:key="pref_cache"
 			android:title="@string/settings_cache_reload_title"
 			android:entries="@array/cache_reload_pref_entry"
 			android:entryValues="@array/cache_reload_pref_entry_value"/>
