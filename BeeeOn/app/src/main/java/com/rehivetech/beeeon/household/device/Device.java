@@ -184,10 +184,22 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
+	 * @param withSpecial Whether to return all modules even with special (refresh/battery/signal/...) modules
 	 * @return List of modules this device contains.
 	 */
-	public List<Module> getAllModules() {
+	public List<Module> getAllModules(boolean withSpecial) {
 		List<Module> modules = mModules.getObjects();
+
+		if (!withSpecial) {
+			// Remove special modules
+			Iterator<Module> it = modules.iterator();
+			while (it.hasNext()) {
+				Module module = it.next();
+				if (module.getType().isSpecial()) {
+					it.remove();
+				}
+			}
+		}
 
 		// Sort modules by proper order
 		Collections.sort(modules, new OrderIdentifierComparator());
@@ -200,7 +212,7 @@ public final class Device implements IIdentifier {
 	 */
 	public List<Module> getVisibleModules() {
 		// This will give us correctly sorted modules
-		List<Module> modules = getAllModules();
+		List<Module> modules = getAllModules(false);
 
 		List<String> hideModuleIds = new ArrayList<>();
 
@@ -213,19 +225,9 @@ public final class Device implements IIdentifier {
 		Iterator<Module> it = modules.iterator();
 		while (it.hasNext()) {
 			Module module = it.next();
-			switch (module.getType()) {
-				case TYPE_BATTERY:
-				case TYPE_RSSI:
-				case TYPE_REFRESH:
-					// Remove features modules
-					it.remove();
-					break;
-				default:
-					// Remove modules to be hidden based on rules
-					if (hideModuleIds.contains(module.getId())) {
-						it.remove();
-					}
-					break;
+			// Remove modules to be hidden based on rules
+			if (hideModuleIds.contains(module.getId())) {
+				it.remove();
 			}
 		}
 
@@ -247,7 +249,7 @@ public final class Device implements IIdentifier {
 	public List<Module> getModulesByType(int typeId) {
 		List<Module> modules = new ArrayList<>();
 
-		for (Module module : getAllModules()) {
+		for (Module module : getAllModules(true)) {
 			if (module.getType().getTypeId() == typeId) {
 				modules.add(module);
 			}

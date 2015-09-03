@@ -549,7 +549,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		List<Module> modules = new ArrayList<Module>();
 
 		for (Device device : mDevices)
-			for (Module module : device.getAllModules()) {
+			for (Module module : device.getAllModules(false)) {
 				if (type == MODULES_ACTORS && !module.isActuator()) {
 					continue;
 				} else if (type == MODULES_SENSORS && module.isActuator()) {

@@ -134,10 +134,10 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	}
 
 	public void onDataSetChanged() {
-		Log.d(TAG, String.format("onDataSetChanged(%d), locId=%s, adId=%s", mWidgetId, mLocationId, mLocationGateId));
+		Log.d(TAG, String.format("onDataSetChanged(%d), locationId=%s, gateId=%s", mWidgetId, mLocationId, mLocationGateId));
 
 		// TODO problem if logged out
-		// TODO problem when changed room
+		// TODO problem when changed location
 		// TODO checking if new data not all the time refresh
 
 		mController = Controller.getInstance(mContext);
@@ -149,13 +149,13 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		}
 
 
-		Log.d(TAG, String.format("mfacit length = %d", mDevices.size()));
+		Log.d(TAG, String.format("Devices length = %d", mDevices.size()));
 		mModules.clear();
-		for (Device fac : mDevices) {
-			if (fac == null) continue;
+		for (Device device : mDevices) {
+			if (device == null) continue;
 
-			Log.d("FAC: ", fac.getAllModules().get(0).getName(mContext));
-			mModules.addAll(fac.getAllModules());
+			Log.d("DEVICE: ", mContext.getString(device.getType().getNameRes()));
+			mModules.addAll(device.getAllModules(false));
 		}
 	}
 }
