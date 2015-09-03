@@ -226,10 +226,10 @@
 	<string name="device_setup_toast_new_module_added">Nové zařízení bylo přidáno</string>
 
 	<!-- Device add -->
-	<string name="device_add_btn_send_pair">ZAHÁJIT PÁROVÁNÍ</string>
+	<string name="device_add_btn_send_pair">Start</string>
 	<string name="device_add_device_found">Zařízení bylo nalezeno</string>
 	<string name="device_add_device_not_found_in_time">Zařízení nebylo nalezeno, ověřte, zda je skutečně zapnuto, a zkuste to znovu</string>
-	<string name="device_add_dialog_device_add_text">Klikněte ZAHÁJIT PÁROVÁNÍ</string>
+	<string name="device_add_dialog_device_add_text">Klikněte na START pro zahájení párování</string>
 	<string name="device_add_shake_it_text">Zatřeste se zařízením či zmáčkněte tlačítko pro párování na zařízení</string>
 	<string name="device_add_time_left_unit">sekundy</string>
 	<string name="device_add_toast_no_gate">Nemáte žádnou registrovanou bránu</string>

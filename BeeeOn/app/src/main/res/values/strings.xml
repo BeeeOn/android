@@ -233,10 +233,10 @@
 	<string name="device_setup_toast_new_module_added">New module was added</string>
 
 	<!-- Device add -->
-	<string name="device_add_btn_send_pair">SEND PAIR</string>
+	<string name="device_add_btn_send_pair">START</string>
 	<string name="device_add_device_found">Device was found</string>
 	<string name="device_add_device_not_found_in_time">Device was not found, check if it\'s really switched on and try it again</string>
-	<string name="device_add_dialog_device_add_text">Click SEND PAIR</string>
+	<string name="device_add_dialog_device_add_text">Click on START to begin pairing</string>
 	<string name="device_add_shake_it_text">Shake the device or press the button on it.</string>
 	<string name="device_add_time_left_unit">seconds</string>
 	<string name="device_add_toast_no_gate">You have no registered gateway</string>
