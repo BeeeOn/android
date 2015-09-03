@@ -66,22 +66,16 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	private void setLocale() {
 		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
 		String lang = prefs.getString(Language.PERSISTENCE_PREF_LANGUAGE, null);
-
-		Toast.makeText(this,lang,Toast.LENGTH_LONG).show();
-
-		Locale locale = new Locale(lang);
-		Resources res = getResources();
-		DisplayMetrics dm = res.getDisplayMetrics();
-		Configuration conf = res.getConfiguration();
-		conf.locale = locale;
-		res.updateConfiguration(conf, dm);
-		/*
-		Intent refresh = new Intent(this, SettingsActivity.class);
-		refresh.setFlags(refresh.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
-		startActivity(refresh);
-			finish();*/
-
+		if (!lang.equals("df")) {
+			Locale locale = new Locale(lang);
+			Resources res = getResources();
+			DisplayMetrics dm = res.getDisplayMetrics();
+			Configuration conf = res.getConfiguration();
+			conf.locale = locale;
+			res.updateConfiguration(conf, dm);
+		}
 	}
+
 
 	@Override
 	public void onResume() {
