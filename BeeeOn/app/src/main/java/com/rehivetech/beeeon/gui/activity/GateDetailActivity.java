@@ -168,8 +168,8 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	@Override
 	public void onGateDevicesClicked() {
-		Intent intent = new Intent(this, MainActivity.class);
-		intent.putExtra(MainActivity.EXTRA_GATE_ID, mGateId);
+		Intent intent = new Intent(this, DevicesListActivity.class);
+		intent.putExtra(DevicesListActivity.EXTRA_GATE_ID, mGateId);
 		startActivity(intent);
 	}
 
