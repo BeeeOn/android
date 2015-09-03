@@ -48,7 +48,7 @@ public class WatchdogNotification extends VisibleNotification {
 
 		try {
 			String message = bundle.getString("msg");
-			String gateId = bundle.getString("gateid");
+			String gateId = bundle.getString("aid");
 			String deviceId = bundle.getString("did");
 			String moduleId = bundle.getString("dtype");
 			String algId = bundle.getString("algid");
