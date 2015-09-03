@@ -347,6 +347,7 @@
 	<string name="settings_unit_preferences_noise">Noise</string>
 	<string name="settings_unit_preferences_temperature">Temperature</string>
 	<string name="settings_unit_unit">Units</string>
+	<string name="settings_language_default">Default(from system)</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s\'s gateway #%2$d</string>

@@ -11,9 +11,7 @@
     <ListPreference
         android:dialogTitle="@string/gate_detail_timezone"
         android:key="pref_timezone"
-        android:title="@string/gate_detail_timezone"
-		android:entries="@array/timezone_pref_array"
-		android:entryValues="@array/timezone_pref_array">
+        android:title="@string/gate_detail_timezone">
     </ListPreference>
 
     <PreferenceScreen
