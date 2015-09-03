@@ -63,7 +63,7 @@ public class XmlParsers {
 		LOGDATA("logs"),
 		LOCATIONS("locations"),
 		LOCATIONID("locationid"),
-		ACCOUNTS("gateusers"),
+		ACCOUNTS("accounts"),
 
 		TRUE("true"),
 		FALSE("false"),

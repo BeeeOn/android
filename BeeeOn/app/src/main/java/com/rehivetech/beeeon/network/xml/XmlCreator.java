@@ -761,7 +761,7 @@ public class XmlCreator {
 	public static String createGetGateUsers(String bt, String gateId) {
 		StringWriter writer = new StringWriter();
 		try {
-			XmlSerializer serializer = beginXml(writer, "gateusers", bt);
+			XmlSerializer serializer = beginXml(writer, "getgateusers", bt);
 			serializer.attribute(ns, "gateid", gateId);
 			return endXml(writer, serializer);
 		} catch (Exception e) {
