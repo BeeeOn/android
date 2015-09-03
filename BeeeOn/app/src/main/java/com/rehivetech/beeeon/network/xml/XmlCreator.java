@@ -686,7 +686,7 @@ public class XmlCreator {
 
 			for (User user : users) {
 				addTag(serializer, "user",
-						"id", user.getId(), // FIXME: shouldn't here be e-mail?
+						"email", user.getEmail(),
 						"role", user.getRole().getId());
 			}
 
