@@ -26,6 +26,7 @@
 	<string name="devices__type_refresh">Refresh period</string>
 	<string name="devices__type_rssi">Signal</string>
 	<string name="devices__type_temperature">Temperature</string>
+	<string name="devices__type_unknown">Unknown</string>
 	<string name="devices__val_boiler_operation_mode_automatic">Automatic</string>
 	<string name="devices__val_boiler_operation_mode_manual">Manual</string>
 	<string name="devices__val_boiler_operation_mode_vacation">Vacation</string>

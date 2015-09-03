@@ -19,18 +19,18 @@ import com.rehivetech.beeeon.household.device.values.UnknownValue;
  */
 public enum ModuleType {
 
-	TYPE_ENUM(0x01, R.string.dev_enum_type, EnumValue.class, false),
-	TYPE_TEMPERATURE(0x02, R.string.dev_temperature_type, TemperatureValue.class, false),
-	TYPE_HUMIDITY(0x03, R.string.dev_temperature_type, HumidityValue.class, false),
-	TYPE_PRESSURE(0x04, R.string.dev_pressure_type, PressureValue.class, false),
-	TYPE_LIGHT(0x05, R.string.dev_illumination_type, IlluminationValue.class, false),
-	TYPE_NOISE(0x06, R.string.dev_noise_type, NoiseValue.class, false),
-	TYPE_CO2(0x07, R.string.dev_emission_type, EmissionValue.class, false),
+	TYPE_ENUM(0x01, R.string.devices__type_enum, EnumValue.class, false),
+	TYPE_TEMPERATURE(0x02, R.string.devices__type_temperature, TemperatureValue.class, false),
+	TYPE_HUMIDITY(0x03, R.string.devices__type_humidity, HumidityValue.class, false),
+	TYPE_PRESSURE(0x04, R.string.devices__type_pressure, PressureValue.class, false),
+	TYPE_LIGHT(0x05, R.string.devices__type_light, IlluminationValue.class, false),
+	TYPE_NOISE(0x06, R.string.devices__type_noise, NoiseValue.class, false),
+	TYPE_CO2(0x07, R.string.devices__type_co2, EmissionValue.class, false),
 	TYPE_BATTERY(0x08, R.string.devices__type_battery, BatteryValue.class, true),
 	TYPE_RSSI(0x09, R.string.devices__type_rssi, RssiValue.class, true),
 	TYPE_REFRESH(0x0A, R.string.devices__type_refresh, RefreshValue.class, true),
 
-	TYPE_UNKNOWN(-1, R.string.dev_unknown_type, UnknownValue.class, false);
+	TYPE_UNKNOWN(-1, R.string.devices__type_unknown, UnknownValue.class, false);
 
 	private final int mTypeId;
 	private final int mNameRes;

@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="dev_enum_type">Zoznamový typ</string>
-
-	<!-- Types of modules -->
-	<string name="dev_unknown_type">Neznáme zariadenie</string>
-	<!-- Sensors -->
-	<string name="dev_temperature_type">Senzor teploty</string>
-	<string name="dev_humidity_type">Senzor vlhkosti</string>
-	<string name="dev_pressure_type">Senzor tlaku</string>
-	<string name="dev_open_closed_type">Senzor otvorenia/zatvorenia</string>
-	<string name="dev_on_off_type">Senzor zapnutia/vypnutia</string>
-	<string name="dev_illumination_type">Senzor osvetlenia</string>
-	<string name="dev_noise_type">Senzor hluku</string>
-	<string name="dev_emission_type">Senzor emisií</string>
-
 	<!-- Names of default locations -->
 	<string name="loc_none">- Nezaradené -</string>
 	<string name="loc_bathroom">Kúpeľna</string>
@@ -23,5 +9,4 @@
 	<string name="loc_living_room">Obývacia izba</string>
 	<string name="loc_wc">WC</string>
 	<string name="loc_cellar">Pivnica</string>
-
 </resources>

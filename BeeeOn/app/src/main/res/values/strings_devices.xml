@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
-	<string name="dev_enum_type">Enum type</string>
-
 	<!-- Units of modules -->
 	<string name="unit_temperature_celsius_full" translatable="false">Celsius</string>
 	<string name="unit_temperature_celsius" translatable="false">°C</string>
@@ -35,16 +33,4 @@
 	<string name="loc_living_room">Living room</string>
 	<string name="loc_wc">WC</string>
 	<string name="loc_cellar">Cellar</string>
-
-	<!-- Types of modules -->
-	<string name="dev_unknown_type">Unknown module</string>
-	<!-- Sensors -->
-	<string name="dev_temperature_type">Thermometer</string>
-	<string name="dev_humidity_type">Hygrometer</string>
-	<string name="dev_pressure_type">Barometer</string>
-	<string name="dev_open_closed_type">Open/closed sensor</string>
-	<string name="dev_on_off_type">On/Off sensor</string>
-	<string name="dev_illumination_type">Photometer</string>
-	<string name="dev_noise_type">Sound meter</string>
-	<string name="dev_emission_type">Emission meter</string>
 </resources>

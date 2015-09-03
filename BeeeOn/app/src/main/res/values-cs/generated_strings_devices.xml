@@ -26,6 +26,7 @@
 	<string name="devices__type_refresh">Interval aktualizace</string>
 	<string name="devices__type_rssi">Signál</string>
 	<string name="devices__type_temperature">Teplota</string>
+	<string name="devices__type_unknown">Neznámý</string>
 	<string name="devices__val_boiler_operation_mode_automatic">Automaticky</string>
 	<string name="devices__val_boiler_operation_mode_manual">Manuální</string>
 	<string name="devices__val_boiler_operation_mode_vacation">Dovolená</string>
