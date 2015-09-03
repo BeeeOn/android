@@ -110,19 +110,13 @@ public class AddDeviceFragment extends TrackFragment {
 		}
 	}
 
-	public void continueTimer() {
-		mCallback.setNextButtonEnabled(false);
-		mSendPairTextView.setText(R.string.device_add_shake_it_text);
-		long diffTimeMSec = (long) (Constants.PAIR_TIME_SEC * 1000) - ((System.nanoTime() / 1000000) - mStartTimeMSec);
-		if (diffTimeMSec < 0) {
-			Log.w(TAG, "diffTimeMSec is less than zero!");
-			return;
-		}
-		mCountDownTimer = new CountDownTimer(diffTimeMSec + 500, 500) {
+	private void createAndStartTimer(final long timeMsecs) {
+		// the timer should start counting down from whole number, so another tick needs to be rounded up (must be > 0.5), that's why + 500
+		mCountDownTimer = new CountDownTimer(timeMsecs + 500, 500) {
 			@Override
 			public void onTick(long millisUntilFinished) {
-				int timerValue = (int) (millisUntilFinished / 1000);
-				mDonutProgress.setProgress(timerValue);
+				int timerValueSec = (int) (millisUntilFinished / 1000);
+				mDonutProgress.setProgress(timerValueSec);
 			}
 
 			@Override
@@ -131,6 +125,17 @@ public class AddDeviceFragment extends TrackFragment {
 				resetTimer();
 			}
 		}.start();
+	}
+
+	public void continueTimer() {
+		mCallback.setNextButtonEnabled(false);
+		mSendPairTextView.setText(R.string.device_add_shake_it_text);
+		long diffTimeMSec = (long) (Constants.PAIR_TIME_SEC * 1000) - ((System.nanoTime() / 1000000) - mStartTimeMSec);
+		if (diffTimeMSec < 0) {
+			Log.w(TAG, "diffTimeMSec is less than zero!");
+			return;
+		}
+		createAndStartTimer(diffTimeMSec);
 
 		doPairRequestTask(mStartTimeMSec);
 	}
@@ -144,10 +149,12 @@ public class AddDeviceFragment extends TrackFragment {
 				// Reset time of pairing start so it won't start again, when it already finished
 				mStartTimeMSec = 0;
 
+				if (mCountDownTimer != null) {
+					mCountDownTimer.cancel();
+				}
+
 				if (success) {
 					Toast.makeText(getActivity(), R.string.device_add_device_found, Toast.LENGTH_LONG).show();
-
-					mCountDownTimer.cancel();
 
 					// go to setup uninit device
 					Intent intent = new Intent(getActivity(), SetupDeviceActivity.class);
@@ -157,7 +164,6 @@ public class AddDeviceFragment extends TrackFragment {
 					if (pairDeviceTask.getException() == null) {
 						Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();
 					}
-					mCountDownTimer.cancel();
 					resetTimer();
 				}
 			}
@@ -177,20 +183,7 @@ public class AddDeviceFragment extends TrackFragment {
 		mDonutProgress.setUnfinishedStrokeColor(getResources().getColor(R.color.white));
 		mSendPairTextView.setText(R.string.device_add_shake_it_text);
 
-		// the timer should start counting down from 30, thats why + 500
-		mCountDownTimer = new CountDownTimer(Constants.PAIR_TIME_SEC * 1000 + 500, 500) {
-
-			public void onTick(long millisUntilFinished) {
-				int timerValueSec = (int) (millisUntilFinished / 1000);
-				mDonutProgress.setProgress(timerValueSec);
-			}
-
-			public void onFinish() {
-				Toast.makeText(getActivity(), R.string.device_add_device_not_found_in_time, Toast.LENGTH_LONG).show();
-				resetTimer();
-			}
-
-		}.start();
+		createAndStartTimer(Constants.PAIR_TIME_SEC * 1000);
 
 		doPairRequestTask(0);
 	}
