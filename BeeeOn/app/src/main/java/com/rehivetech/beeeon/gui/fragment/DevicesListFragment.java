@@ -39,7 +39,7 @@ import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DevicesListFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, IPositiveButtonDialogListener {
+public class DevicesListFragment extends BaseApplicationFragmentWithReloadDataTask implements DeviceRecycleAdapter.IItemClickListener, IPositiveButtonDialogListener {
 	@SuppressWarnings("unused")
 	private static final String TAG = DevicesListFragment.class.getSimpleName();
 
@@ -268,6 +268,12 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		});
 
 		mActivity.callbackTaskManager.executeTask(reloadGateDataTask, gateId);
+	}
+
+	@Override
+	public void doDataReloadTask(boolean forceRefresh) {
+		Toast.makeText(getActivity(),"Reloading...DEBUG",Toast.LENGTH_SHORT).show();
+		doReloadDevicesTask(mActiveGateId,forceRefresh);
 	}
 
 	/**

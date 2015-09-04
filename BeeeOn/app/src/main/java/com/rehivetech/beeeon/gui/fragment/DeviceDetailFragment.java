@@ -26,6 +26,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.rehivetech.beeeon.IconResourceType;
@@ -53,7 +54,7 @@ import java.util.List;
 /**
  * @author martin on 4.8.2015.
  */
-public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener {
+public class DeviceDetailFragment extends BaseApplicationFragmentWithReloadDataTask implements DeviceModuleAdapter.ItemClickListener {
 
 	private static final String TAG = DeviceDetailFragment.class.getSimpleName();
 
@@ -405,6 +406,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		// Remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, gateId);
+	}
+
+	@Override
+	public void doDataReloadTask(boolean forceRefresh) {
+		Toast.makeText(getActivity(), "Reloading...DEBUG", Toast.LENGTH_SHORT).show();
+		doReloadDevicesTask(mGateId, forceRefresh);
 	}
 
 	private void doChangeStateModuleTask(final Module module) {

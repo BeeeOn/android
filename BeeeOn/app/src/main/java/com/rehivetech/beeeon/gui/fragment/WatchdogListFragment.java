@@ -39,7 +39,7 @@ import java.util.List;
  *
  * @author mlyko
  */
-public class WatchdogListFragment extends BaseApplicationFragment {
+public class WatchdogListFragment extends BaseApplicationFragmentWithReloadDataTask {
 	private static final String TAG = WatchdogListFragment.class.getSimpleName();
 
 	private static final String GATE_ID = "lastGateId";
@@ -293,6 +293,12 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(reloadWatchdogTask, gateId);
+	}
+
+	@Override
+	public void doDataReloadTask(boolean forceRefresh) {
+		Toast.makeText(getActivity(),"Reloading...DEBUG",Toast.LENGTH_SHORT).show();
+		doReloadWatchdogsTask(mActiveGateId, forceRefresh);
 	}
 
 	/**

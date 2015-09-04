@@ -30,7 +30,7 @@ public abstract class BaseApplicationFragmentWithReloadDataTask extends BaseAppl
 	@Override
 	public void onPause() {
 		super.onPause();
-		mReloadTimer.cancel();
+		mReloadTimer = null;
 	}
 
 	private void setTimerForReloadTasks() {
@@ -40,13 +40,13 @@ public abstract class BaseApplicationFragmentWithReloadDataTask extends BaseAppl
 
 		if(period > 0) {
 			// 0 means do not reload data
-
+			mReloadTimer = new Timer();
 			mReloadTimer.schedule(new TimerTask() {
 				@Override
 				public void run() {
 					doDataReloadTask(false);
 				}
-			}, 0, period);
+			}, period, period);
 		}
 	}
 

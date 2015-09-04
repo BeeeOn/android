@@ -50,7 +50,7 @@ import java.util.List;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 
-public class ModuleListFragment extends BaseApplicationFragment {
+public class ModuleListFragment extends BaseApplicationFragmentWithReloadDataTask {
 
 	private static final String TAG = ModuleListFragment.class.getSimpleName();
 
@@ -420,6 +420,11 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(fullReloadTask);
+	}
+
+	@Override
+	public void doDataReloadTask(boolean forceRefresh) {
+		doFullReloadTask(forceRefresh);
 	}
 
 	public void doRemoveDeviceTask(Device device) {
