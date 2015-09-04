@@ -297,7 +297,6 @@ public class WatchdogListFragment extends BaseApplicationFragmentWithReloadDataT
 
 	@Override
 	public void doDataReloadTask(boolean forceRefresh) {
-		Toast.makeText(getActivity(),"Reloading...DEBUG",Toast.LENGTH_SHORT).show();
 		doReloadWatchdogsTask(mActiveGateId, forceRefresh);
 	}
 

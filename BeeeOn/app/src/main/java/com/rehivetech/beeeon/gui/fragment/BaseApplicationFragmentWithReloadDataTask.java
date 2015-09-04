@@ -1,52 +1,42 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
+import android.os.Handler;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.ActualizationTime;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by david on 3.9.15.
  */
 public abstract class BaseApplicationFragmentWithReloadDataTask extends BaseApplicationFragment {
-	private Timer mReloadTimer;
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mReloadTimer = new Timer();
-	}
+	private Handler mHandler;
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		setTimerForReloadTasks();
+		setHandler();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mReloadTimer = null;
+		mHandler = null;
 	}
 
-	private void setTimerForReloadTasks() {
+	private void setHandler() {
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
 		String time = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, null);
 		int period = Integer.parseInt(time) * 1000;
 
-		if(period > 0) {
-			// 0 means do not reload data
-			mReloadTimer = new Timer();
-			mReloadTimer.schedule(new TimerTask() {
+		if (period > 0) {
+			mHandler = new Handler();
+			mHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					doDataReloadTask(false);
 				}
-			}, period, period);
+			}, period);
 		}
 	}
 
