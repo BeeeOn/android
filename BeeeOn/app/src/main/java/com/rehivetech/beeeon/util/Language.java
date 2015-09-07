@@ -16,32 +16,13 @@ public class Language extends SettingsItem {
 	public static final int CZECH = 2;
 	public static final int SLOVAK = 3;
 
-	//TODO this class is also in timezone
-	public class Item extends BaseItem {
-		private final int mResName;
-
-		protected Item(int id, int resName) {
-			super(id);
-
-			this.mResName = resName;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public String getSettingsName(Context context) {
-			return context.getString(mResName);
-		}
-	}
-
 	public Language() {
 		super();
 
-		mItems.add(this.new Item(FROM_SYSTEM, 0));
-		mItems.add(this.new Item(ENGLISH, 0));
-		mItems.add(this.new Item(CZECH, 0));
-		mItems.add(this.new Item(SLOVAK, 0));
+		mItems.add(this.new BaseItem(FROM_SYSTEM, 0));
+		mItems.add(this.new BaseItem(ENGLISH, 0));
+		mItems.add(this.new BaseItem(CZECH, 0));
+		mItems.add(this.new BaseItem(SLOVAK, 0));
 	}
 
 	@Override

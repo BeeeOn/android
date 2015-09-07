@@ -14,34 +14,14 @@ public class ActualizationTime extends SettingsItem {
 	public static final int THIRTY_SECONDS = 3;
 	public static final int SIXTY_SECONDS = 4;
 
-
-	//TODO: is it necessary to have items class in every SettingsItem class?
-	public class Item extends BaseItem{
-		private final int mResName;
-
-		protected Item(int id, int resName) {
-			super(id);
-
-			this.mResName = resName;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public String getSettingsName(Context context) {
-			return context.getString(mResName);
-		}
-	}
-
 	public ActualizationTime() {
 		super();
 
-		mItems.add(new Item(DO_NOT_ACTUALIZE, 0));
-		mItems.add(new Item(FIVE_SECONDS,0));
-		mItems.add(new Item(TEN_SECONDS,0));
-		mItems.add(new Item(THIRTY_SECONDS,0));
-		mItems.add(new Item(SIXTY_SECONDS,0));
+		mItems.add(new BaseItem(DO_NOT_ACTUALIZE, 0));
+		mItems.add(new BaseItem(FIVE_SECONDS, 0));
+		mItems.add(new BaseItem(TEN_SECONDS, 0));
+		mItems.add(new BaseItem(THIRTY_SECONDS, 0));
+		mItems.add(new BaseItem(SIXTY_SECONDS, 0));
 	}
 
 	@Override

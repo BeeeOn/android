@@ -10,29 +10,11 @@ public class Timezone extends SettingsItem {
 	public static final int ACTUAL = 0;
 	public static final int GATE = 1;
 
-	public class Item extends BaseItem {
-		private final int mResName;
-
-		protected Item(int id, int resName) {
-			super(id);
-
-			this.mResName = resName;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public String getSettingsName(Context context) {
-			return context.getString(mResName);
-		}
-	}
-
 	public Timezone() {
 		super();
 
-		mItems.add(this.new Item(ACTUAL, R.string.util_timezone_actual_timezone));
-		mItems.add(this.new Item(GATE, R.string.util_timezone_gate_timezone));
+		mItems.add(this.new BaseItem(ACTUAL, R.string.util_timezone_actual_timezone));
+		mItems.add(this.new BaseItem(GATE, R.string.util_timezone_gate_timezone));
 	}
 
 	@Override

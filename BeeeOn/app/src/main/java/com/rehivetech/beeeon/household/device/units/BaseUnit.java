@@ -11,7 +11,7 @@ public abstract class BaseUnit extends SettingsItem {
 		private final int mResUnitShortName;
 
 		protected Item(int id, int resUnitName, int resUnitShortName) {
-			super(id);
+			super(id, 0); // we set resName to 0, because we use own 2 res field and rewrite default getSettingsName(Context) method anyway
 
 			this.mResUnitName = resUnitName;
 			this.mResUnitShortName = resUnitShortName;

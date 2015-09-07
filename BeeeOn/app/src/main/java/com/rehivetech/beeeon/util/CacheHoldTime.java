@@ -15,35 +15,15 @@ public class CacheHoldTime extends SettingsItem{
 	public static final int TEN_MINUTES = 4;
 	public static final int THIRY_MINUTES = 5;
 
-
-	//TODO: is it necessary to have items class in every SettingsItem class?
-	public class Item extends SettingsItem.BaseItem {
-		private final int mResName;
-
-		protected Item(int id, int resName) {
-			super(id);
-
-			this.mResName = resName;
-		}
-
-		/**
-		 * {@inheritDoc}
-		 */
-		@Override
-		public String getSettingsName(Context context) {
-			return context.getString(mResName);
-		}
-	}
-
 	public CacheHoldTime() {
 		super();
 
-		mItems.add(new Item(DO_NOT_ACTUALIZE, 0));
-		mItems.add(new Item(ONE_MINUTE,0));
-		mItems.add(new Item(TWO_MINUTES,0));
-		mItems.add(new Item(FIVE_MINUTES,0));
-		mItems.add(new Item(TEN_MINUTES,0));
-		mItems.add(new Item(THIRY_MINUTES,0));
+		mItems.add(new BaseItem(DO_NOT_ACTUALIZE, 0));
+		mItems.add(new BaseItem(ONE_MINUTE,0));
+		mItems.add(new BaseItem(TWO_MINUTES,0));
+		mItems.add(new BaseItem(FIVE_MINUTES,0));
+		mItems.add(new BaseItem(TEN_MINUTES,0));
+		mItems.add(new BaseItem(THIRY_MINUTES,0));
 	}
 
 	@Override
