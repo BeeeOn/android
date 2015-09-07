@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
@@ -30,8 +31,10 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
+import com.rehivetech.beeeon.util.ActualizationTime;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
@@ -39,13 +42,17 @@ import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DevicesListFragment extends BaseApplicationFragmentWithReloadDataTask implements DeviceRecycleAdapter.IItemClickListener, IPositiveButtonDialogListener {
+public class DevicesListFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, IPositiveButtonDialogListener {
 	@SuppressWarnings("unused")
 	private static final String TAG = DevicesListFragment.class.getSimpleName();
 
 	//private static final String KEY_LOC_ID = "location_id";
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_SELECTED_ITEMS = "selected_items";
+	private static final String DEVICE_LIST_FRAGMENT_AUTO_RELOAD_ID = "deviceListFragmentAutoReload";
+
+	private ICallbackTaskFactory mICallbackTaskFactory;
+
 
 	private
 	@Nullable
@@ -81,7 +88,39 @@ public class DevicesListFragment extends BaseApplicationFragmentWithReloadDataTa
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mActiveGateId = getArguments().getString(KEY_GATE_ID);
+		setAutoReloadDataTimer();
 	}
+
+	private void setAutoReloadDataTimer() {
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, null);
+		int period = Integer.parseInt(reloadTime);
+
+		mICallbackTaskFactory = new ICallbackTaskFactory() {
+			@Override
+			public CallbackTask createTask() {
+				ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, ReloadGateDataTask.ReloadWhat.DEVICES);
+				reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						if (!success) return;
+
+						// stop refreshing
+						updateData();
+					}
+				});
+				return reloadGateDataTask;
+			}
+
+			@Override
+			public Object createParam() {
+				return null;
+			}
+		};
+		if (period > 0)    // zero means do not update
+			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_LIST_FRAGMENT_AUTO_RELOAD_ID, period);
+	}
+
 
 	/**
 	 * Initializes whole layout (need to findView from rootView)
@@ -256,24 +295,7 @@ public class DevicesListFragment extends BaseApplicationFragmentWithReloadDataTa
 	 * @param forceRefresh
 	 */
 	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
-		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
-		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (!success) return;
-
-				// stop refreshing
-				updateData();
-			}
-		});
-
-		mActivity.callbackTaskManager.executeTask(reloadGateDataTask, gateId);
-	}
-
-	@Override
-	public void doDataReloadTask(boolean forceRefresh) {
-		Toast.makeText(getActivity(),"Reloading...DEBUG",Toast.LENGTH_SHORT).show();
-		doReloadDevicesTask(mActiveGateId,forceRefresh);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId);
 	}
 
 	/**

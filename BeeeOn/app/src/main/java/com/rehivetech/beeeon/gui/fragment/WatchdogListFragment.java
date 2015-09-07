@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SwitchCompat;
@@ -27,9 +28,11 @@ import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveWatchdogTask;
 import com.rehivetech.beeeon.threading.task.SaveWatchdogTask;
+import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.Log;
 
 import java.util.List;
@@ -39,10 +42,11 @@ import java.util.List;
  *
  * @author mlyko
  */
-public class WatchdogListFragment extends BaseApplicationFragmentWithReloadDataTask {
+public class WatchdogListFragment extends BaseApplicationFragment {
 	private static final String TAG = WatchdogListFragment.class.getSimpleName();
 
 	private static final String GATE_ID = "lastGateId";
+	private static final String WATCHDOG_AUTO_RELOAD_ID = "watchdogAutoReload";
 
 	private MainActivity mActivity;
 
@@ -59,6 +63,8 @@ public class WatchdogListFragment extends BaseApplicationFragmentWithReloadDataT
 
 	private Watchdog mSelectedItem;
 	private int mSelectedItemPos;
+
+	private ICallbackTaskFactory mICallbackTaskFactory;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -85,6 +91,35 @@ public class WatchdogListFragment extends BaseApplicationFragmentWithReloadDataT
 		if (savedInstanceState != null) {
 			mActiveGateId = savedInstanceState.getString(GATE_ID);
 		}
+		setAutoReloadDataTimer();
+	}
+
+	private void setAutoReloadDataTimer() {
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, null);
+		int period = Integer.parseInt(reloadTime);
+
+		mICallbackTaskFactory = new ICallbackTaskFactory() {
+			@Override
+			public CallbackTask createTask() {
+				ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
+
+				reloadWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						redrawRules();
+					}
+				});
+				return reloadWatchdogTask;
+			}
+
+			@Override
+			public Object createParam() {
+				return null;
+			}
+		};
+		if (period > 0)    // zero means do not update
+			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, WATCHDOG_AUTO_RELOAD_ID, period);
 	}
 
 	@Override
@@ -282,22 +317,8 @@ public class WatchdogListFragment extends BaseApplicationFragmentWithReloadDataT
 	public void doReloadWatchdogsTask(String gateId, boolean forceReload) {
 		Log.d(TAG, "reloadWatchdogsTask()");
 
-		ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, forceReload, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
-
-		reloadWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				redrawRules();
-			}
-		});
-
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadWatchdogTask, gateId);
-	}
-
-	@Override
-	public void doDataReloadTask(boolean forceRefresh) {
-		doReloadWatchdogsTask(mActiveGateId, forceRefresh);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId);
 	}
 
 	/**

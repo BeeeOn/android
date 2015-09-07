@@ -26,7 +26,6 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.rehivetech.beeeon.IconResourceType;
@@ -43,8 +42,10 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 
@@ -54,13 +55,15 @@ import java.util.List;
 /**
  * @author martin on 4.8.2015.
  */
-public class DeviceDetailFragment extends BaseApplicationFragmentWithReloadDataTask implements DeviceModuleAdapter.ItemClickListener {
+public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener {
 
 	private static final String TAG = DeviceDetailFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gateId";
 	private static final String KEY_DEVICE_ID = "deviceId";
 	private static final String KEY_VIEW_PAGER_SELECTED_ITEM = "selected_item";
+	private static final String DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID = "deviceDetailFragmentAutoReload";
+
 
 	private static final int REQUEST_SET_ACTUATOR = 7894;
 
@@ -84,6 +87,8 @@ public class DeviceDetailFragment extends BaseApplicationFragmentWithReloadDataT
 
 	private ViewPager mViewPager;
 	private TabLayout mTabLayout;
+
+	private ICallbackTaskFactory mICallbackTaskFactory;
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 
@@ -195,6 +200,42 @@ public class DeviceDetailFragment extends BaseApplicationFragmentWithReloadDataT
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		setHasOptionsMenu(true);
+		setAutoReloadDataTimer();
+	}
+
+	private void setAutoReloadDataTimer() {
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, null);
+		int period = Integer.parseInt(reloadTime);
+
+		mICallbackTaskFactory = new ICallbackTaskFactory() {
+			@Override
+			public CallbackTask createTask() {
+				ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.DEVICES);
+
+				final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
+
+				reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						if (success) {
+							updateLayout();
+							if (mViewPager != null) {
+								mViewPager.setCurrentItem(tabPos);
+							}
+						}
+					}
+				});
+				return reloadDevicesTask;
+			}
+
+			@Override
+			public Object createParam() {
+				return null;
+			}
+		};
+		if (period > 0)    // zero means do not update
+			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID, period);
 	}
 
 	@Override
@@ -388,29 +429,8 @@ public class DeviceDetailFragment extends BaseApplicationFragmentWithReloadDataT
 	}
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
-		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
-
-		final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
-
-		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					updateLayout();
-					if (mViewPager != null) {
-						mViewPager.setCurrentItem(tabPos);
-					}
-				}
-			}
-		});
-
 		// Remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, gateId);
-	}
-
-	@Override
-	public void doDataReloadTask(boolean forceRefresh) {
-		doReloadDevicesTask(mGateId, forceRefresh);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId);
 	}
 
 	private void doChangeStateModuleTask(final Module module) {
