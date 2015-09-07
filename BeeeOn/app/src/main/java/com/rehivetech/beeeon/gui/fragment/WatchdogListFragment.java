@@ -96,7 +96,9 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 	private void setAutoReloadDataTimer() {
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
-		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, null);
+		if(prefs == null)
+			return;
+		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, "0");
 		int period = Integer.parseInt(reloadTime);
 
 		mICallbackTaskFactory = new ICallbackTaskFactory() {

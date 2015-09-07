@@ -117,14 +117,13 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			mFirstUseAddGate = prefs.getBoolean(Constants.TUTORIAL_ADD_GATE_SHOWED, true);
 			mFirstUseAddDevice = prefs.getBoolean(Constants.TUTORIAL_ADD_DEVICE_SHOWED, true);
 		}
-
-		setAutoReloadDataTimer();
-
 	}
 
 	private void setAutoReloadDataTimer() {
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
-		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, null);
+		if(prefs == null)
+			return;
+		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, "0");
 		int period = Integer.parseInt(reloadTime);
 		Toast.makeText(getActivity(),"Time = " + period,Toast.LENGTH_SHORT).show();
 
@@ -183,6 +182,12 @@ public class ModuleListFragment extends BaseApplicationFragment {
 				mActivity.redraw();
 			}
 		});
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		setAutoReloadDataTimer();
 	}
 
 	public void onPause() {
