@@ -2,10 +2,8 @@
 
 	<ListPreference
 		android:dialogTitle="@string/prefs_choose_language"
-		android:key="pref_language"
-		android:title="@string/prefs_choose_language"
-		android:entries="@array/language_pref_entry_value"
-		android:entryValues="@array/language_pref_entry">
+		android:key="pref_language1"
+		android:title="@string/prefs_choose_language">
 	</ListPreference>
 
 	<ListPreference
@@ -29,15 +27,11 @@
 
 		<ListPreference
 			android:key="pref_actualization"
-			android:title="@string/settings_actualization_screen_title"
-			android:entries="@array/actualizaton_pref_entry"
-			android:entryValues="@array/actualization_pref_entry_value"/>
+			android:title="@string/settings_actualization_screen_title"/>
 
 		<ListPreference
 			android:key="pref_cache"
-			android:title="@string/settings_cache_reload_title"
-			android:entries="@array/cache_reload_pref_entry"
-			android:entryValues="@array/cache_reload_pref_entry_value"/>
+			android:title="@string/settings_cache_reload_title"/>
 
 	</PreferenceCategory>
 

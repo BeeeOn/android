@@ -65,17 +65,34 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	private void setLocale() {
 		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
-		if(prefs == null)
+		if (prefs == null)
 			return;
-		String lang = prefs.getString(Language.PERSISTENCE_PREF_LANGUAGE, "df");
-		if (!lang.equals("df")) {
-			Locale locale = new Locale(lang);
-			Resources res = getResources();
-			DisplayMetrics dm = res.getDisplayMetrics();
-			Configuration conf = res.getConfiguration();
-			conf.locale = locale;
-			res.updateConfiguration(conf, dm);
+		String langValue = prefs.getString(Language.PERSISTENCE_PREF_LANGUAGE, "0");
+
+		String lang;
+		switch (Integer.parseInt(langValue)){
+			case Language.FROM_SYSTEM:
+				lang = Locale.getDefault().toString();
+				break;
+			case Language.ENGLISH:
+				lang = "en";
+				break;
+			case Language.CZECH:
+				lang = "cs";
+				break;
+			case Language.SLOVAK:
+				lang = "sk";
+				break;
+			default:
+				return;
 		}
+
+		Locale locale = new Locale(lang);
+		Resources res = getResources();
+		DisplayMetrics dm = res.getDisplayMetrics();
+		Configuration conf = res.getConfiguration();
+		conf.locale = locale;
+		res.updateConfiguration(conf, dm);
 	}
 
 

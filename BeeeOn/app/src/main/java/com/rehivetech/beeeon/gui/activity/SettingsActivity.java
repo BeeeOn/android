@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.MainSettingsFragment;
+import com.rehivetech.beeeon.util.Language;
 
 import java.util.Locale;
 
@@ -30,13 +31,7 @@ public class SettingsActivity extends BaseApplicationActivity implements MainSet
 		getSupportFragmentManager().beginTransaction().replace(R.id.settings_activity_fragment_holder, new MainSettingsFragment()).commit();
 	}
 
-	public void setLocale(String lang) {
-		Locale locale = new Locale(lang);
-		Resources res = getResources();
-		DisplayMetrics dm = res.getDisplayMetrics();
-		Configuration conf = res.getConfiguration();
-		conf.locale = locale;
-		res.updateConfiguration(conf, dm);
+	public void refreshActivity() {
 		Intent refresh = new Intent(this, SettingsActivity.class);
 		refresh.setFlags(refresh.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
 		startActivity(refresh);

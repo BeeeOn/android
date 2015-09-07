@@ -383,6 +383,21 @@
 	<string name="device_type_unknown_device">Unknown device</string>
 	<string name="device_type_unknown_manufacturer">Unknown manufacturer</string>
 	<string name="prefs_choose_language">Language</string>
+	<string name="language_listpreference_default">Use the system language</string>
+	<string name="language_listpreference_english">English</string>
+	<string name="language_listpreference_czech">Czech</string>
+	<string name="language_listpreference_slovak">Slovak</string>
+	<string name="actualizationtime_listpreference_dont_actualize">Do not actualize</string>
+	<string name="actualizationtime_listpreference_five_secs">Five seconds</string>
+	<string name="actualizationtime_listpreference_ten_secs">Ten seconds</string>
+	<string name="actualizationtime_listpreference_thirty_secs">Thirty seconds</string>
+	<string name="actualizationtime_listpreference_sixty_secs">Sixty seconds</string>
+	<string name="cache_listpreference_do_not_store">Do not store cache</string>
+	<string name="cache_listpreference_one_minute">One minute</string>
+	<string name="cache_listpreference_two_minutes">Two minutes</string>
+	<string name="cache_listpreference_five_minutes">Five minutes</string>
+	<string name="cache_listpreference_ten_minutes">Ten minutes</string>
+	<string name="cache_listpreference_thirty_minutes">Thirty minutes</string>
 
 </resources>
 

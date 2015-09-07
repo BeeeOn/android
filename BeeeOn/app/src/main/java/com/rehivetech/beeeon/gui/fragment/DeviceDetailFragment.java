@@ -204,11 +204,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	}
 
 	private void setAutoReloadDataTimer() {
-		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
-		if(prefs == null)
-			return;
-		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, "0");
-		int period = Integer.parseInt(reloadTime);
+		int period = ActualizationTime.getTimeFromPrefsInMillis(getActivity());
 
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override

@@ -120,13 +120,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 	}
 
 	private void setAutoReloadDataTimer() {
-		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
-		if(prefs == null)
-			return;
-		String reloadTime = prefs.getString(ActualizationTime.PERSISTENCE_ACTUALIZATON_KEY, "0");
-		int period = Integer.parseInt(reloadTime);
-		Toast.makeText(getActivity(),"Time = " + period,Toast.LENGTH_SHORT).show();
-
+		int period = ActualizationTime.getTimeFromPrefsInMillis(getActivity());
 
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override
