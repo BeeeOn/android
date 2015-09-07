@@ -233,7 +233,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 			@Override
 			public Object createParam() {
-				return null;
+				return mGateId;
 			}
 		};
 		if (period > 0)    // zero means do not update
@@ -432,7 +432,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
 		// Remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
 	}
 
 	private void doChangeStateModuleTask(final Module module) {

@@ -116,7 +116,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 			@Override
 			public Object createParam() {
-				return null;
+				return mActiveGateId;
 			}
 		};
 		if (period > 0)    // zero means do not update
@@ -297,7 +297,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 * @param forceRefresh
 	 */
 	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
-		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
 	}
 
 	/**

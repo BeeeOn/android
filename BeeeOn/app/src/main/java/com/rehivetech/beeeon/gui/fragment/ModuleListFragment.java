@@ -147,7 +147,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 			@Override
 			public Object createParam() {
-				return null;
+				return mActiveGateId;
 			}
 		};
 		if (period > 0)    // zero means do not update

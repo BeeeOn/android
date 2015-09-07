@@ -117,7 +117,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 			@Override
 			public Object createParam() {
-				return null;
+				return mActiveGateId;
 			}
 		};
 		if (period > 0)    // zero means do not update
@@ -320,7 +320,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		Log.d(TAG, "reloadWatchdogsTask()");
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
 	}
 
 	/**
