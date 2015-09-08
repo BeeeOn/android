@@ -204,7 +204,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	}
 
 	private void setAutoReloadDataTimer() {
-		int period = ActualizationTime.getTimeFromPrefsInMillis(getActivity());
+		int period = ActualizationTime.getTimeFromPrefsInSecs(getActivity());
 
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override

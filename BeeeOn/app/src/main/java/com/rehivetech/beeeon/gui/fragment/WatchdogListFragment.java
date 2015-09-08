@@ -94,7 +94,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	}
 
 	private void setAutoReloadDataTimer() {
-		int period = ActualizationTime.getTimeFromPrefsInMillis(getActivity());
+		int period = ActualizationTime.getTimeFromPrefsInSecs(getActivity());
 
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override

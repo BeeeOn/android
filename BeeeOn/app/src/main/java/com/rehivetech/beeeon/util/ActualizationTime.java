@@ -38,11 +38,10 @@ public class ActualizationTime extends SettingsItem {
 		return PERSISTENCE_ACTUALIZATON_KEY;
 	}
 
-	public static int getTimeFromPrefsInMillis(Context context) {
+	public static int getTimeFromPrefsInSecs(Context context) {
 		SharedPreferences prefs = Controller.getInstance(context).getUserSettings();
 		if (prefs == null)
 			return 0; //do not actualize
-		int valueOf = Integer.parseInt(prefs.getString(PERSISTENCE_ACTUALIZATON_KEY, "0"));
-		return valueOf * 1000;
+		return Integer.parseInt(prefs.getString(PERSISTENCE_ACTUALIZATON_KEY, "0"));
 	}
 }

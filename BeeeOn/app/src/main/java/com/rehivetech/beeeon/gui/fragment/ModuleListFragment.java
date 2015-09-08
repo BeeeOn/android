@@ -120,7 +120,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 	}
 
 	private void setAutoReloadDataTimer() {
-		int period = ActualizationTime.getTimeFromPrefsInMillis(getActivity());
+		int period = ActualizationTime.getTimeFromPrefsInSecs(getActivity());
 
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override
@@ -132,6 +132,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 					public void onExecute(boolean success) {
 						if (!success)
 							return;
+
 						mActivity.setActiveGateAndMenu();
 						mActivity.redraw();
 					}
