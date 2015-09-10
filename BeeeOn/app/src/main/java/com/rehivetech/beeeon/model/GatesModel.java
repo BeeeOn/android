@@ -20,7 +20,7 @@ public class GatesModel extends BaseModel {
 
 	private final DataHolder<GateInfo> mGatesInfoHolder = new DataHolder<>();
 
-	public GatesModel(INetwork network,int reloadEvery) {
+	public GatesModel(INetwork network,Integer reloadEvery) {
 		super(network);
 		RELOAD_EVERY_SECONDS = reloadEvery;
 	}

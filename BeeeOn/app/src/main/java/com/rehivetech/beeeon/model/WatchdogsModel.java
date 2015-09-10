@@ -16,7 +16,7 @@ public class WatchdogsModel extends BaseModel {
 
 	private final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>(); // gateId => watchdog dataHolder
 
-	public WatchdogsModel(INetwork network, int reloadEvery) {
+	public WatchdogsModel(INetwork network, Integer reloadEvery) {
 		super(network);
 		RELOAD_EVERY_SECONDS = reloadEvery;
 	}

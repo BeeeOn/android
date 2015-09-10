@@ -16,7 +16,7 @@ public class UsersModel extends BaseModel {
 
 	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>(); // gateId => user dataHolder
 
-	public UsersModel(INetwork network, int reloadEvery) {
+	public UsersModel(INetwork network, Integer reloadEvery) {
 		super(network);
 		RELOAD_EVERY_SECONDS = reloadEvery;
 	}

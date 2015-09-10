@@ -21,7 +21,7 @@ public class LocationsModel extends BaseModel {
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // gateId => location dataHolder
 
-	public LocationsModel(INetwork network, Context context,int reloadEvery) {
+	public LocationsModel(INetwork network, Context context,Integer reloadEvery) {
 		super(network);
 		mNoLocationName = context.getString(R.string.loc_none);
 		RELOAD_EVERY_SECONDS = reloadEvery;

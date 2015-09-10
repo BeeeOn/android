@@ -27,7 +27,7 @@ public class DevicesModel extends BaseModel {
 
 	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
 
-	public DevicesModel(INetwork network,int reloadEvery) {
+	public DevicesModel(INetwork network,Integer reloadEvery) {
 		super(network);
 		RELOAD_EVERY_SECONDS = reloadEvery;
 	}

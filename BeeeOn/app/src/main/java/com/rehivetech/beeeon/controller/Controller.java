@@ -169,7 +169,7 @@ public final class Controller {
 		final String name = modelClass.getName();
 
 		SharedPreferences prefs = getUserSettings();
-		int reloadTime = 0;
+		Integer reloadTime = 0;
 		if(prefs != null){
 			String timeStr = prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY,"0");
 			reloadTime = Integer.parseInt(timeStr);
