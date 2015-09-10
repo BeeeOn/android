@@ -23,12 +23,13 @@ public class DevicesModel extends BaseModel {
 
 	private static final String TAG = DevicesModel.class.getSimpleName();
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private static int RELOAD_EVERY_SECONDS = 10 * 60;
 
 	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
 
-	public DevicesModel(INetwork network) {
+	public DevicesModel(INetwork network,int reloadEvery) {
 		super(network);
+		RELOAD_EVERY_SECONDS = reloadEvery;
 	}
 
 	/**

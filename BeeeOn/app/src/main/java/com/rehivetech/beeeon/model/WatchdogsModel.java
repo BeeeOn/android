@@ -12,12 +12,13 @@ import java.util.List;
 
 public class WatchdogsModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private static int RELOAD_EVERY_SECONDS = 10 * 60;
 
 	private final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>(); // gateId => watchdog dataHolder
 
-	public WatchdogsModel(INetwork network) {
+	public WatchdogsModel(INetwork network, int reloadEvery) {
 		super(network);
+		RELOAD_EVERY_SECONDS = reloadEvery;
 	}
 
 	/**

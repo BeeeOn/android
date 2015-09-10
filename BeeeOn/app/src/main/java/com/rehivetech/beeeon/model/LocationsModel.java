@@ -15,15 +15,16 @@ import java.util.List;
 
 public class LocationsModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private static int RELOAD_EVERY_SECONDS = 10 * 60;
 
 	private final String mNoLocationName;
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // gateId => location dataHolder
 
-	public LocationsModel(INetwork network, Context context) {
+	public LocationsModel(INetwork network, Context context,int reloadEvery) {
 		super(network);
 		mNoLocationName = context.getString(R.string.loc_none);
+		RELOAD_EVERY_SECONDS = reloadEvery;
 	}
 
 	private Location createNoLocation(String gateId) {

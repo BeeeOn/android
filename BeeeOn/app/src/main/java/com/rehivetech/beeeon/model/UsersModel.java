@@ -12,12 +12,13 @@ import java.util.List;
 
 public class UsersModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private static int RELOAD_EVERY_SECONDS = 10 * 60;
 
 	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>(); // gateId => user dataHolder
 
-	public UsersModel(INetwork network) {
+	public UsersModel(INetwork network, int reloadEvery) {
 		super(network);
+		RELOAD_EVERY_SECONDS = reloadEvery;
 	}
 
 	/**
