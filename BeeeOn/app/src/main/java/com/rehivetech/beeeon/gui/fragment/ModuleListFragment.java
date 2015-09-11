@@ -117,6 +117,8 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			mFirstUseAddGate = prefs.getBoolean(Constants.TUTORIAL_ADD_GATE_SHOWED, true);
 			mFirstUseAddDevice = prefs.getBoolean(Constants.TUTORIAL_ADD_DEVICE_SHOWED, true);
 		}
+		//setAutoReloadDataTimer();
+
 	}
 
 	private void setAutoReloadDataTimer() {
@@ -177,12 +179,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 				mActivity.redraw();
 			}
 		});
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		setAutoReloadDataTimer();
 	}
 
 	public void onPause() {
