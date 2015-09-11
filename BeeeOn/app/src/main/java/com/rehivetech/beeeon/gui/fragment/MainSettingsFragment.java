@@ -68,10 +68,11 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 		mCachePreference = (ListPreference) findPreference(CacheHoldTime.PERSISTENCE_CACHE_KEY);
 		mCacheHoldTime = new CacheHoldTime();
 
-		initListPrefFromItem(mTimeZonePref, mTimezone);
-		initListPrefFromItem(mLanguagePref, mLanguage);
-		initListPrefFromItem(mActualizationPreference, mActualizationTime);
-		initListPrefFromItem(mCachePreference, mCacheHoldTime);
+		Context context = getActivity();
+		initListPrefFromItem(mTimeZonePref, mTimezone, context);
+		initListPrefFromItem(mLanguagePref, mLanguage, context);
+		initListPrefFromItem(mActualizationPreference, mActualizationTime, context);
+		initListPrefFromItem(mCachePreference, mCacheHoldTime, context);
 
 		Preference units = findPreference(Constants.KEY_UNITS);
 		Intent intentUnit = new Intent(getActivity(), SettingsUnitActivity.class);
@@ -93,8 +94,7 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 
 	}
 
-	private void initListPrefFromItem(ListPreference listPreference, SettingsItem settingsItem) {
-		Context context = getActivity();
+	private void initListPrefFromItem(ListPreference listPreference, SettingsItem settingsItem, Context context) {
 		listPreference.setEntries(settingsItem.getEntries(context));
 		listPreference.setEntryValues(settingsItem.getEntryValues());
 		listPreference.setSummary(settingsItem.fromSettings(mSharedPreferences).getSettingsName(context));
@@ -114,15 +114,17 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equals(Language.PERSISTENCE_PREF_LANGUAGE)) {
 			mOnPreferenceChangedListener.refreshActivity();
-		} else {
-			checkAndSetSummary(mTimeZonePref, mTimezone, key);
-			checkAndSetSummary(mCachePreference, mCacheHoldTime, key);
-			checkAndSetSummary(mActualizationPreference, mActualizationTime, key);
+		} else if(key.equals(mTimezone.getPersistenceKey())) {
+			setSummary(mTimeZonePref, mTimezone);
+		} else if (key.equals(mCacheHoldTime.getPersistenceKey())){
+			setSummary(mCachePreference, mCacheHoldTime);
+		} else if(key.equals(mActualizationTime.getPersistenceKey())){
+			setSummary(mActualizationPreference, mActualizationTime);
 		}
 	}
 
-	private void checkAndSetSummary(ListPreference listPreference, SettingsItem settingsItem, String key) {
-		if (settingsItem != null && settingsItem.getPersistenceKey().equals(key) && listPreference != null) {
+	private void setSummary(ListPreference listPreference, SettingsItem settingsItem) {
+		if (settingsItem != null && listPreference != null) {
 			String summary = settingsItem.fromSettings(mSharedPreferences).getSettingsName(getActivity());
 			listPreference.setSummary(summary);
 		}

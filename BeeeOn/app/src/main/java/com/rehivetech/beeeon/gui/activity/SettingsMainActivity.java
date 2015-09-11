@@ -24,6 +24,7 @@ public class SettingsMainActivity extends BaseApplicationActivity implements Mai
 		getSupportFragmentManager().beginTransaction().replace(R.id.settings_activity_fragment_holder, new MainSettingsFragment()).commit();
 	}
 
+	// refesh activity after user change languge so the change can be seen imeediatelly
 	public void refreshActivity() {
 		Intent refresh = new Intent(this, SettingsMainActivity.class);
 		refresh.setFlags(refresh.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
