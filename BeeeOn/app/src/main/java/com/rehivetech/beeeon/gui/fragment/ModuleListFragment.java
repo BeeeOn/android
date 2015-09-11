@@ -117,7 +117,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			mFirstUseAddGate = prefs.getBoolean(Constants.TUTORIAL_ADD_GATE_SHOWED, true);
 			mFirstUseAddDevice = prefs.getBoolean(Constants.TUTORIAL_ADD_DEVICE_SHOWED, true);
 		}
-		//setAutoReloadDataTimer();
+		setAutoReloadDataTimer();
 
 	}
 
@@ -433,10 +433,13 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 			@Override
 			public void onExecute(boolean success) {
+				Log.d(TAG,"Executing task");
+
 				if (!success)
 					return;
 				Log.d(TAG, "Success -> refresh GUI");
 				mActivity.redraw();
+
 			}
 		});
 

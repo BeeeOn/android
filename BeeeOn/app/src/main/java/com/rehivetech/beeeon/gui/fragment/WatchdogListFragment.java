@@ -90,6 +90,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		if (savedInstanceState != null) {
 			mActiveGateId = savedInstanceState.getString(GATE_ID);
 		}
+		setAutoReloadDataTimer();
 	}
 
 
@@ -170,8 +171,6 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 		redrawRules();
 		// try to reload data
 		doReloadWatchdogsTask(mActiveGateId, false);
-
-		setAutoReloadDataTimer();
 	}
 
 	/**
