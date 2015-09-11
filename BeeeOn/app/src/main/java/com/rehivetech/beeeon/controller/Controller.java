@@ -168,18 +168,11 @@ public final class Controller {
 	public BaseModel getModelInstance(Class<? extends BaseModel> modelClass) {
 		final String name = modelClass.getName();
 
-		SharedPreferences prefs = getUserSettings();
-		Integer reloadTime = 0;
-		if(prefs != null){
-			String timeStr = prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY,"0");
-			reloadTime = Integer.parseInt(timeStr);
-		}
-
 		if (!mModels.containsKey(name)) {
 			synchronized (mModels) {
 				if (!mModels.containsKey(name)) {
 					// Known parameters we can automatically give to model constructor
-					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser,reloadTime};
+					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser,getUserSettings()};
 
 					// Create instance of the given model class
 					final Constructor constructor = modelClass.getConstructors()[0];

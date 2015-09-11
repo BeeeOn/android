@@ -1,10 +1,13 @@
 package com.rehivetech.beeeon.model;
 
+import android.content.SharedPreferences;
+
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.DataHolder;
 
 import org.joda.time.DateTime;
@@ -20,9 +23,9 @@ public class GatesModel extends BaseModel {
 
 	private final DataHolder<GateInfo> mGatesInfoHolder = new DataHolder<>();
 
-	public GatesModel(INetwork network,Integer reloadEvery) {
+	public GatesModel(INetwork network,SharedPreferences prefs) {
 		super(network);
-		RELOAD_EVERY_SECONDS = reloadEvery;
+		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
 	}
 
 	/**

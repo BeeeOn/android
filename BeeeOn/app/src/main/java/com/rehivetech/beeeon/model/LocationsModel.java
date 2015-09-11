@@ -1,11 +1,13 @@
 package com.rehivetech.beeeon.model;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -21,10 +23,10 @@ public class LocationsModel extends BaseModel {
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // gateId => location dataHolder
 
-	public LocationsModel(INetwork network, Context context,Integer reloadEvery) {
+	public LocationsModel(INetwork network, Context context, SharedPreferences prefs) {
 		super(network);
 		mNoLocationName = context.getString(R.string.loc_none);
-		RELOAD_EVERY_SECONDS = reloadEvery;
+		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
 	}
 
 	private Location createNoLocation(String gateId) {

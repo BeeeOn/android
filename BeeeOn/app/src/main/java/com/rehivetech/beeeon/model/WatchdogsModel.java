@@ -1,8 +1,11 @@
 package com.rehivetech.beeeon.model;
 
+import android.content.SharedPreferences;
+
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -16,9 +19,9 @@ public class WatchdogsModel extends BaseModel {
 
 	private final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>(); // gateId => watchdog dataHolder
 
-	public WatchdogsModel(INetwork network, Integer reloadEvery) {
+	public WatchdogsModel(INetwork network, SharedPreferences prefs) {
 		super(network);
-		RELOAD_EVERY_SECONDS = reloadEvery;
+		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
 	}
 
 	/**
