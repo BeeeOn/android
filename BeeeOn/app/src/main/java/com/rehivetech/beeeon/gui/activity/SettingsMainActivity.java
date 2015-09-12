@@ -33,6 +33,8 @@ public class SettingsMainActivity extends BaseApplicationActivity implements Mai
 
 	// refresh activity after user change language so the change can be seen immediately
 	public void refreshActivity() {
+		BaseApplicationActivity.activeLocale = null; // Force reload active locale
+
 		Intent refresh = new Intent(this, SettingsMainActivity.class);
 		refresh.setFlags(refresh.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
 		startActivity(refresh);

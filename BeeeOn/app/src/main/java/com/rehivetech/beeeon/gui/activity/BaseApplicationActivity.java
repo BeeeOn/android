@@ -40,6 +40,8 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	private boolean triedLoginAlready = false;
 
+	public static String activeLocale = null;
+
 	@Nullable
 	private View mProgressBar;
 	@Nullable
@@ -56,25 +58,27 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setLocale();
+
 		super.onCreate(savedInstanceState);
 
 		callbackTaskManager = new CallbackTaskManager(this);
-
-		setLocale();
 	}
 
 	private void setLocale() {
-		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
-		Language.Item lang = (Language.Item) new Language().fromSettings(prefs);
-		if (lang == null || lang.getId() == Language.FROM_SYSTEM) {
-			// System language is used by default, we don't need to change it
+		// We need to set locale only once per application lifetime
+		if (activeLocale != null) {
 			return;
 		}
+
+		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
+		Language.Item lang = (Language.Item) new Language().fromSettings(prefs);
+		activeLocale = lang.getCode();
 
 		Resources res = getResources();
 		DisplayMetrics dm = res.getDisplayMetrics();
 		Configuration conf = res.getConfiguration();
-		conf.locale = new Locale(lang.getCode());
+		conf.locale = new Locale(activeLocale);
 		res.updateConfiguration(conf, dm);
 	}
 
