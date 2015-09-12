@@ -46,15 +46,18 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 		super.onCreate(paramBundle);
 		addPreferencesFromResource(R.xml.activity_settings_main_preferences);
 
-		mSharedPreferences = Controller.getInstance(getActivity()).getUserSettings();
-		if (mSharedPreferences == null) {
-			getActivity().finish(); // TODO: use better way to exit
+		String userId = Controller.getInstance(getActivity()).getActualUser().getId();
+		if (userId.isEmpty()) {
+			// We can't work without userId
 			return;
 		}
-		PreferenceManager.getDefaultSharedPreferences(getActivity()).registerOnSharedPreferenceChangeListener(this);
 
 		// Use own name for sharedPreferences
-		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(Controller.getInstance(getActivity()).getActualUser().getId()));
+		PreferenceManager manager = getPreferenceManager();
+		manager.setSharedPreferencesName(Persistence.getPreferencesFilename(userId));
+
+		mSharedPreferences = manager.getSharedPreferences();
+		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
 		mLanguagePref = (ListPreference) findPreference(Language.PERSISTENCE_PREF_LANGUAGE);
 		mLanguage = new Language();
