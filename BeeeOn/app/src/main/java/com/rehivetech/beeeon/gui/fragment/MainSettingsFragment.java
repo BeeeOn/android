@@ -95,9 +95,12 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 	}
 
 	private void initListPrefFromItem(ListPreference listPreference, SettingsItem settingsItem, Context context) {
+		SettingsItem.BaseItem item = settingsItem.fromSettings(mSharedPreferences);
+
 		listPreference.setEntries(settingsItem.getEntries(context));
 		listPreference.setEntryValues(settingsItem.getEntryValues());
-		listPreference.setSummary(settingsItem.fromSettings(mSharedPreferences).getSettingsName(context));
+		listPreference.setSummary(item.getSettingsName(context));
+		listPreference.setValue(String.valueOf(item.getId()));
 	}
 
 	@Override
