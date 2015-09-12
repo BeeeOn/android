@@ -10,7 +10,7 @@ import com.rehivetech.beeeon.gui.fragment.MainSettingsFragment;
 /**
  * Created by david on 26.8.15.
  */
-public class SettingsMainActivity extends BaseApplicationActivity implements MainSettingsFragment.onPreferenceChangedListener {
+public class SettingsMainActivity extends BaseApplicationActivity implements MainSettingsFragment.OnPreferenceChangedListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

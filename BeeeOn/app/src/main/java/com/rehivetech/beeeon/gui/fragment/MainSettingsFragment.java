@@ -29,7 +29,7 @@ import com.rehivetech.beeeon.util.Utils;
  */
 public class MainSettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-	private onPreferenceChangedListener mOnPreferenceChangedListener;
+	private OnPreferenceChangedListener mOnPreferenceChangedListener;
 	private Timezone mTimezone;
 	private Language mLanguage;
 	private SharedPreferences mSharedPreferences;
@@ -107,9 +107,9 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		try {
-			mOnPreferenceChangedListener = (onPreferenceChangedListener) getActivity();
+			mOnPreferenceChangedListener = (OnPreferenceChangedListener) getActivity();
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement onViewSelected");
+			throw new ClassCastException(activity.toString() + " must implement OnPreferenceChangedListener");
 		}
 	}
 
@@ -145,7 +145,7 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 		mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
-	public interface onPreferenceChangedListener {
+	public interface OnPreferenceChangedListener {
 		void refreshActivity();
 	}
 }
