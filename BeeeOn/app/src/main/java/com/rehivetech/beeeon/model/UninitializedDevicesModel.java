@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.model;
 
-import android.content.SharedPreferences;
-
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
@@ -16,13 +14,13 @@ import java.util.List;
 
 public class UninitializedDevicesModel extends BaseModel {
 
-	private static int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<Device> mUninitializedDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
 
-	public UninitializedDevicesModel(INetwork network, SharedPreferences prefs) {
+	public UninitializedDevicesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
-		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -48,7 +46,7 @@ public class UninitializedDevicesModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadUninitializedDevicesByGate(String gateId, boolean forceReload) throws AppException {
-		if (!forceReload && !mUninitializedDevices.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mUninitializedDevices.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

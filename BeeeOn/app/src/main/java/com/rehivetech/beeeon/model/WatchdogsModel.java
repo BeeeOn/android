@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.model;
 
-import android.content.SharedPreferences;
-
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.INetwork;
@@ -15,13 +13,13 @@ import java.util.List;
 
 public class WatchdogsModel extends BaseModel {
 
-	private static int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>(); // gateId => watchdog dataHolder
 
-	public WatchdogsModel(INetwork network, SharedPreferences prefs) {
+	public WatchdogsModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
-		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -60,7 +58,7 @@ public class WatchdogsModel extends BaseModel {
 	 * @return
 	 */
 	public boolean reloadWatchdogsByGate(String gateId, boolean forceReload) {
-		if (!forceReload && !mWatchdogs.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mWatchdogs.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

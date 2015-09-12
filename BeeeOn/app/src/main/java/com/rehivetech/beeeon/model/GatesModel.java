@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.model;
 
-import android.content.SharedPreferences;
-
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -17,15 +15,15 @@ import java.util.List;
 
 public class GatesModel extends BaseModel {
 
-	private static  int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final DataHolder<Gate> mGatesHolder = new DataHolder<>();
 
 	private final DataHolder<GateInfo> mGatesInfoHolder = new DataHolder<>();
 
-	public GatesModel(INetwork network,SharedPreferences prefs) {
+	public GatesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
-		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -124,7 +122,7 @@ public class GatesModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadGates(boolean forceReload) throws AppException {
-		if (!forceReload && !mGatesHolder.isExpired(RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mGatesHolder.isExpired(mReloadEverySecs)) {
 			return false;
 		}
 
@@ -143,7 +141,7 @@ public class GatesModel extends BaseModel {
 	 */
 	public synchronized boolean reloadGateInfo(String gateId, boolean forceReload) throws AppException {
 		// FIXME: Check isExpired for single item
-		/*if (!forceReload && !mGatesInfoHolder.isExpired(RELOAD_EVERY_SECONDS)) {
+		/*if (!forceReload && !mGatesInfoHolder.isExpired(mReloadEverySecs)) {
 			return false;
 		}*/
 

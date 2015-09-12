@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.model;
 
-import android.content.SharedPreferences;
-
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
@@ -15,13 +13,13 @@ import java.util.List;
 
 public class UsersModel extends BaseModel {
 
-	private static int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>(); // gateId => user dataHolder
 
-	public UsersModel(INetwork network, SharedPreferences prefs) {
+	public UsersModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
-		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class UsersModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadUsersByGate(String gateId, boolean forceReload) {
-		if (!forceReload && !mUsers.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mUsers.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

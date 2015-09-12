@@ -171,8 +171,10 @@ public final class Controller {
 		if (!mModels.containsKey(name)) {
 			synchronized (mModels) {
 				if (!mModels.containsKey(name)) {
+					CacheHoldTime.Item cacheHoldTime = (CacheHoldTime.Item) new CacheHoldTime().fromSettings(getUserSettings());
+
 					// Known parameters we can automatically give to model constructor
-					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser,getUserSettings()};
+					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser, cacheHoldTime};
 
 					// Create instance of the given model class
 					final Constructor constructor = modelClass.getConstructors()[0];

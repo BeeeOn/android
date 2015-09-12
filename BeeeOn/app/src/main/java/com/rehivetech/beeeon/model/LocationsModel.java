@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.model;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
@@ -17,16 +16,16 @@ import java.util.List;
 
 public class LocationsModel extends BaseModel {
 
-	private static int RELOAD_EVERY_SECONDS = 10 * 60;
-
 	private final String mNoLocationName;
+
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // gateId => location dataHolder
 
-	public LocationsModel(INetwork network, Context context, SharedPreferences prefs) {
+	public LocationsModel(INetwork network, Context context, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
 		mNoLocationName = context.getString(R.string.loc_none);
-		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	private Location createNoLocation(String gateId) {
@@ -73,7 +72,7 @@ public class LocationsModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadLocationsByGate(String gateId, boolean forceReload) {
-		if (!forceReload && !mLocations.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mLocations.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

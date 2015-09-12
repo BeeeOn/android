@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.util;
 
+import android.content.Context;
+
 import com.rehivetech.beeeon.R;
 
 /**
@@ -8,22 +10,44 @@ import com.rehivetech.beeeon.R;
 public class CacheHoldTime extends SettingsItem {
 	public static final String PERSISTENCE_CACHE_KEY = "pref_cache";
 
-	public static final int DO_NOT_ACTUALIZE = 0;
-	public static final int ONE_MINUTE = 60;
-	public static final int TWO_MINUTES = 2 * 60;
-	public static final int FIVE_MINUTES = 5 * 60;
-	public static final int TEN_MINUTES = 10 * 60;
-	public static final int THIRY_MINUTES = 30 * 30;
+	public static final int NO_CACHE = 0;
+	public static final int ONE_MINUTE = 1;
+	public static final int TWO_MINUTES = 2;
+	public static final int FIVE_MINUTES = 5;
+	public static final int TEN_MINUTES = 10;
+	public static final int THIRY_MINUTES = 30;
+
+	public class Item extends BaseItem {
+		private final int mMinutes;
+
+		protected Item(int minutes) {
+			super(minutes, 0); // Using minutes as ID for simplicity (to not generate another useless value)
+
+			mMinutes = minutes;
+		}
+
+		public int getSeconds() {
+			return mMinutes * 60;
+		}
+
+		@Override
+		public String getSettingsName(Context context) {
+			if (mMinutes == 0) {
+				return context.getString(R.string.cache_listpreference_no_cache);
+			}
+			return context.getResources().getQuantityString(R.plurals.cache_listpreference_minutes, mMinutes, mMinutes);
+		}
+	}
 
 	public CacheHoldTime() {
 		super();
 
-		mItems.add(new BaseItem(DO_NOT_ACTUALIZE, R.string.cache_listpreference_do_not_store));
-		mItems.add(new BaseItem(ONE_MINUTE, R.string.cache_listpreference_one_minute));
-		mItems.add(new BaseItem(TWO_MINUTES, R.string.cache_listpreference_two_minutes));
-		mItems.add(new BaseItem(FIVE_MINUTES, R.string.cache_listpreference_five_minutes));
-		mItems.add(new BaseItem(TEN_MINUTES, R.string.cache_listpreference_ten_minutes));
-		mItems.add(new BaseItem(THIRY_MINUTES, R.string.cache_listpreference_thirty_minutes));
+		mItems.add(new Item(NO_CACHE));
+		mItems.add(new Item(ONE_MINUTE));
+		mItems.add(new Item(TWO_MINUTES));
+		mItems.add(new Item(FIVE_MINUTES));
+		mItems.add(new Item(TEN_MINUTES));
+		mItems.add(new Item(THIRY_MINUTES));
 	}
 
 	@Override

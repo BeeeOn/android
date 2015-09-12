@@ -1,13 +1,10 @@
 package com.rehivetech.beeeon.model;
 
-import android.content.SharedPreferences;
-
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Module.SaveModule;
-import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Log;
@@ -26,13 +23,13 @@ public class DevicesModel extends BaseModel {
 
 	private static final String TAG = DevicesModel.class.getSimpleName();
 
-	private static int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
 
-	public DevicesModel(INetwork network,SharedPreferences prefs) {
+	public DevicesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
-		RELOAD_EVERY_SECONDS = Integer.parseInt(prefs.getString(CacheHoldTime.PERSISTENCE_CACHE_KEY, "0"));
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -107,7 +104,7 @@ public class DevicesModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadDevicesByGate(String gateId, boolean forceReload) throws AppException {
-		if (!forceReload && !mDevices.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mDevices.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

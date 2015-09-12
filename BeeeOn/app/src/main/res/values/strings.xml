@@ -392,12 +392,13 @@
 	<string name="actualizationtime_listpreference_ten_secs">Ten seconds</string>
 	<string name="actualizationtime_listpreference_thirty_secs">Thirty seconds</string>
 	<string name="actualizationtime_listpreference_sixty_secs">Sixty seconds</string>
-	<string name="cache_listpreference_do_not_store">Do not store cache</string>
-	<string name="cache_listpreference_one_minute">One minute</string>
-	<string name="cache_listpreference_two_minutes">Two minutes</string>
-	<string name="cache_listpreference_five_minutes">Five minutes</string>
-	<string name="cache_listpreference_ten_minutes">Ten minutes</string>
-	<string name="cache_listpreference_thirty_minutes">Thirty minutes</string>
+
+	<plurals name="cache_listpreference_minutes">
+		<item quantity="one">1 minute</item>
+		<item quantity="other">%d minutes</item>
+	</plurals>
+
+	<string name="cache_listpreference_no_cache">Don\'t use cache</string>
 
 </resources>
 

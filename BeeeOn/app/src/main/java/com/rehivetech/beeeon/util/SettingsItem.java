@@ -12,8 +12,8 @@ public abstract class SettingsItem {
 	protected final List<BaseItem> mItems = new ArrayList<BaseItem>();
 
 	public class BaseItem {
-		private final int mId;
-		private final int mResName;
+		protected final int mId;
+		protected final int mResName;
 
 		protected BaseItem(int id, int resName) {
 			this.mId = id;
