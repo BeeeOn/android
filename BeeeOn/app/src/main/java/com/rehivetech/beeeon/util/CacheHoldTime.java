@@ -18,7 +18,7 @@ public class CacheHoldTime extends SettingsItem {
 	public CacheHoldTime() {
 		super();
 
-		mItems.add(new BaseItem(DO_NOT_ACTUALIZE, R.string.cache_listpreference_do_not_store)); //TODO is that even possible?
+		mItems.add(new BaseItem(DO_NOT_ACTUALIZE, R.string.cache_listpreference_do_not_store));
 		mItems.add(new BaseItem(ONE_MINUTE, R.string.cache_listpreference_one_minute));
 		mItems.add(new BaseItem(TWO_MINUTES, R.string.cache_listpreference_two_minutes));
 		mItems.add(new BaseItem(FIVE_MINUTES, R.string.cache_listpreference_five_minutes));
@@ -28,7 +28,7 @@ public class CacheHoldTime extends SettingsItem {
 
 	@Override
 	public int getDefaultId() {
-		return DO_NOT_ACTUALIZE;
+		return FIVE_MINUTES;
 	}
 
 	@Override
