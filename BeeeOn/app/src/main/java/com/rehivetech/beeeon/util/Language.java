@@ -9,7 +9,7 @@ import java.util.Locale;
  */
 public class Language extends SettingsItem {
 
-	public static final String PERSISTENCE_PREF_LANGUAGE = "pref_language1";
+	public static final String PERSISTENCE_PREF_LANGUAGE = "pref_language";
 
 	public static final int FROM_SYSTEM = 0;
 	public static final int ENGLISH = 1;

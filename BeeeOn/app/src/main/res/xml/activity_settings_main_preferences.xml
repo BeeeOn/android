@@ -4,7 +4,7 @@
 
 	<ListPreference
 		android:dialogTitle="@string/prefs_choose_language"
-		android:key="pref_language1"
+		android:key="pref_language"
 		android:title="@string/prefs_choose_language">
 	</ListPreference>
 
