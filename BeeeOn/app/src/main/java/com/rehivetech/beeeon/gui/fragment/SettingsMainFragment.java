@@ -7,32 +7,26 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceManager;
-import android.support.v4.preference.PreferenceFragmentCompat;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MapGeofenceActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsUnitActivity;
-import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Language;
-import com.rehivetech.beeeon.util.SettingsItem;
 import com.rehivetech.beeeon.util.Timezone;
 import com.rehivetech.beeeon.util.Utils;
 
 /**
  * Created by david on 26.8.15.
  */
-public class SettingsMainFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsMainFragment extends BaseSettingsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private OnPreferenceChangedListener mOnPreferenceChangedListener;
 	private Timezone mTimezone;
 	private Language mLanguage;
-	private SharedPreferences mSharedPreferences;
 	private ListPreference mLanguagePref;
 	private ListPreference mTimeZonePref;
 	private ListPreference mActualizationPreference;
@@ -45,19 +39,6 @@ public class SettingsMainFragment extends PreferenceFragmentCompat implements Sh
 	public void onCreate(Bundle paramBundle) {
 		super.onCreate(paramBundle);
 		addPreferencesFromResource(R.xml.activity_settings_main_preferences);
-
-		String userId = Controller.getInstance(getActivity()).getActualUser().getId();
-		if (userId.isEmpty()) {
-			// We can't work without userId
-			return;
-		}
-
-		// Use own name for sharedPreferences
-		PreferenceManager manager = getPreferenceManager();
-		manager.setSharedPreferencesName(Persistence.getPreferencesFilename(userId));
-
-		mSharedPreferences = manager.getSharedPreferences();
-		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
 		mLanguagePref = (ListPreference) findPreference(Language.PERSISTENCE_PREF_LANGUAGE);
 		mLanguage = new Language();
@@ -97,15 +78,6 @@ public class SettingsMainFragment extends PreferenceFragmentCompat implements Sh
 
 	}
 
-	private void initListPrefFromItem(ListPreference listPreference, SettingsItem settingsItem, Context context) {
-		SettingsItem.BaseItem item = settingsItem.fromSettings(mSharedPreferences);
-
-		listPreference.setEntries(settingsItem.getEntries(context));
-		listPreference.setEntryValues(settingsItem.getEntryValues());
-		listPreference.setSummary(item.getSettingsName(context));
-		listPreference.setValue(String.valueOf(item.getId()));
-	}
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -127,25 +99,6 @@ public class SettingsMainFragment extends PreferenceFragmentCompat implements Sh
 		} else if (key.equals(mActualizationTime.getPersistenceKey())) {
 			setSummary(mActualizationPreference, mActualizationTime);
 		}
-	}
-
-	private void setSummary(ListPreference listPreference, SettingsItem settingsItem) {
-		if (settingsItem != null && listPreference != null) {
-			String summary = settingsItem.fromSettings(mSharedPreferences).getSettingsName(getActivity());
-			listPreference.setSummary(summary);
-		}
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	public interface OnPreferenceChangedListener {
