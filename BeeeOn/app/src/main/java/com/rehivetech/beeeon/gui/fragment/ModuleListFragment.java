@@ -122,8 +122,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 	}
 
 	private void setAutoReloadDataTimer() {
-		int period = ActualizationTime.getTimeFromPrefsInSecs(getActivity());
-
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override
 			public CallbackTask createTask() {
@@ -147,6 +145,9 @@ public class ModuleListFragment extends BaseApplicationFragment {
 				return mActiveGateId;
 			}
 		};
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
 		if (period > 0)    // zero means do not update
 			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, MODULE_LIST_FRAGMENT_AUTO_RELOAD_ID, period);
 	}
@@ -433,7 +434,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 			@Override
 			public void onExecute(boolean success) {
-				Log.d(TAG,"Executing task");
+				Log.d(TAG, "Executing task");
 
 				if (!success)
 					return;

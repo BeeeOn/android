@@ -27,7 +27,7 @@ import com.rehivetech.beeeon.util.Utils;
 /**
  * Created by david on 26.8.15.
  */
-public class MainSettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsMainFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
 	private OnPreferenceChangedListener mOnPreferenceChangedListener;
 	private Timezone mTimezone;
@@ -120,11 +120,11 @@ public class MainSettingsFragment extends PreferenceFragmentCompat implements Sh
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if (key.equals(Language.PERSISTENCE_PREF_LANGUAGE)) {
 			mOnPreferenceChangedListener.refreshActivity();
-		} else if(key.equals(mTimezone.getPersistenceKey())) {
+		} else if (key.equals(mTimezone.getPersistenceKey())) {
 			setSummary(mTimeZonePref, mTimezone);
-		} else if (key.equals(mCacheHoldTime.getPersistenceKey())){
+		} else if (key.equals(mCacheHoldTime.getPersistenceKey())) {
 			setSummary(mCachePreference, mCacheHoldTime);
-		} else if(key.equals(mActualizationTime.getPersistenceKey())){
+		} else if (key.equals(mActualizationTime.getPersistenceKey())) {
 			setSummary(mActualizationPreference, mActualizationTime);
 		}
 	}

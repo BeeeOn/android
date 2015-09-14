@@ -36,10 +36,10 @@ public class Language extends SettingsItem {
 	public Language() {
 		super();
 
-		mItems.add(this.new Item(FROM_SYSTEM, R.string.language_listpreference_default, null));
-		mItems.add(this.new Item(ENGLISH, R.string.language_listpreference_english, "en"));
-		mItems.add(this.new Item(CZECH, R.string.language_listpreference_czech, "cs"));
-		mItems.add(this.new Item(SLOVAK, R.string.language_listpreference_slovak, "sk"));
+		mItems.add(this.new Item(FROM_SYSTEM, R.string.settings_language_listpreference_default, null));
+		mItems.add(this.new Item(ENGLISH, R.string.settings_language_listpreference_english, "en"));
+		mItems.add(this.new Item(CZECH, R.string.settings_language_listpreference_czech, "cs"));
+		mItems.add(this.new Item(SLOVAK, R.string.settings_language_listpreference_slovak, "sk"));
 	}
 
 	@Override

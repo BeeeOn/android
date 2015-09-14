@@ -336,6 +336,27 @@
 	<string name="settings_unit_preferences_noise">Hluk</string>
 	<string name="settings_unit_preferences_temperature">Teplota</string>
 	<string name="settings_unit_unit">Jednotky</string>
+	<string name="settings_language_default">Výchozí(Jazyk systému)</string>
+	<string name="settings_actualization_category_title">Nastavení aktualizací</string>
+	<string name="settings_actualization_screen_title">Interval automatické aktualizace</string>
+	<string name="settings_cache_reload_title">Doba uchovávání cache</string>
+	<plurals name="settings_actualization_time_listpreference_seconds">
+		<item quantity="one">1 sekunda</item>
+		<item quantity="few">%d sekundy</item>
+		<item quantity="other">%d sekund</item>
+	</plurals>
+	<string name="settings_actualizationtime_listpreference_dont_actualize">Neaktualizovat</string>
+	<plurals name="settings_cache_listpreference_minutes">
+		<item quantity="one">1 minuta</item>
+		<item quantity="few">%d minuty</item>
+		<item quantity="other">%d minut</item>
+	</plurals>
+	<string name="settings_cache_listpreference_no_cache">Neuchovávat cache</string>
+	<string name="settings_prefs_choose_language">Jazyk</string>
+	<string name="settings_language_listpreference_default">Použít jazyk systému</string>
+	<string name="settings_language_listpreference_english">Angličtina</string>
+	<string name="settings_language_listpreference_czech">Čeština</string>
+	<string name="settings_language_listpreference_slovak">Slovenština</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s brána #%2$d</string>

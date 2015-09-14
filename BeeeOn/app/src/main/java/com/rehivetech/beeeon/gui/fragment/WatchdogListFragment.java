@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.SwitchCompat;
@@ -94,10 +95,7 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	}
 
 
-
 	private void setAutoReloadDataTimer() {
-		int period = ActualizationTime.getTimeFromPrefsInSecs(getActivity());
-
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override
 			public CallbackTask createTask() {
@@ -117,6 +115,9 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 				return mActiveGateId;
 			}
 		};
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
 		if (period > 0)    // zero means do not update
 			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, WATCHDOG_AUTO_RELOAD_ID, period);
 	}

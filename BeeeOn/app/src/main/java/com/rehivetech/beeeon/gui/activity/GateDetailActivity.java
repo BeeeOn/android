@@ -1,11 +1,10 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -67,7 +66,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		setAutoReloadDataTimer();
 	}
 
-	private void setAutoReloadDataTimer(){
+	private void setAutoReloadDataTimer() {
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override
 			public CallbackTask createTask() {
@@ -95,7 +94,9 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				return mGateId;
 			}
 		};
-		int period = ActualizationTime.getTimeFromPrefsInSecs(this);
+		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
 		if (period > 0)
 			callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, GATE_DETAIL_ACIVITY_AUTO_RELOAD_ID, period);
 	}

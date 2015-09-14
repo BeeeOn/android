@@ -33,9 +33,9 @@ public class CacheHoldTime extends SettingsItem {
 		@Override
 		public String getSettingsName(Context context) {
 			if (mMinutes == 0) {
-				return context.getString(R.string.cache_listpreference_no_cache);
+				return context.getString(R.string.settings_cache_listpreference_no_cache);
 			}
-			return context.getResources().getQuantityString(R.plurals.cache_listpreference_minutes, mMinutes, mMinutes);
+			return context.getResources().getQuantityString(R.plurals.settings_cache_listpreference_minutes, mMinutes, mMinutes);
 		}
 	}
 

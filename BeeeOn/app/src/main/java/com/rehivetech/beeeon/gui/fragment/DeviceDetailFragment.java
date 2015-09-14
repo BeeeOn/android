@@ -204,8 +204,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	}
 
 	private void setAutoReloadDataTimer() {
-		int period = ActualizationTime.getTimeFromPrefsInSecs(getActivity());
-
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override
 			public CallbackTask createTask() {
@@ -232,6 +230,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				return mGateId;
 			}
 		};
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
 		if (period > 0)    // zero means do not update
 			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID, period);
 	}

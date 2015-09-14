@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
@@ -91,8 +92,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	}
 
 	private void setAutoReloadDataTimer() {
-		int period = ActualizationTime.getTimeFromPrefsInSecs(getActivity());
-
 		mICallbackTaskFactory = new ICallbackTaskFactory() {
 			@Override
 			public CallbackTask createTask() {
@@ -114,6 +113,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 				return mActiveGateId;
 			}
 		};
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
 		if (period > 0)    // zero means do not update
 			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_LIST_FRAGMENT_AUTO_RELOAD_ID, period);
 	}
