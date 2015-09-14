@@ -18,7 +18,7 @@ public abstract class BaseSettingsFragment extends PreferenceFragmentCompat impl
 	private SharedPreferences mSharedPreferences;
 
 	@Override
-	public void onCreate(Bundle paramBundle) {
+	public final void onCreate(Bundle paramBundle) {
 		super.onCreate(paramBundle);
 
 		String userId = Controller.getInstance(getActivity()).getActualUser().getId();
@@ -33,7 +33,14 @@ public abstract class BaseSettingsFragment extends PreferenceFragmentCompat impl
 		mSharedPreferences = manager.getSharedPreferences();
 		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+		initSettings();
+
 	}
+
+	/**
+	 * @brief: int this method you need to add preferences and ititialize them
+	 */
+	protected abstract void initSettings();
 
 	protected void initListPrefFromItem(ListPreference listPreference, SettingsItem settingsItem, Context context) {
 		SettingsItem.BaseItem item = settingsItem.fromSettings(mSharedPreferences);

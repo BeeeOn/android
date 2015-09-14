@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.ListPreference;
 
 import com.rehivetech.beeeon.R;
@@ -19,9 +18,8 @@ public class SettingsUnitFragment extends BaseSettingsFragment implements Shared
 	private TemperatureUnit mTemperatureUnit;
 	private NoiseUnit mNoiseUnit;
 
-	@Override
-	public void onCreate(Bundle paramBundle) {
-		super.onCreate(paramBundle);
+
+	protected void initSettings() {
 		addPreferencesFromResource(R.xml.activity_settings_unit_preferences);
 
 		mTemperatureUnit = new TemperatureUnit();

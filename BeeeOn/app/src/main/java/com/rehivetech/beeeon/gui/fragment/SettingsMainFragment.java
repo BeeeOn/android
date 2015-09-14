@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.widget.Toast;
@@ -35,9 +34,7 @@ public class SettingsMainFragment extends BaseSettingsFragment implements Shared
 	private CacheHoldTime mCacheHoldTime;
 
 
-	@Override
-	public void onCreate(Bundle paramBundle) {
-		super.onCreate(paramBundle);
+	protected void initSettings() {
 		addPreferencesFromResource(R.xml.activity_settings_main_preferences);
 
 		mLanguagePref = (ListPreference) findPreference(Language.PERSISTENCE_PREF_LANGUAGE);
@@ -75,7 +72,6 @@ public class SettingsMainFragment extends BaseSettingsFragment implements Shared
 				}
 			});
 		}
-
 	}
 
 	@Override
