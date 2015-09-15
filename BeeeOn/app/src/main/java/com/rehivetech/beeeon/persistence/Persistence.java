@@ -13,6 +13,9 @@ import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.util.ActualizationTime;
+import com.rehivetech.beeeon.util.CacheHoldTime;
+import com.rehivetech.beeeon.util.Language;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SettingsItem;
 import com.rehivetech.beeeon.util.Timezone;
@@ -74,7 +77,13 @@ public class Persistence {
 	}
 
 	public void initializeDefaultSettings(String namespace) {
+
+
+		initItemDefaultPreference(namespace, new Language());
 		initItemDefaultPreference(namespace, new Timezone());
+
+		initItemDefaultPreference(namespace, new ActualizationTime());
+		initItemDefaultPreference(namespace, new CacheHoldTime());
 
 		// TODO: use different units based on user Locale, right now we use default values from unit
 		/*

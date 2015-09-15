@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +11,13 @@ public abstract class SettingsItem {
 
 	protected final List<BaseItem> mItems = new ArrayList<BaseItem>();
 
-	public abstract class BaseItem {
-		private final int mId;
+	public class BaseItem {
+		protected final int mId;
+		protected final int mResName;
 
-		protected BaseItem(int id) {
+		protected BaseItem(int id, int resName) {
 			this.mId = id;
+			this.mResName = resName;
 		}
 
 		/**
@@ -24,7 +27,9 @@ public abstract class SettingsItem {
 			return mId;
 		}
 
-		abstract public String getSettingsName(Context context);
+		public String getSettingsName(Context context) {
+			return context.getString(mResName);
+		}
 	}
 
 	abstract public int getDefaultId();
@@ -76,7 +81,18 @@ public abstract class SettingsItem {
 		return getDefault();
 	}
 
-	public BaseItem fromSettings(SharedPreferences prefs) {
+	/**
+	 * Get Item representing value chosen by user in settings.
+	 *
+	 * @param prefs If given null, it return default Item
+	 * @return user chosen Item or default Item, if user didn't chose it in settings yet.
+	 */
+	public BaseItem fromSettings(@Nullable SharedPreferences prefs) {
+		// If we don't have options, return default Item
+		if (prefs == null) {
+			return getDefault();
+		}
+
 		// NOTE: optimization is to cache this value (e.g. in static attribute of child object - or in some extra object with all settings), and update it automatically when settings is changed...
 		String id = prefs.getString(getPersistenceKey(), String.valueOf(getDefault().getId()));
 		return getItemById(Integer.parseInt(id));

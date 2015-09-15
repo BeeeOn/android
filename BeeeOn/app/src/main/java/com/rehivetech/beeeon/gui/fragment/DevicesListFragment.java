@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
@@ -30,8 +31,10 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
+import com.rehivetech.beeeon.util.ActualizationTime;
 
 import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
@@ -46,6 +49,10 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	//private static final String KEY_LOC_ID = "location_id";
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_SELECTED_ITEMS = "selected_items";
+	private static final String DEVICE_LIST_FRAGMENT_AUTO_RELOAD_ID = "deviceListFragmentAutoReload";
+
+	private ICallbackTaskFactory mICallbackTaskFactory;
+
 
 	private
 	@Nullable
@@ -82,6 +89,36 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		setHasOptionsMenu(true);
 		mActiveGateId = getArguments().getString(KEY_GATE_ID);
 	}
+
+	private void setAutoReloadDataTimer() {
+		mICallbackTaskFactory = new ICallbackTaskFactory() {
+			@Override
+			public CallbackTask createTask() {
+				ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, ReloadGateDataTask.ReloadWhat.DEVICES);
+				reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						if (!success) return;
+
+						// stop refreshing
+						updateData();
+					}
+				});
+				return reloadGateDataTask;
+			}
+
+			@Override
+			public Object createParam() {
+				return mActiveGateId;
+			}
+		};
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
+		if (period > 0)    // zero means do not update
+			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_LIST_FRAGMENT_AUTO_RELOAD_ID, period);
+	}
+
 
 	/**
 	 * Initializes whole layout (need to findView from rootView)
@@ -175,6 +212,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			mActionMode = mActivity.startSupportActionMode(new ActionModeEditModules());
 			mDeviceAdapter.setSelectedItems(selectedDevices);
 		}
+		setAutoReloadDataTimer();
 	}
 
 	/**
@@ -256,18 +294,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 * @param forceRefresh
 	 */
 	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
-		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
-		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (!success) return;
-
-				// stop refreshing
-				updateData();
-			}
-		});
-
-		mActivity.callbackTaskManager.executeTask(reloadGateDataTask, gateId);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
 	}
 
 	/**

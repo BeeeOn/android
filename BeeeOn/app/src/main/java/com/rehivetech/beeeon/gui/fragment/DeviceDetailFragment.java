@@ -42,8 +42,10 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 
@@ -60,6 +62,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private static final String KEY_GATE_ID = "gateId";
 	private static final String KEY_DEVICE_ID = "deviceId";
 	private static final String KEY_VIEW_PAGER_SELECTED_ITEM = "selected_item";
+	private static final String DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID = "deviceDetailFragmentAutoReload";
+
 
 	private static final int REQUEST_SET_ACTUATOR = 7894;
 
@@ -83,6 +87,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	private ViewPager mViewPager;
 	private TabLayout mTabLayout;
+
+	private ICallbackTaskFactory mICallbackTaskFactory;
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 
@@ -196,6 +202,40 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		setHasOptionsMenu(true);
 	}
 
+	private void setAutoReloadDataTimer() {
+		mICallbackTaskFactory = new ICallbackTaskFactory() {
+			@Override
+			public CallbackTask createTask() {
+				ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.DEVICES);
+
+				final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
+
+				reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						if (success) {
+							updateLayout();
+							if (mViewPager != null) {
+								mViewPager.setCurrentItem(tabPos);
+							}
+						}
+					}
+				});
+				return reloadDevicesTask;
+			}
+
+			@Override
+			public Object createParam() {
+				return mGateId;
+			}
+		};
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
+		if (period > 0)    // zero means do not update
+			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID, period);
+	}
+
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		Log.d(TAG, "onActivityCreated");
@@ -205,6 +245,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mViewPager.setCurrentItem(savedInstanceState.getInt(KEY_VIEW_PAGER_SELECTED_ITEM));
 			Log.d(TAG, "restore instance");
 		}
+		setAutoReloadDataTimer();
 	}
 
 	@Override
@@ -387,24 +428,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	}
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
-		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.ReloadWhat.DEVICES);
-
-		final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
-
-		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					updateLayout();
-					if (mViewPager != null) {
-						mViewPager.setCurrentItem(tabPos);
-					}
-				}
-			}
-		});
-
 		// Remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(reloadDevicesTask, gateId);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
 	}
 
 	private void doChangeStateModuleTask(final Module module) {

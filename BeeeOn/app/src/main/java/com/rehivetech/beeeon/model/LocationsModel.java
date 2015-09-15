@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -15,15 +16,16 @@ import java.util.List;
 
 public class LocationsModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
-
 	private final String mNoLocationName;
+
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // gateId => location dataHolder
 
-	public LocationsModel(INetwork network, Context context) {
+	public LocationsModel(INetwork network, Context context, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
 		mNoLocationName = context.getString(R.string.loc_none);
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	private Location createNoLocation(String gateId) {
@@ -70,7 +72,7 @@ public class LocationsModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadLocationsByGate(String gateId, boolean forceReload) {
-		if (!forceReload && !mLocations.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mLocations.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

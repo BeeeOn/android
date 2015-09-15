@@ -27,8 +27,7 @@ public class TimeHelper {
 	 */
 
 	private boolean useLocalTimezone() {
-		Timezone timezone = new Timezone();
-		Timezone.Item item = (Timezone.Item) timezone.fromSettings(mPrefs);
+		Timezone.BaseItem item = new Timezone().fromSettings(mPrefs);
 		return item.getId() == Timezone.ACTUAL;
 	}
 

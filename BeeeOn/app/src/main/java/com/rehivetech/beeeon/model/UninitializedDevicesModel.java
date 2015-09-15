@@ -4,6 +4,7 @@ import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -13,12 +14,13 @@ import java.util.List;
 
 public class UninitializedDevicesModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<Device> mUninitializedDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
 
-	public UninitializedDevicesModel(INetwork network) {
+	public UninitializedDevicesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class UninitializedDevicesModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadUninitializedDevicesByGate(String gateId, boolean forceReload) throws AppException {
-		if (!forceReload && !mUninitializedDevices.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mUninitializedDevices.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

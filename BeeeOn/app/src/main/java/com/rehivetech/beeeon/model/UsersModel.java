@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.model;
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -12,12 +13,13 @@ import java.util.List;
 
 public class UsersModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>(); // gateId => user dataHolder
 
-	public UsersModel(INetwork network) {
+	public UsersModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -52,7 +54,7 @@ public class UsersModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadUsersByGate(String gateId, boolean forceReload) {
-		if (!forceReload && !mUsers.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mUsers.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 

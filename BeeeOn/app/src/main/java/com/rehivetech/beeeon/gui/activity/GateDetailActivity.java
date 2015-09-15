@@ -1,11 +1,10 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,8 +17,10 @@ import com.rehivetech.beeeon.gui.fragment.GateDetailFragment;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
+import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.Log;
 
 /**
@@ -32,8 +33,13 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 
+	private ICallbackTaskFactory mICallbackTaskFactory;
+	private static final String GATE_DETAIL_ACIVITY_AUTO_RELOAD_ID = "gateDetailActivityAutoReload";
+
+
 	private String mGateId;
-	@Nullable private GateDetailFragment mFragment;
+	@Nullable
+	private GateDetailFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,42 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			GateDetailFragment gateDetailFragment = GateDetailFragment.newInstance(mGateId);
 			getSupportFragmentManager().beginTransaction().replace(R.id.gate_detail_container, gateDetailFragment, FRAGMENT_DETAILS).commit();
 		}
+		setAutoReloadDataTimer();
+	}
+
+	private void setAutoReloadDataTimer() {
+		mICallbackTaskFactory = new ICallbackTaskFactory() {
+			@Override
+			public CallbackTask createTask() {
+				ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(GateDetailActivity.this, false);
+
+				reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
+						if (gateInfo == null) {
+							Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
+							finish();
+						} else {
+							if (mFragment != null) {
+								mFragment.fillData();
+							}
+						}
+					}
+				});
+				return reloadGateInfoTask;
+			}
+
+			@Override
+			public Object createParam() {
+				return mGateId;
+			}
+		};
+		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
+		if (period > 0)
+			callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, GATE_DETAIL_ACIVITY_AUTO_RELOAD_ID, period);
 	}
 
 	@Override
@@ -77,24 +119,8 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	}
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
-		ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(this, forceReload);
-
-		reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
-				if (gateInfo == null) {
-					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
-					finish();
-				} else {
-					if (mFragment != null) {
-						mFragment.fillData();
-					}
-				}
-			}
-		});
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadGateInfoTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+		callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 	}
 
 	@Override

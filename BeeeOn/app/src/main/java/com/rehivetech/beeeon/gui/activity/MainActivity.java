@@ -299,6 +299,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	public boolean redrawMainFragment() {
+		// stop all tasks - so that the reload tasks will not continue
+		callbackTaskManager.cancelAndRemoveAll();
+
 		// set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (mActiveMenuId == null) {

@@ -5,6 +5,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.DataHolder;
 
 import org.joda.time.DateTime;
@@ -14,14 +15,15 @@ import java.util.List;
 
 public class GatesModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final DataHolder<Gate> mGatesHolder = new DataHolder<>();
 
 	private final DataHolder<GateInfo> mGatesInfoHolder = new DataHolder<>();
 
-	public GatesModel(INetwork network) {
+	public GatesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -120,7 +122,7 @@ public class GatesModel extends BaseModel {
 	 * @return
 	 */
 	public synchronized boolean reloadGates(boolean forceReload) throws AppException {
-		if (!forceReload && !mGatesHolder.isExpired(RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mGatesHolder.isExpired(mReloadEverySecs)) {
 			return false;
 		}
 
@@ -139,7 +141,7 @@ public class GatesModel extends BaseModel {
 	 */
 	public synchronized boolean reloadGateInfo(String gateId, boolean forceReload) throws AppException {
 		// FIXME: Check isExpired for single item
-		/*if (!forceReload && !mGatesInfoHolder.isExpired(RELOAD_EVERY_SECONDS)) {
+		/*if (!forceReload && !mGatesInfoHolder.isExpired(mReloadEverySecs)) {
 			return false;
 		}*/
 

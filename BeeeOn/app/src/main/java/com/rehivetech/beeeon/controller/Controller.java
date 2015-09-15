@@ -27,6 +27,7 @@ import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.network.NetworkServer;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -170,8 +171,10 @@ public final class Controller {
 		if (!mModels.containsKey(name)) {
 			synchronized (mModels) {
 				if (!mModels.containsKey(name)) {
+					CacheHoldTime.Item cacheHoldTime = (CacheHoldTime.Item) new CacheHoldTime().fromSettings(getUserSettings());
+
 					// Known parameters we can automatically give to model constructor
-					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser};
+					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser, cacheHoldTime};
 
 					// Create instance of the given model class
 					final Constructor constructor = modelClass.getConstructors()[0];

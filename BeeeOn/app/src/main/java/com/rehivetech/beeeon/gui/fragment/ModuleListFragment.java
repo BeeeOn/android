@@ -37,9 +37,12 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.model.DevicesModel;
+import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
+import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
+import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TutorialHelper;
 import com.rehivetech.beeeon.util.Utils;
@@ -56,6 +59,11 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 	private static final String LCTN = "lastlocation";
 	private static final String GATE_ID = "lastGateId";
+
+	private static final String MODULE_LIST_FRAGMENT_AUTO_RELOAD_ID = "moduleListFragmentAutoReload";
+
+	private ICallbackTaskFactory mICallbackTaskFactory;
+
 
 	private MainActivity mActivity;
 
@@ -109,7 +117,37 @@ public class ModuleListFragment extends BaseApplicationFragment {
 			mFirstUseAddGate = prefs.getBoolean(Constants.TUTORIAL_ADD_GATE_SHOWED, true);
 			mFirstUseAddDevice = prefs.getBoolean(Constants.TUTORIAL_ADD_DEVICE_SHOWED, true);
 		}
+	}
 
+	private void setAutoReloadDataTimer() {
+		mICallbackTaskFactory = new ICallbackTaskFactory() {
+			@Override
+			public CallbackTask createTask() {
+				ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
+
+				fullReloadTask.setListener(new ICallbackTaskListener() {
+					@Override
+					public void onExecute(boolean success) {
+						if (!success)
+							return;
+
+						mActivity.setActiveGateAndMenu();
+						mActivity.redraw();
+					}
+				});
+				return fullReloadTask;
+			}
+
+			@Override
+			public Object createParam() {
+				return mActiveGateId;
+			}
+		};
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
+		int period = item.getSeconds();
+		if (period > 0)    // zero means do not update
+			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, MODULE_LIST_FRAGMENT_AUTO_RELOAD_ID, period);
 	}
 
 	@Override
@@ -140,6 +178,8 @@ public class ModuleListFragment extends BaseApplicationFragment {
 				mActivity.redraw();
 			}
 		});
+
+		setAutoReloadDataTimer();
 	}
 
 	public void onPause() {
@@ -394,10 +434,13 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 			@Override
 			public void onExecute(boolean success) {
+				Log.d(TAG, "Executing task");
+
 				if (!success)
 					return;
 				Log.d(TAG, "Success -> refresh GUI");
 				mActivity.redraw();
+
 			}
 		});
 
@@ -406,20 +449,8 @@ public class ModuleListFragment extends BaseApplicationFragment {
 	}
 
 	private void doFullReloadTask(boolean forceRefresh) {
-		ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(mActivity, forceRefresh, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
-
-		fullReloadTask.setListener(new ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (!success)
-					return;
-				mActivity.setActiveGateAndMenu();
-				mActivity.redraw();
-			}
-		});
-
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(fullReloadTask);
+		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask());
 	}
 
 	public void doRemoveDeviceTask(Device device) {

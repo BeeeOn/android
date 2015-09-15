@@ -1,132 +1,54 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.persistence.Persistence;
-import com.rehivetech.beeeon.util.Timezone;
-import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.gui.fragment.SettingsMainFragment;
 
 /**
- * The control preference activity handles the preferences for the control extension.
+ * Created by david on 26.8.15.
  */
-public class SettingsMainActivity extends ActionBarPreferenceActivity implements OnSharedPreferenceChangeListener {
-	/**
-	 * keys which are defined in res/xml/preferences.xml
-	 */
-
-	// private ListPreference mListPrefAdapter, mListPrefLocation;
-
-	private ListPreference mTimezoneListPref;
-	private Timezone mTimezone;
-
-	private Preference mPrefUnits;
-	private Preference mPrefGeofence;
-	private SharedPreferences mPrefs;
-
+public class SettingsMainActivity extends BaseApplicationActivity implements SettingsMainFragment.OnPreferenceChangedListener {
 	@Override
-	protected int getPreferencesXmlId() {
-		return R.xml.activity_settings_main_preferences;
-	}
-
-	// added suppressWarnings because of support of lower version
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_settings_main);
+		setupToolbar(R.string.settings_main_settings);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
-		Controller controller = Controller.getInstance(this);
-
-		final Toolbar toolbar = getToolbar();
-		toolbar.setTitle(R.string.settings_main_settings);
-
-
-		// Use own name for sharedPreferences
-		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(controller.getActualUser().getId()));
-
-		// UserSettings can be null when user is not logged in!
-		mPrefs = controller.getUserSettings();
-		if (mPrefs == null) {
+		if (!Controller.getInstance(this).isLoggedIn()) {
+			// We need user to get his preferences
 			finish();
 			return;
 		}
 
-		// mListPrefAdapter = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_ADAPTER);
-		// mListPrefLocation = (ListPreference) findPreference(Constants.PERSISTENCE_PREF_SW2_LOCATION);
-
-		mTimezone = new Timezone();
-		mTimezoneListPref = (ListPreference) findPreference(mTimezone.getPersistenceKey());
-		mTimezoneListPref.setEntries(mTimezone.getEntries(this));
-		mTimezoneListPref.setEntryValues(mTimezone.getEntryValues());
-		mTimezoneListPref.setSummary(mTimezone.fromSettings(mPrefs).getSettingsName(this));
-
-		mPrefUnits = findPreference(Constants.KEY_UNITS);
-		Intent intentUnit = new Intent(this, SettingsUnitActivity.class);
-		mPrefUnits.setIntent(intentUnit);
-
-		// mAdapterListPref.set
-		// mAdapterListPref.setOnPreferenceChangeListener(this);
-		// mLocationListPref.setOnPreferenceChangeListener(this);
-
-		mPrefGeofence = findPreference(Constants.KEY_GEOFENCE);
-		if (Utils.isGooglePlayServicesAvailable(this)) {
-			Intent intentGeofence = new Intent(this, MapGeofenceActivity.class);
-			mPrefGeofence.setIntent(intentGeofence);
-		} else {
-			mPrefGeofence.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					Toast.makeText(SettingsMainActivity.this, R.string.settings_main_toast_no_google_play_services, Toast.LENGTH_LONG).show();
-					return true;
-				}
-			});
-		}
-
-
+		getSupportFragmentManager().beginTransaction().replace(R.id.settings_activity_fragment_holder, new SettingsMainFragment()).commit();
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mPrefs.registerOnSharedPreferenceChangeListener(this);
-	}
+	// refresh activity after user change language so the change can be seen immediately
+	public void refreshActivity() {
+		BaseApplicationActivity.activeLocale = null; // Force reload active locale
 
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+		Intent refresh = new Intent(this, SettingsMainActivity.class);
+		refresh.setFlags(refresh.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY); // Adds the FLAG_ACTIVITY_NO_HISTORY flag
+		startActivity(refresh);
+		finish();
 	}
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
-				return true;
+				break;
 		}
-		return false;
-	}
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if (mTimezone != null && key.equals(mTimezone.getPersistenceKey())) {
-			ListPreference pref = mTimezoneListPref;
-
-			if (pref != null) {
-				String summary = mTimezone.fromSettings(sharedPreferences).getSettingsName(this);
-				pref.setSummary(summary);
-			}
-		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

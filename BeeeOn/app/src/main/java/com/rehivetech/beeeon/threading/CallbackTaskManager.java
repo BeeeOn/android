@@ -11,8 +11,10 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,6 +26,11 @@ public class CallbackTaskManager {
 	 * Holder for running tasks that we need to stop when activity is being stopped.
 	 */
 	private final List<CallbackTask> mTasks = new ArrayList<>();
+
+	/**
+	 * Holder for TimerTask objects which are doing automatic running of task at scheduled time.
+	 */
+	private final Map<String, TimerTask> mTimerTasks = new HashMap<>();
 
 	private final BaseApplicationActivity mActivity;
 
@@ -39,10 +46,17 @@ public class CallbackTaskManager {
 
 	public void cancelAndRemoveAll() {
 		// Cancel and remove all tasks
-		Iterator<CallbackTask> iterator = mTasks.iterator();
-		while (iterator.hasNext()) {
-			iterator.next().cancelTask();
-			iterator.remove();
+		Iterator<CallbackTask> tasksIterator = mTasks.iterator();
+		while (tasksIterator.hasNext()) {
+			tasksIterator.next().cancelTask();
+			tasksIterator.remove();
+		}
+
+		// Cancel timerTasks
+		Iterator<Map.Entry<String, TimerTask>> timersIterator = mTimerTasks.entrySet().iterator();
+		while (timersIterator.hasNext()) {
+			timersIterator.next().getValue().cancel();
+			timersIterator.remove();
 		}
 
 		// Cancel timer and thus its scheduled tasks
@@ -121,7 +135,7 @@ public class CallbackTaskManager {
 			mTimer = new Timer();
 		}
 
-		mTimer.scheduleAtFixedRate(new TimerTask() {
+		TimerTask timerTask = new TimerTask() {
 			@Override
 			public void run() {
 				mActivity.runOnUiThread(new Runnable() {
@@ -138,7 +152,15 @@ public class CallbackTaskManager {
 					}
 				});
 			}
-		}, 0, everySecs * 1000);
+		};
+
+		// Remember this task so we can cancel/reschedule it when this method is called with same id
+		TimerTask oldTask = mTimerTasks.put(id, timerTask);
+		if (oldTask != null) {
+			oldTask.cancel();
+		}
+
+		mTimer.scheduleAtFixedRate(timerTask, everySecs * 1000, everySecs * 1000);
 	}
 
 	/**

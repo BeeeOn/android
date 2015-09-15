@@ -347,6 +347,24 @@
 	<string name="settings_unit_preferences_noise">Noise</string>
 	<string name="settings_unit_preferences_temperature">Temperature</string>
 	<string name="settings_unit_unit">Units</string>
+	<string name="settings_language_default">Default(from system)</string>
+	<string name="settings_actualization_category_title">Actualization settings</string>
+	<string name="settings_actualization_screen_title">Automatic data actualization interval</string>
+	<string name="settings_cache_reload_title">Cache reload time</string>
+	<plurals name="settings_actualization_time_listpreference_seconds">
+		<item quantity="other">%d seconds</item>
+	</plurals>
+	<string name="settings_actualizationtime_listpreference_dont_actualize">Don\'t actualize</string>
+	<plurals name="settings_cache_listpreference_minutes">
+		<item quantity="one">1 minute</item>
+		<item quantity="other">%d minutes</item>
+	</plurals>
+	<string name="settings_cache_listpreference_no_cache">Don\'t use cache</string>
+	<string name="settings_prefs_choose_language">Language</string>
+	<string name="settings_language_listpreference_default">Use the system language</string>
+	<string name="settings_language_listpreference_english">English</string>
+	<string name="settings_language_listpreference_czech">Czech</string>
+	<string name="settings_language_listpreference_slovak">Slovak</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s\'s gateway #%2$d</string>

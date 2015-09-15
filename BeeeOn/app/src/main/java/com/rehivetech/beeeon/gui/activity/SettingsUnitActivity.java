@@ -1,91 +1,33 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.units.BaseUnit;
-import com.rehivetech.beeeon.household.device.units.NoiseUnit;
-import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
-import com.rehivetech.beeeon.persistence.Persistence;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.rehivetech.beeeon.gui.fragment.SettingsUnitFragment;
 
 /**
- * The control preference activity handles the preferences for the control extension.
+ * Created by david on 14.9.15.
  */
-public class SettingsUnitActivity extends ActionBarPreferenceActivity implements OnSharedPreferenceChangeListener {
-	/**
-	 * keys which are defined in res/xml/preferences.xml
-	 */
-
-	private final Map<String, BaseUnit> mUnits = new HashMap<String, BaseUnit>();
-	private final Map<String, ListPreference> mPreferences = new HashMap<String, ListPreference>();
-
-	private SharedPreferences mPrefs;
-
-	@SuppressWarnings("deprecation")
-	private void initUnit(BaseUnit unit) {
-		mUnits.put(unit.getPersistenceKey(), unit);
-
-		ListPreference pref = (ListPreference) findPreference(unit.getPersistenceKey());
-		pref.setEntries(unit.getEntries(this));
-		pref.setEntryValues(unit.getEntryValues());
-		pref.setSummary(unit.fromSettings(mPrefs).getSettingsName(this));
-
-
-		mPreferences.put(unit.getPersistenceKey(), pref);
-	}
+public class SettingsUnitActivity extends BaseApplicationActivity {
 
 	@Override
-	protected int getPreferencesXmlId() {
-		return R.xml.activity_settings_unit_preferences;
-	}
-
-	// added suppressWarnings because of support of lower version
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_settings_units);
+		setupToolbar(R.string.settings_unit_unit);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+		}
 
-		Controller controller = Controller.getInstance(this);
-
-		final Toolbar toolbar = getToolbar();
-		toolbar.setTitle(R.string.settings_unit_unit);
-
-		// Use own name for sharedPreferences
-		getPreferenceManager().setSharedPreferencesName(Persistence.getPreferencesFilename(controller.getActualUser().getId()));
-
-
-		// UserSettings can be null when user is not logged in!
-		mPrefs = controller.getUserSettings();
-		if (mPrefs == null) {
+		if (!Controller.getInstance(this).isLoggedIn()) {
+			// We need user to get his preferences
 			finish();
 			return;
 		}
-
-		initUnit(new TemperatureUnit());
-		initUnit(new NoiseUnit());
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		mPrefs.registerOnSharedPreferenceChangeListener(this);
-	}
-
-	@Override
-	protected void onPause() {
-		super.onPause();
-		mPrefs.unregisterOnSharedPreferenceChangeListener(this);
+		getSupportFragmentManager().beginTransaction().replace(R.id.settings_units_activity_fragment_holder, new SettingsUnitFragment()).commit();
 	}
 
 	@Override
@@ -93,33 +35,9 @@ public class SettingsUnitActivity extends ActionBarPreferenceActivity implements
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				finish();
-				return true;
+				break;
 		}
-		return false;
-	}
-
-	// @Override
-	// public boolean onPreferenceChange(Preference preference, Object newValue)
-	// {
-	//
-	// setDefaultLocAndAdap();
-	//
-	// return true;
-	// }
-
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		ListPreference pref = mPreferences.get(key);
-		BaseUnit unit = mUnits.get(key);
-
-		if (pref != null && unit != null) {
-			String summary = unit.fromSettings(sharedPreferences).getSettingsName(this);
-			pref.setSummary(summary);
-
-			// inform about settings being changed
-			Intent broadcastIntent = new Intent(Constants.BROADCAST_PREFERENCE_CHANGED);
-			sendBroadcast(broadcastIntent);
-		}
+		return super.onOptionsItemSelected(item);
 	}
 
 }

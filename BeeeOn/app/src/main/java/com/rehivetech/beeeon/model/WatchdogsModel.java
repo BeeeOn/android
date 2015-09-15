@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.model;
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -12,12 +13,13 @@ import java.util.List;
 
 public class WatchdogsModel extends BaseModel {
 
-	private static final int RELOAD_EVERY_SECONDS = 10 * 60;
+	private final int mReloadEverySecs;
 
 	private final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>(); // gateId => watchdog dataHolder
 
-	public WatchdogsModel(INetwork network) {
+	public WatchdogsModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
+		mReloadEverySecs = cacheHoldTime.getSeconds();
 	}
 
 	/**
@@ -56,7 +58,7 @@ public class WatchdogsModel extends BaseModel {
 	 * @return
 	 */
 	public boolean reloadWatchdogsByGate(String gateId, boolean forceReload) {
-		if (!forceReload && !mWatchdogs.isExpired(gateId, RELOAD_EVERY_SECONDS)) {
+		if (!forceReload && !mWatchdogs.isExpired(gateId, mReloadEverySecs)) {
 			return false;
 		}
 
