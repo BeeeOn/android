@@ -88,7 +88,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mActiveGateId = getArguments().getString(KEY_GATE_ID);
-		setAutoReloadDataTimer();
 	}
 
 	private void setAutoReloadDataTimer() {
@@ -213,6 +212,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			mActionMode = mActivity.startSupportActionMode(new ActionModeEditModules());
 			mDeviceAdapter.setSelectedItems(selectedDevices);
 		}
+		setAutoReloadDataTimer();
 	}
 
 	/**

@@ -200,7 +200,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		setHasOptionsMenu(true);
-		setAutoReloadDataTimer();
 	}
 
 	private void setAutoReloadDataTimer() {
@@ -246,6 +245,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mViewPager.setCurrentItem(savedInstanceState.getInt(KEY_VIEW_PAGER_SELECTED_ITEM));
 			Log.d(TAG, "restore instance");
 		}
+		setAutoReloadDataTimer();
 	}
 
 	@Override
