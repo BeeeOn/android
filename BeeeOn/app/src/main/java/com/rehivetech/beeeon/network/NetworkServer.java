@@ -9,6 +9,7 @@ import com.rehivetech.beeeon.R;
  * @author Robyer
  */
 public enum NetworkServer implements INameIdentifier {
+	SERVER_BEEEON("beeeon", "BeeeOn", "cloud.beeeon.com", 4565),
 	SERVER_ANT2_ALPHA("ant-2-alpha", "Ant-2 (alpha)", "ant-2.fit.vutbr.cz", 4566),
 	SERVER_ANT2_BETA("ant-2-beta", "Ant-2 (beta)", "ant-2.fit.vutbr.cz", 4565),
 	SERVER_IOTPRO("iotpro", "IOTPro (production)", "iotpro.fit.vutbr.cz", 4565);
@@ -63,6 +64,6 @@ public enum NetworkServer implements INameIdentifier {
 	}
 
 	public static final NetworkServer getDefaultServer() {
-			return SERVER_IOTPRO;
+			return SERVER_BEEEON;
 	}
 }
