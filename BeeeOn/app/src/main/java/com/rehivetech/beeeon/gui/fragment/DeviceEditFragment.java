@@ -60,7 +60,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		EditText editText = (EditText) view.findViewById(R.id.device_edit_device_name);
 		Controller controller = Controller.getInstance(getActivity());
 		mDevice = controller.getDevicesModel().getDevice(mActivity.getmGateId(), mActivity.getmDeviceId());
-		editText.setText(mDevice.getName(mActivity));
+		editText.setText(mDevice.getCustomName());
 		editText.setHint(mDevice.getType().getNameRes());
 
 		RefreshInterval refreshInterval;
