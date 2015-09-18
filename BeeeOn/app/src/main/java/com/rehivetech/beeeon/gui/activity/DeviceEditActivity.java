@@ -7,11 +7,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.DeviceEditFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 
 /**
@@ -88,9 +90,17 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
-	private void doUnregisterDeviceTask(String deviceId) {
-		//TODO implement
-		Toast.makeText(this, "Removing Task", Toast.LENGTH_SHORT).show();
+	private void doRemoveDeviceTask(Device device) {
+		final RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(this);
+		removeDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success)
+					Toast.makeText(DeviceEditActivity.this, "Removing Task", Toast.LENGTH_SHORT).show();
+
+			}
+		});
+		callbackTaskManager.executeTask(removeDeviceTask, device);
 	}
 
 	@Override
@@ -112,7 +122,8 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 	@Override
 	public void onConfirm(int confirmType, String dataId) {
 		if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
-			doUnregisterDeviceTask(dataId);
+
+			doRemoveDeviceTask(Controller.getInstance(this).getDevicesModel().getDevice(mGateId, dataId));
 			finish();
 		}
 	}
