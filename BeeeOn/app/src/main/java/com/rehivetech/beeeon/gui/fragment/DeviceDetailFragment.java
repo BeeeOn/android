@@ -300,8 +300,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				actionBar.setTitle(mDevice.getName(mActivity));
 			}
 		}
-		mDeviceLocation.setText(location.getName());
-		mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
+
+		if (location != null) {
+			mDeviceLocation.setText(location.getName());
+			mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
+		}
+
 		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
 
 		// signal
