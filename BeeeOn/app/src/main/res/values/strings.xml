@@ -259,6 +259,8 @@
 	<string name="device_edit_delete_device_confirm_dialog_text">Do you really want to remove the device</string>
 	<string name="device_edit_toast_not_specified_gate_or_module">Not specified gateway or module</string>
 	<string name="device_edit_toast_device_not_edited_successfully">Device was not edited successfully</string>
+	<string name="device_edit_toast_editing_was_successfull">Editing device was successfull</string>
+	<string name="device_edit_toast_removing_was_successfull">Removing device was successfull</string>
 
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Remove module</string>

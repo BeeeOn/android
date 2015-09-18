@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Created by david on 15.9.15.
@@ -62,9 +63,7 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		LocationArrayAdapter locationAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
 		locationAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
 		locationSpinner.setAdapter(locationAdapter);
-		// TODO dont know hot to set the active location :/
-
-
+		locationSpinner.setSelection(getLocationsIndexFromArray(locationAdapter.getLocations(),mDevice.getLocationId()));
 		return view;
 	}
 
@@ -91,5 +90,16 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		what.add(Module.SaveModule.SAVE_REFRESH);
 
 		return new Device.DataPair(mDevice, newLocation, what);
+	}
+
+	private int getLocationsIndexFromArray(List<Location> locations, String locationId) {
+		int index = 0;
+		for (Location room : locations) {
+			if (room.getId().equalsIgnoreCase(locationId)) {
+				return index;
+			}
+			index++;
+		}
+		return index;
 	}
 }

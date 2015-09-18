@@ -84,7 +84,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 			@Override
 			public void onExecute(boolean success) {
 				if (success)
-					Toast.makeText(DeviceEditActivity.this, "Editing task successfull", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DeviceEditActivity.this,R.string.device_edit_toast_editing_was_successfull, Toast.LENGTH_SHORT).show();
 			}
 		});
 		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
@@ -96,7 +96,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 			@Override
 			public void onExecute(boolean success) {
 				if (success)
-					Toast.makeText(DeviceEditActivity.this, "Removing Task", Toast.LENGTH_SHORT).show();
+					Toast.makeText(DeviceEditActivity.this, R.string.device_edit_toast_removing_was_successfull, Toast.LENGTH_SHORT).show();
 
 			}
 		});
@@ -122,7 +122,6 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 	@Override
 	public void onConfirm(int confirmType, String dataId) {
 		if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
-
 			doRemoveDeviceTask(Controller.getInstance(this).getDevicesModel().getDevice(mGateId, dataId));
 			finish();
 		}
