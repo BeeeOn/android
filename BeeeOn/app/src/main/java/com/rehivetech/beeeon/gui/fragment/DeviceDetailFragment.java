@@ -88,7 +88,32 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private ViewPager mViewPager;
 	private TabLayout mTabLayout;
 
-	private ICallbackTaskFactory mICallbackTaskFactory;
+	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
+		@Override
+		public CallbackTask createTask() {
+			ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.DEVICES);
+
+			final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
+
+			reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
+				@Override
+				public void onExecute(boolean success) {
+					if (success) {
+						updateLayout();
+						if (mViewPager != null) {
+							mViewPager.setCurrentItem(tabPos);
+						}
+					}
+				}
+			});
+			return reloadDevicesTask;
+		}
+
+		@Override
+		public Object createParam() {
+			return mGateId;
+		}
+	};;
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 
@@ -203,32 +228,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	}
 
 	private void setAutoReloadDataTimer() {
-		mICallbackTaskFactory = new ICallbackTaskFactory() {
-			@Override
-			public CallbackTask createTask() {
-				ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.DEVICES);
-
-				final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
-
-				reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
-					@Override
-					public void onExecute(boolean success) {
-						if (success) {
-							updateLayout();
-							if (mViewPager != null) {
-								mViewPager.setCurrentItem(tabPos);
-							}
-						}
-					}
-				});
-				return reloadDevicesTask;
-			}
-
-			@Override
-			public Object createParam() {
-				return mGateId;
-			}
-		};
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
 		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
 		int period = item.getSeconds();

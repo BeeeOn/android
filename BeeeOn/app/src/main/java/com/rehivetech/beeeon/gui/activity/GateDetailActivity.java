@@ -33,9 +33,35 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 
-	private ICallbackTaskFactory mICallbackTaskFactory;
 	private static final String GATE_DETAIL_ACIVITY_AUTO_RELOAD_ID = "gateDetailActivityAutoReload";
 
+	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
+		@Override
+		public CallbackTask createTask() {
+			ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(GateDetailActivity.this, false);
+
+			reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
+				@Override
+				public void onExecute(boolean success) {
+					GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
+					if (gateInfo == null) {
+						Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
+						finish();
+					} else {
+						if (mFragment != null) {
+							mFragment.fillData();
+						}
+					}
+				}
+			});
+			return reloadGateInfoTask;
+		}
+
+		@Override
+		public Object createParam() {
+			return mGateId;
+		}
+	};
 
 	private String mGateId;
 	@Nullable
@@ -67,33 +93,6 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	}
 
 	private void setAutoReloadDataTimer() {
-		mICallbackTaskFactory = new ICallbackTaskFactory() {
-			@Override
-			public CallbackTask createTask() {
-				ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(GateDetailActivity.this, false);
-
-				reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
-					@Override
-					public void onExecute(boolean success) {
-						GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
-						if (gateInfo == null) {
-							Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
-							finish();
-						} else {
-							if (mFragment != null) {
-								mFragment.fillData();
-							}
-						}
-					}
-				});
-				return reloadGateInfoTask;
-			}
-
-			@Override
-			public Object createParam() {
-				return mGateId;
-			}
-		};
 		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
 		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
 		int period = item.getSeconds();

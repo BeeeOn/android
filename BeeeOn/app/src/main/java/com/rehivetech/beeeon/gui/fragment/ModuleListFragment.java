@@ -62,7 +62,29 @@ public class ModuleListFragment extends BaseApplicationFragment {
 
 	private static final String MODULE_LIST_FRAGMENT_AUTO_RELOAD_ID = "moduleListFragmentAutoReload";
 
-	private ICallbackTaskFactory mICallbackTaskFactory;
+	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
+		@Override
+		public CallbackTask createTask() {
+			ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
+
+			fullReloadTask.setListener(new ICallbackTaskListener() {
+				@Override
+				public void onExecute(boolean success) {
+					if (!success)
+						return;
+
+					mActivity.setActiveGateAndMenu();
+					mActivity.redraw();
+				}
+			});
+			return fullReloadTask;
+		}
+
+		@Override
+		public Object createParam() {
+			return mActiveGateId;
+		}
+	};;
 
 
 	private MainActivity mActivity;
@@ -120,29 +142,6 @@ public class ModuleListFragment extends BaseApplicationFragment {
 	}
 
 	private void setAutoReloadDataTimer() {
-		mICallbackTaskFactory = new ICallbackTaskFactory() {
-			@Override
-			public CallbackTask createTask() {
-				ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
-
-				fullReloadTask.setListener(new ICallbackTaskListener() {
-					@Override
-					public void onExecute(boolean success) {
-						if (!success)
-							return;
-
-						mActivity.setActiveGateAndMenu();
-						mActivity.redraw();
-					}
-				});
-				return fullReloadTask;
-			}
-
-			@Override
-			public Object createParam() {
-				return mActiveGateId;
-			}
-		};
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
 		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
 		int period = item.getSeconds();

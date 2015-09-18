@@ -51,7 +51,27 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	private static final String KEY_SELECTED_ITEMS = "selected_items";
 	private static final String DEVICE_LIST_FRAGMENT_AUTO_RELOAD_ID = "deviceListFragmentAutoReload";
 
-	private ICallbackTaskFactory mICallbackTaskFactory;
+	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
+		@Override
+		public CallbackTask createTask() {
+			ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, ReloadGateDataTask.ReloadWhat.DEVICES);
+			reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+				@Override
+				public void onExecute(boolean success) {
+					if (!success) return;
+
+					// stop refreshing
+					updateData();
+				}
+			});
+			return reloadGateDataTask;
+		}
+
+		@Override
+		public Object createParam() {
+			return mActiveGateId;
+		}
+	};
 
 
 	private
@@ -91,27 +111,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	}
 
 	private void setAutoReloadDataTimer() {
-		mICallbackTaskFactory = new ICallbackTaskFactory() {
-			@Override
-			public CallbackTask createTask() {
-				ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, ReloadGateDataTask.ReloadWhat.DEVICES);
-				reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-					@Override
-					public void onExecute(boolean success) {
-						if (!success) return;
-
-						// stop refreshing
-						updateData();
-					}
-				});
-				return reloadGateDataTask;
-			}
-
-			@Override
-			public Object createParam() {
-				return mActiveGateId;
-			}
-		};
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
 		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
 		int period = item.getSeconds();

@@ -64,7 +64,25 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 	private Watchdog mSelectedItem;
 	private int mSelectedItemPos;
 
-	private ICallbackTaskFactory mICallbackTaskFactory;
+	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
+		@Override
+		public CallbackTask createTask() {
+			ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
+
+			reloadWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
+				@Override
+				public void onExecute(boolean success) {
+					redrawRules();
+				}
+			});
+			return reloadWatchdogTask;
+		}
+
+		@Override
+		public Object createParam() {
+			return mActiveGateId;
+		}
+	};;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -95,25 +113,6 @@ public class WatchdogListFragment extends BaseApplicationFragment {
 
 
 	private void setAutoReloadDataTimer() {
-		mICallbackTaskFactory = new ICallbackTaskFactory() {
-			@Override
-			public CallbackTask createTask() {
-				ReloadGateDataTask reloadWatchdogTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.WATCHDOGS);
-
-				reloadWatchdogTask.setListener(new CallbackTask.ICallbackTaskListener() {
-					@Override
-					public void onExecute(boolean success) {
-						redrawRules();
-					}
-				});
-				return reloadWatchdogTask;
-			}
-
-			@Override
-			public Object createParam() {
-				return mActiveGateId;
-			}
-		};
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
 		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
 		int period = item.getSeconds();
