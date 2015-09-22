@@ -250,6 +250,16 @@
 	<string name="device_setup_or">or</string>
 	<string name="device_setup_setup_device">Setup device</string>
 
+	<!-- Device edit -->
+	<string name="manifest_title_device_edit">Edit device</string>
+	<string name="device_edit_device_name">Name</string>
+	<string name="device_edit_location_title">Location</string>
+	<string name="device_edit_refresh_title">Refresh interval</string>
+	<string name="device_edit_delete_device_confirm_dialog_title">Removing device</string>
+	<string name="device_edit_delete_device_confirm_dialog_text">Do you really want to remove the device</string>
+	<string name="device_edit_toast_not_specified_gate_or_module">Not specified gateway or module</string>
+	<string name="device_edit_toast_device_not_edited_successfully">Device was not edited successfully</string>
+
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Remove module</string>
 	<string name="module_list_action_module_add">Add module</string>
@@ -273,7 +283,7 @@
 	<string name="device_detail_label_led">LED status</string>
 	<string name="device_detail_default_group">Default</string>
 	<!-- Module edit -->
-	<string name="module_edit_label_detail_location">Location</string>
+	<string name="module_edit_label_dtail_location">Location</string>
 	<string name="module_edit_label_module_name">Name of module</string>
 	<string name="module_edit_refresh_time">Refresh time </string>
 	<string name="module_edit_setup_new_location_hint">New location name</string>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+	<!-- name,location, interval -->
+
+	<LinearLayout
+		android:paddingLeft="72dp"
+		android:paddingRight="16dp"
+		android:paddingBottom="20dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/beeeon_primary"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/device_edit_device_name"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+			android:textColor="@color/gray_light"
+			/>
+
+		<EditText
+			android:id="@+id/device_edit_device_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+			android:textColorLink="@color/white"
+			android:paddingBottom="20dp"
+			android:textColor="@color/white"
+			android:textColorHint="@color/white"
+			/>
+	</LinearLayout>
+
+	<View
+		style="@style/BeeeOn.Divider.Full"
+		android:layout_marginBottom="16dp"
+		/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:layout_centerVertical="true"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginLeft="16dp"
+			android:layout_marginStart="16dp"
+			android:src="@drawable/ic_bell_dark_24dp"
+			/>
+
+		<TextView
+			android:id="@+id/device_edit_location_spinner_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_secondary_text"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+			android:layout_marginLeft="72dp"
+			android:layout_marginStart="72dp"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:text="@string/device_edit_location_title"
+			/>
+
+		<Spinner
+			android:id="@+id/device_edit_location_spinner"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="16dp"
+			android:layout_marginRight="@dimen/activity_horizontal_margin"
+			android:layout_marginEnd="@dimen/activity_horizontal_margin"
+			android:layout_below="@+id/device_edit_location_spinner_label"
+			android:layout_alignLeft="@+id/device_edit_location_spinner_label"
+			android:layout_alignStart="@+id/device_edit_location_spinner_label"
+			/>
+
+	</RelativeLayout>
+
+	<View
+		style="@style/BeeeOn.Divider"
+		android:layout_marginTop="16dp"
+		android:layout_marginBottom="16dp"
+		/>
+
+	<ViewStub
+		android:id="@+id/device_edit_fragment_refresh_view_stub"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout="@layout/fragment_device_edit_refresh_view"/>
+
+</LinearLayout>
