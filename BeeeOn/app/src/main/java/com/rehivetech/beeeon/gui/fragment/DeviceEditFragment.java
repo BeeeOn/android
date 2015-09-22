@@ -18,6 +18,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.DeviceEditActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
+import com.rehivetech.beeeon.gui.adapter.RefreshIntervalAdapter;
 import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -140,33 +141,5 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		mLocationArrayAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
 		mLocationSpinner.setAdapter(mLocationArrayAdapter);
 		mLocationSpinner.setSelection(getLocationsIndexFromArray(locations, mNewLocation.getId()));
-	}
-
-	private class RefreshIntervalAdapter extends ArrayAdapter<RefreshInterval> {
-
-		public RefreshIntervalAdapter(Context context) {
-			super(context, android.R.layout.simple_spinner_item, RefreshInterval.values());
-			setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		}
-
-		@Override
-		public View getDropDownView(int position, View convertView, ViewGroup parent) {
-			View view = super.getDropDownView(position, convertView, parent);
-
-			TextView textView = (TextView) view.findViewById(android.R.id.text1);
-			textView.setText(getItem(position).getStringInterval(getContext()));
-
-			return view;
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = super.getView(position, convertView, parent);
-
-			TextView textView = (TextView) view.findViewById(android.R.id.text1);
-			textView.setText(getItem(position).getStringInterval(getContext()));
-
-			return view;
-		}
 	}
 }
