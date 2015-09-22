@@ -67,14 +67,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		if ((refreshInterval = mDevice.getRefresh()) != null) {
 			((ViewStub) view.findViewById(R.id.device_edit_fragment_refresh_view_stub)).inflate();
 			mRefreshTimeSpinner = (Spinner) view.findViewById(R.id.device_edit_refresh_spinner);
-			RefreshInterval[] data = RefreshInterval.values();
-			List<CharSequence> list = new ArrayList<>();
-			for (RefreshInterval r : data) {
-				list.add(r.getStringInterval(mActivity));
-			}
-			RefreshIntervalAdapter times = new RefreshIntervalAdapter(getActivity(), android.R.layout.simple_list_item_1, data);
-			times.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			mRefreshTimeSpinner.setAdapter(times);
+			mRefreshTimeSpinner.setAdapter(new RefreshIntervalAdapter(getActivity()));
 			mRefreshTimeSpinner.setSelection(refreshInterval.getIntervalIndex());
 		}
 
@@ -150,51 +143,30 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 	}
 
 	private class RefreshIntervalAdapter extends ArrayAdapter<RefreshInterval> {
-		private RefreshInterval[] items;
-		private Context mContext;
-		private int mDropDownLayoutResource;
-		private int mViewLayoutResource;
 
-		public RefreshIntervalAdapter(Context context, int resource, RefreshInterval[] objects) {
-			super(context, resource, objects);
-			items = objects;
-			mContext = context;
-			mViewLayoutResource = resource;
-		}
-
-		@Override
-		public void setDropDownViewResource(int resource) {
-			mDropDownLayoutResource = resource;
-			super.setDropDownViewResource(resource);
+		public RefreshIntervalAdapter(Context context) {
+			super(context, android.R.layout.simple_spinner_item, RefreshInterval.values());
+			setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		}
 
 		@Override
 		public View getDropDownView(int position, View convertView, ViewGroup parent) {
-			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
+			View view = super.getDropDownView(position, convertView, parent);
 
-			TextView textView = (TextView) row.findViewById(android.R.id.text1);
-			textView.setText(items[position].getStringInterval(mContext));
+			TextView textView = (TextView) view.findViewById(android.R.id.text1);
+			textView.setText(getItem(position).getStringInterval(getContext()));
 
-			return row;
+			return view;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View v = convertView;
-			if (convertView == null) {
-				LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = inflater.inflate(mViewLayoutResource, parent, false);
-			}
-			TextView textView = (TextView) v.findViewById(android.R.id.text1);
-			textView.setText(items[position].getStringInterval(mContext));
+			View view = super.getView(position, convertView, parent);
 
-			return v;
-		}
+			TextView textView = (TextView) view.findViewById(android.R.id.text1);
+			textView.setText(getItem(position).getStringInterval(getContext()));
 
-		@Override
-		public RefreshInterval getItem(int position) {
-			return items[position];
+			return view;
 		}
 	}
 }
