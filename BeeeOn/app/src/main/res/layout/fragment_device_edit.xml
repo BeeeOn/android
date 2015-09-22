@@ -30,7 +30,7 @@
 			android:textColorLink="@color/white"
 			android:paddingBottom="20dp"
 			android:textColor="@color/white"
-			android:textColorHint="@color/white"
+			android:textColorHint="@color/beeeon_placeholder_primary"
 			/>
 	</LinearLayout>
 
