@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.dialog;
 
+import android.app.Activity;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,25 +11,32 @@ import android.widget.Toast;
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.DeviceEditActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
 import com.rehivetech.beeeon.household.location.Location;
 
 /**
- * Created by root on 19.9.15.
+ * Created by xkozak15 on 19.9.15.
  */
 public class AddLocationDialog extends SimpleDialogFragment {
 
 	public static final String TAG = "new_loc";
 
-	private OnSaveClicked mCallback;
+	private AddLocationDialogListener mCallback;
 
-	public static void show(FragmentActivity activity) {
+	public static <T extends FragmentActivity & AddLocationDialogListener> void show(T activity) {
 		AddLocationDialog addLocationDialog = new AddLocationDialog();
-		addLocationDialog.setCallback(((DeviceEditActivity) activity).getFragment());
 		addLocationDialog.show(activity.getSupportFragmentManager(), TAG);
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		try {
+			mCallback = (AddLocationDialogListener) getActivity();
+		} catch (ClassCastException e) {
+			throw new ClassCastException(String.format("%s must implement AddLocationDialogListener", activity.toString()));
+		}
+	}
 
 	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder) {
 		builder.setTitle(R.string.device_edit_overlay_dialog_create_new_location);
@@ -51,7 +59,7 @@ public class AddLocationDialog extends SimpleDialogFragment {
 					Toast.makeText(getActivity(), R.string.device_edit_toast_icon_or_text_is_null, Toast.LENGTH_SHORT).show();
 					return;
 				}
-				mCallback.saveNewDevice(name, icon);
+				mCallback.onCreateLocation(name, icon);
 				dismiss();
 			}
 		});
@@ -66,11 +74,7 @@ public class AddLocationDialog extends SimpleDialogFragment {
 		return builder;
 	}
 
-	public void setCallback(OnSaveClicked callback) {
-		mCallback = callback;
-	}
-
-	public interface OnSaveClicked {
-		void saveNewDevice(String name, Location.LocationIcon icon);
+	public interface AddLocationDialogListener {
+		void onCreateLocation(String name, Location.LocationIcon icon);
 	}
 }

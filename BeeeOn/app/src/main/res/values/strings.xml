@@ -11,6 +11,8 @@
 	<string name="manifest_action_watchdog">Watchdog</string>
 	<string name="manifest_facebook_app_id" translatable="false">868028889921254</string>
 	<string name="manifest_title_device_add">Send the request</string>
+	<string name="manifest_title_device_detail">Device detail</string>
+	<string name="manifest_title_device_edit">Edit device</string>
 	<string name="manifest_title_gate_add">Add gateway</string>
 	<string name="manifest_title_gate_add_user">Add user</string>
 	<string name="manifest_title_gate_detail">Gateway details</string>
@@ -251,7 +253,6 @@
 	<string name="device_setup_setup_device">Setup device</string>
 
 	<!-- Device edit -->
-	<string name="manifest_title_device_edit">Edit device</string>
 	<string name="device_edit_device_name">Name</string>
 	<string name="device_edit_location_title">Location</string>
 	<string name="device_edit_refresh_title">Refresh interval</string>
@@ -261,6 +262,7 @@
 	<string name="device_edit_toast_device_not_edited_successfully">Device was not edited successfully</string>
 	<string name="device_edit_toast_editing_was_successfull">Editing device was successfull</string>
 	<string name="device_edit_toast_removing_was_successfull">Removing device was successfull</string>
+	<string name="device_edit_toast_location_was_added">Location was created successfully</string>
 	<string name="device_edit_overlay_dialog_create_new_location">Create new location</string>
 	<string name="device_edit_overlay_dialog_edit_text_hint">Write new name</string>
 	<string name="device_edit_toast_icon_or_text_is_null">Please set the icon and write the name</string>
@@ -287,6 +289,7 @@
 	<string name="device_detail_list_modules_no_item_title">NO MODULES</string>
 	<string name="device_detail_label_led">LED status</string>
 	<string name="device_detail_default_group">Default</string>
+
 	<!-- Module edit -->
 	<string name="module_edit_label_dtail_location">Location</string>
 	<string name="module_edit_label_module_name">Name of module</string>
