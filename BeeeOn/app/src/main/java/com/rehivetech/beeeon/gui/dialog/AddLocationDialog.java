@@ -30,7 +30,7 @@ public class AddLocationDialog extends SimpleDialogFragment {
 	}
 
 
-	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder){
+	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder) {
 		builder.setTitle(R.string.device_edit_overlay_dialog_create_new_location);
 		LayoutInflater li = LayoutInflater.from(getActivity());
 
@@ -73,7 +73,7 @@ public class AddLocationDialog extends SimpleDialogFragment {
 		mCallback = callback;
 	}
 
-	public interface OnSaveClicked{
+	public interface OnSaveClicked {
 		void saveNewDevice(String name, Location.LocationIcon icon);
 	}
 }

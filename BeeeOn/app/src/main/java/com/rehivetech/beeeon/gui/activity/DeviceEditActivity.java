@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,11 +10,9 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.DeviceEditFragment;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
@@ -24,7 +21,7 @@ import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 /**
  * Created by david on 15.9.15.
  */
-public class DeviceEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener{
+public class DeviceEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 
 	private String mGateId;
 	private String mDeviceId;
@@ -93,7 +90,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 			@Override
 			public void onExecute(boolean success) {
 				if (success)
-					Toast.makeText(DeviceEditActivity.this,R.string.device_edit_toast_editing_was_successfull, Toast.LENGTH_SHORT).show();
+					Toast.makeText(DeviceEditActivity.this, R.string.device_edit_toast_editing_was_successfull, Toast.LENGTH_SHORT).show();
 			}
 		});
 		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);

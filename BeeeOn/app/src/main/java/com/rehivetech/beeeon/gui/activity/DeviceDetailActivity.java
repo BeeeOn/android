@@ -13,54 +13,54 @@ import com.rehivetech.beeeon.gui.fragment.DeviceDetailFragment;
  */
 public class DeviceDetailActivity extends BaseApplicationActivity {
 
-    private static final String TAG = DeviceDetailActivity.class.getSimpleName();
+	private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
-    public static final String EXTRA_GATE_ID = "gate_id";
-    public static final String EXTRA_DEVICE_ID = "device_id";
-    public static final String EXTRA_MODULE_ID = "module_id"; // NOTE: For future use
+	public static final String EXTRA_GATE_ID = "gate_id";
+	public static final String EXTRA_DEVICE_ID = "device_id";
+	public static final String EXTRA_MODULE_ID = "module_id"; // NOTE: For future use
 
-    private String mGateId;
-    private String mDeviceId;
+	private String mGateId;
+	private String mDeviceId;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_detail);
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_device_detail);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            mGateId = bundle.getString(EXTRA_GATE_ID);
-            mDeviceId = bundle.getString(EXTRA_DEVICE_ID);
-        }
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			mGateId = bundle.getString(EXTRA_GATE_ID);
+			mDeviceId = bundle.getString(EXTRA_DEVICE_ID);
+		}
 
-        if (mGateId == null || mDeviceId == null) {
-            Toast.makeText(this, R.string.module_detail_toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
+		if (mGateId == null || mDeviceId == null) {
+			Toast.makeText(this, R.string.module_detail_toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
+			finish();
+			return;
+		}
 
-        DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
-        getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
+		DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
+		getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
 
-    }
+	}
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				break;
 
-            case R.id.device_detail_menu_action_edit:
-                Intent intent = new Intent(this, DeviceEditActivity.class);
-                intent.putExtra(EXTRA_GATE_ID, mGateId);
-                intent.putExtra(EXTRA_DEVICE_ID, mDeviceId);
-                startActivity(intent);
-                break;
+			case R.id.device_detail_menu_action_edit:
+				Intent intent = new Intent(this, DeviceEditActivity.class);
+				intent.putExtra(EXTRA_GATE_ID, mGateId);
+				intent.putExtra(EXTRA_DEVICE_ID, mDeviceId);
+				startActivity(intent);
+				break;
 
-        }
-        return false;
-    }
+		}
+		return false;
+	}
 
 
 }

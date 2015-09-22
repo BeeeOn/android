@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,31 +10,27 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.DeviceEditActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
-import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
 import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 /**
  * Created by david on 15.9.15.
  */
-public class DeviceEditFragment extends BaseApplicationFragment implements AddLocationDialog.OnSaveClicked{
+public class DeviceEditFragment extends BaseApplicationFragment implements AddLocationDialog.OnSaveClicked {
 	private DeviceEditActivity mActivity;
 
 	private Device mDevice;
@@ -93,8 +88,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 				if (i == mLocationArrayAdapter.getCount() - 1) {
 					// the last item of the list is the new room, the new room will be stored in mNewLocation
 					AddLocationDialog.show(getActivity());
-				}
-				else{
+				} else {
 					//if something else is chosen, this variable is null
 					mNewLocation = null;
 			}
