@@ -257,11 +257,10 @@
 	<string name="device_edit_location_title">Location</string>
 	<string name="device_edit_refresh_title">Refresh interval</string>
 	<string name="device_edit_delete_device_confirm_dialog_title">Removing device</string>
-	<string name="device_edit_delete_device_confirm_dialog_text">Do you really want to remove the device</string>
-	<string name="device_edit_toast_not_specified_gate_or_module">Not specified gateway or module</string>
-	<string name="device_edit_toast_device_not_edited_successfully">Device was not edited successfully</string>
-	<string name="device_edit_toast_editing_was_successfull">Editing device was successfull</string>
-	<string name="device_edit_toast_removing_was_successfull">Removing device was successfull</string>
+	<string name="device_edit_delete_device_confirm_dialog_text">Do you really want to remove the device?</string>
+	<string name="device_edit_toast_not_specified_gate_or_device">Not specified gateway or device</string>
+	<string name="device_edit_toast_editing_was_successful">Editing device was successful</string>
+	<string name="device_edit_toast_removing_was_successful">Device was sucessfuly removed</string>
 	<string name="device_edit_toast_location_was_added">Location was created successfully</string>
 	<string name="device_edit_overlay_dialog_create_new_location">Create new location</string>
 	<string name="device_edit_overlay_dialog_edit_text_hint">Write new name</string>

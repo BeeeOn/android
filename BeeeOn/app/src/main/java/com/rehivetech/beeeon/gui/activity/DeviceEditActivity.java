@@ -50,7 +50,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 		mDeviceId = intent.getStringExtra(DeviceDetailActivity.EXTRA_DEVICE_ID);
 
 		if (mGateId == null || mDeviceId == null) {
-			Toast.makeText(this, R.string.device_edit_toast_not_specified_gate_or_module, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.device_edit_toast_not_specified_gate_or_device, Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
@@ -98,7 +98,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(DeviceEditActivity.this, R.string.device_edit_toast_editing_was_successfull, Toast.LENGTH_SHORT).show();
+					Toast.makeText(DeviceEditActivity.this, R.string.device_edit_toast_editing_was_successful, Toast.LENGTH_SHORT).show();
 					finish();
 				}
 			}
@@ -112,7 +112,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					Toast.makeText(DeviceEditActivity.this, R.string.device_edit_toast_removing_was_successfull, Toast.LENGTH_SHORT).show();
+					Toast.makeText(DeviceEditActivity.this, R.string.device_edit_toast_removing_was_successful, Toast.LENGTH_SHORT).show();
 					finish();
 				}
 			}

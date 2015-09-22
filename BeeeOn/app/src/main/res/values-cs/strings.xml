@@ -5,6 +5,8 @@
 	<string name="manifest_action_notification">Notifikace</string>
 	<string name="manifest_action_watchdog">Hlídač</string>
 	<string name="manifest_title_device_add">Přidat zařízení</string>
+	<string name="manifest_title_device_detail">Detail zařízení</string>
+	<string name="manifest_title_device_edit">Úprava zařízení</string>
 	<string name="manifest_title_gate_add">Přidat bránu</string>
 	<string name="manifest_title_gate_add_user">Přidat uživatele</string>
 	<string name="manifest_title_gate_detail">Detaily brány</string>
@@ -226,19 +228,18 @@
 	<string name="device_setup_toast_new_module_added">Nové zařízení bylo přidáno</string>
 
 	<!-- Device edit -->
-	<string name="manifest_title_device_edit">Editace zařízení</string>
-	<string name="device_edit_device_name">Jméno</string>
-	<string name="device_edit_location_title">Lokace</string>
-	<string name="device_edit_refresh_title">Interval refreshe</string>
+	<string name="device_edit_device_name">Název zařízení</string>
+	<string name="device_edit_location_title">Umístění</string>
+	<string name="device_edit_refresh_title">Interval probuzení</string>
 	<string name="device_edit_delete_device_confirm_dialog_title">Odstraňování zařízení</string>
 	<string name="device_edit_delete_device_confirm_dialog_text">Opravdu chcete odstranit zařízení?</string>
-	<string name="device_edit_toast_not_specified_gate_or_module">Nespecifikována brána nebo modul</string>
-	<string name="device_edit_toast_device_not_edited_successfully">Zařízení nebylo úspěšně editováno</string>
-	<string name="device_edit_toast_editing_was_successfull">Zařízení bylo úspěšně editováno</string>
-	<string name="device_edit_toast_removing_was_successfull">Odstranění zařízení proběhlo úspěšně</string>
-	<string name="device_edit_overlay_dialog_create_new_location">Vytváření nové lokace</string>
-	<string name="device_edit_overlay_dialog_edit_text_hint">Napiště jméno</string>
-	<string name="device_edit_toast_icon_or_text_is_null">Prosím zvolte ikonku a napište jméno</string>
+	<string name="device_edit_toast_not_specified_gate_or_device">Nespecifikována brána nebo zařízení</string>
+	<string name="device_edit_toast_editing_was_successful">Úprava zařízení proběhla úspěšně</string>
+	<string name="device_edit_toast_removing_was_successful">Zařízení bylo úspěšně odstraněno</string>
+	<string name="device_edit_toast_location_was_added">Umístění bylo úspěšně vytvořeno</string>
+	<string name="device_edit_overlay_dialog_create_new_location">Vytváření nového umístění</string>
+	<string name="device_edit_overlay_dialog_edit_text_hint">Zadejte název</string>
+	<string name="device_edit_toast_icon_or_text_is_null">Prosím zvolte ikonku a zadejte název</string>
 
 	<!-- Device add -->
 	<string name="device_add_btn_send_pair">Start</string>
