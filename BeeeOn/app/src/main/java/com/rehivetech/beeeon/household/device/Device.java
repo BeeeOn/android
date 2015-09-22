@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.household.device;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.IIdentifier;
@@ -37,7 +38,7 @@ public final class Device implements IIdentifier {
 	private boolean mInitialized;
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
-	private String mName;
+	private String mCustomName = "";
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -95,7 +96,7 @@ public final class Device implements IIdentifier {
 	 */
 	public boolean isExpired() {
 		RefreshInterval refresh = getRefresh();
-		if (refresh == null) {
+		if (refresh == null || mLastUpdate == null) {
 			return true;
 		}
 		return mLastUpdate.plusSeconds(refresh.getInterval()).isBeforeNow();
@@ -140,12 +141,33 @@ public final class Device implements IIdentifier {
 		return mGateId;
 	}
 
-	public String getName() {
-		return mName;
+	/**
+	 * Return name of this device to be used for showing in GUI.
+	 *
+	 * @param context
+	 * @return User configured name (if set), or default device name from definition.
+	 * @see #setCustomName(String)
+	 */
+	@NonNull
+	public String getName(Context context) {
+		return mCustomName.isEmpty() ? context.getString(getType().getNameRes()) : mCustomName;
 	}
 
-	public void setName(String name) {
-		mName = name;
+	/**
+	 * @return User configured name (if set), or empty string.
+	 */
+	@NonNull
+	public String getCustomName() {
+		return mCustomName;
+	}
+
+	/**
+	 * @param name User configured name, or empty string to use name from definition.
+	 * @see #getName(Context)
+	 * @see #getCustomName()
+	 */
+	public void setCustomName(@NonNull String name) {
+		mCustomName = name;
 	}
 
 	/**

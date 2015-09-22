@@ -10,6 +10,9 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.DeviceEditFragment;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 
 /**
  * Created by david on 15.9.15.
@@ -60,12 +63,12 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_DEVICE, mDeviceId);
 				break;
 			case R.id.device_edit_action_save:
-				Device newDevice = mFragment.getNewDevice();
-				if (newDevice == null) {
+				Device.DataPair pair = mFragment.getNewDataPair();
+				if (pair == null) {
 					Toast.makeText(this, R.string.device_edit_toast_device_not_edited_successfully, Toast.LENGTH_SHORT).show();
 					break;
 				}
-				doEditDeviceTask(newDevice);
+				doEditDeviceTask(pair);
 				finish();
 				break;
 
@@ -73,9 +76,16 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 		return false;
 	}
 
-	private void doEditDeviceTask(Device device) {
-		//TODO implement the task
-		Toast.makeText(this, "Editing task", Toast.LENGTH_SHORT).show();
+	private void doEditDeviceTask(Device.DataPair pair) {
+		SaveDeviceTask saveDeviceTask = new SaveDeviceTask(this);
+		saveDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success)
+					Toast.makeText(DeviceEditActivity.this, "Editing task successfull", Toast.LENGTH_SHORT).show();
+			}
+		});
+		callbackTaskManager.executeTask(saveDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	private void doUnregisterDeviceTask(String deviceId) {

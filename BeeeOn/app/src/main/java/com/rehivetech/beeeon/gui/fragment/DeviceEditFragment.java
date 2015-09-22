@@ -15,8 +15,11 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.DeviceEditActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
+
+import java.util.EnumSet;
 
 /**
  * Created by david on 15.9.15.
@@ -46,7 +49,8 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		EditText editText = (EditText) view.findViewById(R.id.device_edit_device_name);
 		Controller controller = Controller.getInstance(getActivity());
 		mDevice = controller.getDevicesModel().getDevice(mActivity.getmGateId(), mActivity.getmDeviceId());
-		editText.setText(mDevice.getType().getNameRes());
+		editText.setText(mDevice.getName(mActivity));
+		editText.setHint(mDevice.getType().getNameRes());
 
 		RefreshInterval refreshInterval;
 		if ((refreshInterval = mDevice.getRefresh()) != null) {
@@ -64,22 +68,28 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		return view;
 	}
 
-	public Device getNewDevice() {
+	public Device.DataPair getNewDataPair() {
 		View view = getView();
 		if (view == null)
 			return null;
 
-		Device newDevice = Device.createDeviceByType(mDevice.getType().getId(), mDevice.getGateId(), mDevice.getAddress());
 		EditText newName = (EditText) view.findViewById(R.id.device_edit_device_name);
-		newDevice.setName(newName.getText().toString());
+		mDevice.setCustomName(newName.getText().toString());
 		Spinner locatinSpinner = (Spinner) view.findViewById(R.id.device_edit_location_spinner);
-		Location newLocation = (Location) locatinSpinner.getSelectedItem();
-		newDevice.setLocationId(newLocation.getId());
+		Location newLocation = (Location) locatinSpinner.getAdapter().getItem(locatinSpinner.getSelectedItemPosition());
+		mDevice.setLocationId(((Location) locatinSpinner.getAdapter().getItem(locatinSpinner.getSelectedItemPosition())).getId());
+
 		if (mDevice.getRefresh() != null) {
 			EditText newRefresh = (EditText) view.findViewById(R.id.device_edit_refresh_edittext);
 			int refreshTime = Integer.parseInt(newRefresh.getText().toString());
-			newDevice.setRefresh(RefreshInterval.fromInterval(refreshTime));
+			mDevice.setRefresh(RefreshInterval.fromInterval(refreshTime));
 		}
-		return newDevice;
+
+		EnumSet<Module.SaveModule> what = EnumSet.noneOf(Module.SaveModule.class);
+		what.add(Module.SaveModule.SAVE_LOCATION);
+		what.add(Module.SaveModule.SAVE_NAME);
+		what.add(Module.SaveModule.SAVE_REFRESH);
+
+		return new Device.DataPair(mDevice, newLocation, what);
 	}
 }

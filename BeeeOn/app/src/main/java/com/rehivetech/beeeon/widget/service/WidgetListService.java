@@ -154,7 +154,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		for (Device device : mDevices) {
 			if (device == null) continue;
 
-			Log.d("DEVICE: ", mContext.getString(device.getType().getNameRes()));
+			Log.d("DEVICE: ", device.getName(mContext));
 			mModules.addAll(device.getAllModules(false));
 		}
 	}

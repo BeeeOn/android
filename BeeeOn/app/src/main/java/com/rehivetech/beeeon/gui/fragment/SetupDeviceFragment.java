@@ -123,7 +123,7 @@ public class SetupDeviceFragment extends TrackFragment {
 		Device device = mNewDevices.get(0);
 
 		TextView name = (TextView) mView.findViewById(R.id.module_setup_header_name);
-		name.setText(getString(device.getType().getNameRes()));
+		name.setText(device.getName(mActivity));
 
 		TextView manufacturer = (TextView) mView.findViewById(R.id.module_setup_header_manufacturer);
 		manufacturer.setText(getString(device.getType().getManufacturerRes()));

@@ -512,7 +512,7 @@ public class XmlCreator {
 						"id", device.getAddress(),
 						"locationid", toSave.contains(SaveModule.SAVE_LOCATION) ? device.getLocationId() : null,
 						"refresh", refresh != null && toSave.contains(SaveModule.SAVE_REFRESH) ? Integer.toString(refresh.getInterval()) : null,
-						"name", toSave.contains(SaveModule.SAVE_NAME) ? device.getName() : null);
+						"name", toSave.contains(SaveModule.SAVE_NAME) ? device.getCustomName() : null);
 			}
 
 			return endXml(writer, serializer);

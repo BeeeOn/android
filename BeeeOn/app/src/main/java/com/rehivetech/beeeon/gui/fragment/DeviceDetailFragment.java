@@ -292,12 +292,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
 		if (mDeviceName != null) {
-			mDeviceName.setText(mDevice.getType().getNameRes());
+			mDeviceName.setText(mDevice.getName(mActivity));
 		} else {
 			ActionBar actionBar = mActivity.getSupportActionBar();
 			if (actionBar != null) {
 				actionBar.setDisplayShowTitleEnabled(true);
-				actionBar.setTitle(mDevice.getType().getNameRes());
+				actionBar.setTitle(mDevice.getName(mActivity));
 			}
 		}
 		mDeviceLocation.setText(location.getName());
