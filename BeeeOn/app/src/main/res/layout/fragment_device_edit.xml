@@ -7,7 +7,9 @@
 
 	<LinearLayout
 		android:paddingLeft="72dp"
+		android:paddingStart="72dp"
 		android:paddingRight="16dp"
+		android:paddingEnd="16dp"
 		android:paddingBottom="20dp"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -26,9 +28,8 @@
 			android:id="@+id/device_edit_device_name"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+			android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 			android:textColorLink="@color/white"
-			android:paddingBottom="20dp"
 			android:textColor="@color/white"
 			android:textColorHint="@color/beeeon_placeholder_primary"
 			/>
@@ -68,8 +69,7 @@
 		<Spinner
 			android:id="@+id/device_edit_location_spinner"
 			android:layout_width="wrap_content"
-			android:layout_height="30dp"
-			android:layout_marginBottom="16dp"
+			android:layout_height="wrap_content"
 			android:layout_marginRight="@dimen/activity_horizontal_margin"
 			android:layout_marginEnd="@dimen/activity_horizontal_margin"
 			android:layout_below="@+id/device_edit_location_spinner_label"

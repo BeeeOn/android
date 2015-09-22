@@ -25,7 +25,7 @@
 			android:id="@+id/gate_edit_text"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+			android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 			android:textColorLink="@color/white"
 			android:paddingBottom="20dp"
 			android:textColor="@color/white"
@@ -121,5 +121,6 @@
 
 	</RelativeLayout>
 
-	<View style="@style/BeeeOn.Divider"/>
+	<View style="@style/BeeeOn.Divider"
+		android:layout_marginTop="16dp" />
 </LinearLayout>
