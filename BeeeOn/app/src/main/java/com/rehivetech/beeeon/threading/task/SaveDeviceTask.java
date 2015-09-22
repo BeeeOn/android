@@ -26,7 +26,7 @@ public class SaveDeviceTask extends CallbackTask<Device.DataPair> {
 			pair.mDevice.setLocationId(newLocation.getId());
 		}
 
-		return controller.getDevicesModel().saveDevice(pair.mDevice, pair.what);
+		return controller.getDevicesModel().saveDevice(pair.mDevice);
 	}
 
 }

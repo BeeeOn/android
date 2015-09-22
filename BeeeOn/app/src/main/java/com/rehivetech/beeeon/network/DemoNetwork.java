@@ -8,7 +8,6 @@ import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
@@ -31,7 +30,6 @@ import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -331,9 +329,9 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<Module.SaveModule> toSave) {
+	public boolean updateDevices(String gateId, List<Device> devices) {
 		for (Device device : devices) {
-			if (!updateDevice(gateId, device, toSave)) {
+			if (!updateDevice(gateId, device)) {
 				return false;
 			}
 		}
@@ -394,8 +392,8 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevice(String gateId, Device device, EnumSet<Module.SaveModule> toSave) {
-		// NOTE: this replaces (or add, in case of initializing new mDevice) whole mDevice, not only fields marked as toSave
+	public boolean updateDevice(String gateId, Device device) {
+		// NOTE: this replaces (or add, in case of initializing new device) whole device
 		mDevices.addObject(gateId, device);
 		return true;
 	}

@@ -11,7 +11,6 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
@@ -42,7 +41,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -514,9 +512,9 @@ public class Network implements INetwork {
 	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
 
 	@Override
-	public boolean updateDevices(String gateId, List<Device> devices, EnumSet<SaveModule> toSave) {
+	public boolean updateDevices(String gateId, List<Device> devices) {
 		processCommunication(
-				XmlCreator.createUpdateDevice(mSessionId, gateId, devices, toSave),
+				XmlCreator.createUpdateDevice(mSessionId, gateId, devices),
 				State.TRUE);
 
 		return true;
@@ -565,11 +563,11 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevice(String gateId, Device device, EnumSet<SaveModule> toSave) {
+	public boolean updateDevice(String gateId, Device device) {
 		ArrayList<Device> list = new ArrayList<>();
 		list.add(device);
 
-		return updateDevices(gateId, list, toSave);
+		return updateDevices(gateId, list);
 	}
 
 	@Override

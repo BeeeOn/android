@@ -115,12 +115,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 			mDevice.setRefresh(newRefresh);
 		}
 
-		EnumSet<Module.SaveModule> what = EnumSet.noneOf(Module.SaveModule.class);
-		what.add(Module.SaveModule.SAVE_LOCATION);
-		what.add(Module.SaveModule.SAVE_NAME);
-		what.add(Module.SaveModule.SAVE_REFRESH);
-
-		return new Device.DataPair(mDevice, mNewLocation, what);
+		return new Device.DataPair(mDevice, mNewLocation);
 	}
 
 	@Override

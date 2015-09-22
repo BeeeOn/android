@@ -404,17 +404,15 @@ public final class Device implements IIdentifier {
 	 */
 	public static class DataPair {
 		public final Device mDevice;
-		public final EnumSet<Module.SaveModule> what;
 		public final Location location;
 
-		public DataPair(final Device device, final EnumSet<Module.SaveModule> what) {
-			this(device, null, what);
+		public DataPair(final Device device) {
+			this(device, null);
 		}
 
-		public DataPair(final Device device, final Location newLoc, final EnumSet<Module.SaveModule> what) {
+		public DataPair(final Device device, final Location location) {
 			this.mDevice = device;
-			this.what = what;
-			this.location = newLoc;
+			this.location = location;
 		}
 	}
 }

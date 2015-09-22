@@ -4,7 +4,6 @@ import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Log;
@@ -14,7 +13,6 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -170,11 +168,10 @@ public class DevicesModel extends BaseModel {
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param device
-	 * @param what   type of settings to save
 	 * @return true on success, false otherwise
 	 */
-	public boolean saveDevice(Device device, EnumSet<SaveModule> what) throws AppException {
-		mNetwork.updateDevice(device.getGateId(), device, what);
+	public boolean saveDevice(Device device) throws AppException {
+		mNetwork.updateDevice(device.getGateId(), device);
 		refreshDevice(device, true);
 
 		return true;

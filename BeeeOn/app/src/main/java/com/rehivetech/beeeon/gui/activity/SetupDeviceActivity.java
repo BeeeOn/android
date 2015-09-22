@@ -117,8 +117,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 				// Save that device
 				Log.d(TAG, String.format("InitializeDevice - device: %s, loc: %s", newDevice.getId(), location.getId()));
-				EnumSet<Module.SaveModule> what = EnumSet.of(Module.SaveModule.SAVE_LOCATION, Module.SaveModule.SAVE_NAME, Module.SaveModule.SAVE_INITIALIZED);
-				doInitializeDeviceTask(new Device.DataPair(newDevice, location, what));
+				doInitializeDeviceTask(new Device.DataPair(newDevice, location));
 			}
 		});
 	}

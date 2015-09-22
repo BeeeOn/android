@@ -78,19 +78,6 @@ public final class Module implements IOrderIdentifier {
 		mValue.setDefaultValue(defaultValue);
 	}
 
-
-	/**
-	 * Represents settings of module which could be saved to server
-	 */
-	public enum SaveModule {
-		SAVE_NAME, // change name of module
-		SAVE_LOCATION, // change location of mDevice
-		SAVE_VISIBILITY, // change visibility of module
-		SAVE_REFRESH, // change refresh interval of mDevice
-		SAVE_VALUE, // change value of actor module
-		SAVE_INITIALIZED,
-	}
-
 	public ModuleType getType() {
 		return mType;
 	}
