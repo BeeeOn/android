@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -24,6 +21,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -36,7 +34,9 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 
 	private Device mDevice;
 
+	@Nullable
 	private Location mNewLocation = null;
+
 	private Spinner mLocationSpinner;
 	private Spinner mRefreshTimeSpinner;
 	private LocationArrayAdapter mLocationArrayAdapter;
@@ -48,7 +48,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		try {
 			mActivity = (DeviceEditActivity) getActivity();
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + "must be sublass of DeviceEditActivity");
+			throw new ClassCastException(activity.toString() + "must be subclass of DeviceEditActivity");
 		}
 	}
 
@@ -78,18 +78,19 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		mLocationSpinner.setSelection(Utils.getObjectIndexFromList(mDevice.getLocationId(), mLocationArrayAdapter.getLocations()));
 		mLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
-			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				if (i == mLocationArrayAdapter.getCount() - 1) {
-					// the last item of the list is the new room, the new room will be stored in mNewLocation
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (position == mLocationArrayAdapter.getCount() - 1) {
+					// the last item of the list is the new room, the callback will call saveNewDevice method which will store store it in mNewLocation
 					AddLocationDialog.show(getActivity());
 				} else {
-					//if something else is chosen, this variable is null
-					mNewLocation = null;
+					// set the actually selected location
+					mNewLocation = (Location) parent.getItemAtPosition(position);
+				}
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
-
+			public void onNothingSelected(AdapterView<?> parent) {
+				mNewLocation = null;
 			}
 		});
 		return view;
@@ -102,10 +103,12 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 
 		EditText newName = (EditText) view.findViewById(R.id.device_edit_device_name);
 		mDevice.setCustomName(newName.getText().toString());
-		mLocationSpinner = (Spinner) view.findViewById(R.id.device_edit_location_spinner);
-		if (mNewLocation == null)
-			mNewLocation = (Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition());
-		mDevice.setLocationId(((Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition())).getId());
+
+		if (mNewLocation != null) {
+			mDevice.setLocationId(mNewLocation.getId());
+		} else {
+			mDevice.setLocationId(Location.NO_LOCATION_ID);
+		}
 
 		if (mDevice.getRefresh() != null) {
 			RefreshInterval newRefresh = (RefreshInterval) mRefreshTimeSpinner.getAdapter().getItem(mRefreshTimeSpinner.getSelectedItemPosition());
