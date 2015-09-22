@@ -8,9 +8,11 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.DeviceEditFragment;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
@@ -19,7 +21,7 @@ import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 /**
  * Created by david on 15.9.15.
  */
-public class DeviceEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
+public class DeviceEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener{
 
 	private String mGateId;
 	private String mDeviceId;
@@ -125,5 +127,9 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 			doRemoveDeviceTask(Controller.getInstance(this).getDevicesModel().getDevice(mGateId, dataId));
 			finish();
 		}
+	}
+
+	public DeviceEditFragment getFragment() {
+		return mFragment;
 	}
 }

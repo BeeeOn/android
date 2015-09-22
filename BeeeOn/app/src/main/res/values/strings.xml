@@ -261,6 +261,8 @@
 	<string name="device_edit_toast_device_not_edited_successfully">Device was not edited successfully</string>
 	<string name="device_edit_toast_editing_was_successfull">Editing device was successfull</string>
 	<string name="device_edit_toast_removing_was_successfull">Removing device was successfull</string>
+	<string name="device_edit_overlay_dialog_create_new_location">Create new location</string>
+	<string name="device_edit_overlay_dialog_edit_text_hint">Write new name</string>
 
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Remove module</string>

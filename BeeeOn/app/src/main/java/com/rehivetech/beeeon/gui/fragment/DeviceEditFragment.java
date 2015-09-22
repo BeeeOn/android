@@ -1,19 +1,25 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.DeviceEditActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
+import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
+import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -25,10 +31,14 @@ import java.util.List;
 /**
  * Created by david on 15.9.15.
  */
-public class DeviceEditFragment extends BaseApplicationFragment {
+public class DeviceEditFragment extends BaseApplicationFragment implements AddLocationDialog.OnSaveClicked{
 	private DeviceEditActivity mActivity;
 
 	private Device mDevice;
+
+	private Location mNewLocation = null;
+	private Spinner mLocationSpinner;
+	private LocationArrayAdapter mLocationArrayAdapter;
 
 
 	@Override
@@ -46,7 +56,7 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_device_edit, null);
 
-		Spinner locationSpinner = (Spinner) view.findViewById(R.id.device_edit_location_spinner);
+		mLocationSpinner = (Spinner) view.findViewById(R.id.device_edit_location_spinner);
 		EditText editText = (EditText) view.findViewById(R.id.device_edit_device_name);
 		Controller controller = Controller.getInstance(getActivity());
 		mDevice = controller.getDevicesModel().getDevice(mActivity.getmGateId(), mActivity.getmDeviceId());
@@ -60,10 +70,27 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 			refeshTime.setText(String.valueOf(refreshInterval.getInterval()));
 		}
 
-		LocationArrayAdapter locationAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
-		locationAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
-		locationSpinner.setAdapter(locationAdapter);
-		locationSpinner.setSelection(getLocationsIndexFromArray(locationAdapter.getLocations(),mDevice.getLocationId()));
+		mLocationArrayAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
+		mLocationArrayAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
+		mLocationSpinner.setAdapter(mLocationArrayAdapter);
+		mLocationSpinner.setSelection(getLocationsIndexFromArray(mLocationArrayAdapter.getLocations(), mDevice.getLocationId()));
+		mLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+				if (i == mLocationArrayAdapter.getCount() - 1) {
+					// the last item of the list is the new room, the new room will be stored in mNewLocation
+					AddLocationDialog.show(getActivity());
+				}
+				else{
+					//if something else is chosen, this variable is null
+					mNewLocation = null;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+
+			}
+		});
 		return view;
 	}
 
@@ -74,9 +101,10 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 
 		EditText newName = (EditText) view.findViewById(R.id.device_edit_device_name);
 		mDevice.setCustomName(newName.getText().toString());
-		Spinner locatinSpinner = (Spinner) view.findViewById(R.id.device_edit_location_spinner);
-		Location newLocation = (Location) locatinSpinner.getAdapter().getItem(locatinSpinner.getSelectedItemPosition());
-		mDevice.setLocationId(((Location) locatinSpinner.getAdapter().getItem(locatinSpinner.getSelectedItemPosition())).getId());
+		mLocationSpinner = (Spinner) view.findViewById(R.id.device_edit_location_spinner);
+		if (mNewLocation == null)
+			mNewLocation = (Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition());
+		mDevice.setLocationId(((Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition())).getId());
 
 		if (mDevice.getRefresh() != null) {
 			EditText newRefresh = (EditText) view.findViewById(R.id.device_edit_refresh_edittext);
@@ -89,7 +117,7 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		what.add(Module.SaveModule.SAVE_NAME);
 		what.add(Module.SaveModule.SAVE_REFRESH);
 
-		return new Device.DataPair(mDevice, newLocation, what);
+		return new Device.DataPair(mDevice, mNewLocation, what);
 	}
 
 	private int getLocationsIndexFromArray(List<Location> locations, String locationId) {
@@ -101,5 +129,67 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 			index++;
 		}
 		return index;
+	}
+
+	@Override
+	public void saveNewDevice(String name, Location.LocationIcon icon) {
+		List<Location> locations = mLocationArrayAdapter.getLocations();
+		mLocationArrayAdapter.clear();
+		mNewLocation = new Location(Location.NEW_LOCATION_ID, name, mActivity.getmGateId(), icon.getId());
+		locations.add(0, mNewLocation);
+		mLocationArrayAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item, locations);
+		mLocationArrayAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
+		mLocationSpinner.setAdapter(mLocationArrayAdapter);
+		mLocationSpinner.setSelection(getLocationsIndexFromArray(locations, mNewLocation.getId()));
+	}
+
+	private class RefreshIntervalAdapter extends ArrayAdapter<RefreshInterval> {
+		private RefreshInterval[] items;
+		private Context mContext;
+		private int mDropDownLayoutResource;
+		private int mViewLayoutResource;
+
+		public RefreshIntervalAdapter(Context context, int resource, RefreshInterval[] objects) {
+			super(context, resource, objects);
+			items = objects;
+			mContext = context;
+			mViewLayoutResource = resource;
+		}
+
+		@Override
+		public void setDropDownViewResource(int resource) {
+			mDropDownLayoutResource = resource;
+			super.setDropDownViewResource(resource);
+		}
+
+		@Override
+		public View getDropDownView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			View row = inflater.inflate(mDropDownLayoutResource, parent, false);
+
+			TextView textView = (TextView) row.findViewById(android.R.id.text1);
+			textView.setText(items[position].getStringInterval(mContext));
+
+			return row;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = convertView;
+			if (convertView == null) {
+				LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				v = inflater.inflate(mViewLayoutResource, parent, false);
+			}
+			TextView textView = (TextView) v.findViewById(android.R.id.text1);
+			textView.setText(items[position].getStringInterval(mContext));
+
+			return v;
+		}
+
+		@Override
+		public RefreshInterval getItem(int position) {
+			return items[position];
+		}
+
 	}
 }
