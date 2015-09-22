@@ -75,7 +75,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		mLocationArrayAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
 		mLocationArrayAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
 		mLocationSpinner.setAdapter(mLocationArrayAdapter);
-		mLocationSpinner.setSelection(getLocationsIndexFromArray(mLocationArrayAdapter.getLocations(), mDevice.getLocationId()));
+		mLocationSpinner.setSelection(Utils.getObjectIndexFromList(mDevice.getLocationId(), mLocationArrayAdapter.getLocations()));
 		mLocationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -120,17 +120,6 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		return new Device.DataPair(mDevice, mNewLocation, what);
 	}
 
-	private int getLocationsIndexFromArray(List<Location> locations, String locationId) {
-		int index = 0;
-		for (Location room : locations) {
-			if (room.getId().equalsIgnoreCase(locationId)) {
-				return index;
-			}
-			index++;
-		}
-		return index;
-	}
-
 	@Override
 	public void saveNewDevice(String name, Location.LocationIcon icon) {
 		List<Location> locations = mLocationArrayAdapter.getLocations();
@@ -140,6 +129,6 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		mLocationArrayAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item, locations);
 		mLocationArrayAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
 		mLocationSpinner.setAdapter(mLocationArrayAdapter);
-		mLocationSpinner.setSelection(getLocationsIndexFromArray(locations, mNewLocation.getId()));
+		mLocationSpinner.setSelection(Utils.getObjectIndexFromList(mNewLocation.getId(), locations));
 	}
 }
