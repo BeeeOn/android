@@ -32,9 +32,8 @@
 			android:text="@string/device_edit_refresh_title"
 			/>
 
-		<EditText
-			android:id="@+id/device_edit_refresh_edittext"
-			android:inputType="number"
+		<Spinner
+			android:id="@+id/device_edit_refresh_spinner"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="16dp"

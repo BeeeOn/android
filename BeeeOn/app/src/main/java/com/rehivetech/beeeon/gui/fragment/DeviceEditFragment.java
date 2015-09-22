@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -25,6 +28,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -38,6 +42,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 
 	private Location mNewLocation = null;
 	private Spinner mLocationSpinner;
+	private Spinner mRefreshTimeSpinner;
 	private LocationArrayAdapter mLocationArrayAdapter;
 
 
@@ -66,8 +71,16 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		RefreshInterval refreshInterval;
 		if ((refreshInterval = mDevice.getRefresh()) != null) {
 			((ViewStub) view.findViewById(R.id.device_edit_fragment_refresh_view_stub)).inflate();
-			EditText refeshTime = (EditText) view.findViewById(R.id.device_edit_refresh_edittext);
-			refeshTime.setText(String.valueOf(refreshInterval.getInterval()));
+			mRefreshTimeSpinner = (Spinner) view.findViewById(R.id.device_edit_refresh_spinner);
+			RefreshInterval[] data = RefreshInterval.values();
+			List<CharSequence> list = new ArrayList<>();
+			for (RefreshInterval r : data) {
+				list.add(r.getStringInterval(mActivity));
+			}
+			RefreshIntervalAdapter times = new RefreshIntervalAdapter(getActivity(), android.R.layout.simple_list_item_1, data);
+			times.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			mRefreshTimeSpinner.setAdapter(times);
+			mRefreshTimeSpinner.setSelection(refreshInterval.getIntervalIndex());
 		}
 
 		mLocationArrayAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
@@ -107,9 +120,8 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		mDevice.setLocationId(((Location) mLocationSpinner.getAdapter().getItem(mLocationSpinner.getSelectedItemPosition())).getId());
 
 		if (mDevice.getRefresh() != null) {
-			EditText newRefresh = (EditText) view.findViewById(R.id.device_edit_refresh_edittext);
-			int refreshTime = Integer.parseInt(newRefresh.getText().toString());
-			mDevice.setRefresh(RefreshInterval.fromInterval(refreshTime));
+			RefreshInterval newRefresh = (RefreshInterval) mRefreshTimeSpinner.getAdapter().getItem(mRefreshTimeSpinner.getSelectedItemPosition());
+			mDevice.setRefresh(newRefresh);
 		}
 
 		EnumSet<Module.SaveModule> what = EnumSet.noneOf(Module.SaveModule.class);
@@ -190,6 +202,5 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		public RefreshInterval getItem(int position) {
 			return items[position];
 		}
-
 	}
 }
