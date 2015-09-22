@@ -2,6 +2,9 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -35,11 +38,15 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_device_edit);
 
-		setupToolbar(R.string.empty);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
+		setSupportActionBar(toolbar);
+		ActionBar actionBar = getSupportActionBar();
+
+		if (actionBar != null) {
+			actionBar.setTitle(R.string.empty);
+			actionBar.setHomeButtonEnabled(true);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
 		}
 
 		Intent intent = getIntent();
