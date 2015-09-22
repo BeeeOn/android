@@ -38,10 +38,7 @@ public class AddLocationDialog extends SimpleDialogFragment {
 		final Spinner spinner = (Spinner) view.findViewById(R.id.fragment_dialog_new_location_icon);
 		final EditText editText = (EditText) view.findViewById(R.id.fragment_dialog_new_location_name);
 
-		// Icon adapter
-		LocationIconAdapter iconAdapter = new LocationIconAdapter(getActivity(), R.layout.activity_module_edit_custom_spinner_icon_item);
-		iconAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_icon_dropdown_item);
-		spinner.setAdapter(iconAdapter);
+		spinner.setAdapter(new LocationIconAdapter(getActivity()));
 
 		builder.setView(view);
 

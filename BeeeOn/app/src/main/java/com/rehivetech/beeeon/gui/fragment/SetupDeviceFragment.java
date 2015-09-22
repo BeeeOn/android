@@ -161,10 +161,7 @@ public class SetupDeviceFragment extends TrackFragment {
 		}
 
 		// first call need to add gate
-		LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.activity_module_edit_custom_spinner_icon_item);
-		iconAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_icon_dropdown_item);
-		newIconSpinner.setAdapter(iconAdapter);
-
+		newIconSpinner.setAdapter(new LocationIconAdapter(mActivity));
 
 		int visibility = (hide ? View.GONE : View.VISIBLE);
 		newLocation.setVisibility(visibility);
