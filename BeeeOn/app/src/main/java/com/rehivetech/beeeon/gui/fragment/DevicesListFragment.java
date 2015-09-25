@@ -203,14 +203,15 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			}
 		});
 
-		if (savedInstanceState == null) return;
-
-		// recreates selected items
-		List<Integer> selectedDevices = savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS);
-		if (selectedDevices != null && !selectedDevices.isEmpty()) {
-			mActionMode = mActivity.startSupportActionMode(new ActionModeEditModules());
-			mDeviceAdapter.setSelectedItems(selectedDevices);
+		if (savedInstanceState != null) {
+			// recreates selected items
+			List<Integer> selectedDevices = savedInstanceState.getIntegerArrayList(KEY_SELECTED_ITEMS);
+			if (selectedDevices != null && !selectedDevices.isEmpty()) {
+				mActionMode = mActivity.startSupportActionMode(new ActionModeEditModules());
+				mDeviceAdapter.setSelectedItems(selectedDevices);
+			}
 		}
+
 		setAutoReloadDataTimer();
 	}
 
