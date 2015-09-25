@@ -38,6 +38,8 @@ public class SetupDeviceFragment extends TrackFragment {
 
 	private List<Device> mNewDevices;
 
+	private String mGateId;
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -62,7 +64,8 @@ public class SetupDeviceFragment extends TrackFragment {
 			// CHYBA
 			return;
 		}
-		mNewDevices = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(gate.getId());
+		mGateId = gate.getId();
+		mNewDevices = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 
 		// TODO: sent as parameter if we want first uninitialized module or some module with particular id
 
@@ -114,21 +117,22 @@ public class SetupDeviceFragment extends TrackFragment {
 			}
 		});
 
-		// Set layout to DataAdapter for locations
-		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.activity_module_edit_spinner_item);
-		dataAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
-		spinner.setAdapter(dataAdapter);
+		Controller controller = Controller.getInstance(mActivity);
 
+		// Get locations list containing gate locations and also special default locations
+		List<Location> locations = LocationArrayAdapter.getLocations(controller.getLocationsModel(), mActivity, mGateId);
+
+		// Set layout to DataAdapter for locations
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, locations);
+		spinner.setAdapter(dataAdapter);
 
 		Device device = mNewDevices.get(0);
 
 		TextView name = (TextView) mView.findViewById(R.id.module_setup_header_name);
-		name.setText(getString(device.getType().getNameRes()));
+		name.setText(device.getName(mActivity));
 
 		TextView manufacturer = (TextView) mView.findViewById(R.id.module_setup_header_manufacturer);
 		manufacturer.setText(getString(device.getType().getManufacturerRes()));
-
-		Controller controller = Controller.getInstance(mActivity);
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = controller.getUserSettings();
@@ -161,10 +165,7 @@ public class SetupDeviceFragment extends TrackFragment {
 		}
 
 		// first call need to add gate
-		LocationIconAdapter iconAdapter = new LocationIconAdapter(mActivity, R.layout.activity_module_edit_custom_spinner_icon_item);
-		iconAdapter.setDropDownViewResource(R.layout.activity_module_edit_spinner_icon_dropdown_item);
-		newIconSpinner.setAdapter(iconAdapter);
-
+		newIconSpinner.setAdapter(new LocationIconAdapter(mActivity));
 
 		int visibility = (hide ? View.GONE : View.VISIBLE);
 		newLocation.setVisibility(visibility);

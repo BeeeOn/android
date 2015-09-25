@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -26,6 +27,14 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_device_detail);
 
+		/* // FIXME: Why this must be in DeviceDetailFragment and it doesn't work when it's here?
+		setupToolbar(R.string.empty);
+		if (mActionBar != null) {
+			mActionBar.setHomeButtonEnabled(true);
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+			mActionBar.setDisplayShowTitleEnabled(false);
+		}*/
+
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			mGateId = bundle.getString(EXTRA_GATE_ID);
@@ -40,7 +49,6 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 
 		DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
 		getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
-
 	}
 
 	@Override
@@ -51,11 +59,15 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 				break;
 
 			case R.id.device_detail_menu_action_edit:
-				// TODO Device edit not implemented yet
-				Toast.makeText(this, getString(R.string.toast_not_implemented), Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(this, DeviceEditActivity.class);
+				intent.putExtra(EXTRA_GATE_ID, mGateId);
+				intent.putExtra(EXTRA_DEVICE_ID, mDeviceId);
+				startActivity(intent);
 				break;
 
 		}
 		return false;
 	}
+
+
 }

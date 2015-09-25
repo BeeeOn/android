@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.network;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
@@ -13,7 +12,6 @@ import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 public interface INetwork {
@@ -158,7 +156,7 @@ public interface INetwork {
 	 *
 	 * @return true if everything goes well, false otherwise
 	 */
-	boolean updateDevices(String gateId, List<Device> devices, EnumSet<SaveModule> toSave);
+	boolean updateDevices(String gateId, List<Device> devices);
 
 	/**
 	 * Method toggle or set actor to new value
@@ -202,7 +200,7 @@ public interface INetwork {
 	 */
 	Device getDevice(Device device);
 
-	boolean updateDevice(String gateId, Device device, EnumSet<SaveModule> toSave);
+	boolean updateDevice(String gateId, Device device);
 
 	/**
 	 * Method ask server for uninitialized (new) devices

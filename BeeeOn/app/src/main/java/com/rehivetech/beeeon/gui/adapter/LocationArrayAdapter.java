@@ -1,19 +1,18 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.model.LocationsModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,85 +20,69 @@ import java.util.List;
 
 public class LocationArrayAdapter extends ArrayAdapter<Location> {
 
-	private Context mContext;
-	private List<Location> mLocations;
-	private int mDropDownLayoutResource;
-	private int mViewLayoutResource;
+	@NonNull
+	List<Location> mLocations;
 
-	public LocationArrayAdapter(Context context, int resource, List<Location> objects) {
-		super(context, resource, objects);
-		mViewLayoutResource = resource;
-		mLocations = objects;
-		mContext = context.getApplicationContext();
-	}
+	public LocationArrayAdapter(@NonNull Context context, @NonNull List<Location> locations) {
+		super(context, R.layout.activity_module_edit_spinner_item, R.id.location_label, locations);
+		mLocations = Collections.unmodifiableList(locations);
 
-	public LocationArrayAdapter(Context context, int resource) {
-		super(context, resource, new ArrayList<Location>());
-		mViewLayoutResource = resource;
-		mContext = context.getApplicationContext();
-		mLocations = getLocations();
-	}
-
-	@Override
-	public Location getItem(int position) {
-		return mLocations.get(position);
-	}
-
-	@Override
-	public void setDropDownViewResource(int resource) {
-		mDropDownLayoutResource = resource;
-	}
-
-	@Override
-	public int getCount() {
-		return mLocations.size();
+		setDropDownViewResource(R.layout.activity_module_edit_spinner_dropdown_item);
 	}
 
 	@Override
 	public View getDropDownView(int position, View convertView, ViewGroup parent) {
-
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View row = inflater.inflate(mDropDownLayoutResource, parent, false);
-
-		CheckedTextView label = (CheckedTextView) row.findViewById(R.id.custom_spinner_dropdown_label);
-		label.setText(mLocations.get(position).getName());
-
-		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_dropdown_icon);
-		int id = mLocations.get(position).getIconResource();
-		icon.setImageResource(id);
-
-		return row;
+		View view = convertView;
+		if (view == null) {
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			view = inflater.inflate(R.layout.activity_module_edit_spinner_dropdown_item, parent, false);
+		}
+		return updateView(view, position);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View row = inflater.inflate(mViewLayoutResource, parent, false);
-
-		TextView label = (TextView) row.findViewById(R.id.custom_spinner_label);
-		label.setText(mLocations.get(position).getName());
-
-		ImageView icon = (ImageView) row.findViewById(R.id.custom_spinner_icon);
-		icon.setImageResource(mLocations.get(position).getIconResource());
-
-		return row;
+		View view = convertView;
+		if (view == null) {
+			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			view = inflater.inflate(R.layout.activity_module_edit_spinner_item, parent, false);
+		}
+		return updateView(view, position);
 	}
 
-	public List<Location> getLocations() {
-		// Get locations from gate
-		List<Location> locations = new ArrayList<Location>();
-		Controller controller = Controller.getInstance(mContext);
-		Gate gate = controller.getActiveGate();
-		if (gate != null) {
-			locations = controller.getLocationsModel().getLocationsByGate(gate.getId());
-		} else {
-			// We need to have gate to continue below
-			return locations;
+	private View updateView(View view, int position) {
+		Location location = getItem(position);
+		if (location == null)
+			return view;
+
+		ImageView icon = (ImageView) view.findViewById(R.id.location_icon);
+		icon.setImageResource(location.getIconResource());
+
+		TextView label = (TextView) view.findViewById(R.id.location_label);
+		label.setText(location.getName());
+
+		return view;
+	}
+
+	public void setLocations(@NonNull List<Location> locations) {
+		clear();
+		for (Location location : locations) {
+			add(location);
 		}
+		mLocations = Collections.unmodifiableList(locations);
+		notifyDataSetChanged();
+	}
+
+	public List<Location> getLocationsList() {
+		return mLocations;
+	}
+
+	public static List<Location> getLocations(LocationsModel locationsModel, Context context, String gateId) {
+		List<Location> locations = locationsModel.getLocationsByGate(gateId);
 
 		// Add "missing" default rooms
 		for (Location.DefaultLocation room : Location.DefaultLocation.values()) {
-			String name = mContext.getString(room.getTitleResource());
+			String name = context.getString(room.getTitleResource());
 
 			boolean found = false;
 			for (Location location : locations) {
@@ -110,7 +93,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 			}
 
 			if (!found) {
-				locations.add(new Location(Location.NEW_LOCATION_ID, name, gate.getId(), room.getId()));
+				locations.add(new Location(Location.NEW_LOCATION_ID, name, gateId, room.getId()));
 			}
 		}
 
@@ -118,7 +101,7 @@ public class LocationArrayAdapter extends ArrayAdapter<Location> {
 		Collections.sort(locations, new NameIdentifierComparator());
 
 		// Add "New location" item
-		locations.add(new Location(Location.NEW_LOCATION_ID, mContext.getString(R.string.adapter_location_array_new_location_spinner), gate.getId(), "0"));
+		locations.add(new Location(Location.NEW_LOCATION_ID, context.getString(R.string.adapter_location_array_new_location_spinner), gateId, "0"));
 
 		return locations;
 	}

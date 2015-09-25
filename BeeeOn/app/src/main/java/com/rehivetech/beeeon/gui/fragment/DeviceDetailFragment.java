@@ -72,7 +72,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private TimeHelper mTimeHelper;
 	private String mGateId;
 	private String mDeviceId;
-	private String mModuleId;
 
 	private TextView mDeviceName;
 	private TextView mDeviceLocation;
@@ -113,10 +112,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		public Object createParam() {
 			return mGateId;
 		}
-	};;
+	};
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
-
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
 		args.putString(KEY_DEVICE_ID, deviceId);
@@ -133,12 +131,30 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		mActivity = (DeviceDetailActivity) activity;
 	}
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.d(TAG, "onCreate");
+		super.onCreate(savedInstanceState);
+		Controller controller = Controller.getInstance(mActivity);
+
+		mGateId = getArguments().getString(KEY_GATE_ID);
+		mDeviceId = getArguments().getString(KEY_DEVICE_ID);
+
+		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
+
+		SharedPreferences prefs = controller.getUserSettings();
+		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+
+		setHasOptionsMenu(true);
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
 
+		// FIXME: Why this doesn't work when it's in DeviceDetailActivity?
 		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
 		AppCompatActivity activity = (AppCompatActivity) getActivity();
 		activity.setSupportActionBar(toolbar);
@@ -153,6 +169,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		mDeviceLocation = (TextView) view.findViewById(R.id.device_detail_loc_label);
 		mDeviceLocationIcon = (ImageView) view.findViewById(R.id.device_detail_loc_icon);
 		mDeviceLastUpdate = (TextView) view.findViewById(R.id.device_detail_last_update_label);
+
+		if (mDevice == null)
+			return view;
 
 		if (mDevice.getRssi() != null) {
 			LinearLayout signalLayout = (LinearLayout) view.findViewById(R.id.device_detail_signal_layout);
@@ -208,23 +227,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			}
 		}
 		return view;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate");
-		super.onCreate(savedInstanceState);
-		Controller controller = Controller.getInstance(mActivity);
-
-		mGateId = getArguments().getString(KEY_GATE_ID);
-		mDeviceId = getArguments().getString(KEY_DEVICE_ID);
-
-		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
-
-		SharedPreferences prefs = controller.getUserSettings();
-		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
-
-		setHasOptionsMenu(true);
 	}
 
 	private void setAutoReloadDataTimer() {
@@ -292,16 +294,20 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
 		if (mDeviceName != null) {
-			mDeviceName.setText(mDevice.getType().getNameRes());
+			mDeviceName.setText(mDevice.getName(mActivity));
 		} else {
 			ActionBar actionBar = mActivity.getSupportActionBar();
 			if (actionBar != null) {
 				actionBar.setDisplayShowTitleEnabled(true);
-				actionBar.setTitle(mDevice.getType().getNameRes());
+				actionBar.setTitle(mDevice.getName(mActivity));
 			}
 		}
-		mDeviceLocation.setText(location.getName());
-		mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
+
+		if (location != null) {
+			mDeviceLocation.setText(location.getName());
+			mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
+		}
+
 		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
 
 		// signal
@@ -323,7 +329,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		if (mModuleAdapter != null) {
 			mModuleAdapter.swapModules(mDevice.getVisibleModules());
-			mModuleAdapter.notifyDataSetChanged();
 
 			if (mModuleAdapter.getItemCount() == 0) {
 				mRecyclerView.setVisibility(View.GONE);
@@ -381,14 +386,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onButtonChangeState(String moduleId) {
 		Log.d(TAG, "onButtonChangeState");
-		mModuleId = moduleId;
 		showListDialog(moduleId);
 	}
 
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
 		Log.d(TAG, "onButtonSetNewValue");
-		mModuleId = moduleId;
 		showNumberPickerDialog(moduleId);
 	}
 

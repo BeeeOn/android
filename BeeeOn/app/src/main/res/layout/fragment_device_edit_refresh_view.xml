@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:id="@+id/device_edit_refresh_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:layout_centerVertical="true"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginLeft="16dp"
+			android:layout_marginStart="16dp"
+			android:src="@drawable/ic_action_refresh_gray"
+			/>
+
+		<TextView
+			android:id="@+id/device_edit_refresh_spinner_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_secondary_text"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+			android:layout_marginLeft="72dp"
+			android:layout_marginStart="72dp"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:text="@string/device_edit_refresh_title"
+			/>
+
+		<Spinner
+			android:id="@+id/device_edit_refresh_spinner"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="@dimen/activity_horizontal_margin"
+			android:layout_marginEnd="@dimen/activity_horizontal_margin"
+			android:layout_marginTop="6dp"
+			android:layout_marginBottom="6dp"
+			android:layout_below="@+id/device_edit_refresh_spinner_label"
+			android:layout_alignLeft="@+id/device_edit_refresh_spinner_label"
+			android:layout_alignStart="@+id/device_edit_refresh_spinner_label"
+			/>
+
+	</RelativeLayout>
+
+	<View
+		style="@style/BeeeOn.Divider"
+		android:layout_marginTop="16dp"
+		android:layout_marginBottom="16dp"
+		/>
+</LinearLayout>

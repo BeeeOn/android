@@ -97,6 +97,10 @@
 		</activity>
 		<activity
 			android:name=".gui.activity.DeviceDetailActivity">
+			android:label="@string/manifest_title_device_detail">
+		</activity>
+		<activity android:name=".gui.activity.DeviceEditActivity"
+			android:label="@string/manifest_title_device_edit">
 		</activity>
 		<activity
 			android:name=".gui.activity.AddGateActivity"

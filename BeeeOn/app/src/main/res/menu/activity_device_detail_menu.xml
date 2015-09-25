@@ -6,5 +6,5 @@
 		android:id="@+id/device_detail_menu_action_edit"
 		android:title="@string/device_detail_menu_edit_title"
 		android:icon="@drawable/ic_mode_edit_white_24dp"
-		app:showAsAction="collapseActionView"/>
+		app:showAsAction="ifRoom|collapseActionView"/>
 </menu>

@@ -234,6 +234,9 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			}
 		}
 		mActionBar = getSupportActionBar();
+		if (mActionBar != null && titleResId > 0) {
+			mActionBar.setTitle(titleResId);
+		}
 
 		return toolbar;
 	}

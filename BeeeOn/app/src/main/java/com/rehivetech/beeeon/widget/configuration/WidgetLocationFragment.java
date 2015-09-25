@@ -70,8 +70,7 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	@Override
 	protected void updateLayout() {
 		// fill sensor spinner
-		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, R.layout.item_spinner_geofence_icon, mLocations);
-		dataAdapter.setDropDownViewResource(R.layout.fragment_config_widget_location_spinner_icon_dropdown);
+		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, mLocations);
 		mLocationSpinner.setAdapter(dataAdapter);
 
 		// set selection

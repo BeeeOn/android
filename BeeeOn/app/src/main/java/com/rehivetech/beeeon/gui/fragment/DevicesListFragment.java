@@ -458,7 +458,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 					// TODO: Use ConfirmDialog util instead of this builder?
 					// shows confirmation dialog
 					SimpleDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-							.setTitle(getString(R.string.module_list_dialog_title_unregister_device, getString(device.getType().getNameRes())))
+							.setTitle(getString(R.string.module_list_dialog_title_unregister_device, device.getName(mActivity)))
 							.setMessage(R.string.module_list_dialog_message_unregister_device)
 							.setNegativeButtonText(R.string.activity_fragment_btn_cancel)
 							.setPositiveButtonText(R.string.module_list_btn_unregister)

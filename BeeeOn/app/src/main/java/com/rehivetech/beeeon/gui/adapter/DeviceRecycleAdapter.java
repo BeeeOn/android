@@ -102,7 +102,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 				DeviceViewHolder deviceHolder = (DeviceViewHolder) viewHolder;
 
-				deviceHolder.mTitle.setText(device.getType().getNameRes());
+				deviceHolder.mTitle.setText(device.getName(mContext));
 				deviceHolder.mSubTitle.setText(device.getType().getManufacturerRes());
 
 				// last update

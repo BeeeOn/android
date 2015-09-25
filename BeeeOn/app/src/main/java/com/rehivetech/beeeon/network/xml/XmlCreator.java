@@ -8,7 +8,6 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.Module.SaveModule;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -20,9 +19,6 @@ import org.xmlpull.v1.XmlSerializer;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
@@ -497,7 +493,7 @@ public class XmlCreator {
 	 * @return UpdateDevice message
 	 * @since 2.2
 	 */
-	public static String createUpdateDevice(String bt, String gateId, List<Device> devices, EnumSet<SaveModule> toSave) {
+	public static String createUpdateDevice(String bt, String gateId, List<Device> devices) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "updatedevice", bt);
@@ -510,9 +506,9 @@ public class XmlCreator {
 				addTag(serializer, "device",
 						"init", device.isInitialized() ? "1" : "0",
 						"id", device.getAddress(),
-						"locationid", toSave.contains(SaveModule.SAVE_LOCATION) ? device.getLocationId() : null,
-						"refresh", refresh != null && toSave.contains(SaveModule.SAVE_REFRESH) ? Integer.toString(refresh.getInterval()) : null,
-						"name", toSave.contains(SaveModule.SAVE_NAME) ? device.getName() : null);
+						"locationid", device.getLocationId(),
+						"refresh", refresh != null ? Integer.toString(refresh.getInterval()) : null,
+						"name", device.getCustomName());
 			}
 
 			return endXml(writer, serializer);
