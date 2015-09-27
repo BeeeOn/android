@@ -84,7 +84,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 		public Object createParam() {
 			return mActiveGateId;
 		}
-	};;
+	};
 
 
 	private MainActivity mActivity;

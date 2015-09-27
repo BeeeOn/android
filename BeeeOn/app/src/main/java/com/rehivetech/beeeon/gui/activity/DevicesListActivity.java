@@ -14,7 +14,6 @@ public class DevicesListActivity extends BaseApplicationActivity {
 	public static final String FRG_DEVICE_LIST_TAG = "devices_list_fragment";
 
 	private String mGateId;
-	@Nullable private DevicesListFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

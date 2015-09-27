@@ -290,6 +290,11 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	private void updateLayout() {
 		Controller controller = Controller.getInstance(mActivity);
+
+		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
+		if (mDevice == null)
+			return;
+
 		Location location = controller.getLocationsModel().getLocation(mGateId, mDevice.getLocationId());
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
@@ -441,7 +446,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mModuleAdapter.swapModules(mDevice.getVisibleModules());
+					updateLayout();
 				}
 			}
 		});
@@ -470,7 +475,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mModuleAdapter.swapModules(mDevice.getVisibleModules());
+					updateLayout();
 				}
 			}
 

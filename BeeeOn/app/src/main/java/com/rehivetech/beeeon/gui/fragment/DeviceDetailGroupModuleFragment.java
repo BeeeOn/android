@@ -111,6 +111,14 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 
 	}
 
+	private void updateLayout() {
+		mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
+		if (mDevice == null)
+			return;
+
+		mModuleAdapter.swapModules(mDevice.getVisibleModules());
+	}
+
 	@Override
 	public void onItemClick(String moduleId) {
 		Log.d(TAG, "onItemClick:" + moduleId);
@@ -204,7 +212,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mModuleAdapter.notifyDataSetChanged();
+					updateLayout();
 				}
 			}
 		});
@@ -233,7 +241,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					mModuleAdapter.swapModules(mDevice.getVisibleModules());
+					updateLayout();
 				}
 			}
 
