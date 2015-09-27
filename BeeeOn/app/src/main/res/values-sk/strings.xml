@@ -5,6 +5,8 @@
 	<string name="manifest_action_notification">Notifikácie</string>
 	<string name="manifest_action_watchdog">Strážny pes</string>
 	<string name="manifest_title_device_add">Pridanie zariadenia</string>
+	<string name="manifest_title_device_detail">Detail zariadenia</string>
+	<string name="manifest_title_device_edit">Editácia zariadenia</string>
 	<string name="manifest_title_gate_add">Pridanie brány</string>
 	<string name="manifest_title_gate_add_user">Pridanie nového používateľa</string>
 	<string name="manifest_title_gate_detail">Detaily brány</string>
@@ -225,6 +227,20 @@
 	<string name="device_setup_toast_need_module_location_name">Napíšte názov umiestnenia</string>
 	<string name="device_setup_toast_new_module_added">Nové zariadenie bolo pridané</string>
 
+	<!-- Device edit -->
+	<string name="device_edit_device_name">Názov zariadenia</string>
+	<string name="device_edit_location_title">Umiestnenie</string>
+	<string name="device_edit_refresh_title">Interval prebudenia</string>
+	<string name="device_edit_delete_device_confirm_dialog_title">Odstraňovanie zariadenia</string>
+	<string name="device_edit_delete_device_confirm_dialog_text">Naozaj chcete odstrániť zariadenie?</string>
+	<string name="device_edit_toast_not_specified_gate_or_device">Nešpecifikována brána alebo zariadenie</string>
+	<string name="device_edit_toast_editing_was_successful">Úprava zariadenia prebehla úspešne</string>
+	<string name="device_edit_toast_removing_was_successful">Zariadenie bolo úspešne odstránené</string>
+	<string name="device_edit_toast_location_was_added">Umiestnenie bolo úspešne vytvorené</string>
+	<string name="device_edit_overlay_dialog_create_new_location">Vytvorenie nového umiestnenia</string>
+	<string name="device_edit_overlay_dialog_edit_text_hint">Zadajte názov</string>
+	<string name="device_edit_toast_icon_or_text_is_null">Prosím zvoľte ikonku a zadajte názov</string>
+
 	<!-- Device add -->
 	<string name="device_add_btn_send_pair">START</string>
 	<string name="device_add_device_found">Našlo sa zariadenie</string>
@@ -336,6 +352,27 @@
 	<string name="settings_unit_preferences_noise">Hluk</string>
 	<string name="settings_unit_preferences_temperature">Teplota</string>
 	<string name="settings_unit_unit">Jednotky</string>
+	<string name="settings_language_default">Východzí(Jazyk systému)</string>
+	<string name="settings_actualization_category_title">Nastavenie aktualizácií</string>
+	<string name="settings_actualization_screen_title">Interval automatickej aktualizácie</string>
+	<string name="settings_cache_reload_title">Doba uchovávania cache</string>
+	<plurals name="settings_actualization_time_listpreference_seconds">
+		<item quantity="one">1 sekunda</item>
+		<item quantity="few">%d sekundy</item>
+		<item quantity="other">%d sekúnd</item>
+	</plurals>
+	<string name="settings_actualizationtime_listpreference_dont_actualize">Neaktualizovať</string>
+	<plurals name="settings_cache_listpreference_minutes">
+		<item quantity="one">1 minúta</item>
+		<item quantity="few">%d minúty</item>
+		<item quantity="other">%d minút</item>
+	</plurals>
+	<string name="settings_cache_listpreference_no_cache">Neuchovávať cache</string>
+	<string name="settings_prefs_choose_language">Jazyk</string>
+	<string name="settings_language_listpreference_default">Použiť jazyk systému</string>
+	<string name="settings_language_listpreference_english">Angličtina</string>
+	<string name="settings_language_listpreference_czech">Čeština</string>
+	<string name="settings_language_listpreference_slovak">Slovenčina</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s brána #%2$d</string>

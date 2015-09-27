@@ -290,7 +290,7 @@
 	<string name="device_detail_default_group">Default</string>
 
 	<!-- Module edit -->
-	<string name="module_edit_label_dtail_location">Location</string>
+	<string name="module_edit_label_detail_location">Location</string>
 	<string name="module_edit_label_module_name">Name of module</string>
 	<string name="module_edit_refresh_time">Refresh time </string>
 	<string name="module_edit_setup_new_location_hint">New location name</string>
