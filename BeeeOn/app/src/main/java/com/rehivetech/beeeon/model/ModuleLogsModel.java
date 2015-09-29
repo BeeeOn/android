@@ -47,23 +47,23 @@ public class ModuleLogsModel extends BaseModel {
 	private List<Interval> getMissingIntervals(ModuleLog.DataPair pair) {
 		List<Interval> downloadIntervals = new ArrayList<Interval>();
 		Interval interval = pair.interval;
-		String moduleName = pair.module.getAbsoluteId();
+		String moduleId = pair.module.getModuleId().absoluteId;
 
 		Log.d(TAG, String.format("We want interval: %s -> %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd())));
 
-		if (!mModulesLogs.containsKey(pair.module.getAbsoluteId())) {
+		if (!mModulesLogs.containsKey(moduleId)) {
 			// No log for this module, download whole interval
-			Log.d(TAG, String.format("No cached log for module %s", moduleName));
+			Log.d(TAG, String.format("No cached log for module %s", moduleId));
 			downloadIntervals.add(interval);
 		} else {
 			// We have this ModuleLog with (not necessarily all) values
-			ModuleLog data = mModulesLogs.get(pair.module.getAbsoluteId());
+			ModuleLog data = mModulesLogs.get(moduleId);
 
 			// Values are returned as sorted
 			SortedMap<Long, Float> rows = data.getValues();
 			if (rows.isEmpty()) {
 				// No values in this log, download whole interval
-				Log.d(TAG, String.format("We have log, but with no values for module %s", moduleName));
+				Log.d(TAG, String.format("We have log, but with no values for module %s", moduleId));
 				downloadIntervals.add(interval);
 			} else {
 				// Use pair gap to make sure we won't make useless request when there won't be no new value anyway
@@ -73,32 +73,32 @@ public class ModuleLogsModel extends BaseModel {
 				long first = rows.firstKey();
 				long last = rows.lastKey();
 
-				Log.d(TAG, String.format("We have cached: %s -> %s for module %s", fmt.print(first), fmt.print(last), moduleName));
+				Log.d(TAG, String.format("We have cached: %s -> %s for module %s", fmt.print(first), fmt.print(last), moduleId));
 
-				Log.d(TAG, String.format("We have log and there are some values for module %s", moduleName));
+				Log.d(TAG, String.format("We have log and there are some values for module %s", moduleId));
 				Log.v(TAG, String.format("Gap: %d ms", gap));
 
 				if (interval.isBefore(first) || interval.isAfter(last)) {
 					// Outside of values in this log, download whole interval
-					Log.d(TAG, String.format("Wanted interval is before or after cached interval for module %s", moduleName));
+					Log.d(TAG, String.format("Wanted interval is before or after cached interval for module %s", moduleId));
 					downloadIntervals.add(interval);
 					// TODO: remember this new hole?
 				} else {
 					if (interval.contains(first)) {
-						Log.d(TAG, String.format("Wanted interval contains FIRST of cached interval for module %s", moduleName));
+						Log.d(TAG, String.format("Wanted interval contains FIRST of cached interval for module %s", moduleId));
 						// <start of interval, start of saved data> 
 						Interval cutInterval = new Interval(interval.getStartMillis(), first);
-						Log.v(TAG, String.format("Cut (FIRST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleName));
+						Log.v(TAG, String.format("Cut (FIRST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleId));
 						Log.v(TAG, String.format("Is (FIRST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
 						if (cutInterval.toDurationMillis() > gap)
 							downloadIntervals.add(cutInterval);
 					}
 
 					if (interval.contains(last)) {
-						Log.d(TAG, String.format("Wanted interval contains LAST of cached interval for module %s", moduleName));
+						Log.d(TAG, String.format("Wanted interval contains LAST of cached interval for module %s", moduleId));
 						// <end of saved data, end of interval>
 						Interval cutInterval = new Interval(last, interval.getEndMillis());
-						Log.v(TAG, String.format("Cut (LAST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleName));
+						Log.v(TAG, String.format("Cut (LAST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleId));
 						Log.v(TAG, String.format("Is (LAST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
 						if (cutInterval.toDurationMillis() > gap)
 							downloadIntervals.add(cutInterval);
@@ -119,9 +119,10 @@ public class ModuleLogsModel extends BaseModel {
 	public ModuleLog getModuleLog(ModuleLog.DataPair pair) {
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
-		if (mModulesLogs.containsKey(pair.module.getAbsoluteId())) {
+		String moduleId = pair.module.getModuleId().absoluteId;
+		if (mModulesLogs.containsKey(moduleId)) {
 			// We have this ModuleLog, lets load wanted values from it
-			ModuleLog data = mModulesLogs.get(pair.module.getAbsoluteId());
+			ModuleLog data = mModulesLogs.get(moduleId);
 			for (Entry<Long, Float> entry : data.getValues(pair.interval).entrySet()) {
 				log.addValue(entry.getKey(), entry.getValue());
 			}
@@ -139,12 +140,12 @@ public class ModuleLogsModel extends BaseModel {
 	public synchronized boolean reloadModuleLog(ModuleLog.DataPair pair) throws AppException {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
 
-		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), pair.module.getAbsoluteId()));
+		String moduleId = pair.module.getModuleId().absoluteId;
+		Log.i(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), moduleId));
 		for (Interval interval : downloadIntervals) {
-			Log.d(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), pair.module.getAbsoluteId()));
+			Log.d(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), moduleId));
 		}
 
-		boolean isDemoNetwork = mNetwork instanceof DemoNetwork;
 		try {
 			for (Interval downloadInterval : downloadIntervals) {
 				// Download selected partial log
@@ -152,7 +153,7 @@ public class ModuleLogsModel extends BaseModel {
 				ModuleLog log = mNetwork.getLog(downPair.module.getDevice().getGateId(), downPair.module, downPair);
 
 				// Save it
-				saveModuleLog(downPair.module.getAbsoluteId(), log);
+				saveModuleLog(moduleId, log);
 			}
 		} catch (AppException e) {
 			throw AppException.wrap(e);

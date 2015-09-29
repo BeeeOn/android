@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.household.device;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.IOrderIdentifier;
@@ -14,8 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Module implements IOrderIdentifier {
-	public static final String ID_SEPARATOR = "---";
-
 	/**
 	 * Properties inherited from device's specification table.
 	 */
@@ -30,16 +29,17 @@ public final class Module implements IOrderIdentifier {
 
 	private final Device mDevice; // parent device
 	private final BaseValue mValue;
+	private final ModuleId mModuleId;
 
-	public static Module createUnknownModule(Device device, String id) {
+	public static Module createUnknownModule(@NonNull Device device, @NonNull String id) {
 		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), null, null, null, false, null, null);
 	}
 
-	public Module(Device device, String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules, @Nullable String defaultValue) {
+	public Module(@NonNull Device device, @NonNull String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules, @Nullable String defaultValue) {
 		this(device, id, typeId, sort, groupRes, nameRes, isActuator, rules, (BaseValue.Constraints) null, defaultValue);
 	}
 
-	public Module(Device device, String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
+	public Module(@NonNull Device device, @NonNull String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
 				  @Nullable BaseValue.Constraints constraints, @Nullable String defaultValue) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
@@ -58,9 +58,11 @@ public final class Module implements IOrderIdentifier {
 			throw new IllegalArgumentException("ValueClass received from ModuleType is EnumValue, but constructor was called without enumValues.");
 		}
 		mValue = BaseValue.createFromModuleType(mType, constraints, defaultValue);
+
+		mModuleId = new ModuleId(device.getGateId(), device.getAddress(), id);
 	}
 
-	public Module(Device device, String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
+	public Module(@NonNull  Device device, @NonNull String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
 				  @Nullable List<EnumValue.Item> enumValues, @Nullable String defaultValue) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
@@ -76,6 +78,8 @@ public final class Module implements IOrderIdentifier {
 		}
 		mValue = new EnumValue(enumValues);
 		mValue.setDefaultValue(defaultValue);
+
+		mModuleId = new ModuleId(device.getGateId(), device.getAddress(), id);
 	}
 
 	public ModuleType getType() {
@@ -119,16 +123,8 @@ public final class Module implements IOrderIdentifier {
 		return mId;
 	}
 
-	/**
-	 * Get unique identifier of module (device address + module id)
-	 *
-	 * @return id
-	 */
-	public String getAbsoluteId() {
-		if (mDevice == null)
-			throw new RuntimeException("Module's device is null!");
-
-		return mDevice.getAddress() + ID_SEPARATOR + mId;
+	public ModuleId getModuleId() {
+		return mModuleId;
 	}
 
 	/**
@@ -202,6 +198,42 @@ public final class Module implements IOrderIdentifier {
 		public Rule(int value, int[] hideModulesIds) {
 			this.value = value;
 			this.hideModulesIds = hideModulesIds;
+		}
+	}
+
+	public static class ModuleId {
+		private static final String ID_SEPARATOR = "---";
+
+		/** Identifier of gate this device belongs to. */
+		public final String gateId;
+
+		/** Unique identifier (address) of device that holds this module. */
+		public final String deviceId;
+
+		/** Identifier of this module inside the parent device (regarding specification). */
+		public final String moduleId;
+
+		/** Unique identifier of module (device address + module id). */
+		public final String absoluteId;
+
+		public ModuleId(String gateId, String deviceId, String moduleId) {
+			this.gateId = gateId;
+			this.deviceId = deviceId;
+			this.moduleId = moduleId;
+			this.absoluteId = deviceId + ID_SEPARATOR + moduleId;
+		}
+
+		public ModuleId(String gateId, String absoluteId) {
+			String[] ids = absoluteId.split(ID_SEPARATOR, 2);
+
+			if (ids.length != 2) {
+				throw new IllegalArgumentException(String.format("Id of module must have 2 parts, given: '%s'", absoluteId));
+			}
+
+			this.gateId = gateId;
+			this.deviceId = ids[0];
+			this.moduleId = ids[1];
+			this.absoluteId = deviceId + ID_SEPARATOR + moduleId;
 		}
 	}
 

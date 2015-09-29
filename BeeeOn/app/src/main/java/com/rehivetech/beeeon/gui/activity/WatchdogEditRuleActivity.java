@@ -200,7 +200,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 			mSpinnerMultiAdapter.addHeader(getString(R.string.watchdog_rule_edit_devices));
 			for (Module dev : moduleSensors) {
 				Location loc = Utils.getFromList(dev.getDevice().getLocationId(), mLocations);
-				mSpinnerMultiAdapter.addItem(new ModuleSpinnerItem(dev, loc, dev.getAbsoluteId(), this));
+				mSpinnerMultiAdapter.addItem(new ModuleSpinnerItem(dev, loc, dev.getModuleId().absoluteId, this));
 			}
 			isAnyIfInput = true;
 		}
@@ -443,9 +443,9 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 			case MODULE:
 				if (!Utils.validateInput(this, ruleTreshold, Utils.ValidationType.DOUBLE)) return;
 
-				Module selectedModule = (Module) selected.getObject();
-				devsIds.add(selectedModule.getAbsoluteId());
-				newParams.add(selectedModule.getAbsoluteId());
+				Module.ModuleId selectedModuleId = ((Module) selected.getObject()).getModuleId();
+				devsIds.add(selectedModuleId.absoluteId);
+				newParams.add(selectedModuleId.absoluteId);
 
 				tresholdValue = ruleTreshold.getText().toString();
 				break;
@@ -485,7 +485,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 				}
 
 				Module selectedActor = getModulesArray(MODULES_ACTORS).get(actorSpinner.getSelectedItemPosition());
-				newParams.add(selectedActor.getAbsoluteId());
+				newParams.add(selectedActor.getModuleId().absoluteId);
 				break;
 		}
 

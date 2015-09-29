@@ -247,7 +247,7 @@ public class ModuleListFragment extends BaseApplicationFragment {
 				Iterator<Module> it = device.getVisibleModules().iterator();
 				while (it.hasNext()) {
 					Module module = it.next();
-					mModuleAdapter.addItem(new ModuleListItem(module, module.getAbsoluteId(), mActivity, !it.hasNext()));
+					mModuleAdapter.addItem(new ModuleListItem(module, module.getModuleId().absoluteId, mActivity, !it.hasNext()));
 					modules.add(module);
 				}
 			}

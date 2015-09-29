@@ -95,14 +95,14 @@ public class WidgetClockData extends WidgetData {
 				continue;
 			}
 
-			String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
+			Module.ModuleId moduleId = new Module.ModuleId(widgetGateId, dev.getId());
 			// FIXME: rework this
 			/*Device device = new Device();
 			device.setGateId(widgetGateId);
-			device.setAddress(ids[0]);
+			device.setAddress(moduleId.deviceId);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
 			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			device.addModule(Module.createFromModuleTypeId(ids[1]));
+			device.addModule(Module.createFromModuleTypeId(moduleId.moduleId));
 
 			mDevices.add(device);*/
 		}

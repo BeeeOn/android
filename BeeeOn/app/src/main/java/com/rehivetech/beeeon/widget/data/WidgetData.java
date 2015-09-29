@@ -420,18 +420,22 @@ public abstract class WidgetData {
 	 *
 	 * @param context
 	 * @param gateId
-	 * @param moduleId
+	 * @param absoluteId
 	 * @return
 	 */
-	public static Intent startDetailActivityIntent(Context context, String gateId, String moduleId) {
-		// Getting DeviceID from ModuleID
-		String[] ids = moduleId.split(Module.ID_SEPARATOR, 2);
-		if (ids.length != 2)
+	public static Intent startDetailActivityIntent(Context context, String gateId, String absoluteId) {
+		Module.ModuleId moduleId;
+		try {
+			// TODO: Is this try block needed? Do we expect that we can get invalid absoluteId here?
+			moduleId = new Module.ModuleId(gateId, absoluteId);
+		} catch (IllegalArgumentException e) {
 			return null;
+		}
 
 		Intent intent = new Intent(context, DeviceDetailActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, ids[0]);
+		intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, moduleId.deviceId);
+		intent.putExtra(DeviceDetailActivity.EXTRA_MODULE_ID, moduleId.moduleId);
 		intent.putExtra(DeviceDetailActivity.EXTRA_GATE_ID, gateId);
 		return intent;
 	}

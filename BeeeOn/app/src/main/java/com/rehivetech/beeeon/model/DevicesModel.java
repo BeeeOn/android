@@ -44,21 +44,17 @@ public class DevicesModel extends BaseModel {
 	 * Return module by ID
 	 *
 	 * @param gateId
-	 * @param id
+	 * @param absoluteId
 	 * @return
 	 */
-	public Module getModule(String gateId, String id) {
-		String[] ids = id.split(Module.ID_SEPARATOR, 2);
+	public Module getModule(String gateId, String absoluteId) {
+		Module.ModuleId moduleId = new Module.ModuleId(gateId, absoluteId);
 
-		if (ids.length != 2) {
-			throw new IllegalArgumentException(String.format("Id of module must have 2 parts, given: '%s'", id));
-		}
-
-		Device device = getDevice(gateId, ids[0]);
+		Device device = getDevice(gateId, moduleId.deviceId);
 		if (device == null)
 			return null;
 
-		return device.getModuleById(ids[1]);
+		return device.getModuleById(moduleId.moduleId);
 	}
 
 	/**
@@ -202,7 +198,7 @@ public class DevicesModel extends BaseModel {
 	 */
 	public boolean switchActor(Module module) throws AppException {
 		if (!module.isActuator()) {
-			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getAbsoluteId()));
+			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getModuleId().absoluteId));
 			return false;
 		}
 

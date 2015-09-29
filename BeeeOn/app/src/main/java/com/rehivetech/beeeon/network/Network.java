@@ -580,6 +580,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	// FIXME: Use ModuleId instead
 	public ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair) {
 		String request = XmlCreator.createGetLog(
 				mSessionId,
