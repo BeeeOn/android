@@ -28,12 +28,12 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 
 	public static String TAG = "jayne";
 
-	private static Module sMModule;
+	private static Module sModule;
 	private static FragmentActivity mActivity;
 	private static Fragment mFragment;
 
 	public static void show(FragmentActivity activity, Module module, Fragment frg) {
-		sMModule = module;
+		sModule = module;
 		mActivity = activity;
 		mFragment = frg;
 		new NumberPickerDialogFragment().show(activity.getSupportFragmentManager(), TAG);
@@ -47,7 +47,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 
 		final NumberPicker numberPicker = (NumberPicker) view.findViewById(R.id.dialog_number_picker_numberpicker);
 		TextView unitView = (TextView) view.findViewById(R.id.dialog_number_picker_unit);
-		double value = sMModule.getValue().getDoubleValue();
+		double value = sModule.getValue().getDoubleValue();
 		final ArrayList<String> tmp = new ArrayList<>();
 		for (double i = value - 40.0; i < value + 40.0; i += 0.5) {
 			tmp.add(String.valueOf(i));
@@ -60,9 +60,9 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
-
-		UnitsHelper mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
-		unitView.setText(mUnitsHelper.getStringUnit(sMModule.getValue()));
+		if (prefs != null) {
+			unitView.setText(new UnitsHelper(prefs, mActivity).getStringUnit(sModule.getValue()));
+		}
 
 		builder.setView(view);
 		builder.setPositiveButton(getString(R.string.activity_fragment_btn_set), new View.OnClickListener() {
@@ -73,11 +73,11 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 				if (mFragment instanceof DeviceDetailFragment) {
 					((DeviceDetailFragment) mFragment).onSetTemperatureClick(
 							Double.parseDouble(numberPicker.getDisplayedValues()[numberPicker.getValue()]),
-							sMModule.getId());
+							sModule.getId());
 				} else {
 					((DeviceDetailGroupModuleFragment) mFragment).onSetTemperatureClick(
 							Double.parseDouble(numberPicker.getDisplayedValues()[numberPicker.getValue()]),
-							sMModule.getId());
+							sModule.getId());
 				}
 				dismiss();
 			}
