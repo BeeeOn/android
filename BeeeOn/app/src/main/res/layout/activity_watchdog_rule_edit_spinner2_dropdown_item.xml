@@ -37,7 +37,7 @@
 			android:layout_height="wrap_content"
 			android:textSize="12sp"
 			android:textColor="@color/beeeon_secondary_text"
-			android:layout_below="@+id/custom_spinner2_dropdown_label"
+			android:layout_below="@id/custom_spinner2_dropdown_label"
 			/>
 	</RelativeLayout>
 </LinearLayout>

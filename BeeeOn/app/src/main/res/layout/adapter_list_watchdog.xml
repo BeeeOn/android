@@ -25,11 +25,11 @@
 		android:gravity="top"
 		android:textColor="@color/beeeon_primary_text"
 		android:layout_alignParentTop="true"
-		android:layout_alignLeft="@+id/list_watchdog_idtem_operator"
 		android:singleLine="true"
 		android:layout_marginRight="8dp"
 		android:layout_marginEnd="8dp"
-		android:layout_alignStart="@+id/list_watchdog_idtem_operator"
+		android:layout_toRightOf="@id/list_watchdog_item_icon"
+		android:layout_toEndOf="@id/list_watchdog_item_icon"
 		/>
 
 	<TextView
@@ -38,12 +38,10 @@
 		android:layout_height="wrap_content"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:textColor="@color/beeeon_secondary_text"
-		android:layout_below="@+id/list_watchdog_item_rule_name"
-		android:layout_alignLeft="@+id/list_watchdog_idtem_operator"
-		android:layout_alignStart="@+id/list_watchdog_idtem_operator"
+		android:layout_below="@id/list_watchdog_item_rule_name"
 		android:singleLine="true"
-		android:layout_toLeftOf="@+id/list_watchdog_item_action"
-		android:layout_toStartOf="@+id/list_watchdog_item_action"
+		android:layout_toRightOf="@id/list_watchdog_item_icon"
+		android:layout_toEndOf="@id/list_watchdog_item_icon"
 		/>
 
 	<ImageView
@@ -54,9 +52,9 @@
 		android:src="@drawable/ic_action_next_item"
 		android:background="@drawable/oval_primary"
 		android:padding="2dp"
-		android:layout_below="@+id/list_watchdog_item_module_name"
-		android:layout_toRightOf="@+id/list_watchdog_item_icon"
-		android:layout_toEndOf="@+id/list_watchdog_item_icon"
+		android:layout_below="@id/list_watchdog_item_module_name"
+		android:layout_toRightOf="@id/list_watchdog_item_icon"
+		android:layout_toEndOf="@id/list_watchdog_item_icon"
 		/>
 
 	<TextView
@@ -68,24 +66,11 @@
 		android:gravity="center_vertical"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
-		android:layout_below="@+id/list_watchdog_item_module_name"
-		android:layout_toRightOf="@+id/list_watchdog_idtem_operator"
-		android:layout_toEndOf="@+id/list_watchdog_idtem_operator"
-		android:layout_alignBottom="@+id/list_watchdog_idtem_operator"
+		android:layout_below="@id/list_watchdog_item_module_name"
+		android:layout_toRightOf="@id/list_watchdog_idtem_operator"
+		android:layout_toEndOf="@id/list_watchdog_idtem_operator"
+		android:layout_alignBottom="@id/list_watchdog_idtem_operator"
 		android:singleLine="true"
-		/>
-
-	<ImageView
-		android:id="@+id/list_watchdog_item_action"
-		android:layout_width="24dp"
-		android:layout_height="wrap_content"
-		android:scaleType="fitCenter"
-		android:layout_marginLeft="8dp"
-		android:layout_marginStart="8dp"
-		android:layout_toLeftOf="@+id/list_watchdog_item_switch"
-		android:layout_toStartOf="@+id/list_watchdog_item_switch"
-		android:layout_centerVertical="true"
-		android:src="@drawable/ic_bell_dark_24dp"
 		/>
 
 	<android.support.v7.widget.SwitchCompat
@@ -100,5 +85,18 @@
 		android:padding="8dp"
 		android:focusable="false"
 		android:focusableInTouchMode="false"
+		/>
+
+	<ImageView
+		android:id="@+id/list_watchdog_item_action"
+		android:layout_width="24dp"
+		android:layout_height="wrap_content"
+		android:scaleType="fitCenter"
+		android:layout_marginLeft="8dp"
+		android:layout_marginStart="8dp"
+		android:layout_toLeftOf="@id/list_watchdog_item_switch"
+		android:layout_toStartOf="@id/list_watchdog_item_switch"
+		android:layout_centerVertical="true"
+		android:src="@drawable/ic_bell_dark_24dp"
 		/>
 </RelativeLayout>

@@ -22,11 +22,11 @@
 		android:singleLine="true"
 		android:textColor="@color/beeeon_primary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		android:layout_toRightOf="@+id/list_module_item_icon"
-		android:layout_toEndOf="@+id/list_module_item_icon"
-		android:layout_toLeftOf="@+id/list_module_item_value"
+		android:layout_toRightOf="@id/list_module_item_icon"
+		android:layout_toEndOf="@id/list_module_item_icon"
+		android:layout_toLeftOf="@id/list_module_item_value"
 		android:layout_toStartOf="@id/list_module_item_value"
-		android:layout_alignTop="@+id/list_module_item_icon"
+		android:layout_alignTop="@id/list_module_item_icon"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
 		/>
@@ -38,11 +38,24 @@
 		android:gravity="bottom"
 		android:textColor="@color/beeeon_secondary_text"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		android:layout_below="@+id/list_module_item_title"
-		android:layout_alignLeft="@+id/list_module_item_title"
-		android:layout_alignStart="@+id/list_module_item_title"
-		android:layout_toLeftOf="@+id/list_module_item_value"
+		android:layout_below="@id/list_module_item_title"
+		android:layout_alignLeft="@id/list_module_item_title"
+		android:layout_alignStart="@id/list_module_item_title"
+		android:layout_toLeftOf="@id/list_module_item_value"
 		android:layout_toStartOf="@id/list_module_item_value"
+		/>
+
+	<TextView
+		android:id="@+id/list_module_item_unit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:textColor="@color/beeeon_accent"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		/>
 
 	<TextView
@@ -50,8 +63,10 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
-		android:layout_toLeftOf="@+id/list_module_item_unit"
-		android:layout_toStartOf="@+id/list_module_item_unit"
+		android:layout_alignBaseline="@id/list_module_item_value"
+		android:layout_alignBottom="@id/list_module_item_value"
+		android:layout_toLeftOf="@id/list_module_item_unit"
+		android:layout_toStartOf="@id/list_module_item_unit"
 		android:gravity="end"
 		android:ellipsize="end"
 		android:scrollHorizontally="true"
@@ -62,20 +77,6 @@
 		android:maxWidth="100dp"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
-		/>
-
-	<TextView
-		android:id="@+id/list_module_item_unit"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignBaseline="@+id/list_module_item_value"
-		android:layout_alignBottom="@+id/list_module_item_value"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentEnd="true"
-		android:textColor="@color/beeeon_accent"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		/>
 
 	<!-- divider -->

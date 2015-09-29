@@ -96,7 +96,7 @@
 					android:layout_marginRight="16dp"
 					android:layout_marginEnd="16dp"
 					android:layout_marginBottom="8dp"
-					android:layout_toRightOf="@+id/watchdog_edit_if_icon"
+					android:layout_toRightOf="@id/watchdog_edit_if_icon"
 					android:layout_toEndOf="@id/watchdog_edit_if_icon"
 					android:layout_alignTop="@id/watchdog_edit_if_icon"
 					/>
@@ -135,8 +135,8 @@
 					android:textColor="@color/beeeon_accent"
 					android:textSize="16sp"
 					android:gravity="center_horizontal"
-					android:layout_toRightOf="@+id/watchdog_edit_operator_fab"
-					android:layout_toEndOf="@+id/watchdog_edit_operator_fab"
+					android:layout_toRightOf="@id/watchdog_edit_operator_fab"
+					android:layout_toEndOf="@id/watchdog_edit_operator_fab"
 					android:hint="@string/watchdog_rule_edit_threshold_value"
 					android:layout_marginLeft="16dp"
 					android:layout_marginStart="16dp"
@@ -151,8 +151,8 @@
 					android:textColor="@color/beeeon_accent"
 					android:textStyle="bold"
 					android:textSize="16sp"
-					android:layout_toRightOf="@+id/watchdog_edit_treshold_edittext"
-					android:layout_alignBaseline="@+id/watchdog_edit_treshold_edittext"
+					android:layout_toRightOf="@id/watchdog_edit_treshold_edittext"
+					android:layout_alignBaseline="@id/watchdog_edit_treshold_edittext"
 					/>
 			</RelativeLayout>
 
@@ -195,7 +195,7 @@
 					android:layout_marginLeft="16dp"
 					android:layout_marginStart="16dp"
 					android:gravity="center_vertical"
-					android:layout_toRightOf="@+id/watchdog_edit_then_icon"
+					android:layout_toRightOf="@id/watchdog_edit_then_icon"
 					android:layout_toEndOf="@id/watchdog_edit_then_icon"
 					android:layout_alignTop="@id/watchdog_edit_then_icon"
 					>
@@ -254,7 +254,7 @@
 					android:id="@+id/watchdog_edit_action_textview"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_toRightOf="@+id/watchdog_edit_action_icon"
+					android:layout_toRightOf="@id/watchdog_edit_action_icon"
 					android:layout_toEndOf="@id/watchdog_edit_action_icon"
 					android:text="@string/watchdog_rule_edit_notification_text"
 					android:layout_margin="16dp"
@@ -306,7 +306,7 @@
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:gravity="center_vertical"
-					android:layout_toRightOf="@+id/watchdog_edit_actor_icon"
+					android:layout_toRightOf="@id/watchdog_edit_actor_icon"
 					android:layout_toEndOf="@id/watchdog_edit_actor_icon"
 					android:layout_margin="16dp"
 					android:text="@string/watchdog_rule_edit_watchdog_actor_change_state"
@@ -318,7 +318,7 @@
 					android:layout_height="36dp"
 					android:layout_below="@id/watchdog_edit_actor_textview"
 					android:layout_alignLeft="@id/watchdog_edit_actor_textview"
-					android:layout_alignStart="@+id/watchdog_edit_actor_textview"
+					android:layout_alignStart="@id/watchdog_edit_actor_textview"
 					android:layout_marginEnd="16dp"
 					android:layout_marginRight="16dp"
 					/>

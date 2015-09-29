@@ -5,10 +5,12 @@
 	android:layout_height="match_parent"
 	android:orientation="vertical">
 
-	<include layout="@layout/layout_beeeon_toolbar"/>
+	<include
+		android:id="@+id/beeeon_toolbar"
+		layout="@layout/layout_beeeon_toolbar"/>
 
 	<ListView
-		android:layout_below="@+id/beeeon_toolbar"
+		android:layout_below="@id/beeeon_toolbar"
 		android:id="@+id/gate_users_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"

@@ -20,35 +20,6 @@
 		/>
 
 	<TextView
-		android:id="@+id/widget_loc_item_name"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
-		android:textColor="@color/beeeon_primary_text"
-		android:textSize="@dimen/abc_text_size_body_1_material"
-		android:layout_marginLeft="48dp"
-		android:layout_marginStart="48dp"
-		android:paddingTop="8dp"
-		android:layout_toStartOf="@+id/widget_loc_item_value"
-		android:layout_toLeftOf="@+id/widget_loc_item_value"
-		android:singleLine="true"
-		/>
-
-	<TextView
-		android:id="@+id/widget_loc_item_update"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/widget_loc_item_name"
-		android:layout_alignStart="@+id/widget_loc_item_name"
-		android:layout_toStartOf="@+id/widget_loc_item_value"
-		android:layout_toLeftOf="@+id/widget_loc_item_value"
-		android:layout_below="@+id/widget_loc_item_name"
-		android:textColor="@color/beeeon_secondary_text"
-		android:textSize="@dimen/abc_text_size_caption_material"
-		android:singleLine="true"
-		/>
-
-	<TextView
 		android:id="@+id/widget_loc_item_value"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -61,5 +32,34 @@
 		android:textColor="@color/beeeon_accent"
 		android:textSize="@dimen/abc_text_size_subhead_material"
 		android:textStyle="bold"
+		/>
+
+	<TextView
+		android:id="@+id/widget_loc_item_name"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentTop="true"
+		android:textColor="@color/beeeon_primary_text"
+		android:textSize="@dimen/abc_text_size_body_1_material"
+		android:layout_marginLeft="48dp"
+		android:layout_marginStart="48dp"
+		android:paddingTop="8dp"
+		android:layout_toStartOf="@id/widget_loc_item_value"
+		android:layout_toLeftOf="@id/widget_loc_item_value"
+		android:singleLine="true"
+		/>
+
+	<TextView
+		android:id="@+id/widget_loc_item_update"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignLeft="@id/widget_loc_item_name"
+		android:layout_alignStart="@id/widget_loc_item_name"
+		android:layout_toStartOf="@id/widget_loc_item_value"
+		android:layout_toLeftOf="@id/widget_loc_item_value"
+		android:layout_below="@id/widget_loc_item_name"
+		android:textColor="@color/beeeon_secondary_text"
+		android:textSize="@dimen/abc_text_size_caption_material"
+		android:singleLine="true"
 		/>
 </RelativeLayout>

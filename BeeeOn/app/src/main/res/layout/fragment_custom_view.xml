@@ -27,7 +27,7 @@
 
 	<View
 		style="@style/BeeeOn.Divider.Full"
-		android:layout_below="@+id/customview_chart_layout"
+		android:layout_below="@id/customview_chart_layout"
 		android:layout_marginTop="@dimen/activity_vertical_margin"
 		android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 

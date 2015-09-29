@@ -4,11 +4,13 @@
 				android:orientation="vertical"
 				android:layout_height="match_parent">
 
-	<include layout="@layout/layout_beeeon_toolbar"/>
+	<include
+		android:id="@+id/beeeon_toolbar"
+		layout="@layout/layout_beeeon_toolbar"/>
 
 	<FrameLayout
 		android:id="@+id/module_detail_container"
-		android:layout_below="@+id/beeeon_toolbar"
+		android:layout_below="@id/beeeon_toolbar"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"/>
 
