@@ -59,7 +59,7 @@ public final class Module implements IOrderIdentifier {
 		}
 		mValue = BaseValue.createFromModuleType(mType, constraints, defaultValue);
 
-		mModuleId = new ModuleId(device.getAddress(), id);
+		mModuleId = new ModuleId(device.getGateId(), device.getAddress(), id);
 	}
 
 	public Module(@NonNull  Device device, @NonNull String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
@@ -79,7 +79,7 @@ public final class Module implements IOrderIdentifier {
 		mValue = new EnumValue(enumValues);
 		mValue.setDefaultValue(defaultValue);
 
-		mModuleId = new ModuleId(device.getAddress(), id);
+		mModuleId = new ModuleId(device.getGateId(), device.getAddress(), id);
 	}
 
 	public ModuleType getType() {
@@ -204,6 +204,9 @@ public final class Module implements IOrderIdentifier {
 	public static class ModuleId {
 		private static final String ID_SEPARATOR = "---";
 
+		/** Identifier of gate this device belongs to. */
+		public final String gateId;
+
 		/** Unique identifier (address) of device that holds this module. */
 		public final String deviceId;
 
@@ -213,19 +216,21 @@ public final class Module implements IOrderIdentifier {
 		/** Unique identifier of module (device address + module id). */
 		public final String absoluteId;
 
-		public ModuleId(String deviceId, String moduleId) {
+		public ModuleId(String gateId, String deviceId, String moduleId) {
+			this.gateId = gateId;
 			this.deviceId = deviceId;
 			this.moduleId = moduleId;
 			this.absoluteId = deviceId + ID_SEPARATOR + moduleId;
 		}
 
-		public ModuleId(String absoluteId) {
+		public ModuleId(String gateId, String absoluteId) {
 			String[] ids = absoluteId.split(ID_SEPARATOR, 2);
 
 			if (ids.length != 2) {
 				throw new IllegalArgumentException(String.format("Id of module must have 2 parts, given: '%s'", absoluteId));
 			}
 
+			this.gateId = gateId;
 			this.deviceId = ids[0];
 			this.moduleId = ids[1];
 			this.absoluteId = deviceId + ID_SEPARATOR + moduleId;

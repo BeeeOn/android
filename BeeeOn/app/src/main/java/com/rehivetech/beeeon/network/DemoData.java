@@ -145,7 +145,7 @@ public class DemoData {
 				TreeMap<String, String> modules1 = new TreeMap<>();
 				TreeMap<String, String> params1 = new TreeMap<>();
 
-				Module.ModuleId moduleId1 = new Module.ModuleId("100:00:FF:000:FF0", "1");
+				Module.ModuleId moduleId1 = new Module.ModuleId(gateID, "100:00:FF:000:FF0", "1");
 				modules1.put("1", moduleId1.absoluteId);
 				params1.put("1", moduleId1.deviceId);
 				params1.put("2", "lt");
@@ -167,7 +167,7 @@ public class DemoData {
 				TreeMap<String, String> modules2 = new TreeMap<>();
 				TreeMap<String, String> params2 = new TreeMap<>();
 
-				Module.ModuleId moduleId2 = new Module.ModuleId("100:00:FF:000:FF0", "2");
+				Module.ModuleId moduleId2 = new Module.ModuleId(gateID, "100:00:FF:000:FF0", "2");
 				modules2.put("1", moduleId2.absoluteId);
 				params2.put("1", moduleId2.deviceId);
 				params2.put("2", "lt");

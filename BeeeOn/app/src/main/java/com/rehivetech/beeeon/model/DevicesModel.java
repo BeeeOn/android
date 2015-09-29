@@ -48,7 +48,7 @@ public class DevicesModel extends BaseModel {
 	 * @return
 	 */
 	public Module getModule(String gateId, String absoluteId) {
-		Module.ModuleId moduleId = new Module.ModuleId(absoluteId);
+		Module.ModuleId moduleId = new Module.ModuleId(gateId, absoluteId);
 
 		Device device = getDevice(gateId, moduleId.deviceId);
 		if (device == null)

@@ -427,7 +427,7 @@ public abstract class WidgetData {
 		Module.ModuleId moduleId;
 		try {
 			// TODO: Is this try block needed? Do we expect that we can get invalid absoluteId here?
-			moduleId = new Module.ModuleId(absoluteId);
+			moduleId = new Module.ModuleId(gateId, absoluteId);
 		} catch (IllegalArgumentException e) {
 			return null;
 		}

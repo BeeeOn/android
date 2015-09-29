@@ -888,7 +888,7 @@ public class XmlCreator {
 			i = 1;
 
 			for (String absoluteId : modules) {
-				Module.ModuleId moduleId = new Module.ModuleId(absoluteId);
+				Module.ModuleId moduleId = new Module.ModuleId(gateId, absoluteId);
 				addTag(serializer, "dev",
 						"id", moduleId.deviceId,
 						"type", moduleId.moduleId,
