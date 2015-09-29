@@ -156,15 +156,6 @@
 		android:layout_marginEnd="16dp"
 		>
 
-		<TextView
-			style="@style/LinearRow.Item.OneLine"
-			android:text="@string/widget_clock_color_scheme"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentStart="true"
-			android:layout_toLeftOf="@id/widget_configuration_scheme"
-			android:layout_toStartOf="@id/widget_configuration_scheme"
-			/>
-
 		<RadioGroup
 			android:id="@+id/widget_configuration_scheme"
 			android:layout_width="wrap_content"
@@ -203,6 +194,15 @@
 				android:background="@drawable/oval_black_selector"
 				/>
 		</RadioGroup>
+
+		<TextView
+			style="@style/LinearRow.Item.OneLine"
+			android:text="@string/widget_clock_color_scheme"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_toLeftOf="@id/widget_configuration_scheme"
+			android:layout_toStartOf="@id/widget_configuration_scheme"
+			/>
 	</RelativeLayout>
 
 	<!-- separator -->

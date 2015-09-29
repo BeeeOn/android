@@ -110,15 +110,6 @@
 		android:layout_marginEnd="16dp"
 		>
 
-		<TextView
-			style="@style/LinearRow.Item.OneLine"
-			android:text="@string/widget_location_list_update_over_wifi_only"
-			android:layout_alignParentStart="true"
-			android:layout_alignParentLeft="true"
-			android:layout_toLeftOf="@id/widget_config_only_wifi"
-			android:layout_toStartOf="@id/widget_config_only_wifi"
-			/>
-
 		<CheckBox
 			android:id="@+id/widget_config_only_wifi"
 			android:layout_width="wrap_content"
@@ -126,6 +117,15 @@
 			android:layout_centerVertical="true"
 			android:layout_alignParentRight="true"
 			android:layout_alignParentEnd="true"
+			/>
+
+		<TextView
+			style="@style/LinearRow.Item.OneLine"
+			android:text="@string/widget_location_list_update_over_wifi_only"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentLeft="true"
+			android:layout_toLeftOf="@id/widget_config_only_wifi"
+			android:layout_toStartOf="@id/widget_config_only_wifi"
 			/>
 	</RelativeLayout>
 

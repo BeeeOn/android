@@ -20,6 +20,21 @@
 		/>
 
 	<TextView
+		android:id="@+id/widget_loc_item_value"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentEnd="true"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:paddingEnd="8dp"
+		android:paddingLeft="8dp"
+		android:paddingRight="8dp"
+		android:textColor="@color/beeeon_accent"
+		android:textSize="@dimen/abc_text_size_subhead_material"
+		android:textStyle="bold"
+		/>
+
+	<TextView
 		android:id="@+id/widget_loc_item_name"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -46,20 +61,5 @@
 		android:textColor="@color/beeeon_secondary_text"
 		android:textSize="@dimen/abc_text_size_caption_material"
 		android:singleLine="true"
-		/>
-
-	<TextView
-		android:id="@+id/widget_loc_item_value"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentEnd="true"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:paddingEnd="8dp"
-		android:paddingLeft="8dp"
-		android:paddingRight="8dp"
-		android:textColor="@color/beeeon_accent"
-		android:textSize="@dimen/abc_text_size_subhead_material"
-		android:textStyle="bold"
 		/>
 </RelativeLayout>

@@ -46,10 +46,25 @@
 		/>
 
 	<TextView
+		android:id="@+id/list_module_item_unit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerVertical="true"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:textColor="@color/beeeon_accent"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+		/>
+
+	<TextView
 		android:id="@+id/list_module_item_value"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
+		android:layout_alignBaseline="@id/list_module_item_value"
+		android:layout_alignBottom="@id/list_module_item_value"
 		android:layout_toLeftOf="@id/list_module_item_unit"
 		android:layout_toStartOf="@id/list_module_item_unit"
 		android:gravity="end"
@@ -62,20 +77,6 @@
 		android:maxWidth="100dp"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
-		/>
-
-	<TextView
-		android:id="@+id/list_module_item_unit"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignBaseline="@id/list_module_item_value"
-		android:layout_alignBottom="@id/list_module_item_value"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentEnd="true"
-		android:textColor="@color/beeeon_accent"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		/>
 
 	<!-- divider -->

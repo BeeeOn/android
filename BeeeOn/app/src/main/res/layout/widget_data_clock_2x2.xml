@@ -110,17 +110,6 @@
 		android:minWidth="110dp"
 		>
 
-		<RelativeLayout
-			android:id="@+id/value_container_inside_temp"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_toLeftOf="@id/widget_clock_separator_2"
-			android:layout_toStartOf="@id/widget_clock_separator_2"
-			>
-
-			<include layout="@layout/widget_persistence_module_value_unit"/>
-		</RelativeLayout>
-
 		<!-- separator -->
 		<ImageView
 			android:id="@+id/widget_clock_separator_2"
@@ -134,6 +123,17 @@
 			android:layout_centerHorizontal="true"
 			android:scaleType="center"
 			/>
+
+		<RelativeLayout
+			android:id="@+id/value_container_inside_temp"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_toLeftOf="@id/widget_clock_separator_2"
+			android:layout_toStartOf="@id/widget_clock_separator_2"
+			>
+
+			<include layout="@layout/widget_persistence_module_value_unit"/>
+		</RelativeLayout>
 
 		<RelativeLayout
 			android:id="@+id/value_container_inside_humid"

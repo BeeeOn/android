@@ -16,6 +16,36 @@
 		android:layout_marginStart="16dp"
 		tools:src="@drawable/ic_val_unknown_gray"/>
 
+	<FrameLayout
+		android:id="@+id/list_module_item_buttons_wrapper"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_alignParentEnd="true"
+		android:layout_centerVertical="true">
+
+		<Button
+			android:id="@+id/list_device_module_item_set_button"
+			android:theme="@style/BeeeOn.Button"
+			android:visibility="gone"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:minWidth="64dp"
+			android:gravity="center"
+			android:layout_marginRight="16dp"
+			android:layout_marginEnd="16dp"
+			android:text="@string/activity_fragment_btn_set"
+			tools:text="set"/>
+
+		<android.support.v7.widget.SwitchCompat
+			android:id="@+id/list_device_module_item_switch"
+			android:visibility="gone"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginRight="16dp"
+			android:layout_marginEnd="16dp"/>
+	</FrameLayout>
+
 	<TextView
 		android:id="@+id/list_module_item_title"
 		android:layout_width="wrap_content"
@@ -48,33 +78,4 @@
 		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 		android:textColor="@color/beeeon_accent"
 		tools:text="25 °C"/>
-
-	<FrameLayout
-		android:id="@+id/list_module_item_buttons_wrapper"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentEnd="true"
-		android:layout_centerVertical="true">
-	<Button
-		android:id="@+id/list_device_module_item_set_button"
-		android:theme="@style/BeeeOn.Button"
-		android:visibility="gone"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:minWidth="64dp"
-		android:gravity="center"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		android:text="@string/activity_fragment_btn_set"
-		tools:text="set"/>
-
-	<android.support.v7.widget.SwitchCompat
-		android:id="@+id/list_device_module_item_switch"
-		android:visibility="gone"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"/>
-</FrameLayout>
 </RelativeLayout>
