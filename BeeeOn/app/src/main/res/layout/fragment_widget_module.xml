@@ -115,8 +115,8 @@
 			android:text="@string/widget_location_list_update_over_wifi_only"
 			android:layout_alignParentStart="true"
 			android:layout_alignParentLeft="true"
-			android:layout_toLeftOf="@+id/widget_config_only_wifi"
-			android:layout_toStartOf="@+id/widget_config_only_wifi"
+			android:layout_toLeftOf="@id/widget_config_only_wifi"
+			android:layout_toStartOf="@id/widget_config_only_wifi"
 			/>
 
 		<CheckBox

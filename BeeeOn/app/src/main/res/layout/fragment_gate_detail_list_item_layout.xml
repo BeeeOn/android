@@ -24,8 +24,8 @@
 		android:layout_marginStart="72dp"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
-		android:layout_toLeftOf="@+id/gate_detail_list_item_button_details"
-		android:layout_toStartOf="@+id/gate_detail_list_item_button_details"
+		android:layout_toLeftOf="@id/gate_detail_list_item_button_details"
+		android:layout_toStartOf="@id/gate_detail_list_item_button_details"
 		/>
 
 	<TextView
@@ -34,11 +34,11 @@
 		android:layout_height="wrap_content"
 		android:paddingBottom="10dp"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		android:layout_below="@+id/gate_detail_list_title"
-		android:layout_alignLeft="@+id/gate_detail_list_title"
-		android:layout_alignStart="@+id/gate_detail_list_title"
-		android:layout_toLeftOf="@+id/gate_detail_list_item_button_details"
-		android:layout_toStartOf="@+id/gate_detail_list_item_button_details"
+		android:layout_below="@id/gate_detail_list_title"
+		android:layout_alignLeft="@id/gate_detail_list_title"
+		android:layout_alignStart="@id/gate_detail_list_title"
+		android:layout_toLeftOf="@id/gate_detail_list_item_button_details"
+		android:layout_toStartOf="@id/gate_detail_list_item_button_details"
 		/>
 
 	<Button

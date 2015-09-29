@@ -36,7 +36,7 @@
 		android:layout_height="wrap_content"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:textColor="@color/beeeon_secondary_text"
-		android:layout_below="@+id/adapter_list_user_name"
+		android:layout_below="@id/adapter_list_user_name"
 		android:layout_alignLeft="@id/adapter_list_user_name"
 		android:layout_alignStart="@id/adapter_list_user_name"
 		/>
@@ -47,7 +47,7 @@
 		android:layout_height="wrap_content"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
 		android:textColor="@color/beeeon_secondary_text"
-		android:layout_below="@+id/adapter_list_user_email"
+		android:layout_below="@id/adapter_list_user_email"
 		android:layout_alignLeft="@id/adapter_list_user_email"
 		android:layout_alignStart="@id/adapter_list_user_email"
 		/>

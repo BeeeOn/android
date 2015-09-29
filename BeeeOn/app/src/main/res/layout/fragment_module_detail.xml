@@ -38,8 +38,8 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_alignParentBottom="true"
-				android:layout_toRightOf="@+id/module_detail_header_icon"
-				android:layout_toEndOf="@+id/module_detail_header_icon"
+				android:layout_toRightOf="@id/module_detail_header_icon"
+				android:layout_toEndOf="@id/module_detail_header_icon"
 				android:layout_marginLeft="8dp"
 				android:paddingBottom="26dp"
 				android:ellipsize="end"
@@ -86,7 +86,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:src="@drawable/ic_mode_edit_white_24dp"
-			android:layout_alignBottom="@+id/module_detail_header_layout"
+			android:layout_alignBottom="@id/module_detail_header_layout"
 			android:layout_marginBottom="-20dp"
 			android:layout_marginLeft="16dp"
 			android:layout_marginStart="16dp"
@@ -101,7 +101,7 @@
 			android:layout_marginTop="24dp"
 			android:layout_marginLeft="16dp"
 			android:layout_marginRight="16dp"
-			android:layout_below="@+id/module_detail_header_layout"
+			android:layout_below="@id/module_detail_header_layout"
 			android:visibility="invisible">
 			<!-- LOCATION -->
 			<LinearLayout
@@ -174,7 +174,7 @@
 			android:orientation="vertical"
 			android:layout_marginLeft="16dp"
 			android:layout_marginRight="16dp"
-			android:layout_below="@+id/module_detail_first_section_layout"
+			android:layout_below="@id/module_detail_first_section_layout"
 			android:visibility="invisible">
 			<!-- LAST UPDATE -->
 			<LinearLayout
@@ -260,7 +260,7 @@
 			android:id="@+id/module_detail_third_section_layout"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_below="@+id/module_detail_second_section_layout"
+			android:layout_below="@id/module_detail_second_section_layout"
 			android:orientation="vertical"
 			android:layout_marginLeft="@dimen/activity_horizontal_margin"
 			android:layout_marginRight="@dimen/activity_horizontal_margin"

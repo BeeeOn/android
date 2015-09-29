@@ -69,9 +69,9 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-			android:layout_below="@+id/gate_edit_gate_id_label"
-			android:layout_alignLeft="@+id/gate_edit_gate_id_label"
-			android:layout_alignStart="@+id/gate_edit_gate_id_label"
+			android:layout_below="@id/gate_edit_gate_id_label"
+			android:layout_alignLeft="@id/gate_edit_gate_id_label"
+			android:layout_alignStart="@id/gate_edit_gate_id_label"
 			/>
 	</RelativeLayout>
 
@@ -114,9 +114,9 @@
 			android:layout_marginBottom="16dp"
 			android:layout_marginRight="@dimen/activity_horizontal_margin"
 			android:layout_marginEnd="@dimen/activity_horizontal_margin"
-			android:layout_below="@+id/gate_edit_spinner_label"
-			android:layout_alignLeft="@+id/gate_edit_spinner_label"
-			android:layout_alignStart="@+id/gate_edit_spinner_label"
+			android:layout_below="@id/gate_edit_spinner_label"
+			android:layout_alignLeft="@id/gate_edit_spinner_label"
+			android:layout_alignStart="@id/gate_edit_spinner_label"
 			/>
 
 	</RelativeLayout>

@@ -393,7 +393,7 @@
 		<!--app:fabSize="normal"-->
 		<!--android:clickable="true"-->
 		<!--android:src="@drawable/ic_menu_chart"-->
-		<!--app:layout_anchor="@+id/device_detail_appbar"-->
+		<!--app:layout_anchor="@id/device_detail_appbar"-->
 		<!--app:layout_anchorGravity="bottom|right|end"/>-->
 
 </android.support.design.widget.CoordinatorLayout>
