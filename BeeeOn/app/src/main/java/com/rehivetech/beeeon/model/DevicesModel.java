@@ -44,21 +44,17 @@ public class DevicesModel extends BaseModel {
 	 * Return module by ID
 	 *
 	 * @param gateId
-	 * @param id
+	 * @param absoluteId
 	 * @return
 	 */
-	public Module getModule(String gateId, String id) {
-		String[] ids = id.split(Module.ID_SEPARATOR, 2);
+	public Module getModule(String gateId, String absoluteId) {
+		Module.ModuleId moduleId = new Module.ModuleId(absoluteId);
 
-		if (ids.length != 2) {
-			throw new IllegalArgumentException(String.format("Id of module must have 2 parts, given: '%s'", id));
-		}
-
-		Device device = getDevice(gateId, ids[0]);
+		Device device = getDevice(gateId, moduleId.deviceId);
 		if (device == null)
 			return null;
 
-		return device.getModuleById(ids[1]);
+		return device.getModuleById(moduleId.moduleId);
 	}
 
 	/**

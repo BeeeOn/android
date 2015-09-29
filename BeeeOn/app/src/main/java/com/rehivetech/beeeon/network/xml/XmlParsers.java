@@ -540,8 +540,8 @@ public class XmlParsers {
 					String position = getSecureAttributeString("pos");
 
 					if (mParser.getName().equals("dev")) {
-						String module = getSecureAttributeString("id") + Module.ID_SEPARATOR + getSecureAttributeString("type");
-						tDevices.put(position, module);
+						Module.ModuleId moduleId = new Module.ModuleId(getSecureAttributeString("id"), getSecureAttributeString("type"));
+						tDevices.put(position, moduleId.absoluteId);
 
 						mParser.nextTag();
 					} else if (mParser.getName().equals("geo")) {

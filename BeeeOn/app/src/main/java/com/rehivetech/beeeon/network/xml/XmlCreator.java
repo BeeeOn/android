@@ -526,6 +526,7 @@ public class XmlCreator {
 	 * @return XML of Switch message
 	 * @since 2.2
 	 */
+	// FIXME: Use ModuleId instead
 	public static String createSwitchState(String bt, String gateId, Module module) {
 		StringWriter writer = new StringWriter();
 		try {
@@ -886,11 +887,11 @@ public class XmlCreator {
 
 			i = 1;
 
-			for (String module : modules) {
-				String[] id_type = module.split(Module.ID_SEPARATOR);
+			for (String absoluteId : modules) {
+				Module.ModuleId moduleId = new Module.ModuleId(absoluteId);
 				addTag(serializer, "dev",
-						"id", id_type[0],
-						"type", id_type[1],
+						"id", moduleId.deviceId,
+						"type", moduleId.moduleId,
 						"pos", Integer.toString(i++));
 			}
 			i = 1;
