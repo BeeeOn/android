@@ -123,15 +123,6 @@ public final class Module implements IOrderIdentifier {
 		return mId;
 	}
 
-	/**
-	 * Get unique identifier of module (device address + module id)
-	 *
-	 * @return id
-	 */
-	public String getAbsoluteId() {
-		return mModuleId.absoluteId;
-	}
-
 	public ModuleId getModuleId() {
 		return mModuleId;
 	}

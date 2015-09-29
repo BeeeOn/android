@@ -102,7 +102,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 		// send broadcast to widgetprovider with information about clicked item
 		Bundle extras = new Bundle();
-		extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, module.getId());
+		extras.putString(WidgetLocationData.EXTRA_ITEM_DEV_ID, module.getId()); // FIXME: Should this be deviceId or moduleId or moduleAbsoluteId?
 		extras.putString(WidgetLocationData.EXTRA_ITEM_GATE_ID, module.getDevice().getGateId());
 		Intent fillInIntent = new Intent();
 		fillInIntent.putExtras(extras);
