@@ -52,7 +52,7 @@ public class WatchdogSensorType extends WatchdogBaseType {
 		ruleTresholdUnit.setVisibility(View.VISIBLE);
 
 		// senzors can have only numbers
-		ruleTreshold.setInputType(InputType.TYPE_CLASS_NUMBER);
+		ruleTreshold.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
 		if (mUnitsHelper != null) {
 			Module selectedModule = (Module) selected.getObject();

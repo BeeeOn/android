@@ -473,6 +473,7 @@ final public class Utils {
 	 */
 	public enum ValidationType {
 		INTEGER,
+		DOUBLE,
 		EMAIL
 	}
 
@@ -496,7 +497,17 @@ final public class Utils {
 			switch (type) {
 				case INTEGER:
 					try {
-						int num = Integer.parseInt(inputText);
+						Integer.parseInt(inputText);
+					} catch (NumberFormatException e) {
+						eText.requestFocus();
+						eText.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						return false;
+					}
+					break;
+
+				case DOUBLE:
+					try {
+						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
 						eText.requestFocus();
 						eText.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
@@ -537,7 +548,17 @@ final public class Utils {
 			switch (type) {
 				case INTEGER:
 					try {
-						int num = Integer.parseInt(inputText);
+						Integer.parseInt(inputText);
+					} catch (NumberFormatException e) {
+						textInputLayout.requestFocus();
+						textInputLayout.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						return false;
+					}
+					break;
+
+				case DOUBLE:
+					try {
+						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
 						textInputLayout.requestFocus();
 						textInputLayout.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));

@@ -441,7 +441,7 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		ISpinnerItem selected = mSpinnerMultiAdapter.getItem(ifItemSpinner.getSelectedItemPosition());
 		switch (selected.getType()) {
 			case MODULE:
-				if (!Utils.validateInput(this, ruleTreshold, Utils.ValidationType.INTEGER)) return;
+				if (!Utils.validateInput(this, ruleTreshold, Utils.ValidationType.DOUBLE)) return;
 
 				Module selectedModule = (Module) selected.getObject();
 				devsIds.add(selectedModule.getAbsoluteId());
@@ -566,38 +566,6 @@ public class WatchdogEditRuleActivity extends BaseApplicationActivity implements
 		}
 
 		return modules;
-	}
-
-	/**
-	 * Helper function for validating EditText
-	 *
-	 * @param eText
-	 * @param additional Array of additional rules to validate
-	 * @return
-	 */
-	private boolean validateInput(EditText eText, String... additional) {
-		String inputText = eText.getText().toString().trim();
-		if (inputText.length() == 0) {
-			eText.requestFocus();
-			eText.setError(getString(R.string.activity_utils_toast_field_must_be_filled));
-			return false;
-		}
-
-		for (String type : additional) {
-			switch (type) {
-				case "parseInt":
-					try {
-						int num = Integer.parseInt(inputText);
-					} catch (NumberFormatException e) {
-						eText.requestFocus();
-						eText.setError(getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
-						return false;
-					}
-					break;
-			}
-		}
-
-		return true;
 	}
 
 	@Override
