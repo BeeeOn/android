@@ -29,7 +29,7 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.network.NetworkServer;
+import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;

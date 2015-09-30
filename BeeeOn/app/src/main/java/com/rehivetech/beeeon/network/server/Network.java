@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.network;
+package com.rehivetech.beeeon.network.server;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -17,10 +17,11 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.xml.XmlCreator;
-import com.rehivetech.beeeon.network.xml.XmlParsers;
-import com.rehivetech.beeeon.network.xml.XmlParsers.State;
+import com.rehivetech.beeeon.network.server.xml.XmlCreator;
+import com.rehivetech.beeeon.network.server.xml.XmlParsers;
+import com.rehivetech.beeeon.network.server.xml.XmlParsers.State;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;

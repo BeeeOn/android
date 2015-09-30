@@ -9,9 +9,9 @@ import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.network.DemoNetwork;
+import com.rehivetech.beeeon.network.demo.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.network.Network;
+import com.rehivetech.beeeon.network.server.Network;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
 

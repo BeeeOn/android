@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.network;
+package com.rehivetech.beeeon.network.server;
 
 import android.content.Context;
 

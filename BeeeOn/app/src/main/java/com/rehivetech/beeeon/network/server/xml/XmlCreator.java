@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.network.xml;
+package com.rehivetech.beeeon.network.server.xml;
 
 import android.support.annotation.Nullable;
 import android.util.Xml;
