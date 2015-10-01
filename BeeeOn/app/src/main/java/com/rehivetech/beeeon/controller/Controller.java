@@ -289,7 +289,7 @@ public final class Controller {
 		}
 
 		// Load user data from server
-		User user = mNetwork.loadUserInfo();
+		User user = mNetwork.accounts_getMyProfile();
 
 		// Eventually save correct userId and download picture if changed (but not in demoMode)
 		if (!(mNetwork instanceof DemoNetwork)) {
@@ -341,7 +341,7 @@ public final class Controller {
 		}
 
 		// We don't have beeeon-token yet, try to login
-		mNetwork.login(authProvider); // throws exception on error
+		mNetwork.accounts_login(authProvider); // throws exception on error
 
 		// Load user data so we will know our userId
 		loadUserData(null);
@@ -389,7 +389,7 @@ public final class Controller {
 	 */
 	public boolean register(@NonNull IAuthProvider authProvider) throws AppException {
 		// We don't have beeeon-token yet, try to login
-		return mNetwork.register(authProvider); // throws exception on error
+		return mNetwork.accounts_register(authProvider); // throws exception on error
 	}
 
 	/**

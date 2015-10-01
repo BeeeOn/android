@@ -229,7 +229,7 @@ public class GcmModel extends BaseModel {
 	 * @param msgIds Array of message IDs which will be marked as read
 	 */
 	public void setNotificationRead(ArrayList<String> msgIds) {
-		mNetwork.NotificationsRead(msgIds);
+		mNetwork.notifications_read(msgIds);
 	}
 
 
@@ -239,7 +239,7 @@ public class GcmModel extends BaseModel {
 	 * This CAN'T be called on UI thread!
 	 */
 	public List<VisibleNotification> getNotificationHistory() {
-		List<VisibleNotification> list = mNetwork.getNotifications();
+		List<VisibleNotification> list = mNetwork.notifications_getLatest();
 		Collections.sort(list);
 		return list;
 	}

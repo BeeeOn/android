@@ -150,7 +150,7 @@ public class ModuleLogsModel extends BaseModel {
 			for (Interval downloadInterval : downloadIntervals) {
 				// Download selected partial log
 				ModuleLog.DataPair downPair = new ModuleLog.DataPair(pair.module, downloadInterval, pair.type, pair.gap);
-				ModuleLog log = mNetwork.getLog(downPair.module.getDevice().getGateId(), downPair.module, downPair);
+				ModuleLog log = mNetwork.devices_getLog(downPair.module.getDevice().getGateId(), downPair.module, downPair);
 
 				// Save it
 				saveModuleLog(moduleId, log);
