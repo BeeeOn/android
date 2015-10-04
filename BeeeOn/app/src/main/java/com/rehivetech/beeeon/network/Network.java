@@ -16,7 +16,6 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.XmlCreator;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
@@ -750,70 +749,6 @@ public class Network implements INetwork {
 				State.NOTIFICATIONS);
 
 		return parser.parseNotifications();
-	}
-
-	@Override
-	public boolean addWatchdog(Watchdog watchdog, String gateId) {
-		String request = XmlCreator.createAddAlg(mSessionId,
-				watchdog.getName(),
-				gateId,
-				watchdog.getType(),
-				watchdog.getModules(),
-				watchdog.getParams(),
-				watchdog.getGeoRegionId());
-
-		XmlParsers parser = processCommunication(
-				request,
-				State.ALGCREATED);
-
-		watchdog.setId(parser.parseNewWatchdogId());
-		return true;
-	}
-
-	@Override
-	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetAlgs(mSessionId, gateId, watchdogIds),
-				State.ALGORITHMS);
-
-		return parser.parseWatchdog();
-	}
-
-	@Override
-	public List<Watchdog> getAllWatchdogs(String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetAllAlgs(mSessionId, gateId),
-				State.ALGORITHMS);
-
-		return parser.parseWatchdog();
-	}
-
-	@Override
-	public boolean updateWatchdog(Watchdog watchdog, String gateId) {
-		String request = XmlCreator.createSetAlg(mSessionId,
-				watchdog.getName(),
-				watchdog.getId(),
-				gateId,
-				watchdog.getType(),
-				watchdog.isEnabled(),
-				watchdog.getModules(),
-				watchdog.getParams(),
-				watchdog.getGeoRegionId());
-
-		processCommunication(
-				request,
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteWatchdog(Watchdog watchdog) {
-		processCommunication(
-				XmlCreator.createDelAlg(mSessionId, watchdog.getId()),
-				State.TRUE);
-
-		return true;
 	}
 
 	@Override

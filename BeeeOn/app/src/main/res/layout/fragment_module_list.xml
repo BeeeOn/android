@@ -37,7 +37,7 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
 			android:visibility="gone"
-			android:text="@string/layout_module_list_watchdog_list_action_refresh_list"/>
+			android:text="@string/layout_device_list_refresh_list"/>
 	</LinearLayout>
 
 	<com.melnykov.fab.FloatingActionButton

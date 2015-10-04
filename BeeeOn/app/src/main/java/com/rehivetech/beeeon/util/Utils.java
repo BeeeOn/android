@@ -500,7 +500,7 @@ final public class Utils {
 						Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
 						eText.requestFocus();
-						eText.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						eText.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -510,7 +510,7 @@ final public class Utils {
 						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
 						eText.requestFocus();
-						eText.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						eText.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -551,7 +551,7 @@ final public class Utils {
 						Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
 						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -561,7 +561,7 @@ final public class Utils {
 						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
 						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;

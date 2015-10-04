@@ -3,11 +3,6 @@
 	  xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
-		android:id="@+id/map_geofence_menu_create_watchdog"
-		android:title="@string/map_geofence_action_mode_watchdog_create"
-		app:showAsAction="ifRoom|withText"/>
-
-	<item
 		android:id="@+id/map_geofence_menu_del"
 		android:title="@string/map_geofence_action_mode_delete_geofence"
 		android:icon="@drawable/ic_delete_white_24dp"

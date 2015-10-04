@@ -15,7 +15,6 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -67,9 +66,6 @@ public class XmlParsers {
 
 		TRUE("true"),
 		FALSE("false"),
-
-		ALGCREATED("algcreated"),
-		ALGORITHMS("algs"),
 
 		VIEWS("views"),
 		NOTIFICATIONS("notifications");
@@ -132,10 +128,6 @@ public class XmlParsers {
 
 	public String parseSessionId() {
 		return getSecureAttributeString("sessionid");
-	}
-
-	public String parseNewWatchdogId() {
-		return getSecureAttributeString("algid");
 	}
 
 	// /////////////////////////////////GATES, USERINFO///////////////////////////////////////////
@@ -493,75 +485,6 @@ public class XmlParsers {
 				if (ntfc != null) {
 					result.add(ntfc);
 				}
-
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
-
-			return result;
-		} catch (IOException | XmlPullParserException e) {
-			throw AppException.wrap(e, ClientError.XML);
-		}
-	}
-
-	// /////////////////////////////////WATCHDOG/////////////////////////////////////////////////////////////
-
-	/**
-	 * Method parse inner part of watchdog
-	 *
-	 * @return list of watchdog objects
-	 */
-	public ArrayList<Watchdog> parseWatchdog() {
-		try {
-			getSecureAttributeString("atype"); // not used yet
-
-			String aid = getSecureAttributeString("gateid");
-			mParser.nextTag();
-
-			ArrayList<Watchdog> result = new ArrayList<>();
-
-			if (!mParser.getName().equals("alg"))
-				return result;
-
-			do {
-				Watchdog watchdog = new Watchdog(getSecureAttributeInt("atype"));
-				watchdog.setId(getSecureAttributeString("id"));
-				watchdog.setGateId(aid);
-				watchdog.setEnabled(getSecureAttributeInt("enable") > 0);
-				watchdog.setName(getSecureAttributeString("name"));
-
-				TreeMap<String, String> tDevices = new TreeMap<>();
-				TreeMap<String, String> tParams = new TreeMap<>();
-
-				mParser.nextTag();
-
-				if (!mParser.getName().equals("dev") && !mParser.getName().equals("par") && !mParser.getName().equals("geo"))
-					Log.e(TAG, "someone send bad xml");//TODO do something
-
-				do {
-					String position = getSecureAttributeString("pos");
-
-					if (mParser.getName().equals("dev")) {
-						Module.ModuleId moduleId = new Module.ModuleId(aid, getSecureAttributeString("id"), getSecureAttributeString("type"));
-						tDevices.put(position, moduleId.absoluteId);
-
-						mParser.nextTag();
-					} else if (mParser.getName().equals("geo")) {
-						watchdog.setGeoRegionId(getSecureAttributeString("rid"));
-						mParser.nextTag();
-					} else {
-						String param = readText("par");
-						tParams.put(position, param);
-						// FIXME: this is workaround cause server not returning <geo> tag .. when it's added, this will not be necessary
-						if (position.equals("1") && watchdog.getType() == Watchdog.TYPE_GEOFENCE && watchdog.getGeoRegionId() == null) {
-							watchdog.setGeoRegionId(param);
-						}
-					}
-
-				} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("alg"));
-
-				watchdog.setModules(new ArrayList<>(tDevices.values()));
-				watchdog.setParams(new ArrayList<>(tParams.values()));
-
-				result.add(watchdog);
 
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
 

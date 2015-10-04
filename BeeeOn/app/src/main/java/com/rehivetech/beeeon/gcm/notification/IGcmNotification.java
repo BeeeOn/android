@@ -15,7 +15,6 @@ public interface IGcmNotification {
 	 * Enum mapping string name of notification to end class for instantiation
 	 */
 	enum NotificationName {
-		WATCHDOG("watchdog", WatchdogNotification.class),
 		DELETE_NOTIF("delete_not", DeleteNotification.class),
 		URI("uri", UriNotification.class),
 		DEVICE_ADDED("sensor_add", DeviceAddedNotification.class),

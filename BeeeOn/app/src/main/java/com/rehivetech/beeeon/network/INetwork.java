@@ -8,7 +8,6 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 
 import java.util.ArrayList;
@@ -320,16 +319,6 @@ public interface INetwork {
 	// /////////////////////////////////////////////////////////////////////////////////
 	// /////////////////////////////////////ALGORITHMS//////////////////////////////////
 	// /////////////////////////////////////////////////////////////////////////////////
-
-	boolean addWatchdog(Watchdog watchdog, String gateId);
-
-	List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId);
-
-	List<Watchdog> getAllWatchdogs(String gateId);
-
-	boolean updateWatchdog(Watchdog watchdog, String gateId);
-
-	boolean deleteWatchdog(Watchdog watchdog);
 
 	boolean passBorder(String regionId, String type);
 }

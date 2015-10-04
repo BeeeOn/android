@@ -142,10 +142,6 @@
 			android:label="@string/manifest_title_gate_add_user">
 		</activity>
 		<activity
-			android:name=".gui.activity.WatchdogEditRuleActivity"
-			android:label="@string/manifest_action_watchdog">
-		</activity>
-		<activity
 			android:name=".gui.activity.NotificationActivity"
 			android:label="@string/manifest_action_notification">
 		</activity>

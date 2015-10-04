@@ -487,11 +487,6 @@ public class MapGeofenceActivity extends BaseApplicationActivity implements Resu
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.map_geofence_menu_del) {
 				deleteGeofence(mHolder);
-			} else if (item.getItemId() == R.id.map_geofence_menu_create_watchdog) {
-				Intent intent = new Intent(MapGeofenceActivity.this, WatchdogEditRuleActivity.class);
-				intent.putExtra(WatchdogEditRuleActivity.EXTRA_GEOFENCE_ID_PICKED, mHolder.getGeofence().getId());
-				intent.putExtra(WatchdogEditRuleActivity.EXTRA_IS_NEW, true);
-				startActivity(intent);
 			}
 
 			mode.finish();

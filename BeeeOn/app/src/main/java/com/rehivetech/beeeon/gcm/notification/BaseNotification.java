@@ -90,9 +90,6 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		BaseNotification notification = null;
 
 		switch (name) {
-			case WATCHDOG:
-				notification = WatchdogNotification.getInstance(msgId, time, type, bundle);
-				break;
 			case GATE_ADDED:
 				notification = GateAddedNotification.getInstance(msgId, time, type, bundle);
 				break;

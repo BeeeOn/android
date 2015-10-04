@@ -20,7 +20,6 @@ import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.model.ModuleLogsModel;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.model.UsersModel;
-import com.rehivetech.beeeon.model.WatchdogsModel;
 import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
@@ -235,10 +234,6 @@ public final class Controller {
 
 	public ModuleLogsModel getModuleLogsModel() {
 		return (ModuleLogsModel) getModelInstance(ModuleLogsModel.class);
-	}
-
-	public WatchdogsModel getWatchdogsModel() {
-		return (WatchdogsModel) getModelInstance(WatchdogsModel.class);
 	}
 
 	public GcmModel getGcmModel() {

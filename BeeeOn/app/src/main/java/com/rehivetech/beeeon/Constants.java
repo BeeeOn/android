@@ -89,8 +89,6 @@ public final class Constants {
 
 	public static final String GUI_MENU_GATEWAY = "GUI_MENU_GATEWAY";
 
-	public static final String GUI_MENU_WATCHDOG = "GUI_MENU_WATCHDOG";
-
 	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY";
 
 	public static final String GUI_MENU_DEVICES = "GUI_MENU_DEVICES";

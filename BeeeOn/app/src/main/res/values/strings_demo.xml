@@ -61,11 +61,4 @@
 	<string name="demo_name_module_lighting">Lighting</string>
 	<string name="demo_name_module_air">Air</string>
 
-	<!-- Names of Watchdog and notification messages-->
-	<string name="demo_name_watchdog_outdoor_temp">Monitoring outside temperature</string>
-	<string name="demo_notif_watchdog_outdoor_temp">Outside is very cold.</string>
-	<string name="demo_name_watchdog_humidity">Low humidity</string>
-	<string name="demo_notif_watchdog_humidity">Humidity is very low</string>
-
-
 </resources>

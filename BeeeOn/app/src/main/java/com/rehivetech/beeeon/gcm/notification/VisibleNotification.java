@@ -40,9 +40,6 @@ public abstract class VisibleNotification extends BaseNotification {
 	private static VisibleNotification getInstance(NotificationName name, NotificationType type, Integer msgId, Long time, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException {
 		VisibleNotification notification = null;
 		switch (name) {
-			case WATCHDOG:
-				notification = WatchdogNotification.getInstance(msgId, time, type, isRead, parser);
-				break;
 			case GATE_ADDED:
 				notification = GateAddedNotification.getInstance(msgId, time, type, isRead, parser);
 				break;
