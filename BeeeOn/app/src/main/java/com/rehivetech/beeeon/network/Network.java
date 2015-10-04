@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
@@ -16,12 +17,10 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.xml.XmlCreator;
 import com.rehivetech.beeeon.network.xml.XmlParsers;
 import com.rehivetech.beeeon.network.xml.XmlParsers.State;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
@@ -40,7 +39,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -558,7 +557,7 @@ public class Network implements INetwork {
 
 	@Override
 	public Device getDevice(Device device) {
-		List<Device> devices = getDevices(Arrays.asList(device));
+		List<Device> devices = getDevices(Collections.singletonList(device));
 		return devices.isEmpty() ? null : devices.get(0);
 	}
 
@@ -637,7 +636,7 @@ public class Network implements INetwork {
 				XmlCreator.createAddLocation(mSessionId, location),
 				State.LOCATIONID);
 
-		location.setId((String) parser.parseNewLocationId());
+		location.setId(parser.parseNewLocationId());
 		return location;
 	}
 
@@ -752,76 +751,4 @@ public class Network implements INetwork {
 		return parser.parseNotifications();
 	}
 
-	@Override
-	public boolean addWatchdog(Watchdog watchdog, String gateId) {
-		String request = XmlCreator.createAddAlg(mSessionId,
-				watchdog.getName(),
-				gateId,
-				watchdog.getType(),
-				watchdog.getModules(),
-				watchdog.getParams(),
-				watchdog.getGeoRegionId());
-
-		XmlParsers parser = processCommunication(
-				request,
-				State.ALGCREATED);
-
-		watchdog.setId(parser.parseNewWatchdogId());
-		return true;
-	}
-
-	@Override
-	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetAlgs(mSessionId, gateId, watchdogIds),
-				State.ALGORITHMS);
-
-		return parser.parseWatchdog();
-	}
-
-	@Override
-	public List<Watchdog> getAllWatchdogs(String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetAllAlgs(mSessionId, gateId),
-				State.ALGORITHMS);
-
-		return parser.parseWatchdog();
-	}
-
-	@Override
-	public boolean updateWatchdog(Watchdog watchdog, String gateId) {
-		String request = XmlCreator.createSetAlg(mSessionId,
-				watchdog.getName(),
-				watchdog.getId(),
-				gateId,
-				watchdog.getType(),
-				watchdog.isEnabled(),
-				watchdog.getModules(),
-				watchdog.getParams(),
-				watchdog.getGeoRegionId());
-
-		processCommunication(
-				request,
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteWatchdog(Watchdog watchdog) {
-		processCommunication(
-				XmlCreator.createDelAlg(mSessionId, watchdog.getId()),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean passBorder(String regionId, String type) {
-		processCommunication(
-				XmlCreator.createPassBorder(mSessionId, regionId, type),
-				State.TRUE);
-
-		return true;
-	}
 }

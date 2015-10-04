@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class SettingsItem {
 
-	protected final List<BaseItem> mItems = new ArrayList<BaseItem>();
+	protected final List<BaseItem> mItems = new ArrayList<>();
 
 	public class BaseItem {
 		protected final int mId;
@@ -49,7 +49,7 @@ public abstract class SettingsItem {
 	 * @return List of values to be shown in settings
 	 */
 	public CharSequence[] getEntries(Context context) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (BaseItem item : mItems) {
 			list.add(item.getSettingsName(context));
 		}
@@ -60,7 +60,7 @@ public abstract class SettingsItem {
 	 * @return List of IDs which will be saved in SharedPreferences.
 	 */
 	public CharSequence[] getEntryValues() {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (BaseItem item : mItems) {
 			list.add(String.valueOf(item.mId));
 		}

@@ -8,7 +8,6 @@
 
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifications</string>
-	<string name="manifest_action_watchdog">Watchdog</string>
 	<string name="manifest_facebook_app_id" translatable="false">868028889921254</string>
 	<string name="manifest_title_device_add">Add device</string>
 	<string name="manifest_title_device_detail">Device detail</string>
@@ -39,6 +38,7 @@
 	<string name="util_timezone_actual_timezone">Current timezone</string>
 	<string name="util_timezone_gate_timezone">Gateway timezone</string>
 	<string name="utils_toast_field_must_be_email">Enter a valid e-mail address</string>
+	<string name="utils_toast_field_must_be_number">Enter a valid number</string>
 
 	<!-- Adapter location -->
 	<string name="adapter_location_array_new_location_spinner">New location</string>
@@ -84,20 +84,6 @@
 	<string name="notification_title_notification">Notification</string>
 	<string name="notification_uri_name_link">Link</string>
 
-	<!-- Geofence dialog -->
-	<string name="geofence_dialog_minus" translatable="false">-</string>
-	<string name="geofence_dialog_name">Name</string>
-	<string name="geofence_dialog_plus" translatable="false">+</string>
-	<string name="geofence_dialog_title_add_new_geofence_area">Add geofence area</string>
-
-	<!-- Map geofence -->
-	<string name="map_geofence_action_mode_delete_geofence">Delete geofence</string>
-	<string name="map_geofence_action_mode_watchdog_create">Create watchdog</string>
-	<string name="map_geofence_action_search">Search</string>
-	<string name="map_geofence_radius">Radius</string>
-	<string name="map_geofence_title_map_geofence">Geofence areas</string>
-	<string name="map_geofence_unit_meter_short" translatable="false">m</string>
-
 	<!-- Common Button, texts, titles, toast -->
 	<string name="activity_configuration_toast_something_wrong">Something went wrong, try again later</string>
 	<string name="activity_fragment_btn_cancel">Cancel</string>
@@ -115,7 +101,7 @@
 	<string name="fragment_configuration_widget_dialog_btn_ok">OK</string>
 	<string name="fragment_module_detail_custom_view_chart_legend">Legend</string>
 	<string name="layout_gate_edit">Edit gateway</string>
-	<string name="layout_module_list_watchdog_list_action_refresh_list">Refresh list</string>
+	<string name="layout_device_list_refresh_list">Refresh list</string>
 	<string name="layout_widget_household">Household</string>
 	<string name="toolbar_refresh_title">Refresh</string>
 	<string name="toast_not_implemented">Not implemented yet</string>
@@ -167,7 +153,6 @@
 	<string name="nav_drawer_menu_menu_household">Overview</string>
 	<string name="nav_drawer_menu_menu_management">Management</string>
 	<string name="nav_drawer_menu_no_gates">You have no gateways</string>
-	<string name="nav_drawer_menu_watchdog_notif_menu_watchdog">Watchdog</string>
 
 	<!-- Gate menu -->
 	<string name="gate_menu_layout_menu_del">Remove gateway</string>
@@ -300,25 +285,6 @@
 	<string name="module_graph_show_y_labels_button">Show Y labels</string>
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Device is not available</string>
-
-	<!-- Watchdog rule edit -->
-	<string name="watchdog_rule_edit_devices">Devices</string>
-	<string name="watchdog_rule_edit_message_remove_watchdog">Watchdog will be permanently removed.</string>
-	<string name="watchdog_rule_edit_multi_adapter_no_item">- Nothing to select -</string>
-	<string name="watchdog_rule_edit_notification_text">Notification text</string>
-	<string name="watchdog_rule_edit_threshold_value">Threshold</string>
-	<string name="watchdog_rule_edit_toast_actor_required">Select actuator</string>
-	<string name="watchdog_rule_edit_toast_fail_save_data">Failed saving data</string>
-	<string name="watchdog_rule_edit_toast_field_must_be_number">Enter a valid number</string>
-	<string name="watchdog_rule_edit_toast_watchdog_no_valid_item">No valid item to check</string>
-	<string name="watchdog_rule_edit_toast_wrong_or_no_watchdog_rule">Wrong or no Watchdog rule selected</string>
-	<string name="watchdog_rule_edit_watchdog_actor_change_state">Change actor\'s state</string>
-	<string name="watchdog_rule_edit_watchdog_notification_send">Send notification</string>
-	<string name="watchdog_rule_edit_watchdog_rule">Watchdog Rule</string>
-	<string name="watchdog_rule_edit_watchdog_rule_name">Rule name</string>
-
-	<!-- Watchdog list -->
-	<string name="watchdog_list_no_rules_cap">NO RULE</string>
 
 	<!-- Widget configuration -->
 	<string name="widget_configuration_title_widget_config">Widget Configuration</string>

@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.util;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -109,7 +110,7 @@ public class TutorialHelper {
 		int marginPx = Utils.convertDpToPixel(25);
 		int marginBottomPx = Utils.convertDpToPixel(55);
 		lps.setMargins(marginPx, marginPx, marginPx, marginBottomPx);
-		ViewTarget target = new ViewTarget(layout.findViewById(R.id.module_list_fab));
+		ViewTarget target = new ViewTarget(layout.findViewById(R.id.devices_list_fab));
 
 		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
 
@@ -159,7 +160,7 @@ public class TutorialHelper {
 		int marginPx = Utils.convertDpToPixel(25);
 		int marginBottomPx = Utils.convertDpToPixel(55);
 		lps.setMargins(marginPx, marginPx, marginPx, marginBottomPx);
-		ViewTarget target = new ViewTarget(layout.findViewById(R.id.module_list_fab));
+		ViewTarget target = new ViewTarget(layout.findViewById(R.id.devices_list_fab));
 
 		OnShowcaseEventListener listener = new OnShowcaseEventListener() {
 

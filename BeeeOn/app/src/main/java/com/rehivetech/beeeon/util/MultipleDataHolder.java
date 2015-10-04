@@ -56,7 +56,7 @@ public class MultipleDataHolder<O extends IIdentifier> {
 	public List<O> getObjects(String holderId) {
 		DataHolder<O> holder = mHolders.get(holderId);
 		if (holder == null) {
-			return new ArrayList<O>();
+			return new ArrayList<>();
 		}
 
 		return holder.getObjects();

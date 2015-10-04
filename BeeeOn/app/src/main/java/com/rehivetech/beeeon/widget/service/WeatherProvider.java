@@ -2,9 +2,9 @@ package com.rehivetech.beeeon.widget.service;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 
 import org.json.JSONArray;

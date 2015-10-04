@@ -14,7 +14,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.model.LocationsModel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

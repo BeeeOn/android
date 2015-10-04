@@ -1,12 +1,12 @@
 package com.rehivetech.beeeon.model;
 
+import android.util.Log;
+
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.util.Log;
 
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
@@ -25,7 +25,7 @@ public class ModuleLogsModel extends BaseModel {
 
 	private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
 
-	private final Map<String, ModuleLog> mModulesLogs = new HashMap<String, ModuleLog>();
+	private final Map<String, ModuleLog> mModulesLogs = new HashMap<>();
 
 	public ModuleLogsModel(INetwork network) {
 		super(network);
@@ -45,7 +45,7 @@ public class ModuleLogsModel extends BaseModel {
 	}
 
 	private List<Interval> getMissingIntervals(ModuleLog.DataPair pair) {
-		List<Interval> downloadIntervals = new ArrayList<Interval>();
+		List<Interval> downloadIntervals = new ArrayList<>();
 		Interval interval = pair.interval;
 		String moduleId = pair.module.getModuleId().absoluteId;
 

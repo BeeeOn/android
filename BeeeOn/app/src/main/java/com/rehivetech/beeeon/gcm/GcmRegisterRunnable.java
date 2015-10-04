@@ -1,11 +1,11 @@
 package com.rehivetech.beeeon.gcm;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 public class GcmRegisterRunnable implements Runnable {

@@ -1,11 +1,11 @@
 package com.rehivetech.beeeon.household.device.values;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.BlankUnit;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.Collections;
 import java.util.List;

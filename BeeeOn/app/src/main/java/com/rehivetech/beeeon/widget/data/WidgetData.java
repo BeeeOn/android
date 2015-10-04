@@ -7,13 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.ViewsBuilder;

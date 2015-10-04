@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.SparseArray;
 
 import com.rehivetech.beeeon.Constants;
@@ -28,7 +29,6 @@ import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
@@ -304,7 +304,7 @@ public class WidgetService extends Service {
 
 			// if widget has setting to update only on wifi - skip if not this
 			if (widgetData.widgetWifiOnly && mNetworkType != ConnectivityManager.TYPE_WIFI && !isForceUpdate) {
-				Log.v(TAG, String.format("Ignoring widget %d - updates only on wifi", widgetId, mNetworkType));
+				Log.v(TAG, String.format("Ignoring widget %d - updates only on wifi", widgetId));
 				continue;
 			}
 

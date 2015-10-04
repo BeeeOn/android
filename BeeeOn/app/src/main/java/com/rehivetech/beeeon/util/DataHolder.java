@@ -4,11 +4,6 @@ import com.rehivetech.beeeon.IIdentifier;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Extends SimpleDataHolder with ability to hold last update time of the data.
  */

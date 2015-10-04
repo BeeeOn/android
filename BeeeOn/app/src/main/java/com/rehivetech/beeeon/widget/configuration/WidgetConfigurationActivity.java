@@ -4,16 +4,13 @@ import android.app.ProgressDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntegerRes;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
-import com.rehivetech.beeeon.util.Log;
 
 /**
  * @author mlyko

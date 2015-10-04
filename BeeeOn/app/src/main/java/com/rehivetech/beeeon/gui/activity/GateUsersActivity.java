@@ -2,9 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,7 +16,6 @@ import android.widget.Toast;
 
 import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
-import com.melnykov.fab.FloatingActionButton;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
@@ -29,6 +26,8 @@ import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.EditUserTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveUserTask;
+
+import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 

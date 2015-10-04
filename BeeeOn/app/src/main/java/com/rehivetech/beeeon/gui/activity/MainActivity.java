@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.avast.android.dialogs.fragment.ListDialogFragment;
-import com.avast.android.dialogs.iface.IListDialogListener;
 import com.github.amlcurran.showcaseview.OnShowcaseEventListener;
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -26,15 +26,12 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
-import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
@@ -48,13 +45,11 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public static final String ADD_DEVICE_TAG = "addDeviceDialog";
 	public static final String FRG_TAG_LOC = "Loc";
 	public static final String FRG_TAG_CUS = "Cus";
-	public static final String FRG_TAG_WAT = "WAT";
 	private static final String FRG_TAG_PRF = "PRF";
 	private static final int ADD_ACTION_CODE = 987654;
 	private NavDrawerMenu mNavDrawerMenu;
 	private DevicesListFragment mDevicesListFragment;
 	private CustomViewFragment mCustomViewFragment;
-	private WatchdogListFragment mWatchdogListFragment;
 
 	private static final int BACK_TIME_INTERVAL = 2100;
 	private Toast mExitToast;
@@ -103,7 +98,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		// creates fragments
 		mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
 		mCustomViewFragment = new CustomViewFragment();
-		mWatchdogListFragment = new WatchdogListFragment();
 
 		if (savedInstanceState != null) {
 			if (!savedInstanceState.getBoolean(IS_DRAWER_OPEN))
@@ -129,8 +123,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
 			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
-		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-			ft.replace(R.id.main_content_frame, mWatchdogListFragment, FRG_TAG_WAT);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_GATEWAY)) {
 			mActiveMenuId = null;
 
@@ -303,9 +295,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
 			mCustomViewFragment = new CustomViewFragment();
 			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
-		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
-			mWatchdogListFragment = new WatchdogListFragment();
-			ft.replace(R.id.main_content_frame, mWatchdogListFragment, FRG_TAG_WAT);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_GATEWAY)) {
 			mActiveMenuId = null;
 			Intent intent = new Intent(this, GateDetailActivity.class);
@@ -441,11 +430,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public void onConfirm(int confirmType, String dataId) {
 		if (confirmType == ConfirmDialog.TYPE_DELETE_GATE) {
 			doUnregisterGateTask(dataId);
-		} else if (confirmType == ConfirmDialog.TYPE_DELETE_WATCHDOG) {
-			Watchdog watchdog = Controller.getInstance(this).getWatchdogsModel().getWatchdog(mActiveGateId, dataId);
-			if (watchdog != null) {
-				mWatchdogListFragment.doRemoveWatchdogTask(watchdog);
-			}
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
 			Device device = Controller.getInstance(this).getDevicesModel().getDevice(mActiveGateId, dataId);
 			if (device != null) {

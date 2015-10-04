@@ -39,7 +39,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_gravity="center"
-			android:text="@string/layout_module_list_watchdog_list_action_refresh_list"
+			android:text="@string/layout_device_list_refresh_list"
 			android:visibility="gone"
 			/>
 	</LinearLayout>
@@ -51,6 +51,9 @@
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"
+		android:layout_marginBottom="16dp"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
 		style="@style/BeeeOn.Fab.Menu"
 		fab:fab_labelStyle="@style/BeeeOn.Fab.Menu.Label">
 

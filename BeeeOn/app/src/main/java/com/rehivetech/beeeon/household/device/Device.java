@@ -3,11 +3,11 @@ package com.rehivetech.beeeon.household.device;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SimpleDataHolder;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -15,7 +15,6 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public final class Device implements IIdentifier {
 	 * @param address
 	 * @return Properly initialized new instance of Device.
 	 */
-	public static final Device createDeviceByType(String typeId, String gateId, String address) {
+	public static Device createDeviceByType(String typeId, String gateId, String address) {
 		DeviceType type = Utils.getEnumFromId(DeviceType.class, typeId, DeviceType.TYPE_UNKNOWN);
 		return new Device(type, gateId, address);
 	}

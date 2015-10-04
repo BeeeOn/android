@@ -274,7 +274,7 @@ public class CallbackTaskManager {
 	public enum ProgressIndicator {
 		PROGRESS_NONE,
 		PROGRESS_ICON,
-		PROGRESS_DIALOG;
+		PROGRESS_DIALOG,
 	}
 
 }

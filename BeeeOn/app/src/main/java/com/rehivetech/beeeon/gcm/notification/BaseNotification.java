@@ -8,9 +8,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.Calendar;
 
@@ -49,7 +49,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		Controller controller = Controller.getInstance(context);
 
 		Log.d(TAG, bundle.toString());
-		BaseNotification notification = null;
+		BaseNotification notification;
 		try {
 			NotificationName name = NotificationName.fromValue(bundle.getString("name"));
 			Integer msgId = Integer.valueOf(bundle.getString("mid"));
@@ -90,9 +90,6 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		BaseNotification notification = null;
 
 		switch (name) {
-			case WATCHDOG:
-				notification = WatchdogNotification.getInstance(msgId, time, type, bundle);
-				break;
 			case GATE_ADDED:
 				notification = GateAddedNotification.getInstance(msgId, time, type, bundle);
 				break;

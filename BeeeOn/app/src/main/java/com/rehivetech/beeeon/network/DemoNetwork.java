@@ -20,7 +20,6 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.household.user.User.Role;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
@@ -58,7 +57,6 @@ public class DemoNetwork implements INetwork {
 	public final DataHolder<Gate> mGates = new DataHolder<>();
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
-	public final MultipleDataHolder<Watchdog> mWatchdogs = new MultipleDataHolder<>();
 	public final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
 
 	public DemoNetwork(Context context) {
@@ -136,7 +134,6 @@ public class DemoNetwork implements INetwork {
 		mGates.clear();
 		mLocations.clear();
 		mDevices.clear();
-		mWatchdogs.clear();
 		mUsers.clear();
 
 		DemoData demoData = new DemoData();
@@ -150,11 +147,8 @@ public class DemoNetwork implements INetwork {
 			mDevices.setObjects(gateId, demoData.getDevices(gateId));
 			mDevices.setLastUpdate(gateId, DateTime.now());
 
-			mWatchdogs.setObjects(gateId, demoData.getWatchdogs(mContext, gateId));
-			mWatchdogs.setLastUpdate(gateId, DateTime.now());
-
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(gateId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
+			mUsers.setObjects(gateId, Arrays.asList(new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)));
 			mUsers.setLastUpdate(gateId, DateTime.now());
 
 			Random rand = getRandomForGate(gate.getId());
@@ -356,7 +350,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public List<Device> getDevices(List<Device> devices) {
-		List<Device> result = new ArrayList<Device>();
+		List<Device> result = new ArrayList<>();
 
 		for (Device device : devices) {
 			Device newDevice = getDevice(device);
@@ -610,7 +604,6 @@ public class DemoNetwork implements INetwork {
 			// If we're deleting ourselves, remove whole gate
 			mLocations.removeHolder(gateId);
 			mDevices.removeHolder(gateId);
-			mWatchdogs.removeHolder(gateId);
 			return mGates.removeObject(gateId) != null;
 		} else {
 			// TODO: This is correct implementation for future
@@ -677,56 +670,6 @@ public class DemoNetwork implements INetwork {
 	public List<VisibleNotification> getNotifications() {
 		// TODO Auto-generated method stub
 		return new ArrayList<>();
-	}
-
-	@Override
-	public List<Watchdog> getAllWatchdogs(String gateId) {
-		return mWatchdogs.getObjects(gateId);
-	}
-
-	@Override
-	public List<Watchdog> getWatchdogs(ArrayList<String> watchdogIds, String gateId) {
-		return new ArrayList<>();
-	}
-
-	@Override
-	public boolean updateWatchdog(Watchdog watchdog, String gateId) {
-		if (!mGates.hasObject(gateId)) {
-			return false;
-		}
-
-		// NOTE: this replaces (or add) whole watchdog
-		mWatchdogs.addObject(gateId, watchdog);
-		return true;
-	}
-
-	@Override
-	public boolean deleteWatchdog(Watchdog watchdog) {
-		return mWatchdogs.removeObject(watchdog.getGateId(), watchdog.getId()) != null;
-	}
-
-	@Override
-	public boolean addWatchdog(Watchdog watchdog, String gateId) {
-		if (!mGates.hasObject(gateId)) {
-			return false;
-		}
-
-		// Create unique watchdog id
-		String watchdogId;
-		int i = 0;
-		do {
-			watchdogId = String.valueOf(i++);
-		} while (mWatchdogs.hasObject(gateId, watchdogId));
-
-		// Set new watchdog id
-		watchdog.setId(watchdogId);
-		mWatchdogs.addObject(gateId, watchdog);
-		return true;
-	}
-
-	@Override
-	public boolean passBorder(String regionId, String type) {
-		return true;
 	}
 
 }

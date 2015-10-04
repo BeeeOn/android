@@ -29,7 +29,7 @@ public enum NetworkServer implements INameIdentifier {
 
 	NetworkServer(String id, String name, String address, int port) {
 		this(id, name, address, port, ASSETS_CA_CERT, SERVER_CN_CERTIFICATE);
-	};
+	}
 
 	NetworkServer(String id, String name, String address, int port, String certAssetsFilename, String certVerifyUrl) {
 		mId = id;
@@ -63,7 +63,7 @@ public enum NetworkServer implements INameIdentifier {
 		return mName;
 	}
 
-	public static final NetworkServer getDefaultServer() {
+	public static NetworkServer getDefaultServer() {
 			return SERVER_BEEEON;
 	}
 }

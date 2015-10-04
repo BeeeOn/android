@@ -6,17 +6,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.MapGeofenceActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsUnitActivity;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Language;
 import com.rehivetech.beeeon.util.Timezone;
-import com.rehivetech.beeeon.util.Utils;
 
 /**
  * Created by david on 26.8.15.
@@ -58,20 +55,6 @@ public class SettingsMainFragment extends BaseSettingsFragment implements Shared
 		Preference units = findPreference(Constants.KEY_UNITS);
 		Intent intentUnit = new Intent(getActivity(), SettingsUnitActivity.class);
 		units.setIntent(intentUnit);
-
-		Preference geofence = findPreference(Constants.KEY_GEOFENCE);
-		if (Utils.isGooglePlayServicesAvailable(getActivity())) {
-			Intent intentGeofence = new Intent(getActivity(), MapGeofenceActivity.class);
-			geofence.setIntent(intentGeofence);
-		} else {
-			geofence.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					Toast.makeText(getActivity(), R.string.settings_main_toast_no_google_play_services, Toast.LENGTH_LONG).show();
-					return true;
-				}
-			});
-		}
 	}
 
 	@Override

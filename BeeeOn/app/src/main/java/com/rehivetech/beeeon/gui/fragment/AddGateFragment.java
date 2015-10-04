@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 public class AddGateFragment extends TrackFragment {
 
 	public OnAddGateListener mCallback;
-	private FragmentActivity mActivity;
+	private AddGateActivity mActivity;
 
 	@Override
 	public void onAttach(Activity activity) {

@@ -17,6 +17,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -110,7 +111,7 @@ final public class Utils {
 	}
 
 	public static String getUtf8StringFromInputStream(InputStream stream) throws IOException {
-		int n = 0;
+		int n;
 		char[] buffer = new char[1024 * 4];
 		InputStreamReader reader = new InputStreamReader(stream, "UTF8");
 		StringWriter writer = new StringWriter();
@@ -160,7 +161,7 @@ final public class Utils {
 	public static JSONObject fetchJsonByPost(String requestUrl, Map<String, String> params) throws JSONException, IOException {
 		final HttpClient client = new DefaultHttpClient();
 		final HttpPost post = new HttpPost(requestUrl);
-		final List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		final List<NameValuePair> pairs = new ArrayList<>();
 
 		for (String key : params.keySet())
 			pairs.add(new BasicNameValuePair(key, params.get(key)));
@@ -500,7 +501,7 @@ final public class Utils {
 						Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
 						eText.requestFocus();
-						eText.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						eText.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -510,7 +511,7 @@ final public class Utils {
 						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
 						eText.requestFocus();
-						eText.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						eText.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -551,7 +552,7 @@ final public class Utils {
 						Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
 						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -561,7 +562,7 @@ final public class Utils {
 						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
 						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.watchdog_rule_edit_toast_field_must_be_number));
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;

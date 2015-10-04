@@ -17,7 +17,6 @@ public class ConfirmDialog extends BaseDialogFragment {
 
 	public static int TYPE_DELETE_GATE = 10;
 	public static int TYPE_DELETE_USER = 11;
-	public static int TYPE_DELETE_WATCHDOG = 12;
 	public static int TYPE_DELETE_DEVICE = 13;
 	public static int TYPE_CHANGE_OWNERSHIP = 20;
 

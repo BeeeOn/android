@@ -130,10 +130,6 @@
 			android:label="@string/settings_unit_unit">
 		</activity>
 		<activity
-			android:name=".gui.activity.MapGeofenceActivity"
-			android:label="@string/map_geofence_title_map_geofence">
-		</activity>
-		<activity
 			android:name=".gui.activity.GateUsersActivity"
 			android:label="@string/gate_users_title_gate_users">
 		</activity>
@@ -142,16 +138,9 @@
 			android:label="@string/manifest_title_gate_add_user">
 		</activity>
 		<activity
-			android:name=".gui.activity.WatchdogEditRuleActivity"
-			android:label="@string/manifest_action_watchdog">
-		</activity>
-		<activity
 			android:name=".gui.activity.NotificationActivity"
 			android:label="@string/manifest_action_notification">
 		</activity>
-		<activity
-			android:name=".gui.activity.ModuleEditActivity"
-			android:label="@string/module_edit_title_module_edit"/>
 		<activity
 			android:name=".gui.activity.GateDetailActivity"
 			android:label="@string/manifest_title_gate_detail"/>
@@ -249,7 +238,6 @@
 				android:resource="@xml/widget_device_3x1_info"/>
 		</receiver>
 
-		<service android:name=".geofence.GeofenceIntentService"/>
 		<!-- GOOGLE CLOUD MESSAGING -->
 		<receiver
 			android:name=".gcm.GcmBroadcastReceiver"

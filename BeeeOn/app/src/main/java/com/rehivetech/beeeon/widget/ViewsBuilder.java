@@ -72,9 +72,9 @@ public class ViewsBuilder {
 
 	public void setSwitchDisabled(boolean isDisabled, boolean isChecked) {
 		if (isDisabled) {
-			setImage(R.id.widget_switchcompat, isChecked == true ? R.drawable.switch_on_disabled : R.drawable.switch_off_disabled);
+			setImage(R.id.widget_switchcompat, isChecked ? R.drawable.switch_on_disabled : R.drawable.switch_off_disabled);
 		} else {
-			setImage(R.id.widget_switchcompat, isChecked == true ? R.drawable.switch_on : R.drawable.switch_off);
+			setImage(R.id.widget_switchcompat, isChecked ? R.drawable.switch_on : R.drawable.switch_off);
 		}
 	}
 

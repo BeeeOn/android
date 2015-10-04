@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.dialog;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -14,7 +15,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.DeviceDetailFragment;
 import com.rehivetech.beeeon.gui.fragment.DeviceDetailGroupModuleFragment;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
 import net.simonvt.numberpicker.NumberPicker;

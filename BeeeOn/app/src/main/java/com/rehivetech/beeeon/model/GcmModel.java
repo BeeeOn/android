@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
@@ -12,7 +13,6 @@ import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.persistence.Persistence;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class GcmModel extends BaseModel {
 	/**
 	 * Weak map for holding registered notification receivers
 	 */
-	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<INotificationReceiver, Boolean>();
+	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<>();
 
 	public GcmModel(INetwork network, Context context, Persistence persistence, User user) {
 		super(network);
@@ -216,7 +216,7 @@ public class GcmModel extends BaseModel {
 	 * @param msgId Notifiaction ID
 	 */
 	public void setNotificationRead(String msgId) {
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 		list.add(msgId);
 		setNotificationRead(list);
 	}

@@ -58,10 +58,4 @@
 	<string name="demo_name_module_lighting">Osvětlení</string>
 	<string name="demo_name_module_air">Ovzduší</string>
 
-	<!-- Names of Watchdog and notification messages-->
-	<string name="demo_name_watchdog_outdoor_temp">Hlídaní venkovní teploty</string>
-	<string name="demo_notif_watchdog_outdoor_temp">Venku je velká zima.</string>
-	<string name="demo_name_watchdog_humidity">Nízka vlhkost</string>
-	<string name="demo_notif_watchdog_humidity">Vlhkost je velmi nízká.</string>
-
 </resources>

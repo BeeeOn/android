@@ -5,19 +5,16 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
-import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.household.watchdog.Watchdog;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 /**
  * Created by vico on 8.7.2015.
@@ -128,68 +125,6 @@ public class DemoData {
 
 		return deviceList;
 
-	}
-
-	public List<Watchdog> getWatchdogs(Context context, String gateID) {
-		List<Watchdog> watchdogList = new ArrayList<>();
-
-		switch (gateID) {
-
-			case GATE_1_ID: {
-				Watchdog watchdog1 = new Watchdog(1);
-				watchdog1.setId("1");
-				watchdog1.setGateId(gateID);
-				watchdog1.setEnabled(false);
-				watchdog1.setName(context.getString(R.string.demo_name_watchdog_outdoor_temp));
-
-				TreeMap<String, String> modules1 = new TreeMap<>();
-				TreeMap<String, String> params1 = new TreeMap<>();
-
-				Module.ModuleId moduleId1 = new Module.ModuleId(gateID, "100:00:FF:000:FF0", "1");
-				modules1.put("1", moduleId1.absoluteId);
-				params1.put("1", moduleId1.deviceId);
-				params1.put("2", "lt");
-				params1.put("3", "0");
-				params1.put("4", "notif");
-				params1.put("5", context.getString(R.string.demo_notif_watchdog_outdoor_temp));
-
-				watchdog1.setModules(new ArrayList<>(modules1.values()));
-				watchdog1.setParams(new ArrayList<>(params1.values()));
-
-				watchdogList.add(watchdog1);
-
-				Watchdog watchdog2 = new Watchdog(1);
-				watchdog2.setId("2");
-				watchdog2.setGateId(gateID);
-				watchdog2.setEnabled(true);
-				watchdog2.setName(context.getString(R.string.demo_name_watchdog_humidity));
-
-				TreeMap<String, String> modules2 = new TreeMap<>();
-				TreeMap<String, String> params2 = new TreeMap<>();
-
-				Module.ModuleId moduleId2 = new Module.ModuleId(gateID, "100:00:FF:000:FF0", "2");
-				modules2.put("1", moduleId2.absoluteId);
-				params2.put("1", moduleId2.deviceId);
-				params2.put("2", "lt");
-				params2.put("3", "30");
-				params2.put("4", "notif");
-				params2.put("5", context.getString(R.string.demo_notif_watchdog_humidity));
-
-				watchdog2.setModules(new ArrayList<>(modules2.values()));
-				watchdog2.setParams(new ArrayList<>(params2.values()));
-
-				watchdogList.add(watchdog2);
-
-				break;
-			}
-			default: {
-				//do nothing
-				break;
-			}
-
-		}
-
-		return watchdogList;
 	}
 
 }

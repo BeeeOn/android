@@ -1,12 +1,12 @@
 package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -18,7 +19,6 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
 import com.rehivetech.beeeon.gui.activity.WebAuthActivity;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import org.json.JSONException;
@@ -290,7 +290,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 			@Override
 			protected String doInBackground(Void... nothing) {
 				// Prepare parameters for Google request
-				final Map<String, String> params = new HashMap<String, String>(8);
+				final Map<String, String> params = new HashMap<>(8);
 				params.put("code", mCode);
 				params.put("client_id", Constants.WEB_LOGIN_CLIENT_ID);
 				params.put("client_secret", Constants.WEB_LOGIN_SECRET);

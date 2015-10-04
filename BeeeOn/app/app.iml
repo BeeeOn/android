@@ -81,7 +81,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.lzyzsd/circleprogress/1.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.shkschneider/android_PreferenceFragmentCompat/1.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.melnykov/fab/1.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/fr.avianey.com.viewpagerindicator/library/2.4.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/net.i2p.android.ext/floatingactionbutton/1.10.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/net.simonvt.numberpicker/number-picker/jars" />
@@ -122,7 +121,6 @@
     <orderEntry type="library" exported="" name="circleprogress-1.1.0" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.1.4" level="project" />
     <orderEntry type="library" exported="" name="floatingactionbutton-1.10.0" level="project" />
-    <orderEntry type="library" exported="" name="fab-1.2.0" level="project" />
     <orderEntry type="library" exported="" name="design-22.2.1" level="project" />
   </component>
 </module>

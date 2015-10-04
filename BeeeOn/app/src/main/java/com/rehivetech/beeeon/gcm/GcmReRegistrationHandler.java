@@ -2,9 +2,9 @@ package com.rehivetech.beeeon.gcm;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.util.Log;
 
 public class GcmReRegistrationHandler extends IntentService {
 	public static final String TAG = GcmReRegistrationHandler.class.getSimpleName();

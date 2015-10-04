@@ -9,13 +9,13 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.NotificationActivity;
 import com.rehivetech.beeeon.gui.adapter.NotificationAdapter;
-import com.rehivetech.beeeon.util.Log;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -40,9 +40,6 @@ public abstract class VisibleNotification extends BaseNotification {
 	private static VisibleNotification getInstance(NotificationName name, NotificationType type, Integer msgId, Long time, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException {
 		VisibleNotification notification = null;
 		switch (name) {
-			case WATCHDOG:
-				notification = WatchdogNotification.getInstance(msgId, time, type, isRead, parser);
-				break;
 			case GATE_ADDED:
 				notification = GateAddedNotification.getInstance(msgId, time, type, isRead, parser);
 				break;

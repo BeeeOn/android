@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.util;
 
-import android.content.Context;
-
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 

@@ -4,11 +4,11 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
-import com.rehivetech.beeeon.util.Log;
 
 public class GcmMessageHandler extends IntentService {
 

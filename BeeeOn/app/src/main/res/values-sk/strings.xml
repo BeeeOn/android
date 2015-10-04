@@ -3,7 +3,6 @@
 
 	<!-- Titles in manifest-->
 	<string name="manifest_action_notification">Notifikácie</string>
-	<string name="manifest_action_watchdog">Strážny pes</string>
 	<string name="manifest_title_device_add">Pridanie zariadenia</string>
 	<string name="manifest_title_device_detail">Detail zariadenia</string>
 	<string name="manifest_title_device_edit">Editácia zariadenia</string>
@@ -32,6 +31,7 @@
 	<string name="util_timezone_actual_timezone">Aktuálne časové pásmo</string>
 	<string name="util_timezone_gate_timezone">Časové pásmo brány</string>
 	<string name="utils_toast_field_must_be_email">Vložte platnú e-mailovú adresu</string>
+	<string name="utils_toast_field_must_be_number">Vložte platné číslo</string>
 
 	<!-- Adapter location -->
 	<string name="adapter_location_array_new_location_spinner">Nové umiestnenie</string>
@@ -80,17 +80,6 @@
 	<string name="notification_title_notification">Notifikácie</string>
 	<string name="notification_uri_name_link">Spoj</string>
 
-	<!-- Geofence dialog -->
-	<string name="geofence_dialog_name">Názov</string>
-	<string name="geofence_dialog_title_add_new_geofence_area">Pridať oblasť</string>
-
-	<!-- Map GeoFence -->
-	<string name="map_geofence_action_mode_delete_geofence">Odstrániť oblasť</string>
-	<string name="map_geofence_action_mode_watchdog_create">Vytvoriť strážneho psa</string>
-	<string name="map_geofence_action_search">Hľadať</string>
-	<string name="map_geofence_title_map_geofence">Geolokačné oblasti</string>
-	<string name="map_geofence_radius">Polomer</string>
-
 	<!-- Common Button, texts, titles, toast -->
 	<string name="activity_configuration_toast_something_wrong">Nastala neznámá chyba, skúste to neskôr</string>
 	<string name="activity_fragment_btn_cancel">Zrušiť</string>
@@ -108,7 +97,7 @@
 	<string name="fragment_configuration_widget_dialog_btn_ok">OK</string>
 	<string name="fragment_module_detail_custom_view_chart_legend">Legenda</string>
 	<string name="layout_gate_edit">Upraviť bránu</string>
-	<string name="layout_module_list_watchdog_list_action_refresh_list">Obnoviť zoznam</string>
+	<string name="layout_device_list_refresh_list">Obnoviť zoznam</string>
 	<string name="layout_widget_household">Domácnosť</string>
 	<string name="toolbar_refresh_title">Obnoviť</string>
 	<string name="toast_not_implemented">Bude implementované v budúcej verzii!</string>
@@ -160,7 +149,6 @@
 	<string name="nav_drawer_menu_menu_household">Prehľad</string>
 	<string name="nav_drawer_menu_menu_management">Správa domácnosti</string>
 	<string name="nav_drawer_menu_no_gates">Nemáte žiadne brány</string>
-	<string name="nav_drawer_menu_watchdog_notif_menu_watchdog">Strážny pes</string>
 
 	<!-- Gate menu-->
 	<string name="gate_menu_layout_menu_del">Odstrániť bránu</string>
@@ -294,25 +282,6 @@
 
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Zariadenie nie je dostupné</string>
-
-	<!-- Watchdog rule edit -->
-	<string name="watchdog_rule_edit_devices">Zariadenia</string>
-	<string name="watchdog_rule_edit_message_remove_watchdog">Strážny pes bude úplne odstránený.</string>
-	<string name="watchdog_rule_edit_multi_adapter_no_item">- Nič pre výber -</string>
-	<string name="watchdog_rule_edit_notification_text">Text notifikácie</string>
-	<string name="watchdog_rule_edit_threshold_value">Prah</string>
-	<string name="watchdog_rule_edit_toast_actor_required">Vyberte aktor</string>
-	<string name="watchdog_rule_edit_toast_fail_save_data">Uloženie údajov zlyhalo</string>
-	<string name="watchdog_rule_edit_toast_field_must_be_number">Vložte platné číslo</string>
-	<string name="watchdog_rule_edit_toast_watchdog_no_valid_item">Žiadna platná položka</string>
-	<string name="watchdog_rule_edit_toast_wrong_or_no_watchdog_rule">Nebolo zadané žiadne pravidlo alebo je zvolené pravidlo nesprávne</string>
-	<string name="watchdog_rule_edit_watchdog_actor_change_state">Zmeniť stav aktoru</string>
-	<string name="watchdog_rule_edit_watchdog_notification_send">Poslať notifikáciu</string>
-	<string name="watchdog_rule_edit_watchdog_rule">Pravidlo strážneho psa</string>
-	<string name="watchdog_rule_edit_watchdog_rule_name">Názov pravidla</string>
-
-	<!-- Watchdog list -->
-	<string name="watchdog_list_no_rules_cap">ŽIADNE PRAVIDLO</string>
 
 	<!-- Widget configuration -->
 	<string name="widget_configuration_title_widget_config">Konfigurácia widgetu</string>

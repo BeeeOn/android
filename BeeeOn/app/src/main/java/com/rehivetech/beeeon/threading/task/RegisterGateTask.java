@@ -21,7 +21,7 @@ public class RegisterGateTask extends CallbackTask<Gate> {
 	}
 
 	private String getUniqueGateName(String userName, List<Gate> gates) {
-		Vector<String> gateNames = new Vector<String>();
+		Vector<String> gateNames = new Vector<>();
 
 		for (Gate gate : gates) {
 			gateNames.add(gate.getName());

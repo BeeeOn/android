@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.SectionIndexer;
 
 import com.rehivetech.beeeon.gui.menuItem.IMenuItem;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +36,9 @@ public class MenuListAdapter extends BaseAdapter implements StickyListHeadersAda
 	public MenuListAdapter(Context context) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
-		mListHeader = new ArrayList<IMenuItem>();
-		mListItem = new ArrayList<IMenuItem>();
-		mListHeaderPos = new ArrayList<Integer>();
+		mListHeader = new ArrayList<>();
+		mListItem = new ArrayList<>();
+		mListHeaderPos = new ArrayList<>();
 		// mListAllItems = new ArrayList<IMenuItem>();
 	}
 

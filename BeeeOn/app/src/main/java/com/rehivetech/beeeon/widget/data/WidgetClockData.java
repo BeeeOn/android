@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 
 import com.rehivetech.beeeon.R;
@@ -10,7 +11,6 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.ViewsBuilder;
@@ -95,9 +95,9 @@ public class WidgetClockData extends WidgetData {
 				continue;
 			}
 
-			Module.ModuleId moduleId = new Module.ModuleId(widgetGateId, dev.getId());
 			// FIXME: rework this
-			/*Device device = new Device();
+			/* Module.ModuleId moduleId = new Module.ModuleId(widgetGateId, dev.getId());
+			Device device = new Device();
 			device.setGateId(widgetGateId);
 			device.setAddress(moduleId.deviceId);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
