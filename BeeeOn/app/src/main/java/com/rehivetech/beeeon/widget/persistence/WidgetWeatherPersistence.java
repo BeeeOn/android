@@ -7,13 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.util.Log;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
 import com.rehivetech.beeeon.household.device.values.PressureValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.service.WeatherProvider;

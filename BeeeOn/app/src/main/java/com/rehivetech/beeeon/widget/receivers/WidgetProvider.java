@@ -8,9 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.rehivetech.beeeon.util.Compatibility;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
 abstract public class WidgetProvider extends AppWidgetProvider {

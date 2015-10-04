@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,7 +19,6 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.EditGateTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
-import com.rehivetech.beeeon.util.Log;
 
 /**
  * Created by david on 17.6.15.

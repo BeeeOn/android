@@ -1,12 +1,13 @@
 package com.rehivetech.beeeon.model;
 
+import android.util.Log;
+
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.CacheHoldTime;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;

@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
@@ -12,7 +13,6 @@ import com.rehivetech.beeeon.network.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.Network;
 import com.rehivetech.beeeon.persistence.Persistence;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;

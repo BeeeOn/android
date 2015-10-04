@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.app.Activity;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -10,7 +11,6 @@ import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddDeviceFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.util.Log;
 
 import java.util.Arrays;
 import java.util.List;

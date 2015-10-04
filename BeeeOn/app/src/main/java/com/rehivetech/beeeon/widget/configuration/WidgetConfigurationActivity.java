@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
-import com.rehivetech.beeeon.util.Log;
 
 /**
  * @author mlyko

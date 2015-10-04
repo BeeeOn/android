@@ -3,8 +3,7 @@ package com.rehivetech.beeeon.gcm.notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
-
-import com.rehivetech.beeeon.util.Log;
+import android.util.Log;
 
 /**
  * Created by Martin on 22. 4. 2015.

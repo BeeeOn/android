@@ -3,8 +3,7 @@ package com.rehivetech.beeeon.gcm;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import com.rehivetech.beeeon.util.Log;
+import android.util.Log;
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
 	public static final String TAG = BootBroadcastReceiver.class.getSimpleName();

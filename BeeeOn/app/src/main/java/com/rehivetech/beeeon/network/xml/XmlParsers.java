@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.network.xml;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.util.Xml;
 
 import com.rehivetech.beeeon.IIdentifier;
@@ -14,7 +15,6 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;

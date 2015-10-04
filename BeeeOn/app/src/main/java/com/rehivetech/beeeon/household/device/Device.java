@@ -3,11 +3,11 @@ package com.rehivetech.beeeon.household.device;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
 import com.rehivetech.beeeon.household.location.Location;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SimpleDataHolder;
 import com.rehivetech.beeeon.util.Utils;
 

@@ -17,6 +17,7 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.widget.EditText;
 import android.widget.Toast;

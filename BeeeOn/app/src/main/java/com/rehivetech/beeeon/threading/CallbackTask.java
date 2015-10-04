@@ -4,10 +4,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.util.Log;
 
 public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boolean> {
 

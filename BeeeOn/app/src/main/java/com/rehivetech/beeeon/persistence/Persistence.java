@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.household.device.units.NoiseUnit;
@@ -16,7 +17,6 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Language;
-import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.SettingsItem;
 import com.rehivetech.beeeon.util.Timezone;
 import com.rehivetech.beeeon.util.Utils;
