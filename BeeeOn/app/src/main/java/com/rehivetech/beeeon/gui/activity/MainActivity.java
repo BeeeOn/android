@@ -26,7 +26,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
-import com.rehivetech.beeeon.gui.fragment.ModuleListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.household.device.Device;
@@ -38,7 +37,7 @@ import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
-public class MainActivity extends BaseApplicationActivity implements IListDialogListener, ConfirmDialog.ConfirmDialogListener {
+public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final int TUTORIAL_MARGIN = 12;
@@ -260,20 +259,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	@Override
-	public void onListItemSelected(CharSequence val, int i, int code) {
-		if (code == ADD_ACTION_CODE) {
-			Log.d(TAG, "Add dialog selected: " + val);
-			if (getString(R.string.main_action_gate_add).equals(val)) {
-				// ADD GATE
-				mD.showAddGateDialog();
-			} else {
-				// ADD DEVICE
-				mModuleListFragment.showAddDeviceDialog();
-			}
-		}
-	}
-
-	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(GATE_ID, mActiveGateId);
 		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
@@ -399,15 +384,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void setActiveGateId(String gateId) {
 		mActiveGateId = gateId;
 		mNavDrawerMenu.setGateId(gateId);
-		if (mModuleListFragment != null)
-			mModuleListFragment.setGateId(gateId);
+		if (mDevicesListFragment != null)
+			mDevicesListFragment.setActiveGateId(gateId);
 	}
 
 	public void setActiveMenuID(String id) {
 		mActiveMenuId = id;
 		mNavDrawerMenu.setActiveMenuID(id);
-		if (mModuleListFragment != null)
-			mModuleListFragment.setMenuID(id);
 	}
 
 	public void logout() {
@@ -466,7 +449,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
 			Device device = Controller.getInstance(this).getDevicesModel().getDevice(mActiveGateId, dataId);
 			if (device != null) {
-				mModuleListFragment.doRemoveDeviceTask(device);
+				mDevicesListFragment.doRemoveDeviceTask(device);
 			}
 		}
 	}
