@@ -37,7 +37,7 @@
 
 	<!-- Util  -->
 	<string name="util_timezone_actual_timezone">Current timezone</string>
-	<string name="util_timezone_gate_timezone">gateway timezone</string>
+	<string name="util_timezone_gate_timezone">Gateway timezone</string>
 	<string name="utils_toast_field_must_be_email">Enter a valid e-mail address</string>
 
 	<!-- Adapter location -->

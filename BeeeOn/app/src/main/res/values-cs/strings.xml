@@ -264,7 +264,7 @@
 	<string name="module_list_action_module_add">Přidání zařízení</string>
 	<string name="module_list_btn_unregister">Odregistrovat</string>
 	<string name="module_list_dialog_message_unregister_device">Zařízení bude odregistrováno ze serveru a jeho historická data budou ztracena.</string>
-	<string name="module_list_dialog_title_unregister_device">Odregistrovat \"%1$s\</string>
+	<string name="module_list_dialog_title_unregister_device">Odregistrovat \"%1$s\"</string>
 	<string name="module_list_no_device_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
 	<string name="module_list_no_gate_cap">ŽÁDNÁ BRÁNA</string>
 
