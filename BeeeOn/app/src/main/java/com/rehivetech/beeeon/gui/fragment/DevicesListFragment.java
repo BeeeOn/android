@@ -375,6 +375,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 */
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
+		if (position == RecyclerView.NO_POSITION)
+			return;
+
 		// check if we actually clicked DEVICE
 		if (viewType != DeviceRecycleAdapter.TYPE_DEVICE) {
 			Toast.makeText(getActivity(), R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
@@ -401,6 +404,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 */
 	@Override
 	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
+		if (position == RecyclerView.NO_POSITION)
+			return false;
+
 		Controller controller = Controller.getInstance(getActivity());
 		// we have to check if user has permission to delete item (so if not, we disable longclick)
 		Gate tmpGate = controller.getGatesModel().getGate(mActiveGateId);

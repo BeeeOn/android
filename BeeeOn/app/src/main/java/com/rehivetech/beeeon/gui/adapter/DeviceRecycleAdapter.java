@@ -202,13 +202,13 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 		@Override
 		public void onClick(View v) {
 			if(mListener != null){
-				mListener.onRecyclerViewItemClick(getPosition(), getItemViewType());
+				mListener.onRecyclerViewItemClick(getAdapterPosition(), getItemViewType());
 			}
 		}
 
 		@Override
 		public boolean onLongClick(View v) {
-			if(mListener != null && mListener.onRecyclerViewItemLongClick(getPosition(), getItemViewType())){
+			if(mListener != null && mListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
 				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 				return true;
 			}
