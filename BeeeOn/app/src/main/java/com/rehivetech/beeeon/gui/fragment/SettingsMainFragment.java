@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
@@ -15,7 +14,6 @@ import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Language;
 import com.rehivetech.beeeon.util.Timezone;
-import com.rehivetech.beeeon.util.Utils;
 
 /**
  * Created by david on 26.8.15.

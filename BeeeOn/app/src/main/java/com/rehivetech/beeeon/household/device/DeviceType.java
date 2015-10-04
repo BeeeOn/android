@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.household.device;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.StringRes;
 
 import com.rehivetech.beeeon.IIdentifier;

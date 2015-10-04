@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.gui.fragment;
+package com.rehivetech.beeeon.gui.dialog;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

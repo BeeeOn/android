@@ -148,7 +148,7 @@ public class DemoNetwork implements INetwork {
 			mDevices.setLastUpdate(gateId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(gateId, Arrays.asList(new User[]{new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)}));
+			mUsers.setObjects(gateId, Arrays.asList(new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Superuser)));
 			mUsers.setLastUpdate(gateId, DateTime.now());
 
 			Random rand = getRandomForGate(gate.getId());
@@ -350,7 +350,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public List<Device> getDevices(List<Device> devices) {
-		List<Device> result = new ArrayList<Device>();
+		List<Device> result = new ArrayList<>();
 
 		for (Device device : devices) {
 			Device newDevice = getDevice(device);

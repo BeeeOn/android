@@ -142,9 +142,6 @@
 			android:label="@string/manifest_action_notification">
 		</activity>
 		<activity
-			android:name=".gui.activity.ModuleEditActivity"
-			android:label="@string/module_edit_title_module_edit"/>
-		<activity
 			android:name=".gui.activity.GateDetailActivity"
 			android:label="@string/manifest_title_gate_detail"/>
 		<activity

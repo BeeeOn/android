@@ -12,7 +12,7 @@ import java.util.TreeMap;
  * Represents history of values for module.
  */
 public class ModuleLog {
-	private SortedMap<Long, Float> mValues = new TreeMap<Long, Float>();
+	private SortedMap<Long, Float> mValues = new TreeMap<>();
 	private DataType mType;
 	private DataInterval mInterval;
 

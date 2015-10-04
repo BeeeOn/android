@@ -19,15 +19,12 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.SetupDeviceFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.util.Log;
 import com.viewpagerindicator.CirclePageIndicator;
-
-import java.util.EnumSet;
 
 public class SetupDeviceActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupDeviceActivity.class.getSimpleName();

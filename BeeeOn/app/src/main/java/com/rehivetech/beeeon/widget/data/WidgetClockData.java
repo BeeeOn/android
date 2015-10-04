@@ -95,9 +95,9 @@ public class WidgetClockData extends WidgetData {
 				continue;
 			}
 
-			Module.ModuleId moduleId = new Module.ModuleId(widgetGateId, dev.getId());
 			// FIXME: rework this
-			/*Device device = new Device();
+			/* Module.ModuleId moduleId = new Module.ModuleId(widgetGateId, dev.getId());
+			Device device = new Device();
 			device.setGateId(widgetGateId);
 			device.setAddress(moduleId.deviceId);
 			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));

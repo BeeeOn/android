@@ -62,9 +62,7 @@ public class WidgetSettings extends WidgetPersistence {
 	 * @return
 	 */
 	public boolean isColorSchemeEqual(int col1, int col2) {
-		if (colorPrimary == col1 && colorSecondary == col2) return true;
-
-		return false;
+		return (colorPrimary == col1 && colorSecondary == col2);
 	}
 
 	@Override

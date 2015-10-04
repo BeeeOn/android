@@ -40,6 +40,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -557,7 +558,7 @@ public class Network implements INetwork {
 
 	@Override
 	public Device getDevice(Device device) {
-		List<Device> devices = getDevices(Arrays.asList(device));
+		List<Device> devices = getDevices(Collections.singletonList(device));
 		return devices.isEmpty() ? null : devices.get(0);
 	}
 
@@ -636,7 +637,7 @@ public class Network implements INetwork {
 				XmlCreator.createAddLocation(mSessionId, location),
 				State.LOCATIONID);
 
-		location.setId((String) parser.parseNewLocationId());
+		location.setId(parser.parseNewLocationId());
 		return location;
 	}
 

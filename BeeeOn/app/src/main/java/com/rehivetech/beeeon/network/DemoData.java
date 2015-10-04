@@ -5,7 +5,6 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
-import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -16,7 +15,6 @@ import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 /**
  * Created by vico on 8.7.2015.

@@ -50,11 +50,11 @@ public enum RefreshInterval {
 			return context.getResources().getQuantityString(R.plurals.refresh_interval_interval_seconds, value, value);
 		} else if (mSecs < 60 * 60) {
 			// minutes
-			int value = (int) mSecs / 60;
+			int value = mSecs / 60;
 			return context.getResources().getQuantityString(R.plurals.refresh_interval_interval_minutes, value, value);
 		} else {
 			// hours
-			int value = (int) mSecs / (60 * 60);
+			int value = mSecs / (60 * 60);
 			return context.getResources().getQuantityString(R.plurals.refresh_interval_interval_hours, value, value);
 		}
 	}

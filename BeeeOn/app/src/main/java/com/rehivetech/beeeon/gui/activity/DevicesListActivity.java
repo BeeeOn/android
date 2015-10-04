@@ -1,8 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 

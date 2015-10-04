@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
-import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.UnknownValue;
 
 public class UnitsHelper {

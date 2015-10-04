@@ -304,7 +304,7 @@ public class WidgetService extends Service {
 
 			// if widget has setting to update only on wifi - skip if not this
 			if (widgetData.widgetWifiOnly && mNetworkType != ConnectivityManager.TYPE_WIFI && !isForceUpdate) {
-				Log.v(TAG, String.format("Ignoring widget %d - updates only on wifi", widgetId, mNetworkType));
+				Log.v(TAG, String.format("Ignoring widget %d - updates only on wifi", widgetId));
 				continue;
 			}
 

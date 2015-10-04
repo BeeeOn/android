@@ -156,9 +156,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			}
 		} else {
 			if (isBarChart) {
-				dataSetList = new ArrayList<BarDataSet>();
+				dataSetList = new ArrayList<>();
 			} else {
-				dataSetList = new ArrayList<LineDataSet>();
+				dataSetList = new ArrayList<>();
 			}
 		}
 

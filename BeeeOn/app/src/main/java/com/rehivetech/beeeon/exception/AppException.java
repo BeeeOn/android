@@ -30,7 +30,7 @@ public class AppException extends RuntimeException {
 	}
 
 	private IErrorCode mErrorCode;
-	private final Map<String, Object> mProperties = new TreeMap<String, Object>();
+	private final Map<String, Object> mProperties = new TreeMap<>();
 
 	public AppException(IErrorCode errorCode) {
 		mErrorCode = errorCode;

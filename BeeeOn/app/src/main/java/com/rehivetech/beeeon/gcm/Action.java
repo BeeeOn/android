@@ -11,8 +11,6 @@ import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 
-import java.util.List;
-
 /**
  * Created by Martin on 6. 5. 2015.
  */

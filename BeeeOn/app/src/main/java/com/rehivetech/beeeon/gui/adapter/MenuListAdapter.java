@@ -36,9 +36,9 @@ public class MenuListAdapter extends BaseAdapter implements StickyListHeadersAda
 	public MenuListAdapter(Context context) {
 		mContext = context;
 		mInflater = LayoutInflater.from(context);
-		mListHeader = new ArrayList<IMenuItem>();
-		mListItem = new ArrayList<IMenuItem>();
-		mListHeaderPos = new ArrayList<Integer>();
+		mListHeader = new ArrayList<>();
+		mListItem = new ArrayList<>();
+		mListHeaderPos = new ArrayList<>();
 		// mListAllItems = new ArrayList<IMenuItem>();
 	}
 

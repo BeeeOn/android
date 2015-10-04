@@ -49,7 +49,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		Controller controller = Controller.getInstance(context);
 
 		Log.d(TAG, bundle.toString());
-		BaseNotification notification = null;
+		BaseNotification notification;
 		try {
 			NotificationName name = NotificationName.fromValue(bundle.getString("name"));
 			Integer msgId = Integer.valueOf(bundle.getString("mid"));

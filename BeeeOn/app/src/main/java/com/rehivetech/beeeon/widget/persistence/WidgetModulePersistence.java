@@ -284,7 +284,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		// if this cannot be switched
 		if (containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
 
-		if (disabled == true) {
+		if (disabled) {
 			mBuilder.setSwitchDisabled(true, moduleValueChecked);
 			WidgetService.cancelPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), gateId);
 		} else {

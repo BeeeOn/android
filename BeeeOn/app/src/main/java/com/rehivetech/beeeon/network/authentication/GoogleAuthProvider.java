@@ -290,7 +290,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 			@Override
 			protected String doInBackground(Void... nothing) {
 				// Prepare parameters for Google request
-				final Map<String, String> params = new HashMap<String, String>(8);
+				final Map<String, String> params = new HashMap<>(8);
 				params.put("code", mCode);
 				params.put("client_id", Constants.WEB_LOGIN_CLIENT_ID);
 				params.put("client_secret", Constants.WEB_LOGIN_SECRET);

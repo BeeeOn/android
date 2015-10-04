@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 public class AddGateFragment extends TrackFragment {
 
 	public OnAddGateListener mCallback;
-	private FragmentActivity mActivity;
+	private AddGateActivity mActivity;
 
 	@Override
 	public void onAttach(Activity activity) {
