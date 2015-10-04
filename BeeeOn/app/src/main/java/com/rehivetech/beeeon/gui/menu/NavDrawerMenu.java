@@ -146,13 +146,16 @@ public class NavDrawerMenu {
 					if (actionBar != null) {
 						switch (mActiveItem) {
 							case Constants.GUI_MENU_CONTROL:
-								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_modules));
+								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_devices));
 								break;
 							case Constants.GUI_MENU_DASHBOARD:
 								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_charts));
 								break;
 							case Constants.GUI_MENU_WATCHDOG:
 								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_watchdog_notif_menu_watchdog));
+								break;
+							default:
+								actionBar.setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_devices));
 								break;
 						}
 					}
@@ -200,6 +203,9 @@ public class NavDrawerMenu {
 						break;
 					case Constants.GUI_MENU_WATCHDOG:
 						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.nav_drawer_menu_watchdog_notif_menu_watchdog));
+						break;
+					default:
+						mActivity.getSupportActionBar().setTitle(mActivity.getString(R.string.nav_drawer_menu_menu_devices));
 						break;
 				}
 			}
