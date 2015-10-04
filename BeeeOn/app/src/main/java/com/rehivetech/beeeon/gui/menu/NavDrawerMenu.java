@@ -163,13 +163,6 @@ public class NavDrawerMenu {
 				if (mMode != null)
 					mMode.finish();
 			}
-
-			public void onDrawerOpened(View drawerView) {
-				// Set the title on the action when drawer open
-				if (mActivity.getSupportActionBar() != null)
-					mActivity.getSupportActionBar().setTitle(mDrawerTitle);
-				super.onDrawerOpened(drawerView);
-			}
 		};
 
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
