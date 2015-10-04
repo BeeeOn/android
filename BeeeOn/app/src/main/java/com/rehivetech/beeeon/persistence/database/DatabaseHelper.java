@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.rehivetech.beeeon.persistence.database.entry.GeofenceEntry;
 import com.rehivetech.beeeon.util.Log;
 
 /**
@@ -41,7 +40,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(TAG, "Creating database");
-		db.execSQL(GeofenceEntry.CREATE_TABLE);
 	}
 
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

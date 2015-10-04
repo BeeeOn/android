@@ -19,11 +19,6 @@
 		android:persistent="false"
 		android:title="@string/settings_unit_unit"/>
 
-	<PreferenceScreen
-		android:key="key_geofence"
-		android:persistent="false"
-		android:title="@string/map_geofence_title_map_geofence"/>
-
 	<PreferenceCategory
 		android:title="@string/settings_actualization_category_title">
 

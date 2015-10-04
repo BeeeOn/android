@@ -751,12 +751,4 @@ public class Network implements INetwork {
 		return parser.parseNotifications();
 	}
 
-	@Override
-	public boolean passBorder(String regionId, String type) {
-		processCommunication(
-				XmlCreator.createPassBorder(mSessionId, regionId, type),
-				State.TRUE);
-
-		return true;
-	}
 }

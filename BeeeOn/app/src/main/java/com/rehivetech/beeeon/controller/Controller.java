@@ -15,7 +15,6 @@ import com.rehivetech.beeeon.model.BaseModel;
 import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.model.GatesModel;
 import com.rehivetech.beeeon.model.GcmModel;
-import com.rehivetech.beeeon.model.GeofenceModel;
 import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.model.ModuleLogsModel;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
@@ -212,10 +211,6 @@ public final class Controller {
 		return mModels.get(name);
 	}
 
-	public GeofenceModel getGeofenceModel() {
-		return (GeofenceModel) getModelInstance(GeofenceModel.class);
-	}
-
 	public GatesModel getGatesModel() {
 		return (GatesModel) getModelInstance(GatesModel.class);
 	}
@@ -336,7 +331,6 @@ public final class Controller {
 	public boolean login(IAuthProvider authProvider) throws AppException {
 		// In demo mode load some init data from sdcard
 		if (mNetwork instanceof DemoNetwork) {
-			getGeofenceModel().deleteDemoData();
 			((DemoNetwork) mNetwork).initDemoData();
 		}
 
@@ -374,10 +368,6 @@ public final class Controller {
 			getGcmModel().registerGCM();
 		}
 
-		// Register geofence areas asynchronously
-		Log.i(TAG, "Geofence: Starting registering Geofence");
-		getGeofenceModel().registerAllUserGeofence(userId);
-
 		// send logout broadcast so widget can set cached
 		mContext.sendBroadcast(new Intent(Constants.BROADCAST_USER_LOGIN));
 
@@ -405,9 +395,6 @@ public final class Controller {
 		if (alsoFromServer) {
 			// TODO: Request to logout from server (discard actual sessionId)
 		}
-
-		// delete geofences
-		getGeofenceModel().unregisterAllUserGeofence(getActualUser().getId());
 
 		// delete all visible notification
 		NotificationManager notifMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);

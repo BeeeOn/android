@@ -130,10 +130,6 @@
 			android:label="@string/settings_unit_unit">
 		</activity>
 		<activity
-			android:name=".gui.activity.MapGeofenceActivity"
-			android:label="@string/map_geofence_title_map_geofence">
-		</activity>
-		<activity
 			android:name=".gui.activity.GateUsersActivity"
 			android:label="@string/gate_users_title_gate_users">
 		</activity>
@@ -245,7 +241,6 @@
 				android:resource="@xml/widget_device_3x1_info"/>
 		</receiver>
 
-		<service android:name=".geofence.GeofenceIntentService"/>
 		<!-- GOOGLE CLOUD MESSAGING -->
 		<receiver
 			android:name=".gcm.GcmBroadcastReceiver"

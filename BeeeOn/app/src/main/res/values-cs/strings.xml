@@ -80,16 +80,6 @@
 	<string name="notification_title_notification">Notifikace</string>
 	<string name="notification_uri_name_link">Spoj</string>
 
-	<!-- Geofence dialog -->
-	<string name="geofence_dialog_name">Název</string>
-	<string name="geofence_dialog_title_add_new_geofence_area">Přidat oblast</string>
-
-	<!-- Map geofence -->
-	<string name="map_geofence_action_mode_delete_geofence">Odstranit oblast</string>
-	<string name="map_geofence_action_search">Hledat</string>
-	<string name="map_geofence_title_map_geofence">Geolokační oblasti</string>
-	<string name="map_geofence_radius">Poloměr</string>
-
 	<!-- Common Button, texts, titles, toast -->
 	<string name="activity_configuration_toast_something_wrong">Nastala neznámá chyba, opakujte akci později</string>
 	<string name="activity_fragment_btn_cancel">Zrušit</string>

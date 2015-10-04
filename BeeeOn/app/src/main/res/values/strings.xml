@@ -84,19 +84,6 @@
 	<string name="notification_title_notification">Notification</string>
 	<string name="notification_uri_name_link">Link</string>
 
-	<!-- Geofence dialog -->
-	<string name="geofence_dialog_minus" translatable="false">-</string>
-	<string name="geofence_dialog_name">Name</string>
-	<string name="geofence_dialog_plus" translatable="false">+</string>
-	<string name="geofence_dialog_title_add_new_geofence_area">Add geofence area</string>
-
-	<!-- Map geofence -->
-	<string name="map_geofence_action_mode_delete_geofence">Delete geofence</string>
-	<string name="map_geofence_action_search">Search</string>
-	<string name="map_geofence_radius">Radius</string>
-	<string name="map_geofence_title_map_geofence">Geofence areas</string>
-	<string name="map_geofence_unit_meter_short" translatable="false">m</string>
-
 	<!-- Common Button, texts, titles, toast -->
 	<string name="activity_configuration_toast_something_wrong">Something went wrong, try again later</string>
 	<string name="activity_fragment_btn_cancel">Cancel</string>

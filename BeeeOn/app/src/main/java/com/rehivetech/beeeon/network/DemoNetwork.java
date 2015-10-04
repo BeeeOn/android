@@ -672,9 +672,4 @@ public class DemoNetwork implements INetwork {
 		return new ArrayList<>();
 	}
 
-	@Override
-	public boolean passBorder(String regionId, String type) {
-		return true;
-	}
-
 }

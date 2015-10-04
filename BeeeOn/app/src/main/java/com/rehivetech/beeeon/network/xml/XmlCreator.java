@@ -851,26 +851,4 @@ public class XmlCreator {
 		}
 	}
 
-	// /////////////////////////////////////GEOFENCING//////////////////////////////////////////////
-
-	/**
-	 * Method create message for PassBorder event
-	 *
-	 * @param bt   beeeon Token (session Id)
-	 * @param rid  region id
-	 * @param type type of passing (in/out)
-	 * @return xml with passBorder message
-	 */
-	public static String createPassBorder(String bt, String rid, String type) {
-		StringWriter writer = new StringWriter();
-		try {
-			XmlSerializer serializer = beginXml(writer, "passborder", bt);
-			serializer.attribute(ns, "rid", rid);
-			serializer.attribute(ns, "type", type);
-			return endXml(writer, serializer);
-		} catch (Exception e) {
-			throw AppException.wrap(e, ClientError.XML);
-		}
-	}
-
 }

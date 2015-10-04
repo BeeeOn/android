@@ -51,7 +51,6 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LOGIN_SERVER = "login_server";
 
 	public static final String KEY_UNITS = "key_units";
-	public static final String KEY_GEOFENCE = "key_geofence";
 
 	/**
 	 * GCM preference keys
