@@ -237,7 +237,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	public void onResume() {
 		super.onResume();
 		Controller controller = Controller.getInstance(getActivity());
-
+		mActiveGateId = controller.getActiveGate().getId();
 		Gate gate = controller.getGatesModel().getGate(mActiveGateId);
 		if (gate == null) {
 			Toast.makeText(getActivity(), R.string.gate_detail_toast_not_specified_gate, Toast.LENGTH_LONG).show();
@@ -301,10 +301,10 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 * Removes device from list & model
 	 *
 	 * @param device
-	 * @param position
 	 */
-	public void doRemoveDeviceTask(final Device device, final int position) {
+	public void doRemoveDeviceTask(final Device device) {
 		// graphicaly deletes item
+		final int position = mDeviceAdapter.getFirstSelectedItem();
 		final Location tempLoc = handleRemoveDeviceFromList(position);
 		RemoveDeviceTask removeDeviceTask = new RemoveDeviceTask(mActivity);
 		removeDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
@@ -426,7 +426,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		Integer selectedFirst = mDeviceAdapter.getFirstSelectedItem();
 		if (mDeviceAdapter.getItemViewType(selectedFirst) == DeviceRecycleAdapter.TYPE_DEVICE) {
 			Device dev = (Device) mDeviceAdapter.getItem(selectedFirst);
-			doRemoveDeviceTask(dev, selectedFirst);
+			doRemoveDeviceTask(dev);
 		}
 
 		if (mActionMode != null) {
@@ -475,5 +475,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			mDeviceAdapter.clearSelection();
 			mActionMode = null;
 		}
+	}
+
+	public void setActiveGateId(String activeGateId) {
+		mActiveGateId = activeGateId;
 	}
 }

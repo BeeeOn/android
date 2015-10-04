@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
-import com.rehivetech.beeeon.gui.fragment.ModuleListFragment;
+import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
 import com.rehivetech.beeeon.gui.fragment.WatchdogListFragment;
 import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.household.device.Device;
@@ -37,7 +37,7 @@ import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Log;
 import com.rehivetech.beeeon.util.Utils;
 
-public class MainActivity extends BaseApplicationActivity implements IListDialogListener, ConfirmDialog.ConfirmDialogListener {
+public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final int TUTORIAL_MARGIN = 12;
@@ -52,7 +52,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	private static final String FRG_TAG_PRF = "PRF";
 	private static final int ADD_ACTION_CODE = 987654;
 	private NavDrawerMenu mNavDrawerMenu;
-	private ModuleListFragment mModuleListFragment;
+	private DevicesListFragment mDevicesListFragment;
 	private CustomViewFragment mCustomViewFragment;
 	private WatchdogListFragment mWatchdogListFragment;
 
@@ -101,7 +101,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		mNavDrawerMenu = new NavDrawerMenu(this, toolbar);
 
 		// creates fragments
-		mModuleListFragment = new ModuleListFragment();
+		mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
 		mCustomViewFragment = new CustomViewFragment();
 		mWatchdogListFragment = new WatchdogListFragment();
 
@@ -124,9 +124,9 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (mActiveMenuId == null) { // Default screen
-			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
-			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
 			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_WATCHDOG)) {
@@ -259,20 +259,6 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	}
 
 	@Override
-	public void onListItemSelected(CharSequence val, int i, int code) {
-		if (code == ADD_ACTION_CODE) {
-			Log.d(TAG, "Add dialog selected: " + val);
-			if (getString(R.string.main_action_gate_add).equals(val)) {
-				// ADD GATE
-				mModuleListFragment.showAddGateDialog();
-			} else {
-				// ADD DEVICE
-				mModuleListFragment.showAddDeviceDialog();
-			}
-		}
-	}
-
-	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(GATE_ID, mActiveGateId);
 		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
@@ -305,23 +291,15 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		// set location layout
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (mActiveMenuId == null) {
-			mModuleListFragment = new ModuleListFragment();
-			mModuleListFragment.setIsPaused(isPaused);
-			mModuleListFragment.setMenuID(mActiveMenuId);
-			mModuleListFragment.setGateId(mActiveGateId);
+			mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setGateId(mActiveGateId);
-
-			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
-			mModuleListFragment = new ModuleListFragment();
-			mModuleListFragment.setIsPaused(isPaused);
-			mModuleListFragment.setMenuID(mActiveMenuId);
-			mModuleListFragment.setGateId(mActiveGateId);
+			mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
 			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
 			mNavDrawerMenu.setGateId(mActiveGateId);
-
-			ft.replace(R.id.main_content_frame, mModuleListFragment, FRG_TAG_LOC);
+			ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
 			mCustomViewFragment = new CustomViewFragment();
 			ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS);
@@ -406,15 +384,13 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 	public void setActiveGateId(String gateId) {
 		mActiveGateId = gateId;
 		mNavDrawerMenu.setGateId(gateId);
-		if (mModuleListFragment != null)
-			mModuleListFragment.setGateId(gateId);
+		if (mDevicesListFragment != null)
+			mDevicesListFragment.setActiveGateId(gateId);
 	}
 
 	public void setActiveMenuID(String id) {
 		mActiveMenuId = id;
 		mNavDrawerMenu.setActiveMenuID(id);
-		if (mModuleListFragment != null)
-			mModuleListFragment.setMenuID(id);
 	}
 
 	public void logout() {
@@ -473,7 +449,7 @@ public class MainActivity extends BaseApplicationActivity implements IListDialog
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
 			Device device = Controller.getInstance(this).getDevicesModel().getDevice(mActiveGateId, dataId);
 			if (device != null) {
-				mModuleListFragment.doRemoveDeviceTask(device);
+				mDevicesListFragment.doRemoveDeviceTask(device);
 			}
 		}
 	}
