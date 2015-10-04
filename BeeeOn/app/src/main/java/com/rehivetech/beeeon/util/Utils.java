@@ -30,25 +30,19 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -159,17 +153,25 @@ final public class Utils {
 	 * @throws IOException
 	 */
 	public static JSONObject fetchJsonByPost(String requestUrl, Map<String, String> params) throws JSONException, IOException {
-		final HttpClient client = new DefaultHttpClient();
-		final HttpPost post = new HttpPost(requestUrl);
-		final List<NameValuePair> pairs = new ArrayList<>();
+		URL url = new URL(requestUrl);
 
+		String query = "";
 		for (String key : params.keySet())
-			pairs.add(new BasicNameValuePair(key, params.get(key)));
+			query += key + "=" + params.get(key) + "&";
 
-		post.setEntity(new UrlEncodedFormEntity(pairs));
-		final HttpResponse resp = client.execute(post);
+		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		//connection.setRequestProperty("Cookie", cookie);
+		//Set to POST
+		connection.setDoOutput(true);
+		connection.setRequestMethod("POST");
+		connection.setReadTimeout(10000);
+		Writer writer = new OutputStreamWriter(connection.getOutputStream());
+		writer.write(query);
+		writer.flush();
+		writer.close();
 
-		return new JSONObject(getUtf8StringFromInputStream(resp.getEntity().getContent()));
+		//return new JSONObject(getUtf8StringFromInputStream(connection.getContent());
+		return new JSONObject((String) connection.getContent());
 	}
 
 	/**

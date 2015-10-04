@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 10
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 65
         versionName "1.2.1"
         signingConfig signingConfigs.debug
@@ -47,11 +47,11 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     // Support libraries
-    compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.android.support:support-v4:23.0.1'
     compile 'com.google.android.gms:play-services:6.5.87'
-	compile 'com.android.support:appcompat-v7:22.2.1'
-	compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.android.support:design:22.2.1'
+	compile 'com.android.support:appcompat-v7:23.0.1'
+	compile 'com.android.support:recyclerview-v7:23.0.1'
+    compile 'com.android.support:design:23.0.1'
     // Third-party libraries
 	compile 'net.i2p.android.ext:floatingactionbutton:1.10.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
