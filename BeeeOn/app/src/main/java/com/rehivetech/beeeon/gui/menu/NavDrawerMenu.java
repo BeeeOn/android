@@ -280,7 +280,7 @@ public class NavDrawerMenu {
 
 			// OVERVIEW
 			mMenuAdapter.addHeader(new GroupMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_household)));
-			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_modules), R.drawable.ic_menu_overview, R.drawable.ic_menu_overview_active, false, Constants.GUI_MENU_CONTROL, (mActiveItem == null) || mActiveItem.equals(Constants.GUI_MENU_CONTROL)));
+			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_devices), R.drawable.ic_menu_overview, R.drawable.ic_menu_overview_active, false, Constants.GUI_MENU_CONTROL, (mActiveItem == null) || mActiveItem.equals(Constants.GUI_MENU_CONTROL)));
 			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_menu_charts), R.drawable.ic_menu_dashboard, R.drawable.ic_menu_dashboard_active, false, Constants.GUI_MENU_DASHBOARD, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_DASHBOARD)));
 			mMenuAdapter.addItem(new LocationMenuItem(mActivity.getString(R.string.nav_drawer_menu_watchdog_notif_menu_watchdog), R.drawable.ic_menu_watchdog, R.drawable.ic_menu_watchdog_active, false, Constants.GUI_MENU_WATCHDOG, (mActiveItem != null) && mActiveItem.equals(Constants.GUI_MENU_WATCHDOG)));
 
