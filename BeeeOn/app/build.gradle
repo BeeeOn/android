@@ -54,8 +54,6 @@ dependencies {
     compile 'com.android.support:design:22.2.1'
     // Third-party libraries
 	compile 'net.i2p.android.ext:floatingactionbutton:1.10.0'
-	compile 'com.melnykov:fab:1.2.0@aar'
-    compile 'net.i2p.android.ext:floatingactionbutton:1.8.0'
     compile 'se.emilsjolander:stickylistheaders:2.5.2'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
     compile 'joda-time:joda-time:2.7'

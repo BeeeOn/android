@@ -19,7 +19,6 @@
 -printmapping build/outputs/mapping/release/mapping.txt
 
 -dontwarn org.joda.convert.**
--dontwarn com.melnykov.fab.**
 -dontwarn android.support.**
 
 #Use 5 step of optimization
@@ -134,7 +133,6 @@
 
 
 #Keep 3th part libraries
--keep class com.melnykov.** {*;}
 -keep class net.i2p.android.**{*;}
 -keep class fr.avianey.**{*;}
 -keep class com.sonyericsson.**{*;}
