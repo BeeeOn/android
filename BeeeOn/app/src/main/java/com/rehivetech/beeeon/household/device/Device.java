@@ -64,7 +64,7 @@ public final class Device implements IIdentifier {
 	 * @param address
 	 * @return Properly initialized new instance of Device.
 	 */
-	public static final Device createDeviceByType(String typeId, String gateId, String address) {
+	public static Device createDeviceByType(String typeId, String gateId, String address) {
 		DeviceType type = Utils.getEnumFromId(DeviceType.class, typeId, DeviceType.TYPE_UNKNOWN);
 		return new Device(type, gateId, address);
 	}

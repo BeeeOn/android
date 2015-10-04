@@ -63,7 +63,7 @@ public enum NetworkServer implements INameIdentifier {
 		return mName;
 	}
 
-	public static final NetworkServer getDefaultServer() {
+	public static NetworkServer getDefaultServer() {
 			return SERVER_BEEEON;
 	}
 }
