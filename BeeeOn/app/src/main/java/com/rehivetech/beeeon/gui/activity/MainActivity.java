@@ -27,6 +27,7 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
+import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
 import com.rehivetech.beeeon.household.device.Device;
@@ -48,6 +49,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public static final String FRG_TAG_LOC = "Loc";
 	public static final String FRG_TAG_CUS = "Cus";
 	private static final String FRG_TAG_PRF = "PRF";
+	private final static String TAG_INFO = "tag_info";
 	private static final int ADD_ACTION_CODE = 987654;
 //	private NavDrawerMenu mNavDrawerMenu;
 	private DevicesListFragment mDevicesListFragment;
@@ -455,6 +457,32 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 	@Override
 	public boolean onNavigationItemSelected(MenuItem menuItem) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+		menuItem.setChecked(true);
+		mDrawerLayout.closeDrawers();
+
+		switch (menuItem.getItemId()) {
+			case R.id.nav_drawer_devices:
+				mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
+				ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC).commit();
+				return true;
+			case R.id.nav_drawer_dashboard:
+				mCustomViewFragment = new CustomViewFragment();
+				ft.replace(R.id.main_content_frame, mCustomViewFragment, FRG_TAG_CUS).commit();
+				return true;
+			case R.id.nav_drawer_settings:
+				Intent intent = new Intent(this, SettingsMainActivity.class);
+				startActivity(intent);
+				return true;
+			case R.id.nav_drawer_about:
+				InfoDialogFragment dialog = new InfoDialogFragment();
+				dialog.show(getSupportFragmentManager(), TAG_INFO);
+				return true;
+			case R.id.nav_drawer_logout:
+				logout();
+				return true;
+		}
 		return false;
 	}
 }

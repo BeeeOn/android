@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<group android:id="@+id/overview">
-		<item android:title="@string/nav_drawer_menu_menu_household">
-			<menu>
+	<item android:title="@string/nav_drawer_menu_menu_household">
+		<menu>
+			<group
+				android:id="@+id/overview"
+				android:checkableBehavior="single">
 				<item
 					android:id="@+id/nav_drawer_devices"
 					android:title="@string/nav_drawer_menu_menu_devices"
@@ -11,16 +13,19 @@
 					android:id="@+id/nav_drawer_dashboard"
 					android:title="@string/nav_drawer_menu_menu_charts"
 					android:icon="@drawable/ic_menu_dashboard"/>
-			</menu>
-		</item>
+			</group>
+		</menu>
+	</item>
+	<group
+		android:checkableBehavior="single">
+		<item
+			android:id="@+id/nav_drawer_settings"
+			android:title="@string/nav_drawer_menu_action_settings"/>
+		<item
+			android:id="@+id/nav_drawer_about"
+			android:title="@string/nav_drawer_menu_action_about"/>
+		<item
+			android:id="@+id/nav_drawer_logout"
+			android:title="@string/nav_drawer_menu_action_logout"/>
 	</group>
-	<item
-		android:id="@+id/nav_drawer_settings"
-		android:title="@string/nav_drawer_menu_action_settings"/>
-	<item
-		android:id="@+id/nav_drawer_about"
-		android:title="@string/nav_drawer_menu_action_about"/>
-	<item
-		android:id="@+id/nav_drawer_logout"
-		android:title="@string/nav_drawer_menu_action_logout"/>
 </menu>
