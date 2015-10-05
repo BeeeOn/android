@@ -94,7 +94,7 @@ public class XmlCreator {
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with signUp message
 	 */
-	public static String createRegister(IAuthProvider authProvider) {
+	public static String accounts_register(IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "register", null);
@@ -124,7 +124,7 @@ public class XmlCreator {
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with signIn message
 	 */
-	public static String createLogin(String phone, IAuthProvider authProvider) {
+	public static String accounts_login(String phone, IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "login", null);
@@ -173,7 +173,7 @@ public class XmlCreator {
 	 * @param bt beeeon Token (session Id)
 	 * @return xml with getUserInfo message
 	 */
-	public static String createGetUserInfo(String bt) {
+	public static String accounts_getMyProfile(String bt) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getuserinfo", bt);
@@ -189,7 +189,7 @@ public class XmlCreator {
 	 * @return xml with logout message
 	 * @since 2.5
 	 */
-	public static String createLogout(String bt){
+	public static String accounts_logout(String bt){
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "logout", bt);
@@ -205,7 +205,7 @@ public class XmlCreator {
 	 * @param authProvider provider of authentication with parameters to send
 	 * @return xml with joinAccount message
 	 */
-	public static String createJoinAccount(String bt, IAuthProvider authProvider) {
+	public static String accounts_connectAuthProvider(String bt, IAuthProvider authProvider) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "connectauthprovider", bt);
@@ -235,7 +235,7 @@ public class XmlCreator {
 	 * @param providerName name of service (beeeon, google, facebook, ...)
 	 * @return xml with cutAccount message
 	 */
-	public static String createCutAccount(String bt, String providerName) {
+	public static String accounts_disconnectAuthProvider(String bt, String providerName) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "disconnectAuthProvider", bt);
@@ -258,7 +258,7 @@ public class XmlCreator {
 	 * @return AddGate message
 	 * @since 2.2
 	 */
-	public static String createAddGate(String bt, String aid, String gateName) {
+	public static String gates_register(String bt, String aid, String gateName) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "addgate", bt);
@@ -280,7 +280,7 @@ public class XmlCreator {
 	 * @return xml with delAdapter message
 	 * @since 2.4
 	 */
-	public static String createDelGate(String bt, String aid){
+	public static String gates_unregister(String bt, String aid){
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "deletegate", bt);
@@ -301,7 +301,7 @@ public class XmlCreator {
 	 * @return GetGates message
 	 * @since 2.2
 	 */
-	public static String createGetGates(String bt) {
+	public static String gates_getAll(String bt) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getgates", bt);
@@ -318,7 +318,7 @@ public class XmlCreator {
 	 * @return GetGateInfo message
 	 * @since 2.5
 	 */
-	public static String createGetGateInfo(String bt, String gateId) {
+	public static String gates_get(String bt, String gateId) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getgateinfo", bt);
@@ -339,7 +339,7 @@ public class XmlCreator {
 	 * @return SetGate message
 	 * @since 2.5
 	 */
-	public static String createUpdateGate(String bt, Gate gate) {
+	public static String gates_update(String bt, Gate gate) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "updategate", bt);
@@ -366,7 +366,7 @@ public class XmlCreator {
 	 * @return XML of GateListen message
 	 * @since 2.2
 	 */
-	public static String createGateScanMode(String bt, String gateId) {
+	public static String gates_startListen(String bt, String gateId) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "scanmode", bt);
@@ -387,7 +387,7 @@ public class XmlCreator {
 	 * @return XML of GetAllDevices message
 	 * @since 2.2
 	 */
-	public static String createGetAllDevices(String bt, String gateId) {
+	public static String devices_getAll(String bt, String gateId) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getalldevices", bt);
@@ -408,7 +408,7 @@ public class XmlCreator {
 	 * @return XML of GetNewDevices message
 	 * @since 2.2
 	 */
-	public static String createGetNewDevices(String bt, String gateId) {
+	public static String devices_getNew(String bt, String gateId) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getnewdevices", bt);
@@ -429,7 +429,7 @@ public class XmlCreator {
 	 * @return update message
 	 * @since 2.2
 	 */
-	public static String createGetDevices(String bt, List<Device> devices) {
+	public static String devices_get(String bt, List<Device> devices) {
 		if (devices.size() < 1)
 			throw new IllegalArgumentException("Expected more than zero devices");
 
@@ -463,7 +463,7 @@ public class XmlCreator {
 	 * @return GetLog message
 	 * @since 2.2
 	 */
-	public static String createGetLog(String bt, String gateId, String deviceId, String moduleId, String from, String to, String funcType, int interval) {
+	public static String devices_getLog(String bt, String gateId, String deviceId, String moduleId, String from, String to, String funcType, int interval) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getlogs", bt);
@@ -493,7 +493,7 @@ public class XmlCreator {
 	 * @return UpdateDevice message
 	 * @since 2.2
 	 */
-	public static String createUpdateDevice(String bt, String gateId, List<Device> devices) {
+	public static String devices_update(String bt, String gateId, List<Device> devices) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "updatedevice", bt);
@@ -527,7 +527,7 @@ public class XmlCreator {
 	 * @since 2.2
 	 */
 	// FIXME: Use ModuleId instead
-	public static String createSwitchState(String bt, String gateId, Module module) {
+	public static String devices_setState(String bt, String gateId, Module module) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "switchstate", bt);
@@ -553,7 +553,7 @@ public class XmlCreator {
 	 * @return XML of DelDevice message
 	 * @since 2.2
 	 */
-	public static String createDeleteDevice(String bt, Device device) {
+	public static String devices_unregister(String bt, Device device) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "deletedevice", bt);
@@ -579,7 +579,7 @@ public class XmlCreator {
 	 * @return created message
 	 * @since 2.2
 	 */
-	public static String createAddLocation(String bt, Location location) {
+	public static String locations_create(String bt, Location location) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "addlocation", bt);
@@ -603,7 +603,7 @@ public class XmlCreator {
 	 * @return message SetRooms
 	 * @since 2.2
 	 */
-	public static String createUpdateLocation(String bt, Location location) {
+	public static String locations_update(String bt, Location location) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "updatelocation", bt);
@@ -628,7 +628,7 @@ public class XmlCreator {
 	 * @return DelRoom message
 	 * @since 2.2
 	 */
-	public static String createDeleteLocation(String bt, Location location) {
+	public static String locations_delete(String bt, Location location) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "deletelocation", bt);
@@ -651,7 +651,7 @@ public class XmlCreator {
 	 * @return message GetRooms
 	 * @since 2.2
 	 */
-	public static String createGetLocations(String bt, String gateId) {
+	public static String locations_getAll(String bt, String gateId) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getlocations", bt);
@@ -674,7 +674,7 @@ public class XmlCreator {
 	 * @return AddAcc message
 	 * @since 2.2
 	 */
-	public static String createInviteGateUser(String bt, String gateId, ArrayList<User> users) {
+	public static String gateusers_invite(String bt, String gateId, ArrayList<User> users) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "invitegateuser", bt);
@@ -702,7 +702,7 @@ public class XmlCreator {
 	 * @return SetAcc message
 	 * @since 2.2
 	 */
-	public static String createUpdateGateUser(String bt, String gateId, ArrayList<User> users) {
+	public static String gateusers_updateAccess(String bt, String gateId, ArrayList<User> users) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "updategateuser", bt);
@@ -730,7 +730,7 @@ public class XmlCreator {
 	 * @return dellAcc message
 	 * @since 2.2
 	 */
-	public static String createDeleteGateUser(String bt, String gateId, List<User> users) {
+	public static String gateusers_remove(String bt, String gateId, List<User> users) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "deletegateuser", bt);
@@ -755,7 +755,7 @@ public class XmlCreator {
 	 * @return GetAcc message
 	 * @since 2.2
 	 */
-	public static String createGetGateUsers(String bt, String gateId) {
+	public static String gateusers_getAll(String bt, String gateId) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getgateusers", bt);
@@ -776,7 +776,7 @@ public class XmlCreator {
 	 * @return message GCMID
 	 * @since 2.2
 	 */
-	public static String createDelGcmid(String userId, String gcmid) {
+	public static String deleteGCMID(String userId, String gcmid) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "deletegcmid", null);
@@ -799,7 +799,7 @@ public class XmlCreator {
 	 * @return message SetXconstants.GCMID
 	 * @since 2.2
 	 */
-	public static String createSetGCMID(String bt, String gcmid) {
+	public static String setGCMID(String bt, String gcmid) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "setgcmid", bt);
@@ -817,7 +817,7 @@ public class XmlCreator {
 	 * @return message GetNotifs
 	 * @since 2.2
 	 */
-	public static String createGetNotifications(String bt) {
+	public static String notifications_getLatest(String bt) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "getnotifications", bt);
@@ -835,7 +835,7 @@ public class XmlCreator {
 	 * @return message NotifRead
 	 * @since 2.2
 	 */
-	public static String createNotificaionRead(String bt, List<String> mids) {
+	public static String notifications_read(String bt, List<String> mids) {
 		StringWriter writer = new StringWriter();
 		try {
 			XmlSerializer serializer = beginXml(writer, "notificationreaded", bt);
