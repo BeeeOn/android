@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
@@ -74,7 +76,8 @@ public final class Controller {
 	 * @param context
 	 * @return singleton instance of controller
 	 */
-	public static Controller getInstance(Context context) {
+	@NonNull
+	public static Controller getInstance(@NonNull Context context) {
 		if (sController == null) {
 			synchronized (Controller.class) {
 				if (sController == null) {
@@ -100,7 +103,7 @@ public final class Controller {
 	 * @param demoMode Whether should be created Controller in demoMode
 	 * @param serverId Identifier of server to use for communication
 	 */
-	private Controller(Context context, boolean demoMode, String serverId) {
+	private Controller(@NonNull Context context, boolean demoMode, String serverId) {
 		mContext = context.getApplicationContext();
 		mDemoMode = demoMode;
 
@@ -138,7 +141,7 @@ public final class Controller {
 	 * @param demoMode
 	 * @param serverId
 	 */
-	public static synchronized void setDemoMode(Context context, boolean demoMode, String serverId) {
+	public static synchronized void setDemoMode(@NonNull Context context, boolean demoMode, String serverId) {
 		// Remember last used mode
 		Persistence.saveLastDemoMode(context, demoMode);
 
@@ -163,7 +166,7 @@ public final class Controller {
 	 * @param modelClass
 	 * @return
 	 */
-	public BaseModel getModelInstance(Class<? extends BaseModel> modelClass) {
+	public BaseModel getModelInstance(@NonNull Class<? extends BaseModel> modelClass) {
 		final String name = modelClass.getName();
 
 		if (!mModels.containsKey(name)) {
@@ -243,6 +246,7 @@ public final class Controller {
 	 * Persistence methods ************************************************
 	 */
 
+	@Nullable
 	public IAuthProvider getLastAuthProvider() {
 		return mPersistence.loadLastAuthProvider();
 	}
@@ -252,6 +256,7 @@ public final class Controller {
 	 *
 	 * @return null if user is not logged in
 	 */
+	@Nullable
 	public SharedPreferences getUserSettings() {
 		String userId = mUser.getId();
 		if (userId.isEmpty()) {
@@ -265,6 +270,7 @@ public final class Controller {
 	/**
 	 * Get global SharedPreferences for whole application
 	 */
+	@NonNull
 	public SharedPreferences getGlobalSettings() {
 		return mPersistence.getSettings(Persistence.GLOBAL);
 	}
@@ -276,7 +282,7 @@ public final class Controller {
 	 *
 	 * @param userId can be null when this is first login
 	 */
-	public void loadUserData(String userId) {
+	public void loadUserData(@Nullable String userId) {
 		// Load cached user details, if this is not first login
 		if (userId != null) {
 			mPersistence.loadUserDetails(userId, mUser);
@@ -328,7 +334,7 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 * @throws AppException
 	 */
-	public boolean login(IAuthProvider authProvider) throws AppException {
+	public boolean login(@NonNull IAuthProvider authProvider) throws AppException {
 		// In demo mode load some init data from sdcard
 		if (mNetwork instanceof DemoNetwork) {
 			((DemoNetwork) mNetwork).initDemoData();
@@ -381,7 +387,7 @@ public final class Controller {
 	 * @return true on success, false otherwise
 	 * @throws AppException
 	 */
-	public boolean register(IAuthProvider authProvider) throws AppException {
+	public boolean register(@NonNull IAuthProvider authProvider) throws AppException {
 		// We don't have beeeon-token yet, try to login
 		return mNetwork.register(authProvider); // throws exception on error
 	}
@@ -434,6 +440,7 @@ public final class Controller {
 	 *
 	 * @return active gate, or first gate, or null if there are no gates
 	 */
+	@Nullable
 	public synchronized Gate getActiveGate() {
 		if (mActiveGate == null) {
 			// UserSettings can be null when user is not logged in!
@@ -484,6 +491,7 @@ public final class Controller {
 		return true;
 	}
 
+	@NonNull
 	public User getActualUser() {
 		return mUser;
 	}
@@ -491,7 +499,7 @@ public final class Controller {
 	/**
 	 * UCA
 	 */
-	public boolean isUserAllowed(Role role) {
+	public boolean isUserAllowed(@NonNull Role role) {
 		if (role.equals(Role.User) || role.equals(Role.Guest)) {
 			return false;
 		}
