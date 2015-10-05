@@ -33,7 +33,7 @@ import java.util.List;
  * @author ThinkDeep
  * @author Robyer
  */
-public class XmlParsers {
+public class XmlParser {
 
 	private XmlPullParser mParser;
 
@@ -41,7 +41,7 @@ public class XmlParsers {
 	private int mErrorCode = -1;
 	private String mVersion;
 
-	private static final String TAG = XmlParsers.class.getSimpleName();
+	private static final String TAG = XmlParser.class.getSimpleName();
 	private static final String ns = null;
 
 	/**
@@ -79,16 +79,16 @@ public class XmlParsers {
 		}
 	}
 
-	private XmlParsers(@NonNull String xmlInput) throws XmlPullParserException, UnsupportedEncodingException {
+	private XmlParser(@NonNull String xmlInput) throws XmlPullParserException, UnsupportedEncodingException {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes("UTF-8")), null);
 	}
 
-	public static XmlParsers parse(@NonNull String xmlInput) throws AppException {
-		XmlParsers parser;
+	public static XmlParser parse(@NonNull String xmlInput) throws AppException {
+		XmlParser parser;
 		try {
-			parser = new XmlParsers(xmlInput);
+			parser = new XmlParser(xmlInput);
 			parser.parseRoot();
 		} catch (XmlPullParserException | IOException e) {
 			throw AppException.wrap(e, ClientError.XML);

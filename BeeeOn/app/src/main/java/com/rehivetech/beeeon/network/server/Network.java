@@ -20,8 +20,8 @@ import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.server.xml.XmlCreator;
-import com.rehivetech.beeeon.network.server.xml.XmlParsers;
-import com.rehivetech.beeeon.network.server.xml.XmlParsers.State;
+import com.rehivetech.beeeon.network.server.xml.XmlParser;
+import com.rehivetech.beeeon.network.server.xml.XmlParser.State;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
@@ -306,13 +306,13 @@ public class Network implements INetwork {
 	 *
 	 * @see {#processCommunication}
 	 */
-	private synchronized XmlParsers processCommunication(String request, State expectedState) throws AppException {
+	private synchronized XmlParser processCommunication(String request, State expectedState) throws AppException {
 		return processCommunication(request, expectedState, true);
 	}
 
-	private XmlParsers processCommunication(String request, State expectedState, boolean checkBT) throws AppException {
+	private XmlParser processCommunication(String request, State expectedState, boolean checkBT) throws AppException {
 		String response = doRequest(request, checkBT);
-		XmlParsers parser = XmlParsers.parse(response);
+		XmlParser parser = XmlParser.parse(response);
 
 		// Check communication protocol version
 		String version = parser.getVersion();
@@ -386,7 +386,7 @@ public class Network implements INetwork {
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createLogin(Utils.getPhoneName(), authProvider),
 				State.SESSION_ID,
 				false);
@@ -439,7 +439,7 @@ public class Network implements INetwork {
 
 	@Override
 	public User accounts_getMyProfile() {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetUserInfo(mSessionId),
 				State.USERINFO);
 
@@ -457,7 +457,7 @@ public class Network implements INetwork {
 
 	@Override
 	public List<Gate> gates_getAll() {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetGates(mSessionId),
 				State.GATES);
 
@@ -466,7 +466,7 @@ public class Network implements INetwork {
 
 	@Override
 	public GateInfo gates_get(String gateId) {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetGateInfo(mSessionId, gateId),
 				State.GATEINFO);
 
@@ -475,7 +475,7 @@ public class Network implements INetwork {
 
 	@Override
 	public List<Device> devices_getAll(String gateId) {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetAllDevices(mSessionId, gateId),
 				State.ALLDEVICES);
 
@@ -540,7 +540,7 @@ public class Network implements INetwork {
 
 	@Override
 	public List<Device> devices_get(List<Device> devices) {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetDevices(mSessionId, devices),
 				State.DEVICES);
 
@@ -563,7 +563,7 @@ public class Network implements INetwork {
 
 	@Override
 	public List<Device> devices_getNew(String gateId) {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetNewDevices(mSessionId, gateId),
 				State.DEVICES);
 
@@ -583,7 +583,7 @@ public class Network implements INetwork {
 				pair.type.getId(),
 				pair.gap.getSeconds());
 
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				request,
 				State.LOGDATA);
 
@@ -597,7 +597,7 @@ public class Network implements INetwork {
 
 	@Override
 	public List<Location> locations_getAll(String gateId) {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetLocations(mSessionId, gateId),
 				State.LOCATIONS);
 
@@ -624,7 +624,7 @@ public class Network implements INetwork {
 
 	@Override
 	public Location locations_create(Location location) {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createAddLocation(mSessionId, location),
 				State.LOCATIONID);
 
@@ -670,7 +670,7 @@ public class Network implements INetwork {
 
 	@Override
 	public List<User> gateusers_getAll(String gateId) {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetGateUsers(mSessionId, gateId),
 				State.ACCOUNTS);
 
@@ -736,7 +736,7 @@ public class Network implements INetwork {
 
 	@Override
 	public List<VisibleNotification> notifications_getLatest() {
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.createGetNotifications(mSessionId),
 				State.NOTIFICATIONS);
 
