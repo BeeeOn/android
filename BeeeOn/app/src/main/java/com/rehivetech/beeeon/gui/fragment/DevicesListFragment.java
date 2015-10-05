@@ -40,6 +40,7 @@ import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 public class DevicesListFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, IPositiveButtonDialogListener {
@@ -54,7 +55,10 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, ReloadGateDataTask.ReloadWhat.DEVICES);
+			ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, mActiveGateId == null
+					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
+					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
+
 			reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 				@Override
 				public void onExecute(boolean success) {
@@ -74,13 +78,14 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	};
 
 
-	private
 	@Nullable
-	ActionMode mActionMode;
+	private ActionMode mActionMode;
 	private TextView mNoItemsTextView;
 	private Button mRefreshButton;
 
 	private DeviceRecycleAdapter mDeviceAdapter;
+
+	@Nullable
 	private String mActiveGateId;
 
 	/**
@@ -236,21 +241,27 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		// FIXME: Is this correct or needed at all here?
 		Controller controller = Controller.getInstance(getActivity());
-		mActiveGateId = controller.getActiveGate().getId();
-		Gate gate = controller.getGatesModel().getGate(mActiveGateId);
-		if (gate == null) {
-			Toast.makeText(getActivity(), R.string.gate_detail_toast_not_specified_gate, Toast.LENGTH_LONG).show();
+		Gate activeGate = controller.getActiveGate();
+		if (activeGate == null) {
 			return;
 		}
 
-		doReloadDevicesTask(gate.getId(), false);
+		mActiveGateId = activeGate.getId();
+		doReloadDevicesTask(mActiveGateId, false);
 	}
 
 	/**
 	 * Refresh layout with new data & stops refreshing
 	 */
 	private void updateData() {
+		if (mActiveGateId == null) {
+			handleEmptyViewVisibility(false);
+			return;
+		}
+
 		Controller controller = Controller.getInstance(getActivity());
 
 		boolean haveDevices = false;
@@ -404,7 +415,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 */
 	@Override
 	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
-		if (position == RecyclerView.NO_POSITION)
+		if (position == RecyclerView.NO_POSITION || mActiveGateId == null)
 			return false;
 
 		Controller controller = Controller.getInstance(getActivity());
