@@ -7,9 +7,11 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
@@ -81,6 +83,8 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		// Inflate Layout
 		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.fragment_custom_view, mLayout, false);
+		Button showYlabelsButton = (Button) row.findViewById(R.id.custom_view_chart_show_legend_btn);
+
 		// Create and set chart
 		BarLineChartBase chart;
 		VerticalChartLegend legend = new VerticalChartLegend(mActivity);
@@ -93,7 +97,8 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.setVisibility(View.INVISIBLE);
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
-		ChartHelper.prepareChart(chart, mActivity, module.getValue(), new StringBuffer(), Controller.getInstance(mActivity));
+		final StringBuffer yLabels = new StringBuffer();
+		ChartHelper.prepareChart(chart, mActivity, module.getValue(), yLabels, Controller.getInstance(mActivity));
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
@@ -117,6 +122,19 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		mCharts.put(module.getType().getTypeId(), chart);
 		mLegends.put(module.getType().getTypeId(), legend);
 
+		if (yLabels.length() > 0) {
+			showYlabelsButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
+							.setTitle(getString(R.string.chart_helper_chart_y_axis))
+							.setMessage(yLabels.toString())
+							.setNeutralButtonText("close")
+							.show();
+				}
+			});
+			showYlabelsButton.setVisibility(View.VISIBLE);
+		}
 		// Add whole item to global mLayout
 		mLayout.addView(row);
 	}
@@ -150,9 +168,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			ChartData data = chart.getData();
 
 			if (isBarChart) {
-				dataSetList = (List<BarDataSet>)(data.getDataSets());
+				dataSetList = (List<BarDataSet>) (data.getDataSets());
 			} else {
-				dataSetList = (List<LineDataSet>)(chart.getData().getDataSets());
+				dataSetList = (List<LineDataSet>) (chart.getData().getDataSets());
 			}
 		} else {
 			if (isBarChart) {
@@ -174,7 +192,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			dataSet = new LineDataSet(lineEntries, String.format("%s [%s]", name, unit));
 		}
 		ValueFormatter valueFormatter = ChartHelper.getValueFormatterInstance(module.getValue(), mActivity, controller);
-		ChartHelper.prepareDataSet (dataSet, isBarChart, false, color);
+		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color);
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();
@@ -207,7 +225,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		}
 
 		if (isBarChart) {
-			BarData  barData = new BarData(xVals, dataSetList);
+			BarData barData = new BarData(xVals, dataSetList);
 			chart.setData(barData);
 		} else {
 			LineData lineData = new LineData(xVals, dataSetList);
@@ -293,7 +311,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 					VerticalChartLegend legend = mLegends.get(typeId);
 
 					legend.setChartDatasets(chart.getData().getDataSets());
-					legend.invalidate();
+					legend.requestLayout();
 				}
 			});
 
