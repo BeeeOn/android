@@ -134,7 +134,7 @@ public class LocationsModel extends BaseModel {
 
 		Location newLocation = mNetwork.createLocation(location);
 		if (newLocation != null) {
-			// Location was updated on server, update it in map too
+			// Location was added to server, update it in map too
 			mLocations.addObject(gateId, newLocation);
 		}
 

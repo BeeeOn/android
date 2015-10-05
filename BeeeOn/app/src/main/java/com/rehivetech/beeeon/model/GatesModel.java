@@ -94,6 +94,7 @@ public class GatesModel extends BaseModel {
 	public boolean registerGate(String id, String name) {
 		if (mNetwork.isAvailable() && mNetwork.addGate(id, name)) {
 			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
+			reloadGateInfo(id, true);
 			return true;
 		}
 
@@ -108,7 +109,9 @@ public class GatesModel extends BaseModel {
 	 */
 	public boolean unregisterGate(String gateId) {
 		if (mNetwork.deleteGate(gateId)) {
-			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered adapter as answer from server?
+			// Gate was deleted on server, remove it from map too
+			mGatesHolder.removeObject(gateId);
+			mGatesInfoHolder.removeObject(gateId);
 			return true;
 		}
 
@@ -125,6 +128,8 @@ public class GatesModel extends BaseModel {
 		if (!forceReload && !mGatesHolder.isExpired(mReloadEverySecs)) {
 			return false;
 		}
+
+		mGatesInfoHolder.clear();
 
 		mGatesHolder.setObjects(mNetwork.getGates());
 		mGatesHolder.setLastUpdate(DateTime.now());

@@ -92,7 +92,7 @@ public class UsersModel extends BaseModel {
 	 */
 	public boolean deleteUser(String gateId, User user) {
 		if (mNetwork.deleteAccount(gateId, user)) {
-			// Location was deleted on server, remove it from map too
+			// User was deleted on server, remove it from map too
 			mUsers.removeObject(gateId, user.getId());
 			return true;
 		}
