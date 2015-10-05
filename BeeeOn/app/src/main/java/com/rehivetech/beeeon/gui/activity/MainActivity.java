@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,7 +29,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
-import com.rehivetech.beeeon.gui.menu.NavDrawerMenu;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -34,7 +36,7 @@ import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.Utils;
 
-public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
+public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener, NavigationView.OnNavigationItemSelectedListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final int TUTORIAL_MARGIN = 12;
@@ -47,7 +49,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public static final String FRG_TAG_CUS = "Cus";
 	private static final String FRG_TAG_PRF = "PRF";
 	private static final int ADD_ACTION_CODE = 987654;
-	private NavDrawerMenu mNavDrawerMenu;
+//	private NavDrawerMenu mNavDrawerMenu;
 	private DevicesListFragment mDevicesListFragment;
 	private CustomViewFragment mCustomViewFragment;
 
@@ -75,6 +77,10 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 	private boolean doRedraw = true;
 
+	private DrawerLayout mDrawerLayout;
+	private NavigationView mNavigationView;
+	private ActionBarDrawerToggle mDrawerToggle;
+
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
@@ -90,10 +96,19 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Toolbar toolbar = setupToolbar(R.string.app_name);
+		Toolbar toolbar = setupToolbar(R.string.manifest_title_main);
+
+		mNavigationView = (NavigationView) findViewById(R.id.navigationview_layout_drawer);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+		mNavigationView.setNavigationItemSelectedListener(this);
+		mDrawerToggle = new ActionBarDrawerToggle(
+				this, mDrawerLayout, toolbar, R.string.nav_drawer_menu_drawer_open, R.string.nav_drawer_menu_drawer_close);
+
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerToggle.syncState();
 
 		// Create NavDrawerMenu
-		mNavDrawerMenu = new NavDrawerMenu(this, toolbar);
+//		mNavDrawerMenu = new NavDrawerMenu(this, toolbar);
 
 		// creates fragments
 		mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
@@ -101,19 +116,19 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 		if (savedInstanceState != null) {
 			if (!savedInstanceState.getBoolean(IS_DRAWER_OPEN))
-				mNavDrawerMenu.closeMenu();
+//				mNavDrawerMenu.closeMenu();
 
 			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
 			mActiveGateId = savedInstanceState.getString(GATE_ID);
-			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setGateId(mActiveGateId);
+//			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+//			mNavDrawerMenu.setGateId(mActiveGateId);
 
 		} else {
-			mNavDrawerMenu.closeMenu();
+//			mNavDrawerMenu.closeMenu();
 			setActiveGateAndMenu();
-			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setGateId(mActiveGateId);
-			mNavDrawerMenu.redrawMenu();
+//			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+//			mNavDrawerMenu.setGateId(mActiveGateId);
+//			mNavDrawerMenu.redrawMenu();
 		}
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -222,7 +237,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(fullReloadTask);
 
-		mNavDrawerMenu.redrawMenu();
+//		mNavDrawerMenu.redrawMenu();
 		// Redraw Main Fragment
 		if (doRedraw) {
 			redraw();
@@ -243,8 +258,8 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			mExitToast = Toast.makeText(getBaseContext(), R.string.main_toast_tap_again_exit, Toast.LENGTH_SHORT);
 			mExitToast.show();
 
-			if (mNavDrawerMenu != null)
-				mNavDrawerMenu.openMenu();
+//			if (mNavDrawerMenu != null)
+//				mNavDrawerMenu.openMenu();
 		}
 
 		mBackPressed = System.currentTimeMillis();
@@ -254,7 +269,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putString(GATE_ID, mActiveGateId);
 		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
-		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.isMenuOpened());
+//		savedInstanceState.putBoolean(IS_DRAWER_OPEN, mNavDrawerMenu.isMenuOpened());
 		super.onSaveInstanceState(savedInstanceState);
 	}
 
@@ -284,13 +299,13 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		if (mActiveMenuId == null) {
 			mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
-			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setGateId(mActiveGateId);
+//			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+//			mNavDrawerMenu.setGateId(mActiveGateId);
 			ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_CONTROL)) {
 			mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
-			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-			mNavDrawerMenu.setGateId(mActiveGateId);
+//			mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+//			mNavDrawerMenu.setGateId(mActiveGateId);
 			ft.replace(R.id.main_content_frame, mDevicesListFragment, FRG_TAG_LOC);
 		} else if (mActiveMenuId.equals(Constants.GUI_MENU_DASHBOARD)) {
 			mCustomViewFragment = new CustomViewFragment();
@@ -314,9 +329,9 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 	public void redraw() {
 		Log.d(TAG, "REDRAW - activeMenu: " + mActiveMenuId + " activeGate: " + mActiveGateId);
-		mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
-		mNavDrawerMenu.setGateId(mActiveGateId);
-		mNavDrawerMenu.redrawMenu();
+//		mNavDrawerMenu.setActiveMenuID(mActiveMenuId);
+//		mNavDrawerMenu.setGateId(mActiveGateId);
+//		mNavDrawerMenu.redrawMenu();
 		redrawMainFragment();
 	}
 
@@ -340,7 +355,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggles
-		mNavDrawerMenu.onConfigurationChanged(newConfig);
+//		mNavDrawerMenu.onConfigurationChanged(newConfig);
 	}
 
 	@Override
@@ -355,11 +370,11 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				if (mNavDrawerMenu.isMenuOpened()) {
-					mNavDrawerMenu.closeMenu();
-				} else {
-					mNavDrawerMenu.openMenu();
-				}
+//				if (mNavDrawerMenu.isMenuOpened()) {
+//					mNavDrawerMenu.closeMenu();
+//				} else {
+//					mNavDrawerMenu.openMenu();
+//				}
 				break;
 			case R.id.main_menu_action_notification:
 				// Notification
@@ -372,14 +387,14 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 	public void setActiveGateId(String gateId) {
 		mActiveGateId = gateId;
-		mNavDrawerMenu.setGateId(gateId);
+//		mNavDrawerMenu.setGateId(gateId);
 		if (mDevicesListFragment != null)
 			mDevicesListFragment.setActiveGateId(gateId);
 	}
 
 	public void setActiveMenuID(String id) {
 		mActiveMenuId = id;
-		mNavDrawerMenu.setActiveMenuID(id);
+//		mNavDrawerMenu.setActiveMenuID(id);
 	}
 
 	public void logout() {
@@ -389,9 +404,9 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		this.finish();
 	}
 
-	public NavDrawerMenu getMenu() {
-		return mNavDrawerMenu;
-	}
+//	public NavDrawerMenu getMenu() {
+//		return mNavDrawerMenu;
+//	}
 
 	public void showOldAddDialog(String[] mStringArray) {
 
@@ -436,5 +451,10 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 				mDevicesListFragment.doRemoveDeviceTask(device);
 			}
 		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(MenuItem menuItem) {
+		return false;
 	}
 }
