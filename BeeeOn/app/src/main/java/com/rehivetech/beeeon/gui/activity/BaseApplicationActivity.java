@@ -248,6 +248,19 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	 * @param onClickListener Callback for refresh icon
 	 */
 	public void setupRefreshIcon(View.OnClickListener onClickListener) {
+		if (onClickListener == null) {
+			if (mRefreshIcon != null) {
+				// Reset callback
+				mRefreshIcon.setOnClickListener(null);
+				mRefreshIcon.setOnLongClickListener(null);
+
+				// Hide refresh icon
+				mRefreshIcon.setVisibility(View.INVISIBLE);
+				mRefreshIcon = null;
+			}
+			return;
+		}
+
 		if (mRefreshIcon == null) {
 			mRefreshIcon = findViewById(R.id.beeeon_toolbar_refresh);
 
