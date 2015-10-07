@@ -221,7 +221,7 @@
 	<string name="device_edit_refresh_title">Interval prebudenia</string>
 	<string name="device_edit_delete_device_confirm_dialog_title">Odstraňovanie zariadenia</string>
 	<string name="device_edit_delete_device_confirm_dialog_text">Naozaj chcete odstrániť zariadenie?</string>
-	<string name="device_edit_toast_not_specified_gate_or_device">Nešpecifikována brána alebo zariadenie</string>
+	<string name="device_edit_toast_not_specified_gate_or_device">Brána alebo zariadenie neexistuje</string>
 	<string name="device_edit_toast_editing_was_successful">Úprava zariadenia prebehla úspešne</string>
 	<string name="device_edit_toast_removing_was_successful">Zariadenie bolo úspešne odstránené</string>
 	<string name="device_edit_toast_location_was_added">Umiestnenie bolo úspešne vytvorené</string>
