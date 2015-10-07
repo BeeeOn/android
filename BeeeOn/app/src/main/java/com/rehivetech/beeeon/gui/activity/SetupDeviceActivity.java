@@ -109,9 +109,6 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 				// Set location to device
 				newDevice.setLocationId(location.getId());
 
-				// Set that device was initialized
-				newDevice.setInitialized(true);
-
 				// Save that device
 				Log.d(TAG, String.format("InitializeDevice - device: %s, loc: %s", newDevice.getId(), location.getId()));
 				doInitializeDeviceTask(new Device.DataPair(newDevice, location));

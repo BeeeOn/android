@@ -34,7 +34,6 @@ public final class Device implements IIdentifier {
 	private final String mGateId;
 
 	private String mLocationId;
-	private boolean mInitialized;
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
 	private String mCustomName = "";
@@ -167,20 +166,6 @@ public final class Device implements IIdentifier {
 	 */
 	public void setCustomName(@NonNull String name) {
 		mCustomName = name;
-	}
-
-	/**
-	 * @return True if this device has been initialized already, false otherwise.
-	 */
-	public boolean isInitialized() {
-		return mInitialized;
-	}
-
-	/**
-	 * @param initialized State of initialization of this device.
-	 */
-	public void setInitialized(boolean initialized) {
-		mInitialized = initialized;
 	}
 
 	/**

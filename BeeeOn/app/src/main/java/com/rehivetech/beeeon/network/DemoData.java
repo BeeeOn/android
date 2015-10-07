@@ -119,7 +119,6 @@ public class DemoData {
 		Random rand = new Random();
 
 		Device device = Device.createDeviceByType(type.getId(), gateId, String.valueOf(++deviceIdGenerator));
-		device.setInitialized(true);
 		device.setLocationId(locationId);
 		device.setRefresh(RefreshInterval.fromInterval(rand.nextInt(3600)));
 		device.setBattery(rand.nextInt(100));

@@ -290,7 +290,6 @@ public class XmlParsers {
 				Device device = Device.createDeviceByType(type, gateId, address);
 
 				device.setCustomName(getSecureAttributeString("name"));
-				device.setInitialized(getSecureAttributeString("init").equals("1"));
 				device.setLocationId(getSecureAttributeString("locationid"));
 				device.setLastUpdate(new DateTime((long) getSecureAttributeInt("time") * 1000, DateTimeZone.UTC));
 				// PairedTime is not used always...

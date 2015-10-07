@@ -504,7 +504,7 @@ public class XmlCreator {
 				RefreshInterval refresh = device.getRefresh();
 
 				addTag(serializer, "device",
-						"init", device.isInitialized() ? "1" : "0",
+						"init", "1",
 						"id", device.getAddress(),
 						"locationid", device.getLocationId(),
 						"refresh", refresh != null ? Integer.toString(refresh.getInterval()) : null,

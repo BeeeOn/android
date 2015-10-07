@@ -30,7 +30,6 @@ import org.joda.time.DateTimeZone;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -293,14 +292,6 @@ public class DemoNetwork implements INetwork {
 			}
 		}
 
-		// TODO: I think this is not necessary
-		// Remove uninitialized devices from this list
-		for (Iterator<Device> it = devices.iterator(); it.hasNext(); ) {
-			if (!it.next().isInitialized()) {
-				it.remove();
-			}
-		}
-
 		return devices;
 	}
 
@@ -354,7 +345,7 @@ public class DemoNetwork implements INetwork {
 
 		for (Device device : devices) {
 			Device newDevice = getDevice(device);
-			if (newDevice != null && newDevice.isInitialized()) {
+			if (newDevice != null) {
 				result.add(newDevice);
 			}
 		}
@@ -426,7 +417,6 @@ public class DemoNetwork implements INetwork {
 				device.setRefresh(refreshes[rand.nextInt(refreshes.length)]);
 			}
 
-			device.setInitialized(rand.nextBoolean());
 			device.setPairedTime(DateTime.now(DateTimeZone.UTC));
 			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			// mDevice.setLocationId(locationId); // uninitialized mDevice has no location
@@ -436,9 +426,6 @@ public class DemoNetwork implements INetwork {
 			for (Module module : device.getAllModules(true)) {
 				setNewValue(module);
 			}
-
-			// Add new mDevice to global holder
-			mDevices.addObject(gateId, device);
 
 			// Add to list that we return
 			newDevices.add(device);
