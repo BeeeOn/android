@@ -2,21 +2,28 @@
 <!-- Don't edit this file; it was generated automatically by DevicesTransformer. -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 	<string name="devices__dev_internal_pressure">Air pressure sensor</string>
+	<string name="devices__dev_presence_monitor">Presence monitor</string>
 	<string name="devices__dev_regulator_vpt">Regulator VPT</string>
 	<string name="devices__dev_temperature_humidity">Temperature and humidity sensor</string>
+	<string name="devices__dev_virtual_thn">TempHumNoise</string>
+	<string name="devices__dev_virtual_thn_x3">TempHumNoise x3</string>
 	<string name="devices__manufacturer_but">BUT</string>
+	<string name="devices__manufacturer_openhab">OpenHAB</string>
 	<string name="devices__manufacturer_thermona">Thermona</string>
+	<string name="devices__manufacturer_virtual">Virtual</string>
 	<string name="devices__mod_boiler_operation_mode">Boiler operation mode</string>
 	<string name="devices__mod_boiler_operation_type">Boiler operation type</string>
 	<string name="devices__mod_boiler_status">Boiler status</string>
 	<string name="devices__mod_current_room_temperature">Current room temperature</string>
 	<string name="devices__mod_current_water_temperature">Current water temperature</string>
 	<string name="devices__mod_outside_temperature">Outside temperature</string>
+	<string name="devices__mod_presence_status">Stav přítomnosti</string>
 	<string name="devices__mod_requested_room_temperature">Requested room temperature</string>
 	<string name="devices__mod_requested_water_temperature">Requested water temperature</string>
 	<string name="devices__mod_room_humidity">Room humidity</string>
 	<string name="devices__mod_room_temperature">Room temperature</string>
 	<string name="devices__type_battery">Battery</string>
+	<string name="devices__type_bitarray">Bit array</string>
 	<string name="devices__type_co2">Carbon dioxide</string>
 	<string name="devices__type_enum">Enum</string>
 	<string name="devices__type_humidity">Humidity</string>
@@ -40,6 +47,9 @@
 	<string name="devices__val_boiler_status_hot_water">Hot water</string>
 	<string name="devices__val_boiler_status_shutdown">Shutdown</string>
 	<string name="devices__val_boiler_status_undefined">Undefined</string>
+	<string name="devices__val_presence_status_not_present">Not present</string>
+	<string name="devices__val_presence_status_present">Present</string>
+	<string name="devices__val_presence_status_undefined">Undefined</string>
 	<string name="devices__zone_1">Zone 1</string>
 	<string name="devices__zone_2">Zone 2</string>
 	<string name="devices__zone_3">Zone 3</string>

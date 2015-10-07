@@ -2,21 +2,28 @@
 <!-- Don't edit this file; it was generated automatically by DevicesTransformer. -->
 <resources>
 	<string name="devices__dev_internal_pressure">Senzor tlaku vzduchu</string>
+	<string name="devices__dev_presence_monitor">Sledování přítomnosti</string>
 	<string name="devices__dev_regulator_vpt">Regulátor VPT</string>
 	<string name="devices__dev_temperature_humidity">Senzor teploty a vlhkosti</string>
+	<string name="devices__dev_virtual_thn">TepVlhHluk</string>
+	<string name="devices__dev_virtual_thn_x3">TepVlhHluk x3</string>
 	<string name="devices__manufacturer_but">VUT</string>
+	<string name="devices__manufacturer_openhab">OpenHAB</string>
 	<string name="devices__manufacturer_thermona">Thermona</string>
+	<string name="devices__manufacturer_virtual">Virtuální</string>
 	<string name="devices__mod_boiler_operation_mode">Režim provozu</string>
 	<string name="devices__mod_boiler_operation_type">Typ provozu</string>
 	<string name="devices__mod_boiler_status">Stav kotle</string>
 	<string name="devices__mod_current_room_temperature">Aktuální teplota místnosti</string>
 	<string name="devices__mod_current_water_temperature">Aktuální teplota vody</string>
 	<string name="devices__mod_outside_temperature">Teplota venkovní</string>
+	<string name="devices__mod_presence_status">Stav přítomnosti</string>
 	<string name="devices__mod_requested_room_temperature">Žádaná teplota místnosti</string>
 	<string name="devices__mod_requested_water_temperature">Žádaná teplota vody</string>
 	<string name="devices__mod_room_humidity">Vlhkost v místnosti</string>
 	<string name="devices__mod_room_temperature">Teplota místnosti</string>
 	<string name="devices__type_battery">Baterie</string>
+	<string name="devices__type_bitarray">Bitové pole</string>
 	<string name="devices__type_co2">Oxid uhličitý</string>
 	<string name="devices__type_enum">Výčet</string>
 	<string name="devices__type_humidity">Vlhkost</string>
@@ -40,6 +47,9 @@
 	<string name="devices__val_boiler_status_hot_water">Ohřev TUV</string>
 	<string name="devices__val_boiler_status_shutdown">Odstaveno</string>
 	<string name="devices__val_boiler_status_undefined">Nezjištěno</string>
+	<string name="devices__val_presence_status_not_present">Nepřítomný</string>
+	<string name="devices__val_presence_status_present">Přítomný</string>
+	<string name="devices__val_presence_status_undefined">Nezjištěno</string>
 	<string name="devices__zone_1">Zóna 1</string>
 	<string name="devices__zone_2">Zóna 2</string>
 	<string name="devices__zone_3">Zóna 3</string>

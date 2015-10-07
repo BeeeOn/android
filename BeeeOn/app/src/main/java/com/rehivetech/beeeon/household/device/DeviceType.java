@@ -144,13 +144,51 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "1", 0x0A, null, null, null, true, null, new BaseValue.Constraints(5.0, 3600.0, 1.0), "30")
 			);
 		}
+	},
+	TYPE_3("3", "Virtual THN v1.0", R.string.devices__dev_virtual_thn, R.string.devices__manufacturer_virtual) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x02, null, null, R.string.devices__type_temperature, false, null, null),
+					new Module(device, "1", 0x03, null, null, R.string.devices__type_humidity, false, null, null),
+					new Module(device, "2", 0x06, null, null, R.string.devices__type_noise, false, null, null)
+			);
+		}
+	},
+	TYPE_4("4", "Virtual THNx3 v1.0", R.string.devices__dev_virtual_thn_x3, R.string.devices__manufacturer_virtual) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x02, null, R.string.devices__zone_1, R.string.devices__type_temperature, false, null, null),
+					new Module(device, "1", 0x03, null, R.string.devices__zone_1, R.string.devices__type_humidity, false, null, null),
+					new Module(device, "2", 0x06, null, R.string.devices__zone_1, R.string.devices__type_noise, false, null, null),
+					new Module(device, "3", 0x02, null, R.string.devices__zone_2, R.string.devices__type_temperature, false, null, null),
+					new Module(device, "4", 0x03, null, R.string.devices__zone_2, R.string.devices__type_humidity, false, null, null),
+					new Module(device, "5", 0x06, null, R.string.devices__zone_2, R.string.devices__type_noise, false, null, null),
+					new Module(device, "6", 0x02, null, R.string.devices__zone_3, R.string.devices__type_temperature, false, null, null),
+					new Module(device, "7", 0x03, null, R.string.devices__zone_3, R.string.devices__type_humidity, false, null, null),
+					new Module(device, "8", 0x06, null, R.string.devices__zone_3, R.string.devices__type_noise, false, null, null)
+			);
+		}
+	},
+	TYPE_5("5", "OpenHAB Presence v1.0", R.string.devices__dev_presence_monitor, R.string.devices__manufacturer_openhab) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__mod_presence_status, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__val_presence_status_undefined),
+							new EnumValue.Item(1, "1", R.string.devices__val_presence_status_present),
+							new EnumValue.Item(2, "2", R.string.devices__val_presence_status_not_present)
+					), null)
+			);
+		}
 	};
 
 	/** Version from specification of this devices list */
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1439814118912l;
+	public static final long DEVICES_DATE = 1444228119607l;
 
 	/** END OF GENERATED CONTENT **/
 
