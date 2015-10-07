@@ -136,14 +136,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_devices_list, container, false);
 
-		// setup refresh icon callback
-		mActivity.setupRefreshIcon(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				doReloadDevicesTask(mActiveGateId, true);
-			}
-		});
-
 		// refresh button when no items shown
 		mRefreshButton = (Button) rootView.findViewById(R.id.devices_list_refresh_button);
 		mRefreshButton.setOnClickListener(new View.OnClickListener() {

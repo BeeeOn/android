@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:title="@string/nav_drawer_menu_menu_household">
+	<item
+		android:title="@string/nav_drawer_menu_menu_household"
+		android:id="@+id/item_overview">
 		<menu>
 			<group
-				android:id="@+id/overview"
+				android:id="@+id/group_overview"
 				android:checkableBehavior="single">
 				<item
 					android:id="@+id/nav_drawer_devices"
@@ -14,10 +16,27 @@
 					android:title="@string/nav_drawer_menu_menu_charts"
 					android:icon="@drawable/ic_menu_dashboard"/>
 			</group>
+			<item
+				android:id="@+id/nav_drawer_gateway"
+				android:title="@string/nav_drawer_menu_menu_gate"
+				android:icon="@drawable/ic_router_gray_24dp"/>
 		</menu>
 	</item>
+
+	<item
+		android:title="@string/nav_drawer_menu_no_gates"
+		android:id="@+id/item_no_gates">
+		<menu>
+			<!-- Items holder to be showed when there is no gates -->
+			<item
+				android:id="@+id/nav_drawer_add_gateway"
+				android:title="@string/nav_drawer_menu_action_gate_add"
+				android:icon="@drawable/ic_add_white_24dp"/>
+		</menu>
+	</item>
+
 	<group
-		android:checkableBehavior="single">
+		android:checkableBehavior="none">
 		<item
 			android:id="@+id/nav_drawer_settings"
 			android:title="@string/nav_drawer_menu_action_settings"/>

@@ -136,7 +136,7 @@
 
 	<!-- NavDrawerMenu -->
 	<string name="nav_drawer_menu_action_about">O aplikaci</string>
-	<string name="nav_drawer_menu_action_logout">Odhlásit</string>
+	<string name="nav_drawer_menu_action_logout">Odhlásit se</string>
 	<string name="nav_drawer_menu_action_settings">Nastavení</string>
 	<string name="nav_drawer_menu_drawer_close">ZAVŘÍT</string>
 	<string name="nav_drawer_menu_drawer_open">OTEVŘÍT</string>
@@ -149,6 +149,7 @@
 	<string name="nav_drawer_menu_menu_household">Přehled</string>
 	<string name="nav_drawer_menu_menu_management">Správa domácnosti</string>
 	<string name="nav_drawer_menu_no_gates">Nemáte žádné brány</string>
+	<string name="nav_drawer_menu_action_gate_add">Přidat bránu</string>
 
 	<!-- Gate menu -->
 	<string name="gate_menu_layout_menu_del">Odstranit bránu</string>
