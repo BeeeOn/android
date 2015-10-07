@@ -33,7 +33,7 @@ public final class Device implements IIdentifier {
 	private final String mAddress;
 	private final String mGateId;
 
-	private String mLocationId;
+	private String mLocationId = Location.NO_LOCATION_ID;
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
 	private String mCustomName = "";
