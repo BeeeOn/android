@@ -19,7 +19,10 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
+import com.rehivetech.beeeon.util.TimezoneWrapper;
 import com.rehivetech.beeeon.util.Utils;
+
+import org.joda.time.DateTimeZone;
 
 import java.util.Arrays;
 import java.util.List;
@@ -71,6 +74,9 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 
 	public void doRegisterGateTask(String id, final boolean scanned) {
 		Gate gate = new Gate(id, null);
+
+		// Set default timezone as the gate timezone
+		gate.setUtcOffset(DateTimeZone.getDefault().getOffset(null) / (1000 * 60));
 
 		RegisterGateTask registerGateTask = new RegisterGateTask(this);
 		registerGateTask.setListener(new CallbackTask.ICallbackTaskListener() {

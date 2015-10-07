@@ -51,7 +51,7 @@ public class RegisterGateTask extends CallbackTask<Gate> {
 		}
 
 		// Register new gate and set it as active
-		if (gatesModel.registerGate(serialNumber, name)) {
+		if (gatesModel.registerGate(serialNumber, name, gate.getUtcOffset())) {
 			controller.setActiveGate(serialNumber, true);
 			return true;
 		}

@@ -450,17 +450,19 @@ public class XmlCreator {
 		 * @param bt       userID of user
 		 * @param aid      gateId of actual gate
 		 * @param gateName name of gate
+		 * @param offsetInMinutes
 		 * @return AddGate message
 		 * @since 2.2
 		 */
-		public static String register(String bt, String aid, String gateName) {
+		public static String register(String bt, String aid, String gateName, int offsetInMinutes) {
 			StringWriter writer = new StringWriter();
 			try {
 				XmlSerializer serializer = beginXml(writer, "addgate", bt);
 
 				addTag(serializer, "gate",
 						"id", aid,
-						"name", gateName);
+						"name", gateName,
+						"timezone", String.valueOf(offsetInMinutes));
 
 				return endXml(writer, serializer);
 			} catch (Exception e) {

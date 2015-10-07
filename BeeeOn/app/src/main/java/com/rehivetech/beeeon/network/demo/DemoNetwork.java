@@ -214,7 +214,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean gates_register(String gateId, String gateName) {
+	public boolean gates_register(String gateId, String gateName, int offsetInMinutes) {
 		if (!isGateAllowed(gateId)) {
 			return false;
 		}
@@ -222,13 +222,11 @@ public class DemoNetwork implements INetwork {
 		Random rand = getRandomForGate(gateId);
 
 		Gate gate = new Gate(gateId, gateName);
+		gate.setUtcOffset(offsetInMinutes);
 
 		// Use random role
 		Role[] roles = Role.values();
 		gate.setRole(roles[rand.nextInt(roles.length)]);
-
-		// Use random offset
-		gate.setUtcOffset(0);
 
 		mGates.addObject(gate);
 

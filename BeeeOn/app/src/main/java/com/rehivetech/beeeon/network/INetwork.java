@@ -217,9 +217,10 @@ public interface INetwork {
 	 *
 	 * @param gateId   gate id
 	 * @param gateName gate name
+	 * @param offsetInMinutes
 	 * @return true if gate has been registered, false otherwise
 	 */
-	boolean gates_register(String gateId, String gateName);
+	boolean gates_register(String gateId, String gateName, int offsetInMinutes);
 
 	/**
 	 * Method unregister gate from this user. If this user is owner, removes gate and all data from whole server.

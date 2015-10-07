@@ -568,9 +568,9 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean gates_register(String gateId, String gateName) {
+	public boolean gates_register(String gateId, String gateName, int offsetInMinutes) {
 		processCommunication(
-				XmlCreator.Gates.register(mSessionId, gateId, gateName),
+				XmlCreator.Gates.register(mSessionId, gateId, gateName, offsetInMinutes),
 				State.TRUE);
 
 		return true;
