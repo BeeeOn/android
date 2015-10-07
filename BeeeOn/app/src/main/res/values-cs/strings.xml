@@ -312,7 +312,7 @@
 
 	<!-- Dialog info -->
 	<string name="dialog_info_btn_rate">Hodnocení</string>
-	<string name="dialog_info_copyright">\u00A9 2014–15 RehiveTech. Všechna práva vyhrazena.</string>
+	<string name="dialog_info_copyright">\u00A9 2014–15 BeeeOn. Všechna práva vyhrazena.</string>
 	<string name="dialog_info_version">Verze</string>
 
 	<!-- Settings -->
