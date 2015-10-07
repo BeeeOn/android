@@ -58,7 +58,7 @@ public class UsersModel extends BaseModel {
 			return false;
 		}
 
-		mUsers.setObjects(gateId, mNetwork.getAccounts(gateId));
+		mUsers.setObjects(gateId, mNetwork.gateusers_getAll(gateId));
 		mUsers.setLastUpdate(gateId, DateTime.now());
 
 		return true;
@@ -72,7 +72,7 @@ public class UsersModel extends BaseModel {
 	 * @return
 	 */
 	public boolean updateUser(String gateId, User user) {
-		if (mNetwork.updateAccount(gateId, user)) {
+		if (mNetwork.gateusers_updateAccess(gateId, user)) {
 			// User was updated on server, update it in map too
 			mUsers.addObject(gateId, user);
 			return true;
@@ -91,7 +91,7 @@ public class UsersModel extends BaseModel {
 	 * @return
 	 */
 	public boolean deleteUser(String gateId, User user) {
-		if (mNetwork.deleteAccount(gateId, user)) {
+		if (mNetwork.gateusers_remove(gateId, user)) {
 			// User was deleted on server, remove it from map too
 			mUsers.removeObject(gateId, user.getId());
 			return true;
@@ -110,7 +110,7 @@ public class UsersModel extends BaseModel {
 	 * @return Location on success, null otherwise
 	 */
 	public boolean addUser(String gateId, User user) {
-		if (mNetwork.addAccount(gateId, user)) {
+		if (mNetwork.gateusers_invite(gateId, user)) {
 			// User was added to server, update it in map too
 			mUsers.addObject(gateId, user);
 			return true;

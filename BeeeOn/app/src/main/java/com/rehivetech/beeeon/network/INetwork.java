@@ -22,10 +22,6 @@ public interface INetwork {
 	 */
 	boolean isAvailable();
 
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////SIGNIN,SIGNUP,GATES//////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
-
 	/**
 	 * Return sessionId used for communication
 	 *
@@ -36,6 +32,7 @@ public interface INetwork {
 	/**
 	 * Set sessionId for communication
 	 *
+	 * @param token
 	 * @return
 	 */
 	void setSessionId(String token);
@@ -47,19 +44,10 @@ public interface INetwork {
 	 */
 	boolean hasSessionId();
 
-	/**
-	 * Logouts actual user, i.e. invalidate beeeon-token of actual user on server.
-	 *
-	 * @return
-	 */
-	boolean logout();
 
-	/**
-	 * Download information about actual user from server
-	 *
-	 * @return User object with data from server
+	/**************************************************************************
+	 * ACCOUNTS
 	 */
-	User loadUserInfo();
 
 	/**
 	 * Method log in user by specified provider
@@ -67,7 +55,7 @@ public interface INetwork {
 	 * @param authProvider provider object with data for authentication
 	 * @return true if user has been logged in with this provider, false otherwise
 	 */
-	boolean login(IAuthProvider authProvider);
+	boolean accounts_login(IAuthProvider authProvider);
 
 	/**
 	 * Method register user to server by specified provider
@@ -75,7 +63,36 @@ public interface INetwork {
 	 * @param authProvider provider object with data for authentication
 	 * @return true if user has beed added to database with this provider, false otherwise
 	 */
-	boolean register(IAuthProvider authProvider);
+	boolean accounts_register(IAuthProvider authProvider);
+
+	/**
+	 * Logouts actual user, i.e. invalidate beeeon-token of actual user on server.
+	 *
+	 * @return true on success, false otherwise
+	 */
+	boolean accounts_logout();
+
+	/**
+	 * Download information about actual user from server.
+	 *
+	 * @return User object with data from server
+	 */
+	User accounts_getMyProfile();
+
+	/**
+	 * Delete whole user account from server.
+	 *
+	 * @return true on success, false otherwise
+	 */
+	// boolean accounts_deleteMyProfile();
+
+	/**
+	 * Update information about actual user on server
+	 *
+	 * @param user
+	 * @return true on success, false otherwise
+	 */
+	// boolean accounts_updateMyProfile(User user);
 
 	/**
 	 * Method add new provider information (join your accounts) to your account
@@ -83,7 +100,7 @@ public interface INetwork {
 	 * @param authProvider
 	 * @return true if everything is ok, false otherwise
 	 */
-	boolean addProvider(IAuthProvider authProvider);
+	boolean accounts_connectAuthProvider(IAuthProvider authProvider);
 
 	/**
 	 * Method remove one of your provider from your account
@@ -91,71 +108,72 @@ public interface INetwork {
 	 * @param providerName
 	 * @return
 	 */
-	boolean removeProvider(String providerName);
+	boolean accounts_disconnectAuthProvider(String providerName);
 
-	/**
-	 * Method remove all providers, so remove whole account from system
-	 *
-	 * @return
+
+	/**************************************************************************
+	 * DEVICES
 	 */
-	boolean deleteMyAccount();
 
 	/**
-	 * Method register gate to server
-	 *
-	 * @param gateId   gate id
-	 * @param gateName gate name
-	 * @return true if gate has been registered, false otherwise
-	 */
-	boolean addGate(String gateId, String gateName);
-
-	/**
-	 * Method ask for list of gates. User has to be sign in before
-	 *
-	 * @return list of gates or empty list
-	 */
-	List<Gate> getGates();
-
-	/**
-	 * Method ask for details about gate.
+	 * Method get all devices of specified gate.
 	 *
 	 * @param gateId of wanted gate
-	 * @return GateInfo
+	 * @return list of devices, or empty list
 	 */
-	GateInfo getGateInfo(String gateId);
+	List<Device> devices_getAll(String gateId);
 
 	/**
-	 * Method ask for whole gate data
+	 * Method ask server for uninitialized (new) devices of specified gate.
 	 *
-	 * @param gateId of wanted gate
-	 * @return Gate
-	 */
-	List<Device> initGate(String gateId);
-
-	/**
-	 * Method edits gate's name and timezone
-	 * @param gate new gate with new data
-	 * @return true if change was successful
-	 */
-	boolean updateGate(Gate gate);
-
-	/*
-	 * Method remove user from gate
 	 * @param gateId
-	 * @return
+	 * @return list of devices, or empty list
 	 */
-	boolean deleteGate(String gateId);
-
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
+	List<Device> devices_getNew(String gateId);
 
 	/**
-	 * Method send updated fields of devices
+	 * Method ask for actual data of specified devices
 	 *
-	 * @return true if everything goes well, false otherwise
+	 * @param devices list of devices to which needed actual data
+	 * @return list of updated devices fields
 	 */
-	boolean updateDevices(String gateId, List<Device> devices);
+	List<Device> devices_get(List<Device> devices);
+
+	/**
+	 * Method ask server for actual data of one device
+	 *
+	 * @param device
+	 * @return
+	 */
+	Device devices_get(Device device);
+
+	/**
+	 * Method ask for module  logs
+	 *
+	 * @param gateId
+	 * @param module
+	 * @param pair
+	 * @return
+	 */
+	ModuleLog devices_getLog(String gateId, Module module, ModuleLog.DataPair pair);
+
+	/**
+	 * Update devices settings (like name or refresh interval).
+	 *
+	 * @param gateId
+	 * @param devices
+	 * @return true on success, false otherwise
+	 */
+	boolean devices_update(String gateId, List<Device> devices);
+
+	/**
+	 * Update device settings (like name or refresh interval).
+	 *
+	 * @param gateId
+	 * @param device
+	 * @return true on success, false otherwise
+	 */
+	boolean devices_update(String gateId, Device device);
 
 	/**
 	 * Method toggle or set actor to new value
@@ -164,156 +182,200 @@ public interface INetwork {
 	 * @param module
 	 * @return
 	 */
-	boolean switchState(String gateId, Module module);
+	boolean devices_setState(String gateId, Module module);
 
 	/**
-	 * Method make gate to special state, when listen for new sensors (e.g. 15s) and wait if some sensors has been
+	 * Method delete device from server
+	 *
+	 * @param device to be deleted
+	 * @return true if is deleted, false otherwise
+	 */
+	boolean devices_unregister(Device device);
+
+
+	/**************************************************************************
+	 * GATES
+	 */
+
+	/**
+	 * Method ask for list of gates. User has to be sign in before
+	 *
+	 * @return list of gates or empty list
+	 */
+	List<Gate> gates_getAll();
+
+	/**
+	 * Method ask for details about gate.
+	 *
+	 * @param gateId of wanted gate
+	 * @return GateInfo
+	 */
+	GateInfo gates_get(String gateId);
+
+	/**
+	 * Method register gate to server
+	 *
+	 * @param gateId   gate id
+	 * @param gateName gate name
+	 * @return true if gate has been registered, false otherwise
+	 */
+	boolean gates_register(String gateId, String gateName);
+
+	/**
+	 * Method unregister gate from this user. If this user is owner, removes gate and all data from whole server.
+	 *
+	 * @param gateId
+	 * @return
+	 */
+	boolean gates_unregister(String gateId);
+
+	/**
+	 * Method make gate to special state, when listen for new sensors (e.g. 30s) and wait if some sensors has been
 	 * shaken to connect
 	 *
 	 * @param gateId
 	 * @return
 	 */
-	boolean prepareGateToListenNewDevices(String gateId);
+	boolean gates_startListen(String gateId);
 
 	/**
-	 * Method delete mDevice from server
+	 * Method edits gate's name and timezone
 	 *
-	 * @param device to be deleted
-	 * @return true if is deleted, false otherwise
+	 * @param gate new gate with new data
+	 * @return true if change was successful
 	 */
-	boolean deleteDevice(Device device);
+	boolean gates_update(Gate gate);
 
 	/**
-	 * Method ask for actual data of devices
-	 *
-	 * @param devices list of devices to which needed actual data
-	 * @return list of updated devices fields
-	 */
-	List<Device> getDevices(List<Device> devices);
-
-	/**
-	 * Method ask server for actual data of one mDevice
-	 *
-	 * @param device
-	 * @return
-	 */
-	Device getDevice(Device device);
-
-	boolean updateDevice(String gateId, Device device);
-
-	/**
-	 * Method ask server for uninitialized (new) devices
+	 * Method opens ssh tunnel on the gate to allow direct connection from computer.
 	 *
 	 * @param gateId
+	 * @return true on success, false otherwise
+	 * @see #gates_get(String) to get address for connection (amongst other info)
+	 */
+	// boolean gates_openSsh(String gateId);
+
+
+	/**************************************************************************
+	 * GATEUSERS
+	 */
+
+	/**
+	 * Method ask for list of users of current gate
+	 *
+	 * @param gateId
+	 * @return list of users, or empty list
+	 */
+	List<User> gateusers_getAll(String gateId);
+
+	/**
+	 * Invite users to this gate. Logged in user must be owner of the gate.
+	 *
+	 * @param gateId
+	 * @param users
 	 * @return
 	 */
-	List<Device> getNewDevices(String gateId);
+	boolean gateusers_invite(String gateId, ArrayList<User> users);
 
 	/**
-	 * Method ask for data of logs
+	 * Invite user to this gate. Logged in user must be owner of the gate.
 	 *
-	 * @param pair data of log (from, to, type, interval)
-	 * @return list of rows with logged data
+	 * @param gateId
+	 * @param user
+	 * @return
 	 */
-	ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair);
-
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////LOCATIONS///////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
+	boolean gateusers_invite(String gateId, User user);
 
 	/**
-	 * Method call to server for actual list of locations
+	 * Method delete users access from gate.
 	 *
-	 * @return List with locations
+	 * @param gateId
+	 * @param users
+	 * @return true if all users has been removed, false otherwise
 	 */
-	List<Location> getLocations(String gateId);
+	boolean gateusers_remove(String gateId, List<User> users);
 
 	/**
-	 * Method call to server to update location
+	 * Method delete user access from gate.
+	 *
+	 * @param gateId
+	 * @param user
+	 * @return true if user has been removed, false otherwise
+	 */
+	boolean gateusers_remove(String gateId, User user);
+
+	/**
+	 * Method update users role for specified gate
+	 *
+	 * @param gateId
+	 * @param users
+	 * @return true if all accounts has been changed false otherwise
+	 */
+	boolean gateusers_updateAccess(String gateId, ArrayList<User> users);
+
+	/**
+	 * Method update user role for specified gate
+	 *
+	 * @param gateId
+	 * @param user
+	 * @return
+	 */
+	boolean gateusers_updateAccess(String gateId, User user);
+
+
+	/**************************************************************************
+	 * LOCATIONS
+	 */
+
+	/**
+	 * Method create new location on server.
 	 *
 	 * @param location
 	 * @return
 	 */
-	boolean updateLocation(Location location);
+	Location locations_create(Location location);
+
+	/**
+	 * Method update location settings on server.
+	 *
+	 * @param location
+	 * @return true if location is updated, false otherwise
+	 */
+	boolean locations_update(Location location);
 
 	/**
 	 * Method call to server and delete location
 	 *
 	 * @param location
-	 * @return true room is deleted, false otherwise
+	 * @return true location is deleted, false otherwise
 	 */
-	boolean deleteLocation(Location location);
-
-	Location createLocation(Location location);
-
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////PROVIDERS////////////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
-
-	boolean addAccounts(String gateId, ArrayList<User> users);
+	boolean locations_delete(Location location);
 
 	/**
-	 * Method add new user to gate
+	 * Method call to server for actual list of locations
 	 *
 	 * @param gateId
-	 * @return
+	 * @return List with locations, or empty list
 	 */
-	boolean addAccount(String gateId, User user);
+	List<Location> locations_getAll(String gateId);
 
-	/**
-	 * Method delete users from actual gate
-	 *
-	 * @param users email of user
-	 * @return true if all users has been deleted, false otherwise
+
+	/**************************************************************************
+	 * NOTIFICATIONS
 	 */
-	boolean deleteAccounts(String gateId, List<User> users);
 
-	/**
-	 * Method delete on user from gate
-	 *
-	 * @param gateId
-	 * @param user
-	 * @return
-	 */
-	boolean deleteAccount(String gateId, User user);
+	// boolean notifications_registerService(NotificationProvider provider);
 
-	/**
-	 * Method ask for list of users of current gate
-	 *
-	 * @return Map of users where key is email and value is User object
-	 */
-	List<User> getAccounts(String gateId);
+	// boolean notifications_unregisterService(String userId, NotificationProvider provider);
 
-	/**
-	 * Method update users roles on server on current gate
-	 * <p/>
-	 * map with email as key and role as value
-	 *
-	 * @return true if all accounts has been changed false otherwise
-	 */
-	boolean updateAccounts(String gateId, ArrayList<User> users);
+	// String notifications_userId();
 
-	/**
-	 * Method update users role on gate
-	 *
-	 * @param gateId
-	 * @param user
-	 * @return
-	 */
-	boolean updateAccount(String gateId, User user);
+	// String notifications_gcmId();
 
-	// /////////////////////////////////////////////////////////////////////////////////
-	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
-	// /////////////////////////////////////////////////////////////////////////////////
+	List<VisibleNotification> notifications_getLatest(/* int count*/);
 
-	/**
-	 * Method set read flag to notification on server
-	 *
-	 * @param msgID id of notification
-	 * @return true if server took flag, false otherwise
-	 */
-	boolean NotificationsRead(ArrayList<String> msgID);
+	boolean notifications_read(ArrayList<String> notificationIds);
 
-	List<VisibleNotification> getNotifications();
+	// boolean notifications_delete(ArrayList<String> notificationIds);
 
 }

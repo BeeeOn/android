@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.network;
+package com.rehivetech.beeeon.network.demo;
 
 import android.content.Context;
 
@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.household.user.User.Role;
+import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
@@ -183,42 +184,37 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public User loadUserInfo() {
+	public User accounts_getMyProfile() {
 		return mUser;
 	}
 
 	@Override
-	public boolean logout() {
+	public boolean accounts_logout() {
 		return true;
 	}
 
 	@Override
-	public boolean login(IAuthProvider authProvider) {
+	public boolean accounts_login(IAuthProvider authProvider) {
 		return true;
 	}
 
 	@Override
-	public boolean register(IAuthProvider authProvider) {
+	public boolean accounts_register(IAuthProvider authProvider) {
 		return true;
 	}
 
 	@Override
-	public boolean addProvider(IAuthProvider authProvider) {
+	public boolean accounts_connectAuthProvider(IAuthProvider authProvider) {
 		return true;
 	}
 
 	@Override
-	public boolean removeProvider(String providerName) {
+	public boolean accounts_disconnectAuthProvider(String providerName) {
 		return true;
 	}
 
 	@Override
-	public boolean deleteMyAccount() {
-		return true;
-	}
-
-	@Override
-	public boolean addGate(String gateId, String gateName) {
+	public boolean gates_register(String gateId, String gateName) {
 		if (!isGateAllowed(gateId)) {
 			return false;
 		}
@@ -240,7 +236,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Gate> getGates() {
+	public List<Gate> gates_getAll() {
 		// Init demo data, if not initialized yet
 		initDemoData();
 
@@ -248,7 +244,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public GateInfo getGateInfo(String gateId) {
+	public GateInfo gates_get(String gateId) {
 		Gate gate = mGates.getObject(gateId);
 		if (gate == null)
 			return null;
@@ -270,7 +266,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Device> initGate(String gateId) {
+	public List<Device> devices_getAll(String gateId) {
 		List<Device> devices = mDevices.getObjects(gateId);
 
 		Random rand = getRandomForGate(gateId);
@@ -296,7 +292,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateGate(Gate gate) {
+	public boolean gates_update(Gate gate) {
 		String gateId = gate.getId();
 
 		Gate oldGate = mGates.getObject(gateId);
@@ -309,14 +305,14 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteGate(String gateId) {
+	public boolean gates_unregister(String gateId) {
 		return mGates.removeObject(gateId) != null;
 	}
 
 	@Override
-	public boolean updateDevices(String gateId, List<Device> devices) {
+	public boolean devices_update(String gateId, List<Device> devices) {
 		for (Device device : devices) {
-			if (!updateDevice(gateId, device)) {
+			if (!devices_update(gateId, device)) {
 				return false;
 			}
 		}
@@ -325,26 +321,26 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean switchState(String gateId, Module module) {
+	public boolean devices_setState(String gateId, Module module) {
 		return true;
 	}
 
 	@Override
-	public boolean prepareGateToListenNewDevices(String gateId) {
+	public boolean gates_startListen(String gateId) {
 		return isGateAllowed(gateId);
 	}
 
 	@Override
-	public boolean deleteDevice(Device device) {
+	public boolean devices_unregister(Device device) {
 		return mDevices.removeObject(device.getGateId(), device.getId()) != null;
 	}
 
 	@Override
-	public List<Device> getDevices(List<Device> devices) {
+	public List<Device> devices_get(List<Device> devices) {
 		List<Device> result = new ArrayList<>();
 
 		for (Device device : devices) {
-			Device newDevice = getDevice(device);
+			Device newDevice = devices_get(device);
 			if (newDevice != null) {
 				result.add(newDevice);
 			}
@@ -354,7 +350,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public Device getDevice(Device device) {
+	public Device devices_get(Device device) {
 		Random rand = getRandomForGate(device.getGateId());
 
 		Device newDevice = mDevices.getObject(device.getGateId(), device.getId());
@@ -377,14 +373,14 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateDevice(String gateId, Device device) {
+	public boolean devices_update(String gateId, Device device) {
 		// NOTE: this replaces (or add, in case of initializing new device) whole device
 		mDevices.addObject(gateId, device);
 		return true;
 	}
 
 	@Override
-	public List<Device> getNewDevices(String gateId) {
+	public List<Device> devices_getNew(String gateId) {
 		List<Device> newDevices = new ArrayList<>();
 
 		if (!mGates.hasObject(gateId)) {
@@ -435,7 +431,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair) {
+	public ModuleLog devices_getLog(String gateId, Module module, ModuleLog.DataPair pair) {
 		// Generate random values for log in demo mode
 		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
 
@@ -494,12 +490,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<Location> getLocations(String gateId) {
+	public List<Location> locations_getAll(String gateId) {
 		return mLocations.getObjects(gateId);
 	}
 
 	@Override
-	public boolean updateLocation(Location location) {
+	public boolean locations_update(Location location) {
 		String gateId = location.getGateId();
 
 		if (!mGates.hasObject(gateId)) {
@@ -512,12 +508,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteLocation(Location location) {
+	public boolean locations_delete(Location location) {
 		return mLocations.removeObject(location.getGateId(), location.getId()) != null;
 	}
 
 	@Override
-	public Location createLocation(Location location) {
+	public Location locations_create(Location location) {
 		String gateId = location.getGateId();
 
 		if (!mGates.hasObject(gateId)) {
@@ -540,9 +536,9 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addAccounts(String gateId, ArrayList<User> users) {
+	public boolean gateusers_invite(String gateId, ArrayList<User> users) {
 		for (User user : users) {
-			if (!addAccount(gateId, user)) {
+			if (!gateusers_invite(gateId, user)) {
 				return false;
 			}
 		}
@@ -551,7 +547,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean addAccount(String gateId, User user) {
+	public boolean gateusers_invite(String gateId, User user) {
 		if (!mGates.hasObject(gateId)) {
 			return false;
 		}
@@ -574,9 +570,9 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteAccounts(String gateId, List<User> users) {
+	public boolean gateusers_remove(String gateId, List<User> users) {
 		for (User user : users) {
-			if (!deleteAccount(gateId, user)) {
+			if (!gateusers_remove(gateId, user)) {
 				return false;
 			}
 		}
@@ -585,7 +581,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean deleteAccount(String gateId, User user) {
+	public boolean gateusers_remove(String gateId, User user) {
 		// TODO: Actual implementation deletes gate, not account...
 		if (user.getId().equals(mUser.getId())) {
 			// If we're deleting ourselves, remove whole gate
@@ -599,14 +595,14 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public List<User> getAccounts(String gateId) {
+	public List<User> gateusers_getAll(String gateId) {
 		return mUsers.getObjects(gateId);
 	}
 
 	@Override
-	public boolean updateAccounts(String gateId, ArrayList<User> users) {
+	public boolean gateusers_updateAccess(String gateId, ArrayList<User> users) {
 		for (User user : users) {
-			if (!updateAccount(gateId, user)) {
+			if (!gateusers_updateAccess(gateId, user)) {
 				return false;
 			}
 		}
@@ -615,7 +611,7 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean updateAccount(String gateId, User user) {
+	public boolean gateusers_updateAccess(String gateId, User user) {
 		if (!mGates.hasObject(gateId)) {
 			return false;
 		}
@@ -648,13 +644,13 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean NotificationsRead(ArrayList<String> msgID) {
+	public boolean notifications_read(ArrayList<String> notificationIds) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public List<VisibleNotification> getNotifications() {
+	public List<VisibleNotification> notifications_getLatest() {
 		// TODO Auto-generated method stub
 		return new ArrayList<>();
 	}

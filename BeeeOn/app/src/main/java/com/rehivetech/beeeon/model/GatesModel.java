@@ -79,7 +79,7 @@ public class GatesModel extends BaseModel {
 	 * @return true on successfully started pairing mode, false otherwise
 	 */
 	public boolean sendPairRequest(String gateId) {
-		return mNetwork.prepareGateToListenNewDevices(gateId);
+		return mNetwork.gates_startListen(gateId);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class GatesModel extends BaseModel {
 	 * @return true on success, false otherwise
 	 */
 	public boolean registerGate(String id, String name) {
-		if (mNetwork.isAvailable() && mNetwork.addGate(id, name)) {
+		if (mNetwork.isAvailable() && mNetwork.gates_register(id, name)) {
 			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
 			reloadGateInfo(id, true);
 			return true;
@@ -108,7 +108,7 @@ public class GatesModel extends BaseModel {
 	 * @return true on success, false otherwise
 	 */
 	public boolean unregisterGate(String gateId) {
-		if (mNetwork.deleteGate(gateId)) {
+		if (mNetwork.gates_unregister(gateId)) {
 			// Gate was deleted on server, remove it from map too
 			mGatesHolder.removeObject(gateId);
 			mGatesInfoHolder.removeObject(gateId);
@@ -131,7 +131,7 @@ public class GatesModel extends BaseModel {
 
 		mGatesInfoHolder.clear();
 
-		mGatesHolder.setObjects(mNetwork.getGates());
+		mGatesHolder.setObjects(mNetwork.gates_getAll());
 		mGatesHolder.setLastUpdate(DateTime.now());
 
 		return true;
@@ -150,7 +150,7 @@ public class GatesModel extends BaseModel {
 			return false;
 		}*/
 
-		GateInfo gateInfo = mNetwork.getGateInfo(gateId);
+		GateInfo gateInfo = mNetwork.gates_get(gateId);
 		if (gateInfo == null)
 			return false;
 
@@ -165,7 +165,7 @@ public class GatesModel extends BaseModel {
 	 * @return
 	 */
 	public boolean editGate(Gate gate) {
-		if (mNetwork.updateGate(gate)) {
+		if (mNetwork.gates_update(gate)) {
 			// Invalidate gates and gatesInfo caches
 			// FIXME: don't do it by deleting whole object, but just setting isExpired for single item
 			mGatesInfoHolder.removeObject(gate.getId());

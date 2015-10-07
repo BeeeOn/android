@@ -22,10 +22,10 @@ import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.model.ModuleLogsModel;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.model.UsersModel;
-import com.rehivetech.beeeon.network.DemoNetwork;
+import com.rehivetech.beeeon.network.demo.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.network.Network;
-import com.rehivetech.beeeon.network.NetworkServer;
+import com.rehivetech.beeeon.network.server.Network;
+import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.CacheHoldTime;
@@ -289,7 +289,7 @@ public final class Controller {
 		}
 
 		// Load user data from server
-		User user = mNetwork.loadUserInfo();
+		User user = mNetwork.accounts_getMyProfile();
 
 		// Eventually save correct userId and download picture if changed (but not in demoMode)
 		if (!(mNetwork instanceof DemoNetwork)) {
@@ -341,7 +341,7 @@ public final class Controller {
 		}
 
 		// We don't have beeeon-token yet, try to login
-		mNetwork.login(authProvider); // throws exception on error
+		mNetwork.accounts_login(authProvider); // throws exception on error
 
 		// Load user data so we will know our userId
 		loadUserData(null);
@@ -389,7 +389,7 @@ public final class Controller {
 	 */
 	public boolean register(@NonNull IAuthProvider authProvider) throws AppException {
 		// We don't have beeeon-token yet, try to login
-		return mNetwork.register(authProvider); // throws exception on error
+		return mNetwork.accounts_register(authProvider); // throws exception on error
 	}
 
 	/**

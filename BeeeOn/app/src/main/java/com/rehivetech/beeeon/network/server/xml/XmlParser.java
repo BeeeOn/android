@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.network.xml;
+package com.rehivetech.beeeon.network.server.xml;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -33,7 +33,7 @@ import java.util.List;
  * @author ThinkDeep
  * @author Robyer
  */
-public class XmlParsers {
+public class XmlParser {
 
 	private XmlPullParser mParser;
 
@@ -41,7 +41,7 @@ public class XmlParsers {
 	private int mErrorCode = -1;
 	private String mVersion;
 
-	private static final String TAG = XmlParsers.class.getSimpleName();
+	private static final String TAG = XmlParser.class.getSimpleName();
 	private static final String ns = null;
 
 	/**
@@ -79,16 +79,16 @@ public class XmlParsers {
 		}
 	}
 
-	private XmlParsers(@NonNull String xmlInput) throws XmlPullParserException, UnsupportedEncodingException {
+	private XmlParser(@NonNull String xmlInput) throws XmlPullParserException, UnsupportedEncodingException {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
 		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes("UTF-8")), null);
 	}
 
-	public static XmlParsers parse(@NonNull String xmlInput) throws AppException {
-		XmlParsers parser;
+	public static XmlParser parse(@NonNull String xmlInput) throws AppException {
+		XmlParser parser;
 		try {
-			parser = new XmlParsers(xmlInput);
+			parser = new XmlParser(xmlInput);
 			parser.parseRoot();
 		} catch (XmlPullParserException | IOException e) {
 			throw AppException.wrap(e, ClientError.XML);
@@ -194,12 +194,11 @@ public class XmlParsers {
 	 */
 	public User parseUserInfo() {
 		try {
-			User user = new User();
-
 			mParser.nextTag(); // user
 			if (!mParser.getName().equals("user"))
 				throw new AppException(ClientError.XML);
 
+			User user = new User();
 			user.setId(getSecureAttributeString("id"));
 			user.setName(getSecureAttributeString("name"));
 			user.setSurname(getSecureAttributeString("surname"));
@@ -229,38 +228,6 @@ public class XmlParsers {
 	// /////////////////////////////////DEVICES, LOGS/////////////////////////////////////////////////////////
 
 	/**
-	 * Method parse inner part of AllDevice message (old:XML message (using parsePartial()))
-	 *
-	 * @return list of devices
-	 */
-	public List<Device> parseAllDevices() {
-		try {
-			mParser.nextTag(); // device start tag
-
-			if (!mParser.getName().equals("device"))
-				return new ArrayList<>();
-
-			return parseInnerDevices();
-		} catch (IOException | XmlPullParserException e) {
-			throw AppException.wrap(e, ClientError.XML);
-		}
-	}
-
-	// special case of parseDevice
-	public List<Device> parseNewDevices() {
-		try {
-			mParser.nextTag(); // device start tag
-
-			if (!mParser.getName().equals("device"))
-				return new ArrayList<>();
-
-			return parseInnerDevices();
-		} catch (IOException | XmlPullParserException e) {
-			throw AppException.wrap(e, ClientError.XML);
-		}
-	}
-
-	/**
 	 * Method parse inner part of Module message (old:Partial message (set of module's tag))
 	 *
 	 * @return List of devices
@@ -268,20 +235,11 @@ public class XmlParsers {
 	public List<Device> parseDevices() {
 		try {
 			mParser.nextTag(); // device start tag
+			List<Device> result = new ArrayList<>();
 
 			if (!mParser.getName().equals("device"))
-				return new ArrayList<>();
+				return result;
 
-			return parseInnerDevices();
-		} catch (IOException | XmlPullParserException e) {
-			throw AppException.wrap(e, ClientError.XML);
-		}
-	}
-
-	private List<Device> parseInnerDevices() {
-		List<Device> result = new ArrayList<>();
-
-		try {
 			do { // go through devices
 				String type = getSecureAttributeString("type");
 				String address = getSecureAttributeString("id");
@@ -313,11 +271,11 @@ public class XmlParsers {
 
 				result.add(device);
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
+
+			return result;
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
-
-		return result;
 	}
 
 	/**
@@ -328,8 +286,6 @@ public class XmlParsers {
 	public ModuleLog parseLogData() {
 		try {
 			mParser.nextTag();
-			// mParser.require(XmlPullParser.START_TAG, ns, "row); // strict solution
-
 			ModuleLog log = new ModuleLog();
 
 			if (!mParser.getName().equals("row"))
@@ -522,7 +478,7 @@ public class XmlParsers {
 	/**
 	 * Read text value of some element.
 	 *
-	 * @param tag name of element to proccess
+	 * @param tag name of element to process
 	 * @return value of element
 	 * @throws IOException
 	 * @throws XmlPullParserException

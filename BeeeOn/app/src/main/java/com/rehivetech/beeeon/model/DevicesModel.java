@@ -103,7 +103,7 @@ public class DevicesModel extends BaseModel {
 			return false;
 		}
 
-		mDevices.setObjects(gateId, mNetwork.initGate(gateId));
+		mDevices.setObjects(gateId, mNetwork.devices_getAll(gateId));
 		mDevices.setLastUpdate(gateId, DateTime.now());
 
 		return true;
@@ -127,7 +127,7 @@ public class DevicesModel extends BaseModel {
 			}
 		}
 
-		List<Device> newDevices = mNetwork.getDevices(devices);
+		List<Device> newDevices = mNetwork.devices_get(devices);
 		if (newDevices == null)
 			return false;
 
@@ -150,7 +150,7 @@ public class DevicesModel extends BaseModel {
 			return false;
 		}
 
-		Device newDevice = mNetwork.getDevice(device);
+		Device newDevice = mNetwork.devices_get(device);
 		if (newDevice == null)
 			return false;
 
@@ -168,7 +168,7 @@ public class DevicesModel extends BaseModel {
 	 * @return true on success, false otherwise
 	 */
 	public boolean saveDevice(Device device) throws AppException {
-		mNetwork.updateDevice(device.getGateId(), device);
+		mNetwork.devices_update(device.getGateId(), device);
 		refreshDevice(device, true);
 
 		return true;
@@ -180,7 +180,7 @@ public class DevicesModel extends BaseModel {
 	 * This CAN'T be called on UI thread!
 	 */
 	public boolean deleteDevice(Device device) throws AppException {
-		if (mNetwork.deleteDevice(device)) {
+		if (mNetwork.devices_unregister(device)) {
 			// Device was deleted on server, remove it from map too
 			mDevices.removeObject(device.getGateId(), device.getId());
 			return true;
@@ -205,7 +205,7 @@ public class DevicesModel extends BaseModel {
 
 		Device device = module.getDevice();
 
-		mNetwork.switchState(module.getDevice().getGateId(), module);
+		mNetwork.devices_setState(module.getDevice().getGateId(), module);
 		refreshDevice(device, true);
 
 		return true;

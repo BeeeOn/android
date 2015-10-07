@@ -76,7 +76,7 @@ public class LocationsModel extends BaseModel {
 			return false;
 		}
 
-		mLocations.setObjects(gateId, mNetwork.getLocations(gateId));
+		mLocations.setObjects(gateId, mNetwork.locations_getAll(gateId));
 		mLocations.setLastUpdate(gateId, DateTime.now());
 
 		return true;
@@ -91,7 +91,7 @@ public class LocationsModel extends BaseModel {
 	public boolean updateLocation(Location location) {
 		String gateId = location.getGateId();
 
-		if (mNetwork.updateLocation(location)) {
+		if (mNetwork.locations_update(location)) {
 			// Location was updated on server, update it in map too
 			mLocations.addObject(gateId, location);
 			return true;
@@ -112,7 +112,7 @@ public class LocationsModel extends BaseModel {
 		String gateId = location.getGateId();
 		String locationId = location.getId();
 
-		if (mNetwork.deleteLocation(location)) {
+		if (mNetwork.locations_delete(location)) {
 			// Location was deleted on server, remove it from map too
 			mLocations.removeObject(gateId, locationId);
 			return true;
@@ -132,7 +132,7 @@ public class LocationsModel extends BaseModel {
 	public Location createLocation(Location location) {
 		String gateId = location.getGateId();
 
-		Location newLocation = mNetwork.createLocation(location);
+		Location newLocation = mNetwork.locations_create(location);
 		if (newLocation != null) {
 			// Location was added to server, update it in map too
 			mLocations.addObject(gateId, newLocation);

@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.network;
+package com.rehivetech.beeeon.network.server;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -17,10 +17,11 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.xml.XmlCreator;
-import com.rehivetech.beeeon.network.xml.XmlParsers;
-import com.rehivetech.beeeon.network.xml.XmlParsers.State;
+import com.rehivetech.beeeon.network.server.xml.XmlCreator;
+import com.rehivetech.beeeon.network.server.xml.XmlParser;
+import com.rehivetech.beeeon.network.server.xml.XmlParser.State;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
@@ -51,7 +52,7 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.TrustManagerFactory;
 
 /**
- * Network service that handles communication with server.
+ * Network class that handles communication with server.
  *
  * @author ThinkDeep
  * @author Robyer
@@ -250,7 +251,7 @@ public class Network implements INetwork {
 	}
 
 	/**
-	 * Just call's {@link #doRequest(String, boolean, int)} with retrues = RETRIES_COUNT
+	 * Just calls {@link #doRequest(String, boolean, int)} with retries = RETRIES_COUNT
 	 *
 	 * @see {#doRequest}
 	 */
@@ -305,13 +306,13 @@ public class Network implements INetwork {
 	 *
 	 * @see {#processCommunication}
 	 */
-	private synchronized XmlParsers processCommunication(String request, State expectedState) throws AppException {
+	private synchronized XmlParser processCommunication(String request, State expectedState) throws AppException {
 		return processCommunication(request, expectedState, true);
 	}
 
-	private XmlParsers processCommunication(String request, State expectedState, boolean checkBT) throws AppException {
+	private XmlParser processCommunication(String request, State expectedState, boolean checkBT) throws AppException {
 		String response = doRequest(request, checkBT);
-		XmlParsers parser = XmlParsers.parse(response);
+		XmlParser parser = XmlParser.parse(response);
 
 		// Check communication protocol version
 		String version = parser.getVersion();
@@ -348,7 +349,6 @@ public class Network implements INetwork {
 				throw new AppException("ParsedMessage is not State.FALSE", ClientError.UNEXPECTED_RESPONSE)
 						.set("ExpectedState", expectedState)
 						.set("State", parser.getState());
-			// FIXME: in specification there is also content of false - which is plaintext inside the <com> tags </com>
 
 			// Delete COM_SESSION_ID when we receive error saying that it is invalid
 			if (parser.getErrorCode() == NetworkError.BAD_BT.getNumber())
@@ -360,8 +360,6 @@ public class Network implements INetwork {
 
 		return parser;
 	}
-
-	// /////////////////////////////////////SIGNIN,SIGNUP,GATES//////////////////////
 
 	@Override
 	public String getSessionId() {
@@ -378,15 +376,20 @@ public class Network implements INetwork {
 		return !mSessionId.isEmpty();
 	}
 
+
+	/**************************************************************************
+	 * ACCOUNTS
+	 */
+
 	@Override
-	public boolean login(IAuthProvider authProvider) {
+	public boolean accounts_login(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
-		XmlParsers parser = processCommunication(
-				XmlCreator.createLogin(Utils.getPhoneName(), authProvider),
+		XmlParser parser = processCommunication(
+				XmlCreator.Accounts.login(Utils.getPhoneName(), authProvider),
 				State.SESSION_ID,
 				false);
 
@@ -395,14 +398,14 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean register(IAuthProvider authProvider) {
+	public boolean accounts_register(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
 		if (parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
 		processCommunication(
-				XmlCreator.createRegister(authProvider),
+				XmlCreator.Accounts.register(authProvider),
 				State.TRUE,
 				false);
 
@@ -410,178 +413,83 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean logout() {
+	public boolean accounts_logout() {
 		processCommunication(
-				XmlCreator.createLogout(mSessionId),
+				XmlCreator.Accounts.logout(mSessionId),
 				State.TRUE);
 
 		return true;
 	}
 
 	@Override
-	public boolean addProvider(IAuthProvider authProvider) {
-		processCommunication(
-				XmlCreator.createJoinAccount(mSessionId, authProvider),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean removeProvider(String providerName) {
-		processCommunication(
-				XmlCreator.createCutAccount(mSessionId, providerName),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteMyAccount() {
-		processCommunication(
-				XmlCreator.createCutAccount(mSessionId, "all"),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public User loadUserInfo() {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetUserInfo(mSessionId),
+	public User accounts_getMyProfile() {
+		XmlParser parser = processCommunication(
+				XmlCreator.Accounts.getMyProfile(mSessionId),
 				State.USERINFO);
 
 		return parser.parseUserInfo();
 	}
 
 	@Override
-	public boolean addGate(String gateId, String gateName) {
+	public boolean accounts_connectAuthProvider(IAuthProvider authProvider) {
 		processCommunication(
-				XmlCreator.createAddGate(mSessionId, gateId, gateName),
+				XmlCreator.Accounts.connectAuthProvider(mSessionId, authProvider),
 				State.TRUE);
 
 		return true;
 	}
 
 	@Override
-	public List<Gate> getGates() {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetGates(mSessionId),
-				State.GATES);
+	public boolean accounts_disconnectAuthProvider(String providerName) {
+		processCommunication(
+				XmlCreator.Accounts.disconnectAuthProvider(mSessionId, providerName),
+				State.TRUE);
 
-		return parser.parseGates();
+		return true;
 	}
 
-	@Override
-	public GateInfo getGateInfo(String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetGateInfo(mSessionId, gateId),
-				State.GATEINFO);
 
-		return parser.parseGateInfo();
-	}
+	/**************************************************************************
+	 * DEVICES
+	 */
 
 	@Override
-	public List<Device> initGate(String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetAllDevices(mSessionId, gateId),
+	public List<Device> devices_getAll(String gateId) {
+		XmlParser parser = processCommunication(
+				XmlCreator.Devices.getAll(mSessionId, gateId),
 				State.ALLDEVICES);
 
-		return parser.parseAllDevices();
+		return parser.parseDevices();
 	}
 
 	@Override
-	public boolean updateGate(Gate gate) {
-		processCommunication(
-				XmlCreator.createUpdateGate(mSessionId, gate),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteGate(String gateId){
-		processCommunication(
-				XmlCreator.createDelGate(mSessionId, gateId),
-				State.TRUE);
-
-		return true;
-	}
-
-	// /////////////////////////////////////DEVICES,LOGS////////////////////////////////
-
-	@Override
-	public boolean updateDevices(String gateId, List<Device> devices) {
-		processCommunication(
-				XmlCreator.createUpdateDevice(mSessionId, gateId, devices),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean switchState(String gateId, Module module) {
-		processCommunication(
-				XmlCreator.createSwitchState(mSessionId, gateId, module),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean prepareGateToListenNewDevices(String gateId) {
-		processCommunication(
-				XmlCreator.createGateScanMode(mSessionId, gateId),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean deleteDevice(Device device) {
-		processCommunication(
-				XmlCreator.createDeleteDevice(mSessionId, device),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public List<Device> getDevices(List<Device> devices) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetDevices(mSessionId, devices),
+	public List<Device> devices_getNew(String gateId) {
+		XmlParser parser = processCommunication(
+				XmlCreator.Devices.getNew(mSessionId, gateId),
 				State.DEVICES);
 
 		return parser.parseDevices();
 	}
 
 	@Override
-	public Device getDevice(Device device) {
-		List<Device> devices = getDevices(Collections.singletonList(device));
+	public List<Device> devices_get(List<Device> devices) {
+		XmlParser parser = processCommunication(
+				XmlCreator.Devices.get(mSessionId, devices),
+				State.DEVICES);
+
+		return parser.parseDevices();
+	}
+
+	@Override
+	public Device devices_get(Device device) {
+		List<Device> devices = devices_get(Collections.singletonList(device));
 		return devices.isEmpty() ? null : devices.get(0);
 	}
 
 	@Override
-	public boolean updateDevice(String gateId, Device device) {
-		ArrayList<Device> list = new ArrayList<>();
-		list.add(device);
-
-		return updateDevices(gateId, list);
-	}
-
-	@Override
-	public List<Device> getNewDevices(String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetNewDevices(mSessionId, gateId),
-				State.DEVICES);
-
-		return parser.parseNewDevices();
-	}
-
-	@Override
 	// FIXME: Use ModuleId instead
-	public ModuleLog getLog(String gateId, Module module, ModuleLog.DataPair pair) {
-		String request = XmlCreator.createGetLog(
+	public ModuleLog devices_getLog(String gateId, Module module, ModuleLog.DataPair pair) {
+		String request = XmlCreator.Devices.getLog(
 				mSessionId,
 				gateId,
 				module.getDevice().getAddress(),
@@ -591,7 +499,7 @@ public class Network implements INetwork {
 				pair.type.getId(),
 				pair.gap.getSeconds());
 
-		XmlParsers parser = processCommunication(
+		XmlParser parser = processCommunication(
 				request,
 				State.LOGDATA);
 
@@ -601,108 +509,234 @@ public class Network implements INetwork {
 		return result;
 	}
 
-	// /////////////////////////////////////LOCATIONS///////////////////////////////////
-
 	@Override
-	public List<Location> getLocations(String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetLocations(mSessionId, gateId),
-				State.LOCATIONS);
-
-		return parser.parseLocations();
-	}
-
-	@Override
-	public boolean updateLocation(Location location) {
+	public boolean devices_update(String gateId, List<Device> devices) {
 		processCommunication(
-				XmlCreator.createUpdateLocation(mSessionId, location),
+				XmlCreator.Devices.update(mSessionId, gateId, devices),
 				State.TRUE);
 
 		return true;
 	}
 
 	@Override
-	public boolean deleteLocation(Location location) {
+	public boolean devices_update(String gateId, Device device) {
+		ArrayList<Device> list = new ArrayList<>();
+		list.add(device);
+
+		return devices_update(gateId, list);
+	}
+
+	@Override
+	public boolean devices_setState(String gateId, Module module) {
 		processCommunication(
-				XmlCreator.createDeleteLocation(mSessionId, location),
+				XmlCreator.Devices.setState(mSessionId, gateId, module),
 				State.TRUE);
 
 		return true;
 	}
 
 	@Override
-	public Location createLocation(Location location) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createAddLocation(mSessionId, location),
-				State.LOCATIONID);
+	public boolean devices_unregister(Device device) {
+		processCommunication(
+				XmlCreator.Devices.unregister(mSessionId, device),
+				State.TRUE);
 
-		location.setId(parser.parseNewLocationId());
-		return location;
+		return true;
 	}
 
-	// /////////////////////////////////////PROVIDERS////////////////////////////////////
+
+	/**************************************************************************
+	 * GATES
+	 */
 
 	@Override
-	public boolean addAccounts(String gateId, ArrayList<User> users) {
+	public List<Gate> gates_getAll() {
+		XmlParser parser = processCommunication(
+				XmlCreator.Gates.getAll(mSessionId),
+				State.GATES);
+
+		return parser.parseGates();
+	}
+
+	@Override
+	public GateInfo gates_get(String gateId) {
+		XmlParser parser = processCommunication(
+				XmlCreator.Gates.get(mSessionId, gateId),
+				State.GATEINFO);
+
+		return parser.parseGateInfo();
+	}
+
+	@Override
+	public boolean gates_register(String gateId, String gateName) {
 		processCommunication(
-				XmlCreator.createInviteGateUser(mSessionId, gateId, users),
+				XmlCreator.Gates.register(mSessionId, gateId, gateName),
 				State.TRUE);
 
 		return true;
 	}
 
 	@Override
-	public boolean addAccount(String gateId, User user) {
-		ArrayList<User> list = new ArrayList<>();
-		list.add(user);
-
-		return addAccounts(gateId, list);
-	}
-
-	@Override
-	public boolean deleteAccounts(String gateId, List<User> users) {
+	public boolean gates_unregister(String gateId) {
 		processCommunication(
-				XmlCreator.createDeleteGateUser(mSessionId, gateId, users),
+				XmlCreator.Gates.unregister(mSessionId, gateId),
 				State.TRUE);
 
 		return true;
 	}
 
 	@Override
-	public boolean deleteAccount(String gateId, User user) {
-		ArrayList<User> list = new ArrayList<>();
-		list.add(user);
+	public boolean gates_startListen(String gateId) {
+		processCommunication(
+				XmlCreator.Gates.startListen(mSessionId, gateId),
+				State.TRUE);
 
-		return deleteAccounts(gateId, list);
+		return true;
 	}
 
 	@Override
-	public List<User> getAccounts(String gateId) {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetGateUsers(mSessionId, gateId),
+	public boolean gates_update(Gate gate) {
+		processCommunication(
+				XmlCreator.Gates.update(mSessionId, gate),
+				State.TRUE);
+
+		return true;
+	}
+
+
+	/**************************************************************************
+	 * GATEUSERS
+	 */
+
+	@Override
+	public List<User> gateusers_getAll(String gateId) {
+		XmlParser parser = processCommunication(
+				XmlCreator.GateUsers.getAll(mSessionId, gateId),
 				State.ACCOUNTS);
 
 		return parser.parseGateUsers();
 	}
 
 	@Override
-	public boolean updateAccounts(String gateId, ArrayList<User> users) {
+	public boolean gateusers_invite(String gateId, ArrayList<User> users) {
 		processCommunication(
-				XmlCreator.createUpdateGateUser(mSessionId, gateId, users),
+				XmlCreator.GateUsers.invite(mSessionId, gateId, users),
 				State.TRUE);
 
 		return true;
 	}
 
 	@Override
-	public boolean updateAccount(String gateId, User user) {
+	public boolean gateusers_invite(String gateId, User user) {
 		ArrayList<User> list = new ArrayList<>();
 		list.add(user);
 
-		return updateAccounts(gateId, list);
+		return gateusers_invite(gateId, list);
 	}
 
-	// /////////////////////////////////////NOTIFICATIONS///////////////////////////////
+	@Override
+	public boolean gateusers_remove(String gateId, List<User> users) {
+		processCommunication(
+				XmlCreator.GateUsers.remove(mSessionId, gateId, users),
+				State.TRUE);
+
+		return true;
+	}
+
+	@Override
+	public boolean gateusers_remove(String gateId, User user) {
+		ArrayList<User> list = new ArrayList<>();
+		list.add(user);
+
+		return gateusers_remove(gateId, list);
+	}
+
+	@Override
+	public boolean gateusers_updateAccess(String gateId, ArrayList<User> users) {
+		processCommunication(
+				XmlCreator.GateUsers.updateAccess(mSessionId, gateId, users),
+				State.TRUE);
+
+		return true;
+	}
+
+	@Override
+	public boolean gateusers_updateAccess(String gateId, User user) {
+		ArrayList<User> list = new ArrayList<>();
+		list.add(user);
+
+		return gateusers_updateAccess(gateId, list);
+	}
+
+
+	/**************************************************************************
+	 * LOCATIONS
+	 */
+
+	@Override
+	public Location locations_create(Location location) {
+		XmlParser parser = processCommunication(
+				XmlCreator.Locations.create(mSessionId, location),
+				State.LOCATIONID);
+
+		location.setId(parser.parseNewLocationId());
+		return location;
+	}
+
+	@Override
+	public boolean locations_update(Location location) {
+		processCommunication(
+				XmlCreator.Locations.update(mSessionId, location),
+				State.TRUE);
+
+		return true;
+	}
+
+	@Override
+	public boolean locations_delete(Location location) {
+		processCommunication(
+				XmlCreator.Locations.delete(mSessionId, location),
+				State.TRUE);
+
+		return true;
+	}
+
+	@Override
+	public List<Location> locations_getAll(String gateId) {
+		XmlParser parser = processCommunication(
+				XmlCreator.Locations.getAll(mSessionId, gateId),
+				State.LOCATIONS);
+
+		return parser.parseLocations();
+	}
+
+
+	/**************************************************************************
+	 * NOTIFICATIONS
+	 */
+
+	@Override
+	public List<VisibleNotification> notifications_getLatest() {
+		XmlParser parser = processCommunication(
+				XmlCreator.Notifications.getLatest(mSessionId),
+				State.NOTIFICATIONS);
+
+		return parser.parseNotifications();
+	}
+
+	@Override
+	public boolean notifications_read(ArrayList<String> notificationIds) {
+		processCommunication(
+				XmlCreator.Notifications.read(mSessionId, notificationIds),
+				State.TRUE);
+
+		return true;
+	}
+
+
+	/**************************************************************************
+	 * GCM - TODO: Rename to notifications and methods to use some NotificationProvider classes
+	 */
 
 	/**
 	 * Method delete old gcmid to avoid fake notifications
@@ -713,16 +747,7 @@ public class Network implements INetwork {
 	 */
 	public boolean deleteGCMID(String userId, String gcmID) {
 		processCommunication(
-				XmlCreator.createDelGcmid(userId, gcmID),
-				State.TRUE);
-
-		return true;
-	}
-
-	@Override
-	public boolean NotificationsRead(ArrayList<String> msgID) {
-		processCommunication(
-				XmlCreator.createNotificaionRead(mSessionId, msgID),
+				XmlCreator.Notifications.deleteGCMID(userId, gcmID),
 				State.TRUE);
 
 		return true;
@@ -736,19 +761,10 @@ public class Network implements INetwork {
 	 */
 	public boolean setGCMID(String gcmID) {
 		processCommunication(
-				XmlCreator.createSetGCMID(mSessionId, gcmID),
+				XmlCreator.Notifications.setGCMID(mSessionId, gcmID),
 				State.TRUE);
 
 		return true;
-	}
-
-	@Override
-	public List<VisibleNotification> getNotifications() {
-		XmlParsers parser = processCommunication(
-				XmlCreator.createGetNotifications(mSessionId),
-				State.NOTIFICATIONS);
-
-		return parser.parseNotifications();
 	}
 
 }
