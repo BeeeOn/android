@@ -158,12 +158,8 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		Random random = new Random();
 		int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 
-
-		String unit = unitsHelper.getStringUnit(module.getValue());
-		String name = module.getName(mActivity);
-
-		List dataSetList;
-		ArrayList<String> xVals = new ArrayList<>();
+		List dataSetList = new ArrayList<>();
+		List<String> xVals = new ArrayList<>();
 		if (chart.getData() != null) {
 			ChartData data = chart.getData();
 
@@ -172,24 +168,21 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			} else {
 				dataSetList = (List<LineDataSet>) (chart.getData().getDataSets());
 			}
-		} else {
-			if (isBarChart) {
-				dataSetList = new ArrayList<>();
-			} else {
-				dataSetList = new ArrayList<>();
-			}
 		}
 
+		String unit = unitsHelper.getStringUnit(module.getValue());
+		String deviceName = module.getDevice().getName(mActivity);
+		String moduleName = module.getName(mActivity);
 
 		List<BarEntry> barEntries = null;
 		List<Entry> lineEntries = null;
 		DataSet dataSet;
 		if (isBarChart) {
 			barEntries = new ArrayList<>();
-			dataSet = new BarDataSet(barEntries, name);
+			dataSet = new BarDataSet(barEntries, String.format("%s - %s", deviceName, moduleName));
 		} else {
 			lineEntries = new ArrayList<>();
-			dataSet = new LineDataSet(lineEntries, String.format("%s [%s]", name, unit));
+			dataSet = new LineDataSet(lineEntries, String.format("%s - %s [%s]", deviceName, moduleName, unit));
 		}
 		ValueFormatter valueFormatter = ChartHelper.getValueFormatterInstance(module.getValue(), mActivity, controller);
 		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color);

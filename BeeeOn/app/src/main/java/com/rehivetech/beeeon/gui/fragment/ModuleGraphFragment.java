@@ -143,18 +143,19 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		Module module = controller.getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
 		BaseValue baseValue = module.getValue();
 		boolean barchart = baseValue instanceof EnumValue;
+
 		String unit = mUnitsHelper.getStringUnit(baseValue);
-		String name = module.getName(mActivity);
+		String deviceName = module.getDevice().getName(mActivity);
+		String moduleName = module.getName(mActivity);
 
 		//set chart
 		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller);
 		mChart.setFillFormatter(new CustomFillFormatter());
 
-
 		if (barchart) {
-			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), name);
+			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
 		} else {
-			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s [%s]", name, unit));
+			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s - %s [%s]", deviceName, moduleName, unit));
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
