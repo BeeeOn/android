@@ -8,8 +8,7 @@
 	android:paddingLeft="5dp"
 	android:paddingBottom="0dp"
 	android:paddingRight="16dp"
-	android:gravity="center_vertical"
-	>
+	android:gravity="center_vertical">
 
 	<TextView
 		android:id="@+id/spinner_header_name"
@@ -20,6 +19,5 @@
 		android:singleLine="true"
 		android:textColor="@color/beeeon_accent"
 		android:textSize="14sp"
-		android:textStyle="bold"
-		/>
+		android:textStyle="bold"/>
 </LinearLayout>
