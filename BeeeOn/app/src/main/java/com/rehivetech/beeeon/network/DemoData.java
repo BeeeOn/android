@@ -15,6 +15,7 @@ import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by vico on 8.7.2015.
@@ -24,33 +25,39 @@ public class DemoData {
 	private static final String GATE_1_ID = "64206";
 	private static final String GATE_2_ID = "65260";
 
-	private static final String GATE_1_LOCATION1 = "5555";
-	private static final String GATE_1_LOCATION2 = "2222";
-	private static final String GATE_1_LOCATION3 = "4444";
-	private static final String GATE_1_LOCATION4 = "6666";
-	private static final String GATE_2_LOCATION1 = "1111";
-	private static final String GATE_2_LOCATION2 = "2";
+	private static final String GATE_1_LOCATION1 = "1";
+	private static final String GATE_1_LOCATION2 = "2";
+	private static final String GATE_1_LOCATION3 = "3";
+	private static final String GATE_1_LOCATION4 = "4";
+	private static final String GATE_2_LOCATION1 = "5";
+	private static final String GATE_2_LOCATION2 = "6";
+
+	/**
+	 * Holds ID of newly created devices in this class.
+	 *
+	 * @see #createDevice(DeviceType, String, String)
+	 */
+	private int deviceIdGenerator = 1000;
 
 	public List<Gate> getGates(Context context) {
-
-		List<Gate> gateList = new ArrayList<>();
+		List<Gate> gatesList = new ArrayList<>();
 
 		Gate demoGate1 = new Gate(GATE_1_ID, context.getString(R.string.gate_1_name));
 		demoGate1.setRole(User.Role.Admin);
-		demoGate1.setUtcOffset(-60);
-		gateList.add(demoGate1);
+		demoGate1.setUtcOffset(500);
+		gatesList.add(demoGate1);
 
 		Gate demoGate2 = new Gate(GATE_2_ID, context.getString(R.string.gate_2_name));
 		demoGate2.setRole(User.Role.Superuser);
 		demoGate2.setUtcOffset(60);
-		gateList.add(demoGate2);
+		gatesList.add(demoGate2);
 
-		return gateList;
+		return gatesList;
 	}
 
 	public List<Location> getLocation(Context context, String gateId) {
+		List<Location> locationsList = new ArrayList<>();
 
-		List<Location> locationList = new ArrayList<>();
 		switch (gateId) {
 			case GATE_1_ID: {
 				Location location1LivingRoom = new Location(GATE_1_LOCATION1, context.getString(R.string.loc_name_demo_living_room), GATE_1_ID, "5");
@@ -58,10 +65,10 @@ public class DemoData {
 				Location location1Kitchen = new Location(GATE_1_LOCATION3, context.getString(R.string.loc_name_demo_kitchen), GATE_1_ID, "4");
 				Location location1Wc = new Location(GATE_1_LOCATION4, context.getString(R.string.loc_name_demo_wc), GATE_1_ID, "6");
 
-				locationList.add(location1LivingRoom);
-				locationList.add(location1BedRoom);
-				locationList.add(location1Kitchen);
-				locationList.add(location1Wc);
+				locationsList.add(location1LivingRoom);
+				locationsList.add(location1BedRoom);
+				locationsList.add(location1Kitchen);
+				locationsList.add(location1Wc);
 				break;
 			}
 
@@ -69,8 +76,8 @@ public class DemoData {
 				Location location2GreenHouse = new Location(GATE_2_LOCATION1, context.getString(R.string.loc_name_demo_green_house), GATE_2_ID, "3");
 				Location location2Sauna = new Location(GATE_2_LOCATION2, context.getString(R.string.loc_name_demo_sauna), GATE_2_ID, "1");
 
-				locationList.add(location2GreenHouse);
-				locationList.add(location2Sauna);
+				locationsList.add(location2GreenHouse);
+				locationsList.add(location2Sauna);
 				break;
 			}
 
@@ -80,51 +87,47 @@ public class DemoData {
 			}
 		}
 
-
-		return locationList;
+		return locationsList;
 	}
 
 	public List<Device> getDevices(String gateId) {
-		List<Device> deviceList = new ArrayList<>();
-
-		int timeLastUpdate = 1377684610;
-		DateTime timeData = new DateTime((long) (timeLastUpdate * 1000), DateTimeZone.UTC);
+		List<Device> devicesList = new ArrayList<>();
 
 		switch (gateId) {
-
 			case GATE_1_ID: {
-				Device device = Device.createDeviceByType(DeviceType.TYPE_0.getId(), gateId, "100:00:FF:000:FF0");
-				device.setInitialized(true);
-				device.setLocationId(GATE_1_LOCATION1);
-				device.setRefresh(RefreshInterval.SEC_5);
-				device.setBattery(100);
-				device.setLastUpdate(DateTime.now());
-				device.setPairedTime(timeData);
-				device.setNetworkQuality(52);
-
-				deviceList.add(device);
+				devicesList.add(createDevice(DeviceType.TYPE_0, gateId, GATE_1_LOCATION1));
+				devicesList.add(createDevice(DeviceType.TYPE_2, gateId, GATE_1_LOCATION2));
+				devicesList.add(createDevice(DeviceType.TYPE_3, gateId, Location.NO_LOCATION_ID));
+				devicesList.add(createDevice(DeviceType.TYPE_4, gateId, Location.NO_LOCATION_ID));
+				devicesList.add(createDevice(DeviceType.TYPE_5, gateId, GATE_1_LOCATION3));
 				break;
 			}
 			case GATE_2_ID: {
-				Device device = Device.createDeviceByType(DeviceType.TYPE_1.getId(), gateId, "100:00:FF:000:FF1");
-				device.setInitialized(true);
-				device.setLocationId(GATE_2_LOCATION1);
-				device.setLastUpdate(DateTime.now());
-				device.setPairedTime(timeData);
-				device.setNetworkQuality(52);
-
-				deviceList.add(device);
+				devicesList.add(createDevice(DeviceType.TYPE_1, gateId, GATE_2_LOCATION1));
 				break;
 			}
 			default: {
 				//do nothing
-
 				break;
 			}
 		}
 
-		return deviceList;
+		return devicesList;
+	}
 
+	private Device createDevice(DeviceType type, String gateId, String locationId) {
+		Random rand = new Random();
+
+		Device device = Device.createDeviceByType(type.getId(), gateId, String.valueOf(++deviceIdGenerator));
+		device.setInitialized(true);
+		device.setLocationId(locationId);
+		device.setRefresh(RefreshInterval.fromInterval(rand.nextInt(3600)));
+		device.setBattery(rand.nextInt(100));
+		device.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(rand.nextInt(500)));
+		device.setPairedTime(DateTime.now(DateTimeZone.UTC).minusMinutes(rand.nextInt(60)));
+		device.setNetworkQuality(rand.nextInt(100));
+
+		return device;
 	}
 
 }
