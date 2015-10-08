@@ -55,23 +55,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			if (getActivity() == null)
-				return null;
-
-			ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, mActiveGateId == null
-					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
-					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
-
-			reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-				@Override
-				public void onExecute(boolean success) {
-					if (!success) return;
-
-					// stop refreshing
-					updateData();
-				}
-			});
-			return reloadGateDataTask;
+			return createReloadDevicesTask(true);
 		}
 
 		@Override
@@ -79,6 +63,30 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			return mActiveGateId;
 		}
 	};
+
+	private CallbackTask createReloadDevicesTask(boolean forceReload) {
+		if (getActivity() == null)
+			return null;
+
+		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(
+				getActivity(),
+				forceReload,
+				mActiveGateId == null
+					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
+					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
+
+		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success)
+					return;
+
+				// stop refreshing
+				updateData();
+			}
+		});
+		return reloadGateDataTask;
+	}
 
 
 	@Nullable
@@ -297,10 +305,10 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 * Async task for refreshing data
 	 *
 	 * @param gateId
-	 * @param forceRefresh
+	 * @param forceReload
 	 */
-	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
-		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
+	private void doReloadDevicesTask(String gateId, boolean forceReload) {
+		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mActiveGateId);
 	}
 
 	/**

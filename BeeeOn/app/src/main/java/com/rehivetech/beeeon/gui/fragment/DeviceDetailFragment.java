@@ -90,25 +90,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			if (getActivity() == null)
-				return null;
-
-			ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(getActivity(), false, ReloadGateDataTask.ReloadWhat.DEVICES);
-
-			final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
-
-			reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
-				@Override
-				public void onExecute(boolean success) {
-					if (success) {
-						updateLayout();
-						if (mViewPager != null) {
-							mViewPager.setCurrentItem(tabPos);
-						}
-					}
-				}
-			});
-			return reloadDevicesTask;
+			return createReloadDevicesTask(true);
 		}
 
 		@Override
@@ -116,6 +98,28 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			return mGateId;
 		}
 	};
+
+	private CallbackTask createReloadDevicesTask(boolean forceReload) {
+		if (getActivity() == null)
+			return null;
+
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(getActivity(), forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);
+
+		final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
+
+		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					updateLayout();
+					if (mViewPager != null) {
+						mViewPager.setCurrentItem(tabPos);
+					}
+				}
+			}
+		});
+		return reloadDevicesTask;
+	}
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 		Bundle args = new Bundle();
@@ -437,9 +441,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		NumberPickerDialogFragment.show(mActivity, module, DeviceDetailFragment.this);
 	}
 
-	protected void doReloadDevicesTask(final String gateId, final boolean forceRefresh) {
-		// Remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
+	protected void doReloadDevicesTask(final String gateId, final boolean forceReload) {
+		// Execute and remember task so it can be stopped automatically
+		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), gateId);
 	}
 
 	private void doChangeStateModuleTask(final Module module) {
