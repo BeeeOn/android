@@ -129,7 +129,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				if(location == null) return; // TODO should show error view or loading or sth
 				LocationViewHolder locationHolder = (LocationViewHolder) viewHolder;
 
-				locationHolder.mDivider.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
+				//locationHolder.mDivider.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
 				locationHolder.mHeader.setText(location.getName());
 				break;
 		}
@@ -221,12 +221,12 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	 */
 	public static class LocationViewHolder extends RecyclerView.ViewHolder{
 		public TextView mHeader;
-		public View mDivider;
+		//public View mDivider;
 
 		public LocationViewHolder(View itemView) {
 			super(itemView);
 			mHeader = (TextView) itemView.findViewById(R.id.list_location_header_text);
-			mDivider = itemView.findViewById(R.id.list_module_item_sep_middle);
+			//mDivider = itemView.findViewById(R.id.list_module_item_sep_middle);
 		}
 	}
 
