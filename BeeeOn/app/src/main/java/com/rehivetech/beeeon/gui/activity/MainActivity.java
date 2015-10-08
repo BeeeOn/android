@@ -27,6 +27,7 @@ import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
+import com.rehivetech.beeeon.gui.fragment.EmptyFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
@@ -136,6 +137,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public void onAppResume() {
 		setActiveGateAndMenu();
 		redrawNavigation();
+		reloadFragment(); // FIXME: do better (only when needed)
 
 		// Reload all data, if wasn't downloaded in login activity
 		final ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(this, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
@@ -147,6 +149,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 					Log.d(TAG, "After reload task - go to redraw mainActivity");
 					setActiveGateAndMenu();
 					redrawNavigation();
+					reloadFragment(); // FIXME: do better (only when needed)
 				}
 			}
 		});
@@ -374,6 +377,11 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			mActiveMenuId = MENU_ITEM_GRAPHS;
 		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
 			mActiveMenuId = MENU_ITEM_DEVICES;
+		}
+
+		Gate activeGate = Controller.getInstance(this).getActiveGate();
+		if (activeGate == null) {
+			fragment = EmptyFragment.newInstance(getString(R.string.nav_drawer_menu_no_gates)); // FIXME: Better string / data
 		}
 
 		callbackTaskManager.cancelAndRemoveAll();
