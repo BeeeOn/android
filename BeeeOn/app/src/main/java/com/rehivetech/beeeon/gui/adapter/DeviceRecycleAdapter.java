@@ -114,8 +114,8 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 					deviceHolder.mAdditional.setVisibility(View.INVISIBLE);
 				}
 				// otherwise set text and show
-				else{
-					deviceHolder.mAdditional.setText(battery + "%");
+				else {
+					deviceHolder.mAdditional.setText(String.format("%d %%", battery));
 					deviceHolder.mAdditional.setVisibility(View.VISIBLE);
 				}
 
