@@ -155,6 +155,8 @@
 	<string name="nav_drawer_menu_no_gates">You have no gateways</string>
 	<string name="nav_drawer_menu_action_gate_add">Add gateway</string>
 
+	<string name="nav_drawer_profile_active_gate">Active gateway</string>
+
 	<!-- Gate menu -->
 	<string name="gate_menu_layout_menu_del">Remove gateway</string>
 	<string name="gate_menu_layout_menu_users">Manage users</string>

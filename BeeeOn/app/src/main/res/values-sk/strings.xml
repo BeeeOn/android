@@ -151,6 +151,8 @@
 	<string name="nav_drawer_menu_no_gates">Nemáte žiadne brány</string>
 	<string name="nav_drawer_menu_action_gate_add">Pridať bránu</string>
 
+	<string name="nav_drawer_profile_active_gate">Aktivná brána</string>
+
 	<!-- Gate menu-->
 	<string name="gate_menu_layout_menu_del">Odstrániť bránu</string>
 	<string name="gate_menu_layout_menu_users">Používatelia brány</string>

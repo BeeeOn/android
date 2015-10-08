@@ -14,7 +14,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +32,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.threading.task.SwitchGateTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 
 import java.util.List;
@@ -63,6 +67,9 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	private Menu mNavigationMenu;
 	private ActionBarDrawerToggle mDrawerToggle;
 
+	private Spinner mGatesSpinner;
+	private ArrayAdapter<Gate> mGatesAdapter;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,6 +87,35 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.nav_drawer_menu_drawer_open, R.string.nav_drawer_menu_drawer_close);
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+		mGatesSpinner = (Spinner) mNavigationHeader.findViewById(R.id.menu_profile_gates_spinner);
+		mGatesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			private boolean firstSelect = true;
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				// Ignore first select after creation (which is automatic - not selected by user)
+				if (firstSelect) {
+					firstSelect = false;
+					return;
+				}
+
+				Gate gate = (Gate) parent.getItemAtPosition(position);
+				if (gate == null)
+					return;
+
+				// TODO: Don't switch gate if this is first "start" (on creating activity)
+				doSwitchGateTask(gate.getId());
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
+		});
+
+		mGatesAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item);
+		mGatesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mGatesSpinner.setAdapter(mGatesAdapter);
+
 		if (savedInstanceState != null) {
 			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
 			mActiveGateId = savedInstanceState.getString(GATE_ID);
@@ -88,22 +124,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		}
 
 		redrawNavigation();
-
-		if (mActiveMenuId == null || mActiveMenuId.equals(MENU_ITEM_DEVICES)) {
-			mNavigationView.setCheckedItem(R.id.nav_drawer_devices);
-
-			changeFragment(DevicesListFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DEVICES);
-		} else if (mActiveMenuId.equals(MENU_ITEM_GRAPHS)) {
-			mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
-
-			changeFragment(new CustomViewFragment(), FRAGMENT_TAG_GRAPHS);
-		} else if (mActiveMenuId.equals(MENU_ITEM_GATEWAY)) {
-			if (mActiveGateId != null) {
-				Intent intent = new Intent(this, GateDetailActivity.class);
-				intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mActiveGateId);
-				startActivity(intent);
-			}
-		}
+		reloadFragment();
 	}
 
 	@Override
@@ -146,8 +167,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			mExitToast = Toast.makeText(getBaseContext(), R.string.main_toast_tap_again_exit, Toast.LENGTH_SHORT);
 			mExitToast.show();
 
-			// Open drawer
-			mDrawerLayout.openDrawer(GravityCompat.START);
+			openNavDrawer();
 		}
 
 		mBackPressed = System.currentTimeMillis();
@@ -158,6 +178,22 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		savedInstanceState.putString(GATE_ID, mActiveGateId);
 		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
 		super.onSaveInstanceState(savedInstanceState);
+	}
+
+	private void reloadFragment() {
+		if (mActiveMenuId == null || mActiveMenuId.equals(MENU_ITEM_DEVICES)) {
+			mNavigationView.setCheckedItem(R.id.nav_drawer_devices);
+			changeFragment(DevicesListFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DEVICES);
+		} else if (mActiveMenuId.equals(MENU_ITEM_GRAPHS)) {
+			mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
+			changeFragment(new CustomViewFragment(), FRAGMENT_TAG_GRAPHS);
+		} else if (mActiveMenuId.equals(MENU_ITEM_GATEWAY)) {
+			if (mActiveGateId != null) {
+				Intent intent = new Intent(this, GateDetailActivity.class);
+				intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mActiveGateId);
+				startActivity(intent);
+			}
+		}
 	}
 
 	public void setActiveGateAndMenu() {
@@ -176,41 +212,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			if (mActiveMenuId == null) {
 				mActiveMenuId = MENU_ITEM_DEVICES;
 			}
-
-
-			// former redrawMainFragment()
-			// FIXME: What is this and why is it here?
-
-			// stop all tasks - so that the reload tasks will not continue
-			/*callbackTaskManager.cancelAndRemoveAll();
-
-			// set location layout
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-			if (mActiveMenuId == null) {
-				mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);;
-				ft.replace(R.id.main_content_frame, mDevicesListFragment, FRAGMENT_TAG_DEVICES);
-			} else if (mActiveMenuId.equals(Constants.MENU_ITEM_DEVICES)) {
-				mDevicesListFragment = DevicesListFragment.newInstance(mActiveGateId);
-				ft.replace(R.id.main_content_frame, mDevicesListFragment, FRAGMENT_TAG_DEVICES);
-			} else if (mActiveMenuId.equals(Constants.MENU_ITEM_GRAPHS)) {
-				mCustomViewFragment = new CustomViewFragment();
-				ft.replace(R.id.main_content_frame, mCustomViewFragment, FRAGMENT_TAG_GRAPHS);
-			} else if (mActiveMenuId.equals(Constants.MENU_ITEM_GATEWAY)) {
-				mActiveMenuId = null;
-
-				if (mActiveGateId != null) {
-					Intent intent = new Intent(this, GateDetailActivity.class);
-					intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mActiveGateId);
-					startActivity(intent);
-				}
-			}
-			else if(mActiveMenuId.equals(Constants.GUI_MENU_DEVICES)){
-				mActiveMenuId = null;
-				Intent intent = new Intent(this, DevicesListActivity.class);
-				intent.putExtra(DevicesListActivity.EXTRA_GATE_ID, mActiveGateId);
-				startActivity(intent);
-			}
-			ft.commitAllowingStateLoss();*/
 		} else {
 			// User has no gate
 			mActiveGateId = null;
@@ -270,6 +271,21 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(unregisterGateTask, gateId);
+	}
+
+	private void doSwitchGateTask(final String gateId) {
+		SwitchGateTask switchGateTask = new SwitchGateTask(this, true);
+
+		switchGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				mActiveGateId = gateId;
+				reloadFragment();
+				closeNavDrawer();
+			}
+		});
+
+		callbackTaskManager.executeTask(switchGateTask, gateId);
 	}
 
 	@Override
@@ -337,13 +353,29 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 		// Close navigation drawer only when we're changing main fragment
 		if (result) {
-			mDrawerLayout.closeDrawer(GravityCompat.START);
+			closeNavDrawer();
 		}
 
 		return result;
 	}
 
+	private void openNavDrawer() {
+		if (mDrawerLayout != null)
+			mDrawerLayout.openDrawer(GravityCompat.START);
+	}
+
+	private void closeNavDrawer() {
+		if (mDrawerLayout != null)
+			mDrawerLayout.closeDrawer(GravityCompat.START);
+	}
+
 	private void changeFragment(Fragment fragment, String tag) {
+		if (tag.equals(FRAGMENT_TAG_GRAPHS)) {
+			mActiveMenuId = MENU_ITEM_GRAPHS;
+		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
+			mActiveMenuId = MENU_ITEM_DEVICES;
+		}
+
 		callbackTaskManager.cancelAndRemoveAll();
 		setupRefreshIcon(null);
 		getSupportFragmentManager()
@@ -353,7 +385,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	}
 
 	private void redrawNavigation() {
-		Controller controller = Controller.getInstance(this);
+		final Controller controller = Controller.getInstance(this);
 
 		// Fill user info in the header of navigation drawer
 		TextView name = (TextView) mNavigationHeader.findViewById(R.id.menu_profile_listview_name);
@@ -372,11 +404,28 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		}
 
 		// Fill gates list in the header of navigation drawer
-		// TODO: Implement this
-
-		// Show / hide menu items based on existence of any gates
 		List<Gate> gates = controller.getGatesModel().getGates();
 		boolean hasGates = !gates.isEmpty();
+
+		// Reload gates adapter data
+		int activeGatePos = 0;
+		mGatesAdapter.clear();
+		for (int i = 0; i < gates.size(); i++) {
+			Gate gate = gates.get(i);
+			mGatesAdapter.add(gate);
+
+			// Remember active gate position
+			if (gate.getId().equals(mActiveGateId)) {
+				activeGatePos = i;
+			}
+		}
+		mGatesAdapter.notifyDataSetChanged();
+		mGatesSpinner.setSelection(activeGatePos);
+
+		// Hide gate selection layout when there are no gates
+		mNavigationHeader.findViewById(R.id.menu_profile_gates).setVisibility(hasGates ? View.VISIBLE : View.GONE);
+
+		// Show / hide menu items based on existence of any gates
 		mNavigationMenu.findItem(R.id.item_overview).setVisible(hasGates);
 		mNavigationMenu.findItem(R.id.item_no_gates).setVisible(!hasGates);
 	}

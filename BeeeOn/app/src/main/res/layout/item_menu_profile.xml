@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/menu_header"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<RelativeLayout
+		android:clickable="true"
+		android:layout_width="match_parent"
+		android:layout_height="120dp"
+		android:background="@color/beeeon_primary"
+		android:paddingBottom="2dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp">
+
+		<ImageView
+			android:id="@+id/menu_profile_listview_icon"
+			android:padding="4dp"
+			android:background="@drawable/oval_primary"
+			android:src="@drawable/ic_person_white_48dp"
+			android:layout_width="60dp"
+			android:layout_height="60dp"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentBottom="true"
+			android:layout_marginBottom="16dp"/>
+
+		<TextView
+			android:id="@+id/menu_profile_listview_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			android:textColor="@color/white"
+			android:layout_alignTop="@id/menu_profile_listview_icon"
+			android:layout_toRightOf="@id/menu_profile_listview_icon"
+			android:layout_toEndOf="@id/menu_profile_listview_icon"
+			android:layout_marginTop="12dp"
+			android:layout_marginLeft="16dp"
+			android:layout_marginStart="16dp"
+			tools:text="John Doe"/>
+
+		<TextView
+			android:id="@+id/menu_profile_listview_email"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/white"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+			android:layout_toRightOf="@id/menu_profile_listview_icon"
+			android:layout_toEndOf="@id/menu_profile_listview_icon"
+			android:layout_below="@id/menu_profile_listview_name"
+			android:layout_marginLeft="16dp"
+			android:layout_marginStart="16dp"
+			android:singleLine="true"
+			tools:text="john@doe.com"/>
+	</RelativeLayout>
+
+	<RelativeLayout
+		android:id="@+id/menu_profile_gates"
+		android:clickable="true"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:paddingTop="4dp"
+		android:paddingLeft="16dp"
+		android:paddingRight="16dp"
+		android:paddingBottom="16dp"
+		android:background="@color/beeeon_primary">
+
+		<TextView
+			android:id="@+id/menu_profile_gates_label"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="6dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+			android:textColor="@color/white"
+			android:text="@string/nav_drawer_profile_active_gate"/>
+
+		<Spinner
+			android:id="@+id/menu_profile_gates_spinner"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/menu_profile_gates_label"/>
+	</RelativeLayout>
+</LinearLayout>
