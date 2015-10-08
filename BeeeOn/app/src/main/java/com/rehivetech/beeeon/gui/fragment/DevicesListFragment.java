@@ -55,6 +55,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
+			if (getActivity() == null)
+				return null;
+
 			ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, mActiveGateId == null
 					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
 					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));

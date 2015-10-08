@@ -90,7 +90,10 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(mActivity, false, ReloadGateDataTask.ReloadWhat.DEVICES);
+			if (getActivity() == null)
+				return null;
+
+			ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(getActivity(), false, ReloadGateDataTask.ReloadWhat.DEVICES);
 
 			final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
 
