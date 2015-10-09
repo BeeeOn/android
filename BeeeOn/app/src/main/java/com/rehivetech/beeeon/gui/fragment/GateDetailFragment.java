@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -192,7 +193,15 @@ public class GateDetailFragment extends BaseApplicationFragment {
 			// Populate the data into the template view using the data object
 			if (detailsItem.imageRes > 0)
 				image.setImageResource(detailsItem.imageRes);
-			text.setText(detailsItem.text);
+			if (detailsItem.text.isEmpty()) {
+				text.setText(String.format("<%s>", getString(R.string.not_specified)));
+				text.setTypeface(null, Typeface.ITALIC);
+				text.setTextColor(getResources().getColor(R.color.beeeon_secondary_text));
+			} else {
+				text.setText(detailsItem.text);
+				text.setTypeface(null, Typeface.NORMAL);
+				text.setTextColor(getResources().getColor(R.color.beeeon_primary_text));
+			}
 			title.setText(detailsItem.titleRes);
 
 			button.setVisibility(detailsItem.buttonClickListener != null ? View.VISIBLE : View.INVISIBLE);

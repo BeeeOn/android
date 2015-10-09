@@ -4,7 +4,9 @@
 	<!-- Application name -->
 	<!--<string name="app_name" translatable="false">BeeeOn Beta</string>-->
 
+	<!-- Common strings -->
 	<string name="empty" translatable="false"/>
+	<string name="not_specified">Not specified</string>
 
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifications</string>
@@ -183,6 +185,7 @@
 
 	<!-- Gate detail -->
 	<string name="gate_detail_gate_id">Gate Id</string>
+	<string name="gate_detail_gate_owner">Owner</string>
 	<string name="gate_detail_ip">IP address</string>
 	<string name="gate_detail_list_btn_details">Details</string>
 	<string name="gate_detail_loading_data">Loading data&#8230;</string>
