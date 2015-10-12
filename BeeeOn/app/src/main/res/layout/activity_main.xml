@@ -28,5 +28,6 @@
 		android:background="@color/white"
 		app:headerLayout="@layout/item_menu_profile_listview"
 		app:menu="@menu/nav_drawer_menu"
+		app:itemBackground="@drawable/drawer_list_selector"
 		android:layout_height="match_parent"/>
 </android.support.v4.widget.DrawerLayout>
