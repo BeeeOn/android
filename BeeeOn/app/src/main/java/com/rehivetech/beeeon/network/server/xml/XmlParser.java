@@ -176,13 +176,14 @@ public class XmlParser {
 			String id = getSecureAttributeString("id");
 			User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttributeString("accessrole"), User.Role.Guest);
 			String name = getSecureAttributeString("name");
+			String owner = getSecureAttributeString("owner");
 			int devicesCount = getSecureAttributeInt("devices");
 			int usersCount = getSecureAttributeInt("users");
 			String ip = getSecureAttributeString("ip");
 			String version = getSecureAttributeString("version");
 			int utcOffsetInMinutes = getSecureAttributeInt("utc");
 
-			return new GateInfo(id, name, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
+			return new GateInfo(id, name, owner, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -392,7 +393,7 @@ public class XmlParser {
 				user.setName(getSecureAttributeString("name"));
 				user.setSurname(getSecureAttributeString("surname"));
 				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttributeString("gender"), User.Gender.UNKNOWN));
-				user.setPictureUrl(getSecureAttributeString("imgurl")); // FIXME: this isn't in specification but it should be here...
+				user.setPictureUrl(getSecureAttributeString("imgurl"));
 
 				result.add(user);
 				mParser.nextTag();

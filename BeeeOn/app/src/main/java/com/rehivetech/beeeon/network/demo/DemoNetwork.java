@@ -249,12 +249,14 @@ public class DemoNetwork implements INetwork {
 
 		int devicesCount = mDevices.getObjects(gateId).size();
 		int usersCount = mUsers.getObjects(gateId).size();
-		String version = "0";
-		String ip = "0.0.0.0";
+		String version = "";
+		String ip = "";
+		String owner = "John Doe";
 
 		return new GateInfo(
 				gate.getId(),
 				gate.getName(),
+				owner,
 				gate.getRole(),
 				gate.getUtcOffset(),
 				devicesCount,
