@@ -193,8 +193,11 @@ public class GateDetailFragment extends BaseApplicationFragment {
 			Button button = (Button) convertView.findViewById(R.id.gate_detail_list_item_button_details);
 
 			// Populate the data into the template view using the data object
-			if (detailsItem.imageRes > 0)
+			if (detailsItem.imageRes > 0) {
 				image.setImageResource(detailsItem.imageRes);
+			} else {
+				image.setImageDrawable(null);
+			}
 			if (detailsItem.text.isEmpty()) {
 				text.setText(String.format("<%s>", getString(R.string.not_specified)));
 				text.setTypeface(null, Typeface.ITALIC);
