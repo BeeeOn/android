@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,13 @@ public class UsersListAdapter extends BaseAdapter {
 		holder.UserName.setText(user.getFullName());
 		holder.UserEmail.setText(user.getEmail());
 		holder.UserRole.setText(user.getRole().getStringResource());
+
+		Bitmap picture = user.getPicture();
+		if (picture != null) {
+			holder.UserIcon.setImageBitmap(Utils.getRoundedShape(picture));
+		} else {
+			holder.UserIcon.setImageResource(R.drawable.ic_person_white_48dp);
+		}
 
 		return convertView;
 	}

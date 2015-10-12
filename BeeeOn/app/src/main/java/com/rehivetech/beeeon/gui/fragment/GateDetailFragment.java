@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -71,6 +72,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 
 		mDetailsItemList = new ArrayList<>();
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_gray_24dp, R.string.gate_detail_gate_id, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_gate_owner, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_your_role, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.gate_detail_timezone, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_supervisor_account_gray_24dp, R.string.gate_detail_num_of_users, loadingText, new View.OnClickListener() {
@@ -124,21 +126,22 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		int offsetInMillis = gateInfo.getUtcOffset() * 60 * 1000;
 
 		mDetailsItemList.get(0).text = gateInfo.getId();
-		mDetailsItemList.get(1).text = getString(gateInfo.getRole().getStringResource());
-		mDetailsItemList.get(2).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
+		mDetailsItemList.get(1).text = gateInfo.getOwner();
+		mDetailsItemList.get(2).text = getString(gateInfo.getRole().getStringResource());
+		mDetailsItemList.get(3).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
 
 		int usersCount = gateInfo.getUsersCount();
-		DetailsItem usersDetailsItem = mDetailsItemList.get(3);
+		DetailsItem usersDetailsItem = mDetailsItemList.get(4);
 		usersDetailsItem.buttonEnabled = usersCount > 0;
 		usersDetailsItem.text = (String.format("%d", usersCount));
 
 		int devicesCount = gateInfo.getDevicesCount();
-		DetailsItem devicesDetailsItem = mDetailsItemList.get(4);
+		DetailsItem devicesDetailsItem = mDetailsItemList.get(5);
 		devicesDetailsItem.buttonEnabled = devicesCount > 0;
 		devicesDetailsItem.text = (String.format("%d", devicesCount));
 
-		mDetailsItemList.get(5).text = gateInfo.getIp();
-		mDetailsItemList.get(6).text = gateInfo.getVersion();
+		mDetailsItemList.get(6).text = gateInfo.getIp();
+		mDetailsItemList.get(7).text = gateInfo.getVersion();
 
 		mGateDetailsAdapter.notifyDataSetChanged();
 	}
@@ -190,9 +193,20 @@ public class GateDetailFragment extends BaseApplicationFragment {
 			Button button = (Button) convertView.findViewById(R.id.gate_detail_list_item_button_details);
 
 			// Populate the data into the template view using the data object
-			if (detailsItem.imageRes > 0)
+			if (detailsItem.imageRes > 0) {
 				image.setImageResource(detailsItem.imageRes);
-			text.setText(detailsItem.text);
+			} else {
+				image.setImageDrawable(null);
+			}
+			if (detailsItem.text.isEmpty()) {
+				text.setText(String.format("<%s>", getString(R.string.not_specified)));
+				text.setTypeface(null, Typeface.ITALIC);
+				text.setTextColor(getResources().getColor(R.color.beeeon_secondary_text));
+			} else {
+				text.setText(detailsItem.text);
+				text.setTypeface(null, Typeface.NORMAL);
+				text.setTextColor(getResources().getColor(R.color.beeeon_primary_text));
+			}
 			title.setText(detailsItem.titleRes);
 
 			button.setVisibility(detailsItem.buttonClickListener != null ? View.VISIBLE : View.INVISIBLE);

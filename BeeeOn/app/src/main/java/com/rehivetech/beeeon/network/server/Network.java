@@ -614,7 +614,14 @@ public class Network implements INetwork {
 				XmlCreator.GateUsers.getAll(mSessionId, gateId),
 				State.ACCOUNTS);
 
-		return parser.parseGateUsers();
+		List<User> users = parser.parseGateUsers();
+		for (User user : users) {
+			if (!user.getPictureUrl().isEmpty()) {
+				user.setPicture(Utils.fetchImageFromUrl(user.getPictureUrl()));
+			}
+		}
+
+		return users;
 	}
 
 	@Override

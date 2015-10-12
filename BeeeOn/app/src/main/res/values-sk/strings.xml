@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+	<!-- Common strings -->
+	<string name="not_specified">Nešpecifikováno</string>
+
 	<!-- Titles in manifest-->
 	<string name="manifest_action_notification">Notifikácie</string>
 	<string name="manifest_title_device_add">Pridanie zariadenia</string>
@@ -179,6 +182,7 @@
 
 	<!-- Gate detail -->
 	<string name="gate_detail_gate_id">ID brány</string>
+	<string name="gate_detail_gate_owner">Vlastník</string>
 	<string name="gate_detail_ip">IP adresa</string>
 	<string name="gate_detail_list_btn_details">Detaily</string>
 	<string name="gate_detail_loading_data">Nahrávam dáta&#8230;</string>
