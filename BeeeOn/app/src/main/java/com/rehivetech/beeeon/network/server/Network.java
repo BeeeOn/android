@@ -68,7 +68,7 @@ public class Network implements INetwork {
 	private static final String ALIAS_CA_CERT = "ca";
 
 	/** Marks end of communication messages */
-	private static final String EOF = "</com>";
+	private static final String EOF = "</response>";
 
 	private static final int SSL_TIMEOUT = 35000;
 
