@@ -78,7 +78,11 @@ public class CallbackTaskManager {
 	 * @param param           		param for the task
 	 * @param progressIndicator what kind of progress indicator this task should show in Activity
 	 */
-	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param, ProgressIndicator progressIndicator) {
+	public <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T param, ProgressIndicator progressIndicator) {
+		// Check if we've got task object
+		if (task == null)
+			return;
+
 		// TODO: check if it makes sense to start the task (data are expired, etc.) - need implementation in each particular task
 		/*if (!task.needRun()) {
 			return;
@@ -109,7 +113,7 @@ public class CallbackTaskManager {
 	 * @param task  task to be executed
 	 * @param param param for the task
 	 */
-	public <T> void executeTask(@NonNull CallbackTask<T> task, @Nullable T param) {
+	public <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T param) {
 		executeTask(task, param, ProgressIndicator.PROGRESS_ICON);
 	}
 
@@ -119,7 +123,7 @@ public class CallbackTaskManager {
 	 *
 	 * @param task task to be executed
 	 */
-	public void executeTask(@NonNull CallbackTask task) {
+	public void executeTask(@Nullable CallbackTask task) {
 		executeTask(task, null);
 	}
 

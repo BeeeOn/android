@@ -82,12 +82,6 @@ public final class Constants {
 
 	public static final String TUTORIAL_ADD_DEVICE_SHOWED = "TUTORIAL_ADD_DEVICE_SHOWED";
 
-	public static final String GUI_MENU_CONTROL = "GUI_MENU_CONTROL";
-
-	public static final String GUI_MENU_DASHBOARD = "GUI_MENU_DASHBOARD";
-
-	public static final String GUI_MENU_GATEWAY = "GUI_MENU_GATEWAY";
-
 	public static final String GUI_INTRO_PLAY = "GUI_INTRO_PLAY";
 
 	public static final String GUI_MENU_DEVICES = "GUI_MENU_DEVICES";

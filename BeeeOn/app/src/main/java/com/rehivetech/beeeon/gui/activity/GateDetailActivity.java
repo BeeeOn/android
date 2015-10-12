@@ -38,23 +38,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(GateDetailActivity.this, false);
-
-			reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
-				@Override
-				public void onExecute(boolean success) {
-					GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
-					if (gateInfo == null) {
-						Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
-						finish();
-					} else {
-						if (mFragment != null) {
-							mFragment.fillData();
-						}
-					}
-				}
-			});
-			return reloadGateInfoTask;
+			return createReloadGateInfoTask(true);
 		}
 
 		@Override
@@ -62,6 +46,26 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			return mGateId;
 		}
 	};
+
+	private CallbackTask createReloadGateInfoTask(boolean forceReload) {
+		ReloadGateInfoTask reloadGateInfoTask = new ReloadGateInfoTask(GateDetailActivity.this, forceReload);
+
+		reloadGateInfoTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
+				if (gateInfo == null) {
+					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
+					finish();
+				} else {
+					if (mFragment != null) {
+						mFragment.fillData();
+					}
+				}
+			}
+		});
+		return reloadGateInfoTask;
+	}
 
 	private String mGateId;
 	@Nullable
@@ -119,7 +123,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+		callbackTaskManager.executeTask(createReloadGateInfoTask(forceReload), gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 	}
 
 	@Override

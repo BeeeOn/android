@@ -149,10 +149,13 @@
 	<string name="nav_drawer_menu_menu_charts">Charts</string>
 	<string name="nav_drawer_menu_menu_devices">Devices</string>
 	<string name="nav_drawer_menu_menu_modules">Modules</string>
-	<string name="nav_drawer_menu_menu_gate">Active gateway</string>
+	<string name="nav_drawer_menu_menu_gate">Gateway</string>
 	<string name="nav_drawer_menu_menu_household">Overview</string>
 	<string name="nav_drawer_menu_menu_management">Management</string>
 	<string name="nav_drawer_menu_no_gates">You have no gateways</string>
+	<string name="nav_drawer_menu_action_gate_add">Add gateway</string>
+
+	<string name="nav_drawer_profile_active_gate">Active gateway</string>
 
 	<!-- Gate menu -->
 	<string name="gate_menu_layout_menu_del">Remove gateway</string>

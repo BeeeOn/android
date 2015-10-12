@@ -55,20 +55,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(getActivity(), false, mActiveGateId == null
-					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
-					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
-
-			reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-				@Override
-				public void onExecute(boolean success) {
-					if (!success) return;
-
-					// stop refreshing
-					updateData();
-				}
-			});
-			return reloadGateDataTask;
+			return createReloadDevicesTask(true);
 		}
 
 		@Override
@@ -76,6 +63,30 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			return mActiveGateId;
 		}
 	};
+
+	private CallbackTask createReloadDevicesTask(boolean forceReload) {
+		if (getActivity() == null)
+			return null;
+
+		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(
+				getActivity(),
+				forceReload,
+				mActiveGateId == null
+					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
+					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
+
+		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success)
+					return;
+
+				// stop refreshing
+				updateData();
+			}
+		});
+		return reloadGateDataTask;
+	}
 
 
 	@Nullable
@@ -135,14 +146,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_devices_list, container, false);
-
-		// setup refresh icon callback
-		mActivity.setupRefreshIcon(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				doReloadDevicesTask(mActiveGateId, true);
-			}
-		});
 
 		// refresh button when no items shown
 		mRefreshButton = (Button) rootView.findViewById(R.id.devices_list_refresh_button);
@@ -302,10 +305,10 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 * Async task for refreshing data
 	 *
 	 * @param gateId
-	 * @param forceRefresh
+	 * @param forceReload
 	 */
-	private void doReloadDevicesTask(String gateId, boolean forceRefresh) {
-		mActivity.callbackTaskManager.executeTask(mICallbackTaskFactory.createTask(), mICallbackTaskFactory.createParam());
+	private void doReloadDevicesTask(String gateId, boolean forceReload) {
+		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mActiveGateId);
 	}
 
 	/**
