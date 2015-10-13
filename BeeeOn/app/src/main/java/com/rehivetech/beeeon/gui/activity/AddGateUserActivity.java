@@ -99,7 +99,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 				mNewRole = User.Role.values()[role.getSelectedItemPosition()];
 
 				// if superuser -- need to show dialog to confirm
-				if (mNewRole == User.Role.Superuser) {
+				if (mNewRole == User.Role.Owner) {
 					SimpleDialogFragment
 							.createBuilder(AddGateUserActivity.this, getSupportFragmentManager())
 							.setTitle(R.string.gate_user_add_dialog_title_add_owner)
@@ -146,7 +146,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 
 	@Override
 	public void onPositiveButtonClicked(int i) {
-		mNewUser.setRole(User.Role.Superuser);
+		mNewUser.setRole(User.Role.Owner);
 		doAddGateUserTask(mNewUser);
 		mNewUser = null;
 		mNewRole = null;

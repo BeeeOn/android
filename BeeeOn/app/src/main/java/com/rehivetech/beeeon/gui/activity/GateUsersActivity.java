@@ -264,7 +264,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 		if (mSelectedItem == null || newRole == null) return;
 
-		if (newRole == User.Role.Superuser) {
+		if (newRole == User.Role.Owner) {
 			// Need confirmation for this change
 			String title = getString(R.string.gate_users_dialog_title_change_ownership);
 			String message = getString(R.string.gate_users_dialog_message_change_ownership);
@@ -283,7 +283,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 			return;
 
 		if (confirmType == ConfirmDialog.TYPE_CHANGE_OWNERSHIP) {
-			user.setRole(User.Role.Superuser);
+			user.setRole(User.Role.Owner);
 			doEditUserTask(user);
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_USER) {
 			doRemoveUserTask(user);
