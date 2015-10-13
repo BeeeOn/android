@@ -9,7 +9,9 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.FillFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.view.ChartMarkerView;
@@ -110,6 +112,7 @@ final public class ChartHelper {
 			if (filled) {
 				((LineDataSet) dataset).setDrawFilled(true);
 				((LineDataSet) dataset).setFillColor(fillColor);
+				((LineDataSet) dataset).setFillFormatter(new CustomFillFormatter());
 			}
 		}
 		dataset.setColor(color);
@@ -149,5 +152,16 @@ final public class ChartHelper {
 				return value + unitsHelper.getStringUnit(baseValue);
 			}
 		};
+	}
+
+	/**
+	 * Custom fill formatter which allow fill chart from bottom
+	 */
+	private static class CustomFillFormatter implements FillFormatter {
+
+		@Override
+		public float getFillLinePosition(LineDataSet dataSet, LineDataProvider dataProvider) {
+			return dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum;
+		}
 	}
 }

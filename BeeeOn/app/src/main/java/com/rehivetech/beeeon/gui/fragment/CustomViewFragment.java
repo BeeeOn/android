@@ -23,7 +23,6 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
@@ -184,7 +183,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			lineEntries = new ArrayList<>();
 			dataSet = new LineDataSet(lineEntries, String.format("%s - %s [%s]", deviceName, moduleName, unit));
 		}
-		YAxisValueFormatter valueFormatter = ChartHelper.getValueFormatterInstance(module.getValue(), mActivity, controller);
 		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color);
 		dataSetList.add(dataSet);
 

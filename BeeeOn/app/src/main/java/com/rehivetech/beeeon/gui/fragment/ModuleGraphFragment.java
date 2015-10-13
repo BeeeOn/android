@@ -205,10 +205,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 			BarData barData = new BarData(xVals, (BarDataSet) mDataSet);
 			data.setData(barData);
 		} else {
-			if (mDataSet.getYVals().size() < 50) {
-				((LineDataSet) mDataSet).setDrawCubic(true);
-				((LineDataSet) mDataSet).setCubicIntensity(0.05f);
-			}
 			LineData lineData = new LineData(xVals, (LineDataSet) mDataSet);
 			data.setData(lineData);
 		}
@@ -253,15 +249,4 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(getModuleLogTask, pair);
 	}
-
-	/**
-	 * Custom fill formatter which allow fill chart from bottom
-	 */
-//	protected class CustomFillFormatter implements FillFormatter {
-//
-//		@Override
-//		public float getFillLinePosition(LineDataSet dataSet, LineData data, float chartMaxY, float chartMinY) {
-//			return chartMinY;
-//		}
-//	}
 }
