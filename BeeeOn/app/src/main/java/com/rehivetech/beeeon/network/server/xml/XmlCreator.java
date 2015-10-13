@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.network.server.xml;
 import android.support.annotation.Nullable;
 import android.util.Xml;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.household.device.Device;
@@ -13,6 +12,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.network.server.Network;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -41,7 +41,7 @@ public class XmlCreator {
 			serializer.startDocument("UTF-8", null);
 
 			serializer.startTag(ns, "request");
-			serializer.attribute(ns, "version", Constants.PROTOCOL_VERSION); // every time use version
+			serializer.attribute(ns, "version", Network.PROTOCOL_VERSION); // every time use version
 			serializer.attribute(ns, "ns", namespace);
 			serializer.attribute(ns, "type", type);
 			if (sessionId != null) {

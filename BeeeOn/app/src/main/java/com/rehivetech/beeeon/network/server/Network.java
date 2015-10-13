@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
@@ -60,6 +59,9 @@ import javax.net.ssl.TrustManagerFactory;
 public class Network implements INetwork {
 
 	private static final String TAG = Network.class.getSimpleName();
+
+	/** Communication version */
+	public static final String PROTOCOL_VERSION = "1.0.0";
 
 	/** Number of retries when we receive no response from server (e.g. because persistent connection expires from server side) */
 	private static final int RETRIES_COUNT = 2;
@@ -318,21 +320,23 @@ public class Network implements INetwork {
 		String version = parser.getVersion();
 		if (version.isEmpty()) {
 			throw new AppException("Get no protocol version from response.", ClientError.XML);
-		} else if (!version.equals(Constants.PROTOCOL_VERSION)) {
+		} else if (!version.equals(PROTOCOL_VERSION)) {
 			String srv[] = version.split("\\.");
-			String app[] = Constants.PROTOCOL_VERSION.split("\\.");
+			String app[] = PROTOCOL_VERSION.split("\\.");
 
-			if (srv.length >= 2 && app.length >= 2) {
+			if (srv.length == 3 && app.length == 3) {
 				try {
 					int srv_major = Integer.parseInt(srv[0]);
-					int srv_minor = Integer.parseInt(srv[1]);
+					//int srv_minor = Integer.parseInt(srv[1]);
+					//int srv_build = (srv.length >= 3) ? Integer.parseInt(srv[2]) : 0;
 					int app_major = Integer.parseInt(app[0]);
-					int app_minor = Integer.parseInt(app[1]);
+					//int app_minor = Integer.parseInt(app[1]);
+					//int app_build = (app.length >= 3) ? Integer.parseInt(app[2]) : 0;
 
-					if (srv_major != app_major || srv_minor < app_minor) {
-						// Server must have same major version as app and same or greater minor version than app
+					if (srv_major != app_major) {
+						// Server must have same major version as app
 						throw new AppException(NetworkError.COM_VER_MISMATCH)
-								.set(NetworkError.PARAM_COM_VER_LOCAL, Constants.PROTOCOL_VERSION)
+								.set(NetworkError.PARAM_COM_VER_LOCAL, PROTOCOL_VERSION)
 								.set(NetworkError.PARAM_COM_VER_SERVER, version);
 					}
 				} catch (NumberFormatException e) {
