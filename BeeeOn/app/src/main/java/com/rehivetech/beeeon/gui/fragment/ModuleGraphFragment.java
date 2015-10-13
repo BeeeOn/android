@@ -20,7 +20,6 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.FillFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
@@ -150,7 +149,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		//set chart
 		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller);
-		mChart.setFillFormatter(new CustomFillFormatter());
+//		mChart.setFillFormatter(new CustomFillFormatter());
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
@@ -258,11 +257,11 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	/**
 	 * Custom fill formatter which allow fill chart from bottom
 	 */
-	protected class CustomFillFormatter implements FillFormatter {
-
-		@Override
-		public float getFillLinePosition(LineDataSet dataSet, LineData data, float chartMaxY, float chartMinY) {
-			return chartMinY;
-		}
-	}
+//	protected class CustomFillFormatter implements FillFormatter {
+//
+//		@Override
+//		public float getFillLinePosition(LineDataSet dataSet, LineData data, float chartMaxY, float chartMinY) {
+//			return chartMinY;
+//		}
+//	}
 }
