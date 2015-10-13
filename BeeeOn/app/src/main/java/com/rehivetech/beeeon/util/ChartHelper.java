@@ -9,7 +9,9 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.ValueFormatter;
+import com.github.mikephil.charting.formatter.FillFormatter;
+import com.github.mikephil.charting.formatter.YAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.view.ChartMarkerView;
@@ -36,7 +38,7 @@ final public class ChartHelper {
 	 * @param controller Controller instance
 	 */
 	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels, Controller controller) {
-		ValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
+		YAxisValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
@@ -110,6 +112,7 @@ final public class ChartHelper {
 			if (filled) {
 				((LineDataSet) dataset).setDrawFilled(true);
 				((LineDataSet) dataset).setFillColor(fillColor);
+				((LineDataSet) dataset).setFillFormatter(new CustomFillFormatter());
 			}
 		}
 		dataset.setColor(color);
@@ -124,31 +127,41 @@ final public class ChartHelper {
 	 * @param controller Controller instance
 	 * @return specific valueFormatter
 	 */
-	public static ValueFormatter getValueFormatterInstance(final BaseValue baseValue, final Context context, Controller controller) {
+	public static YAxisValueFormatter getValueFormatterInstance(final BaseValue baseValue, final Context context, Controller controller) {
 		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), context);
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
-				return new ValueFormatter() {
+				return new YAxisValueFormatter() {
 					@Override
-					public String getFormattedValue(float value) {
+					public String getFormattedValue(float value, YAxis yAxis) {
 						return String.format("%.0f.", yLabels.size() - value);
 					}
 				};
 			}
-			return new ValueFormatter() {
-
+			return new YAxisValueFormatter() {
 				@Override
-				public String getFormattedValue(float value) {
+				public String getFormattedValue(float value, YAxis yAxis) {
 					return context.getString(yLabels.get((int) value).getStringResource());
 				}
 			};
 		}
-		return new ValueFormatter() {
+		return new YAxisValueFormatter() {
 			@Override
-			public String getFormattedValue(float value) {
+			public String getFormattedValue(float value, YAxis yAxis) {
 				return value + unitsHelper.getStringUnit(baseValue);
 			}
 		};
+	}
+
+	/**
+	 * Custom fill formatter which allow fill chart from bottom
+	 */
+	private static class CustomFillFormatter implements FillFormatter {
+
+		@Override
+		public float getFillLinePosition(LineDataSet dataSet, LineDataProvider dataProvider) {
+			return dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum;
+		}
 	}
 }

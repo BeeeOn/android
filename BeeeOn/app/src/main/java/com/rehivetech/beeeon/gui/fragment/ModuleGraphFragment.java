@@ -20,7 +20,6 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.utils.FillFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
@@ -150,7 +149,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		//set chart
 		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller);
-		mChart.setFillFormatter(new CustomFillFormatter());
+//		mChart.setFillFormatter(new CustomFillFormatter());
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
@@ -206,10 +205,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 			BarData barData = new BarData(xVals, (BarDataSet) mDataSet);
 			data.setData(barData);
 		} else {
-			if (mDataSet.getYVals().size() < 50) {
-				((LineDataSet) mDataSet).setDrawCubic(true);
-				((LineDataSet) mDataSet).setCubicIntensity(0.05f);
-			}
 			LineData lineData = new LineData(xVals, (LineDataSet) mDataSet);
 			data.setData(lineData);
 		}
@@ -253,16 +248,5 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(getModuleLogTask, pair);
-	}
-
-	/**
-	 * Custom fill formatter which allow fill chart from bottom
-	 */
-	protected class CustomFillFormatter implements FillFormatter {
-
-		@Override
-		public float getFillLinePosition(LineDataSet dataSet, LineData data, float chartMaxY, float chartMinY) {
-			return chartMinY;
-		}
 	}
 }
