@@ -159,7 +159,7 @@ public class WidgetClockData extends WidgetData {
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if (this.widgetLayout == R.layout.widget_data_clock_3x2) {
-				if (dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
+				if (dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.widget_module_icon, View.VISIBLE);
 			} else if (this.widgetLayout == R.layout.widget_data_clock_2x2) {
 				dev.setValueUnitSize(R.dimen.abc_text_size_caption_material);
 			}

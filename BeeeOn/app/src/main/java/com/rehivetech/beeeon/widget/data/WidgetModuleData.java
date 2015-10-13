@@ -34,7 +34,7 @@ public class WidgetModuleData extends WidgetData {
 		super(widgetId, context, unitsHelper, timeHelper);
 
 		widgetModules = new ArrayList<>();
-		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
+		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.widget_value_container, unitsHelper, timeHelper, settings));
 
 		mDevices = new ArrayList<>();
 	}
@@ -82,9 +82,9 @@ public class WidgetModuleData extends WidgetData {
 	@Override
 	protected void renderLayout() {
 		// -------------------- initialize layout
-		mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
+		mBuilder.setOnClickListener(R.id.widget_options, mConfigurationPendingIntent);
 		mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
-		mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
+		mBuilder.setOnClickListener(R.id.widget_refresh, mRefreshPendingIntent);
 
 		if (widgetGateId.isEmpty()) return;
 
@@ -93,13 +93,13 @@ public class WidgetModuleData extends WidgetData {
 		boolean isOnlyOne = true;
 		for (WidgetModulePersistence dev : widgetModules) {
 			// detail activity
-			mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
-			mBuilder.setOnClickListener(R.id.menu_empty_listview_login_name_text, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.widget_module_icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.widget_module_name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
 
 			// when only 1 module is in the widget - we assume that we need icon and name
 			if (isOnlyOne) {
-				mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.ic_val_unknown : dev.icon);
-				mBuilder.setTextViewText(R.id.menu_empty_listview_login_name_text, dev.getName());
+				mBuilder.setImage(R.id.widget_module_icon, dev.icon == 0 ? R.drawable.ic_val_unknown : dev.icon);
+				mBuilder.setTextViewText(R.id.widget_module_name, dev.getName());
 				isOnlyOne = false;
 			}
 

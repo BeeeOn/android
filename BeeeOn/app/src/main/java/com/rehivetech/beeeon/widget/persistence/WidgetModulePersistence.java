@@ -218,14 +218,14 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 			mBuilder.loadRootView(R.layout.widget_persistence_module_value_unit);
 
 			// if location set, show the icon
-			if (locationIcon > 0) mBuilder.setImage(R.id.icon, locationIcon);
+			if (locationIcon > 0) mBuilder.setImage(R.id.widget_module_icon, locationIcon);
 
 			if (mIsCached) {
-				mBuilder.setTextViewText(R.id.value, getValue());
-				mBuilder.setTextViewText(R.id.unit, getUnit() + cachedString);
+				mBuilder.setTextViewText(R.id.widget_module_value, getValue());
+				mBuilder.setTextViewText(R.id.widget_module_unit, getUnit() + cachedString);
 			} else {
-				mBuilder.setTextViewText(R.id.value, getValue());
-				mBuilder.setTextViewText(R.id.unit, getUnit());
+				mBuilder.setTextViewText(R.id.widget_module_value, getValue());
+				mBuilder.setTextViewText(R.id.widget_module_unit, getUnit());
 			}
 		}
 
@@ -250,15 +250,15 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	public void setValueUnitSize(int dimensionResource) {
 		if (containerType != VALUE_UNIT) return;
 
-		mBuilder.setTextViewTextSize(R.id.value, dimensionResource);
-		mBuilder.setTextViewTextSize(R.id.unit, dimensionResource);
+		mBuilder.setTextViewTextSize(R.id.widget_module_value, dimensionResource);
+		mBuilder.setTextViewTextSize(R.id.widget_module_unit, dimensionResource);
 	}
 
 	public void setValueUnitColor(int colorResource) {
 		if (containerType != VALUE_UNIT) return;
 
-		mBuilder.setTextViewColor(R.id.value, colorResource);
-		mBuilder.setTextViewColor(R.id.unit, colorResource);
+		mBuilder.setTextViewColor(R.id.widget_module_value, colorResource);
+		mBuilder.setTextViewColor(R.id.widget_module_unit, colorResource);
 	}
 
 	/**

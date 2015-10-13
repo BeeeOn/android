@@ -12,7 +12,7 @@
 		android:layout_height="wrap_content"
 		android:minHeight="140dp"
 		android:background="@drawable/widget_bg"
-		android:id="@+id/layout"
+		android:id="@+id/widget_layout"
 		android:layout_gravity="center"
 		>
 
@@ -28,7 +28,7 @@
 			>
 
 			<ImageView
-				android:id="@+id/icon"
+				android:id="@+id/widget_location_icon"
 				android:layout_width="38dp"
 				android:layout_height="match_parent"
 				android:paddingLeft="8dp"
@@ -42,7 +42,7 @@
 				/>
 
 			<TextView
-				android:id="@+id/name"
+				android:id="@+id/widget_location_name"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0.5"
@@ -56,7 +56,7 @@
 				/>
 
 			<ImageView
-				android:id="@+id/refresh"
+				android:id="@+id/widget_refresh"
 				style="@style/AppWidget.ActionButton"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
@@ -65,7 +65,7 @@
 				/>
 
 			<ImageView
-				android:id="@+id/options"
+				android:id="@+id/widget_options"
 				style="@style/AppWidget.ActionButton.Overflow"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
@@ -89,7 +89,7 @@
 			/>
 
 		<TextView
-			android:id="@+id/empty_view"
+			android:id="@+id/widget_empty_view"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:gravity="center"
@@ -110,7 +110,7 @@
 
 		<!-- shadow below header -->
 		<ImageView
-			android:id="@+id/toolbar_shadow"
+			android:id="@+id/widget_toolbar_shadow"
 			android:layout_width="wrap_content"
 			android:layout_height="6dp"
 			android:layout_below="@id/widget_header"

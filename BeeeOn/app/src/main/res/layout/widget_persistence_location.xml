@@ -8,7 +8,7 @@
 	>
 
 	<ImageView
-		android:id="@+id/icon"
+		android:id="@+id/widget_location_icon"
 		android:layout_width="24dp"
 		android:layout_height="24dp"
 		android:src="@drawable/ic_loc_unknown"
@@ -16,7 +16,7 @@
 		/>
 
 	<TextView
-		android:id="@+id/name"
+		android:id="@+id/widget_location_name"
 		android:layout_width="wrap_content"
 		android:layout_height="match_parent"
 		android:textSize="@dimen/abc_text_size_caption_material"
