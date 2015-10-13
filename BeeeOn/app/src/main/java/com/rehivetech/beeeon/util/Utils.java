@@ -170,8 +170,7 @@ final public class Utils {
 		writer.flush();
 		writer.close();
 
-		//return new JSONObject(getUtf8StringFromInputStream(connection.getContent());
-		return new JSONObject((String) connection.getContent());
+		return new JSONObject(getUtf8StringFromInputStream((InputStream) connection.getContent()));
 	}
 
 	/**
