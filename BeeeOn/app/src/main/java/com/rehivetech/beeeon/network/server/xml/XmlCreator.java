@@ -32,43 +32,37 @@ public class XmlCreator {
 
 	protected static final String ns = null;
 
-	public static abstract class Base {
+	public static class Request {
+		public final StringWriter writer;
+		public final XmlSerializer serializer;
+		public final String namespace;
+		public final String type;
 
-		protected static XmlSerializer beginXml(StringWriter writer, String namespace, String type, @Nullable String sessionId) throws IOException {
-			XmlSerializer serializer = Xml.newSerializer();
-
-			serializer.setOutput(writer);
-			serializer.startDocument("UTF-8", null);
-
-			serializer.startTag(ns, "request");
-			serializer.attribute(ns, "version", Network.PROTOCOL_VERSION); // every time use version
-			serializer.attribute(ns, "ns", namespace);
-			serializer.attribute(ns, "type", type);
-			if (sessionId != null) {
-				serializer.attribute(ns, "sessionid", sessionId);
-			}
-
-			return serializer;
+		public Request(XmlSerializer serializer, String namespace, String type) {
+			this.writer = new StringWriter();
+			this.serializer = serializer;
+			this.namespace = namespace;
+			this.type = type;
 		}
 
-		protected static String endXml(StringWriter writer, XmlSerializer serializer) throws IOException {
-			serializer.text("");
-			serializer.endTag(ns, "request");
-			serializer.endDocument();
+		protected static String endXml(Request req) throws IOException {
+			req.serializer.text("");
+			req.serializer.endTag(ns, "request");
+			req.serializer.endDocument();
 
-			return writer.toString();
+			return req.writer.toString();
 		}
 
-		protected static void startTag(XmlSerializer serializer, String tag) throws IOException {
-			serializer.startTag(ns, tag);
+		protected static void startTag(Request req, String tag) throws IOException {
+			req.serializer.startTag(ns, tag);
 		}
 
-		protected static void endTag(XmlSerializer serializer, String tag) throws IOException {
-			serializer.endTag(ns, tag);
+		protected static void endTag(Request req, String tag) throws IOException {
+			req.serializer.endTag(ns, tag);
 		}
 
-		protected static void addTag(XmlSerializer serializer, String tag, String... attributes) throws IOException {
-			startTag(serializer, tag);
+		protected static void addTag(Request req, String tag, String... attributes) throws IOException {
+			startTag(req, tag);
 
 			if (attributes.length % 2 != 0) { // odd
 				throw new IllegalArgumentException("Invalid attributes count");
@@ -79,21 +73,79 @@ public class XmlCreator {
 				String value = attributes[i + 1];
 
 				if (value != null)
-					serializer.attribute(ns, name, value);
+					req.serializer.attribute(ns, name, value);
 			}
 
-			endTag(serializer, tag);
+			endTag(req, tag);
 		}
 
-		protected static void addAttribute(XmlSerializer serializer, String name, String value) throws IOException {
-			serializer.attribute(ns, name, value);
+		protected static void addAttribute(Request req, String name, String value) throws IOException {
+			req.serializer.attribute(ns, name, value);
+		}
+	}
+
+	public static abstract class Base {
+
+		protected static Request beginXml(String namespace, String type, @Nullable String sessionId) throws IOException {
+			Request req = new Request(Xml.newSerializer(), namespace, type);
+
+			req.serializer.setOutput(req.writer);
+			req.serializer.startDocument("UTF-8", null);
+
+			req.serializer.startTag(ns, "request");
+			req.serializer.attribute(ns, "version", Network.PROTOCOL_VERSION); // every time use version
+			req.serializer.attribute(ns, "ns", namespace);
+			req.serializer.attribute(ns, "type", type);
+			if (sessionId != null) {
+				req.serializer.attribute(ns, "sessionid", sessionId);
+			}
+
+			return req;
+		}
+
+		protected static String endXml(Request req) throws IOException {
+			req.serializer.text("");
+			req.serializer.endTag(ns, "request");
+			req.serializer.endDocument();
+
+			return req.writer.toString();
+		}
+
+		protected static void startTag(Request req, String tag) throws IOException {
+			req.serializer.startTag(ns, tag);
+		}
+
+		protected static void endTag(Request req, String tag) throws IOException {
+			req.serializer.endTag(ns, tag);
+		}
+
+		protected static void addTag(Request req, String tag, String... attributes) throws IOException {
+			startTag(req, tag);
+
+			if (attributes.length % 2 != 0) { // odd
+				throw new IllegalArgumentException("Invalid attributes count");
+			}
+
+			for (int i = 0; i < attributes.length; i += 2) { // take pair of args
+				String name = attributes[i];
+				String value = attributes[i + 1];
+
+				if (value != null)
+					req.serializer.attribute(ns, name, value);
+			}
+
+			endTag(req, tag);
+		}
+
+		protected static void addAttribute(Request req, String name, String value) throws IOException {
+			req.serializer.attribute(ns, name, value);
 		}
 	}
 
 	public static class Accounts extends Base {
 
-		private static XmlSerializer beginXml(StringWriter writer, String type, @Nullable String sessionId) throws IOException {
-			return Base.beginXml(writer, "accounts", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
+			return Base.beginXml("accounts", type, sessionId);
 		}
 
 		/**
@@ -103,23 +155,22 @@ public class XmlCreator {
 		 * @return xml with signUp message
 		 */
 		public static String register(IAuthProvider authProvider) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "register", null);
+				Request req = beginXml("register", null);
 
-				startTag(serializer, "provider");
-				addAttribute(serializer, "name", authProvider.getProviderName());
+				startTag(req, "provider");
+				addAttribute(req, "name", authProvider.getProviderName());
 
 				for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
 					String key = entry.getKey();
 					String value = entry.getValue();
 
 					if (key != null && value != null)
-						addAttribute(serializer, key, value);
+						addAttribute(req, key, value);
 				}
-				endTag(serializer, "provider");
+				endTag(req, "provider");
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -133,25 +184,24 @@ public class XmlCreator {
 		 * @return xml with signIn message
 		 */
 		public static String login(String phone, IAuthProvider authProvider) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "login", null);
+				Request req = beginXml("login", null);
 
-				startTag(serializer, "provider");
-				addAttribute(serializer, "name", authProvider.getProviderName());
+				startTag(req, "provider");
+				addAttribute(req, "name", authProvider.getProviderName());
 
 				for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
 					String key = entry.getKey();
 					String value = entry.getValue();
 
 					if (key != null && value != null)
-						addAttribute(serializer, key, value);
+						addAttribute(req, key, value);
 				}
-				endTag(serializer, "provider");
+				endTag(req, "provider");
 
-				addTag(serializer, "phone", "name", phone);
+				addTag(req, "phone", "name", phone);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -164,10 +214,9 @@ public class XmlCreator {
 		 * @return xml with getUserInfo message
 		 */
 		public static String getMyProfile(String bt) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getmyprofile", bt);
-				return endXml(writer, serializer);
+				Request req = beginXml("getmyprofile", bt);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -181,10 +230,9 @@ public class XmlCreator {
 		 * @since 2.5
 		 */
 		public static String logout(String bt) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "logout", bt);
-				return endXml(writer, serializer);
+				Request req = beginXml("logout", bt);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -197,23 +245,22 @@ public class XmlCreator {
 		 * @return xml with joinAccount message
 		 */
 		public static String connectAuthProvider(String bt, IAuthProvider authProvider) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "connectauthprovider", bt);
+				Request req = beginXml("connectauthprovider", bt);
 
-				startTag(serializer, "provider");
-				addAttribute(serializer, "name", authProvider.getProviderName());
+				startTag(req, "provider");
+				addAttribute(req, "name", authProvider.getProviderName());
 
 				for (Map.Entry<String, String> entry : authProvider.getParameters().entrySet()) {
 					String key = entry.getKey();
 					String value = entry.getValue();
 
 					if (key != null && value != null)
-						addAttribute(serializer, key, value);
+						addAttribute(req, key, value);
 				}
-				endTag(serializer, "provider");
+				endTag(req, "provider");
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -227,14 +274,13 @@ public class XmlCreator {
 		 * @return xml with cutAccount message
 		 */
 		public static String disconnectAuthProvider(String bt, String providerName) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "disconnectAuthProvider", bt);
+				Request req = beginXml("disconnectAuthProvider", bt);
 
-				addTag(serializer, "provider",
+				addTag(req, "provider",
 						"name", providerName);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -243,8 +289,8 @@ public class XmlCreator {
 
 	public static class Devices extends Base {
 
-		private static XmlSerializer beginXml(StringWriter writer, String type, @Nullable String sessionId) throws IOException {
-			return Base.beginXml(writer, "devices", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
+			return Base.beginXml("devices", type, sessionId);
 		}
 
 		/**
@@ -256,12 +302,11 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String getAll(String bt, String gateId) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getall", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("getall", bt);
+				addAttribute(req, "gateid", gateId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -276,12 +321,11 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String getNew(String bt, String gateId) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getnew", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("getnew", bt);
+				addAttribute(req, "gateid", gateId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -299,17 +343,16 @@ public class XmlCreator {
 			if (devices.size() < 1)
 				throw new IllegalArgumentException("Expected more than zero devices");
 
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "get", bt);
+				Request req = beginXml("get", bt);
 
 				for (Device device : devices) {
-					addTag(serializer, "device",
+					addTag(req, "device",
 							"gateid", device.getGateId(),
 							"euid", device.getAddress());
 				}
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -330,12 +373,11 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String getLog(String bt, String gateId, String deviceId, String moduleId, String from, String to, String funcType, int interval) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getlog", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("getlog", bt);
+				addAttribute(req, "gateid", gateId);
 
-				addTag(serializer, "logs",
+				addTag(req, "logs",
 						"from", from,
 						"to", to,
 						"ftype", funcType,
@@ -343,7 +385,7 @@ public class XmlCreator {
 						"deviceeuid", deviceId,
 						"moduleid", moduleId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -359,22 +401,21 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String update(String bt, String gateId, List<Device> devices) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "update", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("update", bt);
+				addAttribute(req, "gateid", gateId);
 
 				for (Device device : devices) {
 					RefreshInterval refresh = device.getRefresh();
 
-					addTag(serializer, "device",
+					addTag(req, "device",
 							"euid", device.getAddress(),
 							"locationid", device.getLocationId(),
 							"refresh", refresh != null ? Integer.toString(refresh.getInterval()) : null, // FIXME: Remove this, it must be saved as actor switching
 							"name", device.getCustomName());
 				}
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -391,17 +432,16 @@ public class XmlCreator {
 		 */
 		// FIXME: Use ModuleId instead
 		public static String setState(String bt, String gateId, Module module) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "setstate", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("setstate", bt);
+				addAttribute(req, "gateid", gateId);
 
-				addTag(serializer, "device",
+				addTag(req, "device",
 						"euid", module.getDevice().getId(),
 						"moduleid", module.getId(),
 						"value", String.valueOf(module.getValue().getDoubleValue()));
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -416,15 +456,14 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String unregister(String bt, Device device) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "unregister", bt);
-				addAttribute(serializer, "gateid", device.getGateId());
+				Request req = beginXml("unregister", bt);
+				addAttribute(req, "gateid", device.getGateId());
 
-				addTag(serializer, "device",
+				addTag(req, "device",
 						"euid", device.getAddress());
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -433,31 +472,30 @@ public class XmlCreator {
 
 	public static class Gates extends Base {
 
-		private static XmlSerializer beginXml(StringWriter writer, String type, @Nullable String sessionId) throws IOException {
-			return Base.beginXml(writer, "gates", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
+			return Base.beginXml("gates", type, sessionId);
 		}
 
 		/**
 		 * Method create XML for AddGate message
 		 *
-		 * @param bt       userID of user
-		 * @param aid      gateId of actual gate
-		 * @param gateName name of gate
-		 * @param offsetInMinutes
+		 * @param bt              userID of user
+		 * @param aid             gateId of actual gate
+		 * @param gateName        name of gate
+		 * @param offsetInMinutes timezone of gate as offset in minutes
 		 * @return AddGate message
 		 * @since 2.2
 		 */
 		public static String register(String bt, String aid, String gateName, int offsetInMinutes) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "register", bt);
+				Request req = beginXml("register", bt);
 
-				addTag(serializer, "gate",
+				addTag(req, "gate",
 						"id", aid,
 						"name", gateName,
 						"timezone", String.valueOf(offsetInMinutes));
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -472,14 +510,13 @@ public class XmlCreator {
 		 * @since 2.4
 		 */
 		public static String unregister(String bt, String aid) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "unregister", bt);
+				Request req = beginXml("unregister", bt);
 
-				addTag(serializer, "gate",
+				addTag(req, "gate",
 						"id", aid);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -493,10 +530,9 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String getAll(String bt) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getall", bt);
-				return endXml(writer, serializer);
+				Request req = beginXml("getall", bt);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -510,14 +546,13 @@ public class XmlCreator {
 		 * @since 2.5
 		 */
 		public static String get(String bt, String gateId) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "get", bt);
+				Request req = beginXml("get", bt);
 
-				addTag(serializer, "gate",
+				addTag(req, "gate",
 						"id", gateId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -532,16 +567,15 @@ public class XmlCreator {
 		 * @since 2.5
 		 */
 		public static String update(String bt, Gate gate) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "update", bt);
+				Request req = beginXml("update", bt);
 
-				addTag(serializer, "gate",
+				addTag(req, "gate",
 						"id", gate.getId(),
 						"name", gate.getName(),
 						"timezone", String.valueOf(gate.getUtcOffset()));
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -556,14 +590,13 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String startListen(String bt, String gateId) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "startlisten", bt);
+				Request req = beginXml("startlisten", bt);
 
-				addTag(serializer, "gate",
+				addTag(req, "gate",
 						"id", gateId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -572,8 +605,8 @@ public class XmlCreator {
 
 	public static class GateUsers extends Base {
 
-		private static XmlSerializer beginXml(StringWriter writer, String type, @Nullable String sessionId) throws IOException {
-			return Base.beginXml(writer, "gateusers", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
+			return Base.beginXml("gateusers", type, sessionId);
 		}
 
 		/**
@@ -586,18 +619,17 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String invite(String bt, String gateId, ArrayList<User> users) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "invite", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("invite", bt);
+				addAttribute(req, "gateid", gateId);
 
 				for (User user : users) {
-					addTag(serializer, "user",
+					addTag(req, "user",
 							"email", user.getEmail(),
 							"permission", user.getRole().getId());
 				}
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -613,18 +645,17 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String updateAccess(String bt, String gateId, ArrayList<User> users) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "updateaccess", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("updateaccess", bt);
+				addAttribute(req, "gateid", gateId);
 
 				for (User user : users) {
-					addTag(serializer, "user",
+					addTag(req, "user",
 							"id", user.getId(),
 							"permission", user.getRole().getId());
 				}
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -640,17 +671,16 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String remove(String bt, String gateId, List<User> users) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "remove", bt);
-				serializer.attribute(ns, "gateid", gateId);
+				Request req = beginXml("remove", bt);
+				addAttribute(req, "gateid", gateId);
 
 				for (User user : users) {
-					addTag(serializer, "user",
+					addTag(req, "user",
 							"id", user.getId());
 				}
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -665,12 +695,11 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String getAll(String bt, String gateId) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getall", bt);
-				serializer.attribute(ns, "gateid", gateId);
+				Request req = beginXml("getall", bt);
+				addAttribute(req, "gateid", gateId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -679,8 +708,8 @@ public class XmlCreator {
 
 	public static class Locations extends Base {
 
-		private static XmlSerializer beginXml(StringWriter writer, String type, @Nullable String sessionId) throws IOException {
-			return Base.beginXml(writer, "locations", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
+			return Base.beginXml("locations", type, sessionId);
 		}
 
 		/**
@@ -692,16 +721,15 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String create(String bt, Location location) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "create", bt);
-				addAttribute(serializer, "gateid", location.getGateId());
+				Request req = beginXml("create", bt);
+				addAttribute(req, "gateid", location.getGateId());
 
-				addTag(serializer, "location",
+				addTag(req, "location",
 						"type", location.getType(),
 						"name", location.getName());
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -716,17 +744,16 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String update(String bt, Location location) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "update", bt);
-				addAttribute(serializer, "gateid", location.getGateId());
+				Request req = beginXml("update", bt);
+				addAttribute(req, "gateid", location.getGateId());
 
-				addTag(serializer, "location",
+				addTag(req, "location",
 						"id", location.getId(),
 						"type", location.getType(),
 						"name", location.getName());
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -741,15 +768,14 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String delete(String bt, Location location) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "delete", bt);
-				addAttribute(serializer, "gateid", location.getGateId());
+				Request req = beginXml("delete", bt);
+				addAttribute(req, "gateid", location.getGateId());
 
-				addTag(serializer, "location",
+				addTag(req, "location",
 						"id", location.getId());
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -764,12 +790,11 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String getAll(String bt, String gateId) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getall", bt);
-				addAttribute(serializer, "gateid", gateId);
+				Request req = beginXml("getall", bt);
+				addAttribute(req, "gateid", gateId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -779,8 +804,8 @@ public class XmlCreator {
 
 	public static class Notifications extends Base {
 
-		private static XmlSerializer beginXml(StringWriter writer, String type, @Nullable String sessionId) throws IOException {
-			return Base.beginXml(writer, "notifications", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
+			return Base.beginXml("notifications", type, sessionId);
 		}
 
 		/**
@@ -792,16 +817,15 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String deleteGCMID(String userId, String gcmid) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "unregisterservice", null);
+				Request req = beginXml("unregisterservice", null);
 
-				addTag(serializer, "service",
+				addTag(req, "service",
 						"name", "gcm",
 						"id", gcmid,
 						"userid", userId);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -816,15 +840,14 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String setGCMID(String bt, String gcmid) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "registerservice", bt);
+				Request req = beginXml("registerservice", bt);
 
-				addTag(serializer, "service",
+				addTag(req, "service",
 						"name", "gcm",
 						"id", gcmid);
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -838,10 +861,9 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		public static String getLatest(String bt) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "getlatest", bt);
-				return endXml(writer, serializer);
+				Request req = beginXml("getlatest", bt);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
@@ -850,38 +872,36 @@ public class XmlCreator {
 		/**
 		 * Method create XML of NotifRead message
 		 *
-		 * @param bt   userID of user
+		 * @param bt  userID of user
 		 * @param ids list of gcmID of read notification
 		 * @return message NotifRead
 		 * @since 2.2
 		 */
 		public static String read(String bt, List<String> ids) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "read", bt);
+				Request req = beginXml("read", bt);
 
 				for (String id : ids) {
-					addTag(serializer, "notification",
+					addTag(req, "notification",
 							"id", id);
 				}
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
 		}
 
 		public static String delete(String bt, List<String> ids) {
-			StringWriter writer = new StringWriter();
 			try {
-				XmlSerializer serializer = beginXml(writer, "delete", bt);
+				Request req = beginXml("delete", bt);
 
 				for (String id : ids) {
-					addTag(serializer, "notification",
+					addTag(req, "notification",
 							"id", id);
 				}
 
-				return endXml(writer, serializer);
+				return endXml(req);
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
