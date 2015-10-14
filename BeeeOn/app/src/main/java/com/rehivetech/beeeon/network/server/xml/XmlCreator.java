@@ -37,16 +37,28 @@ public class XmlCreator {
 		private final XmlSerializer mSerializer;
 		public final String namespace;
 		public final String type;
+		public final XmlParser.Result expectedResult;
 
-		private Request(XmlSerializer serializer, String namespace, String type) {
+		private String mMessage;
+
+		private Request(XmlSerializer serializer, String namespace, String type, XmlParser.Result expectedResult) {
 			this.mWriter = new StringWriter();
 			this.mSerializer = serializer;
 			this.namespace = namespace;
 			this.type = type;
+			this.expectedResult = expectedResult;
 		}
 
-		protected static Request beginXml(String namespace, String type, @Nullable String sessionId) throws IOException {
-			Request req = new Request(Xml.newSerializer(), namespace, type);
+		/**
+		 * @return Created request message (string containing xml request) or null when request is not ready yet (was not called {@link #endXml()} method on it)
+		 */
+		@Nullable
+		public String getMessage() {
+			return mMessage;
+		}
+
+		protected static Request beginXml(String namespace, String type, @Nullable String sessionId, XmlParser.Result expectedResult) throws IOException {
+			Request req = new Request(Xml.newSerializer(), namespace, type, expectedResult);
 
 			req.mSerializer.setOutput(req.mWriter);
 			req.mSerializer.startDocument("UTF-8", null);
@@ -62,12 +74,14 @@ public class XmlCreator {
 			return req;
 		}
 
-		protected String endXml() throws IOException {
+		protected Request endXml() throws IOException {
 			mSerializer.text("");
 			mSerializer.endTag(ns, "request");
 			mSerializer.endDocument();
 
-			return mWriter.toString();
+			// Create the data
+			mMessage = mWriter.toString();
+			return this;
 		}
 
 		protected void startTag(String tag) throws IOException {
@@ -103,8 +117,8 @@ public class XmlCreator {
 
 	public static class Accounts {
 
-		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
-			return Request.beginXml("accounts", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId, XmlParser.Result expectedResult) throws IOException {
+			return Request.beginXml("accounts", type, sessionId, expectedResult);
 		}
 
 		/**
@@ -113,9 +127,9 @@ public class XmlCreator {
 		 * @param authProvider provider of authentication with parameters to send
 		 * @return xml with signUp message
 		 */
-		public static String register(IAuthProvider authProvider) {
+		public static Request register(IAuthProvider authProvider) {
 			try {
-				Request req = beginXml("register", null);
+				Request req = beginXml("register", null, XmlParser.Result.OK);
 
 				req.startTag("provider");
 				req.addAttribute("name", authProvider.getProviderName());
@@ -142,9 +156,9 @@ public class XmlCreator {
 		 * @param authProvider provider of authentication with parameters to send
 		 * @return xml with signIn message
 		 */
-		public static String login(String phone, IAuthProvider authProvider) {
+		public static Request login(String phone, IAuthProvider authProvider) {
 			try {
-				Request req = beginXml("login", null);
+				Request req = beginXml("login", null, XmlParser.Result.DATA);
 
 				req.startTag("provider");
 				req.addAttribute("name", authProvider.getProviderName());
@@ -172,9 +186,9 @@ public class XmlCreator {
 		 * @param bt beeeon Token (session Id)
 		 * @return xml with getUserInfo message
 		 */
-		public static String getMyProfile(String bt) {
+		public static Request getMyProfile(String bt) {
 			try {
-				Request req = beginXml("getmyprofile", bt);
+				Request req = beginXml("getmyprofile", bt, XmlParser.Result.DATA);
 				return req.endXml();
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
@@ -188,9 +202,9 @@ public class XmlCreator {
 		 * @return xml with logout message
 		 * @since 2.5
 		 */
-		public static String logout(String bt) {
+		public static Request logout(String bt) {
 			try {
-				Request req = beginXml("logout", bt);
+				Request req = beginXml("logout", bt, XmlParser.Result.OK);
 				return req.endXml();
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
@@ -203,9 +217,9 @@ public class XmlCreator {
 		 * @param authProvider provider of authentication with parameters to send
 		 * @return xml with joinAccount message
 		 */
-		public static String connectAuthProvider(String bt, IAuthProvider authProvider) {
+		public static Request connectAuthProvider(String bt, IAuthProvider authProvider) {
 			try {
-				Request req = beginXml("connectauthprovider", bt);
+				Request req = beginXml("connectauthprovider", bt, XmlParser.Result.OK);
 
 				req.startTag("provider");
 				req.addAttribute("name", authProvider.getProviderName());
@@ -232,9 +246,9 @@ public class XmlCreator {
 		 * @param providerName name of service (beeeon, google, facebook, ...)
 		 * @return xml with cutAccount message
 		 */
-		public static String disconnectAuthProvider(String bt, String providerName) {
+		public static Request disconnectAuthProvider(String bt, String providerName) {
 			try {
-				Request req = beginXml("disconnectAuthProvider", bt);
+				Request req = beginXml("disconnectAuthProvider", bt, XmlParser.Result.OK);
 
 				req.addTag("provider",
 						"name", providerName);
@@ -248,8 +262,8 @@ public class XmlCreator {
 
 	public static class Devices {
 
-		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
-			return Request.beginXml("devices", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId, XmlParser.Result expectedResult) throws IOException {
+			return Request.beginXml("devices", type, sessionId, expectedResult);
 		}
 
 		/**
@@ -260,9 +274,9 @@ public class XmlCreator {
 		 * @return XML of GetAllDevices message
 		 * @since 2.2
 		 */
-		public static String getAll(String bt, String gateId) {
+		public static Request getAll(String bt, String gateId) {
 			try {
-				Request req = beginXml("getall", bt);
+				Request req = beginXml("getall", bt, XmlParser.Result.DATA);
 				req.addAttribute("gateid", gateId);
 
 				return req.endXml();
@@ -279,9 +293,9 @@ public class XmlCreator {
 		 * @return XML of GetNewDevices message
 		 * @since 2.2
 		 */
-		public static String getNew(String bt, String gateId) {
+		public static Request getNew(String bt, String gateId) {
 			try {
-				Request req = beginXml("getnew", bt);
+				Request req = beginXml("getnew", bt, XmlParser.Result.DATA);
 				req.addAttribute("gateid", gateId);
 
 				return req.endXml();
@@ -298,12 +312,12 @@ public class XmlCreator {
 		 * @return update message
 		 * @since 2.2
 		 */
-		public static String get(String bt, List<Device> devices) {
+		public static Request get(String bt, List<Device> devices) {
 			if (devices.size() < 1)
 				throw new IllegalArgumentException("Expected more than zero devices");
 
 			try {
-				Request req = beginXml("get", bt);
+				Request req = beginXml("get", bt, XmlParser.Result.DATA);
 
 				for (Device device : devices) {
 					req.addTag("device",
@@ -331,9 +345,9 @@ public class XmlCreator {
 		 * @return GetLog message
 		 * @since 2.2
 		 */
-		public static String getLog(String bt, String gateId, String deviceId, String moduleId, String from, String to, String funcType, int interval) {
+		public static Request getLog(String bt, String gateId, String deviceId, String moduleId, String from, String to, String funcType, int interval) {
 			try {
-				Request req = beginXml("getlog", bt);
+				Request req = beginXml("getlog", bt, XmlParser.Result.DATA);
 				req.addAttribute("gateid", gateId);
 
 				req.addTag("logs",
@@ -359,9 +373,9 @@ public class XmlCreator {
 		 * @return UpdateDevice message
 		 * @since 2.2
 		 */
-		public static String update(String bt, String gateId, List<Device> devices) {
+		public static Request update(String bt, String gateId, List<Device> devices) {
 			try {
-				Request req = beginXml("update", bt);
+				Request req = beginXml("update", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", gateId);
 
 				for (Device device : devices) {
@@ -390,9 +404,9 @@ public class XmlCreator {
 		 * @since 2.2
 		 */
 		// FIXME: Use ModuleId instead
-		public static String setState(String bt, String gateId, Module module) {
+		public static Request setState(String bt, String gateId, Module module) {
 			try {
-				Request req = beginXml("setstate", bt);
+				Request req = beginXml("setstate", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", gateId);
 
 				req.addTag("device",
@@ -414,9 +428,9 @@ public class XmlCreator {
 		 * @return XML of DelDevice message
 		 * @since 2.2
 		 */
-		public static String unregister(String bt, Device device) {
+		public static Request unregister(String bt, Device device) {
 			try {
-				Request req = beginXml("unregister", bt);
+				Request req = beginXml("unregister", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", device.getGateId());
 
 				req.addTag("device",
@@ -431,8 +445,8 @@ public class XmlCreator {
 
 	public static class Gates {
 
-		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
-			return Request.beginXml("gates", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId, XmlParser.Result expectedResult) throws IOException {
+			return Request.beginXml("gates", type, sessionId, expectedResult);
 		}
 
 		/**
@@ -445,9 +459,9 @@ public class XmlCreator {
 		 * @return AddGate message
 		 * @since 2.2
 		 */
-		public static String register(String bt, String aid, String gateName, int offsetInMinutes) {
+		public static Request register(String bt, String aid, String gateName, int offsetInMinutes) {
 			try {
-				Request req = beginXml("register", bt);
+				Request req = beginXml("register", bt, XmlParser.Result.OK);
 
 				req.addTag("gate",
 						"id", aid,
@@ -468,9 +482,9 @@ public class XmlCreator {
 		 * @return xml with delAdapter message
 		 * @since 2.4
 		 */
-		public static String unregister(String bt, String aid) {
+		public static Request unregister(String bt, String aid) {
 			try {
-				Request req = beginXml("unregister", bt);
+				Request req = beginXml("unregister", bt, XmlParser.Result.OK);
 
 				req.addTag("gate",
 						"id", aid);
@@ -488,9 +502,9 @@ public class XmlCreator {
 		 * @return GetGates message
 		 * @since 2.2
 		 */
-		public static String getAll(String bt) {
+		public static Request getAll(String bt) {
 			try {
-				Request req = beginXml("getall", bt);
+				Request req = beginXml("getall", bt, XmlParser.Result.DATA);
 				return req.endXml();
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
@@ -504,9 +518,9 @@ public class XmlCreator {
 		 * @return GetGateInfo message
 		 * @since 2.5
 		 */
-		public static String get(String bt, String gateId) {
+		public static Request get(String bt, String gateId) {
 			try {
-				Request req = beginXml("get", bt);
+				Request req = beginXml("get", bt, XmlParser.Result.DATA);
 
 				req.addTag("gate",
 						"id", gateId);
@@ -525,9 +539,9 @@ public class XmlCreator {
 		 * @return SetGate message
 		 * @since 2.5
 		 */
-		public static String update(String bt, Gate gate) {
+		public static Request update(String bt, Gate gate) {
 			try {
-				Request req = beginXml("update", bt);
+				Request req = beginXml("update", bt, XmlParser.Result.OK);
 
 				req.addTag("gate",
 						"id", gate.getId(),
@@ -548,9 +562,9 @@ public class XmlCreator {
 		 * @return XML of GateListen message
 		 * @since 2.2
 		 */
-		public static String startListen(String bt, String gateId) {
+		public static Request startListen(String bt, String gateId) {
 			try {
-				Request req = beginXml("startlisten", bt);
+				Request req = beginXml("startlisten", bt, XmlParser.Result.OK);
 
 				req.addTag("gate",
 						"id", gateId);
@@ -564,8 +578,8 @@ public class XmlCreator {
 
 	public static class GateUsers {
 
-		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
-			return Request.beginXml("gateusers", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId, XmlParser.Result expectedResult) throws IOException {
+			return Request.beginXml("gateusers", type, sessionId, expectedResult);
 		}
 
 		/**
@@ -577,9 +591,9 @@ public class XmlCreator {
 		 * @return AddAcc message
 		 * @since 2.2
 		 */
-		public static String invite(String bt, String gateId, ArrayList<User> users) {
+		public static Request invite(String bt, String gateId, ArrayList<User> users) {
 			try {
-				Request req = beginXml("invite", bt);
+				Request req = beginXml("invite", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", gateId);
 
 				for (User user : users) {
@@ -603,9 +617,9 @@ public class XmlCreator {
 		 * @return SetAcc message
 		 * @since 2.2
 		 */
-		public static String updateAccess(String bt, String gateId, ArrayList<User> users) {
+		public static Request updateAccess(String bt, String gateId, ArrayList<User> users) {
 			try {
-				Request req = beginXml("updateaccess", bt);
+				Request req = beginXml("updateaccess", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", gateId);
 
 				for (User user : users) {
@@ -629,9 +643,9 @@ public class XmlCreator {
 		 * @return dellAcc message
 		 * @since 2.2
 		 */
-		public static String remove(String bt, String gateId, List<User> users) {
+		public static Request remove(String bt, String gateId, List<User> users) {
 			try {
-				Request req = beginXml("remove", bt);
+				Request req = beginXml("remove", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", gateId);
 
 				for (User user : users) {
@@ -653,9 +667,9 @@ public class XmlCreator {
 		 * @return GetAcc message
 		 * @since 2.2
 		 */
-		public static String getAll(String bt, String gateId) {
+		public static Request getAll(String bt, String gateId) {
 			try {
-				Request req = beginXml("getall", bt);
+				Request req = beginXml("getall", bt, XmlParser.Result.DATA);
 				req.addAttribute("gateid", gateId);
 
 				return req.endXml();
@@ -667,8 +681,8 @@ public class XmlCreator {
 
 	public static class Locations {
 
-		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
-			return Request.beginXml("locations", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId, XmlParser.Result expectedResult) throws IOException {
+			return Request.beginXml("locations", type, sessionId, expectedResult);
 		}
 
 		/**
@@ -679,9 +693,9 @@ public class XmlCreator {
 		 * @return created message
 		 * @since 2.2
 		 */
-		public static String create(String bt, Location location) {
+		public static Request create(String bt, Location location) {
 			try {
-				Request req = beginXml("create", bt);
+				Request req = beginXml("create", bt, XmlParser.Result.DATA);
 				req.addAttribute("gateid", location.getGateId());
 
 				req.addTag("location",
@@ -702,9 +716,9 @@ public class XmlCreator {
 		 * @return message SetRooms
 		 * @since 2.2
 		 */
-		public static String update(String bt, Location location) {
+		public static Request update(String bt, Location location) {
 			try {
-				Request req = beginXml("update", bt);
+				Request req = beginXml("update", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", location.getGateId());
 
 				req.addTag("location",
@@ -726,9 +740,9 @@ public class XmlCreator {
 		 * @return DelRoom message
 		 * @since 2.2
 		 */
-		public static String delete(String bt, Location location) {
+		public static Request delete(String bt, Location location) {
 			try {
-				Request req = beginXml("delete", bt);
+				Request req = beginXml("delete", bt, XmlParser.Result.OK);
 				req.addAttribute("gateid", location.getGateId());
 
 				req.addTag("location",
@@ -748,9 +762,9 @@ public class XmlCreator {
 		 * @return message GetRooms
 		 * @since 2.2
 		 */
-		public static String getAll(String bt, String gateId) {
+		public static Request getAll(String bt, String gateId) {
 			try {
-				Request req = beginXml("getall", bt);
+				Request req = beginXml("getall", bt, XmlParser.Result.DATA);
 				req.addAttribute("gateid", gateId);
 
 				return req.endXml();
@@ -763,8 +777,8 @@ public class XmlCreator {
 
 	public static class Notifications {
 
-		private static Request beginXml(String type, @Nullable String sessionId) throws IOException {
-			return Request.beginXml("notifications", type, sessionId);
+		private static Request beginXml(String type, @Nullable String sessionId, XmlParser.Result expectedResult) throws IOException {
+			return Request.beginXml("notifications", type, sessionId, expectedResult);
 		}
 
 		/**
@@ -775,9 +789,9 @@ public class XmlCreator {
 		 * @return message GCMID
 		 * @since 2.2
 		 */
-		public static String deleteGCMID(String userId, String gcmid) {
+		public static Request deleteGCMID(String userId, String gcmid) {
 			try {
-				Request req = beginXml("unregisterservice", null);
+				Request req = beginXml("unregisterservice", null, XmlParser.Result.OK);
 
 				req.addTag("service",
 						"name", "gcm",
@@ -798,9 +812,9 @@ public class XmlCreator {
 		 * @return message SetXconstants.GCMID
 		 * @since 2.2
 		 */
-		public static String setGCMID(String bt, String gcmid) {
+		public static Request setGCMID(String bt, String gcmid) {
 			try {
-				Request req = beginXml("registerservice", bt);
+				Request req = beginXml("registerservice", bt, XmlParser.Result.OK);
 
 				req.addTag("service",
 						"name", "gcm",
@@ -819,9 +833,9 @@ public class XmlCreator {
 		 * @return message GetNotifs
 		 * @since 2.2
 		 */
-		public static String getLatest(String bt) {
+		public static Request getLatest(String bt) {
 			try {
-				Request req = beginXml("getlatest", bt);
+				Request req = beginXml("getlatest", bt, XmlParser.Result.DATA);
 				return req.endXml();
 			} catch (Exception e) {
 				throw AppException.wrap(e, ClientError.XML);
@@ -836,9 +850,9 @@ public class XmlCreator {
 		 * @return message NotifRead
 		 * @since 2.2
 		 */
-		public static String read(String bt, List<String> ids) {
+		public static Request read(String bt, List<String> ids) {
 			try {
-				Request req = beginXml("read", bt);
+				Request req = beginXml("read", bt, XmlParser.Result.OK);
 
 				for (String id : ids) {
 					req.addTag("notification",
@@ -851,9 +865,9 @@ public class XmlCreator {
 			}
 		}
 
-		public static String delete(String bt, List<String> ids) {
+		public static Request delete(String bt, List<String> ids) {
 			try {
-				Request req = beginXml("delete", bt);
+				Request req = beginXml("delete", bt, XmlParser.Result.OK);
 
 				for (String id : ids) {
 					req.addTag("notification",
