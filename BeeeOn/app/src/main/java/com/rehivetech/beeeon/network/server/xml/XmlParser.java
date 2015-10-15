@@ -35,47 +35,25 @@ import java.util.List;
  */
 public class XmlParser {
 
-	private XmlPullParser mParser;
-
-	private State mState;
-	private int mErrorCode = -1;
-	private String mVersion;
-
 	private static final String TAG = XmlParser.class.getSimpleName();
+
 	private static final String ns = null;
 
-	/**
-	 * Represents states of communication (from server to app)
-	 *
-	 * @author ThinkDeep
-	 */
-	public enum State implements IIdentifier {
-		SESSION_ID("sessionid"),
-		USERINFO("userinfo"),
-		GATES("gates"),
-		GATEINFO("gateinfo"),
-		DEVICES("devices"),
+	private XmlPullParser mParser;
 
-		ALLDEVICES("alldevices"),
-		LOGDATA("logs"),
-		LOCATIONS("locations"),
-		LOCATIONID("locationid"),
-		ACCOUNTS("accounts"),
+	private String mNamespace;
+	private String mType;
+	private String mVersion;
+	private Result mResult;
+	private int mErrorCode = -1;
 
-		TRUE("true"),
-		FALSE("false"),
-
-		VIEWS("views"),
-		NOTIFICATIONS("notifications");
-
-		private final String mValue;
-
-		State(String value) {
-			mValue = value;
-		}
+	public enum Result implements IIdentifier {
+		OK,
+		DATA,
+		ERROR;
 
 		public String getId() {
-			return mValue;
+			return this.name().toLowerCase();
 		}
 	}
 
@@ -99,19 +77,25 @@ public class XmlParser {
 	private void parseRoot() throws IOException, XmlPullParserException, AppException {
 		mParser.nextTag();
 
-		mParser.require(XmlPullParser.START_TAG, ns, "com");
+		mParser.require(XmlPullParser.START_TAG, ns, "response");
 
-		String state = getSecureAttributeString("state");
-		String version = getSecureAttributeString("version");
-		String errorCode = getSecureAttributeString("errcode");
-
-		mState = Utils.getEnumFromId(State.class, state);
-		mErrorCode = !errorCode.isEmpty() ? Integer.parseInt(errorCode) : -1;
-		mVersion = version;
+		mNamespace = getSecureAttributeString("ns");
+		mType = getSecureAttributeString("type");
+		mVersion = getSecureAttributeString("version");
+		mResult = Utils.getEnumFromId(Result.class, getSecureAttributeString("result"), Result.ERROR);
+		mErrorCode = (mResult == Result.ERROR) ? getSecureAttributeInt("errcode") : -1;
 	}
 
-	public State getState() {
-		return mState;
+	public String getNamespace() {
+		return mNamespace;
+	}
+
+	public String getType() {
+		return mType;
+	}
+
+	public Result getResult() {
+		return mResult;
 	}
 
 	public String getVersion() {
@@ -125,7 +109,15 @@ public class XmlParser {
 	// /////////////////////////////////SIMPLE RESULTS///////////////////////////////////////////
 
 	public String parseSessionId() {
-		return getSecureAttributeString("sessionid");
+		try {
+			mParser.nextTag();
+			if (!mParser.getName().equals("session"))
+				throw new AppException(ClientError.XML);
+
+			return getSecureAttributeString("id");
+		} catch (IOException | XmlPullParserException e) {
+			throw AppException.wrap(e, ClientError.XML);
+		}
 	}
 
 	// /////////////////////////////////GATES, USERINFO///////////////////////////////////////////
@@ -146,13 +138,13 @@ public class XmlParser {
 
 			do {
 				Gate gate = new Gate(getSecureAttributeString("id"), getSecureAttributeString("name"));
-				gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttributeString("role"), User.Role.Guest));
-				gate.setUtcOffset(getSecureAttributeInt("utc"));
+				gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttributeString("permission"), User.Role.Guest));
+				gate.setUtcOffset(getSecureAttributeInt("timezone"));
 				result.add(gate);
 
 				mParser.nextTag();
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("response"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -174,14 +166,14 @@ public class XmlParser {
 				throw new AppException(ClientError.XML);
 
 			String id = getSecureAttributeString("id");
-			User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttributeString("accessrole"), User.Role.Guest);
+			User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttributeString("permission"), User.Role.Guest);
 			String name = getSecureAttributeString("name");
 			String owner = getSecureAttributeString("owner");
 			int devicesCount = getSecureAttributeInt("devices");
 			int usersCount = getSecureAttributeInt("users");
 			String ip = getSecureAttributeString("ip");
 			String version = getSecureAttributeString("version");
-			int utcOffsetInMinutes = getSecureAttributeInt("utc");
+			int utcOffsetInMinutes = getSecureAttributeInt("timezone");
 
 			return new GateInfo(id, name, owner, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
 		} catch (IOException | XmlPullParserException e) {
@@ -193,7 +185,7 @@ public class XmlParser {
 	 * Method parse inner part of UserInfo message
 	 * @return User object
 	 */
-	public User parseUserInfo() {
+	public User parseGetMyProfile() {
 		try {
 			mParser.nextTag(); // user
 			if (!mParser.getName().equals("user"))
@@ -243,7 +235,7 @@ public class XmlParser {
 
 			do { // go through devices
 				String type = getSecureAttributeString("type");
-				String address = getSecureAttributeString("id");
+				String address = getSecureAttributeString("euid");
 				String gateId = getSecureAttributeString("gateid");
 
 				Device device = Device.createDeviceByType(type, gateId, address);
@@ -253,12 +245,6 @@ public class XmlParser {
 				device.setLastUpdate(new DateTime((long) getSecureAttributeInt("time") * 1000, DateTimeZone.UTC));
 				// PairedTime is not used always...
 				device.setPairedTime(new DateTime((long) getSecureAttributeInt("involved") * 1000, DateTimeZone.UTC));
-
-				// FIXME: Temporary workaround
-				int refresh = getSecureAttributeInt("refresh");
-				if (refresh > 0) {
-					device.setRefresh(RefreshInterval.fromInterval(refresh));
-				}
 
 				// Load modules values
 				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("device")) {
@@ -271,7 +257,7 @@ public class XmlParser {
 				}
 
 				result.add(device);
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("response"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -317,7 +303,7 @@ public class XmlParser {
 				} catch (NumberFormatException e) {
 					throw AppException.wrap(e, ClientError.XML);
 				}
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("response"));
 
 			return log;
 		} catch (IOException | XmlPullParserException e) {
@@ -351,7 +337,7 @@ public class XmlParser {
 
 				mParser.nextTag(); // loc end tag
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("response"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -362,7 +348,7 @@ public class XmlParser {
 	public String parseNewLocationId() {
 		try {
 			mParser.nextTag();
-
+			// TODO: Use whole returned location element as it contains all info about (new) location
 			if (!mParser.getName().equals("location"))
 				throw new AppException(ClientError.XML);
 
@@ -389,7 +375,7 @@ public class XmlParser {
 				User user = new User();
 				user.setId(getSecureAttributeString("id"));
 				user.setEmail(getSecureAttributeString("email"));
-				user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttributeString("role"), User.Role.Guest)); // FIXME: probably this should have different name
+				user.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttributeString("permission"), User.Role.Guest)); // FIXME: probably this should have different name
 				user.setName(getSecureAttributeString("name"));
 				user.setSurname(getSecureAttributeString("surname"));
 				user.setGender(Utils.getEnumFromId(User.Gender.class, getSecureAttributeString("gender"), User.Gender.UNKNOWN));
@@ -398,7 +384,7 @@ public class XmlParser {
 				result.add(user);
 				mParser.nextTag();
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("response"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
@@ -440,7 +426,7 @@ public class XmlParser {
 					result.add(ntfc);
 				}
 
-			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("com"));
+			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("response"));
 
 			return result;
 		} catch (IOException | XmlPullParserException e) {
