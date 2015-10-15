@@ -15,6 +15,8 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
@@ -76,27 +78,31 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 				holder.mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
 
 				if (module.isActuator()) {
-					if (module.getValue() instanceof EnumValue) {
-						List<EnumValue.Item> items = ((EnumValue) module.getValue()).getEnumItems();
+					BaseValue value = module.getValue();
 
-						if (items.size() > 2) {
-							holder.mButton.setVisibility(View.VISIBLE);
-							holder.mButton.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									mItemClickListener.onButtonChangeState(holder.mModuleId);
-								}
-							});
-						} else {
-							holder.mSwitch.setVisibility(View.VISIBLE);
-							holder.mSwitch.setOnClickListener(new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									mItemClickListener.onSwitchChange(holder.mModuleId);
-								}
-							});
-						}
+					if (value instanceof BooleanValue) {
+						holder.mButton.setVisibility(View.GONE);
+
+						holder.mSwitch.setVisibility(View.VISIBLE);
+						holder.mSwitch.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								mItemClickListener.onSwitchChange(holder.mModuleId);
+							}
+						});
+					} else if (value instanceof EnumValue) {
+						holder.mSwitch.setVisibility(View.GONE);
+
+						holder.mButton.setVisibility(View.VISIBLE);
+						holder.mButton.setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								mItemClickListener.onButtonChangeState(holder.mModuleId);
+							}
+						});
 					} else {
+						holder.mSwitch.setVisibility(View.GONE);
+
 						holder.mButton.setVisibility(View.VISIBLE);
 						holder.mButton.setOnClickListener(new View.OnClickListener() {
 							@Override
