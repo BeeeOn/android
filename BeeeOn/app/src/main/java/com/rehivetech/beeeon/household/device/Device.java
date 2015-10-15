@@ -292,7 +292,7 @@ public final class Device implements IIdentifier {
 	}
 
 	@Nullable
-	private Module getFirstModuleByType(ModuleType type) {
+	public Module getFirstModuleByType(ModuleType type) {
 		List<Module> modules = getModulesByType(type.getTypeId());
 		if (modules.isEmpty())
 			return null;
