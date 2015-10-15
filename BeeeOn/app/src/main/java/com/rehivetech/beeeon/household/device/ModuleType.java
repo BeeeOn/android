@@ -3,12 +3,15 @@ package com.rehivetech.beeeon.household.device;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BatteryValue;
+import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.EmissionValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
 import com.rehivetech.beeeon.household.device.values.IlluminationValue;
 import com.rehivetech.beeeon.household.device.values.NoiseValue;
 import com.rehivetech.beeeon.household.device.values.PressureValue;
+import com.rehivetech.beeeon.household.device.values.RawFloatValue;
+import com.rehivetech.beeeon.household.device.values.RawIntValue;
 import com.rehivetech.beeeon.household.device.values.RefreshValue;
 import com.rehivetech.beeeon.household.device.values.RssiValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
@@ -29,6 +32,9 @@ public enum ModuleType {
 	TYPE_BATTERY(0x08, R.string.devices__type_battery, BatteryValue.class, true),
 	TYPE_RSSI(0x09, R.string.devices__type_rssi, RssiValue.class, true),
 	TYPE_REFRESH(0x0A, R.string.devices__type_refresh, RefreshValue.class, true),
+	TYPE_BITARRAY(0x0B, R.string.devices__type_bitarray, UnknownValue.class, false), // FIXME: Implement this value type
+	TYPE_RAW_INT(0x0C, R.string.devices__type_raw_int, RawIntValue.class, false),
+	TYPE_RAW_FLOAT(0x0D, R.string.devices__type_raw_float, RawFloatValue.class, false),
 
 	TYPE_UNKNOWN(-1, R.string.devices__type_unknown, UnknownValue.class, false);
 
