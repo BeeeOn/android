@@ -375,9 +375,6 @@
 	<string name="intro_tut_intro_text_5">Mobilná aplikácia poskytuje sledovánie a konfiguráciu domácnosti kdekoľvek a kedykoľvek.</string>
 	<string name="intro_tut_intro_title">Úvodný sprievodca BeeeOn</string>
 
-	<!-- Number picker dialog -->
-	<string name="number_picker_dialog_dialog_title_actuator_set_value">Nastaviť novú hodnotu</string>
-
 	<!-- Device type -->
 	<string name="device_type_unknown_device">Neznáme zariadenie</string>
 	<string name="device_type_unknown_manufacturer">Neznámý výrobca</string>

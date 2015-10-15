@@ -41,7 +41,7 @@ public class NumberPickerDialogFragment extends SimpleDialogFragment {
 
 	@Override
 	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder) {
-		builder.setTitle(getString(R.string.number_picker_dialog_dialog_title_actuator_set_value));
+		builder.setTitle(sModule.getName(mActivity));
 		LayoutInflater li = LayoutInflater.from(getActivity());
 		View view = li.inflate(R.layout.fragment_dialog_number_picker, null);
 

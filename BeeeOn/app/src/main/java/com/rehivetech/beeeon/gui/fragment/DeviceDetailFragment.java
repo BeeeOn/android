@@ -415,7 +415,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	}
 
 	private void showListDialog(String moduleId) {
-		EnumValue value = (EnumValue) mDevice.getModuleById(moduleId).getValue();
+		Module module = mDevice.getModuleById(moduleId);
+		EnumValue value = (EnumValue) module.getValue();
 		List<EnumValue.Item> items = value.getEnumItems();
 
 		List<String> namesList = new ArrayList<>();
@@ -424,7 +425,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 		ListDialogFragment
 				.createBuilder(mActivity, getFragmentManager())
-				.setTitle(getString(R.string.number_picker_dialog_dialog_title_actuator_set_value))
+				.setTitle(module.getName(mActivity))
 				.setItems(namesList.toArray(new CharSequence[namesList.size()]))
 				.setSelectedItem(value.getActive().getId())
 				.setRequestCode(REQUEST_SET_ACTUATOR)

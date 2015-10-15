@@ -380,9 +380,6 @@
 	<string name="intro_tut_intro_text_5">Mobile application displays information about the household and allows you to control it anywhere, anytime.</string>
 	<string name="intro_tut_intro_title">BeeeOn Introduction</string>
 
-	<!-- Number picker dialog -->
-	<string name="number_picker_dialog_dialog_title_actuator_set_value">Set new value</string>
-
 	<!-- Device type -->
 	<string name="device_type_unknown_device">Unknown device</string>
 	<string name="device_type_unknown_manufacturer">Unknown manufacturer</string>
