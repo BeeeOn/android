@@ -39,6 +39,7 @@
 	<string name="devices__mod_slope_ekviterm_curve">Sklon ekvitermickej krivky</string>
 	<string name="devices__mod_use_ekviterm_thermostat">Použít ekvitermní regulaci v izbovom termostate</string>
 	<string name="devices__type_battery">Batéria</string>
+	<string name="devices__type_boolean">Boolean</string>
 	<string name="devices__type_bitarray">Bitové pole</string>
 	<string name="devices__type_co2">Oxid uhličitý</string>
 	<string name="devices__type_enum">Výčet</string>

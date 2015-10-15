@@ -35,6 +35,7 @@ public enum ModuleType {
 	TYPE_BITARRAY(0x0B, R.string.devices__type_bitarray, UnknownValue.class, false), // FIXME: Implement this value type
 	TYPE_RAW_INT(0x0C, R.string.devices__type_raw_int, RawIntValue.class, false),
 	TYPE_RAW_FLOAT(0x0D, R.string.devices__type_raw_float, RawFloatValue.class, false),
+	TYPE_BOOLEAN(0x0E, R.string.devices__type_boolean, BooleanValue.class, false),
 
 	TYPE_UNKNOWN(-1, R.string.devices__type_unknown, UnknownValue.class, false);
 

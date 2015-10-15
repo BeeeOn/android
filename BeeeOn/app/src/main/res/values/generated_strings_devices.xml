@@ -39,6 +39,7 @@
 	<string name="devices__mod_slope_ekviterm_curve">Slope of ekviterm curve</string>
 	<string name="devices__mod_use_ekviterm_thermostat">Use ekviterm thermostat</string>
 	<string name="devices__type_battery">Battery</string>
+	<string name="devices__type_boolean">Boolean</string>
 	<string name="devices__type_bitarray">Bit array</string>
 	<string name="devices__type_co2">Carbon dioxide</string>
 	<string name="devices__type_enum">Enum</string>
