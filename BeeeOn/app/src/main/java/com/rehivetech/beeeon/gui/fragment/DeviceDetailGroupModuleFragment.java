@@ -116,7 +116,8 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		if (mDevice == null)
 			return;
 
-		mModuleAdapter.swapModules(mDevice.getVisibleModules());
+		mModuleAdapter.swapModules(getModulesByGroup());
+		mModuleAdapter.setUseFirstItemSpace(true);
 	}
 
 	@Override
