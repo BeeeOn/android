@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Tomáš on 25. 4. 2015.
@@ -203,11 +204,14 @@ public class WeatherProvider {
 
 
 	private String getLangLocaleCode() {
-		// TODO should change, cause e.g czech language returns CS and OWM needs CZ
-		//Locale locale = mContext.getResources().getConfiguration().locale;
-		//Log.v("WeatherProvider", "selected locale code: " + locale.getLanguage());
-		//return locale.getLanguage();
-		return "en";
+		Locale locale = mContext.getResources().getConfiguration().locale;
+		// TODO: Specify transformations for all supported languages on OWM, because e.g. czech language returns CS and OWM needs CZ
+		switch (locale.getLanguage()) {
+			case "cs":
+				return "cz";
+			default:
+				return "en";
+		}
 	}
 
 	public class City {

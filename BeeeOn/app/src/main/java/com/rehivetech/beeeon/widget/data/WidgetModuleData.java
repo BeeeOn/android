@@ -5,11 +5,16 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,19 +58,13 @@ public class WidgetModuleData extends WidgetData {
 	public void init() {
 		mDevices.clear();
 		for (WidgetModulePersistence dev : widgetModules) {
-			if (dev.getId().isEmpty()) {
+			Module module = dev.getModule();
+			if (dev.getId().isEmpty() || module == null) {
 				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
 				continue;
 			}
 
-			// FIXME: rework this
-			/* String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
-			Device device = Device.createDeviceByType(deviceType, widgetGateId, ids[0]);
-			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			device.setModuleValue(ids[1], dev.getValue());
-
-			mDevices.add(device);*/
+			mDevices.add(module.getDevice());
 		}
 	}
 
