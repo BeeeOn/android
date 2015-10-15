@@ -5,17 +5,21 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
 import com.rehivetech.beeeon.gui.activity.WebAuthActivity;
@@ -231,6 +235,23 @@ public class GoogleAuthProvider implements IAuthProvider {
 				// This is page we're looking for
 				done = true;
 				finishWebLoginAuth(url);
+			}
+		}
+
+		@Override
+		public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+			super.onReceivedSslError(view, handler, error);
+
+			view.setVisibility(View.INVISIBLE);
+
+			if (!done) {
+				done = true;
+
+				Log.e(TAG, String.format("Received SSL error for url: %s", error.getUrl()));
+				Toast.makeText(mActivity, R.string.login_toast_ssl_error, Toast.LENGTH_LONG).show();
+
+				mActivity.setResult(IAuthProvider.RESULT_ERROR);
+				mActivity.finish();
 			}
 		}
 

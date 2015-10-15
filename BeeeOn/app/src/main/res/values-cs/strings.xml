@@ -136,6 +136,7 @@
 	<string name="login_toast_internet_connection">Aktivujte připojení k Internetu</string>
 	<string name="login_toast_login_failed">Přihlášení selhalo</string>
 	<string name="login_toast_registration_failed">Registrace selhala</string>
+	<string name="login_toast_ssl_error">Chyba SSL certifikátu</string>
 
 	<!-- NavDrawerMenu -->
 	<string name="nav_drawer_menu_action_about">O aplikaci</string>

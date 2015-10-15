@@ -139,6 +139,7 @@
 	<string name="login_toast_internet_connection">Turn internet connection on</string>
 	<string name="login_toast_login_failed">Login failed</string>
 	<string name="login_toast_registration_failed">Registration failed</string>
+	<string name="login_toast_ssl_error">SSL certificate error</string>
 
 	<!-- NavDrawer menu -->
 	<string name="nav_drawer_menu_action_about">About</string>
