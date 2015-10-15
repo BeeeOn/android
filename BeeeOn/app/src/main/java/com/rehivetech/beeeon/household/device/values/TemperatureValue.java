@@ -26,10 +26,6 @@ public final class TemperatureValue extends BaseValue {
 		return type == IconResourceType.WHITE ? R.drawable.ic_val_temperature_actor : R.drawable.ic_val_temperature_actor_gray;
 	}
 
-	public double getValue() {
-		return mValue;
-	}
-
 	@Override
 	public double getDoubleValue() {
 		return mValue;

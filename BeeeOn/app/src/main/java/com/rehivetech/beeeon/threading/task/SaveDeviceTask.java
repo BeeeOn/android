@@ -4,8 +4,13 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.threading.CallbackTask;
+
+import java.util.List;
 
 public class SaveDeviceTask extends CallbackTask<Device.DataPair> {
 
@@ -26,7 +31,18 @@ public class SaveDeviceTask extends CallbackTask<Device.DataPair> {
 			pair.mDevice.setLocationId(newLocation.getId());
 		}
 
-		return controller.getDevicesModel().saveDevice(pair.mDevice);
+		DevicesModel devicesModel = controller.getDevicesModel();
+
+		// Save device data
+		devicesModel.saveDevice(pair.mDevice);
+
+		// Save refresh interval as actor switch
+		List<Module> refreshModules = pair.mDevice.getModulesByType(ModuleType.TYPE_REFRESH.getTypeId());
+		if (!refreshModules.isEmpty()) {
+			devicesModel.switchActor(refreshModules.get(0));
+		}
+
+		return true;
 	}
 
 }

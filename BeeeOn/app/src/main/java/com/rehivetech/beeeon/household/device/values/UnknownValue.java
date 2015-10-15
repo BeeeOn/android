@@ -6,14 +6,11 @@ import com.rehivetech.beeeon.household.device.units.BlankUnit;
 
 public final class UnknownValue extends BaseValue {
 
-	private String mValue = "";
-
 	private static BlankUnit mUnit = new BlankUnit();
 
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		mValue = value;
 	}
 
 	@Override
@@ -30,10 +27,6 @@ public final class UnknownValue extends BaseValue {
 	@Override
 	public BlankUnit getUnit() {
 		return mUnit;
-	}
-
-	public String getValue() {
-		return mValue;
 	}
 
 	@Override

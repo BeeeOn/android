@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.SimpleDataHolder;
 import com.rehivetech.beeeon.util.Utils;
@@ -292,7 +293,7 @@ public final class Device implements IIdentifier {
 	}
 
 	@Nullable
-	private Module getFirstModuleByType(ModuleType type) {
+	public Module getFirstModuleByType(ModuleType type) {
 		List<Module> modules = getModulesByType(type.getTypeId());
 		if (modules.isEmpty())
 			return null;
@@ -310,8 +311,10 @@ public final class Device implements IIdentifier {
 		if (refresh == null)
 			return null;
 
-		int seconds = (int) refresh.getValue().getDoubleValue();
-		return RefreshInterval.fromInterval(seconds);
+		// TODO: Support getting default value automatically somehow in the BaseValue object?
+		BaseValue value = refresh.getValue();
+		double seconds = value.hasValue() ? value.getDoubleValue() : Double.parseDouble(value.getDefaultValue());
+		return RefreshInterval.fromInterval((int) seconds);
 	}
 
 	/**
