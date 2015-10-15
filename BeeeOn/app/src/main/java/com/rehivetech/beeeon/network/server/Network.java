@@ -295,6 +295,9 @@ public class Network implements INetwork {
 			// Probably connection is lost so we need to reinit socket at next call of doRequest
 			closeCommunicationSocket();
 
+			// Wait a while to make sure socket is closed so we can open it again
+			SystemClock.sleep(50);
+
 			// Try to do this request again (with decremented retries)
 			Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));
 			return doRequest(messageToSend, checkBT, retries - 1);
