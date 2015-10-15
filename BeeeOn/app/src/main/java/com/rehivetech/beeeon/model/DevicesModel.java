@@ -170,6 +170,8 @@ public class DevicesModel extends BaseModel {
 	public boolean saveDevice(Device device) throws AppException {
 		mNetwork.devices_update(device.getGateId(), device);
 		refreshDevice(device, true);
+		// FIXME: Attempt to fix refreshing devices list in MainActivity, why is it needed?
+		mDevices.setLastUpdate(device.getGateId(), null);
 
 		return true;
 	}
@@ -183,6 +185,8 @@ public class DevicesModel extends BaseModel {
 		if (mNetwork.devices_unregister(device)) {
 			// Device was deleted on server, remove it from map too
 			mDevices.removeObject(device.getGateId(), device.getId());
+			// FIXME: Attempt to fix refreshing devices list in MainActivity, why is it needed?
+			mDevices.setLastUpdate(device.getGateId(), null);
 			return true;
 		}
 
