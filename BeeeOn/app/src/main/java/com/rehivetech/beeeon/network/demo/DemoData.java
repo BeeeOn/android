@@ -104,6 +104,7 @@ public class DemoData {
 			}
 			case GATE_2_ID: {
 				devicesList.add(createDevice(DeviceType.TYPE_1, gateId, GATE_2_LOCATION1));
+				devicesList.add(createDevice(DeviceType.TYPE_6, gateId, GATE_2_LOCATION1));
 				break;
 			}
 			default: {
