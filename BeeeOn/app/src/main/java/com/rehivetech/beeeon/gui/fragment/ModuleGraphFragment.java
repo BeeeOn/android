@@ -24,6 +24,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -133,6 +134,14 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		Device device = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
+		if (device == null) {
+			Log.e(TAG, String.format("Device #%s does not exists", mDeviceId));
+			mActivity.finish();
+			return;
+		}
+
 		addGraphView();
 		doLoadGraphData();
 	}

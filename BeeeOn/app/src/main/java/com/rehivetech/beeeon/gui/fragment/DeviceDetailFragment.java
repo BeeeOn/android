@@ -110,6 +110,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
+				Device device = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
+				if (device == null) {
+					Log.e(TAG, String.format("Device #%s does not exists", mDeviceId));
+					mActivity.finish();
+				}
+
 				if (success) {
 					updateLayout();
 					if (mViewPager != null) {
