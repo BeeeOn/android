@@ -5,11 +5,16 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +39,7 @@ public class WidgetModuleData extends WidgetData {
 		super(widgetId, context, unitsHelper, timeHelper);
 
 		widgetModules = new ArrayList<>();
-		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.value_container, unitsHelper, timeHelper, settings));
+		widgetModules.add(new WidgetModulePersistence(mContext, mWidgetId, 0, R.id.widget_value_container, unitsHelper, timeHelper, settings));
 
 		mDevices = new ArrayList<>();
 	}
@@ -53,19 +58,13 @@ public class WidgetModuleData extends WidgetData {
 	public void init() {
 		mDevices.clear();
 		for (WidgetModulePersistence dev : widgetModules) {
-			if (dev.getId().isEmpty()) {
+			Module module = dev.getModule();
+			if (dev.getId().isEmpty() || module == null) {
 				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
 				continue;
 			}
 
-			// FIXME: rework this
-			/* String[] ids = dev.getId().split(Module.ID_SEPARATOR, 2);
-			Device device = Device.createDeviceByType(deviceType, widgetGateId, ids[0]);
-			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			device.setModuleValue(ids[1], dev.getValue());
-
-			mDevices.add(device);*/
+			mDevices.add(module.getDevice());
 		}
 	}
 
@@ -82,9 +81,9 @@ public class WidgetModuleData extends WidgetData {
 	@Override
 	protected void renderLayout() {
 		// -------------------- initialize layout
-		mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
+		mBuilder.setOnClickListener(R.id.widget_options, mConfigurationPendingIntent);
 		mBuilder.setOnClickListener(R.id.widget_last_update, mRefreshPendingIntent);
-		mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
+		mBuilder.setOnClickListener(R.id.widget_refresh, mRefreshPendingIntent);
 
 		if (widgetGateId.isEmpty()) return;
 
@@ -93,13 +92,13 @@ public class WidgetModuleData extends WidgetData {
 		boolean isOnlyOne = true;
 		for (WidgetModulePersistence dev : widgetModules) {
 			// detail activity
-			mBuilder.setOnClickListener(R.id.icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
-			mBuilder.setOnClickListener(R.id.menu_empty_listview_login_name_text, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.widget_module_icon, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
+			mBuilder.setOnClickListener(R.id.widget_module_name, startDetailActivityPendingIntent(mContext, mWidgetId + dev.getOffset(), widgetGateId, dev.getId()));
 
 			// when only 1 module is in the widget - we assume that we need icon and name
 			if (isOnlyOne) {
-				mBuilder.setImage(R.id.icon, dev.icon == 0 ? R.drawable.ic_val_unknown : dev.icon);
-				mBuilder.setTextViewText(R.id.menu_empty_listview_login_name_text, dev.getName());
+				mBuilder.setImage(R.id.widget_module_icon, dev.icon == 0 ? R.drawable.ic_val_unknown : dev.icon);
+				mBuilder.setTextViewText(R.id.widget_module_name, dev.getName());
 				isOnlyOne = false;
 			}
 

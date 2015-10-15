@@ -9,6 +9,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -17,6 +18,8 @@ import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
 import java.text.DateFormatSymbols;
@@ -90,21 +93,13 @@ public class WidgetClockData extends WidgetData {
 
 		mDevices.clear();
 		for (WidgetModulePersistence dev : widgetModules) {
-			if (dev.getId().isEmpty()) {
+			Module module = dev.getModule();
+			if (dev.getId().isEmpty() || module == null) {
 				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
 				continue;
 			}
 
-			// FIXME: rework this
-			/* Module.ModuleId moduleId = new Module.ModuleId(widgetGateId, dev.getId());
-			Device device = new Device();
-			device.setGateId(widgetGateId);
-			device.setAddress(moduleId.deviceId);
-			device.setLastUpdate(new DateTime(dev.lastUpdateTime, DateTimeZone.UTC));
-			device.setRefresh(RefreshInterval.fromInterval(dev.refresh));
-			device.addModule(Module.createFromModuleTypeId(moduleId.moduleId));
-
-			mDevices.add(device);*/
+			mDevices.add(module.getDevice());
 		}
 
 		// sets icon of weather (even default)
@@ -159,7 +154,7 @@ public class WidgetClockData extends WidgetData {
 			dev.setValueUnitColor(settings.colorSecondary);
 
 			if (this.widgetLayout == R.layout.widget_data_clock_3x2) {
-				if (dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.icon, View.VISIBLE);
+				if (dev.containerType == WidgetModulePersistence.VALUE_UNIT) dev.getBuilder().setViewVisibility(R.id.widget_module_icon, View.VISIBLE);
 			} else if (this.widgetLayout == R.layout.widget_data_clock_2x2) {
 				dev.setValueUnitSize(R.dimen.abc_text_size_caption_material);
 			}

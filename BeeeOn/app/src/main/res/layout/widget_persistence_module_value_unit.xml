@@ -9,7 +9,7 @@
 	>
 
 	<ImageView
-		android:id="@+id/icon"
+		android:id="@+id/widget_module_icon"
 		android:layout_width="20dp"
 		android:layout_height="20dp"
 		android:src="@drawable/ic_loc_unknown_gray"
@@ -20,7 +20,7 @@
 		/>
 
 	<TextView
-		android:id="@+id/value"
+		android:id="@+id/widget_module_value"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:textSize="@dimen/abc_text_size_body_2_material"
@@ -31,7 +31,7 @@
 		/>
 
 	<TextView
-		android:id="@+id/unit"
+		android:id="@+id/widget_module_unit"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginLeft="2dp"

@@ -70,12 +70,12 @@ public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
 	public void renderView(ViewsBuilder parentBuilder) {
 		super.renderView(parentBuilder);
 		if (mBoundView == 0) {
-			parentBuilder.setTextViewText(R.id.menu_empty_listview_login_name_text, name);
-			parentBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
+			parentBuilder.setTextViewText(R.id.widget_location_name, name);
+			parentBuilder.setImage(R.id.widget_location_icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
 		} else {
 			mBuilder.loadRootView(R.layout.widget_persistence_location);
-			mBuilder.setTextViewText(R.id.menu_empty_listview_login_name_text, name);
-			mBuilder.setImage(R.id.icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
+			mBuilder.setTextViewText(R.id.widget_location_name, name);
+			mBuilder.setImage(R.id.widget_location_icon, Utils.getEnumFromId(Location.LocationIcon.class, type, Location.LocationIcon.UNKNOWN).getIconResource(IconResourceType.WHITE));
 			parentBuilder.removeAllViews(mBoundView);
 			parentBuilder.addView(mBoundView, mBuilder.getRoot());
 		}

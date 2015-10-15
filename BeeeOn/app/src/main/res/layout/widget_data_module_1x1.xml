@@ -10,7 +10,7 @@
 		android:layout_width="70dp"
 		android:layout_height="80dp"
 		android:background="@drawable/widget_bg"
-		android:id="@+id/layout"
+		android:id="@+id/widget_layout"
 		android:orientation="vertical"
 		android:layout_gravity="center"
 		>
@@ -28,7 +28,7 @@
 			>
 
 			<TextView
-				android:id="@+id/name"
+				android:id="@+id/widget_module_name"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:gravity="center"
@@ -40,7 +40,7 @@
 				/>
 
 			<ImageView
-				android:id="@+id/icon"
+				android:id="@+id/widget_module_icon"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:scaleType="fitCenter"
@@ -60,7 +60,7 @@
 
 		<!-- value layout - inflated programmatically -->
 		<RelativeLayout
-			android:id="@+id/value_container"
+			android:id="@+id/widget_value_container"
 			android:layout_width="match_parent"
 			android:layout_height="0dp"
 			android:layout_weight="0.4"

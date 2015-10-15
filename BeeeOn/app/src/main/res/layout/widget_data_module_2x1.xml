@@ -11,7 +11,7 @@
 		android:minWidth="170dp"
 		android:layout_height="80dp"
 		android:background="@drawable/widget_bg"
-		android:id="@+id/layout"
+		android:id="@+id/widget_layout"
 		android:layout_gravity="center"
 		>
 
@@ -27,7 +27,7 @@
 			>
 
 			<ImageView
-				android:id="@+id/icon"
+				android:id="@+id/widget_module_icon"
 				android:layout_width="38dp"
 				android:layout_height="match_parent"
 				android:paddingLeft="8dp"
@@ -41,7 +41,7 @@
 				/>
 
 			<TextView
-				android:id="@+id/name"
+				android:id="@+id/widget_module_name"
 				android:layout_width="0dp"
 				android:layout_height="match_parent"
 				android:layout_weight="0.5"
@@ -55,7 +55,7 @@
 				/>
 
 			<ImageView
-				android:id="@+id/options"
+				android:id="@+id/widget_options"
 				style="@style/AppWidget.ActionButton.Overflow"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
@@ -66,7 +66,7 @@
 
 		<!-- shadow -->
 		<ImageView
-			android:id="@+id/toolbar_shadow"
+			android:id="@+id/widget_toolbar_shadow"
 			android:layout_width="wrap_content"
 			android:layout_height="6dp"
 			android:layout_below="@id/widget_header"
@@ -79,8 +79,8 @@
 
 		<!-- value inflated programmatically -->
 		<RelativeLayout
-			android:id="@+id/value_container"
-			android:layout_below="@id/toolbar_shadow"
+			android:id="@+id/widget_value_container"
+			android:layout_below="@id/widget_toolbar_shadow"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignLeft="@id/widget_header"
@@ -97,7 +97,7 @@
 			android:id="@+id/widget_last_update"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_below="@id/toolbar_shadow"
+			android:layout_below="@id/widget_toolbar_shadow"
 			android:text="@string/layout_widget_placeholder_none"
 			android:textColor="@color/gray_dark"
 			android:textSize="@dimen/abc_text_size_caption_material"

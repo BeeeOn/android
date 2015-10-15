@@ -84,11 +84,11 @@ public class WidgetLocationData extends WidgetData {
 	protected void renderLayout() {
 		// -------------------- initialize layout
 		// sets onclick "listeners"
-		mBuilder.setOnClickListener(R.id.options, mConfigurationPendingIntent);
-		mBuilder.setOnClickListener(R.id.refresh, mRefreshPendingIntent);
+		mBuilder.setOnClickListener(R.id.widget_options, mConfigurationPendingIntent);
+		mBuilder.setOnClickListener(R.id.widget_refresh, mRefreshPendingIntent);
 
 		// TODO scroll to location?
-		mBuilder.setOnClickListener(R.id.icon, startMainActivityPendingIntent(mContext, widgetGateId));
+		mBuilder.setOnClickListener(R.id.widget_location_icon, startMainActivityPendingIntent(mContext, widgetGateId));
 		mBuilder.setOnClickListener(R.id.menu_empty_listview_login_name_text, startMainActivityPendingIntent(mContext, widgetGateId));
 
 		// onclick listener when clicked on item
@@ -99,7 +99,7 @@ public class WidgetLocationData extends WidgetData {
 		mRemoteViewsFactoryIntent.putExtra(EXTRA_LOCATION_GATE_ID, widgetGateId);
 
 		mBuilder.setRemoteAdapter(R.id.widget_sensor_list_view, mWidgetId, mRemoteViewsFactoryIntent);
-		mBuilder.setEmptyView(R.id.widget_sensor_list_view, R.id.empty_view);
+		mBuilder.setEmptyView(R.id.widget_sensor_list_view, R.id.widget_empty_view);
 
 		// -------------------- render layout
 		widgetLocation.renderView(mBuilder);
@@ -134,7 +134,7 @@ public class WidgetLocationData extends WidgetData {
 		widgetLastUpdate = getTimeNow();
 		widgetGateId = gate.getId();
 
-		mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.layout);
+		mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.widget_layout);
 
 		this.save();
 		Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));

@@ -1,11 +1,13 @@
 package com.rehivetech.beeeon.widget.persistence;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -25,7 +27,9 @@ import com.rehivetech.beeeon.widget.service.WidgetService;
  */
 public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	private static final String PREF_ICON = "icon";
-	private static final String PREF_TYPE = "type";
+	private static final String PREF_GATE_ID = "gate_id";
+	private static final String PREF_DEVICE_TYPE = "device_type";
+	private static final String PREF_MODULE_ABSOLUTE_ID = "module_absolute_id";
 	private static final String PREF_RAW_VALUE = "raw_value";
 	private static final String PREF_CACHED_VALUE = "cached_value";
 	private static final String PREF_CACHED_UNIT = "cached_unit";
@@ -40,7 +44,6 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	public static final int SWITCHCOMPAT = 2;
 
 	// persistence data
-	public int type;
 	public int icon;
 	public long lastUpdateTime;
 	public String lastUpdateText;
@@ -54,12 +57,13 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	private String cachedUnit;
 
 	// generated data
-	private ModuleType mModuleType;
-	private BaseValue moduleValue;
 	private boolean moduleValueDisabled = false;
 	private boolean moduleValueChecked;
 
 	public int containerType;
+
+	@Nullable
+	private Module mModule;
 
 	public WidgetModulePersistence(Context context, int widgetId, int offset, int boundView, UnitsHelper unitsHelper, TimeHelper timeHelper, WidgetSettings settings) {
 		super(context, widgetId, offset, boundView, unitsHelper, timeHelper, settings);
@@ -74,8 +78,6 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		locationId = mPrefs.getString(getProperty(PREF_LOCATION_ID), "");
 		locationIcon = mPrefs.getInt(getProperty(PREF_LOCATION_ICON), 0);
 
-		type = mPrefs.getInt(getProperty(PREF_TYPE), ModuleType.TYPE_UNKNOWN.getTypeId());
-
 		rawValue = mPrefs.getString(getProperty(PREF_RAW_VALUE), "");
 		cachedValue = mPrefs.getString(getProperty(PREF_CACHED_VALUE), "");
 		cachedUnit = mPrefs.getString(getProperty(PREF_CACHED_UNIT), "");
@@ -84,12 +86,21 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		lastUpdateTime = mPrefs.getLong(getProperty(PREF_LAST_UPDATE_TIME), 0);
 		refresh = mPrefs.getInt(getProperty(PREF_REFRESH), 0);
 
-		mModuleType = ModuleType.fromTypeId(type);
-		moduleValue = BaseValue.createFromModuleType(mModuleType, null, null);
+		gateId = mPrefs.getString(getProperty(PREF_GATE_ID), "");
+		String typeId = mPrefs.getString(getProperty(PREF_DEVICE_TYPE), "");
+		String moduleAbsoluteId = mPrefs.getString(getProperty(PREF_MODULE_ABSOLUTE_ID), "");
+		if (!typeId.isEmpty() && !moduleAbsoluteId.isEmpty()) {
+			Module.ModuleId moduleId = new Module.ModuleId(gateId, moduleAbsoluteId);
 
-		// we don't set value when creating new widget
-		if (!rawValue.isEmpty()) {
-			moduleValue.setValue(rawValue);
+			Device device = Device.createDeviceByType(typeId, moduleId.gateId, moduleId.deviceId);
+			mModule = device.getModuleById(moduleId.moduleId);
+
+			// we don't set value when creating new widget
+			if (!rawValue.isEmpty()) {
+				mModule.setValue(rawValue);
+			}
+		} else {
+			mModule = null;
 		}
 	}
 
@@ -97,7 +108,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	public void configure(Object obj1, Object obj2) {
 		super.configure(obj1, obj2);
 
-		if (!(obj1 instanceof Module) || !(obj2 instanceof Gate) || obj1 == null || obj2 == null) return;
+		if (!(obj1 instanceof Module) || !(obj2 instanceof Gate)) return;
 		Module module = (Module) obj1;
 		Gate gate = (Gate) obj2;
 
@@ -106,22 +117,20 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		icon = module.getIconResource(IconResourceType.WHITE);
 		gateId = gate.getId();
 		mGateRole = gate.getRole().getId();
-		type = module.getType().getTypeId();
+		mModule = module;
 
 		Device device = module.getDevice();
 
 		mUserRole = Utils.getEnumFromId(User.Role.class, mGateRole, User.Role.Guest);
-		lastUpdateTime = device.getLastUpdate().getMillis();
+		lastUpdateTime = device.getLastUpdate() == null ? 0 : device.getLastUpdate().getMillis();
 
 		RefreshInterval deviceRefresh = device.getRefresh();
 		if (deviceRefresh != null) {
 			refresh = deviceRefresh.getInterval();
 		}
 
-		mModuleType = module.getType();
 		// value is saving as raw (for recreating) and cached (for when user is logged out)
 		rawValue = module.getValue().getRawValue();
-		moduleValue.setValue(module.getValue().getRawValue());
 
 		// when user is logged in, save last known value as cached value
 		if (mUnitsHelper != null) {
@@ -151,9 +160,15 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	public void save() {
 		super.save();
 
+		if (mModule == null)
+			return;
+
 		mPrefs.edit()
 				.putInt(getProperty(PREF_ICON), icon)
-				.putInt(getProperty(PREF_TYPE), type)
+
+				.putString(getProperty(PREF_DEVICE_TYPE), mModule.getDevice().getType().getId())
+				.putString(getProperty(PREF_MODULE_ABSOLUTE_ID), mModule.getModuleId().absoluteId)
+
 				.putString(getProperty(PREF_LOCATION_ID), locationId)
 				.putInt(getProperty(PREF_LOCATION_ICON), locationIcon)
 
@@ -173,7 +188,10 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 
 		mPrefs.edit()
 				.remove(getProperty(PREF_ICON))
-				.remove(getProperty(PREF_TYPE))
+
+				.remove(getProperty(PREF_DEVICE_TYPE))
+				.remove(getProperty(PREF_MODULE_ABSOLUTE_ID))
+
 				.remove(getProperty(PREF_LOCATION_ID))
 				.remove(getProperty(PREF_LOCATION_ICON))
 
@@ -192,15 +210,18 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 		super.renderView(parentBuilder, isCached, cachedString);
 		if (mBoundView == 0) return;
 
+		if (mModule == null) return;
+
 		Controller controller = Controller.getInstance(mContext);
 
-		// FIXME: rework this
-		if (/*getType().isActor() &&*/ controller.isUserAllowed(mUserRole) && moduleValue instanceof BooleanValue) {
+		if (mModule.isActuator() && controller.isUserAllowed(mUserRole) && mModule.getValue() instanceof BooleanValue) {
 			containerType = SWITCHCOMPAT;
+
+			BooleanValue moduleValue = (BooleanValue) mModule.getValue();
 
 			mBuilder.loadRootView(R.layout.widget_persistence_module_switchcompat);
 			mBuilder.setOnClickListener(R.id.widget_switchcompat, WidgetService.getPendingIntentActorChangeRequest(mContext, mWidgetId, getId(), gateId));
-			moduleValueChecked = ((BooleanValue) moduleValue).isActiveValue(BooleanValue.TRUE);
+			moduleValueChecked = moduleValue.isActiveValue(BooleanValue.TRUE);
 
 			if (mIsCached) {
 				setSwitchDisabled(true, false);
@@ -209,7 +230,7 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 					setSwitchDisabled(true);
 				} else {
 					setSwitchDisabled(false);
-					boolean isOn = ((BooleanValue) moduleValue).isActiveValue(BooleanValue.TRUE);
+					boolean isOn = moduleValue.isActiveValue(BooleanValue.TRUE);
 					setSwitchChecked(isOn);
 				}
 			}
@@ -218,14 +239,14 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 			mBuilder.loadRootView(R.layout.widget_persistence_module_value_unit);
 
 			// if location set, show the icon
-			if (locationIcon > 0) mBuilder.setImage(R.id.icon, locationIcon);
+			if (locationIcon > 0) mBuilder.setImage(R.id.widget_module_icon, locationIcon);
 
 			if (mIsCached) {
-				mBuilder.setTextViewText(R.id.value, getValue());
-				mBuilder.setTextViewText(R.id.unit, getUnit() + cachedString);
+				mBuilder.setTextViewText(R.id.widget_module_value, getValue());
+				mBuilder.setTextViewText(R.id.widget_module_unit, getUnit() + cachedString);
 			} else {
-				mBuilder.setTextViewText(R.id.value, getValue());
-				mBuilder.setTextViewText(R.id.unit, getUnit());
+				mBuilder.setTextViewText(R.id.widget_module_value, getValue());
+				mBuilder.setTextViewText(R.id.widget_module_unit, getUnit());
 			}
 		}
 
@@ -250,15 +271,15 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	public void setValueUnitSize(int dimensionResource) {
 		if (containerType != VALUE_UNIT) return;
 
-		mBuilder.setTextViewTextSize(R.id.value, dimensionResource);
-		mBuilder.setTextViewTextSize(R.id.unit, dimensionResource);
+		mBuilder.setTextViewTextSize(R.id.widget_module_value, dimensionResource);
+		mBuilder.setTextViewTextSize(R.id.widget_module_unit, dimensionResource);
 	}
 
 	public void setValueUnitColor(int colorResource) {
 		if (containerType != VALUE_UNIT) return;
 
-		mBuilder.setTextViewColor(R.id.value, colorResource);
-		mBuilder.setTextViewColor(R.id.unit, colorResource);
+		mBuilder.setTextViewColor(R.id.widget_module_value, colorResource);
+		mBuilder.setTextViewColor(R.id.widget_module_unit, colorResource);
 	}
 
 	/**
@@ -267,8 +288,11 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	 * @param state
 	 */
 	public void setSwitchChecked(boolean state) {
+		if (mModule == null)
+			return;
+
 		// if this cannot be switched
-		if (containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
+		if (containerType != SWITCHCOMPAT || !(mModule.getValue() instanceof BooleanValue)) return;
 
 		mBuilder.setSwitchChecked(state);
 		moduleValueChecked = state;
@@ -281,8 +305,11 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	 * @param prevent  is set - prevents getting changed before calling setSwitchDisabled(false)
 	 */
 	public void setSwitchDisabled(boolean disabled, boolean prevent) {
+		if (mModule == null)
+			return;
+
 		// if this cannot be switched
-		if (containerType != SWITCHCOMPAT || !(moduleValue instanceof BooleanValue)) return;
+		if (containerType != SWITCHCOMPAT || !(mModule.getValue() instanceof BooleanValue)) return;
 
 		if (disabled) {
 			mBuilder.setSwitchDisabled(true, moduleValueChecked);
@@ -304,8 +331,10 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	// ----------------------------------------------------------- //
 	// ---------------------- GETTERS ---------------------------- //
 	// ----------------------------------------------------------- //
-	public ModuleType getType() {
-		return mModuleType;
+
+	@Nullable
+	public Module getModule() {
+		return mModule;
 	}
 
 	/**
@@ -314,8 +343,8 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	 * @return
 	 */
 	public String getValueUnit() {
-		if (mUnitsHelper != null) {
-			return mUnitsHelper.getStringValueUnit(moduleValue);
+		if (mModule != null && mUnitsHelper != null) {
+			return mUnitsHelper.getStringValueUnit(mModule.getValue());
 		}
 
 		return String.format("%s %s", cachedValue, cachedUnit);
@@ -327,8 +356,8 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	 * @return
 	 */
 	public String getValue() {
-		if (mUnitsHelper != null) {
-			return mUnitsHelper.getStringValue(moduleValue);
+		if (mModule != null && mUnitsHelper != null) {
+			return mUnitsHelper.getStringValue(mModule.getValue());
 		}
 
 		return cachedValue;
@@ -340,8 +369,8 @@ public class WidgetModulePersistence extends WidgetBeeeOnPersistence {
 	 * @return
 	 */
 	public String getUnit() {
-		if (mUnitsHelper != null) {
-			return mUnitsHelper.getStringUnit(moduleValue);
+		if (mModule != null && mUnitsHelper != null) {
+			return mUnitsHelper.getStringUnit(mModule.getValue());
 		}
 
 		return cachedUnit;
