@@ -33,10 +33,6 @@ public final class BatteryValue extends BaseValue {
 		return mUnit;
 	}
 
-	public double getValue() {
-		return mValue;
-	}
-
 	@Override
 	public double getDoubleValue() {
 		return mValue;
