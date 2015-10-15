@@ -3,9 +3,9 @@ package com.rehivetech.beeeon.network.server;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.SystemClock;
 import android.util.Log;
 
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.NetworkError;
@@ -21,7 +21,7 @@ import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.server.xml.XmlCreator;
 import com.rehivetech.beeeon.network.server.xml.XmlParser;
-import com.rehivetech.beeeon.network.server.xml.XmlParser.State;
+import com.rehivetech.beeeon.network.server.xml.XmlParser.Result;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
@@ -61,14 +61,25 @@ public class Network implements INetwork {
 
 	private static final String TAG = Network.class.getSimpleName();
 
-	/** Number of retries when we receive no response from server (e.g. because persistent connection expires from server side) */
+	/**
+	 * Communication version
+	 */
+	public static final String PROTOCOL_VERSION = "1.0.0";
+
+	/**
+	 * Number of retries when we receive no response from server (e.g. because persistent connection expires from server side)
+	 */
 	private static final int RETRIES_COUNT = 2;
 
-	/** Alias (tag) for CA certificate */
+	/**
+	 * Alias (tag) for CA certificate
+	 */
 	private static final String ALIAS_CA_CERT = "ca";
 
-	/** Marks end of communication messages */
-	private static final String EOF = "</com>";
+	/**
+	 * Marks end of communication messages
+	 */
+	private static final String EOF = "</response>";
 
 	private static final int SSL_TIMEOUT = 35000;
 
@@ -293,6 +304,9 @@ public class Network implements INetwork {
 			// Probably connection is lost so we need to reinit socket at next call of doRequest
 			closeCommunicationSocket();
 
+			// Wait a while to make sure socket is closed so we can open it again
+			SystemClock.sleep(50);
+
 			// Try to do this request again (with decremented retries)
 			Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));
 			return doRequest(messageToSend, checkBT, retries - 1);
@@ -302,37 +316,39 @@ public class Network implements INetwork {
 	}
 
 	/**
-	 * Just call's {@link #processCommunication(String, State, boolean)} with checkBT = true
+	 * Just call's {@link #processCommunication(XmlCreator.Request, boolean)} with checkBT = true
 	 *
-	 * @see {#processCommunication}
+	 * @see Network#processCommunication(XmlCreator.Request, boolean)
 	 */
-	private synchronized XmlParser processCommunication(String request, State expectedState) throws AppException {
-		return processCommunication(request, expectedState, true);
+	private synchronized XmlParser processCommunication(XmlCreator.Request request) throws AppException {
+		return processCommunication(request, true);
 	}
 
-	private XmlParser processCommunication(String request, State expectedState, boolean checkBT) throws AppException {
-		String response = doRequest(request, checkBT);
+	private XmlParser processCommunication(XmlCreator.Request request, boolean checkBT) throws AppException {
+		String response = doRequest(request.getMessage(), checkBT);
 		XmlParser parser = XmlParser.parse(response);
 
 		// Check communication protocol version
 		String version = parser.getVersion();
 		if (version.isEmpty()) {
 			throw new AppException("Get no protocol version from response.", ClientError.XML);
-		} else if (!version.equals(Constants.PROTOCOL_VERSION)) {
+		} else if (!version.equals(PROTOCOL_VERSION)) {
 			String srv[] = version.split("\\.");
-			String app[] = Constants.PROTOCOL_VERSION.split("\\.");
+			String app[] = PROTOCOL_VERSION.split("\\.");
 
-			if (srv.length >= 2 && app.length >= 2) {
+			if (srv.length == 3 && app.length == 3) {
 				try {
 					int srv_major = Integer.parseInt(srv[0]);
-					int srv_minor = Integer.parseInt(srv[1]);
+					//int srv_minor = Integer.parseInt(srv[1]);
+					//int srv_build = (srv.length >= 3) ? Integer.parseInt(srv[2]) : 0;
 					int app_major = Integer.parseInt(app[0]);
-					int app_minor = Integer.parseInt(app[1]);
+					//int app_minor = Integer.parseInt(app[1]);
+					//int app_build = (app.length >= 3) ? Integer.parseInt(app[2]) : 0;
 
-					if (srv_major != app_major || srv_minor < app_minor) {
-						// Server must have same major version as app and same or greater minor version than app
+					if (srv_major != app_major) {
+						// Server must have same major version as app
 						throw new AppException(NetworkError.COM_VER_MISMATCH)
-								.set(NetworkError.PARAM_COM_VER_LOCAL, Constants.PROTOCOL_VERSION)
+								.set(NetworkError.PARAM_COM_VER_LOCAL, PROTOCOL_VERSION)
 								.set(NetworkError.PARAM_COM_VER_SERVER, version);
 					}
 				} catch (NumberFormatException e) {
@@ -343,19 +359,25 @@ public class Network implements INetwork {
 			}
 		}
 
-		// Check expected state
-		if (parser.getState() != expectedState) {
-			if (parser.getState() != State.FALSE)
-				throw new AppException("ParsedMessage is not State.FALSE", ClientError.UNEXPECTED_RESPONSE)
-						.set("ExpectedState", expectedState)
-						.set("State", parser.getState());
-
+		// Check and process errors
+		if (parser.getResult() == Result.ERROR) {
 			// Delete COM_SESSION_ID when we receive error saying that it is invalid
 			if (parser.getErrorCode() == NetworkError.BAD_BT.getNumber())
 				mSessionId = "";
 
 			// Throw AppException
 			throw new AppException(Utils.getEnumFromId(NetworkError.class, String.valueOf(parser.getErrorCode()), NetworkError.UNKNOWN));
+		}
+
+		// Check expected namespace/type/result
+		if (!parser.getNamespace().equals(request.namespace) || !parser.getType().equals(request.type) || parser.getResult() != request.expectedResult) {
+			throw new AppException("Unexpected response", ClientError.UNEXPECTED_RESPONSE)
+					.set("ExpectedNamespace", request.namespace)
+					.set("ReceivedNamespace", parser.getNamespace())
+					.set("ExpectedType", request.type)
+					.set("ReceivedType", parser.getType())
+					.set("ExpectedResult", request.expectedResult)
+					.set("ReceivedResult", parser.getResult());
 		}
 
 		return parser;
@@ -390,7 +412,6 @@ public class Network implements INetwork {
 
 		XmlParser parser = processCommunication(
 				XmlCreator.Accounts.login(Utils.getPhoneName(), authProvider),
-				State.SESSION_ID,
 				false);
 
 		mSessionId = parser.parseSessionId();
@@ -406,7 +427,6 @@ public class Network implements INetwork {
 
 		processCommunication(
 				XmlCreator.Accounts.register(authProvider),
-				State.TRUE,
 				false);
 
 		return true;
@@ -415,8 +435,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean accounts_logout() {
 		processCommunication(
-				XmlCreator.Accounts.logout(mSessionId),
-				State.TRUE);
+				XmlCreator.Accounts.logout(mSessionId));
 
 		return true;
 	}
@@ -424,17 +443,15 @@ public class Network implements INetwork {
 	@Override
 	public User accounts_getMyProfile() {
 		XmlParser parser = processCommunication(
-				XmlCreator.Accounts.getMyProfile(mSessionId),
-				State.USERINFO);
+				XmlCreator.Accounts.getMyProfile(mSessionId));
 
-		return parser.parseUserInfo();
+		return parser.parseGetMyProfile();
 	}
 
 	@Override
 	public boolean accounts_connectAuthProvider(IAuthProvider authProvider) {
 		processCommunication(
-				XmlCreator.Accounts.connectAuthProvider(mSessionId, authProvider),
-				State.TRUE);
+				XmlCreator.Accounts.connectAuthProvider(mSessionId, authProvider));
 
 		return true;
 	}
@@ -442,8 +459,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean accounts_disconnectAuthProvider(String providerName) {
 		processCommunication(
-				XmlCreator.Accounts.disconnectAuthProvider(mSessionId, providerName),
-				State.TRUE);
+				XmlCreator.Accounts.disconnectAuthProvider(mSessionId, providerName));
 
 		return true;
 	}
@@ -456,8 +472,7 @@ public class Network implements INetwork {
 	@Override
 	public List<Device> devices_getAll(String gateId) {
 		XmlParser parser = processCommunication(
-				XmlCreator.Devices.getAll(mSessionId, gateId),
-				State.ALLDEVICES);
+				XmlCreator.Devices.getAll(mSessionId, gateId));
 
 		return parser.parseDevices();
 	}
@@ -465,8 +480,7 @@ public class Network implements INetwork {
 	@Override
 	public List<Device> devices_getNew(String gateId) {
 		XmlParser parser = processCommunication(
-				XmlCreator.Devices.getNew(mSessionId, gateId),
-				State.DEVICES);
+				XmlCreator.Devices.getNew(mSessionId, gateId));
 
 		return parser.parseDevices();
 	}
@@ -474,8 +488,7 @@ public class Network implements INetwork {
 	@Override
 	public List<Device> devices_get(List<Device> devices) {
 		XmlParser parser = processCommunication(
-				XmlCreator.Devices.get(mSessionId, devices),
-				State.DEVICES);
+				XmlCreator.Devices.get(mSessionId, devices));
 
 		return parser.parseDevices();
 	}
@@ -489,7 +502,7 @@ public class Network implements INetwork {
 	@Override
 	// FIXME: Use ModuleId instead
 	public ModuleLog devices_getLog(String gateId, Module module, ModuleLog.DataPair pair) {
-		String request = XmlCreator.Devices.getLog(
+		XmlCreator.Request request = XmlCreator.Devices.getLog(
 				mSessionId,
 				gateId,
 				module.getDevice().getAddress(),
@@ -500,8 +513,7 @@ public class Network implements INetwork {
 				pair.gap.getSeconds());
 
 		XmlParser parser = processCommunication(
-				request,
-				State.LOGDATA);
+				request);
 
 		ModuleLog result = parser.parseLogData();
 		result.setDataInterval(pair.gap);
@@ -512,8 +524,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean devices_update(String gateId, List<Device> devices) {
 		processCommunication(
-				XmlCreator.Devices.update(mSessionId, gateId, devices),
-				State.TRUE);
+				XmlCreator.Devices.update(mSessionId, gateId, devices));
 
 		return true;
 	}
@@ -529,8 +540,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean devices_setState(String gateId, Module module) {
 		processCommunication(
-				XmlCreator.Devices.setState(mSessionId, gateId, module),
-				State.TRUE);
+				XmlCreator.Devices.setState(mSessionId, gateId, module));
 
 		return true;
 	}
@@ -538,8 +548,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean devices_unregister(Device device) {
 		processCommunication(
-				XmlCreator.Devices.unregister(mSessionId, device),
-				State.TRUE);
+				XmlCreator.Devices.unregister(mSessionId, device));
 
 		return true;
 	}
@@ -552,8 +561,7 @@ public class Network implements INetwork {
 	@Override
 	public List<Gate> gates_getAll() {
 		XmlParser parser = processCommunication(
-				XmlCreator.Gates.getAll(mSessionId),
-				State.GATES);
+				XmlCreator.Gates.getAll(mSessionId));
 
 		return parser.parseGates();
 	}
@@ -561,8 +569,7 @@ public class Network implements INetwork {
 	@Override
 	public GateInfo gates_get(String gateId) {
 		XmlParser parser = processCommunication(
-				XmlCreator.Gates.get(mSessionId, gateId),
-				State.GATEINFO);
+				XmlCreator.Gates.get(mSessionId, gateId));
 
 		return parser.parseGateInfo();
 	}
@@ -570,8 +577,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean gates_register(String gateId, String gateName, int offsetInMinutes) {
 		processCommunication(
-				XmlCreator.Gates.register(mSessionId, gateId, gateName, offsetInMinutes),
-				State.TRUE);
+				XmlCreator.Gates.register(mSessionId, gateId, gateName, offsetInMinutes));
 
 		return true;
 	}
@@ -579,8 +585,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean gates_unregister(String gateId) {
 		processCommunication(
-				XmlCreator.Gates.unregister(mSessionId, gateId),
-				State.TRUE);
+				XmlCreator.Gates.unregister(mSessionId, gateId));
 
 		return true;
 	}
@@ -588,8 +593,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean gates_startListen(String gateId) {
 		processCommunication(
-				XmlCreator.Gates.startListen(mSessionId, gateId),
-				State.TRUE);
+				XmlCreator.Gates.startListen(mSessionId, gateId));
 
 		return true;
 	}
@@ -597,8 +601,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean gates_update(Gate gate) {
 		processCommunication(
-				XmlCreator.Gates.update(mSessionId, gate),
-				State.TRUE);
+				XmlCreator.Gates.update(mSessionId, gate));
 
 		return true;
 	}
@@ -611,8 +614,7 @@ public class Network implements INetwork {
 	@Override
 	public List<User> gateusers_getAll(String gateId) {
 		XmlParser parser = processCommunication(
-				XmlCreator.GateUsers.getAll(mSessionId, gateId),
-				State.ACCOUNTS);
+				XmlCreator.GateUsers.getAll(mSessionId, gateId));
 
 		List<User> users = parser.parseGateUsers();
 		for (User user : users) {
@@ -627,8 +629,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean gateusers_invite(String gateId, ArrayList<User> users) {
 		processCommunication(
-				XmlCreator.GateUsers.invite(mSessionId, gateId, users),
-				State.TRUE);
+				XmlCreator.GateUsers.invite(mSessionId, gateId, users));
 
 		return true;
 	}
@@ -644,8 +645,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean gateusers_remove(String gateId, List<User> users) {
 		processCommunication(
-				XmlCreator.GateUsers.remove(mSessionId, gateId, users),
-				State.TRUE);
+				XmlCreator.GateUsers.remove(mSessionId, gateId, users));
 
 		return true;
 	}
@@ -661,8 +661,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean gateusers_updateAccess(String gateId, ArrayList<User> users) {
 		processCommunication(
-				XmlCreator.GateUsers.updateAccess(mSessionId, gateId, users),
-				State.TRUE);
+				XmlCreator.GateUsers.updateAccess(mSessionId, gateId, users));
 
 		return true;
 	}
@@ -683,8 +682,7 @@ public class Network implements INetwork {
 	@Override
 	public Location locations_create(Location location) {
 		XmlParser parser = processCommunication(
-				XmlCreator.Locations.create(mSessionId, location),
-				State.LOCATIONID);
+				XmlCreator.Locations.create(mSessionId, location));
 
 		location.setId(parser.parseNewLocationId());
 		return location;
@@ -693,8 +691,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean locations_update(Location location) {
 		processCommunication(
-				XmlCreator.Locations.update(mSessionId, location),
-				State.TRUE);
+				XmlCreator.Locations.update(mSessionId, location));
 
 		return true;
 	}
@@ -702,8 +699,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean locations_delete(Location location) {
 		processCommunication(
-				XmlCreator.Locations.delete(mSessionId, location),
-				State.TRUE);
+				XmlCreator.Locations.delete(mSessionId, location));
 
 		return true;
 	}
@@ -711,8 +707,7 @@ public class Network implements INetwork {
 	@Override
 	public List<Location> locations_getAll(String gateId) {
 		XmlParser parser = processCommunication(
-				XmlCreator.Locations.getAll(mSessionId, gateId),
-				State.LOCATIONS);
+				XmlCreator.Locations.getAll(mSessionId, gateId));
 
 		return parser.parseLocations();
 	}
@@ -725,8 +720,7 @@ public class Network implements INetwork {
 	@Override
 	public List<VisibleNotification> notifications_getLatest() {
 		XmlParser parser = processCommunication(
-				XmlCreator.Notifications.getLatest(mSessionId),
-				State.NOTIFICATIONS);
+				XmlCreator.Notifications.getLatest(mSessionId));
 
 		return parser.parseNotifications();
 	}
@@ -734,8 +728,7 @@ public class Network implements INetwork {
 	@Override
 	public boolean notifications_read(ArrayList<String> notificationIds) {
 		processCommunication(
-				XmlCreator.Notifications.read(mSessionId, notificationIds),
-				State.TRUE);
+				XmlCreator.Notifications.read(mSessionId, notificationIds));
 
 		return true;
 	}
@@ -754,8 +747,7 @@ public class Network implements INetwork {
 	 */
 	public boolean deleteGCMID(String userId, String gcmID) {
 		processCommunication(
-				XmlCreator.Notifications.deleteGCMID(userId, gcmID),
-				State.TRUE);
+				XmlCreator.Notifications.deleteGCMID(userId, gcmID));
 
 		return true;
 	}
@@ -768,8 +760,7 @@ public class Network implements INetwork {
 	 */
 	public boolean setGCMID(String gcmID) {
 		processCommunication(
-				XmlCreator.Notifications.setGCMID(mSessionId, gcmID),
-				State.TRUE);
+				XmlCreator.Notifications.setGCMID(mSessionId, gcmID));
 
 		return true;
 	}

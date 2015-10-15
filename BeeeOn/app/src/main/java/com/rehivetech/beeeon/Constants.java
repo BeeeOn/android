@@ -12,11 +12,6 @@ package com.rehivetech.beeeon;
 public final class Constants {
 
 	/**
-	 * Network layer version
-	 */
-	public static final String PROTOCOL_VERSION = "2.5";
-
-	/**
 	 * Persistence's shared preferences
 	 */
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
