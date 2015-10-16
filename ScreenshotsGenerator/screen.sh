@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Script for automate capturing screenshots
 # Params:
 #		$1 ... device 
@@ -67,7 +68,7 @@ sleep 5
 adb shell "screencap -p /data/local/tmp/gpss/screenshot5.png"
 
 # Overview screen
-adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.activity.ModuleDetailActivity -e gate_id 65260 -e module_id 101:00:FF:000:FF0---10"
+adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.activity.ModuleGraphActivity -e gate_id 64206 -e module_id 1 -e device_id 1003"
 sleep 20
 adb shell "screencap -p /data/local/tmp/gpss/screenshot4.png"
 
@@ -80,6 +81,11 @@ adb shell "screencap -p /data/local/tmp/gpss/screenshot6.png"
 adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.activity.SettingsMainActivity"
 sleep 5
 adb shell "screencap -p /data/local/tmp/gpss/screenshot7.png"
+
+# Overview screen
+adb shell "am start -n com.rehivetech.beeeon.debug/com.rehivetech.beeeon.gui.activity.DeviceDetailActivity -e gate_id 64206 -e device_id 1001"
+sleep 20
+adb shell "screencap -p /data/local/tmp/gpss/screenshot8.png"
 
 # pull screenshots to PC
 adb pull /data/local/tmp/gpss $3
