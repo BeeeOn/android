@@ -23,7 +23,7 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 	private String mDeviceId;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_device_detail);
 

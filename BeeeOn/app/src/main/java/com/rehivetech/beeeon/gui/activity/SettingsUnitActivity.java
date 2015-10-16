@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.gui.fragment.SettingsUnitFragment;
 public class SettingsUnitActivity extends BaseApplicationActivity {
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings_units);
 		setupToolbar(R.string.settings_unit_unit);

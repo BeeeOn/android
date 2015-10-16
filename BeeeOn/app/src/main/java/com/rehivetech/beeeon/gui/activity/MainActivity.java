@@ -72,7 +72,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	private ArrayAdapter<Gate> mGatesAdapter;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 

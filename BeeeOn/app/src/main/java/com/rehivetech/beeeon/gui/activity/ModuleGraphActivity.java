@@ -26,7 +26,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private String mModuleId;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_graph);
 

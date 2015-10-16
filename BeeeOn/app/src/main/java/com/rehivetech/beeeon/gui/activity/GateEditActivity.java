@@ -34,7 +34,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	@Nullable private GateEditFragment mFragment;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_edit);
 

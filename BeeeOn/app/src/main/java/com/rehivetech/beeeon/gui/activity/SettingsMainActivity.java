@@ -13,7 +13,7 @@ import com.rehivetech.beeeon.gui.fragment.SettingsMainFragment;
  */
 public class SettingsMainActivity extends BaseApplicationActivity implements SettingsMainFragment.OnPreferenceChangedListener {
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings_main);
 		setupToolbar(R.string.settings_main_settings);

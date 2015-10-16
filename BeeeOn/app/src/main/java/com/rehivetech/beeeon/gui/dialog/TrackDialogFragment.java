@@ -13,7 +13,6 @@ public abstract class TrackDialogFragment extends DialogFragment {
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-
 		super.onCreate(savedInstanceState);
 
 		this.tracker = ((BeeeOnApplication)getActivity().getApplication()).getDefaultTracker();
