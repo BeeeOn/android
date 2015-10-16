@@ -100,7 +100,8 @@
 			android:name=".gui.activity.DeviceDetailActivity">
 			android:label="@string/manifest_title_device_detail">
 		</activity>
-		<activity android:name=".gui.activity.DeviceEditActivity"
+		<activity
+			android:name=".gui.activity.DeviceEditActivity"
 			android:label="@string/manifest_title_device_edit">
 		</activity>
 		<activity
@@ -121,9 +122,10 @@
 			</intent-filter>
 		</activity>
 
-		<activity android:name=".gui.activity.SettingsMainActivity"
-				  android:label="@string/manifest_title_settings"
-				  android:configChanges="locale|orientation">
+		<activity
+			android:name=".gui.activity.SettingsMainActivity"
+			android:label="@string/manifest_title_settings"
+			android:configChanges="locale|orientation">
 		</activity>
 		<activity
 			android:name=".gui.activity.SettingsUnitActivity"
@@ -161,7 +163,7 @@
 
 		<activity
 			android:name=".gui.activity.DevicesListActivity"
-			android:label="@string/nav_drawer_menu_menu_devices" />
+			android:label="@string/nav_drawer_menu_menu_devices"/>
 
 		<!-- WIDGETS -->
 		<service
