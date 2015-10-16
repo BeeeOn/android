@@ -58,7 +58,8 @@
 #Uncomment if using annotations to keep them.
 -keepattributes *Annotation*
 
-
+-keep class com.google.android.gms.** { *; }
+-dontwarn com.google.android.gms.**
 
 #Keep classes that are referenced on the AndroidManifest
 -keep public class * extends android.app.Activity
@@ -172,3 +173,7 @@
 #    java.lang.Object writeReplace();
 #    java.lang.Object readResolve();
 #}
+
+# FIXME odstranit - pouze docasne reseni matematicke knihovny, ktere jsou vyuzity v externich knihovnach
+-dontwarn com.viewpagerindicator.**
+-dontwarn net.simonvt.numberpicker.**

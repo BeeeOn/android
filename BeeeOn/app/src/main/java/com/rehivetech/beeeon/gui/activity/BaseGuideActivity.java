@@ -23,7 +23,7 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 	protected CirclePageIndicator mIndicator;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceData) {
+	public void onCreate(Bundle savedInstanceData) {
 		super.onCreate(savedInstanceData);
 
 		mPagerAdapter = initPagerAdapter();

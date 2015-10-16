@@ -1,23 +1,22 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import com.google.android.gms.analytics.Tracker;
+import com.rehivetech.beeeon.BeeeOnApplication;
 
-import com.google.analytics.tracking.android.EasyTracker;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+	private Tracker mTracker;
+
 	@Override
-	public void onStart() {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onStart();
+// Obtain the shared Tracker instance.
+		BeeeOnApplication application = (BeeeOnApplication) getApplication();
+		mTracker = application.getDefaultTracker();
 
-		EasyTracker.getInstance(this).activityStart(this);
-	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-
-		EasyTracker.getInstance(this).activityStop(this);
 	}
 
 }

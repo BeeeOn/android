@@ -46,7 +46,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 	private UsersListAdapter mUsersListAdapter;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_users);
 

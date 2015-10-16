@@ -18,7 +18,7 @@ public class WebAuthActivity extends BaseActivity {
 	private IAuthProvider.IWebAuthProvider mWebAuthProvider;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		// Init views and layout

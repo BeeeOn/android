@@ -72,7 +72,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	private GateDetailFragment mFragment;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_detail);
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<!--  App property id. -->
+	<string name="ga_trackingId">UA-45172133-3</string>
+
+	<!-- Enable automatic Activity measurement -->
+	<bool name="ga_autoActivityTracking">true</bool>
+
+	<!-- Report uncaught exceptions -->
+	<bool name="ga_reportUncaughtExceptions">true</bool>
+
+
+	<!-- The screen names that will appear in reports -->
+	<screenName name="com.google.android.gms.analytics.samples.mobileplayground.ScreenviewFragment">
+		AnalyticsSampleApp ScreenViewSampleScreen
+	</screenName>
+</resources>

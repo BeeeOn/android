@@ -57,7 +57,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	public CallbackTaskManager callbackTaskManager;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		setLocale();
 
 		super.onCreate(savedInstanceState);
