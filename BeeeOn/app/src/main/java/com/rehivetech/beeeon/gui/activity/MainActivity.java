@@ -81,7 +81,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		mNavigationView = (NavigationView) findViewById(R.id.navigationview_layout_drawer);
 		mNavigationView.setNavigationItemSelectedListener(this);
 
-		mNavigationHeader = mNavigationView.findViewById(R.id.menu_header);
+		mNavigationHeader = mNavigationView.inflateHeaderView(R.layout.item_menu_profile);
 		mNavigationMenu = mNavigationView.getMenu();
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
