@@ -157,6 +157,8 @@
 -keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
 -keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }
 
+-keep class android.support.**{*;}
+
 ###### ADDITIONAL OPTIONS NOT USED NORMALLY
 
 #To keep callback calls. Uncomment if using any
