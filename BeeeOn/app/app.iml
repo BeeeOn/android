@@ -78,7 +78,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/support-v4/23.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.avast/android-styled-dialogs/2.2.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.facebook.android/facebook-android-sdk/4.0.0/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.amlcurran.showcaseview/showcaseview/5.1.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.lzyzsd/circleprogress/1.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.github.shkschneider/android_PreferenceFragmentCompat/1.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/8.1.0/jars" />
@@ -115,7 +114,6 @@
     <orderEntry type="library" exported="" name="play-services-base-8.1.0" level="project" />
     <orderEntry type="library" exported="" name="MPAndroidChart-v2.1.5" level="project" />
     <orderEntry type="library" exported="" name="play-services-identity-8.1.0" level="project" />
-    <orderEntry type="library" exported="" name="showcaseview-5.1.1" level="project" />
     <orderEntry type="library" exported="" name="recyclerview-v7-23.1.0" level="project" />
     <orderEntry type="library" exported="" name="android_PreferenceFragmentCompat-1.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-analytics-8.1.0" level="project" />
