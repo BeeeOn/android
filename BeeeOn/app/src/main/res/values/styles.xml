@@ -36,7 +36,7 @@
     </style>
 
     <!-- Showcase themes -->
-    <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
+    <!-- <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
         <item name="sv_backgroundColor">#b4000000</item>
         <item name="sv_showcaseColor">#00bcd4</item>
         <item name="sv_buttonText">Close</item>
@@ -51,7 +51,7 @@
     </style>
     <style name="CustomShowcaseTheme_Next" parent="CustomShowcaseTheme">
         <item name="sv_buttonText">Next</item>
-    </style>
+    </style> -->
 
     <!--MainActivity custom theme-->
     <style name="MainActivityTheme" parent="AppTheme">
