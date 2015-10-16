@@ -12,7 +12,7 @@
 
 
 	<!-- The screen names that will appear in reports -->
-	<screenName name="com.google.android.gms.analytics.samples.mobileplayground.ScreenviewFragment">
-		AnalyticsSampleApp ScreenViewSampleScreen
-	</screenName>
+	<!--<screenName name="com.google.android.gms.analytics.samples.mobileplayground.ScreenviewFragment">-->
+		<!--AnalyticsSampleApp ScreenViewSampleScreen-->
+	<!--</screenName>-->
 </resources>

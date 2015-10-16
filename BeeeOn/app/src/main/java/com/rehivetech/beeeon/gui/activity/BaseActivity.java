@@ -11,8 +11,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 	private Tracker mTracker;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onStart();
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 // Obtain the shared Tracker instance.
 		BeeeOnApplication application = (BeeeOnApplication) getApplication();
 		mTracker = application.getDefaultTracker();
