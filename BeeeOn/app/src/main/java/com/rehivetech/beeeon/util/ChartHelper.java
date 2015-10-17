@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.util;
 
 import android.content.Context;
 import android.support.annotation.ColorInt;
+import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
@@ -37,7 +38,8 @@ final public class ChartHelper {
 	 * @param yLabels    StringBuffer to save long x labels in bar chart
 	 * @param controller Controller instance
 	 */
-	public static void prepareChart(BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels, Controller controller) {
+	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue,
+									StringBuffer yLabels, Controller controller, String dataUnit) {
 		YAxisValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		chart.getLegend().setEnabled(false);
@@ -50,7 +52,6 @@ final public class ChartHelper {
 		chart.setDrawBorders(true);
 		chart.setBorderColor(context.getResources().getColor(R.color.gray));
 		chart.setDescription("");
-		chart.setHighlightEnabled(false);
 		chart.setGridBackgroundColor(context.getResources().getColor(R.color.white));
 		//set bottom X axis style
 		XAxis xAxis = chart.getXAxis();
@@ -91,7 +92,7 @@ final public class ChartHelper {
 			chart.setDoubleTapToZoomEnabled(false);
 			chart.setScaleYEnabled(false);
 		} else {
-			ChartMarkerView markerView = new ChartMarkerView(context, R.layout.util_chart_helper_markerview);
+			ChartMarkerView markerView = new ChartMarkerView(context, R.layout.util_chart_helper_markerview, chart, dataUnit);
 			chart.setMarkerView(markerView);
 		}
 	}
@@ -104,7 +105,7 @@ final public class ChartHelper {
 	 * @param filled   fill dataset flag
 	 * @param color    line color
 	 */
-	public static void prepareDataSet(DataSet dataset, boolean barChart, boolean filled, @ColorInt int color) {
+	public static void prepareDataSet(DataSet dataset, boolean barChart, boolean filled, @ColorInt int color, @ColorInt @Nullable Integer highlightColor) {
 		int fillColor = Utils.setColorAlpha(color, 125);
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
@@ -113,6 +114,15 @@ final public class ChartHelper {
 				((LineDataSet) dataset).setDrawFilled(true);
 				((LineDataSet) dataset).setFillColor(fillColor);
 				((LineDataSet) dataset).setFillFormatter(new CustomFillFormatter());
+				if (highlightColor != null) {
+					((LineDataSet) dataset).setDrawHorizontalHighlightIndicator(false);
+					((LineDataSet) dataset).setHighLightColor(highlightColor);
+					((LineDataSet) dataset).setHighlightLineWidth(1f);
+				} else {
+					((LineDataSet) dataset).setDrawHighlightIndicators(false);
+				}
+			} else if (highlightColor == null){
+				((LineDataSet) dataset).setDrawHighlightIndicators(false);
 			}
 		}
 		dataset.setColor(color);

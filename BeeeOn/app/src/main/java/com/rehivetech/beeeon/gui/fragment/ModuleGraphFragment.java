@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,7 +158,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		String moduleName = module.getName(mActivity);
 
 		//set chart
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller, mUnitsHelper.getStringUnit(baseValue));
 //		mChart.setFillFormatter(new CustomFillFormatter());
 
 		if (barchart) {
@@ -167,7 +168,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
-		ChartHelper.prepareDataSet(mDataSet, barchart, true, getResources().getColor(R.color.beeeon_primary_medium));
+		ChartHelper.prepareDataSet(mDataSet, barchart, true,
+				ContextCompat.getColor(mActivity, R.color.beeeon_primary_medium), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -31,6 +31,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -79,6 +80,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	}
 
 	private void addChart(final Module module) {
+		Controller controller = Controller.getInstance(mActivity);
+		UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
+		BaseValue baseValue = module.getValue();
+
 		// Inflate Layout
 		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.fragment_custom_view, mLayout, false);
@@ -97,7 +102,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
-		ChartHelper.prepareChart(chart, mActivity, module.getValue(), yLabels, Controller.getInstance(mActivity));
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, Controller.getInstance(mActivity), unitsHelper.getStringUnit(baseValue));
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
@@ -183,7 +188,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			lineEntries = new ArrayList<>();
 			dataSet = new LineDataSet(lineEntries, String.format("%s - %s [%s]", deviceName, moduleName, unit));
 		}
-		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color);
+		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color, null);
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();

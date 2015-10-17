@@ -2,8 +2,10 @@ package com.rehivetech.beeeon.gui.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -16,21 +18,41 @@ import com.rehivetech.beeeon.R;
 public class ChartMarkerView extends MarkerView {
 
 	private TextView mTextView;
+	private Chart mChart;
+	private String mValueUnit;
+
 
 	/**
 	 * Constructor. Sets up the MarkerView with a custom layout resource.
 	 *
-	 * @param context
+	 * @param context context
 	 * @param layoutResource the layout resource to use for the MarkerView
+	 * @param chart  the chart reference
 	 */
-	public ChartMarkerView(Context context, int layoutResource) {
+	public ChartMarkerView(Context context, int layoutResource, Chart chart, String valueUnit) {
 		super(context, layoutResource);
 		mTextView = (TextView) findViewById(R.id.util_chart_helper_markerview_text);
+		mChart = chart;
+		mValueUnit = valueUnit;
+	}
+
+	@Override
+	public void draw(Canvas canvas, float posx, float posy) {
+		// take offsets into consideration
+		posx += getXOffset();
+		posy = canvas.getHeight() / 2 + getYOffset();
+
+		// translate to the correct position and draw
+		canvas.translate(posx, posy);
+		draw(canvas);
+		canvas.translate(-posx, -posy);
 	}
 
 	@Override
 	public void refreshContent(Entry e, Highlight highlight) {
-		mTextView.setText(Float.toString(e.getVal()));
+		String xValue = mChart.getXValue(e.getXIndex());
+		mTextView.setText(String.format("%s %s\n%s ", e.getVal(), mValueUnit, xValue));
+
 	}
 
 	@Override
