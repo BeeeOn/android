@@ -52,17 +52,17 @@ import java.util.Random;
 import java.util.SortedMap;
 
 public class CustomViewFragment extends BaseApplicationFragment {
+	private static final String TAG = CustomViewFragment.class.getSimpleName();
+
+	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	private SparseArray<List<Module>> mModules = new SparseArray<>();
 	// private SparseArray<List<ModuleLog>> mLogs = new SparseArray<List<ModuleLog>>();
 	private SparseArray<BarLineChartBase> mCharts = new SparseArray<>();
 	private SparseArray<VerticalChartLegend> mLegends = new SparseArray<>();
 
-	private String mChartDateTimeFormat = "dd.MM. kk:mm";
-
 	private LinearLayout mLayout;
 
-	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
 	public CustomViewFragment() {
 	}
@@ -148,7 +148,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		Controller controller = Controller.getInstance(mActivity);
 		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mChartDateTimeFormat, controller.getActiveGate());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
 
 		boolean isBarChart = (module.getValue() instanceof EnumValue);
 

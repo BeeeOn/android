@@ -58,8 +58,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private static final String KEY_DEVICE_ID = "device_id";
 	private static final String KEY_MODULE_ID = "module_id";
 
-	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
-	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	private String mGateId;
 	private String mDeviceId;
@@ -159,7 +158,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		//set chart
 		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller, mUnitsHelper.getStringUnit(baseValue));
-//		mChart.setFillFormatter(new CustomFillFormatter());
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
@@ -240,8 +238,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusWeeks(1);
-
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
 
 		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(mActivity);
 		final ModuleLog.DataPair pair = new ModuleLog.DataPair( //
