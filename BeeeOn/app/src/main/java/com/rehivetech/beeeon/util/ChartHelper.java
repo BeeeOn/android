@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.DataSet;
@@ -15,7 +16,6 @@ import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.view.ChartMarkerView;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 
@@ -34,12 +34,13 @@ final public class ChartHelper {
 	 *
 	 * @param chart      chart instance
 	 * @param context    context
-	 * @param baseValue
+	 * @param baseValue  module baseValue
 	 * @param yLabels    StringBuffer to save long x labels in bar chart
 	 * @param controller Controller instance
+	 * @param markerView chart markerView instance
 	 */
 	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue,
-									StringBuffer yLabels, Controller controller, String dataUnit) {
+									StringBuffer yLabels, Controller controller, MarkerView markerView) {
 		YAxisValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
 
 		chart.getLegend().setEnabled(false);
@@ -92,7 +93,6 @@ final public class ChartHelper {
 			chart.setDoubleTapToZoomEnabled(false);
 			chart.setScaleYEnabled(false);
 		} else {
-			ChartMarkerView markerView = new ChartMarkerView(context, R.layout.util_chart_helper_markerview, chart, dataUnit);
 			chart.setMarkerView(markerView);
 		}
 	}
@@ -104,6 +104,7 @@ final public class ChartHelper {
 	 * @param barChart bar chart flag
 	 * @param filled   fill dataset flag
 	 * @param color    line color
+	 * @param highlightColor color for highlight lines
 	 */
 	public static void prepareDataSet(DataSet dataset, boolean barChart, boolean filled, @ColorInt int color, @ColorInt @Nullable Integer highlightColor) {
 		int fillColor = Utils.setColorAlpha(color, 125);
@@ -117,12 +118,13 @@ final public class ChartHelper {
 				if (highlightColor != null) {
 					((LineDataSet) dataset).setDrawHorizontalHighlightIndicator(false);
 					((LineDataSet) dataset).setHighLightColor(highlightColor);
-					((LineDataSet) dataset).setHighlightLineWidth(1f);
 				} else {
 					((LineDataSet) dataset).setDrawHighlightIndicators(false);
 				}
 			} else if (highlightColor == null){
 				((LineDataSet) dataset).setDrawHighlightIndicators(false);
+			} else {
+				((LineDataSet) dataset).setHighLightColor(highlightColor);
 			}
 		}
 		dataset.setColor(color);

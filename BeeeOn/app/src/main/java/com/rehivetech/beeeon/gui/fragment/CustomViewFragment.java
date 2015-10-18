@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -25,6 +27,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.view.CustomViewChartMarkerView;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -102,7 +105,8 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
-		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, Controller.getInstance(mActivity), unitsHelper.getStringUnit(baseValue));
+		MarkerView markerView = new CustomViewChartMarkerView(mActivity, R.layout.util_chart_customview_markerview, chart, unitsHelper.getStringUnit(baseValue));
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, Controller.getInstance(mActivity), markerView);
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
@@ -188,7 +192,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			lineEntries = new ArrayList<>();
 			dataSet = new LineDataSet(lineEntries, String.format("%s - %s [%s]", deviceName, moduleName, unit));
 		}
-		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color, null);
+		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color, ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();

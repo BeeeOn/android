@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
+import com.rehivetech.beeeon.gui.view.ChartMarkerView;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -40,7 +42,6 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -157,7 +158,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		String moduleName = module.getName(mActivity);
 
 		//set chart
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller, mUnitsHelper.getStringUnit(baseValue));
+		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart, mUnitsHelper.getStringUnit(baseValue));
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller, markerView);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
