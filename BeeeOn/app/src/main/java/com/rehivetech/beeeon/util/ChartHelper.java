@@ -181,6 +181,10 @@ final public class ChartHelper {
 			public String getFormattedValue(float value, YAxis yAxis) {
 				if (value == 0)
 					value = 0;
+
+				if (value % 1 == 0) {
+					return String.format("%.0f", value);
+				}
 				return String.format("%.1f", value);
 			}
 		};
