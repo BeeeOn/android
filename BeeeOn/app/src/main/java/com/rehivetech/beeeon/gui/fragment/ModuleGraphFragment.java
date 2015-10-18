@@ -159,7 +159,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		//set chart
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart, mUnitsHelper.getStringUnit(baseValue));
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller, markerView);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));

@@ -36,12 +36,11 @@ final public class ChartHelper {
 	 * @param context    context
 	 * @param baseValue  module baseValue
 	 * @param yLabels    StringBuffer to save long x labels in bar chart
-	 * @param controller Controller instance
 	 * @param markerView chart markerView instance
 	 */
 	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue,
-									StringBuffer yLabels, Controller controller, MarkerView markerView) {
-		YAxisValueFormatter enumValueFormatter = getValueFormatterInstance(baseValue, context, controller);
+									StringBuffer yLabels, MarkerView markerView) {
+		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
@@ -74,6 +73,7 @@ final public class ChartHelper {
 
 		//disable right Y axis
 		chart.getAxisRight().setEnabled(false);
+		yAxis.setValueFormatter(yAxisValueFormatter);
 
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
@@ -86,7 +86,6 @@ final public class ChartHelper {
 				yAxis.setShowOnlyMinMax(true);
 			}
 
-			yAxis.setValueFormatter(enumValueFormatter);
 			yAxis.setLabelCount(labels.size(), true);
 			yAxis.setAxisMinValue(0);
 			yAxis.setAxisMaxValue(labels.size() - 1);
@@ -134,13 +133,11 @@ final public class ChartHelper {
 	/**
 	 * Prepare ValueFormatter for bar and line chart
 	 *
-	 * @param baseValue
+	 * @param baseValue module baseValue
 	 * @param context    Context
-	 * @param controller Controller instance
 	 * @return specific valueFormatter
 	 */
-	public static YAxisValueFormatter getValueFormatterInstance(final BaseValue baseValue, final Context context, Controller controller) {
-		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), context);
+	public static YAxisValueFormatter getValueFormatterInstance(final BaseValue baseValue, final Context context) {
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
@@ -161,7 +158,9 @@ final public class ChartHelper {
 		return new YAxisValueFormatter() {
 			@Override
 			public String getFormattedValue(float value, YAxis yAxis) {
-				return value + unitsHelper.getStringUnit(baseValue);
+				if (value == 0)
+					value = 0;
+				return String.format("%.1f", value);
 			}
 		};
 	}

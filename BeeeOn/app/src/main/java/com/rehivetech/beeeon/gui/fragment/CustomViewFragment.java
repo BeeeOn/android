@@ -106,7 +106,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
 		MarkerView markerView = new CustomViewChartMarkerView(mActivity, R.layout.util_chart_customview_markerview, chart, unitsHelper.getStringUnit(baseValue));
-		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, Controller.getInstance(mActivity), markerView);
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView);
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
