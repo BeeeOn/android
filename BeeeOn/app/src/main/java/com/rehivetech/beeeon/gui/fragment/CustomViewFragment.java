@@ -1,8 +1,10 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -82,6 +84,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		return view;
 	}
 
+	@SuppressLint("PrivateResource")
 	private void addChart(final Module module) {
 		Controller controller = Controller.getInstance(mActivity);
 		UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
@@ -117,7 +120,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 		//set legend title
 		int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
-		TextView legendHeadline = new TextView(mActivity);
+		AppCompatTextView legendHeadline = new AppCompatTextView(mActivity);
 		legendHeadline.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
 		legendHeadline.setPadding(0, padding, 0, padding);
 		legendHeadline.setText(getString(R.string.fragment_module_detail_custom_view_chart_legend));
@@ -155,7 +158,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	@SuppressWarnings("unchecked")
 	private void fillChart(ModuleLog log, Module module) {
 		Controller controller = Controller.getInstance(mActivity);
-		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
 

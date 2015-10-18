@@ -1,10 +1,12 @@
 package com.rehivetech.beeeon.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
-import android.widget.TextView;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatTextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.Chart;
@@ -18,7 +20,6 @@ import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 
@@ -41,6 +42,7 @@ final public class ChartHelper {
 	 * @param yLabels    StringBuffer to save long x labels in bar chart
 	 * @param markerView chart markerView instance
 	 */
+	@SuppressLint("PrivateResource")
 	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue,
 									StringBuffer yLabels, MarkerView markerView, String valuesUnit) {
 		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
@@ -49,7 +51,7 @@ final public class ChartHelper {
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
 
 		//TextView to get text color and typeface from textAppearance
-		TextView tempText = new TextView(context);
+		AppCompatTextView tempText = new AppCompatTextView(context);
 		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
 
 		//set paint when no chart data is avaiable
@@ -59,7 +61,7 @@ final public class ChartHelper {
 		paint.setTextSize(tempText.getTextSize());
 
 		chart.setDrawBorders(true);
-		chart.setBorderColor(context.getResources().getColor(R.color.gray));
+		chart.setBorderColor(ContextCompat.getColor(context, R.color.gray));
 
 		//set chart description as values unit
 		chart.setDescription(valuesUnit);
@@ -70,12 +72,12 @@ final public class ChartHelper {
 
 
 
-		chart.setGridBackgroundColor(context.getResources().getColor(R.color.white));
+		chart.setGridBackgroundColor(ContextCompat.getColor(context, R.color.white));
 		//set bottom X axis style
 		XAxis xAxis = chart.getXAxis();
 		xAxis.setAvoidFirstLastClipping(true);
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		xAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
+		xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
 		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
 		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
 		xAxis.setTypeface(tempText.getTypeface());
@@ -83,7 +85,7 @@ final public class ChartHelper {
 
 		//set left Y axis style
 		YAxis yAxis = chart.getAxisLeft();
-		yAxis.setAxisLineColor(context.getResources().getColor(R.color.beeeon_secondary_text));
+		yAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
 		yAxis.setStartAtZero(false);
 		yAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
 		yAxis.setTypeface(tempText.getTypeface());
