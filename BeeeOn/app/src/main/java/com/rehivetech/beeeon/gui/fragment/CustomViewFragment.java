@@ -105,8 +105,13 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
-		MarkerView markerView = new CustomViewChartMarkerView(mActivity, R.layout.util_chart_customview_markerview, chart, unitsHelper.getStringUnit(baseValue));
-		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView);
+		String valueUnit = unitsHelper.getStringUnit(baseValue);
+		if (valueUnit.length() > 0) {
+			valueUnit = String.format("[%s]", valueUnit);
+		}
+
+		MarkerView markerView = new CustomViewChartMarkerView(mActivity, R.layout.util_chart_customview_markerview, chart, valueUnit);
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, valueUnit);
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
@@ -178,7 +183,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			}
 		}
 
-		String unit = unitsHelper.getStringUnit(module.getValue());
 		String deviceName = module.getDevice().getName(mActivity);
 		String moduleName = module.getName(mActivity);
 
@@ -190,7 +194,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			dataSet = new BarDataSet(barEntries, String.format("%s - %s", deviceName, moduleName));
 		} else {
 			lineEntries = new ArrayList<>();
-			dataSet = new LineDataSet(lineEntries, String.format("%s - %s [%s]", deviceName, moduleName, unit));
+			dataSet = new LineDataSet(lineEntries, String.format("%s - %s", deviceName, moduleName));
 		}
 		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color, ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 		dataSetList.add(dataSet);
@@ -232,6 +236,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			chart.setData(lineData);
 		}
 		chart.invalidate();
+		ChartHelper.setChartDescription(chart, true);
 
 		Log.d(TAG, "Filling chart finished");
 	}

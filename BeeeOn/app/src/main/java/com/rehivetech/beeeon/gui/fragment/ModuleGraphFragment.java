@@ -153,18 +153,21 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		BaseValue baseValue = module.getValue();
 		boolean barchart = baseValue instanceof EnumValue;
 
-		String unit = mUnitsHelper.getStringUnit(baseValue);
 		String deviceName = module.getDevice().getName(mActivity);
 		String moduleName = module.getName(mActivity);
 
 		//set chart
-		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart, mUnitsHelper.getStringUnit(baseValue));
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView);
+		String valueUnit = mUnitsHelper.getStringUnit(baseValue);
+		if (valueUnit.length() > 0) {
+			valueUnit = String.format("[%s]", valueUnit);
+		}
+		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart, valueUnit);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels,  markerView, valueUnit);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
 		} else {
-			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s - %s [%s]", deviceName, moduleName, unit));
+			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s - %s", deviceName, moduleName));
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
@@ -221,6 +224,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		}
 		mChart.setData(data);
 		mChart.invalidate();
+		ChartHelper.setChartDescription(mChart, false);
+
 		Log.d(TAG, "Filling graph finished");
 		mChart.animateY(2000);
 
