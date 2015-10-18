@@ -1,11 +1,13 @@
 package com.rehivetech.beeeon.util;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -48,6 +50,12 @@ final public class ChartHelper {
 		//TextView to get text color and typeface from textAppearance
 		TextView tempText = new TextView(context);
 		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
+		//set paint when no chart data is avaiable
+		Paint paint = chart.getPaint(Chart.PAINT_INFO);
+		paint.setColor(tempText.getCurrentTextColor());
+		paint.setTypeface(tempText.getTypeface());
+		paint.setTextSize(tempText.getTextSize());
 
 		chart.setDrawBorders(true);
 		chart.setBorderColor(context.getResources().getColor(R.color.gray));
