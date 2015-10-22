@@ -171,7 +171,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
-		ChartHelper.prepareDataSet(mDataSet, barchart, true,
+		ChartHelper.prepareDataSet(mActivity, mDataSet, barchart, true,
 				ContextCompat.getColor(mActivity, R.color.beeeon_primary_medium), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 	}
 

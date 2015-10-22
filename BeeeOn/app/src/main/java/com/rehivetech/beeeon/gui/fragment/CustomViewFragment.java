@@ -198,7 +198,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			lineEntries = new ArrayList<>();
 			dataSet = new LineDataSet(lineEntries, String.format("%s - %s", deviceName, moduleName));
 		}
-		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color, ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+		ChartHelper.prepareDataSet(mActivity, dataSet, isBarChart, false, color, ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();

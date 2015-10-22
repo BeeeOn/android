@@ -115,6 +115,9 @@ final public class ChartHelper {
 		} else {
 			chart.setMarkerView(markerView);
 		}
+
+		//set max visible values count by screen size
+		chart.setMaxVisibleValueCount(context.getResources().getInteger(R.integer.graph_values_count));
 	}
 
 	/**
@@ -126,7 +129,9 @@ final public class ChartHelper {
 	 * @param color    line color
 	 * @param highlightColor color for highlight lines
 	 */
-	public static void prepareDataSet(DataSet dataset, boolean barChart, boolean filled, @ColorInt int color, @ColorInt @Nullable Integer highlightColor) {
+	@SuppressLint("PrivateResource")
+	public static void prepareDataSet(Context context, DataSet dataset, boolean barChart, boolean filled,
+									  @ColorInt int color, @ColorInt @Nullable Integer highlightColor) {
 		int fillColor = Utils.setColorAlpha(color, 125);
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
@@ -148,7 +153,14 @@ final public class ChartHelper {
 			}
 		}
 		dataset.setColor(color);
-		dataset.setDrawValues(false);
+		dataset.setDrawValues(true);
+
+		AppCompatTextView tempText = new AppCompatTextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
+		dataset.setValueTextColor(tempText.getCurrentTextColor());
+		dataset.setValueTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		dataset.setValueTypeface(tempText.getTypeface());
 	}
 
 	/**
