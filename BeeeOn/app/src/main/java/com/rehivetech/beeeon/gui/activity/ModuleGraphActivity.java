@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +11,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.ModuleGraphFragment;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.util.UnitsHelper;
 
 /**
  * @author martin on 18.8.2015.
@@ -45,10 +47,15 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			return;
 		}
 
-		Module module = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
+		Controller controller = Controller.getInstance(this);
+		Module module = controller.getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
+
+		SharedPreferences prefs = controller.getUserSettings();
+		UnitsHelper unitsHelper = new UnitsHelper(prefs, this);
+		String toolbarTitle = String.format("%s [%s]",module.getName(this), unitsHelper.getStringUnit(module.getValue()));
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		toolbar.setTitle(module.getName(this));
+		toolbar.setTitle(toolbarTitle);
 		setSupportActionBar(toolbar);
 
 		ActionBar actionBar = getSupportActionBar();

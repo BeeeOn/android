@@ -161,8 +161,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		if (valueUnit.length() > 0) {
 			valueUnit = String.format("[%s]", valueUnit);
 		}
-		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart, valueUnit);
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels,  markerView, valueUnit);
+		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels,  markerView);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
@@ -224,7 +224,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		}
 		mChart.setData(data);
 		mChart.invalidate();
-		ChartHelper.setChartDescription(mChart, false);
 
 		Log.d(TAG, "Filling graph finished");
 		mChart.animateY(2000);

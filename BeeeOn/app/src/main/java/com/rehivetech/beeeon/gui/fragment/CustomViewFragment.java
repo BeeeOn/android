@@ -108,13 +108,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
-		String valueUnit = unitsHelper.getStringUnit(baseValue);
-		if (valueUnit.length() > 0) {
-			valueUnit = String.format("[%s]", valueUnit);
-		}
 
-		MarkerView markerView = new CustomViewChartMarkerView(mActivity, R.layout.util_chart_customview_markerview, chart, valueUnit);
-		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, valueUnit);
+		MarkerView markerView = new CustomViewChartMarkerView(mActivity, R.layout.util_chart_customview_markerview, chart);
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView);
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
@@ -132,8 +128,13 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(legend);
 
 		// Set title
+		String valueUnit = unitsHelper.getStringUnit(baseValue);
+		if (valueUnit.length() > 0) {
+			valueUnit = String.format(" [%s]", valueUnit);
+		}
 		TextView tv = (TextView) row.findViewById(R.id.custom_view_chart_label);
-		tv.setText(getString(module.getType().getStringResource()));
+		String titleText = getString(module.getType().getStringResource()) + valueUnit;
+		tv.setText(titleText);
 
 		mCharts.put(module.getType().getTypeId(), chart);
 		mLegends.put(module.getType().getTypeId(), legend);
@@ -238,7 +239,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			chart.setData(lineData);
 		}
 		chart.invalidate();
-		ChartHelper.setChartDescription(chart, true);
 
 		Log.d(TAG, "Filling chart finished");
 	}

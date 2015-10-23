@@ -18,7 +18,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.LineDataProvider;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -44,7 +43,7 @@ final public class ChartHelper {
 	 */
 	@SuppressLint("PrivateResource")
 	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue,
-									StringBuffer yLabels, MarkerView markerView, String valuesUnit) {
+									StringBuffer yLabels, MarkerView markerView) {
 		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
 
 		chart.getLegend().setEnabled(false);
@@ -63,14 +62,7 @@ final public class ChartHelper {
 		chart.setDrawBorders(true);
 		chart.setBorderColor(ContextCompat.getColor(context, R.color.gray));
 
-		//set chart description as values unit
-		chart.setDescription(valuesUnit);
-		chart.setDescriptionColor(tempText.getCurrentTextColor());
-		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Subhead);
-		chart.setDescriptionTextSize(tempText.getTextSize());
-		chart.setDescriptionTypeface(tempText.getTypeface());
-
-
+		chart.setDescription("");
 
 		chart.setGridBackgroundColor(ContextCompat.getColor(context, R.color.white));
 		//set bottom X axis style
@@ -78,7 +70,6 @@ final public class ChartHelper {
 		xAxis.setAvoidFirstLastClipping(true);
 		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 		xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
-		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
 		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
 		xAxis.setTypeface(tempText.getTypeface());
 		xAxis.setTextColor(tempText.getCurrentTextColor());
@@ -200,20 +191,6 @@ final public class ChartHelper {
 				return String.format("%.1f", value);
 			}
 		};
-	}
-
-	/**
-	 * Set description style in chart
-	 * @param chart chart instance
-	 */
-	public static void setChartDescription(Chart chart, boolean customView) {
-		ViewPortHandler viewPortHandler = chart.getViewPortHandler();
-		float posX = chart.getWidth() - viewPortHandler.offsetRight() - 10f;
-		float posY = chart.getTop() + viewPortHandler.offsetTop() + 10f;
-		if (customView) {
-			posY += 20f;
-		}
-		chart.setDescriptionPosition(posX, posY);
 	}
 
 	/**

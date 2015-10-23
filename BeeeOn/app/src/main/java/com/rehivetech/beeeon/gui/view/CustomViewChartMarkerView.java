@@ -19,7 +19,6 @@ public class CustomViewChartMarkerView extends MarkerView{
 	private TextView mTextView;
 
 	private Chart mChart;
-	private String mValueUnit;
 
 	/**
 	 * Constructor. Sets up the MarkerView with a custom layout resource.
@@ -27,20 +26,18 @@ public class CustomViewChartMarkerView extends MarkerView{
 	 * @param context app context
 	 * @param layoutResource id of layout resource
 	 * @param chart chart instance
-	 * @param valueUnit unit of chart values
 	 */
-	public CustomViewChartMarkerView(Context context, int layoutResource, Chart chart, String valueUnit) {
+	public CustomViewChartMarkerView(Context context, int layoutResource, Chart chart) {
 		super(context, layoutResource);
 
 		mTextView = (TextView) findViewById(R.id.util_chart_customiew_markerview_text);
 		mChart = chart;
-		mValueUnit = valueUnit;
 	}
 
 	@Override
 	public void refreshContent(Entry e, Highlight highlight) {
 		String xValue = mChart.getXValue(e.getXIndex());
-		mTextView.setText(String.format("%s %s\n%s ", e.getVal(), mValueUnit, xValue));
+		mTextView.setText(String.format("%s\n%s ", e.getVal(), xValue));
 	}
 
 	@Override

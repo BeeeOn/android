@@ -19,7 +19,6 @@ public class ChartMarkerView extends MarkerView {
 
 	private TextView mTextView;
 	private Chart mChart;
-	private String mValueUnit;
 
 
 	/**
@@ -29,11 +28,10 @@ public class ChartMarkerView extends MarkerView {
 	 * @param layoutResource the layout resource to use for the MarkerView
 	 * @param chart  the chart reference
 	 */
-	public ChartMarkerView(Context context, int layoutResource, Chart chart, String valueUnit) {
+	public ChartMarkerView(Context context, int layoutResource, Chart chart) {
 		super(context, layoutResource);
 		mTextView = (TextView) findViewById(R.id.util_chart_helper_markerview_text);
 		mChart = chart;
-		mValueUnit = valueUnit;
 	}
 
 	@Override
@@ -51,7 +49,7 @@ public class ChartMarkerView extends MarkerView {
 	@Override
 	public void refreshContent(Entry e, Highlight highlight) {
 		String xValue = mChart.getXValue(e.getXIndex());
-		mTextView.setText(String.format("%s %s\n%s ", e.getVal(), mValueUnit, xValue));
+		mTextView.setText(String.format("%s\n%s ", e.getVal(), xValue));
 
 	}
 
