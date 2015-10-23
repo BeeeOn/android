@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 
@@ -122,7 +121,7 @@ final public class ChartHelper {
 	 */
 	@SuppressLint("PrivateResource")
 	public static void prepareDataSet(Context context, DataSet dataset, boolean barChart, boolean filled,
-									  @ColorInt int color, @ColorInt @Nullable Integer highlightColor) {
+									  @ColorInt int color, @ColorInt int highlightColor) {
 		int fillColor = Utils.setColorAlpha(color, 125);
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
@@ -131,14 +130,7 @@ final public class ChartHelper {
 				((LineDataSet) dataset).setDrawFilled(true);
 				((LineDataSet) dataset).setFillColor(fillColor);
 				((LineDataSet) dataset).setFillFormatter(new CustomFillFormatter());
-				if (highlightColor != null) {
-					((LineDataSet) dataset).setDrawHorizontalHighlightIndicator(false);
-					((LineDataSet) dataset).setHighLightColor(highlightColor);
-				} else {
-					((LineDataSet) dataset).setDrawHighlightIndicators(false);
-				}
-			} else if (highlightColor == null){
-				((LineDataSet) dataset).setDrawHighlightIndicators(false);
+				((LineDataSet) dataset).setHighLightColor(highlightColor);
 			} else {
 				((LineDataSet) dataset).setHighLightColor(highlightColor);
 			}

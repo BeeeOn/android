@@ -29,7 +29,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.view.CustomViewChartMarkerView;
+import com.rehivetech.beeeon.gui.view.ChartMarkerView;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -109,7 +109,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
 
-		MarkerView markerView = new CustomViewChartMarkerView(mActivity, R.layout.util_chart_customview_markerview, chart);
+		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, chart);
 		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView);
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
