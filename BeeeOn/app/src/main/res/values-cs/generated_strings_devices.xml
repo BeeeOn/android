@@ -17,6 +17,7 @@
 	<string name="devices__manufacturer_thermona">Thermona</string>
 	<string name="devices__manufacturer_virtual">Virtuální</string>
 	<string name="devices__mod_average_outside_temperature">Venkovní teplota (průměr za 24 h)</string>
+	<string name="devices__mod_boiler_mode">Režim kotle</string>
 	<string name="devices__mod_boiler_operation_mode">Režim provozu</string>
 	<string name="devices__mod_boiler_operation_type">Typ provozu</string>
 	<string name="devices__mod_boiler_status">Stav kotle</string>
@@ -34,12 +35,13 @@
 	<string name="devices__mod_presence_status">Stav přítomnosti</string>
 	<string name="devices__mod_requested_room_temperature">Žádaná teplota místnosti</string>
 	<string name="devices__mod_requested_water_temperature">Žádaná teplota vody</string>
+	<string name="devices__mod_requested_water_temperature_read">Žádaná teplota vody</string>
+	<string name="devices__mod_requested_water_temperature_set">Žádaná teplota vody</string>
 	<string name="devices__mod_room_humidity">Vlhkost v místnosti</string>
 	<string name="devices__mod_room_temperature">Teplota místnosti</string>
 	<string name="devices__mod_slope_ekviterm_curve">Sklon ekvitermní křivky</string>
 	<string name="devices__mod_use_ekviterm_thermostat">Zapnout ekvitermní regulaci v pokojovém režimu</string>
 	<string name="devices__type_battery">Baterie</string>
-	<string name="devices__type_boolean">Boolean</string>
 	<string name="devices__type_bitarray">Bitové pole</string>
 	<string name="devices__type_co2">Oxid uhličitý</string>
 	<string name="devices__type_enum">Výčet</string>
@@ -53,6 +55,9 @@
 	<string name="devices__type_rssi">Signál</string>
 	<string name="devices__type_temperature">Teplota</string>
 	<string name="devices__type_unknown">Neznámý</string>
+	<string name="devices__val_boiler_mode_off">Vypnuto</string>
+	<string name="devices__val_boiler_mode_on">Zapnuto</string>
+	<string name="devices__val_boiler_mode_undefined">Nezjištěno</string>
 	<string name="devices__val_boiler_operation_mode_automatic">Automaticky</string>
 	<string name="devices__val_boiler_operation_mode_manual">Manuální</string>
 	<string name="devices__val_boiler_operation_mode_vacation">Dovolená</string>

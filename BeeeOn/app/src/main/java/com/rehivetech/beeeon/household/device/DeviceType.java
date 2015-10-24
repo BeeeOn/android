@@ -188,10 +188,11 @@ public enum DeviceType implements IIdentifier {
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
 					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {1, 2, 3, 4, 5, 11, 12, 13}),
-							new Module.Rule(1, new int[] {2, 4}),
+							new Module.Rule(0, new int[] {1, 2, 3, 4, 5, 11, 12, 13, 65}),
+							new Module.Rule(1, new int[] {4}),
 							new Module.Rule(2, new int[] {2, 4}),
-							new Module.Rule(3, new int[] {4})
+							new Module.Rule(3, new int[] {2, 4}),
+							new Module.Rule(4, new int[] {2, 65})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -206,7 +207,8 @@ public enum DeviceType implements IIdentifier {
 					), null),
 					new Module(device, "2", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_requested_room_temperature, false, null, null),
 					new Module(device, "3", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "4", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "4", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_requested_water_temperature_set, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "65", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_requested_water_temperature_read, false, null, null),
 					new Module(device, "5", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_current_water_temperature, false, null, null),
 					new Module(device, "11", 0x01, null, R.string.devices__zone_1, R.string.devices__frost_protection, true, Arrays.asList(
 							new Module.Rule(0, new int[] {12, 13})
@@ -214,13 +216,14 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
 					), null),
-					new Module(device, "12", 0x02, null, R.string.devices__zone_1, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 0.5), null),
-					new Module(device, "13", 0x02, null, R.string.devices__zone_1, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 0.5), null),
+					new Module(device, "12", 0x02, null, R.string.devices__zone_1, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
+					new Module(device, "13", 0x02, null, R.string.devices__zone_1, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
 					new Module(device, "14", 0x01, null, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {15, 16, 17, 18, 19, 25, 26, 27}),
-							new Module.Rule(1, new int[] {16, 18}),
+							new Module.Rule(0, new int[] {15, 16, 17, 18, 19, 25, 26, 27, 66}),
+							new Module.Rule(1, new int[] {18}),
 							new Module.Rule(2, new int[] {16, 18}),
-							new Module.Rule(3, new int[] {18})
+							new Module.Rule(3, new int[] {16, 18}),
+							new Module.Rule(4, new int[] {16, 66})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -235,7 +238,8 @@ public enum DeviceType implements IIdentifier {
 					), null),
 					new Module(device, "16", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_requested_room_temperature, false, null, null),
 					new Module(device, "17", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "18", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "18", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_requested_water_temperature_set, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "66", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_requested_water_temperature_read, false, null, null),
 					new Module(device, "19", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_current_water_temperature, false, null, null),
 					new Module(device, "25", 0x01, null, R.string.devices__zone_2, R.string.devices__frost_protection, true, Arrays.asList(
 							new Module.Rule(0, new int[] {26, 27})
@@ -243,13 +247,14 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
 					), null),
-					new Module(device, "26", 0x02, null, R.string.devices__zone_2, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 0.5), null),
-					new Module(device, "27", 0x02, null, R.string.devices__zone_2, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 0.5), null),
+					new Module(device, "26", 0x02, null, R.string.devices__zone_2, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
+					new Module(device, "27", 0x02, null, R.string.devices__zone_2, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
 					new Module(device, "28", 0x01, null, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {29, 30, 31, 32, 33, 39, 40, 41}),
-							new Module.Rule(1, new int[] {30, 32}),
+							new Module.Rule(0, new int[] {29, 30, 31, 32, 33, 39, 40, 41, 67}),
+							new Module.Rule(1, new int[] {32}),
 							new Module.Rule(2, new int[] {30, 32}),
-							new Module.Rule(3, new int[] {32})
+							new Module.Rule(3, new int[] {30, 32}),
+							new Module.Rule(4, new int[] {30, 67})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -264,7 +269,8 @@ public enum DeviceType implements IIdentifier {
 					), null),
 					new Module(device, "30", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_requested_room_temperature, false, null, null),
 					new Module(device, "31", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "32", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "32", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_requested_water_temperature_set, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "67", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_requested_water_temperature_read, false, null, null),
 					new Module(device, "33", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_current_water_temperature, false, null, null),
 					new Module(device, "39", 0x01, null, R.string.devices__zone_3, R.string.devices__frost_protection, true, Arrays.asList(
 							new Module.Rule(0, new int[] {40, 41})
@@ -272,13 +278,14 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
 					), null),
-					new Module(device, "40", 0x02, null, R.string.devices__zone_3, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 0.5), null),
-					new Module(device, "41", 0x02, null, R.string.devices__zone_3, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 0.5), null),
+					new Module(device, "40", 0x02, null, R.string.devices__zone_3, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
+					new Module(device, "41", 0x02, null, R.string.devices__zone_3, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
 					new Module(device, "42", 0x01, null, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {43, 44, 45, 46, 47, 53, 54, 55}),
-							new Module.Rule(1, new int[] {44, 46}),
+							new Module.Rule(0, new int[] {43, 44, 45, 46, 47, 53, 54, 55, 68}),
+							new Module.Rule(1, new int[] {46}),
 							new Module.Rule(2, new int[] {44, 46}),
-							new Module.Rule(3, new int[] {46})
+							new Module.Rule(3, new int[] {44, 46}),
+							new Module.Rule(4, new int[] {44, 68})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -293,7 +300,8 @@ public enum DeviceType implements IIdentifier {
 					), null),
 					new Module(device, "44", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_requested_room_temperature, false, null, null),
 					new Module(device, "45", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "46", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "46", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_requested_water_temperature_set, true, null, new BaseValue.Constraints(50.0, 90.0, 1.0), null),
+					new Module(device, "68", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_requested_water_temperature_read, false, null, null),
 					new Module(device, "47", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_current_water_temperature, false, null, null),
 					new Module(device, "53", 0x01, null, R.string.devices__zone_4, R.string.devices__frost_protection, true, Arrays.asList(
 							new Module.Rule(0, new int[] {54, 55})
@@ -301,8 +309,8 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
 					), null),
-					new Module(device, "54", 0x02, null, R.string.devices__zone_4, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 0.5), null),
-					new Module(device, "55", 0x02, null, R.string.devices__zone_4, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 0.5), null),
+					new Module(device, "54", 0x02, null, R.string.devices__zone_4, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
+					new Module(device, "55", 0x02, null, R.string.devices__zone_4, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
 					new Module(device, "56", 0x01, 0, R.string.devices__boiler, R.string.devices__mod_boiler_status, false, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_status_undefined),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_status_heating),
@@ -310,10 +318,15 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(3, "3", R.string.devices__val_boiler_status_failure),
 							new EnumValue.Item(4, "4", R.string.devices__val_boiler_status_shutdown)
 					), null),
+					new Module(device, "57", 0x01, null, R.string.devices__boiler, R.string.devices__mod_boiler_mode, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__val_boiler_mode_undefined),
+							new EnumValue.Item(1, "1", R.string.devices__val_boiler_mode_on),
+							new EnumValue.Item(2, "2", R.string.devices__val_boiler_mode_off)
+					), null),
 					new Module(device, "58", 0x02, null, R.string.devices__boiler, R.string.devices__mod_current_water_temperature, false, null, null),
 					new Module(device, "59", 0x02, null, R.string.devices__boiler, R.string.devices__mod_current_outside_temperature, false, null, null),
 					new Module(device, "60", 0x02, null, R.string.devices__boiler, R.string.devices__mod_average_outside_temperature, false, null, null),
-					new Module(device, "61", 0x02, null, R.string.devices__boiler, R.string.devices__mod_current_boiler_performance, false, null, null),
+					new Module(device, "61", 0x03, null, R.string.devices__boiler, R.string.devices__mod_current_boiler_performance, false, null, null),
 					new Module(device, "62", 0x04, null, R.string.devices__boiler, R.string.devices__mod_current_boiler_pressure, false, null, null),
 					new Module(device, "63", 0x0B, null, R.string.devices__boiler, R.string.devices__mod_current_boiler_error, false, null, null)
 			);
@@ -324,7 +337,7 @@ public enum DeviceType implements IIdentifier {
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1444926926179l;
+	public static final long DEVICES_DATE = 1445721217047l;
 
 	/** END OF GENERATED CONTENT **/
 

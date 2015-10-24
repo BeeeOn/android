@@ -17,6 +17,7 @@
 	<string name="devices__manufacturer_thermona">Thermona</string>
 	<string name="devices__manufacturer_virtual">Virtual</string>
 	<string name="devices__mod_average_outside_temperature">Outside temperature (avarage in 24 hours)</string>
+	<string name="devices__mod_boiler_mode">Boiler mode</string>
 	<string name="devices__mod_boiler_operation_mode">Boiler operation mode</string>
 	<string name="devices__mod_boiler_operation_type">Boiler operation type</string>
 	<string name="devices__mod_boiler_status">Boiler status</string>
@@ -34,12 +35,13 @@
 	<string name="devices__mod_presence_status">Stav přítomnosti</string>
 	<string name="devices__mod_requested_room_temperature">Requested room temperature</string>
 	<string name="devices__mod_requested_water_temperature">Requested water temperature</string>
+	<string name="devices__mod_requested_water_temperature_read">Requested water temperature</string>
+	<string name="devices__mod_requested_water_temperature_set">Requested water temperature</string>
 	<string name="devices__mod_room_humidity">Room humidity</string>
 	<string name="devices__mod_room_temperature">Room temperature</string>
 	<string name="devices__mod_slope_ekviterm_curve">Slope of ekviterm curve</string>
 	<string name="devices__mod_use_ekviterm_thermostat">Use ekviterm thermostat</string>
 	<string name="devices__type_battery">Battery</string>
-	<string name="devices__type_boolean">Boolean</string>
 	<string name="devices__type_bitarray">Bit array</string>
 	<string name="devices__type_co2">Carbon dioxide</string>
 	<string name="devices__type_enum">Enum</string>
@@ -53,6 +55,9 @@
 	<string name="devices__type_rssi">Signal</string>
 	<string name="devices__type_temperature">Temperature</string>
 	<string name="devices__type_unknown">Unknown</string>
+	<string name="devices__val_boiler_mode_off">Off</string>
+	<string name="devices__val_boiler_mode_on">On</string>
+	<string name="devices__val_boiler_mode_undefined">Undefined</string>
 	<string name="devices__val_boiler_operation_mode_automatic">Automatic</string>
 	<string name="devices__val_boiler_operation_mode_manual">Manual</string>
 	<string name="devices__val_boiler_operation_mode_vacation">Vacation</string>
@@ -65,7 +70,7 @@
 	<string name="devices__val_boiler_status_heating">Heating</string>
 	<string name="devices__val_boiler_status_hot_water">Hot water</string>
 	<string name="devices__val_boiler_status_shutdown">Shutdown</string>
-	<string name="devices__val_boiler_status_undefined">Unknown</string>
+	<string name="devices__val_boiler_status_undefined">Undefined</string>
 	<string name="devices__val_frost_protection_off">Off</string>
 	<string name="devices__val_frost_protection_on">On</string>
 	<string name="devices__val_presence_status_not_present">Not present</string>
