@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.Chart;
@@ -17,6 +18,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.LineDataProvider;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -108,6 +112,64 @@ final public class ChartHelper {
 
 		//set max visible values count by screen size
 		chart.setMaxVisibleValueCount(context.getResources().getInteger(R.integer.graph_values_count));
+
+		final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
+		final int chartNumOfCircles = context.getResources().getInteger(R.integer.graph_number_circles);
+
+		chart.setOnChartGestureListener(new OnChartGestureListener() {
+			@Override
+			public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+			}
+
+			@Override
+			public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+			}
+
+			@Override
+			public void onChartLongPressed(MotionEvent me) {
+
+			}
+
+			@Override
+			public void onChartDoubleTapped(MotionEvent me) {
+
+			}
+
+			@Override
+			public void onChartSingleTapped(MotionEvent me) {
+
+			}
+
+			@Override
+			public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+			}
+
+			@Override
+			public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+				int yValuesCount = chart.getData().getYValCount();
+				DataSet dataSet = (DataSet) chart.getData().getDataSets().get(0);
+
+				if (yValuesCount / viewPortHandler.getScaleX() < chartNumOfCircles) {
+
+					if (dataSet instanceof LineDataSet && !((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+						((LineDataSet) chart.getData().getDataSets().get(0)).setDrawCircles(true);
+					}
+				} else {
+
+					if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+						((LineDataSet) chart.getData().getDataSets().get(0)).setDrawCircles(false);
+					}
+				}
+			}
+
+			@Override
+			public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+			}
+		});
 	}
 
 	/**
@@ -125,6 +187,8 @@ final public class ChartHelper {
 		int fillColor = Utils.setColorAlpha(color, 125);
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
+			((LineDataSet) dataset).setCircleColor(color);
+			((LineDataSet) dataset).setCircleSize(Utils.convertDpToPixel(2));
 
 			if (filled) {
 				((LineDataSet) dataset).setDrawFilled(true);
