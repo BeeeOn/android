@@ -52,7 +52,14 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		SharedPreferences prefs = controller.getUserSettings();
 		UnitsHelper unitsHelper = new UnitsHelper(prefs, this);
-		String toolbarTitle = String.format("%s [%s]",module.getName(this), unitsHelper.getStringUnit(module.getValue()));
+
+		String moduleUnit = unitsHelper.getStringUnit(module.getValue());
+		
+		if (moduleUnit.length() > 0) {
+			moduleUnit = String.format("[%s]", moduleUnit);
+		}
+
+		String toolbarTitle = String.format("%s %s",module.getName(this), moduleUnit);
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		toolbar.setTitle(toolbarTitle);

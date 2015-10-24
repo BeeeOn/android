@@ -185,10 +185,22 @@ final public class ChartHelper {
 	public static void prepareDataSet(Context context, DataSet dataset, boolean barChart, boolean filled,
 									  @ColorInt int color, @ColorInt int highlightColor) {
 		int fillColor = Utils.setColorAlpha(color, 125);
+
+		dataset.setDrawValues(false);
+
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
 			((LineDataSet) dataset).setCircleColor(color);
 			((LineDataSet) dataset).setCircleSize(Utils.convertDpToPixel(2));
+
+			dataset.setDrawValues(true);
+
+			AppCompatTextView tempText = new AppCompatTextView(context);
+			tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
+			dataset.setValueTextColor(tempText.getCurrentTextColor());
+			dataset.setValueTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+			dataset.setValueTypeface(tempText.getTypeface());
 
 			if (filled) {
 				((LineDataSet) dataset).setDrawFilled(true);
@@ -200,14 +212,6 @@ final public class ChartHelper {
 			}
 		}
 		dataset.setColor(color);
-		dataset.setDrawValues(true);
-
-		AppCompatTextView tempText = new AppCompatTextView(context);
-		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
-
-		dataset.setValueTextColor(tempText.getCurrentTextColor());
-		dataset.setValueTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
-		dataset.setValueTypeface(tempText.getTypeface());
 	}
 
 	/**

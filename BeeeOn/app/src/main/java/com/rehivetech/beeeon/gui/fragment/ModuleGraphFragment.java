@@ -158,9 +158,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		//set chart
 		String valueUnit = mUnitsHelper.getStringUnit(baseValue);
-		if (valueUnit.length() > 0) {
-			valueUnit = String.format("[%s]", valueUnit);
-		}
+
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
 		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels,  markerView);
 
