@@ -194,10 +194,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		DataSet dataSet;
 		if (isBarChart) {
 			barEntries = new ArrayList<>();
-			dataSet = new BarDataSet(barEntries, String.format("%s - %s", deviceName, moduleName));
+			dataSet = new BarDataSet(barEntries, String.format("%s - %s", moduleName, deviceName));
 		} else {
 			lineEntries = new ArrayList<>();
-			dataSet = new LineDataSet(lineEntries, String.format("%s - %s", deviceName, moduleName));
+			dataSet = new LineDataSet(lineEntries, String.format("%s - %s", moduleName, deviceName));
 		}
 		ChartHelper.prepareDataSet(mActivity, dataSet, isBarChart, false, color, ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 		dataSetList.add(dataSet);
