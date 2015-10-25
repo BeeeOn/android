@@ -1,7 +1,10 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -15,6 +18,7 @@ import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -25,12 +29,14 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.view.ChartMarkerView;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -51,17 +57,17 @@ import java.util.Random;
 import java.util.SortedMap;
 
 public class CustomViewFragment extends BaseApplicationFragment {
+	private static final String TAG = CustomViewFragment.class.getSimpleName();
+
+	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	private SparseArray<List<Module>> mModules = new SparseArray<>();
 	// private SparseArray<List<ModuleLog>> mLogs = new SparseArray<List<ModuleLog>>();
 	private SparseArray<BarLineChartBase> mCharts = new SparseArray<>();
 	private SparseArray<VerticalChartLegend> mLegends = new SparseArray<>();
 
-	private String mChartDateTimeFormat = "dd.MM. kk:mm";
-
 	private LinearLayout mLayout;
 
-	private static final String TAG = CustomViewFragment.class.getSimpleName();
 
 	public CustomViewFragment() {
 	}
@@ -78,7 +84,12 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		return view;
 	}
 
+	@SuppressLint("PrivateResource")
 	private void addChart(final Module module) {
+		Controller controller = Controller.getInstance(mActivity);
+		UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
+		BaseValue baseValue = module.getValue();
+
 		// Inflate Layout
 		LayoutInflater inflater = getLayoutInflater(null);
 		View row = inflater.inflate(R.layout.fragment_custom_view, mLayout, false);
@@ -97,13 +108,15 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chart.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) mActivity.getResources().getDimension(R.dimen.graph_height)));
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
-		ChartHelper.prepareChart(chart, mActivity, module.getValue(), yLabels, Controller.getInstance(mActivity));
+
+		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, chart);
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView);
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 
 		//set legend title
 		int padding = getResources().getDimensionPixelOffset(R.dimen.customview_text_padding);
-		TextView legendHeadline = new TextView(mActivity);
+		AppCompatTextView legendHeadline = new AppCompatTextView(mActivity);
 		legendHeadline.setTextAppearance(mActivity, R.style.TextAppearance_AppCompat_Subhead);
 		legendHeadline.setPadding(0, padding, 0, padding);
 		legendHeadline.setText(getString(R.string.fragment_module_detail_custom_view_chart_legend));
@@ -115,8 +128,13 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(legend);
 
 		// Set title
+		String valueUnit = unitsHelper.getStringUnit(baseValue);
+		if (valueUnit.length() > 0) {
+			valueUnit = String.format(" [%s]", valueUnit);
+		}
 		TextView tv = (TextView) row.findViewById(R.id.custom_view_chart_label);
-		tv.setText(getString(module.getType().getStringResource()));
+		String titleText = getString(module.getType().getStringResource()) + valueUnit;
+		tv.setText(titleText);
 
 		mCharts.put(module.getType().getTypeId(), chart);
 		mLegends.put(module.getType().getTypeId(), legend);
@@ -141,9 +159,8 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	@SuppressWarnings("unchecked")
 	private void fillChart(ModuleLog log, Module module) {
 		Controller controller = Controller.getInstance(mActivity);
-		final UnitsHelper unitsHelper = new UnitsHelper(controller.getUserSettings(), mActivity);
 		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(mChartDateTimeFormat, controller.getActiveGate());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
 
 		boolean isBarChart = (module.getValue() instanceof EnumValue);
 
@@ -169,7 +186,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			}
 		}
 
-		String unit = unitsHelper.getStringUnit(module.getValue());
 		String deviceName = module.getDevice().getName(mActivity);
 		String moduleName = module.getName(mActivity);
 
@@ -178,12 +194,12 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		DataSet dataSet;
 		if (isBarChart) {
 			barEntries = new ArrayList<>();
-			dataSet = new BarDataSet(barEntries, String.format("%s - %s", deviceName, moduleName));
+			dataSet = new BarDataSet(barEntries, String.format("%s - %s", moduleName, deviceName));
 		} else {
 			lineEntries = new ArrayList<>();
-			dataSet = new LineDataSet(lineEntries, String.format("%s - %s [%s]", deviceName, moduleName, unit));
+			dataSet = new LineDataSet(lineEntries, String.format("%s - %s", moduleName, deviceName));
 		}
-		ChartHelper.prepareDataSet(dataSet, isBarChart, false, color);
+		ChartHelper.prepareDataSet(mActivity, dataSet, isBarChart, false, color, ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 		dataSetList.add(dataSet);
 
 		SortedMap<Long, Float> values = log.getValues();

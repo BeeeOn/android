@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.Button;
 
 import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -23,6 +25,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
+import com.rehivetech.beeeon.gui.view.ChartMarkerView;
 import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -39,7 +42,6 @@ import com.rehivetech.beeeon.util.UnitsHelper;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -57,8 +59,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private static final String KEY_DEVICE_ID = "device_id";
 	private static final String KEY_MODULE_ID = "module_id";
 
-	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. kk:mm";
-	private static final String LOG_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	private String mGateId;
 	private String mDeviceId;
@@ -152,22 +153,24 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		BaseValue baseValue = module.getValue();
 		boolean barchart = baseValue instanceof EnumValue;
 
-		String unit = mUnitsHelper.getStringUnit(baseValue);
 		String deviceName = module.getDevice().getName(mActivity);
 		String moduleName = module.getName(mActivity);
 
 		//set chart
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, controller);
-//		mChart.setFillFormatter(new CustomFillFormatter());
+		String valueUnit = mUnitsHelper.getStringUnit(baseValue);
+
+		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels,  markerView);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
 		} else {
-			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s - %s [%s]", deviceName, moduleName, unit));
+			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s - %s", deviceName, moduleName));
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
-		ChartHelper.prepareDataSet(mDataSet, barchart, true, getResources().getColor(R.color.beeeon_primary_medium));
+		ChartHelper.prepareDataSet(mActivity, mDataSet, barchart, true,
+				ContextCompat.getColor(mActivity, R.color.beeeon_primary_medium), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -219,6 +222,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		}
 		mChart.setData(data);
 		mChart.invalidate();
+
 		Log.d(TAG, "Filling graph finished");
 		mChart.animateY(2000);
 
@@ -238,8 +242,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusWeeks(1);
-
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(LOG_DATE_TIME_FORMAT).withZoneUTC();
 
 		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(mActivity);
 		final ModuleLog.DataPair pair = new ModuleLog.DataPair( //

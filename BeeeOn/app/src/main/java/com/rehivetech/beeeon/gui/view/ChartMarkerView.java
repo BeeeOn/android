@@ -4,33 +4,40 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.rehivetech.beeeon.R;
 
 /**
- * @author martin on 15.7.2015.
+ * Created by martin on 18.10.15.
  */
 @SuppressLint("ViewConstructor")
 public class ChartMarkerView extends MarkerView {
 
 	private TextView mTextView;
 
+	private Chart mChart;
+
 	/**
 	 * Constructor. Sets up the MarkerView with a custom layout resource.
 	 *
-	 * @param context
-	 * @param layoutResource the layout resource to use for the MarkerView
+	 * @param context app context
+	 * @param layoutResource id of layout resource
+	 * @param chart chart instance
 	 */
-	public ChartMarkerView(Context context, int layoutResource) {
+	public ChartMarkerView(Context context, int layoutResource, Chart chart) {
 		super(context, layoutResource);
-		mTextView = (TextView) findViewById(R.id.util_chart_helper_markerview_text);
+
+		mTextView = (TextView) findViewById(R.id.util_chart_customiew_markerview_text);
+		mChart = chart;
 	}
 
 	@Override
 	public void refreshContent(Entry e, Highlight highlight) {
-		mTextView.setText(Float.toString(e.getVal()));
+		String xValue = mChart.getXValue(e.getXIndex());
+		mTextView.setText(String.format("%s\n%s ", e.getVal(), xValue));
 	}
 
 	@Override
