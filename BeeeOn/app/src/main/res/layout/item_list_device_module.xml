@@ -24,18 +24,15 @@
 		android:layout_alignParentEnd="true"
 		android:layout_centerVertical="true">
 
-		<Button
+		<ImageButton
 			android:id="@+id/list_device_module_item_set_button"
-			android:theme="@style/BeeeOn.Button"
-			android:visibility="gone"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="64dp"
-			android:gravity="center"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="50dp"
+			android:layout_height="50dp"
 			android:layout_marginRight="16dp"
 			android:layout_marginEnd="16dp"
-			android:text="@string/activity_fragment_btn_set"
-			tools:text="set"/>
+			android:src="@drawable/ic_settings_white_24dp"
+			android:tint="@color/beeeon_accent"/>
 
 		<android.support.v7.widget.SwitchCompat
 			android:id="@+id/list_device_module_item_switch"
@@ -50,17 +47,18 @@
 		android:id="@+id/list_module_item_title"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:paddingTop="4dp"
+		android:gravity="start"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
 		android:layout_toLeftOf="@id/list_module_item_buttons_wrapper"
 		android:layout_toStartOf="@id/list_module_item_buttons_wrapper"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
-		android:paddingTop="20dp"
-		android:maxLines="1"
+		android:maxLines="2"
 		android:ellipsize="end"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		tools:text="Module Titleasdasdadasdasdasda"/>
+		tools:text="Module"/>
 
 	<TextView
 		android:id="@+id/list_module_item_value"
@@ -73,9 +71,12 @@
 		android:layout_toStartOf="@id/list_module_item_buttons_wrapper"
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
-		android:maxLines="1"
+		android:layout_alignParentBottom="true"
+		android:gravity="center_vertical"
+
+		android:maxLines="2"
 		android:ellipsize="end"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 		android:textColor="@color/beeeon_accent"
-		tools:text="25 °C"/>
+		tools:text="25 °C "/>
 </RelativeLayout>
