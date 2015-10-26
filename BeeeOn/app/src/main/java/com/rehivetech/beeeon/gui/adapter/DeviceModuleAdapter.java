@@ -7,7 +7,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -168,7 +168,7 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 		public final ImageView mIcon;
 		public final TextView mTitle;
 		public final TextView mValue;
-		public final Button mButton;
+		public final ImageButton mButton;
 		public final SwitchCompat mSwitch;
 		public final View mView;
 
@@ -177,7 +177,7 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 			mIcon = (ImageView) itemView.findViewById(R.id.list_module_item_icon);
 			mTitle = (TextView) itemView.findViewById(R.id.list_module_item_title);
 			mValue = (TextView) itemView.findViewById(R.id.list_module_item_value);
-			mButton = (Button) itemView.findViewById(R.id.list_device_module_item_set_button);
+			mButton = (ImageButton) itemView.findViewById(R.id.list_device_module_item_set_button);
 			mSwitch = (SwitchCompat) itemView.findViewById(R.id.list_device_module_item_switch);
 			mView = itemView;
 		}
