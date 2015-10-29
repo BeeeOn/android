@@ -34,12 +34,14 @@ public enum NetworkError implements IErrorCode, IIdentifier {
 	NO_EMAIL(28),
 	EMAIL_PROVIDER_MISMATCH(29),
 	LOGOUT_FAILED(30),
+	GATE_AVAILABLE(31),
 	ADA_SERVER_PROBLEM(100),
 
 	// Errors from UI server
 	INVALID_LOCATION_TYPE(50),
 	COM_FW_ALGORITHMS_ERROR(200),
 	GENERATE_BTOKEN_ERROR(997),
+	UNKNOWN_ERROR(998),
 	INVALID_REQUEST(999);
 
 	public static final String PARAM_COM_VER_LOCAL = "Local version";

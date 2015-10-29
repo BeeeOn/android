@@ -29,12 +29,14 @@
 	<string name="NetworkError___COM_VER_MISMATCH">Verze komunikačního protokolu již není podporována.\n(aplikace: %1$s, server: %2$s)\n\nAktualizujte si prosím vaši aplikaci.</string>
 	<string name="NetworkError___COM_FW_ALGORITHMS_ERROR">Chyba při komunikaci s firmware/algoritmy.</string>
 	<string name="NetworkError___DAMAGED_XML">Bylo odesláno poškozené XML.\n\nZkuste to prosím znovu.</string>
+	<string name="NetworkError___GATE_AVAILABLE">K této bráně již máte přístup.</string>
 	<string name="NetworkError___GENERATE_BTOKEN_ERROR">Chyba při generování přístupového tokenu.</string>
 	<string name="NetworkError___IMPROPER_NAME_OR_EMAIL">Zadané jméno nebo e-mail není vhodný.</string>
 	<string name="NetworkError___IMPROPER_PSWD">Zadané heslo není dostatečně bezpečné.</string>
 	<string name="NetworkError___INVALID_LOCATION_TYPE">Byl zadán neplatný typ umístění.</string>
 	<string name="NetworkError___INVALID_PROVIDER">Tento poskytovatel není k dispozici.</string>
 	<string name="NetworkError___INVALID_REQUEST">Tento typ požadavku není na serveru podporován.</string>
+	<string name="NetworkError___UNKNOWN_ERROR">Server nahlásil neznámou chybu.</string>
 	<string name="NetworkError___LOW_RIGHTS">Nemáte dostatečná práva pro tuto akci.\n\nPožádejte vlastníka brány o jejich navýšení.</string>
 	<string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Bylo zadáno neplatné ID nebo typ zařízení.</string>
 	<string name="NetworkError___NOT_VALID_USER">Byl zadán neplatný token nebo e-mail.</string>
