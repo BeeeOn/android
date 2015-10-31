@@ -5,7 +5,7 @@
 			  android:layout_height="wrap_content"
 			  android:gravity="center">
 
-	<net.simonvt.numberpicker.NumberPicker
+	<eu.rekisoft.android.numberpicker.NumberPicker
 		android:id="@+id/dialog_number_picker_numberpicker"
 		style="@style/numberPicker"
 		android:layout_width="wrap_content"

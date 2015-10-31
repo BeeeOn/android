@@ -132,7 +132,7 @@
 		<item name="android:background">@drawable/appwidget_actionbar_background</item>
 	</style>
 
-	<style name="numberPicker" parent="@style/NPWidget.Material.NumberPicker" />
+	<style name="numberPicker" parent="@style/NPWidget.Holo.Light.NumberPicker"/>
 
 	<style name="BeeeOn" />
 

@@ -17,9 +17,9 @@ import com.rehivetech.beeeon.gui.fragment.DeviceDetailGroupModuleFragment;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
-import net.simonvt.numberpicker.NumberPicker;
-
 import java.util.ArrayList;
+
+import eu.rekisoft.android.numberpicker.NumberPicker;
 
 /**
  * Created by leo on 24.4.15.
