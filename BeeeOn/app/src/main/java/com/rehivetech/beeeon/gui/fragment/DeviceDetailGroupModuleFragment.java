@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
+import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,7 +37,8 @@ import java.util.List;
 /**
  * @author martin on 15.8.2015.
  */
-public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener, DeviceModuleAdapter.ItemClickListener {
+public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener,
+		DeviceModuleAdapter.ItemClickListener, NumberPickerDialogFragment.SetNewValueListener {
 
 	private static final String TAG = DeviceDetailGroupModuleFragment.class.getSimpleName();
 
@@ -204,7 +207,19 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 
 	private void showNumberPickerDialog(String moduleId) {
 		Module module = mDevice.getModuleById(moduleId);
-		NumberPickerDialogFragment.show(mActivity, module, DeviceDetailGroupModuleFragment.this);
+		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
+		UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
+
+		NumberPickerDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+				.setTitle(module.getName(mActivity))
+				.setConstraints(module.getValue().getConstraints())
+				.setPositiveButtonText(getString(R.string.activity_fragment_btn_set))
+				.setNegativeButtonText(getString(R.string.activity_fragment_btn_cancel))
+				.setActualValue(module.getValue().getDoubleValue())
+				.setValuesUnit(unitsHelper.getStringUnit(module.getValue()))
+				.setModuleId(moduleId)
+				.setTargetFragment(this, 0)
+				.show();
 	}
 
 	private void doChangeStateModuleTask(final Module module) {
@@ -253,15 +268,15 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
 	}
 
-	public void onSetTemperatureClick(Double value, String moduleId) {
+	@Override
+	public void onSetNewValue(String moduleId, String actualValue) {
 		Module module = mDevice.getModuleById(moduleId);
 		if (module == null) {
 			Log.e(TAG, "Can't load module for changing its value");
 			return;
 		}
 
-		module.setValue(String.valueOf(value));
+		module.setValue(actualValue);
 		doChangeStateModuleTask(module);
 	}
-
 }
