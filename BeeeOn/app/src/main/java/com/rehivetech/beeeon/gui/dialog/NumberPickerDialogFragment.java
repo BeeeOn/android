@@ -128,41 +128,42 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 
 		List<String> wholeSteps = new ArrayList<>();
 
-		for (int i = minValue.intValue(); i < maxValue.intValue(); i += granularity.intValue()) {
-			wholeSteps.add(String.valueOf(i));
+		if (granularity > 1) {
+
+			for (double i = minValue; i < maxValue; i += granularity) {
+				wholeSteps.add(String.valueOf(i));
+			}
+		} else {
+
+			for (int i = minValue.intValue(); i < maxValue.intValue(); i += granularity.intValue()) {
+				wholeSteps.add(String.valueOf(i));
+			}
 		}
+
 		numberPickerWhole.setDisplayedValues(wholeSteps.toArray(new String[wholeSteps.size()]));
 		numberPickerWhole.setMinValue(0);
 		numberPickerWhole.setMaxValue(wholeSteps.size() - 1);
 		numberPickerWhole.setValue(wholeSteps.indexOf(String.valueOf(actualValue.intValue())));
 
-		if (granularity != Math.floor(granularity)) {
-
+		if (granularity != Math.floor(granularity) && granularity <= 1) {
 			Log.d(TAG, "granularity is with decimal part");
 
 			numberPickerDecimal.setVisibility(View.VISIBLE);
 			decimalPoint.setVisibility(View.VISIBLE);
 
-			String s = String.valueOf(granularity);
-			String[] result = s.split("\\.");
-
-			int decimalMax = 1;
-			for (int i = 0; i < result[1].length(); i++) {
-				decimalMax *= 10;
-			}
-
-			int actualDecimalPart = (int) ((actualValue - actualValue.intValue()) * Math.pow(10, result[1].length()));
-			int decimalGranularity = (int) ((granularity - granularity.intValue()) * Math.pow(10, result[1].length()));
-
 			List<String> decimalSteps = new ArrayList<>();
-			for (int i = 0; i < decimalMax; i += decimalGranularity) {
-				decimalSteps.add(String.valueOf(i));
+			double granularityDecimalPart = granularity - granularity.intValue();
+
+			for (double i = 0; i < 1; i += granularityDecimalPart) {
+				decimalSteps.add(String.valueOf(i).substring(2));
 			}
 
 			numberPickerDecimal.setDisplayedValues(decimalSteps.toArray(new String[decimalSteps.size()]));
 			numberPickerDecimal.setMinValue(0);
 			numberPickerDecimal.setMaxValue(decimalSteps.size() - 1);
-			numberPickerDecimal.setValue(actualDecimalPart);
+
+			double actualValueDecimalPart = actualValue - actualValue.intValue();
+			numberPickerDecimal.setValue(decimalSteps.indexOf(String.valueOf(actualValueDecimalPart)));
 		}
 
 		builder.setView(view);
