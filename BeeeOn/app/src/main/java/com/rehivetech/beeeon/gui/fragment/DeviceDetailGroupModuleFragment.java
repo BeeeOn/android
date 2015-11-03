@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,7 +27,6 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -145,8 +143,8 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
 		Log.d(TAG, "onButtonSetNewValue");
-		mModuleId = moduleId;
-		showNumberPickerDialog(moduleId);
+
+		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
 	}
 
 	@Override
@@ -203,23 +201,6 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 				.setTargetFragment(DeviceDetailGroupModuleFragment.this, REQUEST_SET_ACTUATOR)
 				.show();
 		Log.d(TAG, "dialog is created");
-	}
-
-	private void showNumberPickerDialog(String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
-		UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
-
-		NumberPickerDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-				.setTitle(module.getName(mActivity))
-				.setConstraints(module.getValue().getConstraints())
-				.setPositiveButtonText(getString(R.string.activity_fragment_btn_set))
-				.setNegativeButtonText(getString(R.string.activity_fragment_btn_cancel))
-				.setActualValue(module.getValue().getDoubleValue())
-				.setValuesUnit(unitsHelper.getStringUnit(module.getValue()))
-				.setModuleId(moduleId)
-				.setTargetFragment(this, 0)
-				.show();
 	}
 
 	private void doChangeStateModuleTask(final Module module) {

@@ -2,7 +2,9 @@ package com.rehivetech.beeeon.gui.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,7 +15,11 @@ import android.widget.TextView;
 import com.avast.android.dialogs.core.BaseDialogBuilder;
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.BaseActivity;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +44,23 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 	private static final String ARG_MODULE_ID = "module_id";
 
 
-	public static NumberPickerDialogBuilder createBuilder(Context context, FragmentManager fragmentManager) {
+	public static void showNumberPickerDialog(BaseActivity context, Module module, Fragment targetFragment) {
+		SharedPreferences prefs = Controller.getInstance(context).getUserSettings();
+		UnitsHelper unitsHelper = new UnitsHelper(prefs, context);
+
+		NumberPickerDialogFragment.createBuilder(context, context.getSupportFragmentManager())
+				.setTitle(module.getName(context))
+				.setConstraints(module.getValue().getConstraints())
+				.setPositiveButtonText(context.getString(R.string.activity_fragment_btn_set))
+				.setNegativeButtonText(context.getString(R.string.activity_fragment_btn_cancel))
+				.setActualValue(module.getValue().getDoubleValue())
+				.setValuesUnit(unitsHelper.getStringUnit(module.getValue()))
+				.setModuleId(module.getId())
+				.setTargetFragment(targetFragment, 0)
+				.show();
+	}
+
+	private static NumberPickerDialogBuilder createBuilder(Context context, FragmentManager fragmentManager) {
 		return new NumberPickerDialogBuilder(context, fragmentManager);
 	}
 

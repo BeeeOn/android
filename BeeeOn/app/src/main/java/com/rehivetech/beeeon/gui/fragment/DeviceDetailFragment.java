@@ -48,7 +48,6 @@ import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnitsHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -411,7 +410,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
 		Log.d(TAG, "onButtonSetNewValue");
-		showNumberPickerDialog(moduleId);
+
+		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
 	}
 
 	@Override
@@ -442,23 +442,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				.setTargetFragment(DeviceDetailFragment.this, REQUEST_SET_ACTUATOR)
 				.show();
 		Log.d(TAG, "dialog is created");
-	}
-
-	private void showNumberPickerDialog(String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
-		UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
-
-		NumberPickerDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-				.setTitle(module.getName(mActivity))
-				.setConstraints(module.getValue().getConstraints())
-				.setPositiveButtonText(getString(R.string.activity_fragment_btn_set))
-				.setNegativeButtonText(getString(R.string.activity_fragment_btn_cancel))
-				.setActualValue(module.getValue().getDoubleValue())
-				.setValuesUnit(unitsHelper.getStringUnit(module.getValue()))
-				.setModuleId(moduleId)
-				.setTargetFragment(this, 1)
-				.show();
 	}
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceReload) {
