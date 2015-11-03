@@ -47,8 +47,10 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 			return;
 		}
 
-		DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
-		getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
+		if (savedInstanceState == null) {
+			DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
+		}
 	}
 
 	@Override

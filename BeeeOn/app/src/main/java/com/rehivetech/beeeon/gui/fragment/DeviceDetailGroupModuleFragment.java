@@ -35,7 +35,8 @@ import java.util.List;
 /**
  * @author martin on 15.8.2015.
  */
-public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener, DeviceModuleAdapter.ItemClickListener {
+public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener,
+		DeviceModuleAdapter.ItemClickListener, NumberPickerDialogFragment.SetNewValueListener {
 
 	private static final String TAG = DeviceDetailGroupModuleFragment.class.getSimpleName();
 
@@ -142,8 +143,8 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
 		Log.d(TAG, "onButtonSetNewValue");
-		mModuleId = moduleId;
-		showNumberPickerDialog(moduleId);
+
+		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
 	}
 
 	@Override
@@ -202,11 +203,6 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		Log.d(TAG, "dialog is created");
 	}
 
-	private void showNumberPickerDialog(String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		NumberPickerDialogFragment.show(mActivity, module, DeviceDetailGroupModuleFragment.this);
-	}
-
 	private void doChangeStateModuleTask(final Module module) {
 		ActorActionTask changeStateModuleTask = new ActorActionTask(mActivity);
 
@@ -253,15 +249,15 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
 	}
 
-	public void onSetTemperatureClick(Double value, String moduleId) {
+	@Override
+	public void onSetNewValue(String moduleId, String actualValue) {
 		Module module = mDevice.getModuleById(moduleId);
 		if (module == null) {
 			Log.e(TAG, "Can't load module for changing its value");
 			return;
 		}
 
-		module.setValue(String.valueOf(value));
+		module.setValue(actualValue);
 		doChangeStateModuleTask(module);
 	}
-
 }

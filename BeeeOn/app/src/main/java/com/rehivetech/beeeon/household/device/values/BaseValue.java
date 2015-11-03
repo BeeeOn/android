@@ -85,15 +85,27 @@ public abstract class BaseValue {
 		return new UnknownValue();
 	}
 
-	public static class Constraints {
-		private final Double min;
-		private final Double max;
-		private final Double granularity;
+	public static class Constraints{
+		private final Double mMin;
+		private final Double mMax;
+		private final Double mGranularity;
 
 		public Constraints(Double min, Double max, Double granularity) {
-			this.min = min;
-			this.max = max;
-			this.granularity = granularity;
+			mMin = min;
+			mMax = max;
+			mGranularity = granularity;
+		}
+
+		public Double getMin() {
+			return mMin;
+		}
+
+		public Double getMax() {
+			return mMax;
+		}
+
+		public Double getGranularity() {
+			return mGranularity;
 		}
 	}
 

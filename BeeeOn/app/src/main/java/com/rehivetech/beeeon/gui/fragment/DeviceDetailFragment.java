@@ -410,7 +410,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
 		Log.d(TAG, "onButtonSetNewValue");
-		showNumberPickerDialog(moduleId);
+
+		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
 	}
 
 	@Override
@@ -441,11 +442,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				.setTargetFragment(DeviceDetailFragment.this, REQUEST_SET_ACTUATOR)
 				.show();
 		Log.d(TAG, "dialog is created");
-	}
-
-	private void showNumberPickerDialog(String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		NumberPickerDialogFragment.show(mActivity, module, DeviceDetailFragment.this);
 	}
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceReload) {

@@ -5,9 +5,25 @@
 			  android:layout_height="wrap_content"
 			  android:gravity="center">
 
-	<net.simonvt.numberpicker.NumberPicker
-		android:id="@+id/dialog_number_picker_numberpicker"
+	<eu.rekisoft.android.numberpicker.NumberPicker
+		android:id="@+id/dialog_number_picker_numberpicker_whole"
 		style="@style/numberPicker"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"/>
+
+	<TextView
+		android:id="@+id/dialog_number_picker_decimal_point"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:visibility="gone"
+		android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+		android:text="."/>
+
+	<eu.rekisoft.android.numberpicker.NumberPicker
+		android:id="@+id/dialog_number_picker_numberpicker_decimal"
+		style="@style/numberPicker"
+		android:visibility="gone"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"/>
@@ -16,10 +32,8 @@
 		android:id="@+id/dialog_number_picker_unit"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:textColor="@color/beeeon_primary"
-		android:textSize="30sp"
+		android:textAppearance="@style/TextAppearance.AppCompat.Display1"
 		android:layout_marginLeft="8dp"
 		android:layout_marginStart="8dp"
-		android:text="@string/unit_temperature_celsius"
 		/>
 </LinearLayout>
