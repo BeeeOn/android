@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
@@ -163,6 +164,9 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 		}
 
 		builder.setView(view);
+
+		//disable show keyboard by default
+		getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
 		return builder;
 	}
