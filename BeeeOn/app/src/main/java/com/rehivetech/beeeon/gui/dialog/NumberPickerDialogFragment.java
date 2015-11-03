@@ -85,16 +85,20 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 		builder.setTitle(args.getString(ARG_TITLE));
 
 		String positiveButtonText = args.getString(ARG_POSITIVE_BUTTON_TEXT);
+
+		final List<String> wholeSteps = new ArrayList<>();
+		final List<String> decimalSteps = new ArrayList<>();
+
 		if (!TextUtils.isEmpty(positiveButtonText)) {
 
 			builder.setPositiveButton(positiveButtonText, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					for (SetNewValueListener listener : NumberPickerDialogFragment.this.getListeners()) {
-						int actualWholeVal = numberPickerWhole.getValue();
-						int actualDecimalVal = 0;
+						String actualWholeVal = wholeSteps.get(numberPickerWhole.getValue());
+						String actualDecimalVal = "";
 						if (numberPickerDecimal.getVisibility() == View.VISIBLE) {
-							actualDecimalVal = numberPickerDecimal.getValue();
+							actualDecimalVal = decimalSteps.get(numberPickerDecimal.getValue());
 						}
 						String actualValue = String.format("%s.%s", actualWholeVal, actualDecimalVal);
 
@@ -121,8 +125,6 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 		Double granularity = args.getDouble(ARG_GRANULARITY);
 		Double actualValue = args.getDouble(ARG_ACTUAL_VALUE);
 
-		List<String> wholeSteps = new ArrayList<>();
-
 		if (granularity > 1) {
 
 			for (double i = minValue; i < maxValue; i += granularity) {
@@ -146,7 +148,6 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			numberPickerDecimal.setVisibility(View.VISIBLE);
 			decimalPoint.setVisibility(View.VISIBLE);
 
-			List<String> decimalSteps = new ArrayList<>();
 			double granularityDecimalPart = granularity - granularity.intValue();
 
 			for (double i = 0; i < 1; i += granularityDecimalPart) {
