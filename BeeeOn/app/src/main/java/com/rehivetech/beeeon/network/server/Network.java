@@ -747,7 +747,7 @@ public class Network implements INetwork {
 	 */
 	public boolean deleteGCMID(String userId, String gcmID) {
 		processCommunication(
-				XmlCreator.Notifications.deleteGCMID(userId, gcmID));
+				XmlCreator.Notifications.deleteGCMID(mSessionId, userId, gcmID));
 
 		return true;
 	}

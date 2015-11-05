@@ -46,8 +46,4 @@ public class GcmHelper {
 		gcmReg.run();
 	}
 
-	public static void invalidateLocalGcmId(Controller controller) {
-		controller.getGcmModel().setGCMIdLocal("");
-	}
-
 }

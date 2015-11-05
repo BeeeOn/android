@@ -14,18 +14,13 @@ public class GcmReRegistrationHandler extends IntentService {
 	}
 
 	@Override
-	public void onCreate() {
-		super.onCreate();
-	}
-
-	@Override
 	protected void onHandleIntent(Intent intent) {
 		Controller controller = Controller.getInstance(this);
 		if (controller.isLoggedIn()) {
 			Log.i(TAG, GcmHelper.TAG_GCM + "Re-registartion GCM");
 			GcmHelper.registerGCMInBackground(getApplicationContext());
 		} else {
-			GcmHelper.invalidateLocalGcmId(controller);
+			controller.getGcmModel().setGCMIdLocal("");
 		}
 	}
 

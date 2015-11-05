@@ -108,14 +108,16 @@ public class GcmModel extends BaseModel {
 				public void run() {
 					String id = (gcmId != null) ? gcmId : getGCMRegistrationId();
 
+					mPersistence.saveGCMRegistrationId("");
+
 					if (userId.isEmpty() || id.isEmpty())
 						return;
 
 					try {
-						((Network) mNetwork).deleteGCMID(userId, gcmId);
+						((Network) mNetwork).deleteGCMID(userId, id);
 					} catch (AppException e) {
 						// do nothing
-						Log.w(TAG, GcmHelper.TAG_GCM + "Delete GCM ID failed: " + e.getLocalizedMessage());
+						Log.w(TAG, GcmHelper.TAG_GCM + "Delete GCM ID failed: " + e.getTranslatedErrorMessage(mContext));
 					}
 				}
 			};

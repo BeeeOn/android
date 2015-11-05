@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.model.GcmModel;
 import com.rehivetech.beeeon.util.Utils;
 
 public class GcmRegisterRunnable implements Runnable {
@@ -25,14 +26,16 @@ public class GcmRegisterRunnable implements Runnable {
 	 * @param maxAttempts Maximum attempts to get GCM ID, null for infinity
 	 */
 	public GcmRegisterRunnable(Context context, Integer maxAttempts) {
-		this.mContext = context.getApplicationContext();
-		this.mMaxAttempts = maxAttempts;
-		this.mOldGcmId = Controller.getInstance(mContext).getGcmModel().getGCMRegistrationId();
+		mContext = context.getApplicationContext();
+		mMaxAttempts = maxAttempts;
+		mOldGcmId = Controller.getInstance(mContext).getGcmModel().getGCMRegistrationId();
 	}
 
 	@Override
 	public void run() {
 		Controller controller = Controller.getInstance(mContext);
+		GcmModel gcmModel = controller.getGcmModel();
+
 		// if there is no limit, set lower priority of this thread
 		if (mMaxAttempts == null) {
 			// Moves the current Thread into the background
@@ -42,7 +45,7 @@ public class GcmRegisterRunnable implements Runnable {
 		// if there is not Internet connection, locally invalidate and next event will try again to get new GCM ID 
 		if (!Utils.isInternetAvailable(mContext)) {
 			Log.w(TAG, GcmHelper.TAG_GCM + "No Internet, locally invalidate GCM ID");
-			GcmHelper.invalidateLocalGcmId(Controller.getInstance(mContext));
+			gcmModel.setGCMIdLocal("");
 			return;
 		}
 
@@ -80,20 +83,19 @@ public class GcmRegisterRunnable implements Runnable {
 			}
 		}
 
-		Log.i(TAG, GcmHelper.TAG_GCM + "Module registered, attempt number " + String.valueOf(attempt) + " , registration ID="
-				+ mNewGcmId);
+		Log.i(TAG, GcmHelper.TAG_GCM + "Module registered, attempt number " + String.valueOf(attempt) + ", registration ID=" + mNewGcmId);
 
 		// if new GCM ID is different then the old one, delete old on server side and apply new one
 		if (!mOldGcmId.equals(mNewGcmId)) {
-			controller.getGcmModel().deleteGCM(controller.getActualUser().getId(), mOldGcmId);
+			gcmModel.deleteGCM(controller.getActualUser().getId(), mOldGcmId);
 
 			// Persist the regID - no need to register again.
-			controller.getGcmModel().setGCMIdLocal(mNewGcmId);
-			controller.getGcmModel().setGCMIdServer(mNewGcmId);
+			gcmModel.setGCMIdLocal(mNewGcmId);
+			gcmModel.setGCMIdServer(mNewGcmId);
 
 		} else {
 			// save it just locally to update app version
-			controller.getGcmModel().setGCMIdLocal(mNewGcmId);
+			gcmModel.setGCMIdLocal(mNewGcmId);
 			Log.i(TAG, GcmHelper.TAG_GCM + "New GCM ID is the same, no need to change");
 		}
 	}

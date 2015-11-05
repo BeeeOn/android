@@ -111,7 +111,7 @@ public class NotificationFragment extends Fragment {
 						}
 					});
 				} catch (AppException e) {
-					Log.e(TAG, "Cannot get notification history, error: " + e.getLocalizedMessage());
+					Log.e(TAG, "Cannot get notification history, error: " + e.getTranslatedErrorMessage(getActivity()));
 					getActivity().runOnUiThread(new Runnable() {
 
 						@Override
