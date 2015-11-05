@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
 
 public class GcmReRegistrationHandler extends IntentService {
@@ -17,7 +18,7 @@ public class GcmReRegistrationHandler extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		Controller controller = Controller.getInstance(this);
 		if (controller.isLoggedIn()) {
-			Log.i(TAG, GcmHelper.TAG_GCM + "Re-registartion GCM");
+			Log.i(TAG, Constants.GCM_TAG + "Re-registartion GCM");
 			GcmHelper.registerGCMInBackground(getApplicationContext());
 		} else {
 			controller.getGcmModel().setGCMIdLocal("");

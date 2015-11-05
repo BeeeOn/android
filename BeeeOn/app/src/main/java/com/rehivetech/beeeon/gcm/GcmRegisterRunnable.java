@@ -44,7 +44,7 @@ public class GcmRegisterRunnable implements Runnable {
 
 		// if there is not Internet connection, locally invalidate and next event will try again to get new GCM ID 
 		if (!Utils.isInternetAvailable(mContext)) {
-			Log.w(TAG, GcmHelper.TAG_GCM + "No Internet, locally invalidate GCM ID");
+			Log.w(TAG, Constants.GCM_TAG + "No Internet, locally invalidate GCM ID");
 			gcmModel.setGCMIdLocal("");
 			return;
 		}
@@ -61,7 +61,7 @@ public class GcmRegisterRunnable implements Runnable {
 			try {
 				mNewGcmId = gcm.register(Constants.PROJECT_NUMBER);
 			} catch (Exception e) {
-				Log.e(TAG, GcmHelper.TAG_GCM + "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
+				Log.e(TAG, Constants.GCM_TAG + "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
 				/*
 				 * No matter how many times you call register, it will always fail and throw an exception on some
 				 * devices. On these devices we need to get GCM ID this way.
@@ -83,7 +83,7 @@ public class GcmRegisterRunnable implements Runnable {
 			}
 		}
 
-		Log.i(TAG, GcmHelper.TAG_GCM + "Module registered, attempt number " + String.valueOf(attempt) + ", registration ID=" + mNewGcmId);
+		Log.i(TAG, Constants.GCM_TAG + "Module registered, attempt number " + String.valueOf(attempt) + ", registration ID=" + mNewGcmId);
 
 		// if new GCM ID is different then the old one, delete old on server side and apply new one
 		if (!mOldGcmId.equals(mNewGcmId)) {
@@ -96,7 +96,7 @@ public class GcmRegisterRunnable implements Runnable {
 		} else {
 			// save it just locally to update app version
 			gcmModel.setGCMIdLocal(mNewGcmId);
-			Log.i(TAG, GcmHelper.TAG_GCM + "New GCM ID is the same, no need to change");
+			Log.i(TAG, Constants.GCM_TAG + "New GCM ID is the same, no need to change");
 		}
 	}
 

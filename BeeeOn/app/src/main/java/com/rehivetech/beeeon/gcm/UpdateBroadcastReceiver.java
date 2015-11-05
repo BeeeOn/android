@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.rehivetech.beeeon.Constants;
+
 public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
 	public static final String TAG = UpdateBroadcastReceiver.class.getSimpleName();
@@ -15,7 +17,7 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	public static void onUpdate(Context context) {
-		Log.i(TAG, GcmHelper.TAG_GCM + "App updated, starting service for re-registering GCM ID.");
+		Log.i(TAG, Constants.GCM_TAG + "App updated, starting service for re-registering GCM ID.");
 		context.startService(new Intent(context, GcmReRegistrationHandler.class));
 	}
 

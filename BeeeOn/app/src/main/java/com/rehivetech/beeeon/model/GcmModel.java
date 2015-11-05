@@ -3,13 +3,13 @@ package com.rehivetech.beeeon.model;
 import android.content.Context;
 import android.util.Log;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmHelper;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.user.User;
-import com.rehivetech.beeeon.network.demo.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.server.Network;
 import com.rehivetech.beeeon.persistence.Persistence;
@@ -45,7 +45,7 @@ public class GcmModel extends BaseModel {
 		final String gcmId = getGCMRegistrationId();
 		if (gcmId.isEmpty()) {
 			GcmHelper.registerGCMInBackground(mContext);
-			Log.w(TAG, GcmHelper.TAG_GCM + "GCM ID is not accessible in persistence, creating new thread");
+			Log.w(TAG, Constants.GCM_TAG + "GCM ID is not accessible in persistence, creating new thread");
 		} else {
 			// send GCM ID to server
 			setGCMIdServer(gcmId);
@@ -64,7 +64,7 @@ public class GcmModel extends BaseModel {
 	public String getGCMRegistrationId() {
 		String registrationId = mPersistence.loadGCMRegistrationId();
 		if (registrationId.isEmpty()) {
-			Log.i(TAG, GcmHelper.TAG_GCM + "Registration not found.");
+			Log.i(TAG, Constants.GCM_TAG + "Registration not found.");
 			return "";
 		}
 		// Check if app was updated; if so, it must clear the registration ID
@@ -76,7 +76,7 @@ public class GcmModel extends BaseModel {
 			// delete actual GCM ID from server
 			deleteGCM(mUser.getId(), registrationId);
 			setGCMIdLocal("");
-			Log.i(TAG, GcmHelper.TAG_GCM + "App version changed.");
+			Log.i(TAG, Constants.GCM_TAG + "App version changed.");
 			return "";
 		}
 		return registrationId;
@@ -106,7 +106,7 @@ public class GcmModel extends BaseModel {
 						((Network) mNetwork).deleteGCMID(userId, id);
 					} catch (AppException e) {
 						// do nothing
-						Log.w(TAG, GcmHelper.TAG_GCM + "Delete GCM ID failed: " + e.getTranslatedErrorMessage(mContext));
+						Log.w(TAG, Constants.GCM_TAG + "Delete GCM ID failed: " + e.getTranslatedErrorMessage(mContext));
 					}
 				}
 			};
@@ -121,7 +121,7 @@ public class GcmModel extends BaseModel {
 	 */
 	public void setGCMIdLocal(String gcmId) {
 		int appVersion = Utils.getAppVersion(mContext);
-		Log.i(TAG, GcmHelper.TAG_GCM + "Saving GCM ID on app version " + appVersion);
+		Log.i(TAG, Constants.GCM_TAG + "Saving GCM ID on app version " + appVersion);
 
 		mPersistence.saveGCMRegistrationId(gcmId);
 		mPersistence.saveLastApplicationVersion(appVersion);
@@ -139,11 +139,11 @@ public class GcmModel extends BaseModel {
 			return;
 
 		try {
-			Log.i(TAG, GcmHelper.TAG_GCM + "Set GCM ID to server: " + gcmID);
+			Log.i(TAG, Constants.GCM_TAG + "Set GCM ID to server: " + gcmID);
 			((Network) mNetwork).setGCMID(gcmID);
 		} catch (AppException e) {
 			// nothing to do
-			Log.e(TAG, GcmHelper.TAG_GCM + "Set GCM ID to server failed: " + e.getTranslatedErrorMessage(mContext));
+			Log.e(TAG, Constants.GCM_TAG + "Set GCM ID to server failed: " + e.getTranslatedErrorMessage(mContext));
 		}
 	}
 

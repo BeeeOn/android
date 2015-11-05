@@ -6,12 +6,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.util.Utils;
 
 public class GcmHelper {
-	public static final String TAG_GCM = "BEEEON_GCM: ";
-
-	/**
-	 * Maximum attempts to get GCM ID. After reaching this attempts there will be created new thread to get GCM ID.
-	 */
-	private static final int MAX_GCM_ATTEMPTS = 3;
 
 	/**
 	 * Registers the application with GCM servers asynchronously.
