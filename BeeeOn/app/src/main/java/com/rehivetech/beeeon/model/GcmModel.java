@@ -48,18 +48,7 @@ public class GcmModel extends BaseModel {
 			Log.w(TAG, GcmHelper.TAG_GCM + "GCM ID is not accessible in persistence, creating new thread");
 		} else {
 			// send GCM ID to server
-			Thread t = new Thread() {
-				public void run() {
-					try {
-						setGCMIdServer(gcmId);
-					} catch (Exception e) {
-						// do nothing
-						Log.w(TAG, GcmHelper.TAG_GCM + "Login: Sending GCM ID to server failed: " + e.getLocalizedMessage());
-					}
-				}
-			};
-			t.start();
-			setGCMIdLocal(gcmId);
+			setGCMIdServer(gcmId);
 		}
 	}
 
@@ -86,7 +75,7 @@ public class GcmModel extends BaseModel {
 		if (registeredVersion != currentVersion) {
 			// delete actual GCM ID from server
 			deleteGCM(mUser.getId(), registrationId);
-			mPersistence.saveGCMRegistrationId("");
+			setGCMIdLocal("");
 			Log.i(TAG, GcmHelper.TAG_GCM + "App version changed.");
 			return "";
 		}
@@ -108,7 +97,7 @@ public class GcmModel extends BaseModel {
 				public void run() {
 					String id = (gcmId != null) ? gcmId : getGCMRegistrationId();
 
-					mPersistence.saveGCMRegistrationId("");
+					setGCMIdLocal("");
 
 					if (userId.isEmpty() || id.isEmpty())
 						return;
@@ -146,25 +135,15 @@ public class GcmModel extends BaseModel {
 	 * @param gcmID to be set
 	 */
 	public void setGCMIdServer(String gcmID) {
-		Log.i(TAG, GcmHelper.TAG_GCM + "setGcmIdServer");
-		if (mNetwork instanceof DemoNetwork) {
-			Log.i(TAG, GcmHelper.TAG_GCM + "DemoMode -> return");
+		if (!(mNetwork instanceof Network) || mUser.getId().isEmpty())
 			return;
-		}
-
-		if (mUser.getId().isEmpty()) {
-			// no user, it will be sent in user login
-			return;
-		}
 
 		try {
 			Log.i(TAG, GcmHelper.TAG_GCM + "Set GCM ID to server: " + gcmID);
-			if (mNetwork instanceof Network) {
-				((Network) mNetwork).setGCMID(gcmID);
-			}
+			((Network) mNetwork).setGCMID(gcmID);
 		} catch (AppException e) {
 			// nothing to do
-			Log.e(TAG, GcmHelper.TAG_GCM + "Set GCM ID to server failed.");
+			Log.e(TAG, GcmHelper.TAG_GCM + "Set GCM ID to server failed: " + e.getTranslatedErrorMessage(mContext));
 		}
 	}
 
