@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="is_api_11">false</bool>
+
+    <bool name="is_at_least_api_12">false</bool>
+    <bool name="is_at_most_api_11">true</bool>
 </resources>
