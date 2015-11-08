@@ -22,6 +22,6 @@
 		android:layout_gravity="center_horizontal"
 		android:gravity="center_horizontal"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		android:textColor="@color/beeeon_primary_dark"/>
+		android:textColor="@color/white"/>
 
 </merge>

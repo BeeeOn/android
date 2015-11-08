@@ -102,7 +102,6 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		mRecyclerView = (RecyclerView) mView.findViewById(R.id.device_detail_modules_list);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 		mModuleAdapter = new DeviceModuleAdapter(mActivity, getModulesByGroup(), this);
-		mModuleAdapter.setUseFirstItemSpace(true);
 		mRecyclerView.setAdapter(mModuleAdapter);
 
 		if (mModuleAdapter.getItemCount() == 0) {

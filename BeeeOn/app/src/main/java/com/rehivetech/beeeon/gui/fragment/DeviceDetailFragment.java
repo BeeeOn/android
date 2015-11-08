@@ -3,15 +3,15 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.Space;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * @author martin on 4.8.2015.
  */
-public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener {
+public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener, AppBarLayout.OnOffsetChangedListener {
 
 	private static final String TAG = DeviceDetailFragment.class.getSimpleName();
 
@@ -74,6 +74,11 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private String mGateId;
 	private String mDeviceId;
 
+	private Toolbar mToolbar;
+	private AppBarLayout mAppBarLayout;
+	private CollapsingToolbarLayout mCollapsingToolbarLayout;
+
+	private ImageView mIcon;
 	private TextView mDeviceName;
 
 	private DeviceFeatureView mDeviceLocation;
@@ -170,9 +175,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
 
 		// FIXME: Why this doesn't work when it's in DeviceDetailActivity?
-		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
+		mToolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
 		AppCompatActivity activity = (AppCompatActivity) getActivity();
-		activity.setSupportActionBar(toolbar);
+		activity.setSupportActionBar(mToolbar);
 		ActionBar actionBar = activity.getSupportActionBar();
 
 		if (actionBar != null) {
@@ -180,7 +185,14 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			actionBar.setDisplayShowTitleEnabled(false);
 		}
 
+		mAppBarLayout = (AppBarLayout) view.findViewById(R.id.device_detail_appbar);
+		mAppBarLayout.addOnOffsetChangedListener(this);
+		mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.device_detail_collapsing_toolbar);
+
+		mIcon = (ImageView) view.findViewById(R.id.device_detail_icon);
+		setParallaxMultiplier(mIcon, 0.9f);
 		mDeviceName = (TextView) view.findViewById(R.id.device_detail_device_name);
+		setParallaxMultiplier(mDeviceName, 0.9f);
 
 		if (mDevice == null)
 			return view;
@@ -224,24 +236,19 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (moduleGroups.size() == 1) {
 			List<Module> modules = mDevice.getVisibleModules();
 			mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
+			mRecyclerView.setVisibility(View.VISIBLE);
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 			mEmptyTextView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
 			mModuleAdapter = new DeviceModuleAdapter(mActivity, modules, this);
 			mRecyclerView.setAdapter(mModuleAdapter);
 
 		} else {
-			view.findViewById(R.id.device_detail_recyclerview_layout).setVisibility(View.GONE);
-			view.findViewById(R.id.device_detail_viewpager_layout).setVisibility(View.VISIBLE);
 			mViewPager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
 			mTabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
+			mTabLayout.setVisibility(View.VISIBLE);
+			mViewPager.setVisibility(View.VISIBLE);
 		}
 
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-			Space space = (Space) view.findViewById(R.id.device_detail_appbar_space);
-			if (space != null) {
-				space.setVisibility(View.VISIBLE);
-			}
-		}
 		return view;
 	}
 
@@ -311,18 +318,15 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (mDevice == null)
 			return;
 
+		mDeviceName.setText(mDevice.getName(mActivity));
+
+		ActionBar actionBar = mActivity.getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setTitle(mDevice.getName(mActivity));
+		}
+
 		Location location = controller.getLocationsModel().getLocation(mGateId, mDevice.getLocationId());
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
-
-		if (mDeviceName != null) {
-			mDeviceName.setText(mDevice.getName(mActivity));
-		} else {
-			ActionBar actionBar = mActivity.getSupportActionBar();
-			if (actionBar != null) {
-				actionBar.setDisplayShowTitleEnabled(true);
-				actionBar.setTitle(mDevice.getName(mActivity));
-			}
-		}
 
 		if (location != null && mDeviceLocation != null) {
 			mDeviceLocation.setValue(location.getName());
@@ -363,6 +367,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			setupViewPager(mViewPager, mTabLayout, moduleGroups);
 		}
 
+	}
+
+	@Override
+	public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+		int maxScroll = (int) (appBarLayout.getTotalScrollRange() * 0.5f);
+		ActionBar actionBar = mActivity.getSupportActionBar();
+
+		if (actionBar != null) {
+			actionBar.setDisplayShowTitleEnabled(verticalOffset <= -maxScroll);
+		}
 	}
 
 	static class ModuleGroupPagerAdapter extends FragmentPagerAdapter {
@@ -511,5 +525,10 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		doChangeStateModuleTask(module);
 	}
 
+	private void setParallaxMultiplier(View view, float multiplier) {
+		CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) view.getLayoutParams();
+		layoutParams.setParallaxMultiplier(multiplier);
+		view.setLayoutParams(layoutParams);
+	}
 
 }

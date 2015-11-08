@@ -59,10 +59,14 @@ public class DeviceFeatureView extends LinearLayout{
 
 		int padding = Utils.convertDpToPixel(16f);
 		setPadding(0, 0, padding, 0);
+		setVisibility(INVISIBLE);
 	}
 
 	public void setValue(String value) {
-		mValue.setText(value);
+		if (value.length() > 0) {
+			setVisibility(VISIBLE);
+			mValue.setText(value);
+		}
 	}
 
 	public void setCaption(String caption) {
