@@ -36,6 +36,7 @@ import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
+import com.rehivetech.beeeon.gui.view.DeviceFeatureView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -74,13 +75,14 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private String mDeviceId;
 
 	private TextView mDeviceName;
-	private TextView mDeviceLocation;
-	private TextView mDeviceLastUpdate;
-	private TextView mDeviceSignal;
-	private TextView mDeviceBattery;
-	private TextView mDeviceRefresh;
+
+	private DeviceFeatureView mDeviceLocation;
+	private DeviceFeatureView mDeviceLastUpdate;
+	private DeviceFeatureView mDeviceSignal;
+	private DeviceFeatureView mDeviceBattery;
+	private DeviceFeatureView mDeviceRefresh;
+
 	private TextView mEmptyTextView;
-	private ImageView mDeviceLocationIcon;
 	private RecyclerView mRecyclerView;
 	private DeviceModuleAdapter mModuleAdapter;
 
@@ -179,42 +181,43 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 
 		mDeviceName = (TextView) view.findViewById(R.id.device_detail_device_name);
-		mDeviceLocation = (TextView) view.findViewById(R.id.device_detail_loc_label);
-		mDeviceLocationIcon = (ImageView) view.findViewById(R.id.device_detail_loc_icon);
-		mDeviceLastUpdate = (TextView) view.findViewById(R.id.device_detail_last_update_label);
 
 		if (mDevice == null)
 			return view;
 
+		LinearLayout featuresLayout = (LinearLayout) view.findViewById(R.id.device_detail_features_layout);
+
 		if (mDevice.getRssi() != null) {
-			LinearLayout signalLayout = (LinearLayout) view.findViewById(R.id.device_detail_signal_layout);
-			mDeviceSignal = (TextView) signalLayout.findViewById(R.id.device_detail_signal_value);
-			signalLayout.setVisibility(View.VISIBLE);
+			mDeviceSignal = new DeviceFeatureView(mActivity);
+			mDeviceSignal.setCaption(getString(R.string.module_detail_label_signal));
+			mDeviceSignal.setIcon(R.drawable.ic_signal);
+			featuresLayout.addView(mDeviceSignal);
 		}
 
 		if (mDevice.getBattery() != null) {
-			LinearLayout batteryLayout = (LinearLayout) view.findViewById(R.id.device_detail_battery_layout);
-			mDeviceBattery = (TextView) view.findViewById(R.id.device_detail_battery_value);
-			mDeviceBattery.setText(String.format("%d%%", mDevice.getBattery()));
-
-			batteryLayout.setVisibility(View.VISIBLE);
+			mDeviceBattery = new DeviceFeatureView(mActivity);
+			mDeviceBattery.setCaption(getString(R.string.devices__type_battery));
+			mDeviceBattery.setIcon(R.drawable.ic_battery);
+			featuresLayout.addView(mDeviceBattery);
 		}
 
 		if (mDevice.getRefresh() != null) {
-			LinearLayout refreshLayout = (LinearLayout) view.findViewById(R.id.device_detail_refresh_layout);
-			mDeviceRefresh = (TextView) view.findViewById(R.id.device_detail_refresh_value);
-			RefreshInterval refreshInterval = mDevice.getRefresh();
-			if (refreshInterval != null) {
-				mDeviceRefresh.setText(refreshInterval.getStringInterval(mActivity));
-			}
-
-			refreshLayout.setVisibility(View.VISIBLE);
+			mDeviceRefresh = new DeviceFeatureView(mActivity);
+			mDeviceRefresh.setCaption(getString(R.string.devices__type_refresh));
+			mDeviceRefresh.setIcon(R.drawable.ic_refresh);
+			featuresLayout.addView(mDeviceRefresh);
 		}
 //		TODO device LED
-//		if (deviceFeatures.hasLed()) {
-//			LinearLayout ledLayout = (LinearLayout) view.findViewById(R.id.device_detail_led_layout);
-//			ledLayout.setVisibility(View.VISIBLE);
-//		}
+
+		mDeviceLastUpdate = new DeviceFeatureView(mActivity);
+		mDeviceLastUpdate.setCaption(getString(R.string.module_detail_label_last_update));
+		mDeviceLastUpdate.setIcon(R.drawable.ic_clock);
+		featuresLayout.addView(mDeviceLastUpdate);
+
+		mDeviceLocation = new DeviceFeatureView(mActivity);
+		mDeviceLocation.setCaption(getString(R.string.module_edit_label_detail_location));
+		featuresLayout.addView(mDeviceLocation);
+
 
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
@@ -321,27 +324,29 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			}
 		}
 
-		if (location != null) {
-			mDeviceLocation.setText(location.getName());
-			mDeviceLocationIcon.setImageResource(location.getIconResource(IconResourceType.WHITE));
+		if (location != null && mDeviceLocation != null) {
+			mDeviceLocation.setValue(location.getName());
+			mDeviceLocation.setIcon(location.getIconResource(IconResourceType.WHITE));
 		}
 
-		mDeviceLastUpdate.setText(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
+		if (mDeviceLastUpdate != null) {
+			mDeviceLastUpdate.setValue(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
+		}
 
 		// signal
-		if (mDevice.getRssi() != null) {
-			mDeviceSignal.setText(String.format("%d%%", mDevice.getRssi()));
+		if (mDevice.getRssi() != null && mDeviceSignal != null) {
+			mDeviceSignal.setValue(String.format("%d%%", mDevice.getRssi()));
 		}
 
 		// battery
-		if (mDevice.getBattery() != null) {
-			mDeviceBattery.setText(String.format("%d%%", mDevice.getBattery()));
+		if (mDevice.getBattery() != null && mDeviceBattery != null) {
+			mDeviceBattery.setValue(String.format("%d%%", mDevice.getBattery()));
 		}
 
 		// refresh
-		if (mDevice.getRefresh() != null) {
+		if (mDevice.getRefresh() != null && mDeviceRefresh != null) {
 			RefreshInterval refreshInterval = mDevice.getRefresh();
-			mDeviceRefresh.setText(refreshInterval.getStringInterval(mActivity));
+			mDeviceRefresh.setValue(refreshInterval.getStringInterval(mActivity));
 		}
 		// TODO device LED initialize
 
