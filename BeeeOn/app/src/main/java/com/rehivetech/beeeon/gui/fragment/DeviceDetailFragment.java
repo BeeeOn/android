@@ -56,7 +56,8 @@ import java.util.List;
 /**
  * @author martin on 4.8.2015.
  */
-public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener, AppBarLayout.OnOffsetChangedListener {
+public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener,
+		AppBarLayout.OnOffsetChangedListener {
 
 	private static final String TAG = DeviceDetailFragment.class.getSimpleName();
 
@@ -73,10 +74,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private TimeHelper mTimeHelper;
 	private String mGateId;
 	private String mDeviceId;
-
-	private Toolbar mToolbar;
-	private AppBarLayout mAppBarLayout;
-	private CollapsingToolbarLayout mCollapsingToolbarLayout;
 
 	private ImageView mIcon;
 	private TextView mDeviceName;
@@ -106,6 +103,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 	};
 
+	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
+		Bundle args = new Bundle();
+		args.putString(KEY_GATE_ID, gateId);
+		args.putString(KEY_DEVICE_ID, deviceId);
+
+		DeviceDetailFragment fragment = new DeviceDetailFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	private CallbackTask createReloadDevicesTask(boolean forceReload) {
 		if (getActivity() == null)
 			return null;
@@ -124,7 +131,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				}
 
 				if (success) {
-					updateLayout();
+					updateData();
 					if (mViewPager != null) {
 						mViewPager.setCurrentItem(tabPos);
 					}
@@ -132,16 +139,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			}
 		});
 		return reloadDevicesTask;
-	}
-
-	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
-		Bundle args = new Bundle();
-		args.putString(KEY_GATE_ID, gateId);
-		args.putString(KEY_DEVICE_ID, deviceId);
-
-		DeviceDetailFragment fragment = new DeviceDetailFragment();
-		fragment.setArguments(args);
-		return fragment;
 	}
 
 	@Override
@@ -175,9 +172,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
 
 		// FIXME: Why this doesn't work when it's in DeviceDetailActivity?
-		mToolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
+		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
 		AppCompatActivity activity = (AppCompatActivity) getActivity();
-		activity.setSupportActionBar(mToolbar);
+		activity.setSupportActionBar(toolbar);
 		ActionBar actionBar = activity.getSupportActionBar();
 
 		if (actionBar != null) {
@@ -185,9 +182,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			actionBar.setDisplayShowTitleEnabled(false);
 		}
 
-		mAppBarLayout = (AppBarLayout) view.findViewById(R.id.device_detail_appbar);
-		mAppBarLayout.addOnOffsetChangedListener(this);
-		mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.device_detail_collapsing_toolbar);
+		AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.device_detail_appbar);
+		appBarLayout.addOnOffsetChangedListener(this);
 
 		mIcon = (ImageView) view.findViewById(R.id.device_detail_icon);
 		setParallaxMultiplier(mIcon, 0.9f);
@@ -247,6 +243,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mTabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
 			mTabLayout.setVisibility(View.VISIBLE);
 			mViewPager.setVisibility(View.VISIBLE);
+			setupViewPager(mViewPager, mTabLayout, mDevice.getModulesGroups(mActivity));
 		}
 
 		return view;
@@ -311,7 +308,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		tabLayout.setupWithViewPager(viewPager);
 	}
 
-	private void updateLayout() {
+	public void updateData() {
 		Controller controller = Controller.getInstance(mActivity);
 
 		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
@@ -363,8 +360,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			}
 		}
 
-		if (mViewPager != null && mTabLayout != null) {
-			setupViewPager(mViewPager, mTabLayout, moduleGroups);
+		if (mViewPager != null) {
+			for (int i = 0; i < moduleGroups.size(); i++) {
+				ModuleGroupPagerAdapter adapter = (ModuleGroupPagerAdapter) mViewPager.getAdapter();
+				DeviceDetailGroupModuleFragment fragment = (DeviceDetailGroupModuleFragment) adapter.getActiveFragment(mViewPager, i);
+				if (fragment != null) {
+					Log.d(TAG, "updating viewpager fragment " + fragment.getTag());
+					fragment.updateData(mDevice);
+				}
+			}
+
 		}
 
 	}
@@ -379,34 +384,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 	}
 
-	static class ModuleGroupPagerAdapter extends FragmentPagerAdapter {
-		private final List<Fragment> mFragments = new ArrayList<>();
-		private final List<String> mFragmentTitles = new ArrayList<>();
-
-		public ModuleGroupPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			return mFragments.get(position);
-		}
-
-		@Override
-		public int getCount() {
-			return mFragments.size();
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return mFragmentTitles.get(position);
-		}
-
-		public void addFragment(Fragment fragment, String title) {
-			mFragments.add(fragment);
-			mFragmentTitles.add(title);
-		}
-	}
 
 	@Override
 	public void onItemClick(String moduleId) {
@@ -475,7 +452,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					updateLayout();
+					updateData();
 				}
 			}
 		});
@@ -504,7 +481,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					updateLayout();
+					updateData();
 				}
 			}
 
@@ -531,4 +508,43 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		view.setLayoutParams(layoutParams);
 	}
 
+	static class ModuleGroupPagerAdapter extends FragmentPagerAdapter {
+		private final List<Fragment> mFragments = new ArrayList<>();
+		private final List<String> mFragmentTitles = new ArrayList<>();
+		private final FragmentManager mFragmentManager;
+
+		public ModuleGroupPagerAdapter(FragmentManager fm) {
+			super(fm);
+			mFragmentManager = fm;
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return mFragments.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return mFragments.size();
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return mFragmentTitles.get(position);
+		}
+
+		public Fragment getActiveFragment(ViewPager container, int position) {
+			String name = makeFragmentName(container.getId(), position);
+			return  mFragmentManager.findFragmentByTag(name);
+		}
+
+		private static String makeFragmentName(int viewId, int index) {
+			return "android:switcher:" + viewId + ":" + index;
+		}
+
+		public void addFragment(Fragment fragment, String title) {
+			mFragments.add(fragment);
+			mFragmentTitles.add(title);
+		}
+	}
 }
