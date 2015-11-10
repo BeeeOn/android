@@ -46,7 +46,6 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.TimeHelper;
 
@@ -70,6 +69,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private static final int REQUEST_SET_ACTUATOR = 7894;
 
 	private DeviceDetailActivity mActivity;
+	private UpdateDevice mDeviceCallback;
 	private Device mDevice;
 	private TimeHelper mTimeHelper;
 	private String mGateId;
@@ -94,7 +94,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			return createReloadDevicesTask(true);
+			return mActivity.createReloadDevicesTask(true);
 		}
 
 		@Override
@@ -113,39 +113,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		return fragment;
 	}
 
-	private CallbackTask createReloadDevicesTask(boolean forceReload) {
-		if (getActivity() == null)
-			return null;
-
-		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(getActivity(), forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);
-
-		final int tabPos = (mViewPager != null ? mViewPager.getCurrentItem() : 0);
-
-		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				Device device = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
-				if (device == null) {
-					Log.e(TAG, String.format("Device #%s does not exists", mDeviceId));
-					mActivity.finish();
-				}
-
-				if (success) {
-					updateData();
-					if (mViewPager != null) {
-						mViewPager.setCurrentItem(tabPos);
-					}
-				}
-			}
-		});
-		return reloadDevicesTask;
-	}
-
 	@Override
 	public void onAttach(Activity activity) {
 		Log.d(TAG, "onAttach");
 		super.onAttach(activity);
 		mActivity = (DeviceDetailActivity) activity;
+		mDeviceCallback = (UpdateDevice) activity;
 	}
 
 	@Override
@@ -230,12 +203,11 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
 		if (moduleGroups.size() == 1) {
-			List<Module> modules = mDevice.getVisibleModules();
 			mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
 			mRecyclerView.setVisibility(View.VISIBLE);
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 			mEmptyTextView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
-			mModuleAdapter = new DeviceModuleAdapter(mActivity, modules, this);
+			mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
 			mRecyclerView.setAdapter(mModuleAdapter);
 
 		} else {
@@ -312,6 +284,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		Controller controller = Controller.getInstance(mActivity);
 
 		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
+		mDevice = mDeviceCallback.getDevice();
+
 		if (mDevice == null)
 			return;
 
@@ -366,7 +340,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				DeviceDetailGroupModuleFragment fragment = (DeviceDetailGroupModuleFragment) adapter.getActiveFragment(mViewPager, i);
 				if (fragment != null) {
 					Log.d(TAG, "updating viewpager fragment " + fragment.getTag());
-					fragment.updateData(mDevice);
+					fragment.updateData();
 				}
 			}
 
@@ -442,7 +416,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceReload) {
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), gateId);
+		mActivity.callbackTaskManager.executeTask(mActivity.createReloadDevicesTask(forceReload), gateId);
 	}
 
 	private void doChangeStateModuleTask(final Module module) {
@@ -506,6 +480,11 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) view.getLayoutParams();
 		layoutParams.setParallaxMultiplier(multiplier);
 		view.setLayoutParams(layoutParams);
+	}
+
+
+	public interface UpdateDevice {
+		Device getDevice();
 	}
 
 	static class ModuleGroupPagerAdapter extends FragmentPagerAdapter {

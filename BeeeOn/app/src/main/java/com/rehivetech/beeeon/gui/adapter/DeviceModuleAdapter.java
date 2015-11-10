@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,9 +34,9 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 	private List<Module> mModuleList;
 	private ItemClickListener mItemClickListener;
 
-	public DeviceModuleAdapter(Context context, List<Module> moduleList, ItemClickListener itemClickListener) {
+	public DeviceModuleAdapter(Context context, ItemClickListener itemClickListener) {
 		mContext = context;
-		mModuleList = moduleList;
+		mModuleList = new ArrayList<>();
 		mItemClickListener = itemClickListener;
 	}
 
