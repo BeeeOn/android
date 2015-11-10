@@ -278,6 +278,8 @@
 	<string name="device_detail_list_modules_no_item_title">ŽÁDNE MODULY</string>
 	<string name="device_detail_label_led">LED status</string>
 	<string name="device_detail_default_group">Výchozí</string>
+	<string name="device_detail_device_online">Připojeno</string>
+	<string name="device_detail_device_offline">Odpojeno</string>
 
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Umístění</string>

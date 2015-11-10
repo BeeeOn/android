@@ -281,6 +281,8 @@
 	<string name="device_detail_list_modules_no_item_title">NO MODULES</string>
 	<string name="device_detail_label_led">LED status</string>
 	<string name="device_detail_default_group">Default</string>
+	<string name="device_detail_device_online">Online</string>
+	<string name="device_detail_device_offline">Offline</string>
 
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Location</string>
