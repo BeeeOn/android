@@ -258,6 +258,8 @@
 	<string name="device_edit_overlay_dialog_create_new_location">Create new location</string>
 	<string name="device_edit_overlay_dialog_edit_text_hint">Write new name</string>
 	<string name="device_edit_toast_icon_or_text_is_null">Please set the icon and write the name</string>
+	<string name="device_edit_warning_battery_life">Choosing too low refresh interval may decrease battery life.</string>
+	<string name="device_edit_warning_refresh">New refresh interval will be applied on next device\'s wake up after save. To wake up device manually you can shake it or press pairing button.</string>
 
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Remove module</string>
