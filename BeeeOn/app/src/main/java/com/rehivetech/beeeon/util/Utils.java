@@ -14,8 +14,10 @@ import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
@@ -47,9 +49,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 
 final public class Utils {
 	private static final String TAG = Utils.class.getSimpleName();
+
+	private static final int[] sGraphColors = new int[] {R.color.graph1, R.color.graph2, R.color.graph3, R.color.graph4, R.color.graph5,
+			R.color.graph6, R.color.graph7, R.color.graph8, R.color.graph9, R.color.graph10, R.color.graph11, R.color.graph12,
+			R.color.graph13, R.color.graph14, R.color.graph15, R.color.graph16, R.color.graph17, R.color.graph18,
+			R.color.graph19, R.color.graph20};
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -579,5 +587,15 @@ final public class Utils {
 		}
 
 		return true;
+	}
+
+	@ColorInt
+	public static int getGraphColor(Context context, int index) {
+		if (index < sGraphColors.length) {
+			return ContextCompat.getColor(context, sGraphColors[index]);
+		}
+
+		Random random = new Random(index);
+		return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	}
 }
