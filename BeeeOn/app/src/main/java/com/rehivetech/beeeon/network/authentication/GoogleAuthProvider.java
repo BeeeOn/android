@@ -247,7 +247,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 			if (!done) {
 				done = true;
 
-				Log.e(TAG, String.format("Received SSL error for url: %s", error.getUrl()));
+				Log.e(TAG, String.format("Received SSL error: %s", error.toString()));
 				Toast.makeText(mActivity, R.string.login_toast_ssl_error, Toast.LENGTH_LONG).show();
 
 				mActivity.setResult(IAuthProvider.RESULT_ERROR);
