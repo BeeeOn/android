@@ -44,7 +44,7 @@ public class TimeHelper {
 	}
 
 	/**
-	 * Return string with formatted time (if it is 23 hours ago, it show only date)
+	 * Return string with formatted time (if it is 23 hours ago, it show also date)
 	 *
 	 * @param lastUpdate
 	 * @param gate       If null, then it will use local timezone
@@ -52,7 +52,7 @@ public class TimeHelper {
 	 */
 	public String formatLastUpdate(DateTime lastUpdate, Gate gate) {
 		boolean isTooOld = lastUpdate.plusHours(23).isBeforeNow();
-		DateTimeFormatter fmt = isTooOld ? DateTimeFormat.shortDate() : DateTimeFormat.mediumTime();
+		DateTimeFormatter fmt = isTooOld ? DateTimeFormat.shortDateTime() : DateTimeFormat.mediumTime();
 
 		DateTimeZone zone = getDateTimeZone(gate);
 		return fmt.withZone(zone).print(lastUpdate);
