@@ -497,7 +497,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 	}
 
-	public void setActiveGateId(String activeGateId) {
+	public void setActiveGateId(@Nullable String activeGateId) {
 		mActiveGateId = activeGateId;
 	}
 }

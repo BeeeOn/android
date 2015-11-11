@@ -158,12 +158,6 @@ public class SetupDeviceFragment extends TrackFragment {
 
 		Spinner newIconSpinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon);
 
-		// Prepare list of icons
-		List<Integer> iconsList = new ArrayList<>();
-		for (Location.LocationIcon icon : Location.LocationIcon.values()) {
-			iconsList.add(icon.getIconResource(IconResourceType.DARK));
-		}
-
 		// first call need to add gate
 		newIconSpinner.setAdapter(new LocationIconAdapter(mActivity));
 

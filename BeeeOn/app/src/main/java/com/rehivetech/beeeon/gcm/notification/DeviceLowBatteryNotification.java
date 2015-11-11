@@ -28,8 +28,6 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 	}
 
 	protected static DeviceLowBatteryNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		DeviceLowBatteryNotification instance = null;
-
 		try {
 			String gateId = bundle.getString("gateid");
 			String deviceId = bundle.getString("did");
@@ -40,12 +38,10 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 				return null;
 			}
 
-			instance = new DeviceLowBatteryNotification(msgId, time, type, false, gateId, deviceId, batterylevel);
+			return new DeviceLowBatteryNotification(msgId, time, type, false, gateId, deviceId, batterylevel);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			return instance;
+			return null;
 		}
-
-		return instance;
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {

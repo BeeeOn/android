@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -182,7 +183,11 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		}
 
 		// city name
-		final String cityInput = cityTextInputLayout.getEditText().getText().toString();
+		EditText editText = cityTextInputLayout.getEditText();
+		if (editText == null)
+			return;
+
+		final String cityInput = editText.getText().toString();
 
 		// show dialog of loading
 		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.widget_clock_progress_checking_location)).show();

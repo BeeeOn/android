@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ public class InfoDialogFragment extends TrackDialogFragment {
 	// ///////////////////////////////////////////////
 
 	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState) {
+	public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
 
 		LayoutInflater factory = LayoutInflater.from(getActivity());
 		final View view = factory.inflate(R.layout.fragment_dialog_info, null);

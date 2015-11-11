@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.util;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.joda.time.DateTimeZone;
@@ -90,7 +91,7 @@ public class TimezoneWrapper implements Comparable<TimezoneWrapper> {
 	}
 
 	@Override
-	public int compareTo(TimezoneWrapper another) {
+	public int compareTo(@NonNull TimezoneWrapper another) {
 		int lhs = offsetInMillis;
 		int rhs = another.offsetInMillis;
 

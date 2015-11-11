@@ -25,8 +25,6 @@ public class GateOfflineNotification extends VisibleNotification {
 	}
 
 	protected static GateOfflineNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		GateOfflineNotification instance = null;
-
 		try {
 			String gateId = bundle.getString("gateid");
 
@@ -35,12 +33,10 @@ public class GateOfflineNotification extends VisibleNotification {
 				return null;
 			}
 
-			instance = new GateOfflineNotification(msgId, time, type, false, gateId);
+			return new GateOfflineNotification(msgId, time, type, false, gateId);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			return instance;
+			return null;
 		}
-
-		return instance;
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {

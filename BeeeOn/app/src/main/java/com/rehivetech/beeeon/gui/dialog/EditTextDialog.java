@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
 import com.avast.android.dialogs.core.BaseDialogFragment;
@@ -47,9 +48,12 @@ public class EditTextDialog extends BaseDialogFragment {
 		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 
 		// setting EditText options
-		textInputLayout.getEditText().setText(this.getArguments().getString(ARG_EDIT_TEXT_VALUE));
-		textInputLayout.setHint(this.getArguments().getString(ARG_EDIT_TEXT_HINT));
-		textInputLayout.getEditText().setInputType(this.getArguments().getInt(ARG_EDIT_TEXT_INPUT_TYPE));
+		EditText editText = textInputLayout.getEditText();
+		if (editText != null) {
+			editText.setText(this.getArguments().getString(ARG_EDIT_TEXT_VALUE));
+			textInputLayout.setHint(this.getArguments().getString(ARG_EDIT_TEXT_HINT));
+			editText.setInputType(this.getArguments().getInt(ARG_EDIT_TEXT_INPUT_TYPE));
+		}
 
 		// shows keyboard immediately
 		boolean showKeyboard = this.getArguments().getBoolean(ARG_SHOW_KEYBOARD);

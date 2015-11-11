@@ -252,7 +252,7 @@
 	<string name="device_edit_delete_device_confirm_dialog_text">Do you really want to remove the device?</string>
 	<string name="device_edit_toast_not_specified_gate_or_device">Gateway or device doesn\'t exists</string>
 	<string name="device_edit_toast_editing_was_successful">Editing device was successful</string>
-	<string name="device_edit_toast_removing_was_successful">Device was sucessfuly removed</string>
+	<string name="device_edit_toast_removing_was_successful">Device was successfuly removed</string>
 	<string name="device_edit_toast_location_was_added">Location was created successfully</string>
 	<string name="device_edit_overlay_dialog_create_new_location">Create new location</string>
 	<string name="device_edit_overlay_dialog_edit_text_hint">Write new name</string>

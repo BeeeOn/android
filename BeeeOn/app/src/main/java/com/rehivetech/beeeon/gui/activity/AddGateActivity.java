@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -156,6 +157,9 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			return;
 		}
 
-		doRegisterGateTask(textInputLayout.getEditText().getText().toString(), false);
+		EditText editText = textInputLayout.getEditText();
+		if (editText != null) {
+			doRegisterGateTask(editText.getText().toString(), false);
+		}
 	}
 }

@@ -76,6 +76,9 @@ public final class Module implements IOrderIdentifier {
 		if (mType.getValueClass() != EnumValue.class) {
 			throw new IllegalArgumentException("ValueClass received from ModuleType is not EnumValue, but constructor was called with enumValues.");
 		}
+		if (enumValues == null) {
+			enumValues = new ArrayList<EnumValue.Item>();
+		}
 		mValue = new EnumValue(enumValues);
 		mValue.setDefaultValue(defaultValue);
 

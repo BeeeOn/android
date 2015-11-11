@@ -220,7 +220,7 @@ public class LoginActivity extends BaseActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		// Prepare correct authProvider object
-		IAuthProvider authProvider = null;
+		IAuthProvider authProvider;
 
 		// RequestCode uniquely identifies authProvider - all providers must respect that and use it in startActivityForResult(providerId)
 		switch (requestCode) {

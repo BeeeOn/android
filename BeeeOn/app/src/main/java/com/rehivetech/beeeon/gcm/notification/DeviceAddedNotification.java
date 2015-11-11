@@ -26,8 +26,6 @@ public class DeviceAddedNotification extends VisibleNotification {
 	}
 
 	protected static DeviceAddedNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		DeviceAddedNotification instance = null;
-
 		try {
 			String gateId = bundle.getString("gateid");
 			String deviceId = bundle.getString("did");
@@ -37,12 +35,10 @@ public class DeviceAddedNotification extends VisibleNotification {
 				return null;
 			}
 
-			instance = new DeviceAddedNotification(msgId, time, type, false, gateId, deviceId);
+			return new DeviceAddedNotification(msgId, time, type, false, gateId, deviceId);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			return instance;
+			return null;
 		}
-
-		return instance;
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {

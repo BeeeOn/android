@@ -20,18 +20,18 @@ public final class Action {
 	}
 
 	@Nullable
-	static public void getModuleDetailIntent(Context context, String gateId, String deviceId, String moduleId) {
+	static public Intent getModuleDetailIntent(Context context, String gateId, String deviceId, String moduleId) {
 		Controller controller = Controller.getInstance(context);
 		Device device = controller.getDevicesModel().getDevice(gateId, deviceId);
 		if (device == null) {
 			Toast.makeText(context, R.string.module_get_detail_intent_toast_device_not_available, Toast.LENGTH_SHORT).show();
-			return;
+			return null;
 		}
 
 		Module module = device.getModuleById(moduleId);
 		if (module == null) {
 			Toast.makeText(context, R.string.module_get_detail_intent_toast_device_not_available, Toast.LENGTH_SHORT).show();
-			return;
+			return null;
 		}
 
 		// Module exists, we can open activity
@@ -40,6 +40,6 @@ public final class Action {
 		intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_ID, device.getId());
 		intent.putExtra(DeviceDetailActivity.EXTRA_MODULE_ID, module.getId());
 
-		context.startActivity(intent);
+		return intent;
 	}
 }

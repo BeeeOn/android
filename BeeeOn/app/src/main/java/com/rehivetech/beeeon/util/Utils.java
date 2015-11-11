@@ -539,7 +539,8 @@ final public class Utils {
 	 * @return
 	 */
 	public static boolean validateInput(Context context, TextInputLayout textInputLayout, ValidationType... additional) {
-		String inputText = textInputLayout.getEditText().getText().toString().trim();
+		EditText editText = textInputLayout.getEditText();
+		String inputText = (editText != null ? editText.getText().toString().trim() : "");
 		if (inputText.length() == 0) {
 			textInputLayout.requestFocus();
 			textInputLayout.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));

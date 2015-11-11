@@ -185,7 +185,7 @@ public class Persistence {
 		else
 			editor.putBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, demoMode);
 
-		editor.commit();
+		editor.apply();
 	}
 
 	// Last server
@@ -201,7 +201,7 @@ public class Persistence {
 		else
 			editor.putString(Constants.PERSISTENCE_PREF_LOGIN_SERVER, server);
 
-		editor.commit();
+		editor.apply();
 	}
 
 	// Last user
@@ -224,7 +224,7 @@ public class Persistence {
 		String parameter = getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, "");
 
 		// Return null if we have no className found
-		if (className == null || className.isEmpty())
+		if (className.isEmpty())
 			return null;
 
 		IAuthProvider provider = null;

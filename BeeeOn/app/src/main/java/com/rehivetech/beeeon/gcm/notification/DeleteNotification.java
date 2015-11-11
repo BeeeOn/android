@@ -29,8 +29,6 @@ public class DeleteNotification extends BaseNotification {
 	}
 
 	protected static DeleteNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		DeleteNotification instance = null;
-
 		try {
 			Integer delNotificationId = Integer.valueOf(bundle.getString(JSON_TAG_DEL_NOTIFICATION_ID));
 
@@ -39,12 +37,10 @@ public class DeleteNotification extends BaseNotification {
 				return null;
 			}
 
-			instance = new DeleteNotification(msgId, time, type, delNotificationId);
+			return new DeleteNotification(msgId, time, type, delNotificationId);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			return instance;
+			return null;
 		}
-
-		return instance;
 	}
 
 	@Override

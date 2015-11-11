@@ -32,8 +32,6 @@ public class UriNotification extends VisibleNotification {
 	}
 
 	protected static UriNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
-		UriNotification instance = null;
-
 		try {
 			String message = bundle.getString("msg");
 			String uri = bundle.getString("url");
@@ -43,12 +41,10 @@ public class UriNotification extends VisibleNotification {
 				return null;
 			}
 
-			instance = new UriNotification(msgId, time, type, false, message, uri);
+			return new UriNotification(msgId, time, type, false, message, uri);
 		} catch (IllegalArgumentException | NullPointerException e) {
-			return instance;
+			return null;
 		}
-
-		return instance;
 	}
 
 	protected static VisibleNotification getInstance(Integer msgId, Long time, NotificationType type, boolean isRead, XmlPullParser parser) throws IOException, XmlPullParserException, NumberFormatException {

@@ -89,10 +89,10 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 				Spinner newIconSpinner = mFragment.getNewIconSpinner();
 				Device newDevice = Controller.getInstance(SetupDeviceActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(0);
 
-				Location location = null;
+				Location location;
 				if (spinner.getSelectedItemPosition() == spinner.getCount() - 1) {
 					// last location - means new one, so check its name
-					if (newLocation != null && newLocation.length() < 1) {
+					if (newLocation == null || newLocation.length() < 1) {
 						Toast.makeText(SetupDeviceActivity.this, getString(R.string.device_setup_toast_need_module_location_name), Toast.LENGTH_LONG).show();
 						return;
 					}

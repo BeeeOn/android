@@ -6,6 +6,7 @@ package com.rehivetech.beeeon.gcm.notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -130,11 +131,6 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 	public void onGcmRecieve(final Context context) {
 		final Controller controller = Controller.getInstance(context);
 
-		if (context == null || controller == null) {
-			Log.e(TAG, "onGcmRecieve(): context or controller is NULL");
-			return;
-		}
-
 		// if somebody already handle notification using controller observer, then do nothing
 		if (passToController(controller)) {
 			return;
@@ -205,7 +201,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 	}
 
 	@Override
-	public int compareTo(BaseNotification notification) {
+	public int compareTo(@NonNull BaseNotification notification) {
 		if (getDate().after(notification.getDate())) {
 			return -1;
 		} else if (getDate().before(notification.getDate())) {
