@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/device_detail_root_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -79,17 +80,14 @@
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/device_detail_modules_list"
-		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layout_gravity="fill_vertical"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		android:scrollbars="vertical"/>
 
-
 	<android.support.v4.view.ViewPager
 		android:id="@+id/device_detail_group_pager"
-		android:visibility="gone"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"

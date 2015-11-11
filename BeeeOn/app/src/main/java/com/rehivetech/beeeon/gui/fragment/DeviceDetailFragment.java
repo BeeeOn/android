@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -75,6 +76,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private String mGateId;
 	private String mDeviceId;
 
+	private CoordinatorLayout mRootLayout;
 	private ImageView mIcon;
 	private TextView mDeviceName;
 
@@ -155,6 +157,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			actionBar.setDisplayShowTitleEnabled(false);
 		}
 
+		mRootLayout = (CoordinatorLayout) view.findViewById(R.id.device_detail_root_layout);
+
 		AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.device_detail_appbar);
 		appBarLayout.addOnOffsetChangedListener(this);
 
@@ -202,19 +206,20 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
 
+		mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
+		mViewPager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
+
 		if (moduleGroups.size() == 1) {
-			mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
-			mRecyclerView.setVisibility(View.VISIBLE);
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 			mEmptyTextView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
 			mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
 			mRecyclerView.setAdapter(mModuleAdapter);
-
+			mRootLayout.removeView(mViewPager);
+			mViewPager = null;
 		} else {
-			mViewPager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
 			mTabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
 			mTabLayout.setVisibility(View.VISIBLE);
-			mViewPager.setVisibility(View.VISIBLE);
+			mRootLayout.removeView(mRecyclerView);
 			setupViewPager(mViewPager, mTabLayout, mDevice.getModulesGroups(mActivity));
 		}
 
