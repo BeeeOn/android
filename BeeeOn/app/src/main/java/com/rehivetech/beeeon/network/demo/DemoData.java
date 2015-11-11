@@ -7,6 +7,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 
@@ -39,17 +40,19 @@ public class DemoData {
 	 */
 	private int deviceIdGenerator = 1000;
 
-	public List<Gate> getGates(Context context) {
-		List<Gate> gatesList = new ArrayList<>();
+	public List<GateInfo> getGates(Context context) {
+		List<GateInfo> gatesList = new ArrayList<>();
 
-		Gate demoGate1 = new Gate(GATE_1_ID, context.getString(R.string.gate_1_name));
+		GateInfo demoGate1 = new GateInfo(GATE_1_ID, context.getString(R.string.gate_1_name));
 		demoGate1.setRole(User.Role.Admin);
 		demoGate1.setUtcOffset(500);
+		demoGate1.setOwner("John Doe");
 		gatesList.add(demoGate1);
 
-		Gate demoGate2 = new Gate(GATE_2_ID, context.getString(R.string.gate_2_name));
+		GateInfo demoGate2 = new GateInfo(GATE_2_ID, context.getString(R.string.gate_2_name));
 		demoGate2.setRole(User.Role.Owner);
 		demoGate2.setUtcOffset(60);
+		demoGate2.setOwner("John Doe");
 		gatesList.add(demoGate2);
 
 		return gatesList;

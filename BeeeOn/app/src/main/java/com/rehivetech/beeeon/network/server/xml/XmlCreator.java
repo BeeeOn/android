@@ -9,10 +9,12 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.server.Network;
+import com.rehivetech.beeeon.util.GpsData;
 
 import org.xmlpull.v1.XmlSerializer;
 
@@ -536,17 +538,21 @@ public class XmlCreator {
 		 *
 		 * @param bt   BeeeOn token (active session)
 		 * @param gate to save
+		 * @param gpsData
 		 * @return SetGate message
 		 * @since 2.5
 		 */
-		public static Request update(String bt, Gate gate) {
+		public static Request update(String bt, Gate gate, GpsData gpsData) {
 			try {
 				Request req = beginXml("update", bt, XmlParser.Result.OK);
 
 				req.addTag("gate",
 						"id", gate.getId(),
 						"name", gate.getName(),
-						"timezone", String.valueOf(gate.getUtcOffset()));
+						"timezone", String.valueOf(gate.getUtcOffset()),
+						"altitude", String.valueOf(gpsData.getAltitude()),
+						"longitude", String.valueOf(gpsData.getLongitude()),
+						"latitude", String.valueOf(gpsData.getLatitude()));
 
 				return req.endXml();
 			} catch (Exception e) {

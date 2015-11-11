@@ -7,6 +7,7 @@ import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.DataHolder;
+import com.rehivetech.beeeon.util.GpsData;
 
 import org.joda.time.DateTime;
 
@@ -163,10 +164,11 @@ public class GatesModel extends BaseModel {
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param gate - new edited gate
+	 * @param gpsData
 	 * @return
 	 */
-	public boolean editGate(Gate gate) {
-		if (mNetwork.gates_update(gate)) {
+	public boolean editGate(Gate gate, GpsData gpsData) {
+		if (mNetwork.gates_update(gate, gpsData)) {
 			// Invalidate gates and gatesInfo caches
 			// FIXME: don't do it by deleting whole object, but just setting isExpired for single item
 			mGatesInfoHolder.removeObject(gate.getId());

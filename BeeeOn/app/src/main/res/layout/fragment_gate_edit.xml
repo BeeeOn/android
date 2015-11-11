@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:tools="http://schemas.android.com/tools"
 			  android:orientation="vertical"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
@@ -111,12 +112,60 @@
 			android:id="@+id/gate_edit_spinner"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_marginBottom="16dp"
 			android:layout_marginRight="@dimen/activity_horizontal_margin"
 			android:layout_marginEnd="@dimen/activity_horizontal_margin"
 			android:layout_below="@id/gate_edit_spinner_label"
 			android:layout_alignLeft="@id/gate_edit_spinner_label"
 			android:layout_alignStart="@id/gate_edit_spinner_label"
+			/>
+
+	</RelativeLayout>
+
+	<View
+		style="@style/BeeeOn.Divider"
+		android:layout_marginTop="16dp"
+		android:layout_marginBottom="16dp"
+		/>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:id="@+id/gate_edit_altitude_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/beeeon_secondary_text"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+			android:layout_marginLeft="72dp"
+			android:layout_marginStart="72dp"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:text="@string/gate_detail_altitude"
+			/>
+
+		<EditText
+			android:id="@+id/gate_edit_altitude"
+			android:minWidth="50dp"
+			android:layout_gravity="end"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+			tools:text="500"
+			android:inputType="number"
+			android:layout_below="@id/gate_edit_altitude_label"
+			android:layout_alignLeft="@id/gate_edit_altitude_label"
+			android:layout_alignStart="@id/gate_edit_altitude_label"
+			android:gravity="end"/>
+
+		<TextView
+			android:id="@+id/gate_edit_altitude_meters"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="m"
+			android:layout_toEndOf="@id/gate_edit_altitude"
+			android:layout_toRightOf="@id/gate_edit_altitude"
+			android:layout_alignBaseline="@id/gate_edit_altitude"
 			/>
 
 	</RelativeLayout>

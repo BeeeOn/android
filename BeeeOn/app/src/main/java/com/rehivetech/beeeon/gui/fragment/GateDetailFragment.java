@@ -75,6 +75,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_gate_owner, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_your_role, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.gate_detail_timezone, loadingText));
+		mDetailsItemList.add(new DetailsItem(0, R.string.gate_detail_altitude, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_supervisor_account_gray_24dp, R.string.gate_detail_num_of_users, loadingText, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -129,19 +130,20 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		mDetailsItemList.get(1).text = gateInfo.getOwner();
 		mDetailsItemList.get(2).text = getString(gateInfo.getRole().getStringResource());
 		mDetailsItemList.get(3).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
+		mDetailsItemList.get(4).text = String.valueOf(gateInfo.getGpsData().getAltitude());
 
 		int usersCount = gateInfo.getUsersCount();
-		DetailsItem usersDetailsItem = mDetailsItemList.get(4);
+		DetailsItem usersDetailsItem = mDetailsItemList.get(5);
 		usersDetailsItem.buttonEnabled = usersCount > 0;
 		usersDetailsItem.text = (String.format("%d", usersCount));
 
 		int devicesCount = gateInfo.getDevicesCount();
-		DetailsItem devicesDetailsItem = mDetailsItemList.get(5);
+		DetailsItem devicesDetailsItem = mDetailsItemList.get(6);
 		devicesDetailsItem.buttonEnabled = devicesCount > 0;
 		devicesDetailsItem.text = (String.format("%d", devicesCount));
 
-		mDetailsItemList.get(6).text = gateInfo.getIp();
-		mDetailsItemList.get(7).text = gateInfo.getVersion();
+		mDetailsItemList.get(7).text = gateInfo.getIp();
+		mDetailsItemList.get(8).text = gateInfo.getVersion();
 
 		mGateDetailsAdapter.notifyDataSetChanged();
 	}

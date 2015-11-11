@@ -23,6 +23,7 @@ import com.rehivetech.beeeon.household.user.User.Role;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.DataHolder;
+import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -54,7 +55,7 @@ public class DemoNetwork implements INetwork {
 	private boolean mInitialized;
 	private Map<String, Random> mRandoms = new HashMap<>();
 
-	public final DataHolder<Gate> mGates = new DataHolder<>();
+	public final DataHolder<GateInfo> mGates = new DataHolder<>();
 	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
 	public final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
 	public final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
@@ -138,7 +139,7 @@ public class DemoNetwork implements INetwork {
 
 		DemoData demoData = new DemoData();
 		mGates.setObjects(demoData.getGates(mContext));
-		for (Gate gate : mGates.getObjects()) {
+		for (GateInfo gate : mGates.getObjects()) {
 			String gateId = gate.getId();
 
 			mLocations.setObjects(gateId, demoData.getLocation(mContext, gateId));
@@ -221,7 +222,7 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(gateId);
 
-		Gate gate = new Gate(gateId, gateName);
+		GateInfo gate = new GateInfo(gateId, gateName);
 		gate.setUtcOffset(offsetInMinutes);
 
 		// Use random role
@@ -238,31 +239,23 @@ public class DemoNetwork implements INetwork {
 		// Init demo data, if not initialized yet
 		initDemoData();
 
-		return mGates.getObjects();
+		List<Gate> gates = new ArrayList<>();
+		for (GateInfo gateInfo : mGates.getObjects()) {
+			gates.add(new Gate(gateInfo.getId(), gateInfo.getName()));
+		}
+		return gates;
 	}
 
 	@Override
 	public GateInfo gates_get(String gateId) {
-		Gate gate = mGates.getObject(gateId);
+		GateInfo gate = mGates.getObject(gateId);
 		if (gate == null)
 			return null;
 
-		int devicesCount = mDevices.getObjects(gateId).size();
-		int usersCount = mUsers.getObjects(gateId).size();
-		String version = "";
-		String ip = "";
-		String owner = "John Doe";
+		gate.setDevicesCount(mDevices.getObjects(gateId).size());
+		gate.setUsersCount(mUsers.getObjects(gateId).size());
 
-		return new GateInfo(
-				gate.getId(),
-				gate.getName(),
-				owner,
-				gate.getRole(),
-				gate.getUtcOffset(),
-				devicesCount,
-				usersCount,
-				version,
-				ip);
+		return gate;
 	}
 
 	@Override
@@ -292,15 +285,16 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
-	public boolean gates_update(Gate gate) {
+	public boolean gates_update(Gate gate, GpsData gpsData) {
 		String gateId = gate.getId();
 
-		Gate oldGate = mGates.getObject(gateId);
+		GateInfo oldGate = mGates.getObject(gateId);
 		if (oldGate == null)
 			return false;
 
 		oldGate.setName(gate.getName());
 		oldGate.setUtcOffset(gate.getUtcOffset());
+		oldGate.setGpsData(gpsData);
 		return true;
 	}
 
@@ -636,7 +630,7 @@ public class DemoNetwork implements INetwork {
 
 		// If we change role of ourselves, we need to put such change to gate itself too
 		if (user.getId().equals(mUser.getId())) {
-			Gate gate = mGates.getObject(gateId);
+			GateInfo gate = mGates.getObject(gateId);
 			gate.setRole(user.getRole());
 		}
 

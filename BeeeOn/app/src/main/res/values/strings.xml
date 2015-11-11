@@ -198,6 +198,7 @@
 	<string name="gate_detail_toast_not_specified_gate">Not specified gateway</string>
 	<string name="gate_detail_your_role">Your role</string>
 	<string name="gate_detail_version">Communication version</string>
+	<string name="gate_detail_altitude">Altitude</string>
 
 	<!-- Gate edit -->
 	<string name="gate_edit_gate_id_read_only">Gate Id (read-only)</string>

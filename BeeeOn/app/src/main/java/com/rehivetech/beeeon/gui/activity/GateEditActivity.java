@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.EditGateTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
+import com.rehivetech.beeeon.util.GpsData;
 
 /**
  * Created by david on 17.6.15.
@@ -123,8 +125,8 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 			}
 			case R.id.gate_edit_action_save: {
 				if (mFragment != null) {
-					Gate gate = mFragment.getNewGate();
-					doEditGateTask(gate);
+					Pair<Gate, GpsData> pair = mFragment.getNewGate();
+					doEditGateTask(pair);
 				}
 				break;
 			}
@@ -132,7 +134,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 		return super.onOptionsItemSelected(item);
 	}
 
-	private void doEditGateTask(Gate gate) {
+	private void doEditGateTask(Pair<Gate, GpsData> pair) {
 		EditGateTask editGateTask = new EditGateTask(this);
 		editGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
@@ -143,7 +145,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				}
 			}
 		});
-		callbackTaskManager.executeTask(editGateTask, gate, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
+		callbackTaskManager.executeTask(editGateTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 
 	private void doUnregisterGateTask(String gateId) {

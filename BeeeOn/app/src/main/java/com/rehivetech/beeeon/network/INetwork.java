@@ -9,6 +9,7 @@ import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.util.GpsData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -243,9 +244,10 @@ public interface INetwork {
 	 * Method edits gate's name and timezone
 	 *
 	 * @param gate new gate with new data
+	 * @param gpsData gps data of this gate
 	 * @return true if change was successful
 	 */
-	boolean gates_update(Gate gate);
+	boolean gates_update(Gate gate, GpsData gpsData);
 
 	/**
 	 * Method opens ssh tunnel on the gate to allow direct connection from computer.

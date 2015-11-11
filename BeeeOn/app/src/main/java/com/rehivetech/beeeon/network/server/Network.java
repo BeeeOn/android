@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.server.xml.XmlCreator;
 import com.rehivetech.beeeon.network.server.xml.XmlParser;
 import com.rehivetech.beeeon.network.server.xml.XmlParser.Result;
+import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
@@ -599,9 +600,9 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean gates_update(Gate gate) {
+	public boolean gates_update(Gate gate, GpsData gpsData) {
 		processCommunication(
-				XmlCreator.Gates.update(mSessionId, gate));
+				XmlCreator.Gates.update(mSessionId, gate, gpsData));
 
 		return true;
 	}

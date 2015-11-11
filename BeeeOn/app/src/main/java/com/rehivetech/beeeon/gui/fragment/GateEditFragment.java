@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.GateEditActivity;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
+import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.TimezoneWrapper;
 
 import java.util.List;
@@ -114,7 +116,7 @@ public class GateEditFragment extends BaseApplicationFragment {
 		outState.putInt(KEY_GATE_TIMEZONE_INDEX, mTimezoneSpinner.getSelectedItemPosition());
 	}
 
-	public Gate getNewGate() {
+	public Pair<Gate, GpsData> getNewGate() {
 		View view = getView();
 		if (view == null)
 			return null;
@@ -127,7 +129,13 @@ public class GateEditFragment extends BaseApplicationFragment {
 		int offsetInMinutes = timezone.offsetInMillis / (1000 * 60);
 		gate.setUtcOffset(offsetInMinutes);
 
-		return gate;
+		String altitudeText = ((EditText) view.findViewById(R.id.gate_edit_altitude)).getText().toString();
+		int altitude = altitudeText.isEmpty() ? 0 : Integer.parseInt(altitudeText);
+
+		GpsData gpsData = new GpsData();
+		gpsData.setAltitude(altitude);
+
+		return Pair.create(gate, gpsData);
 	}
 
 }

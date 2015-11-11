@@ -15,6 +15,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
@@ -175,7 +176,12 @@ public class XmlParser {
 			String version = getSecureAttributeString("version");
 			int utcOffsetInMinutes = getSecureAttributeInt("timezone");
 
-			return new GateInfo(id, name, owner, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip);
+			GpsData gpsData = new GpsData();
+			gpsData.setAltitude(getSecureAttributeInt("altitude"));
+			gpsData.setLongitude(getSecureAttributeDouble("longitude"));
+			gpsData.setLatitude(getSecureAttributeDouble("latitude"));
+
+			return new GateInfo(id, name, owner, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip, gpsData);
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);
 		}
@@ -503,5 +509,10 @@ public class XmlParser {
 	private int getSecureAttributeInt(String name) {
 		String value = getSecureAttributeString(name);
 		return (value.length() < 1) ? 0 : Integer.parseInt(value);
+	}
+
+	private double getSecureAttributeDouble(String name) {
+		String value = getSecureAttributeString(name);
+		return (value.length() < 1) ? 0 : Double.parseDouble(value);
 	}
 }
