@@ -11,7 +11,7 @@
 		android:id="@+id/list_module_item_icon"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"
+		android:paddingTop="4dp"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
 		tools:src="@drawable/ic_val_unknown_gray"/>
@@ -22,7 +22,8 @@
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"
-		android:layout_centerVertical="true">
+		android:paddingTop="4dp"
+		>
 
 		<ImageButton
 			android:id="@+id/list_device_module_item_set_button"
@@ -49,6 +50,7 @@
 		android:layout_height="wrap_content"
 		android:paddingTop="4dp"
 		android:gravity="start"
+		android:layout_gravity="center_vertical"
 		android:layout_marginLeft="72dp"
 		android:layout_marginStart="72dp"
 		android:layout_toLeftOf="@id/list_module_item_buttons_wrapper"
@@ -58,7 +60,7 @@
 		android:maxLines="2"
 		android:ellipsize="end"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		tools:text="Module"/>
+		tools:text="Module "/>
 
 	<TextView
 		android:id="@+id/list_module_item_value"
@@ -72,11 +74,11 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentStart="true"
 		android:layout_alignParentBottom="true"
-		android:gravity="center_vertical"
+		android:gravity="top"
 
 		android:maxLines="2"
 		android:ellipsize="end"
 		android:textAppearance="@style/TextAppearance.AppCompat.Body2"
 		android:textColor="@color/beeeon_accent"
-		tools:text="25 °C "/>
+		tools:text="25 °C"/>
 </RelativeLayout>
