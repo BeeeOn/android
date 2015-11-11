@@ -111,7 +111,9 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 			try {
 				Toast.makeText(this, R.string.gate_add_toast_error_no_qr_reader, Toast.LENGTH_LONG).show();
 				// Let user to download e.g. Barcode Scanner
-				Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
+				Uri marketUri = Utils.isBlackBerry()
+					? Uri.parse("https://appworld.blackberry.com/webstore/content/20395272")
+					: Uri.parse("market://details?id=com.google.zxing.client.android");
 				Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
 				startActivity(marketIntent);
 			} catch (ActivityNotFoundException e1) {
