@@ -418,22 +418,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mActivity.callbackTaskManager.executeTask(mDeviceCallback.createReloadDevicesTask(forceReload), gateId);
 	}
 
-	private void doChangeStateModuleTask(final Module module) {
-		ActorActionTask changeStateModuleTask = new ActorActionTask(mActivity);
-
-		changeStateModuleTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					updateData();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(changeStateModuleTask, module);
-	}
-
 	private void doActorAction(final Module module) {
 		if (!module.isActuator()) {
 			return;
@@ -462,17 +446,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
-	}
-
-	public void onSetTemperatureClick(Double value, String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		if (module == null) {
-			Log.e(TAG, "Can't load module for changing its value");
-			return;
-		}
-
-		module.setValue(String.valueOf(value));
-		doChangeStateModuleTask(module);
 	}
 
 	private void setParallaxMultiplier(View view, float multiplier) {
