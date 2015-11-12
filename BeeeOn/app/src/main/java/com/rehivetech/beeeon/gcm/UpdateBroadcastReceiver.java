@@ -5,13 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.rehivetech.beeeon.Constants;
+
 public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
 	public static final String TAG = UpdateBroadcastReceiver.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.i(TAG, GcmHelper.TAG_GCM + "App updated, starting service for re-registering GCM ID.");
+		onUpdate(context);
+	}
+
+	public static void onUpdate(Context context) {
+		Log.i(TAG, Constants.GCM_TAG + "App updated, starting service for re-registering GCM ID.");
 		context.startService(new Intent(context, GcmReRegistrationHandler.class));
+	}
+
+	public static class LegacyUpdateBroadcastReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent != null && intent.getData() != null && context.getPackageName().equals(intent.getData().getSchemeSpecificPart())) {
+				onUpdate(context);
+			}
+		}
 	}
 }

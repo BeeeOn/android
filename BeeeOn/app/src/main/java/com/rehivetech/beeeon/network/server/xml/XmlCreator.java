@@ -789,9 +789,9 @@ public class XmlCreator {
 		 * @return message GCMID
 		 * @since 2.2
 		 */
-		public static Request deleteGCMID(String userId, String gcmid) {
+		public static Request deleteGCMID(String bt, String userId, String gcmid) {
 			try {
-				Request req = beginXml("unregisterservice", null, XmlParser.Result.OK);
+				Request req = beginXml("unregisterservice", bt, XmlParser.Result.OK);
 
 				req.addTag("service",
 						"name", "gcm",

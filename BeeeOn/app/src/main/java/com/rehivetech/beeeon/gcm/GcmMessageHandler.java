@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 
@@ -38,14 +39,14 @@ public class GcmMessageHandler extends IntentService {
 
 		if (extras == null || extras.isEmpty() || messageType == null || messageType.isEmpty()) {
 			GcmBroadcastReceiver.completeWakefulIntent(intent);
-			Log.w(TAG, GcmHelper.TAG_GCM + "Null notification");
+			Log.w(TAG, Constants.GCM_TAG + "Null notification");
 			return;
 		}
 
 		if (GoogleCloudMessaging.MESSAGE_TYPE_SEND_ERROR.equals(messageType)) {
-			Log.w(TAG, GcmHelper.TAG_GCM + "Send error: " + extras.toString());
+			Log.w(TAG, Constants.GCM_TAG + "Send error: " + extras.toString());
 		} else if (GoogleCloudMessaging.MESSAGE_TYPE_DELETED.equals(messageType)) {
-			Log.w(TAG, GcmHelper.TAG_GCM + "Deleted messages on server: " + extras.toString());
+			Log.w(TAG, Constants.GCM_TAG + "Deleted messages on server: " + extras.toString());
 			// If it's a regular GCM message, do some work.
 		} else if (GoogleCloudMessaging.MESSAGE_TYPE_MESSAGE.equals(messageType)) {
 			handleNotification(intent);
@@ -59,7 +60,7 @@ public class GcmMessageHandler extends IntentService {
 
 		// control if message was valid
 		if (notification == null) {
-			Log.e(TAG, GcmHelper.TAG_GCM + "Invalid message.");
+			Log.e(TAG, Constants.GCM_TAG + "Invalid message.");
 			GcmBroadcastReceiver.completeWakefulIntent(intent);
 			return;
 		}

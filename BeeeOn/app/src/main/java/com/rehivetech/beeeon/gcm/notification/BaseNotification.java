@@ -128,7 +128,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 	abstract protected void onGcmHandle(Context context);
 
 
-	public void onGcmRecieve(final Context context) {
+	public void onGcmRecieve(@NonNull Context context) {
 		final Controller controller = Controller.getInstance(context);
 
 		// if somebody already handle notification using controller observer, then do nothing

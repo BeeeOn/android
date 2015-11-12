@@ -400,14 +400,14 @@ public final class Controller {
 	public void logout(boolean alsoFromServer) {
 		if (alsoFromServer) {
 			// TODO: Request to logout from server (discard actual sessionId)
+
+			// Delete GCM id on server side
+			getGcmModel().deleteGCM(mUser.getId(), null);
 		}
 
 		// delete all visible notification
 		NotificationManager notifMgr = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
 		notifMgr.cancelAll();
-
-		// Delete GCM id on server side
-		getGcmModel().deleteGCM(mUser.getId(), null);
 
 		// Destroy session
 		mNetwork.setSessionId("");

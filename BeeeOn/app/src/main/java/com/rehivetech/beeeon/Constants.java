@@ -53,6 +53,8 @@ public final class Constants {
 	public static final String PREF_GCM_REG_ID = "gcm_registration_id";
 	public static final String PREF_GCM_APP_VERSION = "gcm_app_version";
 
+	public static final String GCM_TAG = "BEEEON_GCM: ";
+
 	/**
 	 * Project number from the API Console
 	 */
