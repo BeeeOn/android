@@ -117,7 +117,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onAttach(Activity activity) {
-		Log.d(TAG, "onAttach");
 		super.onAttach(activity);
 		mActivity = (DeviceDetailActivity) activity;
 		mDeviceCallback = (UpdateDevice) activity;
@@ -125,7 +124,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate");
 		super.onCreate(savedInstanceState);
 		Controller controller = Controller.getInstance(mActivity);
 
@@ -143,7 +141,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		Log.d(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
 
 		// FIXME: Why this doesn't work when it's in DeviceDetailActivity?
@@ -236,7 +233,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		Log.d(TAG, "onActivityCreated");
 		super.onActivityCreated(savedInstanceState);
 
 		if (savedInstanceState != null && mViewPager != null) {
@@ -248,7 +244,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onResume() {
-		Log.d(TAG, "onResume");
 		super.onResume();
 		doReloadDevicesTask(mGateId, false);
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
@@ -261,7 +256,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		Log.d(TAG, "onSaveInstanceState");
 		super.onSaveInstanceState(outState);
 		if (mViewPager != null) {
 			outState.putInt(KEY_VIEW_PAGER_SELECTED_ITEM, mViewPager.getCurrentItem());
@@ -366,10 +360,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 	}
 
-
 	@Override
 	public void onItemClick(String moduleId) {
-		Log.d(TAG, "onItemClick:" + moduleId);
 		Bundle args = new Bundle();
 		args.putString(ModuleGraphActivity.EXTRA_GATE_ID, mGateId);
 		args.putString(ModuleGraphActivity.EXTRA_DEVICE_ID, mDeviceId);
@@ -381,20 +373,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onButtonChangeState(String moduleId) {
-		Log.d(TAG, "onButtonChangeState");
 		showListDialog(moduleId);
 	}
 
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
-		Log.d(TAG, "onButtonSetNewValue");
-
 		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
 	}
 
 	@Override
 	public void onSwitchChange(String moduleId) {
-		Log.d(TAG, "onSwitchChange");
 		Module module = mDevice.getModuleById(moduleId);
 		doActorAction(module);
 	}
@@ -419,7 +407,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				.setCancelButtonText(R.string.activity_fragment_btn_cancel)
 				.setTargetFragment(DeviceDetailFragment.this, REQUEST_SET_ACTUATOR)
 				.show();
-		Log.d(TAG, "dialog is created");
 	}
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceReload) {
