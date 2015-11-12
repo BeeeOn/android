@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 /**
  * Class that handle screen with detail of some sensor
  */
-public class DeviceDetailActivity extends BaseApplicationActivity implements DeviceDetailFragment.UpdateDevice{
+public class DeviceDetailActivity extends BaseApplicationActivity implements DeviceDetailFragment.UpdateDevice {
 
 	private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
@@ -85,6 +85,7 @@ public class DeviceDetailActivity extends BaseApplicationActivity implements Dev
 		return false;
 	}
 
+	@Override
 	public CallbackTask createReloadDevicesTask(boolean forceReload) {
 
 		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);

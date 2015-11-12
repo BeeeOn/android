@@ -69,7 +69,6 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	private static final int REQUEST_SET_ACTUATOR = 7894;
 
-	private DeviceDetailActivity mActivity;
 	private UpdateDevice mDeviceCallback;
 	private Device mDevice;
 	private TimeHelper mTimeHelper;
@@ -96,12 +95,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
 		public CallbackTask createTask() {
-			return mActivity.createReloadDevicesTask(true);
+			return mDeviceCallback != null ? mDeviceCallback.createReloadDevicesTask(true) : null;
 		}
 
 		@Override
 		public Object createParam() {
-			return mGateId;
+			return mDeviceCallback != null ? mDeviceCallback.getDevice() : null;
 		}
 	};
 
@@ -118,8 +117,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		mActivity = (DeviceDetailActivity) activity;
-		mDeviceCallback = (UpdateDevice) activity;
+
+		try {
+			mDeviceCallback = (UpdateDevice) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString() + " must implement UpdateDevice");
+		}
 	}
 
 	@Override
@@ -411,7 +414,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	protected void doReloadDevicesTask(final String gateId, final boolean forceReload) {
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(mActivity.createReloadDevicesTask(forceReload), gateId);
+		if (mDeviceCallback != null)
+			mActivity.callbackTaskManager.executeTask(mDeviceCallback.createReloadDevicesTask(forceReload), gateId);
 	}
 
 	private void doChangeStateModuleTask(final Module module) {
@@ -479,6 +483,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 
 	public interface UpdateDevice {
+		CallbackTask createReloadDevicesTask(boolean forceReload);
 		Device getDevice();
 	}
 
