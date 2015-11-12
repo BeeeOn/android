@@ -308,7 +308,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	 * @param forceReload
 	 */
 	private void doReloadDevicesTask(String gateId, boolean forceReload) {
-		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mActiveGateId);
+		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), gateId);
 	}
 
 	/**

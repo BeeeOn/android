@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
@@ -44,6 +43,7 @@ import com.rehivetech.beeeon.threading.task.GetModulesLogsTask;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -53,7 +53,6 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.SortedMap;
 
 public class CustomViewFragment extends BaseApplicationFragment {
@@ -157,7 +156,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void fillChart(ModuleLog log, Module module) {
+	private void fillChart(ModuleLog log, Module module, int index) {
 		Controller controller = Controller.getInstance(mActivity);
 		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
 		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
@@ -171,8 +170,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		}
 
 		//set random color
-		Random random = new Random();
-		int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+		int color = Utils.getGraphColor(mActivity, index);
 
 		List dataSetList = new ArrayList<>();
 		List<String> xVals = new ArrayList<>();
@@ -306,9 +304,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 					// Remember type of chart we're downloading data for
 					int typeId = pairs.get(0).module.getType().getTypeId();
 
+					int index = 0;
 					for (ModuleLog.DataPair pair : pairs) {
 						ModuleLog log = Controller.getInstance(getActivity()).getModuleLogsModel().getModuleLog(pair);
-						fillChart(log, pair.module);
+						fillChart(log, pair.module, index++);
 					}
 
 					// start chart animation

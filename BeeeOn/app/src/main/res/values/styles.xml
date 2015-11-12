@@ -200,8 +200,8 @@
         <item name="tabPaddingStart">12dp</item>
         <item name="tabPaddingEnd">12dp</item>
         <item name="tabBackground">?attr/selectableItemBackground</item>
-		<item name="android:background">@color/gray_dark</item>
         <item name="tabSelectedTextColor">?android:textColorPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body2</item>
 		<item name="tabGravity">center</item>
 		<item name="tabMode">scrollable</item>
     </style>

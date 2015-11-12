@@ -237,6 +237,8 @@
 	<string name="device_edit_overlay_dialog_create_new_location">Vytváření nového umístění</string>
 	<string name="device_edit_overlay_dialog_edit_text_hint">Zadejte název</string>
 	<string name="device_edit_toast_icon_or_text_is_null">Prosím zvolte ikonku a zadejte název</string>
+	<string name="device_edit_warning_battery_life">Volbou příliš nízkého intervalu probuzení můžete snížit životnost baterie.</string>
+	<string name="device_edit_warning_refresh">Nový interval probuzení bude po uložení použit až při dalším probuzení zařízení. Pokud chcete probudit zařízení ručně, zatřeste s ním nebo stiskněte jeho párovací tlačítko.</string>
 
 	<!-- Device add -->
 	<string name="device_add_btn_send_pair">Start</string>
@@ -278,6 +280,8 @@
 	<string name="device_detail_list_modules_no_item_title">ŽÁDNE MODULY</string>
 	<string name="device_detail_label_led">LED status</string>
 	<string name="device_detail_default_group">Výchozí</string>
+	<string name="device_detail_device_online">Připojeno</string>
+	<string name="device_detail_device_offline">Odpojeno</string>
 
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Umístění</string>

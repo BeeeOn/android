@@ -54,6 +54,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	private String mModuleId;
 
 	private DeviceDetailActivity mActivity;
+	private DeviceDetailFragment.UpdateDevice mDeviceCallback;
 	private View mView;
 	private DeviceModuleAdapter mModuleAdapter;
 
@@ -75,6 +76,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		mActivity = (DeviceDetailActivity) activity;
+		mDeviceCallback = (DeviceDetailFragment.UpdateDevice) activity;
 	}
 
 	@Override
@@ -83,7 +85,6 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		mGateId = getArguments().getString(KEY_GATE_ID);
 		mDeviceId = getArguments().getString(KEY_DEVICE_ID);
 		mGroupName = getArguments().getString(KEY_GROUP_NAME);
-		mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
 		mModuleId = "-1";
 	}
 
@@ -97,28 +98,32 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		return mView;
 	}
 
-	private void initLayout() {
-
-		mRecyclerView = (RecyclerView) mView.findViewById(R.id.device_detail_modules_list);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-		mModuleAdapter = new DeviceModuleAdapter(mActivity, getModulesByGroup(), this);
-		mModuleAdapter.setUseFirstItemSpace(true);
-		mRecyclerView.setAdapter(mModuleAdapter);
-
-		if (mModuleAdapter.getItemCount() == 0) {
-			mRecyclerView.setVisibility(View.GONE);
-			mEmptyListView.setVisibility(View.VISIBLE);
-		}
-
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		mDevice = mDeviceCallback.getDevice();
+		updateData();
 	}
 
-	private void updateLayout() {
-		mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
-		if (mDevice == null)
-			return;
+	private void initLayout() {
+		mRecyclerView = (RecyclerView) mView.findViewById(R.id.device_detail_modules_list);
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+		mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
+		mRecyclerView.setAdapter(mModuleAdapter);
+	}
 
-		mModuleAdapter.swapModules(getModulesByGroup());
-		mModuleAdapter.setUseFirstItemSpace(true);
+	public void updateData() {
+		mDevice = mDeviceCallback.getDevice();
+
+		if (mModuleAdapter != null) {
+			List<Module> modules= getModulesByGroup();
+			mModuleAdapter.swapModules(modules);
+
+			if (mModuleAdapter.getItemCount() == 0) {
+				mRecyclerView.setVisibility(View.GONE);
+				mEmptyListView.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	@Override
@@ -210,7 +215,8 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					updateLayout();
+					mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
+					updateData();
 				}
 			}
 		});
@@ -239,7 +245,8 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 			@Override
 			public void onExecute(boolean success) {
 				if (success) {
-					updateLayout();
+					mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
+					updateData();
 				}
 			}
 

@@ -148,19 +148,24 @@ final public class ChartHelper {
 			}
 
 			@Override
+			@SuppressWarnings("unchecked")
 			public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
 				int yValuesCount = chart.getData().getYValCount();
-				DataSet dataSet = (DataSet) chart.getData().getDataSets().get(0);
+				List<DataSet> dataSets = (List<DataSet>)chart.getData().getDataSets();
 
-				if (yValuesCount / viewPortHandler.getScaleX() < chartNumOfCircles) {
 
-					if (dataSet instanceof LineDataSet && !((LineDataSet) dataSet).isDrawCirclesEnabled()) {
-						((LineDataSet) chart.getData().getDataSets().get(0)).setDrawCircles(true);
-					}
-				} else {
+				for (DataSet dataSet : dataSets) {
 
-					if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
-						((LineDataSet) chart.getData().getDataSets().get(0)).setDrawCircles(false);
+					if (yValuesCount / viewPortHandler.getScaleX() < chartNumOfCircles) {
+
+						if (dataSet instanceof LineDataSet && !((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+							((LineDataSet) dataSet).setDrawCircles(true);
+						}
+					} else {
+
+						if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+							((LineDataSet) dataSet).setDrawCircles(false);
+						}
 					}
 				}
 			}
@@ -175,10 +180,10 @@ final public class ChartHelper {
 	/**
 	 * Prepare data set for chart
 	 *
-	 * @param dataset  data set to prepare
-	 * @param barChart bar chart flag
-	 * @param filled   fill dataset flag
-	 * @param color    line color
+	 * @param dataset        data set to prepare
+	 * @param barChart       bar chart flag
+	 * @param filled         fill dataset flag
+	 * @param color          line color
 	 * @param highlightColor color for highlight lines
 	 */
 	@SuppressLint("PrivateResource")
@@ -218,7 +223,7 @@ final public class ChartHelper {
 	 * Prepare ValueFormatter for bar and line chart
 	 *
 	 * @param baseValue module baseValue
-	 * @param context    Context
+	 * @param context   Context
 	 * @return specific valueFormatter
 	 */
 	public static YAxisValueFormatter getValueFormatterInstance(final BaseValue baseValue, final Context context) {

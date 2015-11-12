@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -45,6 +47,8 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	private EditText mDeviceNameText;
 	private Spinner mLocationSpinner;
 	private Spinner mRefreshTimeSpinner;
+	private TextView mWarningBattery;
+	private TextView mWarningRefresh;
 
 	private LocationArrayAdapter mLocationArrayAdapter;
 
@@ -86,7 +90,7 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_device_edit, null);
+		View view = inflater.inflate(R.layout.fragment_device_edit, container, false);
 
 		mDeviceNameText = (EditText) view.findViewById(R.id.device_edit_device_name);
 		mLocationSpinner = (Spinner) view.findViewById(R.id.device_edit_location_spinner);
@@ -96,6 +100,9 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 			((ViewStub) view.findViewById(R.id.device_edit_fragment_refresh_view_stub)).inflate();
 			mRefreshTimeSpinner = (Spinner) view.findViewById(R.id.device_edit_refresh_spinner);
 			mRefreshTimeSpinner.setAdapter(new RefreshIntervalAdapter(mActivity));
+
+			mWarningBattery = (TextView) view.findViewById(R.id.device_edit_warning_refresh_battery);
+			mWarningRefresh = (TextView) view.findViewById(R.id.device_edit_warning_refresh);
 		}
 
 		mLocationSpinner.setAdapter(mLocationArrayAdapter);
@@ -138,9 +145,28 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		reloadLocationSpinner();
 		selectLocation(mDevice.getLocationId());
 
-		RefreshInterval refreshInterval = mDevice.getRefresh();
+		final RefreshInterval refreshInterval = mDevice.getRefresh();
 		if (refreshInterval != null && mRefreshTimeSpinner != null) {
 			mRefreshTimeSpinner.setSelection(refreshInterval.getIntervalIndex());
+			mRefreshTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					RefreshInterval interval = (RefreshInterval) parent.getAdapter().getItem(position);
+					mWarningBattery.setVisibility(interval.getInterval() <= RefreshInterval.SEC_10.getInterval() ? View.VISIBLE : View.GONE);
+					mWarningRefresh.setVisibility(refreshInterval.getInterval() >= RefreshInterval.MIN_10.getInterval() ? View.VISIBLE : View.GONE);
+
+					if (mWarningBattery.getVisibility() == View.VISIBLE && mWarningRefresh.getVisibility() == View.VISIBLE) {
+						RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mWarningBattery.getLayoutParams();
+						layoutParams.addRule(RelativeLayout.BELOW, mWarningRefresh.getId());
+						mWarningBattery.setLayoutParams(layoutParams);
+					}
+				}
+
+				@Override
+				public void onNothingSelected(AdapterView<?> parent) {
+
+				}
+			});
 		}
 	}
 

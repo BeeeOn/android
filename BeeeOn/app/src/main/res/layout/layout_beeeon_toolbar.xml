@@ -10,7 +10,9 @@
 	app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
 	android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
 	app:popupTheme="@style/Theme.AppCompat.Light"
-	app:titleMarginStart="16dp">
+	app:titleMarginStart="16dp"
+	app:layout_scrollFlags="scroll|enterAlways"
+	app:layout_collapseMode="pin">
 
 	<!-- frame layout so that progress/refresh icon can overlay -->
 	<!-- TODO could be managed by <ViewSwitcher> -->

@@ -1,17 +1,23 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.DeviceDetailFragment;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 
 /**
  * Class that handle screen with detail of some sensor
  */
-public class DeviceDetailActivity extends BaseApplicationActivity {
+public class DeviceDetailActivity extends BaseApplicationActivity implements DeviceDetailFragment.UpdateDevice {
 
 	private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
@@ -21,6 +27,10 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 
 	private String mGateId;
 	private String mDeviceId;
+
+	private Device mDevice;
+
+	private DeviceDetailFragment mFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +57,13 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 			return;
 		}
 
+		mDevice = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId);
+
 		if (savedInstanceState == null) {
-			DeviceDetailFragment deviceDetailFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
-			getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, deviceDetailFragment).commit();
+			mFragment = DeviceDetailFragment.newInstance(mGateId, mDeviceId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.device_detail_container, mFragment).commit();
+		} else {
+			mFragment = (DeviceDetailFragment) getSupportFragmentManager().findFragmentById(R.id.device_detail_container);
 		}
 	}
 
@@ -71,5 +85,32 @@ public class DeviceDetailActivity extends BaseApplicationActivity {
 		return false;
 	}
 
+	@Override
+	public CallbackTask createReloadDevicesTask(boolean forceReload) {
 
+		ReloadGateDataTask reloadDevicesTask = new ReloadGateDataTask(this, forceReload, ReloadGateDataTask.ReloadWhat.DEVICES);
+
+		final Activity activity = this;
+		reloadDevicesTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				mDevice = Controller.getInstance(activity).getDevicesModel().getDevice(mGateId, mDeviceId);
+
+				if (mDevice == null) {
+					Log.e(TAG, String.format("Device #%s does not exists", mDeviceId));
+					activity.finish();
+				}
+
+				if (success) {
+					mFragment.updateData();
+				}
+			}
+		});
+		return reloadDevicesTask;
+	}
+
+	@Override
+	public Device getDevice() {
+		return mDevice;
+	}
 }
