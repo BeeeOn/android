@@ -195,7 +195,7 @@
 	<string name="gate_detail_toast_not_specified_gate">Nešpecifikovaná brána</string>
 	<string name="gate_detail_version">Komunikačná verzia</string>
 	<string name="gate_detail_your_role">Vaša úloha</string>
-	<!-- <string name="gate_detail_altitude">Nadmořská výška</string> -->
+ 	<string name="gate_detail_altitude">Nadmorská výška</string>
 
 	<!-- Gate edit -->
 	<string name="gate_edit_gate_id_read_only">ID brány (iba na čítanie)</string>

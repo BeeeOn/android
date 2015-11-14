@@ -29,14 +29,14 @@
 	<string name="NetworkError___COM_FW_ALGORITHMS_ERROR">Chyba pri komunikácii s firmware/algoritmami.</string>
 	<string name="NetworkError___COM_VER_MISMATCH">Verzia komunikačného protokolu už nie je podporovaná.\n(aplikácia: %1$s, server: %2$s)\n\nAktualizujte si vašu aplikáciu.</string>
 	<string name="NetworkError___DAMAGED_XML">Bolo prijaté poškodené XML.\n\nSkúste to znovu.</string>
-	<!-- TODO: <string name="NetworkError___GATE_AVAILABLE">K této bráně již máte přístup.</string> -->
+	<string name="NetworkError___GATE_AVAILABLE">K tejto bráne už máte prístup.</string>
 	<string name="NetworkError___GENERATE_BTOKEN_ERROR">Chyba pri generovaní prístupového tokenu.</string>
 	<string name="NetworkError___IMPROPER_NAME_OR_EMAIL">Zadané meno alebo e-mail nie je vhodné.</string>
 	<string name="NetworkError___IMPROPER_PSWD">Zadané heslo nie je dostatočne bezpečné.</string>
 	<string name="NetworkError___INVALID_LOCATION_TYPE">Bol zadaný neplatný typ umiestnenia.</string>
 	<string name="NetworkError___INVALID_PROVIDER">Tento poskytovateľ nie je k dispozícii.</string>
 	<string name="NetworkError___INVALID_REQUEST">Tento typ požiadavku nie je na serveri podporovaný.</string>
-	<!-- TODO: <string name="NetworkError___UNKNOWN_ERROR">Server nahlásil neznámou chybu.</string> -->
+	<string name="NetworkError___UNKNOWN_ERROR">Server nahlásil neznámu chybu.</string>
 	<string name="NetworkError___LOW_RIGHTS">Nemáte dostatočné práva na túto akciu.\n\nPožiadajte vlastníka brány o ich navýšenie.</string>
 	<string name="NetworkError___NOT_CONSISTENT_SENSOR_ADDR">Bolo zadané neplatné ID alebo typ zariadenia.</string>
 	<string name="NetworkError___NOT_VALID_USER">Bol zadaný neplatný token alebo e-mail.</string>
