@@ -10,7 +10,6 @@
 		android:layout_height="wrap_content">
 
 		<ImageView
-			android:layout_centerVertical="true"
 			android:layout_width="24dp"
 			android:layout_height="24dp"
 			android:layout_marginLeft="16dp"
