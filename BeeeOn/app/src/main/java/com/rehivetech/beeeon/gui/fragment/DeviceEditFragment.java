@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,7 +24,10 @@ import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.Utils;
+
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -51,6 +55,9 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	private TextView mWarningRefresh;
 
 	private LocationArrayAdapter mLocationArrayAdapter;
+
+	private TimeHelper mTimeHelper;
+	private boolean mFirstSelect = true;
 
 	public static DeviceEditFragment newInstance(String gateId, String deviceId) {
 		Bundle args = new Bundle();
@@ -85,6 +92,9 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		// Get locations list containing gate locations and also special default locations
 		List<Location> locations = LocationArrayAdapter.getLocations(controller.getLocationsModel(), mActivity, mGateId);
 		mLocationArrayAdapter = new LocationArrayAdapter(mActivity, locations);
+
+		SharedPreferences prefs = controller.getUserSettings();
+		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 	}
 
 	@Nullable
@@ -151,9 +161,21 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 			mRefreshTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					if (mFirstSelect) {
+						mFirstSelect = false;
+						return;
+					}
+
 					RefreshInterval interval = (RefreshInterval) parent.getAdapter().getItem(position);
 					mWarningBattery.setVisibility(interval.getInterval() <= RefreshInterval.SEC_10.getInterval() ? View.VISIBLE : View.GONE);
-					mWarningRefresh.setVisibility(refreshInterval.getInterval() >= RefreshInterval.MIN_10.getInterval() ? View.VISIBLE : View.GONE);
+					mWarningRefresh.setVisibility(refreshInterval.getInterval() >= RefreshInterval.MIN_5.getInterval() ? View.VISIBLE : View.GONE);
+
+					DateTime nexWakeUp = mDevice.getLastUpdate();
+
+					if (nexWakeUp != null) {
+						nexWakeUp = nexWakeUp.plusSeconds(refreshInterval.getInterval());
+					}
+					mWarningRefresh.setText(getString(R.string.device_edit_warning_refresh, mTimeHelper.formatLastUpdate(nexWakeUp, Controller.getInstance(mActivity).getGatesModel().getGate(mGateId))));
 
 					if (mWarningBattery.getVisibility() == View.VISIBLE && mWarningRefresh.getVisibility() == View.VISIBLE) {
 						RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mWarningBattery.getLayoutParams();

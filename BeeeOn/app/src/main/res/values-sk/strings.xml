@@ -237,9 +237,8 @@
 	<string name="device_edit_overlay_dialog_create_new_location">Vytvorenie nového umiestnenia</string>
 	<string name="device_edit_overlay_dialog_edit_text_hint">Zadajte názov</string>
 	<string name="device_edit_toast_icon_or_text_is_null">Prosím zvoľte ikonku a zadajte názov</string>
-	<string name="device_edit_warning_battery_life">Voľbou príliš nízkého intervalu prebudenia môžete znížiť životnosť batérie.</string>
-	<string name="device_edit_warning_refresh">Nový interval prebudenia bude po uložení použitýt až pri ďalšom prebudení zariadenia. Al chcete prebudiť zariadenie ručne, zatraste s ním nebo slačte jeho párovacie tlačidlo.</string>
-
+	<string name="device_edit_warning_battery_life">- Voľbou príliš nízkého intervalu prebudenia môžete znížiť životnosť batérie.</string>
+	<string name="device_edit_warning_refresh">- Zmena se prejaví pri ďalšom prebudení zariadenia (približne v %s). Ak chcete prebudiť zariadenie ručne, zatraste zariadením alebo stlačte jeho tlačidlo pre párovanie.</string>
 	<!-- Device add -->
 	<string name="device_add_btn_send_pair">START</string>
 	<string name="device_add_device_found">Našlo sa zariadenie</string>
