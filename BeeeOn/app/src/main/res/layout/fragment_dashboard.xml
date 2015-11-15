@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:fab="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/tools">
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/dashboard_recyclerview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+	<net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
+		android:id="@+id/dashboard_fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="16dp"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:layout_gravity="bottom|end"
+		style="@style/BeeeOn.Fab.Menu"
+		fab:fab_labelStyle="@style/BeeeOn.Fab.Menu.Label">
+
+		<net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+			android:id="@+id/dashboard_add_graph"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			fab:fab_title="@string/dashboard_fab_add_graph"
+			fab:fab_icon="@drawable/ic_add_white_24dp"
+			style="@style/BeeeOn.Fab.Mini"
+			/>
+
+	</net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
+
+</android.support.design.widget.CoordinatorLayout>

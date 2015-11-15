@@ -447,5 +447,8 @@
 	<string name="data_type_min">Minimum</string>
 	<string name="data_type_avg">Average</string>
 	<string name="data_type_max">Maximum</string>
+
+	<!--Dashboard-->
+	<string name="dashboard_fab_add_graph">Add graph</string>
 </resources>
 
