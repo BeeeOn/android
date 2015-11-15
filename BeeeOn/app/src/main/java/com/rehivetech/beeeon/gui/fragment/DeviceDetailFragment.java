@@ -33,7 +33,6 @@ import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
@@ -100,7 +99,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		@Override
 		public Object createParam() {
-			return mDeviceCallback != null ? mDeviceCallback.getDevice() : null;
+			return mGateId;
 		}
 	};
 
