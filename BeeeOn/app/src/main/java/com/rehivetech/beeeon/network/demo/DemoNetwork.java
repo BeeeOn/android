@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
+import com.rehivetech.beeeon.util.ValuesGenerator;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -100,31 +101,8 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(module.getDevice().getGateId());
 
-		if (module.getValue() instanceof EnumValue) {
-			EnumValue value = (EnumValue) module.getValue();
-			List<Item> items = value.getEnumItems();
-			Item item = items.get(rand.nextInt(items.size()));
-
-			module.setValue(item.getValue());
-		} else {
-			double lastValue = module.getValue().getDoubleValue();
-			double range = 5;
-
-			RefreshInterval refresh = module.getDevice().getRefresh();
-			if (refresh != null) {
-				range = 2 + Math.log(refresh.getInterval());
-			}
-
-			if (Double.isNaN(lastValue)) {
-				lastValue = rand.nextDouble() * 1000;
-			}
-
-			double addvalue = rand.nextInt((int) range * 1000) / 1000;
-			boolean plus = rand.nextBoolean();
-			lastValue = lastValue + addvalue * (plus ? 1 : -1);
-
-			module.setValue(String.valueOf((int) lastValue));
-		}
+		String newValue = ValuesGenerator.generateValue(module, rand);
+		module.setValue(newValue);
 	}
 
 	public void initDemoData() throws AppException {
@@ -221,8 +199,6 @@ public class DemoNetwork implements INetwork {
 		if (!isGateAllowed(gateId)) {
 			return false;
 		}
-
-		Random rand = getRandomForGate(gateId);
 
 		GateInfo gate = new GateInfo(gateId, gateName);
 		gate.setUtcOffset(offsetInMinutes);
