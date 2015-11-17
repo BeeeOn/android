@@ -30,7 +30,7 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,16 +49,16 @@ public class DemoNetwork implements INetwork {
 
 	private static final int RAW_ENUM_VALUES_COUNT_IN_LOG = 100;
 
-	private Context mContext;
-	private User mUser;
+	private final Context mContext;
+	private final User mUser;
 	private String mBT;
 	private boolean mInitialized;
-	private Map<String, Random> mRandoms = new HashMap<>();
+	private final Map<String, Random> mRandoms = new HashMap<>();
 
-	public final DataHolder<GateInfo> mGates = new DataHolder<>();
-	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
-	public final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
-	public final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
+	private final DataHolder<GateInfo> mGates = new DataHolder<>();
+	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
+	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
+	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
 
 	public DemoNetwork(Context context) {
 		mContext = context;
@@ -149,14 +149,13 @@ public class DemoNetwork implements INetwork {
 			mDevices.setLastUpdate(gateId, DateTime.now());
 
 			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(gateId, Arrays.asList(new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Owner)));
+			mUsers.setObjects(gateId, Collections.singletonList(new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Owner)));
 			mUsers.setLastUpdate(gateId, DateTime.now());
 
 			Random rand = getRandomForGate(gate.getId());
 
 			// Set last update time to time between (-26 hours, now>
 			for (Device device : mDevices.getObjects(gateId)) {
-				// FIXME: is using getObjects() ok? It creates new list. But it should be ok, because inner objects are still only references. Needs test!
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(rand.nextInt(60 * 60 * 26)));
 			}
 		}
