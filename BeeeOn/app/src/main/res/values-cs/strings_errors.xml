@@ -48,4 +48,6 @@
 	<string name="NetworkError___ΝΟ_ΕΜΑΙL">Poskytovatel příhlášení nedodal email.</string>
 	<string name="NetworkError___EMAIL_PROVIDER_MISMATCH">Tento e-mail je používán jiným poskytovatelem, použijte prosím správného poskytovatela. Aktuálního poskytovatela můžete poté přidat v nastavení.</string>
 	<string name="NetworkError___LOGOUT_FAILED">Odhlášení se nezdařilo, zkuste to prosím později.</string>
+	<string name="NetworkError___UNDER_DEVELOPMENT">Tato funkce se teprve připravuje.</string>
+	<string name="NetworkError___CANT_DO_THIS">Toto nemůžete udělat.</string>
 </resources>

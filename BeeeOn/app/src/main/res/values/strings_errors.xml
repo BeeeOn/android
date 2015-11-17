@@ -48,4 +48,6 @@
 	<string name="NetworkError___ΝΟ_ΕΜΑΙL">Login provider does not provide e-mail</string>
 	<string name="NetworkError___EMAIL_PROVIDER_MISMATCH">This e-mail is joined to another provider. Use right provider and add this one in you setting.</string>
 	<string name="NetworkError___LOGOUT_FAILED">Logout failed, try it later.</string>
+	<string name="NetworkError___UNDER_DEVELOPMENT">This feature is still under development.</string>
+	<string name="NetworkError___CANT_DO_THIS">You can\'t do this.</string>
 </resources>

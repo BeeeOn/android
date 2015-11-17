@@ -42,7 +42,11 @@ public enum NetworkError implements IErrorCode, IIdentifier {
 	COM_FW_ALGORITHMS_ERROR(200),
 	GENERATE_BTOKEN_ERROR(997),
 	UNKNOWN_ERROR(998),
-	INVALID_REQUEST(999);
+	INVALID_REQUEST(999),
+
+	// Special errors
+	UNDER_DEVELOPMENT(1000),
+	CANT_DO_THIS(1001);
 
 	public static final String PARAM_COM_VER_LOCAL = "Local version";
 	public static final String PARAM_COM_VER_SERVER = "Server version";

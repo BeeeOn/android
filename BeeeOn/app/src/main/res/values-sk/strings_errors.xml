@@ -48,4 +48,6 @@
 	<string name="NetworkError___EMAIL_PROVIDER_MISMATCH">Tento e-mail je používaný iným poskytovateľom, použite správného poskytovateľa. Aktuálneho poskytovateľa môžete potom pridať v nastaveniach.</string>
 	<string name="NetworkError___LOGOUT_FAILED">Odhlásenie zlyhalo, skúste to neskôr.</string>
 	<string name="NetworkError___ΝΟ_ΕΜΑΙL">Poskytovateľ prihlasovania nám nedodal e-mail.</string>
+	<string name="NetworkError___UNDER_DEVELOPMENT">Táto funkcia sa ešte len pripravuje.</string>
+	<string name="NetworkError___CANT_DO_THIS">Toto nemôžete urobiť.</string>
 </resources>
