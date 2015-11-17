@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
@@ -190,6 +191,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean accounts_logout() {
+		mBT = "";
 		return true;
 	}
 
@@ -299,6 +301,10 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean gates_unregister(String gateId) {
+		mLocations.removeHolder(gateId);
+		mDevices.removeHolder(gateId);
+		mUsers.removeHolder(gateId);
+		mRandoms.remove(gateId);
 		return mGates.removeObject(gateId) != null;
 	}
 
@@ -575,16 +581,12 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean gateusers_remove(String gateId, User user) {
-		// TODO: Actual implementation deletes gate, not account...
 		if (user.getId().equals(mUser.getId())) {
-			// If we're deleting ourselves, remove whole gate
-			mLocations.removeHolder(gateId);
-			mDevices.removeHolder(gateId);
-			return mGates.removeObject(gateId) != null;
-		} else {
-			// TODO: This is correct implementation for future
-			return mUsers.removeObject(gateId, user.getId()) != null;
+			// We can't remove self user
+			throw new AppException(NetworkError.CANT_DO_THIS);
 		}
+
+		return mUsers.removeObject(gateId, user.getId()) != null;
 	}
 
 	@Override
