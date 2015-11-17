@@ -6,7 +6,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
@@ -19,7 +18,10 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by vico on 8.7.2015.
+ * Helper class with data for DemoNetwork.
+ *
+ * @author vico
+ * @author Robyer
  */
 public class DemoData {
 
@@ -40,22 +42,50 @@ public class DemoData {
 	 */
 	private int deviceIdGenerator = 1000;
 
+	private final User mUser;
+
+	/**
+	 * @param user User object used in DemoNetwork, so it will have same correct name in gateusers data.
+	 */
+	public DemoData(User user) {
+		mUser = user;
+	}
+
 	public List<GateInfo> getGates(Context context) {
 		List<GateInfo> gatesList = new ArrayList<>();
 
 		GateInfo demoGate1 = new GateInfo(GATE_1_ID, context.getString(R.string.gate_1_name));
 		demoGate1.setRole(User.Role.Admin);
 		demoGate1.setUtcOffset(500);
-		demoGate1.setOwner("John Doe");
+		demoGate1.setOwner(getGateOwner(demoGate1.getId()));
 		gatesList.add(demoGate1);
 
 		GateInfo demoGate2 = new GateInfo(GATE_2_ID, context.getString(R.string.gate_2_name));
 		demoGate2.setRole(User.Role.Owner);
 		demoGate2.setUtcOffset(60);
-		demoGate2.setOwner("John Doe");
+		demoGate2.setOwner(getGateOwner(demoGate2.getId()));
 		gatesList.add(demoGate2);
 
 		return gatesList;
+	}
+
+	/**
+	 * Helper for getting gate's owner name.
+	 *
+	 * @param gateId
+	 * @return
+	 */
+	private String getGateOwner(String gateId) {
+		String owner = "";
+
+		List<User> users = getUsers(gateId);
+		for (User user : users) {
+			if (user.getRole() == User.Role.Owner) {
+				owner = user.getFullName();
+			}
+		}
+
+		return owner;
 	}
 
 	public List<Location> getLocation(Context context, String gateId) {
@@ -131,6 +161,38 @@ public class DemoData {
 		device.setNetworkQuality(rand.nextInt(100));
 
 		return device;
+	}
+
+	public List<User> getUsers(String gateId) {
+		List<User> usersList = new ArrayList<>();
+
+		User demoUser = new User(mUser.getId(), mUser.getName(), mUser.getSurname(), mUser.getEmail(), mUser.getGender(), mUser.getRole());
+
+		switch (gateId) {
+			case GATE_1_ID: {
+				demoUser.setRole(User.Role.Owner);
+				usersList.add(demoUser); // we are owner
+
+				usersList.add(new User("100", "John", "Doe", "john@doe.com", User.Gender.MALE, User.Role.Admin));
+				usersList.add(new User("101", "Marry", "Anne", "marry@anne.net", User.Gender.FEMALE, User.Role.Guest));
+				usersList.add(new User("102", "Ralph", "Doe", "ralph@doe.com", User.Gender.MALE, User.Role.User));
+				break;
+			}
+			case GATE_2_ID: {
+				demoUser.setRole(User.Role.Admin);
+				usersList.add(demoUser); // we are admin only
+
+				usersList.add(new User("100", "Frank", "Kenneth", "frank@kenneth.com", User.Gender.MALE, User.Role.Owner));
+				break;
+			}
+			default: {
+				demoUser.setRole(User.Role.Owner); // we are owner
+				usersList.add(mUser);
+				break;
+			}
+		}
+
+		return usersList;
 	}
 
 }

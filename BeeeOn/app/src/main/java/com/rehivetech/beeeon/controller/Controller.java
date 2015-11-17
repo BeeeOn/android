@@ -335,7 +335,7 @@ public final class Controller {
 	 * @throws AppException
 	 */
 	public boolean login(@NonNull IAuthProvider authProvider) throws AppException {
-		// In demo mode load some init data from sdcard
+		// In demo mode load some init data
 		if (mNetwork instanceof DemoNetwork) {
 			((DemoNetwork) mNetwork).initDemoData();
 		}

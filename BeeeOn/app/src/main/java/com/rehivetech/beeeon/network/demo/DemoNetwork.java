@@ -31,7 +31,6 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,8 +136,9 @@ public class DemoNetwork implements INetwork {
 		mLocations.clear();
 		mDevices.clear();
 		mUsers.clear();
+		mRandoms.clear();
 
-		DemoData demoData = new DemoData();
+		DemoData demoData = new DemoData(mUser);
 		mGates.setObjects(demoData.getGates(mContext));
 		for (GateInfo gate : mGates.getObjects()) {
 			String gateId = gate.getId();
@@ -149,8 +149,7 @@ public class DemoNetwork implements INetwork {
 			mDevices.setObjects(gateId, demoData.getDevices(gateId));
 			mDevices.setLastUpdate(gateId, DateTime.now());
 
-			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(gateId, Collections.singletonList(new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Owner)));
+			mUsers.setObjects(gateId, demoData.getUsers(gateId));
 			mUsers.setLastUpdate(gateId, DateTime.now());
 
 			Random rand = getRandomForGate(gate.getId());
@@ -227,12 +226,10 @@ public class DemoNetwork implements INetwork {
 
 		GateInfo gate = new GateInfo(gateId, gateName);
 		gate.setUtcOffset(offsetInMinutes);
-
-		// Use random role
-		Role[] roles = Role.values();
-		gate.setRole(roles[rand.nextInt(roles.length)]);
+		gate.setRole(Role.Owner);
 
 		mGates.addObject(gate);
+		mUsers.addObject(gateId, mUser);
 
 		return true;
 	}
