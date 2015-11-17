@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.household.gate;
 
+import android.support.annotation.NonNull;
+
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.user.User;
 
@@ -8,7 +10,7 @@ public class Gate implements INameIdentifier {
 
 	protected final String mId;
 	protected String mName;
-	protected User.Role mRole;
+	protected User.Role mRole = User.Role.Guest;
 	protected int mUtcOffsetInMinutes;
 
 	public Gate(String id, String name) {
@@ -42,13 +44,14 @@ public class Gate implements INameIdentifier {
 	/**
 	 * @param role of actual user of gate
 	 */
-	public void setRole(User.Role role) {
+	public void setRole(@NonNull User.Role role) {
 		mRole = role;
 	}
 
 	/**
 	 * @return role of actual user of gate
 	 */
+	@NonNull
 	public User.Role getRole() {
 		return mRole;
 	}
