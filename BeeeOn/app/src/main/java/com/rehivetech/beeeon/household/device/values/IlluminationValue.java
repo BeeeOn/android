@@ -38,4 +38,20 @@ public final class IlluminationValue extends BaseValue {
 		return mValue;
 	}
 
+	// NOTE: Guessed from http://www.engineeringtoolbox.com/light-level-rooms-d_708.html
+
+	@Override
+	public double getSaneMinimum() {
+		return 20;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return 750;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 15;
+	}
 }

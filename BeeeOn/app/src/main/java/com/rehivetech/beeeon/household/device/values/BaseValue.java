@@ -24,6 +24,21 @@ public abstract class BaseValue {
 	public abstract double getDoubleValue();
 
 	/**
+	 * @return sane minimum value for this type, to use in demo data or graphs.
+	 */
+	public abstract double getSaneMinimum();
+
+	/**
+	 * @return sane maximum value for this type, to use in demo data or graphs.
+	 */
+	public abstract double getSaneMaximum();
+
+	/**
+	 * @return sane step value for this type, to use in demo data or graphs.
+	 */
+	public abstract double getSaneStep();
+
+	/**
 	 * @return "Raw" string value, which means value given in {@link #setValue(String)} method
 	 * @throws IllegalStateException When mRawValue is null (probably child object didn't call'd super.setValue())
 	 */
@@ -85,7 +100,7 @@ public abstract class BaseValue {
 		return new UnknownValue();
 	}
 
-	public static class Constraints{
+	public static class Constraints {
 		private final Double mMin;
 		private final Double mMax;
 		private final Double mGranularity;

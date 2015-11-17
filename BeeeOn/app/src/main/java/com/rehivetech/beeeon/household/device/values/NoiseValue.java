@@ -37,4 +37,20 @@ public final class NoiseValue extends BaseValue {
 		return mValue;
 	}
 
+	// NOTE: Guessed from http://www.gcaudio.com/resources/howtos/loudness.html
+
+	@Override
+	public double getSaneMinimum() {
+		return 0;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return 90;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 2;
+	}
 }

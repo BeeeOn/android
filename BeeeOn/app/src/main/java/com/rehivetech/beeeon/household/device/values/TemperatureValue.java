@@ -36,4 +36,18 @@ public final class TemperatureValue extends BaseValue {
 		return mUnit;
 	}
 
+	@Override
+	public double getSaneMinimum() {
+		return 10;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return 40;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 0.1;
+	}
 }

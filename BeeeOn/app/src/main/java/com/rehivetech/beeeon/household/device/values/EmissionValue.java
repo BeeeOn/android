@@ -37,4 +37,20 @@ public final class EmissionValue extends BaseValue {
 		return mValue;
 	}
 
+	// NOTE: Guessed from http://www.theben.de/en/CO2-sensors
+
+	@Override
+	public double getSaneMinimum() {
+		return 350;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return 4000;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 10;
+	}
 }
