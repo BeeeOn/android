@@ -4,16 +4,13 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
-import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.household.device.values.EnumValue;
-import com.rehivetech.beeeon.household.device.values.EnumValue.Item;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -25,12 +22,12 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
+import com.rehivetech.beeeon.util.ValuesGenerator;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,18 +44,16 @@ public class DemoNetwork implements INetwork {
 	public static final String DEMO_USER_ID = "demo";
 	private static final String DEMO_USER_BT = "12345";
 
-	private static final int RAW_ENUM_VALUES_COUNT_IN_LOG = 100;
-
-	private Context mContext;
-	private User mUser;
+	private final Context mContext;
+	private final User mUser;
 	private String mBT;
 	private boolean mInitialized;
-	private Map<String, Random> mRandoms = new HashMap<>();
+	private final Map<String, Random> mRandoms = new HashMap<>();
 
-	public final DataHolder<GateInfo> mGates = new DataHolder<>();
-	public final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
-	public final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
-	public final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
+	private final DataHolder<GateInfo> mGates = new DataHolder<>();
+	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>();
+	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
+	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
 
 	public DemoNetwork(Context context) {
 		mContext = context;
@@ -100,31 +95,8 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(module.getDevice().getGateId());
 
-		if (module.getValue() instanceof EnumValue) {
-			EnumValue value = (EnumValue) module.getValue();
-			List<Item> items = value.getEnumItems();
-			Item item = items.get(rand.nextInt(items.size()));
-
-			module.setValue(item.getValue());
-		} else {
-			double lastValue = module.getValue().getDoubleValue();
-			double range = 5;
-
-			RefreshInterval refresh = module.getDevice().getRefresh();
-			if (refresh != null) {
-				range = 2 + Math.log(refresh.getInterval());
-			}
-
-			if (Double.isNaN(lastValue)) {
-				lastValue = rand.nextDouble() * 1000;
-			}
-
-			double addvalue = rand.nextInt((int) range * 1000) / 1000;
-			boolean plus = rand.nextBoolean();
-			lastValue = lastValue + addvalue * (plus ? 1 : -1);
-
-			module.setValue(String.valueOf((int) lastValue));
-		}
+		String newValue = ValuesGenerator.generateValue(module, rand);
+		module.setValue(newValue);
 	}
 
 	public void initDemoData() throws AppException {
@@ -136,8 +108,9 @@ public class DemoNetwork implements INetwork {
 		mLocations.clear();
 		mDevices.clear();
 		mUsers.clear();
+		mRandoms.clear();
 
-		DemoData demoData = new DemoData();
+		DemoData demoData = new DemoData(mUser);
 		mGates.setObjects(demoData.getGates(mContext));
 		for (GateInfo gate : mGates.getObjects()) {
 			String gateId = gate.getId();
@@ -148,15 +121,13 @@ public class DemoNetwork implements INetwork {
 			mDevices.setObjects(gateId, demoData.getDevices(gateId));
 			mDevices.setLastUpdate(gateId, DateTime.now());
 
-			// Just one (self) user for now, anyone can create XML with more users and use it here like other items
-			mUsers.setObjects(gateId, Arrays.asList(new User(mUser.getId(), "John", "Doe", "john@doe.com", Gender.MALE, Role.Owner)));
+			mUsers.setObjects(gateId, demoData.getUsers(gateId));
 			mUsers.setLastUpdate(gateId, DateTime.now());
 
 			Random rand = getRandomForGate(gate.getId());
 
 			// Set last update time to time between (-26 hours, now>
 			for (Device device : mDevices.getObjects(gateId)) {
-				// FIXME: is using getObjects() ok? It creates new list. But it should be ok, because inner objects are still only references. Needs test!
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC).minusSeconds(rand.nextInt(60 * 60 * 26)));
 			}
 		}
@@ -191,6 +162,7 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean accounts_logout() {
+		mBT = "";
 		return true;
 	}
 
@@ -206,12 +178,14 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean accounts_connectAuthProvider(IAuthProvider authProvider) {
-		return true;
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 	@Override
 	public boolean accounts_disconnectAuthProvider(String providerName) {
-		return true;
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 	@Override
@@ -220,16 +194,12 @@ public class DemoNetwork implements INetwork {
 			return false;
 		}
 
-		Random rand = getRandomForGate(gateId);
-
 		GateInfo gate = new GateInfo(gateId, gateName);
 		gate.setUtcOffset(offsetInMinutes);
-
-		// Use random role
-		Role[] roles = Role.values();
-		gate.setRole(roles[rand.nextInt(roles.length)]);
+		gate.setRole(Role.Owner);
 
 		mGates.addObject(gate);
+		mUsers.addObject(gateId, mUser);
 
 		return true;
 	}
@@ -300,6 +270,10 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean gates_unregister(String gateId) {
+		mLocations.removeHolder(gateId);
+		mDevices.removeHolder(gateId);
+		mUsers.removeHolder(gateId);
+		mRandoms.remove(gateId);
 		return mGates.removeObject(gateId) != null;
 	}
 
@@ -427,60 +401,9 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public ModuleLog devices_getLog(String gateId, Module module, ModuleLog.DataPair pair) {
 		// Generate random values for log in demo mode
-		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
-
-		long start = pair.interval.getStartMillis();
-		long end = pair.interval.getEndMillis();
-
 		Random rand = getRandomForGate(gateId);
 
-		double lastValue = pair.module.getValue().getDoubleValue();
-		if (Double.isNaN(lastValue)) {
-			lastValue = rand.nextDouble() * 1000;
-		}
-
-		boolean isEnum = (module.getValue() instanceof EnumValue);
-		boolean hasRefresh = (module.getDevice().getRefresh() != null);
-
-		int everyMsecs;
-		double range = 5;
-
-		if (isEnum || !hasRefresh) {
-			// For enums we want fixed number of steps (because application surely wants raw values)
-			// For devices without refresh it is the similar situation
-			everyMsecs = (int) (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
-		} else {
-			int refreshInterval = module.getDevice().getRefresh().getInterval();
-			everyMsecs = Math.max(pair.gap.getSeconds(), refreshInterval) * 1000;
-			range = 2 + Math.log(refreshInterval);
-		}
-
-		while (start < end) {
-			if (isEnum) {
-				EnumValue value = (EnumValue) module.getValue();
-				List<Item> items = value.getEnumItems();
-
-				int pos = 0;
-				for (Item item : items) {
-					if (item.getId() == (int) lastValue) {
-						break;
-					}
-					pos++;
-				}
-				// (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
-				pos = (items.size() + pos + (rand.nextInt(3) - 1)) % items.size();
-				lastValue = items.get(pos).getId();
-			} else {
-				double addvalue = rand.nextInt((int) range * 1000) / 1000;
-				boolean plus = rand.nextBoolean();
-				lastValue = lastValue + addvalue * (plus ? 1 : -1);
-			}
-
-			log.addValue(start, (float) lastValue);
-			start += everyMsecs;
-		}
-
-		return log;
+		return ValuesGenerator.generateLog(module, pair, rand);
 	}
 
 	@Override
@@ -576,16 +499,12 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean gateusers_remove(String gateId, User user) {
-		// TODO: Actual implementation deletes gate, not account...
 		if (user.getId().equals(mUser.getId())) {
-			// If we're deleting ourselves, remove whole gate
-			mLocations.removeHolder(gateId);
-			mDevices.removeHolder(gateId);
-			return mGates.removeObject(gateId) != null;
-		} else {
-			// TODO: This is correct implementation for future
-			return mUsers.removeObject(gateId, user.getId()) != null;
+			// We can't remove self user
+			throw new AppException(NetworkError.CANT_DO_THIS);
 		}
+
+		return mUsers.removeObject(gateId, user.getId()) != null;
 	}
 
 	@Override
@@ -639,14 +558,14 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean notifications_read(ArrayList<String> notificationIds) {
-		// TODO Auto-generated method stub
-		return false;
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 	@Override
 	public List<VisibleNotification> notifications_getLatest() {
-		// TODO Auto-generated method stub
-		return new ArrayList<>();
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 }

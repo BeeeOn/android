@@ -38,4 +38,18 @@ public final class BatteryValue extends BaseValue {
 		return mValue;
 	}
 
+	@Override
+	public double getSaneMinimum() {
+		return 0;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return 100;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 1;
+	}
 }

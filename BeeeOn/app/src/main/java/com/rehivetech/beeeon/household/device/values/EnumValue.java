@@ -157,4 +157,18 @@ public class EnumValue extends BaseValue {
 		return mValue;
 	}
 
+	@Override
+	public double getSaneMinimum() {
+		return 0;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return mItems.size();
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 1;
+	}
 }

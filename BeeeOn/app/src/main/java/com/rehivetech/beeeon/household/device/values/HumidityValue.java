@@ -37,4 +37,18 @@ public final class HumidityValue extends BaseValue {
 		return mValue;
 	}
 
+	@Override
+	public double getSaneMinimum() {
+		return 30;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return 80;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 1;
+	}
 }

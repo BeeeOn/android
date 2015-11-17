@@ -37,4 +37,20 @@ public final class PressureValue extends BaseValue {
 		return mValue;
 	}
 
+	// NOTE: Guessed from https://en.wikipedia.org/wiki/Atmospheric_pressure
+
+	@Override
+	public double getSaneMinimum() {
+		return 970;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return 1050;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 1.3;
+	}
 }

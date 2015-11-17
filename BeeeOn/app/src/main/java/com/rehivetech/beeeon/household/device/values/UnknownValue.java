@@ -34,4 +34,18 @@ public final class UnknownValue extends BaseValue {
 		return Double.NaN;
 	}
 
+	@Override
+	public double getSaneMinimum() {
+		return Double.NaN;
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return Double.NaN;
+	}
+
+	@Override
+	public double getSaneStep() {
+		return Double.NaN;
+	}
 }

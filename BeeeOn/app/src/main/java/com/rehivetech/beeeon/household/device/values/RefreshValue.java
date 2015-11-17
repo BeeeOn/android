@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.household.device.values;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.units.RefreshUnit;
 
 public final class RefreshValue extends BaseValue {
@@ -38,4 +39,18 @@ public final class RefreshValue extends BaseValue {
 		return mValue;
 	}
 
+	@Override
+	public double getSaneMinimum() {
+		return RefreshInterval.SEC_1.getInterval();
+	}
+
+	@Override
+	public double getSaneMaximum() {
+		return RefreshInterval.HOUR_24.getInterval();
+	}
+
+	@Override
+	public double getSaneStep() {
+		return 30;
+	}
 }
