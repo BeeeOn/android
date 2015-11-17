@@ -207,12 +207,14 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean accounts_connectAuthProvider(IAuthProvider authProvider) {
-		return true;
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 	@Override
 	public boolean accounts_disconnectAuthProvider(String providerName) {
-		return true;
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 	@Override
@@ -640,14 +642,14 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean notifications_read(ArrayList<String> notificationIds) {
-		// TODO Auto-generated method stub
-		return false;
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 	@Override
 	public List<VisibleNotification> notifications_getLatest() {
-		// TODO Auto-generated method stub
-		return new ArrayList<>();
+		// FIXME: Implement this
+		throw new AppException(NetworkError.UNDER_DEVELOPMENT);
 	}
 
 }
