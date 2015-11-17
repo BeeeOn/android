@@ -10,11 +10,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
-import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
-import com.rehivetech.beeeon.household.device.values.EnumValue;
-import com.rehivetech.beeeon.household.device.values.EnumValue.Item;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -47,8 +43,6 @@ public class DemoNetwork implements INetwork {
 
 	public static final String DEMO_USER_ID = "demo";
 	private static final String DEMO_USER_BT = "12345";
-
-	private static final int RAW_ENUM_VALUES_COUNT_IN_LOG = 100;
 
 	private final Context mContext;
 	private final User mUser;
@@ -407,60 +401,9 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public ModuleLog devices_getLog(String gateId, Module module, ModuleLog.DataPair pair) {
 		// Generate random values for log in demo mode
-		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
-
-		long start = pair.interval.getStartMillis();
-		long end = pair.interval.getEndMillis();
-
 		Random rand = getRandomForGate(gateId);
 
-		double lastValue = pair.module.getValue().getDoubleValue();
-		if (Double.isNaN(lastValue)) {
-			lastValue = rand.nextDouble() * 1000;
-		}
-
-		boolean isEnum = (module.getValue() instanceof EnumValue);
-		boolean hasRefresh = (module.getDevice().getRefresh() != null);
-
-		int everyMsecs;
-		double range = 5;
-
-		if (isEnum || !hasRefresh) {
-			// For enums we want fixed number of steps (because application surely wants raw values)
-			// For devices without refresh it is the similar situation
-			everyMsecs = (int) (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
-		} else {
-			int refreshInterval = module.getDevice().getRefresh().getInterval();
-			everyMsecs = Math.max(pair.gap.getSeconds(), refreshInterval) * 1000;
-			range = 2 + Math.log(refreshInterval);
-		}
-
-		while (start < end) {
-			if (isEnum) {
-				EnumValue value = (EnumValue) module.getValue();
-				List<Item> items = value.getEnumItems();
-
-				int pos = 0;
-				for (Item item : items) {
-					if (item.getId() == (int) lastValue) {
-						break;
-					}
-					pos++;
-				}
-				// (size + pos + <-1,1>) % size  - first size is because it could end up to "-1"
-				pos = (items.size() + pos + (rand.nextInt(3) - 1)) % items.size();
-				lastValue = items.get(pos).getId();
-			} else {
-				double addvalue = rand.nextInt((int) range * 1000) / 1000;
-				boolean plus = rand.nextBoolean();
-				lastValue = lastValue + addvalue * (plus ? 1 : -1);
-			}
-
-			log.addValue(start, (float) lastValue);
-			start += everyMsecs;
-		}
-
-		return log;
+		return ValuesGenerator.generateLog(module, pair, rand);
 	}
 
 	@Override
