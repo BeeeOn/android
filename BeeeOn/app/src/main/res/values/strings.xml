@@ -332,7 +332,7 @@
 	<string name="dialog_info_btn_rate">Rate</string>
 	<string name="dialog_info_company_email" translatable="false">info@beeeon.com</string>
 	<string name="dialog_info_company_web" translatable="false">http://beeeon.com/</string>
-	<string name="dialog_info_copyright">\u00A9 2014–15 BeeeOn. All rights reserved.</string>
+	<string name="dialog_info_copyright">\u00A9 2014–15 BeeeOn Team. All rights reserved.</string>
 	<string name="dialog_info_play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
 	<string name="dialog_info_version">Version</string>
 
