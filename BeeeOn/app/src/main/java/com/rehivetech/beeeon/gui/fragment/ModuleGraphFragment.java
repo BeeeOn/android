@@ -58,12 +58,14 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_DEVICE_ID = "device_id";
 	private static final String KEY_MODULE_ID = "module_id";
+	private static final String KEY_DATA_RANGE = "data_range";
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	private String mGateId;
 	private String mDeviceId;
 	private String mModuleId;
+	private @ChartHelper.DataRange int mRange;
 
 	private ModuleGraphActivity mActivity;
 
@@ -77,11 +79,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private Button mShowLegendButton;
 	private StringBuffer mYlabels = new StringBuffer();
 
-	public static ModuleGraphFragment newInstance(String gateId, String deviceId, String moduleId) {
+	public static ModuleGraphFragment newInstance(String gateId, String deviceId, String moduleId, @ChartHelper.DataRange int range) {
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
 		args.putString(KEY_DEVICE_ID, deviceId);
 		args.putString(KEY_MODULE_ID, moduleId);
+		args.putInt(KEY_DATA_RANGE, range);
 
 		ModuleGraphFragment fragment = new ModuleGraphFragment();
 		fragment.setArguments(args);
@@ -104,6 +107,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		mGateId = args.getString(KEY_GATE_ID);
 		mDeviceId = args.getString(KEY_DEVICE_ID);
 		mModuleId = args.getString(KEY_MODULE_ID);
+		//noinspection ResourceType
+		mRange = args.getInt(KEY_DATA_RANGE);
+
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
@@ -143,8 +149,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 			return;
 		}
 
-		addGraphView();
-		doLoadGraphData();
+//		addGraphView();
+//		doLoadGraphData();
 	}
 
 	private void addGraphView() {

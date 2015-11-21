@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
-	android:orientation="vertical"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	tools:context=".ModuleGraphActivity">
@@ -12,12 +12,20 @@
 		android:layout_height="wrap_content">
 
 		<include layout="@layout/layout_beeeon_toolbar"/>
+
+		<android.support.design.widget.TabLayout
+			android:id="@+id/module_graph_tab_layoout"
+			style="@style/ModuleGroupTabLayout"
+			android:layout_width="wrap_content"
+			android:layout_height="45dp"/>
+
 	</android.support.design.widget.AppBarLayout>
 
-	<FrameLayout
-		android:id="@+id/module_graph_container"
+	<android.support.v4.view.ViewPager
+		android:id="@+id/module_graph_view_pager"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"/>
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		/>
 
-
-</LinearLayout>
+</android.support.design.widget.CoordinatorLayout>

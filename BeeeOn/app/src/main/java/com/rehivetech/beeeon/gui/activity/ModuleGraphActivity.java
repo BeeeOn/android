@@ -2,6 +2,12 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -11,7 +17,11 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.ModuleGraphFragment;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author martin on 18.8.2015.
@@ -26,6 +36,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private String mGateId;
 	private String mDeviceId;
 	private String mModuleId;
+
+	private TabLayout mTabLayout;
+	private ViewPager mViewPager;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +85,12 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
 
-		ModuleGraphFragment moduleGraphFragment = ModuleGraphFragment.newInstance(mGateId, mDeviceId, mModuleId);
-		getSupportFragmentManager().beginTransaction().replace(R.id.module_graph_container, moduleGraphFragment).commit();
+		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
+		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
+
+		setupViewPager();
+//		ModuleGraphFragment moduleGraphFragment = ModuleGraphFragment.newInstance(mGateId, mDeviceId, mModuleId);
+//		getSupportFragmentManager().beginTransaction().replace(R.id.module_graph_container, moduleGraphFragment).commit();
 	}
 
 	@Override
@@ -83,5 +101,64 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 				break;
 		}
 		return false;
+	}
+
+	private void setupViewPager() {
+		GraphPagerAdapter adapter = new GraphPagerAdapter(getSupportFragmentManager());
+
+
+		for (int dataRange : ChartHelper.ALL_RANGES) {
+			ModuleGraphFragment fragment = ModuleGraphFragment.newInstance(mGateId, mDeviceId, mModuleId, dataRange);
+			adapter.addFragment(fragment, getString(getIntervalString(dataRange)));
+		}
+
+		mViewPager.setAdapter(adapter);
+		mTabLayout.setupWithViewPager(mViewPager);
+	}
+
+	private class GraphPagerAdapter extends FragmentPagerAdapter {
+
+		private final List<Fragment> mFragments = new ArrayList<>();
+		private final List<String> mFragmentTitles = new ArrayList<>();
+
+		public GraphPagerAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return mFragments.get(position);
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			return mFragmentTitles.get(position);
+		}
+
+		@Override
+		public int getCount() {
+			return mFragments.size();
+		}
+
+		public void addFragment(Fragment fragment, String title) {
+			mFragments.add(fragment);
+			mFragmentTitles.add(title);
+		}
+	}
+
+	private
+	@StringRes
+	int getIntervalString(@ChartHelper.DataRange int interval) {
+		switch (interval) {
+			case ChartHelper.RANGE_HOUR:
+				return R.string.graph_range_hour;
+			case ChartHelper.RANGE_DAY:
+				return R.string.graph_range_day;
+			case ChartHelper.RANGE_WEEK:
+				return R.string.graph_range_week;
+			case ChartHelper.RANGE_MONTH:
+				return R.string.graph_range_month;
+		}
+		return -1;
 	}
 }

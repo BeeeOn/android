@@ -389,11 +389,18 @@
 	<string name="device_type_unknown_manufacturer">Unknown manufacturer</string>
 
 	<!-- Various strings -->
+
 	<string name="unit_meters_short">m</string>
 
 	<!-- Server names -->
 	<string name="server_production">Production</string>
 	<string name="server_development">Development</string>
+
+	<!--GRAPH RANGE-->
+	<string name="graph_range_hour">hour</string>
+	<string name="graph_range_day">day</string>
+	<string name="graph_range_week">week</string>
+	<string name="graph_range_month">month</string>
 
 </resources>
 
