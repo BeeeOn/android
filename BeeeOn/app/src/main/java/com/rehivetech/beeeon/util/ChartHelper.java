@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.MotionEvent;
@@ -25,9 +26,26 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
 final public class ChartHelper {
+
+	@IntDef(value = {RANGE_HOUR, RANGE_DAY, RANGE_WEEK, RANGE_MONTH})
+	@Retention(RetentionPolicy.CLASS)
+
+	public @interface DataRange {
+		int[] values() default {};
+	}
+
+	public static final int RANGE_HOUR = 60 * 60;
+	public static final int RANGE_DAY = RANGE_HOUR * 24;
+	public static final int RANGE_WEEK = RANGE_DAY * 7;
+	public static final int RANGE_MONTH = RANGE_WEEK * 4;
+
+
+	public static int[] ALL_RANGES = {RANGE_HOUR, RANGE_DAY, RANGE_WEEK, RANGE_MONTH};
 
 	/**
 	 * Private constructor to avoid instantiation.
