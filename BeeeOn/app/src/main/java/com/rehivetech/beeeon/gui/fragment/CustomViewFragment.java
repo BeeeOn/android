@@ -160,9 +160,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	@SuppressWarnings("unchecked")
 	private void fillChart(ModuleLog log, Module module, int index) {
-		Controller controller = Controller.getInstance(mActivity);
-		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
 
 		boolean isBarChart = (module.getValue() instanceof EnumValue);
 
@@ -211,7 +208,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
-			xVals.add(fmt.print(dateMillis));
+			xVals.add(String.valueOf(dateMillis));
 			if (isBarChart) {
 				barEntries.add(new BarEntry(value, i++));
 			} else {
