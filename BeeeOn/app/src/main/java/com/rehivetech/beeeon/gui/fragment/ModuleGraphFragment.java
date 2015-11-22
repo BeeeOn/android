@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -175,6 +177,15 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
 
 		ChartHelper.prepareChart(mChart, mActivity, formatter, baseValue, mYlabels, markerView);
+
+		// prepare axis bottom
+		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
+		//prepare axis left
+		ChartHelper.prepareYAxis(mActivity, mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.INSIDE_CHART, false);
+		//disable right axis
+		mChart.getAxisRight().setEnabled(false);
+
+		mChart.setDrawBorders(false);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));

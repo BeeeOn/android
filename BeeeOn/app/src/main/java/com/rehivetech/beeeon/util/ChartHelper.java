@@ -260,6 +260,39 @@ final public class ChartHelper {
 		dataset.setColor(color);
 	}
 
+	@SuppressLint("PrivateResource")
+	public static void prepareXAxis(Context context, XAxis axis, @ColorInt Integer textColor, XAxis.XAxisPosition position, boolean drawGridLines) {
+		//TextView to get text color and typeface from textAppearance
+		AppCompatTextView tempText = new AppCompatTextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
+		axis.setAvoidFirstLastClipping(true);
+		axis.setPosition(position);
+		axis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
+		axis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		axis.setTypeface(tempText.getTypeface());
+		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
+		axis.setDrawGridLines(drawGridLines);
+	}
+
+	@SuppressLint("PrivateResource")
+	public static void prepareYAxis(Context context, YAxis axis, @ColorInt Integer textColor, YAxis.YAxisLabelPosition position, boolean drawGridLines) {
+		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(null, context);
+		//TextView to get text color and typeface from textAppearance
+		AppCompatTextView tempText = new AppCompatTextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
+		axis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
+		axis.setStartAtZero(false);
+		axis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		axis.setTypeface(tempText.getTypeface());
+		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
+		axis.setValueFormatter(yAxisValueFormatter);
+		axis.setPosition(position);
+		axis.setDrawGridLines(drawGridLines);
+	}
+
+
 	/**
 	 * Prepare ValueFormatter for bar and line chart
 	 *
