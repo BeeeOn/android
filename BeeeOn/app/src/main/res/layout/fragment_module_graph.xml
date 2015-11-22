@@ -10,21 +10,15 @@
 	<com.github.mikephil.charting.charts.CombinedChart
 		android:id="@+id/module_graph_chart"
 		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layerType="software"
-		android:layout_weight="10"/>
+		android:layout_height="140dp"
+		android:layerType="software"/>
 
-	<com.rehivetech.beeeon.gui.view.VerticalChartLegend
-		android:id="@+id/module_graph_legend"
-		android:layout_width="match_parent"
-		android:layout_height="0dp"
-		android:layout_weight="1.5"/>
+	<!--<Button-->
+		<!--android:id="@+id/module_graph_show_legend_btn"-->
+		<!--android:theme="@style/BeeeOn.Button"-->
+		<!--android:layout_width="wrap_content"-->
+		<!--android:layout_height="wrap_content"-->
+		<!--android:layout_gravity="center_horizontal"-->
+		<!--android:text="@string/module_graph_show_y_labels_button"/>-->
 
-	<Button
-		android:id="@+id/module_graph_show_legend_btn"
-		android:theme="@style/BeeeOn.Button"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:text="@string/module_graph_show_y_labels_button"/>
 </LinearLayout>

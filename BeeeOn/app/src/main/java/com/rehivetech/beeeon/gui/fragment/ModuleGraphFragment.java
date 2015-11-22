@@ -9,45 +9,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.view.ChartMarkerView;
-import com.rehivetech.beeeon.gui.view.VerticalChartLegend;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
-import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.threading.CallbackTask;
-import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Interval;
-import org.joda.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
 
 /**
  * @author martin on 18.8.2015.
@@ -72,12 +59,29 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
 
-	private View mView;
 	private CombinedChart mChart;
 	private DataSet mDataSet;
-	private VerticalChartLegend mLegend;
-	private Button mShowLegendButton;
+	private List<String> mXValues = new ArrayList<>();
+//	private Button mShowLegendButton;
 	private StringBuffer mYlabels = new StringBuffer();
+
+	private ChartHelper.ChartLoad mChartLoadCallback = new ChartHelper.ChartLoad() {
+		@Override
+		public void onChartLoaded() {
+			BarLineScatterCandleBubbleData data;
+			CombinedData combinedData = new CombinedData(mXValues);
+
+			if (mDataSet instanceof BarDataSet) {
+				data = new BarData(mXValues, (BarDataSet) mDataSet);
+				combinedData.setData((BarData) data);
+			} else {
+				data = new LineData(mXValues, (LineDataSet) mDataSet);
+				combinedData.setData((LineData) data);
+			}
+			mChart.setData(combinedData);
+			mChart.invalidate();
+		}
+	};
 
 	public static ModuleGraphFragment newInstance(String gateId, String deviceId, String moduleId, @ChartHelper.DataRange int range) {
 		Bundle args = new Bundle();
@@ -120,22 +124,21 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_module_graph, container, false);
-		mChart = (CombinedChart) mView.findViewById(R.id.module_graph_chart);
-		mLegend = (VerticalChartLegend) mView.findViewById(R.id.module_graph_legend);
+		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
+		mChart = (CombinedChart) view.findViewById(R.id.module_graph_chart);
 
-		mShowLegendButton = (Button) mView.findViewById(R.id.module_graph_show_legend_btn);
-		mShowLegendButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
-						.setTitle(getString(R.string.chart_helper_chart_y_axis))
-						.setMessage(mYlabels.toString())
-						.setNeutralButtonText("close")
-						.show();
-			}
-		});
-		return mView;
+//		mShowLegendButton = (Button) view.findViewById(R.id.module_graph_show_legend_btn);
+//		mShowLegendButton.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
+//						.setTitle(getString(R.string.chart_helper_chart_y_axis))
+//						.setMessage(mYlabels.toString())
+//						.setNeutralButtonText("close")
+//						.show();
+//			}
+//		});
+		return view;
 	}
 
 	@Override
@@ -146,11 +149,15 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		if (device == null) {
 			Log.e(TAG, String.format("Device #%s does not exists", mDeviceId));
 			mActivity.finish();
-			return;
 		}
+	}
 
-//		addGraphView();
-//		doLoadGraphData();
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser && getView() != null) {
+			addGraphView();
+		}
 	}
 
 	private void addGraphView() {
@@ -163,107 +170,23 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		String moduleName = module.getName(mActivity);
 
 		//set chart
-		String valueUnit = mUnitsHelper.getStringUnit(baseValue);
 
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels,  markerView);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
 		} else {
 			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s - %s", deviceName, moduleName));
-			mShowLegendButton.setVisibility(View.GONE);
+//			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
 		ChartHelper.prepareDataSet(mActivity, mDataSet, barchart, true,
 				ContextCompat.getColor(mActivity, R.color.beeeon_primary_medium), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
-	}
 
-	@SuppressWarnings("unchecked")
-	public void fillGraph(ModuleLog log, Module module) {
-		boolean barGraph = (module.getValue() instanceof EnumValue);
-		Gate gate = Controller.getInstance(mActivity).getGatesModel().getGate(mGateId);
-		if (mChart == null) {
-			return;
-		}
-
-		SortedMap<Long, Float> values = log.getValues();
-		int size = values.size();
-		ArrayList<String> xVals = new ArrayList<>();
-
-		List<BarEntry> barEntries = null;
-		List<Entry> lineEntries = null;
-		if (barGraph) {
-			barEntries = ((BarDataSet) mDataSet).getYVals();
-		} else {
-			lineEntries = ((LineDataSet) mDataSet).getYVals();
-		}
-		DateTimeFormatter fmt = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
-
-		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", size, log.getMinimum(), log.getMaximum()));
-
-		int i = 0;
-		for (Map.Entry<Long, Float> entry : values.entrySet()) {
-			Long dateMillis = entry.getKey();
-			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
-			xVals.add(fmt.print(dateMillis));
-			if (barGraph) {
-				barEntries.add(new BarEntry(value, i++));
-			} else {
-				lineEntries.add(new Entry(value, i++));
-			}
-			// This shouldn't happen, only when some other thread changes this values object - can it happen?
-			if (i >= size)
-				break;
-		}
-
-		mDataSet.notifyDataSetChanged();
-		CombinedData data = new CombinedData(xVals);
-		if (barGraph) {
-			BarData barData = new BarData(xVals, (BarDataSet) mDataSet);
-			data.setData(barData);
-		} else {
-			LineData lineData = new LineData(xVals, (LineDataSet) mDataSet);
-			data.setData(lineData);
-		}
-		mChart.setData(data);
-		mChart.invalidate();
-
-		Log.d(TAG, "Filling graph finished");
-		mChart.animateY(2000);
-
-		if (mLegend != null) {
-			mLegend.setChartDatasets(mChart.getData().getDataSets());
-			mLegend.invalidate();
-			mLegend.setPadding(0, 0, 0, getResources().getDimensionPixelOffset(R.dimen.customview_text_padding));
-		}
-	}
-
-	protected void doLoadGraphData() {
-		final Module module = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
-		if (module == null) {
-			Log.e(TAG, "Can't load module for loading graph data");
-			return;
-		}
-
-		DateTime end = DateTime.now(DateTimeZone.UTC);
-		DateTime start = end.minusWeeks(1);
-
-		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(mActivity);
-		final ModuleLog.DataPair pair = new ModuleLog.DataPair( //
-				module, // module
-				new Interval(start, end), // interval from-to
-				ModuleLog.DataType.AVERAGE, // type
-				(module.getValue() instanceof EnumValue) ? ModuleLog.DataInterval.RAW : ModuleLog.DataInterval.TEN_MINUTES); // interval
-
-		getModuleLogTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				fillGraph(Controller.getInstance(mActivity).getModuleLogsModel().getModuleLog(pair), module);
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(getModuleLogTask, pair);
+		//load chart data
+		mXValues = new ArrayList<>();
+		ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSet, mXValues, mGateId, mDeviceId, mModuleId, mRange,
+				ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW, mChartLoadCallback);
 	}
 }
