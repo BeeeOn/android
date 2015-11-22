@@ -22,6 +22,7 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
+import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.github.mikephil.charting.listener.ChartTouchListener;
@@ -40,6 +41,7 @@ import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -49,6 +51,8 @@ import java.util.SortedMap;
 
 final public class ChartHelper {
 	private static final String TAG = ChartHelper.class.getSimpleName();
+
+	public static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	@IntDef(value = {RANGE_HOUR, RANGE_DAY, RANGE_WEEK, RANGE_MONTH})
 	@Retention(RetentionPolicy.CLASS)
@@ -81,7 +85,7 @@ final public class ChartHelper {
 	 * @param markerView chart markerView instance
 	 */
 	@SuppressLint("PrivateResource")
-	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue,
+	public static void prepareChart(final BarLineChartBase chart, final Context context, DateTimeFormatter dateTimeFormatter, BaseValue baseValue,
 									StringBuffer yLabels, MarkerView markerView) {
 		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
 
@@ -112,6 +116,7 @@ final public class ChartHelper {
 		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
 		xAxis.setTypeface(tempText.getTypeface());
 		xAxis.setTextColor(tempText.getCurrentTextColor());
+		xAxis.setValueFormatter(getXAxisValueFormaatter(dateTimeFormatter));
 
 		//set left Y axis style
 		YAxis yAxis = chart.getAxisLeft();
@@ -290,6 +295,17 @@ final public class ChartHelper {
 					return String.format("%.0f", value);
 				}
 				return String.format("%.1f", value);
+			}
+		};
+	}
+
+	public static XAxisValueFormatter getXAxisValueFormaatter(final DateTimeFormatter formatter) {
+
+		return new XAxisValueFormatter() {
+			@Override
+			public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
+				long value = Long.parseLong(original);
+				return formatter.print(value);
 			}
 		};
 	}

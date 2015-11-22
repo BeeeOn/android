@@ -108,8 +108,11 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
 
+		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
+
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, chart);
-		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView);
+		ChartHelper.prepareChart(chart, mActivity, fmt, baseValue, yLabels, markerView);
 		chart.getLegend().setEnabled(false);
 		chartLayout.setVisibility(View.VISIBLE);
 

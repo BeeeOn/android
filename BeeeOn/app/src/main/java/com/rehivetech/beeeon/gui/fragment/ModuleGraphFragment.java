@@ -33,6 +33,8 @@ import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,8 +48,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private static final String KEY_DEVICE_ID = "device_id";
 	private static final String KEY_MODULE_ID = "module_id";
 	private static final String KEY_DATA_RANGE = "data_range";
-
-	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	private String mGateId;
 	private String mDeviceId;
@@ -171,8 +171,10 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		//set chart
 
+		DateTimeFormatter formatter = mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId));
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView);
+
+		ChartHelper.prepareChart(mChart, mActivity, formatter, baseValue, mYlabels, markerView);
 
 		if (barchart) {
 			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
