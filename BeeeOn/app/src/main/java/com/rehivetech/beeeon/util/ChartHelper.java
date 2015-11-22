@@ -5,8 +5,10 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
@@ -14,7 +16,10 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
@@ -23,14 +28,27 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 final public class ChartHelper {
+	private static final String TAG = ChartHelper.class.getSimpleName();
 
 	@IntDef(value = {RANGE_HOUR, RANGE_DAY, RANGE_WEEK, RANGE_MONTH})
 	@Retention(RetentionPolicy.CLASS)
@@ -276,6 +294,92 @@ final public class ChartHelper {
 		};
 	}
 
+
+
+	/**
+	 * @param activity     instance of activity
+	 * @param controller   instance of controller
+	 * @param dataSet      instance of chart dataSet
+	 * @param xValues      chart X values list
+	 * @param gateId       ID of gate
+	 * @param deviceId     ID of device
+	 * @param moduleId     ID of module
+	 * @param range        time range to be displayed
+	 * @param dataType     type of data (AVG, MIN, MAX)
+	 * @param dataInterval interval of values
+	 */
+	public static <T extends DataSet>
+	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, final List<String> xValues,
+									 String gateId, String deviceId, String moduleId, @DataRange int range, ModuleLog.DataType dataType,
+					   final ModuleLog.DataInterval dataInterval, final ChartLoad callback) {
+
+		final Module module = controller.getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
+
+		if (module == null) {
+			return;
+		}
+
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusSeconds(range);
+		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(activity);
+
+		final ModuleLog.DataPair dataPair = new ModuleLog.DataPair(module, new Interval(start, end), dataType, dataInterval);
+		getModuleLogTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				fillDataSet(Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair), dataSet, xValues);
+				callback.onChartLoaded();
+			}
+		});
+
+		activity.callbackTaskManager.executeTask(getModuleLogTask, dataPair);
+	}
+
+	/**
+	 * @param moduleLog data to be displayed
+	 * @param dataSet chart dataSet
+	 * @param xValues chart xValues
+	 */
+	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues) {
+		boolean barChart = (dataSet instanceof BarDataSet);
+		SortedMap<Long, Float> values = moduleLog.getValues();
+
+		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum()));
+
+		int i = 0;
+		for (Map.Entry<Long, Float> entry : values.entrySet()) {
+			float value = Float.isNaN(entry.getValue()) ? moduleLog.getMinimum() : entry.getValue();
+			xValues.add(String.valueOf(entry.getKey()));
+
+			if (barChart) {
+				dataSet.addEntry(new BarEntry(value, i++));
+			} else {
+				dataSet.addEntry(new Entry(value, i++));
+			}
+		}
+	}
+
+
+	/**
+	 * @param interval Data range int interval
+	 * @return interval string representation
+	 */
+	public static
+	@StringRes
+	int getIntervalString(@ChartHelper.DataRange int interval) {
+		switch (interval) {
+			case ChartHelper.RANGE_HOUR:
+				return R.string.graph_range_hour;
+			case ChartHelper.RANGE_DAY:
+				return R.string.graph_range_day;
+			case ChartHelper.RANGE_WEEK:
+				return R.string.graph_range_week;
+			case ChartHelper.RANGE_MONTH:
+				return R.string.graph_range_month;
+		}
+		return -1;
+	}
+
 	/**
 	 * Custom fill formatter which allow fill chart from bottom
 	 */
@@ -285,5 +389,13 @@ final public class ChartHelper {
 		public float getFillLinePosition(LineDataSet dataSet, LineDataProvider dataProvider) {
 			return dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum;
 		}
+	}
+
+
+	/**
+	 * Callback interface for load chart data
+	 */
+	public interface ChartLoad {
+		void onChartLoaded();
 	}
 }

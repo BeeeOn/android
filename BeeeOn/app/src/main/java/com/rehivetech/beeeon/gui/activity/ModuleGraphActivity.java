@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -109,7 +108,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		for (int dataRange : ChartHelper.ALL_RANGES) {
 			ModuleGraphFragment fragment = ModuleGraphFragment.newInstance(mGateId, mDeviceId, mModuleId, dataRange);
-			adapter.addFragment(fragment, getString(getIntervalString(dataRange)));
+			adapter.addFragment(fragment, getString(ChartHelper.getIntervalString(dataRange)));
 		}
 
 		mViewPager.setAdapter(adapter);
@@ -146,19 +145,5 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		}
 	}
 
-	private
-	@StringRes
-	int getIntervalString(@ChartHelper.DataRange int interval) {
-		switch (interval) {
-			case ChartHelper.RANGE_HOUR:
-				return R.string.graph_range_hour;
-			case ChartHelper.RANGE_DAY:
-				return R.string.graph_range_day;
-			case ChartHelper.RANGE_WEEK:
-				return R.string.graph_range_week;
-			case ChartHelper.RANGE_MONTH:
-				return R.string.graph_range_month;
-		}
-		return -1;
-	}
+
 }
