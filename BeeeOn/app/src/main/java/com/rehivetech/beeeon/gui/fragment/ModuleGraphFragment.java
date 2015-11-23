@@ -176,12 +176,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		DateTimeFormatter formatter = mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId));
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
 
-		ChartHelper.prepareChart(mChart, mActivity, formatter, baseValue, mYlabels, markerView);
+		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
 
 		// prepare axis bottom
-		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
+		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false);
 		//prepare axis left
-		ChartHelper.prepareYAxis(mActivity, mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.INSIDE_CHART, false);
+		ChartHelper.prepareYAxis(mActivity, module.getValue(), mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
 		//disable right axis
 		mChart.getAxisRight().setEnabled(false);
 
@@ -195,7 +195,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		}
 		//set dataset style
 		ChartHelper.prepareDataSet(mActivity, mDataSet, barchart, true,
-				ContextCompat.getColor(mActivity, R.color.beeeon_primary_medium), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+				ContextCompat.getColor(mActivity, R.color.beeeon_primary), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 
 		//load chart data
 		mXValues = new ArrayList<>();

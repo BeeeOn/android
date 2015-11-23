@@ -85,9 +85,8 @@ final public class ChartHelper {
 	 * @param markerView chart markerView instance
 	 */
 	@SuppressLint("PrivateResource")
-	public static void prepareChart(final BarLineChartBase chart, final Context context, DateTimeFormatter dateTimeFormatter, BaseValue baseValue,
-									StringBuffer yLabels, MarkerView markerView) {
-		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
+	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels,
+									MarkerView markerView, boolean drawBorders) {
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
@@ -102,34 +101,12 @@ final public class ChartHelper {
 		paint.setTypeface(tempText.getTypeface());
 		paint.setTextSize(tempText.getTextSize());
 
-		chart.setDrawBorders(true);
+		chart.setDrawBorders(drawBorders);
 		chart.setBorderColor(ContextCompat.getColor(context, R.color.gray));
 
 		chart.setDescription("");
 
-		chart.setGridBackgroundColor(ContextCompat.getColor(context, R.color.white));
-		//set bottom X axis style
-		XAxis xAxis = chart.getXAxis();
-		xAxis.setAvoidFirstLastClipping(true);
-		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
-		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
-		xAxis.setTypeface(tempText.getTypeface());
-		xAxis.setTextColor(tempText.getCurrentTextColor());
-		xAxis.setValueFormatter(getXAxisValueFormaatter(dateTimeFormatter));
-
-		//set left Y axis style
-		YAxis yAxis = chart.getAxisLeft();
-		yAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
-		yAxis.setStartAtZero(false);
-		yAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
-		yAxis.setTypeface(tempText.getTypeface());
-		yAxis.setTextColor(tempText.getCurrentTextColor());
-
-
-		//disable right Y axis
-		chart.getAxisRight().setEnabled(false);
-		yAxis.setValueFormatter(yAxisValueFormatter);
+		chart.setGridBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
 
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
@@ -138,13 +115,8 @@ final public class ChartHelper {
 				for (int i = labels.size() - 1; i > -1; i--) {
 					yLabels.append(String.format("%d. %s\n", j++, context.getString(labels.get(i).getStringResource())));
 				}
-			} else {
-				yAxis.setShowOnlyMinMax(true);
 			}
 
-			yAxis.setLabelCount(labels.size(), true);
-			yAxis.setAxisMinValue(0);
-			yAxis.setAxisMaxValue(labels.size() - 1);
 			chart.setDoubleTapToZoomEnabled(false);
 			chart.setScaleYEnabled(false);
 		} else {
@@ -261,7 +233,9 @@ final public class ChartHelper {
 	}
 
 	@SuppressLint("PrivateResource")
-	public static void prepareXAxis(Context context, XAxis axis, @ColorInt Integer textColor, XAxis.XAxisPosition position, boolean drawGridLines) {
+	public static void prepareXAxis(Context context, XAxis axis, DateTimeFormatter formatter, @ColorInt Integer textColor,
+									XAxis.XAxisPosition position, boolean drawGridLines) {
+
 		//TextView to get text color and typeface from textAppearance
 		AppCompatTextView tempText = new AppCompatTextView(context);
 		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
@@ -273,11 +247,14 @@ final public class ChartHelper {
 		axis.setTypeface(tempText.getTypeface());
 		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
 		axis.setDrawGridLines(drawGridLines);
+		axis.setValueFormatter(getXAxisValueFormatter(formatter));
 	}
 
 	@SuppressLint("PrivateResource")
-	public static void prepareYAxis(Context context, YAxis axis, @ColorInt Integer textColor, YAxis.YAxisLabelPosition position, boolean drawGridLines) {
-		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(null, context);
+	public static void prepareYAxis(Context context, BaseValue baseValue, YAxis axis, @ColorInt Integer textColor,
+									YAxis.YAxisLabelPosition position, boolean drawGridLines, boolean drawAxisLine) {
+
+		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
 		//TextView to get text color and typeface from textAppearance
 		AppCompatTextView tempText = new AppCompatTextView(context);
 		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
@@ -290,6 +267,19 @@ final public class ChartHelper {
 		axis.setValueFormatter(yAxisValueFormatter);
 		axis.setPosition(position);
 		axis.setDrawGridLines(drawGridLines);
+		axis.setDrawAxisLine(drawAxisLine);
+
+		if (baseValue instanceof EnumValue) {
+			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
+
+			if (labels.size() <= 2) {
+				axis.setShowOnlyMinMax(true);
+			}
+
+			axis.setLabelCount(labels.size(), true);
+			axis.setAxisMinValue(0);
+			axis.setAxisMaxValue(labels.size() - 1);
+		}
 	}
 
 
@@ -332,7 +322,7 @@ final public class ChartHelper {
 		};
 	}
 
-	public static XAxisValueFormatter getXAxisValueFormaatter(final DateTimeFormatter formatter) {
+	public static XAxisValueFormatter getXAxisValueFormatter(final DateTimeFormatter formatter) {
 
 		return new XAxisValueFormatter() {
 			@Override
