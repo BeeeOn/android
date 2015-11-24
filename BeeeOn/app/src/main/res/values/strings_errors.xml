@@ -16,6 +16,8 @@
 	<string name="NetworkError___GATE_NOT_EXISTS">This gateway has not connected to cloud yet.\n\nPlease check its Internet connection.</string>
 	<string name="NetworkError___GATE_NOT_FREE">This gateway has already been registered by another user.\n\nHe can share gateway with you.</string>
 	<string name="NetworkError___ADA_SERVER_PROBLEM">Server experienced some issues.\n\nTry to connect later.</string>
+	<string name="NetworkError___ADA_REQUEST_TIMEOUT">Request to gate timed out. Requested action may not happened.</string>
+	<string name="NetworkError___ADA_REQUEST_REVOKED">Request to gate was rejected.</string>
 	<string name="NetworkError___BAD_ACTION">Invalid action was inserted.</string>
 	<string name="NetworkError___BAD_ACTOR_VALUE">Invalid actuator value was inserted.</string>
 	<string name="NetworkError___BAD_AGREG_FUNC">Bad type of aggregation function was requested.</string>

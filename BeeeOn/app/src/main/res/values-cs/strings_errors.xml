@@ -16,6 +16,8 @@
 	<string name="NetworkError___GATE_NOT_EXISTS">Brána s tímto číslem není na serveru známa.\n\nZkontrolujte, zda je správně připojená k internetové síti.</string>
 	<string name="NetworkError___GATE_NOT_FREE">Bránu s tímto číslem má již registrovaný jiný uživatel.\n\nPokud ho znáte, můžete jej požádat o přístup.</string>
 	<string name="NetworkError___ADA_SERVER_PROBLEM">Nastal problém na straně serveru.\n\nZkuste to prosím později.</string>
+	<string name="NetworkError___ADA_REQUEST_TIMEOUT">Požadavek na bránu vypršel. Požadovaná akce nemusela proběhnout.</string>
+	<string name="NetworkError___ADA_REQUEST_REVOKED">Požadavek na bránu byl odmítnut.</string>
 	<string name="NetworkError___BAD_ACTION">Byla zadána neplatná akce.</string>
 	<string name="NetworkError___BAD_ACTOR_VALUE">Byla zadána neplatná hodnota aktoru.</string>
 	<string name="NetworkError___BAD_AGREG_FUNC">Byl zadán neplatný typ agregační funkce.</string>

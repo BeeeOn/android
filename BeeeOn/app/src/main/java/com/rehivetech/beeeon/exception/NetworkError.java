@@ -35,7 +35,11 @@ public enum NetworkError implements IErrorCode, IIdentifier {
 	EMAIL_PROVIDER_MISMATCH(29),
 	LOGOUT_FAILED(30),
 	GATE_AVAILABLE(31),
+
+	// Errors from ADA server
 	ADA_SERVER_PROBLEM(100),
+	ADA_REQUEST_TIMEOUT(101),
+	ADA_REQUEST_REVOKED(102),
 
 	// Errors from UI server
 	INVALID_LOCATION_TYPE(50),
