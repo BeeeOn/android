@@ -15,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -597,5 +598,21 @@ final public class Utils {
 
 		Random random = new Random(index);
 		return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
+	}
+
+	public static int parseIntSafely(@Nullable String string, int defaultValue) {
+		try {
+			return (string != null && !string.isEmpty()) ? Integer.parseInt(string) : defaultValue;
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+
+	public static double parseDoubleSafely(@Nullable String string, double defaultValue) {
+		try {
+			return (string != null && !string.isEmpty()) ? Double.parseDouble(string) : defaultValue;
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
 	}
 }

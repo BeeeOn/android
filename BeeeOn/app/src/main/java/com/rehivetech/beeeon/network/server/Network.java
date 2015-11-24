@@ -339,10 +339,10 @@ public class Network implements INetwork {
 
 			if (srv.length == 3 && app.length == 3) {
 				try {
-					int srv_major = Integer.parseInt(srv[0]);
+					int srv_major = Utils.parseIntSafely(srv[0], 0);
 					//int srv_minor = Integer.parseInt(srv[1]);
 					//int srv_build = (srv.length >= 3) ? Integer.parseInt(srv[2]) : 0;
-					int app_major = Integer.parseInt(app[0]);
+					int app_major = Utils.parseIntSafely(app[0], 0);
 					//int app_minor = Integer.parseInt(app[1]);
 					//int app_build = (app.length >= 3) ? Integer.parseInt(app[2]) : 0;
 

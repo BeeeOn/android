@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.household.device.values.RefreshValue;
 import com.rehivetech.beeeon.household.device.values.RssiValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
 import com.rehivetech.beeeon.household.device.values.UnknownValue;
+import com.rehivetech.beeeon.util.Utils;
 
 /**
  * Module types
@@ -78,10 +79,7 @@ public enum ModuleType {
 	}
 
 	public static ModuleType fromValue(String value) {
-		if (value.isEmpty())
-			return TYPE_UNKNOWN;
-
-		return fromTypeId(Integer.parseInt(value));
+		return fromTypeId(Utils.parseIntSafely(value, TYPE_UNKNOWN.getTypeId()));
 	}
 
 }

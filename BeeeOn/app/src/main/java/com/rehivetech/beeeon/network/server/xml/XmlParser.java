@@ -10,7 +10,6 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -84,7 +83,7 @@ public class XmlParser {
 		mType = getSecureAttributeString("type");
 		mVersion = getSecureAttributeString("version");
 		mResult = Utils.getEnumFromId(Result.class, getSecureAttributeString("result"), Result.ERROR);
-		mErrorCode = (mResult == Result.ERROR) ? getSecureAttributeInt("errcode") : -1;
+		mErrorCode = (mResult == Result.ERROR) ? getSecureAttributeInt("errcode", -1) : -1;
 	}
 
 	public String getNamespace() {
@@ -140,7 +139,7 @@ public class XmlParser {
 			do {
 				Gate gate = new Gate(getSecureAttributeString("id"), getSecureAttributeString("name"));
 				gate.setRole(Utils.getEnumFromId(User.Role.class, getSecureAttributeString("permission"), User.Role.Guest));
-				gate.setUtcOffset(getSecureAttributeInt("timezone"));
+				gate.setUtcOffset(getSecureAttributeInt("timezone", 0));
 				result.add(gate);
 
 				mParser.nextTag();
@@ -170,16 +169,16 @@ public class XmlParser {
 			User.Role role = Utils.getEnumFromId(User.Role.class, getSecureAttributeString("permission"), User.Role.Guest);
 			String name = getSecureAttributeString("name");
 			String owner = getSecureAttributeString("owner");
-			int devicesCount = getSecureAttributeInt("devices");
-			int usersCount = getSecureAttributeInt("users");
+			int devicesCount = getSecureAttributeInt("devices", -1);
+			int usersCount = getSecureAttributeInt("users", -1);
 			String ip = getSecureAttributeString("ip");
 			String version = getSecureAttributeString("version");
-			int utcOffsetInMinutes = getSecureAttributeInt("timezone");
+			int utcOffsetInMinutes = getSecureAttributeInt("timezone", 0);
 
 			GpsData gpsData = new GpsData();
-			gpsData.setAltitude(getSecureAttributeInt("altitude"));
-			gpsData.setLongitude(getSecureAttributeDouble("longitude"));
-			gpsData.setLatitude(getSecureAttributeDouble("latitude"));
+			gpsData.setAltitude(getSecureAttributeInt("altitude", -1));
+			gpsData.setLongitude(getSecureAttributeDouble("longitude", -1));
+			gpsData.setLatitude(getSecureAttributeDouble("latitude", -1));
 
 			return new GateInfo(id, name, owner, role, utcOffsetInMinutes, devicesCount, usersCount, version, ip, gpsData);
 		} catch (IOException | XmlPullParserException e) {
@@ -248,9 +247,9 @@ public class XmlParser {
 
 				device.setCustomName(getSecureAttributeString("name"));
 				device.setLocationId(getSecureAttributeString("locationid"));
-				device.setLastUpdate(new DateTime((long) getSecureAttributeInt("time") * 1000, DateTimeZone.UTC));
+				device.setLastUpdate(new DateTime((long) getSecureAttributeInt("time", 0) * 1000, DateTimeZone.UTC));
 				// PairedTime is not used always...
-				device.setPairedTime(new DateTime((long) getSecureAttributeInt("involved") * 1000, DateTimeZone.UTC));
+				device.setPairedTime(new DateTime((long) getSecureAttributeInt("involved", 0) * 1000, DateTimeZone.UTC));
 
 				// Load modules values
 				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("device")) {
@@ -417,7 +416,7 @@ public class XmlParser {
 				String id = getSecureAttributeString("mid");
 				String time = getSecureAttributeString("time");
 				String type = getSecureAttributeString("type");
-				boolean read = (getSecureAttributeInt("read") != 0);
+				boolean read = (getSecureAttributeInt("read", 0) != 0);
 
 				//TODO
 				// call here some method from gcm/notification part
@@ -501,18 +500,26 @@ public class XmlParser {
 	}
 
 	/**
-	 * Method return integer value of string, or zero if length is 0
+	 * Method return int value of string, or defaultValue if number can't be parsed.
 	 *
-	 * @param name of the attribute
-	 * @return integer value of attribute or zero if empty
+	 * @param name Name of the attribute
+	 * @param defaultValue Return this value when number can't be parsed
+	 * @return int value of attribute or defaultValue
 	 */
-	private int getSecureAttributeInt(String name) {
-		String value = getSecureAttributeString(name);
-		return (value.length() < 1) ? 0 : Integer.parseInt(value);
+	private int getSecureAttributeInt(String name, int defaultValue) {
+		String value = mParser.getAttributeValue(ns, name);
+		return Utils.parseIntSafely(value, defaultValue);
 	}
 
-	private double getSecureAttributeDouble(String name) {
-		String value = getSecureAttributeString(name);
-		return (value.length() < 1) ? 0 : Double.parseDouble(value);
+	/**
+	 * Method return double value of string, or defaultValue if number can't be parsed.
+	 *
+	 * @param name Name of the attribute
+	 * @param defaultValue Return this value when number can't be parsed
+	 * @return double value of attribute or defaultValue
+	 */
+	private double getSecureAttributeDouble(String name, double defaultValue) {
+		String value = mParser.getAttributeValue(ns, name);
+		return Utils.parseDoubleSafely(value, defaultValue);
 	}
 }

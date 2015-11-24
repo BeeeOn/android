@@ -4,6 +4,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.units.RefreshUnit;
+import com.rehivetech.beeeon.util.Utils;
 
 public final class RefreshValue extends BaseValue {
 
@@ -14,7 +15,7 @@ public final class RefreshValue extends BaseValue {
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		mValue = Double.parseDouble(value);
+		mValue = Utils.parseDoubleSafely(value, Double.NaN);
 	}
 
 	@Override

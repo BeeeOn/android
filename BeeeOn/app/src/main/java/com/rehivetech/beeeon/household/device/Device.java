@@ -313,7 +313,7 @@ public final class Device implements IIdentifier {
 
 		// TODO: Support getting default value automatically somehow in the BaseValue object?
 		BaseValue value = refresh.getValue();
-		double seconds = value.hasValue() ? value.getDoubleValue() : Double.parseDouble(value.getDefaultValue());
+		double seconds = value.hasValue() ? value.getDoubleValue() : Utils.parseDoubleSafely(value.getDefaultValue(), Double.NaN);
 		return RefreshInterval.fromInterval((int) seconds);
 	}
 

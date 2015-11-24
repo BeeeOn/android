@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
+import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.util.ValuesGenerator;
 
 import org.joda.time.DateTime;
@@ -77,7 +78,7 @@ public class DemoNetwork implements INetwork {
 
 		if (rand == null) {
 			try {
-				int id = Integer.parseInt(gateId);
+				int id = Utils.parseIntSafely(gateId, 0);
 				rand = new Random(id);
 			} catch (NumberFormatException e) {
 				rand = new Random();

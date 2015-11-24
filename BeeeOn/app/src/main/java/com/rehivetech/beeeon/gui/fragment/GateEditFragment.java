@@ -19,6 +19,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.TimezoneWrapper;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
@@ -130,7 +131,7 @@ public class GateEditFragment extends BaseApplicationFragment {
 		gate.setUtcOffset(offsetInMinutes);
 
 		String altitudeText = ((EditText) view.findViewById(R.id.gate_edit_altitude)).getText().toString();
-		int altitude = altitudeText.isEmpty() ? 0 : Integer.parseInt(altitudeText);
+		int altitude = altitudeText.isEmpty() ? 0 : Utils.parseIntSafely(altitudeText, 0);
 
 		GpsData gpsData = new GpsData();
 		gpsData.setAltitude(altitude);

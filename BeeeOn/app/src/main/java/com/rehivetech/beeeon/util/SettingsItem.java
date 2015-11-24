@@ -88,14 +88,16 @@ public abstract class SettingsItem {
 	 * @return user chosen Item or default Item, if user didn't chose it in settings yet.
 	 */
 	public BaseItem fromSettings(@Nullable SharedPreferences prefs) {
+		BaseItem defaultItem = getDefault();
+
 		// If we don't have options, return default Item
 		if (prefs == null) {
-			return getDefault();
+			return defaultItem;
 		}
 
 		// NOTE: optimization is to cache this value (e.g. in static attribute of child object - or in some extra object with all settings), and update it automatically when settings is changed...
-		String id = prefs.getString(getPersistenceKey(), String.valueOf(getDefault().getId()));
-		return getItemById(Integer.parseInt(id));
+		String id = prefs.getString(getPersistenceKey(), String.valueOf(defaultItem.getId()));
+		return getItemById(Utils.parseIntSafely(id, defaultItem.getId()));
 	}
 
 }

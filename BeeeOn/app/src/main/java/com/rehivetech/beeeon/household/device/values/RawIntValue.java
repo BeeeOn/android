@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.household.device.values;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.NoiseUnit;
+import com.rehivetech.beeeon.util.Utils;
 
 public final class RawIntValue extends BaseValue {
 
@@ -13,7 +14,7 @@ public final class RawIntValue extends BaseValue {
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		mValue = Integer.parseInt(value);
+		mValue = Utils.parseIntSafely(value, -1);
 	}
 
 	@Override
