@@ -389,5 +389,8 @@
 	<string name="device_type_unknown_device">Unknown device</string>
 	<string name="device_type_unknown_manufacturer">Unknown manufacturer</string>
 
+	<!-- Various strings -->
+	<string name="unit_meters_short">m</string>
+
 </resources>
 

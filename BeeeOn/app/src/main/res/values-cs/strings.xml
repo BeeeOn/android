@@ -384,4 +384,7 @@
 	<string name="device_type_unknown_device">Neznámé zařízení</string>
 	<string name="device_type_unknown_manufacturer">Neznámý výrobce</string>
 
+	<!-- Various strings -->
+	<string name="unit_meters_short">m</string>
+
 </resources>

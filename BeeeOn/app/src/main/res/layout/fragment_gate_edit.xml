@@ -162,7 +162,7 @@
 			android:id="@+id/gate_edit_altitude_meters"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="m"
+			android:text="@string/unit_meters_short"
 			android:layout_toEndOf="@id/gate_edit_altitude"
 			android:layout_toRightOf="@id/gate_edit_altitude"
 			android:layout_alignBaseline="@id/gate_edit_altitude"

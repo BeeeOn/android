@@ -125,12 +125,13 @@ public class GateDetailFragment extends BaseApplicationFragment {
 			mTitleText.setText(R.string.gate_detail_text_gate_no_name);
 
 		int offsetInMillis = gateInfo.getUtcOffset() * 60 * 1000;
+		int altitude = gateInfo.getGpsData().getAltitude();
 
 		mDetailsItemList.get(0).text = gateInfo.getId();
 		mDetailsItemList.get(1).text = gateInfo.getOwner();
 		mDetailsItemList.get(2).text = getString(gateInfo.getRole().getStringResource());
 		mDetailsItemList.get(3).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
-		mDetailsItemList.get(4).text = String.valueOf(gateInfo.getGpsData().getAltitude());
+		mDetailsItemList.get(4).text = (altitude != -1 ? String.format("%d%s", altitude, getString(R.string.unit_meters_short)) : "");
 
 		int usersCount = gateInfo.getUsersCount();
 		DetailsItem usersDetailsItem = mDetailsItemList.get(5);
