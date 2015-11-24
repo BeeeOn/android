@@ -489,18 +489,17 @@ final public class Utils {
 	}
 
 	/**
-	 * Helper function for validating EditText
-	 * FIXME: don't have 2 implementations of validation
+	 * Helper function for validating EditText input
 	 *
-	 * @param eText
+	 * @param editText
 	 * @param additional Array of additional rules to validate: parseInt
 	 * @return
 	 */
-	public static boolean validateInput(Context context, EditText eText, ValidationType... additional) {
-		String inputText = eText.getText().toString().trim();
+	public static boolean validateInput(Context context, EditText editText, ValidationType... additional) {
+		String inputText = editText.getText().toString().trim();
 		if (inputText.length() == 0) {
-			eText.requestFocus();
-			eText.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
+			editText.requestFocus();
+			editText.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
 			return false;
 		}
 
@@ -508,28 +507,30 @@ final public class Utils {
 			switch (type) {
 				case INTEGER:
 					try {
+						//noinspection ResultOfMethodCallIgnored
 						Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
-						eText.requestFocus();
-						eText.setError(context.getString(R.string.utils_toast_field_must_be_number));
+						editText.requestFocus();
+						editText.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
 
 				case DOUBLE:
 					try {
+						//noinspection ResultOfMethodCallIgnored
 						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
-						eText.requestFocus();
-						eText.setError(context.getString(R.string.utils_toast_field_must_be_number));
+						editText.requestFocus();
+						editText.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
 
 				case EMAIL:
 					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
-						eText.requestFocus();
-						eText.setError(context.getString(R.string.utils_toast_field_must_be_email));
+						editText.requestFocus();
+						editText.setError(context.getString(R.string.utils_toast_field_must_be_email));
 						return false;
 					}
 			}
@@ -540,7 +541,6 @@ final public class Utils {
 
 	/**
 	 * Validating TextInputLayout
-	 * FIXME: don't have 2 implementations of validation
 	 *
 	 * @param context
 	 * @param textInputLayout
@@ -549,45 +549,7 @@ final public class Utils {
 	 */
 	public static boolean validateInput(Context context, TextInputLayout textInputLayout, ValidationType... additional) {
 		EditText editText = textInputLayout.getEditText();
-		String inputText = (editText != null ? editText.getText().toString().trim() : "");
-		if (inputText.length() == 0) {
-			textInputLayout.requestFocus();
-			textInputLayout.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
-			return false;
-		}
-
-		for (ValidationType type : additional) {
-			switch (type) {
-				case INTEGER:
-					try {
-						Integer.parseInt(inputText);
-					} catch (NumberFormatException e) {
-						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
-						return false;
-					}
-					break;
-
-				case DOUBLE:
-					try {
-						Double.parseDouble(inputText);
-					} catch (NumberFormatException e) {
-						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
-						return false;
-					}
-					break;
-
-				case EMAIL:
-					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
-						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_email));
-						return false;
-					}
-			}
-		}
-
-		return true;
+		return editText != null && validateInput(context, editText, additional);
 	}
 
 	@ColorInt
