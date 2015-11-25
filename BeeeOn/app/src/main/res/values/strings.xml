@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
 
 	<!-- Application name -->
-	<string name="app_name" translatable="false">BeeeOn Beta</string>
+	<!-- <string name="app_name" translatable="false">BeeeOn Beta</string> --> <!-- is defined in build.gradle -->
 
 	<!-- Common strings -->
 	<string name="empty" translatable="false"/>
