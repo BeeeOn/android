@@ -91,7 +91,9 @@ public class Network implements INetwork {
 	private final Object mSocketLock = new Object();
 	private SSLSocket mSocket = null;
 	private PrintWriter mSocketWriter = null;
-	private BufferedReader mSocketReader = null;
+	private InputStreamReader mSocketReader = null;
+
+	private boolean mInterrupted;
 
 	public Network(Context context, NetworkServer server) {
 		mContext = context;
@@ -115,7 +117,7 @@ public class Network implements INetwork {
 					// At this point SSLSocket performed certificate verification and
 					// we have performed hostName verification, so it is safe to proceed.
 					mSocketWriter = new PrintWriter(mSocket.getOutputStream());
-					mSocketReader = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
+					mSocketReader = new InputStreamReader(mSocket.getInputStream());
 				} catch (IOException e) {
 					closeCommunicationSocket();
 					throw AppException.wrap(e, ClientError.SOCKET);
@@ -130,13 +132,31 @@ public class Network implements INetwork {
 		// Receive response
 		StringBuilder response = new StringBuilder();
 		try {
-			String actRecieved;
-			while ((actRecieved = mSocketReader.readLine()) != null) {
-				response.append(actRecieved);
-				if (actRecieved.endsWith(EOF))
+			int eofLen = EOF.length() + 5; // 5 as reserve for potential \n or other chars after
+
+			int charsRead;
+			char[] buffer = new char[2048];
+			char[] cmpBuffer = new char[eofLen];
+
+			while (!mInterrupted && (charsRead = mSocketReader.read(buffer)) != -1) {
+				response.append(buffer, 0, charsRead);
+
+				// Bit complicated checking for end of data, because I want to optimize it not to create new whole String on every iteration
+				String cmpData;
+				if (charsRead >= eofLen) {
+					// check only buffer
+					cmpData = new String(buffer).substring(charsRead - eofLen, charsRead);
+				} else {
+					// need to check whole
+					response.getChars(response.length() - eofLen, response.length(), cmpBuffer, 0);
+					cmpData = new String(cmpBuffer);
+				}
+
+				if (cmpData.contains(EOF))
 					break;
 			}
 		} catch (IOException e) {
+			closeCommunicationSocket();
 			throw AppException.wrap(e, ClientError.SOCKET);
 		}
 
@@ -195,6 +215,9 @@ public class Network implements INetwork {
 						.set("Expected CN", mServer.certVerifyUrl)
 						.set("Found CN", s.getPeerPrincipal());
 			}
+			// Reset interrupted flag
+			mInterrupted = false;
+
 			return socket;
 		} catch (UnknownHostException e) {
 			// UnknownHostException - Server address or hostName wasn't not found
@@ -225,22 +248,8 @@ public class Network implements INetwork {
 	 */
 	private void closeCommunicationSocket() {
 		synchronized (mSocketLock) {
-			// Securely close socket
-			if (mSocket != null) {
-				try {
-					mSocket.close();
-				} catch (IOException e) {
-					e.printStackTrace(); // Nothing we can do here
-				} finally {
-					mSocket = null;
-				}
-			}
-
-			// Close writer
-			if (mSocketWriter != null) {
-				mSocketWriter.close();
-				mSocketWriter = null;
-			}
+			// Set interrupted flag
+			mInterrupted = true;
 
 			// Securely close reader
 			if (mSocketReader != null) {
@@ -250,6 +259,23 @@ public class Network implements INetwork {
 					e.printStackTrace(); // Nothing we can do here
 				} finally {
 					mSocketReader = null;
+				}
+			}
+
+			// Close writer
+			if (mSocketWriter != null) {
+				mSocketWriter.close();
+				mSocketWriter = null;
+			}
+
+			// Securely close socket
+			if (mSocket != null) {
+				try {
+					mSocket.close();
+				} catch (IOException e) {
+					e.printStackTrace(); // Nothing we can do here
+				} finally {
+					mSocket = null;
 				}
 			}
 		}
