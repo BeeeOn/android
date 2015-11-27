@@ -134,26 +134,19 @@ public class Network implements INetwork {
 		try {
 			int eofLen = EOF.length() + 5; // 5 as reserve for potential \n or other chars after
 
-			int charsRead;
+			int charsRead, respLen;
 			char[] buffer = new char[2048];
 			char[] cmpBuffer = new char[eofLen];
 
 			while (!mInterrupted && (charsRead = mSocketReader.read(buffer)) != -1) {
 				response.append(buffer, 0, charsRead);
 
-				// Bit complicated checking for end of data, because I want to optimize it not to create new whole String on every iteration
-				String cmpData;
-				if (charsRead >= eofLen) {
-					// check only buffer
-					cmpData = new String(buffer).substring(charsRead - eofLen, charsRead);
-				} else {
-					// need to check whole
-					response.getChars(response.length() - eofLen, response.length(), cmpBuffer, 0);
-					cmpData = new String(cmpBuffer);
+				// Check if we've received whole data (end element)
+				if ((respLen = response.length()) >= eofLen) {
+					response.getChars(respLen - eofLen, respLen, cmpBuffer, 0);
+					if (new String(cmpBuffer).contains(EOF))
+						break;
 				}
-
-				if (cmpData.contains(EOF))
-					break;
 			}
 		} catch (IOException e) {
 			closeCommunicationSocket();
