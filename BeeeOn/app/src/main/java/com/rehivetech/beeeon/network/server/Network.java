@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.rehivetech.beeeon.exception.AppException;
@@ -50,6 +51,7 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
 /**
@@ -88,6 +90,9 @@ public class Network implements INetwork {
 	private final NetworkServer mServer;
 	private String mSessionId = "";
 
+	@Nullable
+	private final SSLSocketFactory mSocketFactory;
+
 	private final Object mSocketLock = new Object();
 	private SSLSocket mSocket = null;
 	private PrintWriter mSocketWriter = null;
@@ -98,6 +103,46 @@ public class Network implements INetwork {
 	public Network(Context context, NetworkServer server) {
 		mContext = context;
 		mServer = server;
+
+		SSLSocketFactory socketFactory = null;
+		try {
+			// Open CA certificate from assets
+			InputStream inStreamCertTmp = mContext.getAssets().open(mServer.certAssetsFilename);
+			InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
+			Certificate ca;
+			try {
+				CertificateFactory cf = CertificateFactory.getInstance("X.509");
+				ca = cf.generateCertificate(inStreamCert);
+			} finally {
+				inStreamCert.close();
+			}
+			// Create a KeyStore containing our trusted CAs
+			String keyStoreType = KeyStore.getDefaultType();
+			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
+			keyStore.load(null, null);
+			keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
+
+			// Create a TrustManager that trusts the CAs in our KeyStore
+			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+			tmf.init(keyStore);
+
+			// Create an SSLContext that uses our TrustManager
+			SSLContext sslContext = SSLContext.getInstance("TLS");
+			sslContext.init(null, tmf.getTrustManagers(), null);
+
+			socketFactory = sslContext.getSocketFactory();
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
+			// IOException - Can't read CA certificate from assets or can't create new socket
+			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
+			// KeyStoreException - Bad type of KeyStore, can't set CA certificate to KeyStore
+			// NoSuchAlgorithmException - Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
+			// KeyManagementException - general exception, thrown to indicate an exception during processing an operation concerning key management
+
+			Log.e(TAG, "Can't create socketFactory! No network connection is possible.");
+		}
+
+		mSocketFactory = socketFactory;
 	}
 
 	/**
@@ -108,6 +153,10 @@ public class Network implements INetwork {
 	 * @throws AppException with error ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE or ClientError.SOCKET
 	 */
 	private String startCommunication(String request) throws AppException {
+		if (mSocket != null && !mSocket.isConnected()) {
+			closeCommunicationSocket();
+		}
+
 		// Init socket objects if not exists
 		synchronized (mSocketLock) {
 			if (mSocket == null || mSocketReader == null || mSocketWriter == null) {
@@ -165,34 +214,13 @@ public class Network implements INetwork {
 	 * @throws AppException with error ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE or ClientError.SOCKET
 	 */
 	private SSLSocket initSocket() {
+		if (mSocketFactory == null) {
+			throw new AppException("SocketFactory is null.", ClientError.SOCKET);
+		}
+
 		try {
-			// Open CA certificate from assets
-			InputStream inStreamCertTmp = mContext.getAssets().open(mServer.certAssetsFilename);
-			InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
-			Certificate ca;
-			try {
-				CertificateFactory cf = CertificateFactory.getInstance("X.509");
-				ca = cf.generateCertificate(inStreamCert);
-			} finally {
-				inStreamCert.close();
-			}
-			// Create a KeyStore containing our trusted CAs
-			String keyStoreType = KeyStore.getDefaultType();
-			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-			keyStore.load(null, null);
-			keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
-
-			// Create a TrustManager that trusts the CAs in our KeyStore
-			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-			TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-			tmf.init(keyStore);
-
-			// Create an SSLContext that uses our TrustManager
-			SSLContext sslContext = SSLContext.getInstance("TLS");
-			sslContext.init(null, tmf.getTrustManagers(), null);
-
 			// Open SSLSocket directly to server
-			SSLSocket socket = (SSLSocket) sslContext.getSocketFactory().createSocket(mServer.address, mServer.port);
+			SSLSocket socket = (SSLSocket) mSocketFactory.createSocket(mServer.address, mServer.port);
 
 			HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
 			//socket.setKeepAlive(true);
@@ -213,17 +241,13 @@ public class Network implements INetwork {
 
 			return socket;
 		} catch (UnknownHostException e) {
-			// UnknownHostException - Server address or hostName wasn't not found
+			// Server address or hostName wasn't not found
 			throw AppException.wrap(e, ClientError.UNKNOWN_HOST);
 		} catch (ConnectException e) {
-			// ConnectException - Connection refused, timeout, etc.
+			// Connection refused, timeout, etc.
 			throw AppException.wrap(e, ClientError.SERVER_CONNECTION);
-		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
-			// IOException - Can't read CA certificate from assets or can't create new socket
-			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
-			// KeyStoreException - Bad type of KeyStore, can't set CA certificate to KeyStore
-			// NoSuchAlgorithmException - Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
-			// KeyManagementException - general exception, thrown to indicate an exception during processing an operation concerning key management
+		} catch (IOException e) {
+			// Can't create new socket
 			throw AppException.wrap(e, ClientError.SOCKET);
 		}
 	}
