@@ -47,9 +47,6 @@
 
 	<uses-permission android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"/>
 
-	<!-- Sony Smartwatch permission -->
-	<uses-permission android:name="com.sonyericsson.extras.liveware.aef.EXTENSION_PERMISSION"/>
-
 	<application
 		android:name=".BeeeOnApplication"
 		android:allowBackup="true"
@@ -61,13 +58,10 @@
 			android:value="@integer/google_play_services_version"/>
 		<meta-data
 			android:name="com.google.android.maps.v2.API_KEY"
-			android:value="AIzaSyBCTLpegGSezAdXYuZOLxqzQe1eW9kYvlM"/>
+			android:value="@string/api_keys_google_maps"/>
 		<meta-data
 			android:name="com.facebook.sdk.ApplicationId"
-			android:value="@string/manifest_facebook_app_id"/>
-		<meta-data
-			android:name="io.fabric.ApiKey"
-			android:value="050bb3e73bcdf2d45c0bf93f2b5595ef82ebc937"/>
+			android:value="@string/api_keys_facebook_app_id"/>
 
 		<activity
 			android:name=".gui.activity.LoginActivity"

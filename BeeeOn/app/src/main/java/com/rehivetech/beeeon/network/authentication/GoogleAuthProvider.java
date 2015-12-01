@@ -214,7 +214,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 			StringBuilder url = new StringBuilder();
 			url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
-			url.append(Utils.uriEncode(Constants.WEB_LOGIN_CLIENT_ID));
+			url.append(Utils.uriEncode(mActivity.getString(R.string.api_keys_web_login_client_id)));
 			url.append("&scope=openid%20email%20profile");
 			url.append("&redirect_uri=");
 			url.append(Utils.uriEncode(REDIRECT_URL));
@@ -313,8 +313,8 @@ public class GoogleAuthProvider implements IAuthProvider {
 				// Prepare parameters for Google request
 				final Map<String, String> params = new HashMap<>(8);
 				params.put("code", mCode);
-				params.put("client_id", Constants.WEB_LOGIN_CLIENT_ID);
-				params.put("client_secret", Constants.WEB_LOGIN_SECRET);
+				params.put("client_id", mActivity.getString(R.string.api_keys_web_login_client_id));
+				params.put("client_secret", mActivity.getString(R.string.api_keys_web_login_secret));
 				params.put("redirect_uri", REDIRECT_URL);
 				params.put("grant_type", "authorization_code");
 

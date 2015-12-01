@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
@@ -88,7 +89,7 @@ public class GcmModel extends BaseModel {
 					attempt++;
 
 					try {
-						gcmIdNew = gcm.register(Constants.PROJECT_NUMBER);
+						gcmIdNew = gcm.register(mContext.getString(R.string.api_keys_google_console_project_id));
 					} catch (Exception e) {
 						Log.e(TAG, Constants.GCM_TAG + "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
 						// No matter how many times you call register, it will always fail and throw an exception on some devices. On these devices we need to get GCM ID this way:

@@ -71,9 +71,9 @@ dependencies {
 	compile 'com.android.support:recyclerview-v7:23.1.1'
 	compile 'com.android.support:design:23.1.1'
 	// Google Play libraries
-	compile 'com.google.android.gms:play-services-analytics:8.1.0'
-	compile 'com.google.android.gms:play-services-identity:8.1.0'
-	compile 'com.google.android.gms:play-services-gcm:8.1.0'
+	compile 'com.google.android.gms:play-services-analytics:8.3.0'
+	compile 'com.google.android.gms:play-services-identity:8.3.0'
+	compile 'com.google.android.gms:play-services-gcm:8.3.0'
 	// Third-party libraries
 	compile 'ue.rekisoft.android.numberpicker:android-numberpicker@aar'
 	compile 'net.i2p.android.ext:floatingactionbutton:1.10.0'
@@ -81,7 +81,7 @@ dependencies {
 	compile 'joda-time:joda-time:2.7'
 	compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 	compile 'com.avast:android-styled-dialogs:2.2.0'
-	compile 'com.facebook.android:facebook-android-sdk:4.0.0'
+	compile 'com.facebook.android:facebook-android-sdk:4.5.0'
 	compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
 	compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.0.0@aar'
 }
