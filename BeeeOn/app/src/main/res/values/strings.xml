@@ -10,7 +10,6 @@
 
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifications</string>
-	<string name="manifest_facebook_app_id" translatable="false">868028889921254</string>
 	<string name="manifest_title_device_add">Add device</string>
 	<string name="manifest_title_device_detail">Device detail</string>
 	<string name="manifest_title_device_edit">Edit device</string>

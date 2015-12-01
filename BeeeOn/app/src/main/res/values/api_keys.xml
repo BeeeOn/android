@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- Facebook Application ID -->
+	<string name="api_keys_facebook_app_id" translatable="false">868028889921254</string>
+
+	<!-- API key for using Google Maps API -->
+	<string name="api_keys_google_maps" translatable="false">AIzaSyBCTLpegGSezAdXYuZOLxqzQe1eW9kYvlM</string>
+
+	<!-- Project number from the Google Console -->
+	<string name="api_keys_google_console_project_id" translatable="false">72175563561</string>
+
+	<!-- Google OAuth web login API -->
+	<string name="api_keys_web_login_client_id" translatable="false">72175563561-ustmn77c152m6o819sf3htgrhch3rjcq.apps.googleusercontent.com</string>
+	<string name="api_keys_web_login_secret" translatable="false">NzG3qF8v6I0V0Xfe37GeeZq0</string>
+</resources>
