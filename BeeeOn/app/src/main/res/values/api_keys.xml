@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
 	<!-- Facebook Application ID -->
 	<string name="api_keys_facebook_app_id" translatable="false">868028889921254</string>
 
@@ -12,4 +12,7 @@
 	<!-- Google OAuth web login API -->
 	<string name="api_keys_web_login_client_id" translatable="false">72175563561-ustmn77c152m6o819sf3htgrhch3rjcq.apps.googleusercontent.com</string>
 	<string name="api_keys_web_login_secret" translatable="false">NzG3qF8v6I0V0Xfe37GeeZq0</string>
+
+	<!-- Google Analytics tracking ID -->
+	<string name="api_keys_google_analytics_tracking_id" translatable="false">UA-45172133-3</string>
 </resources>

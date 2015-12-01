@@ -24,7 +24,13 @@ public class BeeeOnApplication extends Application {
 		if (mTracker == null) {
 			GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
 			// To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-			mTracker = analytics.newTracker(R.xml.ga_tracker);
+			mTracker = analytics.newTracker(getString(R.string.api_keys_google_analytics_tracking_id));
+			// End current session if app sleeps for a period of time
+			mTracker.setSessionTimeout(300);
+			// Enable automatic Activity measurement
+			mTracker.enableAutoActivityTracking(true);
+			// Report uncaught exceptions
+			mTracker.enableExceptionReporting(true);
 		}
 		return mTracker;
 	}
