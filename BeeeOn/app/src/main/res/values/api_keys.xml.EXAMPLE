@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+	<!-- Facebook Application ID -->
+	<!-- <string name="api_keys_facebook_app_id" translatable="false">YOUR_FACEBOOK_APP_ID</string> -->
+
+	<!-- API key for using Google Maps API -->
+	<!-- <string name="api_keys_google_maps" translatable="false">YOUR_GOOGLE_MAPS_KEY</string> -->
+
+	<!-- Project number from the Google Console -->
+	<!-- <string name="api_keys_google_console_project_id" translatable="false">YOUR_GOOGLE_CONSOLE_ID</string> -->
+
+	<!-- Google OAuth web login API -->
+	<!-- <string name="api_keys_web_login_client_id" translatable="false">YOUR_GOOGLE_LOGIN_CLIENT_ID</string>
+	<string name="api_keys_web_login_secret" translatable="false">YOUR_GOOGLE_LOGIN_SECRET</string> -->
+
+	<!-- Google Analytics tracking ID -->
+	<!-- <string name="api_keys_google_analytics_tracking_id" translatable="false">YOUR_GOOGLE_ANALYTICS_ID</string> -->
+</resources>

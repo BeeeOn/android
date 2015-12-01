@@ -1,6 +1,6 @@
-# Ignore keystores folder except debug.keystore
+# Ignore sensitive data (keystores, keys, ...)
 **/keystores/*
-!**/keystores/debug.keystore
+**/res/values/api_keys.xml
 
 # Built application files
 *.apk
