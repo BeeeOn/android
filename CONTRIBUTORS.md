@@ -1,12 +1,14 @@
-Petr Buno <xbunop00@stud.fit.vutbr.cz>
-Martin Douděra <doudera.m@gmail.com>
-David Kozák <dkozak94@gmail.com>
-Martina Kůrová <kurovamartina@gmail.com>
-Jan Lamacz <xlamac00@stud.fit.vutbr.cz>
-Martin Matejčík <xmatej46@stud.fit.vutbr.cz>
-Tomáš Mlynarič <mlynarict@gmail.com>
-Leopold Podmolík <leopold@podmolik.cz>
-Robert Pösel <robyer@seznam.cz>
-Peter Vican <xvican02@stud.fit.vutbr.cz>
-Jan Viktorin <iviktorin@fit.vutbr.cz>
-Martin Žádník <izadnik@fit.vutbr.cz>
+# BeeeOn-Android contributors
+(sorted alphabeticaly)
+- [Petr Buno](mailto:xbunop00@stud.fit.vutbr.cz)
+- [Martin Douděra](mailto:doudera.m@gmail.com)
+- [David Kozák](mailto:dkozak94@gmail.com)
+- [Martina Kůrová](mailto:kurovamartina@gmail.com)
+- [Jan Lamacz](mailto:xlamac00@stud.fit.vutbr.cz)
+- [Martin Matejčík](mailto:xmatej46@stud.fit.vutbr.cz)
+- [Tomáš Mlynarič](mailto:mlynarict@gmail.com)
+- [Leopold Podmolík](mailto:leopold@podmolik.cz)
+- [Robert Pösel](mailto:robyer@seznam.cz)
+- [Peter Vican](mailto:xvican02@stud.fit.vutbr.cz)
+- [Jan Viktorin](mailto:iviktorin@fit.vutbr.cz)
+- [Martin Žádník](mailto:izadnik@fit.vutbr.cz)
