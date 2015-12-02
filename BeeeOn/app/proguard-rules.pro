@@ -55,6 +55,10 @@
 #To repackage classes on a single package
 -repackageclasses ''
 
+# For better debugging
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
 #Uncomment if using annotations to keep them.
 -keepattributes *Annotation*
 
