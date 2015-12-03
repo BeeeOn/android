@@ -1,18 +1,18 @@
 package com.rehivetech.beeeon.network.server;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 
+import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 
 /**
  * @author Robyer
  */
-public enum NetworkServer implements INameIdentifier {
-	SERVER_BEEEON("beeeon", "BeeeOn", "cloud.beeeon.com", 4565),
-	SERVER_ANT2_ALPHA("ant-2-alpha", "Ant-2 (alpha)", "ant-2.fit.vutbr.cz", 4566),
-	SERVER_ANT2_BETA("ant-2-beta", "Ant-2 (beta)", "ant-2.fit.vutbr.cz", 4565),
-	SERVER_IOTPRO("iotpro", "IOTPro (production)", "iotpro.fit.vutbr.cz", 4565);
+public enum NetworkServer implements IIdentifier {
+	SERVER_BEEEON("beeeon", R.string.server_production, "cloud.beeeon.com", 4565),
+	SERVER_ANT2_ALPHA("ant-2-alpha", R.string.server_development, "ant-2.fit.vutbr.cz", 4566);
 
 	/** Name of default CA certificate located in assets */
 	private static final String ASSETS_CA_CERT = "cacert.crt";
@@ -21,19 +21,19 @@ public enum NetworkServer implements INameIdentifier {
 	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
 
 	private final String mId;
-	private final String mName;
+	private final int mNameRes;
 	public final String address;
 	public final int port;
 	public final String certAssetsFilename;
 	public final String certVerifyUrl;
 
-	NetworkServer(String id, String name, String address, int port) {
-		this(id, name, address, port, ASSETS_CA_CERT, SERVER_CN_CERTIFICATE);
+	NetworkServer(String id, @StringRes int nameRes, String address, int port) {
+		this(id, nameRes, address, port, ASSETS_CA_CERT, SERVER_CN_CERTIFICATE);
 	}
 
-	NetworkServer(String id, String name, String address, int port, String certAssetsFilename, String certVerifyUrl) {
+	NetworkServer(String id, @StringRes int nameRes, String address, int port, String certAssetsFilename, String certVerifyUrl) {
 		mId = id;
-		mName = name;
+		mNameRes = nameRes;
 
 		this.address = address;
 		this.port = port;
@@ -46,24 +46,20 @@ public enum NetworkServer implements INameIdentifier {
 		return mId;
 	}
 
-	@Override
-	public String getName() {
-		return mName;
-	}
-
 	public String getTranslatedName(Context context) {
+		String name = context.getString(mNameRes);
 		if (this == getDefaultServer()) {
-			return String.format("%s %s", mName, context.getString(R.string.network_server_sufix_default));
+			return String.format("%s %s", name, context.getString(R.string.network_server_sufix_default));
 		}
-		return mName;
+		return name;
 	}
 
 	@Override
 	public String toString() {
-		return mName;
+		return mId;
 	}
 
 	public static NetworkServer getDefaultServer() {
-			return SERVER_BEEEON;
+		return SERVER_BEEEON;
 	}
 }

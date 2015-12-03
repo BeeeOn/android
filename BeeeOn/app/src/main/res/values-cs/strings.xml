@@ -387,4 +387,8 @@
 	<!-- Various strings -->
 	<string name="unit_meters_short">m</string>
 
+	<!-- Server names -->
+	<string name="server_production">Produkční</string>
+	<string name="server_development">Vývojový</string>
+
 </resources>

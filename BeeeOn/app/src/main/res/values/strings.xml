@@ -391,5 +391,9 @@
 	<!-- Various strings -->
 	<string name="unit_meters_short">m</string>
 
+	<!-- Server names -->
+	<string name="server_production">Production</string>
+	<string name="server_development">Development</string>
+
 </resources>
 
