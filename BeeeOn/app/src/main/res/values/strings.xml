@@ -27,7 +27,7 @@
 
 	<!-- Demo network -->
 	<string name="demo_network_demo_mode">DEMO MODE</string>
-	<string name="demo_network_demo_mode_email" translatable="false">demo@beeeon.com</string>
+	<string name="demo_network_demo_mode_email" translatable="false">demo@beeeon.org</string>
 
 	<!-- Network server -->
 	<string name="network_server_sufix_default"> (default)</string>
@@ -329,8 +329,8 @@
 
 	<!-- Dialog info -->
 	<string name="dialog_info_btn_rate">Rate</string>
-	<string name="dialog_info_company_email" translatable="false">info@beeeon.com</string>
-	<string name="dialog_info_company_web" translatable="false">http://beeeon.com/</string>
+	<string name="dialog_info_company_email" translatable="false">info@beeeon.org</string>
+	<string name="dialog_info_company_web" translatable="false">http://beeeon.org/</string>
 	<string name="dialog_info_copyright">\u00A9 2014–15 BeeeOn Team. All rights reserved.</string>
 	<string name="dialog_info_play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
 	<string name="dialog_info_version">Version</string>
