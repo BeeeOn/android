@@ -294,6 +294,9 @@
 
 	<!--Module graph-->
 	<string name="module_graph_show_y_labels_button">Show Y labels</string>
+	<string name="module_graph_type_of_data">Type of data</string>
+	<string name="module_graph_data_granularity">Data granularity</string>
+
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Device is not available</string>
 
@@ -391,6 +394,7 @@
 	<!-- Various strings -->
 
 	<string name="unit_meters_short">m</string>
+	<string name="button_done">done</string>
 
 	<!-- Server names -->
 	<string name="server_production">Production</string>
@@ -402,5 +406,20 @@
 	<string name="graph_range_week">week</string>
 	<string name="graph_range_month">month</string>
 
+	<!--DATA INTERVAL-->
+	<string name="data_interval_raw">raw data</string>
+	<string name="data_interval_minute">minute</string>
+	<string name="data_interval_five_minutes">5 minutes</string>
+	<string name="data_interval_ten_minutes">10 minutes</string>
+	<string name="data_interval_half_hour">half hour</string>
+	<string name="data_interval_hour">hour</string>
+	<string name="data_interval_day">day</string>
+	<string name="data_interval_week">week</string>
+	<string name="data_interval_month">month</string>
+
+	<!--DATA TYPE-->
+	<string name="data_type_min">minimum</string>
+	<string name="data_type_avg">average</string>
+	<string name="data_type_max">maximum</string>
 </resources>
 

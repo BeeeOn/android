@@ -31,4 +31,116 @@
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		/>
 
+
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/module_graph_fab"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom|end"
+		android:src="@drawable/ic_settings_white_24dp"
+		android:layout_marginRight="16dp"
+		android:layout_marginEnd="16dp"
+		android:layout_marginBottom="16dp"
+		app:borderWidth="0dp"/>
+
+	<io.codetail.widget.RevealFrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="bottom">
+
+		<RelativeLayout
+			android:id="@+id/module_graph_footer"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@color/beeeon_accent"
+			android:visibility="invisible"
+			android:padding="16dp">
+
+			<TextView
+				android:id="@+id/module_graph_label_type_data"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+				android:paddingBottom="5dp"
+				android:text="@string/module_graph_type_of_data"/>
+
+			<android.support.v7.widget.AppCompatCheckBox
+				android:id="@+id/module_graph_checkbox_min"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/module_graph_label_type_data"/>
+
+			<TextView
+				android:id="@+id/module_graph_text_min"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="6dp"
+				android:layout_toRightOf="@id/module_graph_checkbox_min"
+				android:layout_toEndOf="@id/module_graph_checkbox_min"
+				android:layout_below="@id/module_graph_label_type_data"
+				android:text="@string/data_type_min"/>
+
+
+			<android.support.v7.widget.AppCompatCheckBox
+				android:id="@+id/module_graph_checkbox_avg"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/module_graph_checkbox_min"/>
+
+			<TextView
+				android:id="@+id/module_graph_text_avg"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="12dp"
+				android:layout_toRightOf="@id/module_graph_checkbox_avg"
+				android:layout_toEndOf="@id/module_graph_checkbox_avg"
+				android:layout_below="@id/module_graph_text_min"
+				android:text="@string/data_type_avg"/>
+
+			<android.support.v7.widget.AppCompatCheckBox
+				android:id="@+id/module_graph_checkbox_max"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/module_graph_checkbox_avg"/>
+
+			<TextView
+				android:id="@+id/module_graph_text_max"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="12dp"
+				android:layout_toRightOf="@id/module_graph_checkbox_max"
+				android:layout_toEndOf="@id/module_graph_checkbox_max"
+				android:layout_below="@id/module_graph_text_avg"
+				android:text="@string/data_type_max"/>
+
+
+			<TextView
+				android:id="@+id/module_graph_label_data_granularity"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+				android:paddingTop="5dp"
+				android:paddingBottom="5dp"
+				android:layout_below="@id/module_graph_checkbox_max"
+				android:text="@string/module_graph_data_granularity"/>
+
+			<com.rehivetech.beeeon.gui.view.Slider
+				android:id="@+id/module_graph_slider"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/module_graph_label_data_granularity"/>
+
+			<Button
+				android:id="@+id/module_graph_button_done"
+				android:theme="@style/BeeeOn.Button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/button_done"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"
+				android:layout_below="@id/module_graph_slider"/>
+
+		</RelativeLayout>
+
+	</io.codetail.widget.RevealFrameLayout>
 </android.support.design.widget.CoordinatorLayout>

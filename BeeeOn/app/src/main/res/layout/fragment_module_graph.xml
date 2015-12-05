@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/module_graph_layout"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:orientation="vertical">
+	android:layout_height="match_parent">
 
 	<com.github.mikephil.charting.charts.CombinedChart
 		android:id="@+id/module_graph_chart"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="250dp"
 		android:layerType="software"
 		/>
+
 
 	<!--<Button-->
 	<!--android:id="@+id/module_graph_show_legend_btn"-->
@@ -21,4 +21,5 @@
 	<!--android:layout_gravity="center_horizontal"-->
 	<!--android:text="@string/module_graph_show_y_labels_button"/>-->
 
-</LinearLayout>
+
+</RelativeLayout>

@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.view.ChartMarkerView;
+import com.rehivetech.beeeon.gui.view.Slider;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -61,6 +62,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
 
+	private Slider mSlider;
 	private CombinedChart mChart;
 	private DataSet mDataSet;
 	private List<String> mXValues = new ArrayList<>();
@@ -128,6 +130,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
 		mChart = (CombinedChart) view.findViewById(R.id.module_graph_chart);
+
+//		mSlider = (Slider) view.findViewById(R.id.module_graph_slider);
+
 
 //		mShowLegendButton = (Button) view.findViewById(R.id.module_graph_show_legend_btn);
 //		mShowLegendButton.setOnClickListener(new View.OnClickListener() {
