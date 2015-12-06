@@ -45,6 +45,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -339,7 +340,6 @@ final public class ChartHelper {
 	 * @param activity     instance of activity
 	 * @param controller   instance of controller
 	 * @param dataSet      instance of chart dataSet
-	 * @param xValues      chart X values list
 	 * @param gateId       ID of gate
 	 * @param deviceId     ID of device
 	 * @param moduleId     ID of module
@@ -348,10 +348,11 @@ final public class ChartHelper {
 	 * @param dataInterval interval of values
 	 */
 	public static <T extends DataSet>
-	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, final List<String> xValues,
-									 String gateId, String deviceId, String moduleId, @DataRange int range, ModuleLog.DataType dataType,
-					   final ModuleLog.DataInterval dataInterval, final ChartLoad callback) {
+	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, String gateId, String deviceId,
+					   String moduleId, @DataRange int range, ModuleLog.DataType dataType,
+					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback) {
 
+		final List<String> xValues = new ArrayList<>();
 		final Module module = controller.getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
 
 		if (module == null) {
@@ -367,7 +368,7 @@ final public class ChartHelper {
 			@Override
 			public void onExecute(boolean success) {
 				fillDataSet(Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair), dataSet, xValues);
-				callback.onChartLoaded();
+				callback.onChartLoaded(dataSet, xValues);
 			}
 		});
 
@@ -384,6 +385,8 @@ final public class ChartHelper {
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
 		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum()));
+
+		dataSet.clear();
 
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
@@ -434,7 +437,7 @@ final public class ChartHelper {
 	/**
 	 * Callback interface for load chart data
 	 */
-	public interface ChartLoad {
-		void onChartLoaded();
+	public interface ChartLoadListener {
+		void onChartLoaded(DataSet dataset, List<String> xValues);
 	}
 }

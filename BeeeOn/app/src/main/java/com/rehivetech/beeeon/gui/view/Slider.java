@@ -94,6 +94,13 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 
 	}
 
+	public int getProgress() {
+		return mSeekbar.getProgress();
+	}
+
+	public void setProgress(int progress) {
+		mSeekbar.setProgress(progress);
+	}
 
 	private class ProgressDrawable extends Drawable {
 

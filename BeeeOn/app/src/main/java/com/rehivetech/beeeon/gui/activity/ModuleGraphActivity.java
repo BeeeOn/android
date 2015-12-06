@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,6 +42,11 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	public static final String EXTRA_DEVICE_ID = "device_id";
 	public static final String EXTRA_MODULE_ID = "module_id";
 
+	private static final String OUT_STATE_CHECK_BOX_MIN = "check_box_min";
+	private static final String OUT_STATE_CHECK_BOX_MAX = "check_box_max";
+	private static final String OUT_STET_CHECK_BOX_AVG = "check_box_avg";
+	private static final String OUT_STATE_SLIDER_PROGRESS = "slider_progress";
+
 	private String mGateId;
 	private String mDeviceId;
 	private String mModuleId;
@@ -48,6 +54,13 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private TabLayout mTabLayout;
 	private ViewPager mViewPager;
 
+	private Slider mSlider;
+	private AppCompatCheckBox mCheckBoxMin;
+	private AppCompatCheckBox mCheckBoxAvg;
+	private AppCompatCheckBox mCheckBoxMax;
+
+	private Button mButtonDone;
+	private FloatingActionButton mFab;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,20 +109,26 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
 		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
 
-		setupViewPager();
+		mSlider = (Slider) findViewById(R.id.module_graph_slider);
 
-		Slider slider = (Slider) findViewById(R.id.module_graph_slider);
+		mCheckBoxMin = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_min);
+		mCheckBoxAvg = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_avg);
+		mCheckBoxMax = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_max);
+
+		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
+		mButtonDone = (Button) findViewById(R.id.module_graph_button_done);
+
+		setupViewPager();
 
 		Map<ModuleLog.DataInterval, String> intervals = getIntervalString(ModuleLog.DataInterval.values());
 
-		slider.setValues(new ArrayList<>(intervals.values()));
+		mSlider.setValues(new ArrayList<>(intervals.values()));
 
-		final FloatingActionButton floatingActionButton = (FloatingActionButton) findViewById(R.id.module_graph_fab);
 		final View transformView = findViewById(R.id.module_graph_footer);
-		floatingActionButton.setOnClickListener(new View.OnClickListener() {
+		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(floatingActionButton);
+				FabTransformation.Builder builder = FabTransformation.with(mFab);
 
 				builder.setListener(new FabTransformation.OnTransformListener() {
 					@Override
@@ -128,11 +147,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			}
 		});
 
-		Button buttonDone = (Button) findViewById(R.id.module_graph_button_done);
-		buttonDone.setOnClickListener(new View.OnClickListener() {
+		mButtonDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(floatingActionButton);
+				FabTransformation.Builder builder = FabTransformation.with(mFab);
 
 				builder.setListener(new FabTransformation.OnTransformListener() {
 					@Override
@@ -143,6 +161,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 					@Override
 					public void onEndTransform() {
+						redrawActiveFragment();
 					}
 				});
 
@@ -150,8 +169,18 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			}
 		});
-//		ModuleGraphFragment moduleGraphFragment = ModuleGraphFragment.newInstance(mGateId, mDeviceId, mModuleId);
-//		getSupportFragmentManager().beginTransaction().replace(R.id.module_graph_container, moduleGraphFragment).commit();
+
+
+		if (savedInstanceState != null) {
+			mCheckBoxMin.setChecked(savedInstanceState.getBoolean(OUT_STATE_CHECK_BOX_MIN));
+			mCheckBoxAvg.setChecked(savedInstanceState.getBoolean(OUT_STET_CHECK_BOX_AVG));
+			mCheckBoxMax.setChecked(savedInstanceState.getBoolean(OUT_STATE_CHECK_BOX_MAX));
+
+			mSlider.setProgress(savedInstanceState.getInt(OUT_STATE_SLIDER_PROGRESS));
+		} else {
+			mCheckBoxAvg.setChecked(true);
+		}
+
 	}
 
 	@Override
@@ -162,6 +191,15 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 				break;
 		}
 		return false;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(OUT_STATE_CHECK_BOX_MIN, mCheckBoxMin.isChecked());
+		outState.putBoolean(OUT_STET_CHECK_BOX_AVG, mCheckBoxAvg.isChecked());
+		outState.putBoolean(OUT_STATE_CHECK_BOX_MAX, mCheckBoxMax.isChecked());
+		outState.putInt(OUT_STATE_SLIDER_PROGRESS, mSlider.getProgress());
 	}
 
 	private void setupViewPager() {
@@ -215,13 +253,45 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		return intervalStringMap;
 	}
 
-	private class GraphPagerAdapter extends FragmentPagerAdapter {
+	private ModuleLog.DataInterval getIntervalBySliderProgress() {
+
+		switch (mSlider.getProgress()) {
+			case 1:
+				return ModuleLog.DataInterval.MINUTE;
+			case 2:
+				return ModuleLog.DataInterval.FIVE_MINUTES;
+			case 3:
+				return ModuleLog.DataInterval.TEN_MINUTES;
+			case 4:
+				return ModuleLog.DataInterval.HALF_HOUR;
+			case 5:
+				return ModuleLog.DataInterval.HOUR;
+			case 6:
+				return ModuleLog.DataInterval.DAY;
+			case 7:
+				return ModuleLog.DataInterval.WEEK;
+			case 8:
+				return ModuleLog.DataInterval.MONTH;
+		}
+
+		return ModuleLog.DataInterval.RAW;
+	}
+
+	private void redrawActiveFragment() {
+		ModuleGraphFragment currentFragment = (ModuleGraphFragment) ((GraphPagerAdapter) mViewPager.getAdapter()).getActiveFragment(mViewPager, mViewPager.getCurrentItem());
+
+		currentFragment.onChartSettingChanged(mCheckBoxMin.isChecked(), mCheckBoxAvg.isChecked(), mCheckBoxMax.isChecked(), getIntervalBySliderProgress());
+	}
+
+	private static class GraphPagerAdapter extends FragmentPagerAdapter {
 
 		private final List<Fragment> mFragments = new ArrayList<>();
 		private final List<String> mFragmentTitles = new ArrayList<>();
+		private final FragmentManager mFragmentManager;
 
 		public GraphPagerAdapter(FragmentManager fm) {
 			super(fm);
+			mFragmentManager = fm;
 		}
 
 		@Override
@@ -243,7 +313,19 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			mFragments.add(fragment);
 			mFragmentTitles.add(title);
 		}
+
+		public Fragment getActiveFragment(ViewPager container, int position) {
+			String name = makeFragmentName(container.getId(), position);
+			return  mFragmentManager.findFragmentByTag(name);
+		}
+
+		private static String makeFragmentName(int viewId, int index) {
+			return "android:switcher:" + viewId + ":" + index;
+		}
 	}
 
 
+	public interface ChartSettingListener {
+		void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity);
+	}
 }

@@ -17,7 +17,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.BarLineScatterCandleBubbleData;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineData;
@@ -26,7 +25,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.view.ChartMarkerView;
-import com.rehivetech.beeeon.gui.view.Slider;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -35,6 +33,7 @@ import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.format.DateTimeFormatter;
 
@@ -44,7 +43,7 @@ import java.util.List;
 /**
  * @author martin on 18.8.2015.
  */
-public class ModuleGraphFragment extends BaseApplicationFragment {
+public class ModuleGraphFragment extends BaseApplicationFragment implements ModuleGraphActivity.ChartSettingListener{
 	private static final String TAG = ModuleGraphFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
@@ -62,26 +61,42 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
 
-	private Slider mSlider;
 	private CombinedChart mChart;
-	private DataSet mDataSet;
-	private List<String> mXValues = new ArrayList<>();
-//	private Button mShowLegendButton;
+	private DataSet mDataSetMin;
+	private DataSet mDataSetAvg;
+	private DataSet mDataSetMax;
+
+	//	private Button mShowLegendButton;
 	private StringBuffer mYlabels = new StringBuffer();
 
-	private ChartHelper.ChartLoad mChartLoadCallback = new ChartHelper.ChartLoad() {
-		@Override
-		public void onChartLoaded() {
-			BarLineScatterCandleBubbleData data;
-			CombinedData combinedData = new CombinedData(mXValues);
+	private ChartHelper.ChartLoadListener mChartLoadCallback = new ChartHelper.ChartLoadListener() {
 
-			if (mDataSet instanceof BarDataSet) {
-				data = new BarData(mXValues, (BarDataSet) mDataSet);
-				combinedData.setData((BarData) data);
+		@Override
+		public void onChartLoaded(DataSet dataSet, List<String> xValues) {
+			CombinedData combinedData;
+
+			List<String> xvalsTmp = new ArrayList<>(xValues);
+
+			if (mChart.getData() != null) {
+				combinedData = mChart.getData();
+				combinedData.getXVals().clear();
+				combinedData.getXVals().addAll(xvalsTmp);
+
 			} else {
-				data = new LineData(mXValues, (LineDataSet) mDataSet);
-				combinedData.setData((LineData) data);
+				combinedData = new CombinedData(xvalsTmp);
 			}
+
+			if (dataSet instanceof BarDataSet) {
+				BarData data = (combinedData.getBarData() == null) ? new BarData(xvalsTmp) : combinedData.getBarData();
+				data.addDataSet((BarDataSet) dataSet);
+				combinedData.setData(data);
+
+			} else {
+				LineData data = (combinedData.getLineData() == null) ? new LineData(xvalsTmp) : combinedData.getLineData();
+				data.addDataSet((LineDataSet) dataSet);
+				combinedData.setData(data);
+			}
+
 			mChart.setData(combinedData);
 			mChart.invalidate();
 		}
@@ -131,7 +146,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
 		mChart = (CombinedChart) view.findViewById(R.id.module_graph_chart);
 
-//		mSlider = (Slider) view.findViewById(R.id.module_graph_slider);
 
 
 //		mShowLegendButton = (Button) view.findViewById(R.id.module_graph_show_legend_btn);
@@ -192,19 +206,46 @@ public class ModuleGraphFragment extends BaseApplicationFragment {
 
 		mChart.setDrawBorders(false);
 
+		String dataSetMinName = String.format("%s - %s min", deviceName, moduleName);
+		String dataSetAvgName = String.format("%s - %s avg", deviceName, moduleName);
+		String dataSetMaxName = String.format("%s - %s max", deviceName, moduleName);
+
 		if (barchart) {
-			mDataSet = new BarDataSet(new ArrayList<BarEntry>(), String.format("%s - %s", deviceName, moduleName));
+			mDataSetMin = new BarDataSet(new ArrayList<BarEntry>(), dataSetMinName);
+			mDataSetAvg = new BarDataSet(new ArrayList<BarEntry>(), dataSetAvgName);
+			mDataSetMax = new BarDataSet(new ArrayList<BarEntry>(), dataSetMaxName);
 		} else {
-			mDataSet = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), String.format("%s - %s", deviceName, moduleName));
+			mDataSetMin = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetMinName);
+			mDataSetAvg = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetAvgName);
+			mDataSetMax = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetMaxName);
 //			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
-		ChartHelper.prepareDataSet(mActivity, mDataSet, barchart, true,
-				ContextCompat.getColor(mActivity, R.color.beeeon_primary), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+		ChartHelper.prepareDataSet(mActivity, mDataSetAvg, barchart, true, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+		ChartHelper.prepareDataSet(mActivity, mDataSetMin, barchart, true, Utils.getGraphColor(mActivity, 1), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+		ChartHelper.prepareDataSet(mActivity, mDataSetMax, barchart, true, Utils.getGraphColor(mActivity, 2), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 
 		//load chart data
-		mXValues = new ArrayList<>();
-		ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSet, mXValues, mGateId, mDeviceId, mModuleId, mRange,
+		ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
 				ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW, mChartLoadCallback);
+	}
+
+	@Override
+	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity) {
+		mChart.clear();
+
+		if (drawMax) {
+			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,
+					ModuleLog.DataType.MAXIMUM, dataGranularity, mChartLoadCallback);
+		}
+		if (drawAvg) {
+			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
+					ModuleLog.DataType.AVERAGE, dataGranularity, mChartLoadCallback);
+		}
+
+		if (drawMin) {
+			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
+					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback);
+		}
 	}
 }
