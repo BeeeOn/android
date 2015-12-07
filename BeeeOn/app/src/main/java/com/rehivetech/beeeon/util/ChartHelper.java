@@ -367,8 +367,12 @@ final public class ChartHelper {
 		getModuleLogTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				fillDataSet(Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair), dataSet, xValues);
-				callback.onChartLoaded(dataSet, xValues);
+				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
+
+				if (moduleLog.getValues().size() > 1) {
+					fillDataSet(moduleLog, dataSet, xValues);
+					callback.onChartLoaded(dataSet, xValues);
+				}
 			}
 		});
 

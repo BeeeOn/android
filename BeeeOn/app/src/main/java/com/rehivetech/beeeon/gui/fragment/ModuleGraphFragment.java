@@ -99,6 +99,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 			mChart.setData(combinedData);
 			mChart.invalidate();
+
+			mActivity.setMinValue(String.format("%.2f", dataSet.getYMin()));
+			mActivity.setMaxValue(String.format("%.2f", dataSet.getYMax()));
 		}
 	};
 
@@ -172,13 +175,19 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			mActivity.finish();
 		}
 	}
+//
+//	@Override
+//	public void setUserVisibleHint(boolean isVisibleToUser) {
+//		super.setUserVisibleHint(isVisibleToUser);
+//		if (isVisibleToUser && getView() != null) {
+//			addGraphView();
+//		}
+//	}
 
 	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if (isVisibleToUser && getView() != null) {
-			addGraphView();
-		}
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		addGraphView();
 	}
 
 	private void addGraphView() {

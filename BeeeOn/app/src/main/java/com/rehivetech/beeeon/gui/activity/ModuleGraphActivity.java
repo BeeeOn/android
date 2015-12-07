@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.konifar.fab_transformation.FabTransformation;
@@ -50,6 +51,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private String mGateId;
 	private String mDeviceId;
 	private String mModuleId;
+
+	private TextView mMinValue;
+	private TextView mMaxValue;
+	private TextView mActValue;
 
 	private TabLayout mTabLayout;
 	private ViewPager mViewPager;
@@ -105,6 +110,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 			actionBar.setDisplayShowTitleEnabled(true);
 		}
+
+		mMinValue = (TextView) findViewById(R.id.module_graph_min_value);
+		mMaxValue = (TextView) findViewById(R.id.module_graph_max_value);
+		mActValue = (TextView) findViewById(R.id.module_graph_act_value);
 
 		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
 		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
@@ -181,6 +190,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			mCheckBoxAvg.setChecked(true);
 		}
 
+		updateActValue();
 	}
 
 	@Override
@@ -213,8 +223,29 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		mViewPager.setAdapter(adapter);
 		mTabLayout.setupWithViewPager(mViewPager);
+
+		mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
 	}
 
+	private void updateActValue() {
+		Double actValue = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId).getValue().getDoubleValue();
+		mActValue.setText(Double.toString(actValue));
+	}
 	private Map<ModuleLog.DataInterval, String> getIntervalString(ModuleLog.DataInterval[] intervals) {
 		Map<ModuleLog.DataInterval, String> intervalStringMap =new LinkedHashMap<>();
 
@@ -281,6 +312,14 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		ModuleGraphFragment currentFragment = (ModuleGraphFragment) ((GraphPagerAdapter) mViewPager.getAdapter()).getActiveFragment(mViewPager, mViewPager.getCurrentItem());
 
 		currentFragment.onChartSettingChanged(mCheckBoxMin.isChecked(), mCheckBoxAvg.isChecked(), mCheckBoxMax.isChecked(), getIntervalBySliderProgress());
+	}
+
+	public void setMinValue(String minValue) {
+		mMinValue.setText(minValue);
+	}
+
+	public void setMaxValue(String maxValue) {
+		mMaxValue.setText(maxValue);
 	}
 
 	private static class GraphPagerAdapter extends FragmentPagerAdapter {
