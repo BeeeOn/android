@@ -309,11 +309,19 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mDeviceLastUpdate.setValue(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
 		}
 
+		// available/unavailable icon
+		boolean statusOk = mDevice.getStatus().equals(Device.STATUS_AVAILABLE);
+		int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
+		int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
+
+		mIcon.setImageResource(iconRes);
+		mIcon.setBackgroundResource(backRes);
+
 		// signal
 
 		Integer rssi = mDevice.getRssi();
 		if (rssi != null && mDeviceSignal != null) {
-			mDeviceSignal.setValue(rssi == 0 ? getString(R.string.device_detail_device_offline) : getString(R.string.device_detail_device_online));
+			mDeviceSignal.setValue(String.valueOf(rssi));
 			mDeviceSignal.setIcon(rssi == 0 ? R.drawable.ic_signal_wifi_off_white_24dp : R.drawable.ic_signal_wifi_4_bar_white_24dp);
 		}
 

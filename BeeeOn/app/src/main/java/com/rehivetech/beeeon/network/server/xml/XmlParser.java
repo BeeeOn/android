@@ -250,6 +250,7 @@ public class XmlParser {
 				device.setLastUpdate(new DateTime((long) getSecureAttributeInt("time", 0) * 1000, DateTimeZone.UTC));
 				// PairedTime is not used always...
 				device.setPairedTime(new DateTime((long) getSecureAttributeInt("involved", 0) * 1000, DateTimeZone.UTC));
+				device.setStatus(getSecureAttributeString("status"));
 
 				// Load modules values
 				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("device")) {

@@ -14,7 +14,7 @@
 		android:layout_width="40dp"
 		android:layout_height="40dp"
 		android:padding="4dp"
-		android:src="@drawable/ic_mod_boiler_state"
+		android:src="@drawable/ic_status_online"
 		android:background="@drawable/oval_primary"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"

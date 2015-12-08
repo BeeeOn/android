@@ -120,7 +120,12 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				}
 
 				// sets selected background && icon
-				deviceHolder.setSelected(isSelected(position), deviceHolder.mIcon, R.drawable.ic_mod_boiler_state);
+				boolean statusOk = device.getStatus().equals(Device.STATUS_AVAILABLE);
+				int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
+				int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
+
+				deviceHolder.setSelected(isSelected(position), deviceHolder.mIcon, iconRes);
+				deviceHolder.mIcon.setBackgroundResource(backRes);
 
 				break;
 

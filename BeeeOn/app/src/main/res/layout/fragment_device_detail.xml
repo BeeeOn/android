@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
 	android:id="@+id/device_detail_root_layout"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
@@ -29,7 +30,7 @@
 				android:layout_marginLeft="16dp"
 				android:layout_marginStart="16dp"
 				app:layout_collapseMode="parallax"
-				android:src="@drawable/ic_mod_boiler_state"/>
+				android:src="@drawable/ic_status_online"/>
 
 			<TextView
 				android:id="@+id/device_detail_device_name"
@@ -39,6 +40,7 @@
 				android:paddingLeft="72dp"
 				android:textAppearance="@style/TextAppearance.AppCompat.Title"
 				android:textColor="@color/white"
+				tools:text="Device name"
 				app:layout_collapseMode="parallax"
 				android:maxLines="2"/>
 

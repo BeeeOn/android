@@ -22,6 +22,9 @@ import java.util.List;
 public final class Device implements IIdentifier {
 	public static final String TAG = Device.class.getSimpleName();
 
+	public static final String STATUS_AVAILABLE = "available";
+	public static final String STATUS_UNAVAILABLE = "unavailable";
+
 	/**
 	 * Properties inherited from device's specification table.
 	 */
@@ -38,6 +41,7 @@ public final class Device implements IIdentifier {
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
 	private String mCustomName = "";
+	private String mStatus = STATUS_AVAILABLE;
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -167,6 +171,14 @@ public final class Device implements IIdentifier {
 	 */
 	public void setCustomName(@NonNull String name) {
 		mCustomName = name;
+	}
+
+	public String getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(String status) {
+		mStatus = status;
 	}
 
 	/**

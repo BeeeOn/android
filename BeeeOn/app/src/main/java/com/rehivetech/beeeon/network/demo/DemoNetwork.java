@@ -98,6 +98,9 @@ public class DemoNetwork implements INetwork {
 
 		String newValue = ValuesGenerator.generateValue(module, rand);
 		module.setValue(newValue);
+
+		// Set error status randomly (but rarely)
+		module.getDevice().setStatus(rand.nextInt() % 10 != 0 ? Device.STATUS_AVAILABLE : Device.STATUS_UNAVAILABLE);
 	}
 
 	public void initDemoData() throws AppException {
@@ -386,6 +389,7 @@ public class DemoNetwork implements INetwork {
 			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			// mDevice.setLocationId(locationId); // uninitialized mDevice has no location
 			device.setNetworkQuality(rand.nextInt(101));
+			device.setStatus(Device.STATUS_AVAILABLE);
 
 			// Set random values for device modules
 			for (Module module : device.getAllModules(true)) {
