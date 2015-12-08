@@ -65,6 +65,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private AppCompatCheckBox mCheckBoxAvg;
 	private AppCompatCheckBox mCheckBoxMax;
 
+	private Button mButtonCancel;
 	private Button mButtonDone;
 	private FloatingActionButton mFab;
 
@@ -130,6 +131,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		((TextView) findViewById(R.id.module_graph_text_max)).setTextColor(Utils.getGraphColor(this, 2));
 
 		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
+		mButtonCancel = (Button) findViewById(R.id.module_graph_button_cancel);
 		mButtonDone = (Button) findViewById(R.id.module_graph_button_done);
 
 		setupViewPager();
@@ -158,6 +160,28 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 				});
 
 				builder.transformTo(transformView);
+
+			}
+		});
+
+		mButtonCancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FabTransformation.Builder builder = FabTransformation.with(mFab);
+
+				builder.setListener(new FabTransformation.OnTransformListener() {
+					@Override
+					public void onStartTransform() {
+						transformView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.beeeon_accent));
+
+					}
+
+					@Override
+					public void onEndTransform() {
+					}
+				});
+
+				builder.transformFrom(transformView);
 
 			}
 		});

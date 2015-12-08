@@ -198,6 +198,16 @@
 				android:layout_below="@id/module_graph_label_data_granularity"/>
 
 			<Button
+				android:id="@+id/module_graph_button_cancel"
+				android:theme="@style/BeeeOn.Button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/activity_fragment_btn_cancel"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentLeft="true"
+				android:layout_below="@id/module_graph_slider"/>
+
+			<Button
 				android:id="@+id/module_graph_button_done"
 				android:theme="@style/BeeeOn.Button"
 				android:layout_width="wrap_content"
