@@ -27,6 +27,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -123,6 +124,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mCheckBoxMin = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_min);
 		mCheckBoxAvg = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_avg);
 		mCheckBoxMax = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_max);
+
+		((TextView) findViewById(R.id.module_graph_text_min)).setTextColor(Utils.getGraphColor(this, 1));
+		((TextView) findViewById(R.id.module_graph_text_avg)).setTextColor(Utils.getGraphColor(this, 0));
+		((TextView) findViewById(R.id.module_graph_text_max)).setTextColor(Utils.getGraphColor(this, 2));
 
 		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
 		mButtonDone = (Button) findViewById(R.id.module_graph_button_done);
@@ -232,7 +237,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onPageSelected(int position) {
-
+				redrawActiveFragment();
 			}
 
 			@Override
@@ -244,7 +249,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 	private void updateActValue() {
 		Double actValue = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId).getValue().getDoubleValue();
-		mActValue.setText(Double.toString(actValue));
+		mActValue.setText(String.format("%.2f", actValue));
 	}
 	private Map<ModuleLog.DataInterval, String> getIntervalString(ModuleLog.DataInterval[] intervals) {
 		Map<ModuleLog.DataInterval, String> intervalStringMap =new LinkedHashMap<>();

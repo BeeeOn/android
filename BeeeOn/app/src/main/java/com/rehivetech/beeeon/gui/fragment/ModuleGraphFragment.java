@@ -102,6 +102,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 			mActivity.setMinValue(String.format("%.2f", dataSet.getYMin()));
 			mActivity.setMaxValue(String.format("%.2f", dataSet.getYMax()));
+
+			Log.d(TAG, String.format("dataSet added: %s",dataSet.getLabel()));
 		}
 	};
 
@@ -175,14 +177,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			mActivity.finish();
 		}
 	}
-//
-//	@Override
-//	public void setUserVisibleHint(boolean isVisibleToUser) {
-//		super.setUserVisibleHint(isVisibleToUser);
-//		if (isVisibleToUser && getView() != null) {
-//			addGraphView();
-//		}
-//	}
 
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -234,9 +228,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		ChartHelper.prepareDataSet(mActivity, mDataSetMin, barchart, true, Utils.getGraphColor(mActivity, 1), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 		ChartHelper.prepareDataSet(mActivity, mDataSetMax, barchart, true, Utils.getGraphColor(mActivity, 2), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 
-		//load chart data
-		ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
-				ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW, mChartLoadCallback);
 	}
 
 	@Override

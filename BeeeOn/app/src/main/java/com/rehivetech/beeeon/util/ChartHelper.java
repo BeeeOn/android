@@ -388,7 +388,7 @@ final public class ChartHelper {
 		boolean barChart = (dataSet instanceof BarDataSet);
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
-		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum()));
+		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString()));
 
 		dataSet.clear();
 
