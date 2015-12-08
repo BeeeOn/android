@@ -137,6 +137,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		Map<ModuleLog.DataInterval, String> intervals = getIntervalString(ModuleLog.DataInterval.values());
 
 		mSlider.setValues(new ArrayList<>(intervals.values()));
+		mSlider.setProgress(2);  // default dataInterval 5 minutes
 
 		final View transformView = findViewById(R.id.module_graph_footer);
 		mFab.setOnClickListener(new View.OnClickListener() {
