@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.CombinedChart;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -24,7 +23,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
-import com.rehivetech.beeeon.gui.view.ChartMarkerView;
+import com.rehivetech.beeeon.gui.view.ModuleGraphMarkerView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -196,7 +195,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		//set chart
 
 		DateTimeFormatter formatter = mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId));
-		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, mChart);
+		ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, mChart, formatter);
 
 		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
 
