@@ -77,7 +77,8 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 				Spinner spinner = mFragment.getSpinner();
 				TextView newLocation = mFragment.getNewLocation();
 				Spinner newIconSpinner = mFragment.getNewIconSpinner();
-				Device newDevice = Controller.getInstance(SetupDeviceActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(0);
+				int deviceIndex = mFragment.getDeviceIndex();
+				Device newDevice = Controller.getInstance(SetupDeviceActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(deviceIndex) ;
 
 				if (spinner == null || newIconSpinner == null || newDevice == null) {
 					// Temporary fix for temporary solution with 2-tabs pairing result - e.g. when user press "save" on the first tab, then spinner doesn't exists

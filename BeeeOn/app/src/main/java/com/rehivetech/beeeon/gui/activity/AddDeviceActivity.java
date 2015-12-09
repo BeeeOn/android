@@ -57,7 +57,9 @@ public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFra
 
 	@Override
 	public void setNextButtonEnabled(boolean enabled) {
-		mNext.setEnabled(enabled);
+		if (mNext != null) {
+			mNext.setEnabled(enabled);
+		}
 	}
 
 	@Override

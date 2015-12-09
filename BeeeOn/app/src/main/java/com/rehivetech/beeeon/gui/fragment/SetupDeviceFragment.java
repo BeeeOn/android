@@ -41,6 +41,7 @@ public class SetupDeviceFragment extends TrackFragment {
 	private Device mNewDevice;
 
 	private String mGateId;
+	private int mDeviceIndex;
 
 	public static SetupDeviceFragment newInstance(int deviceIndex) {
 
@@ -57,6 +58,7 @@ public class SetupDeviceFragment extends TrackFragment {
 
 		try {
 			mActivity = (SetupDeviceActivity) getActivity();
+			mActivity.setFragment(this);
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must be subclass of SetupDeviceActivity");
@@ -76,10 +78,10 @@ public class SetupDeviceFragment extends TrackFragment {
 			return;
 		}
 
-		int deviceIndex = getArguments().getInt(KEY_DEVICE_INDEX);
+		mDeviceIndex = getArguments().getInt(KEY_DEVICE_INDEX);
 
 		mGateId = gate.getId();
-		mNewDevice = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(deviceIndex);
+		mNewDevice = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(mDeviceIndex);
 
 		// TODO: sent as parameter if we want first uninitialized module or some module with particular id
 
@@ -95,16 +97,6 @@ public class SetupDeviceFragment extends TrackFragment {
 		mActivity.findViewById(R.id.device_setup_save_button).setVisibility(View.VISIBLE);
 		return mView;
 	}
-
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if (isVisibleToUser) {
-			Log.d(TAG, "SETUP MODULE fragment is visible");
-			mActivity.setFragment(this);
-		}
-	}
-
 
 	private void initViews() {
 		// Set listener for hide or unhide layout for add new location
@@ -205,6 +197,10 @@ public class SetupDeviceFragment extends TrackFragment {
 	@Nullable
 	public Spinner getNewIconSpinner() {
 		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon));
+	}
+
+	public int getDeviceIndex() {
+		return mDeviceIndex;
 	}
 
 }
