@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -190,14 +191,17 @@ public class SetupDeviceFragment extends TrackFragment {
 		return false;
 	}
 
+	@Nullable
 	public Spinner getSpinner() {
 		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location));
 	}
 
+	@Nullable
 	public TextView getNewLocation() {
 		return ((EditText) mView.findViewById(R.id.module_setup_new_location_name));
 	}
 
+	@Nullable
 	public Spinner getNewIconSpinner() {
 		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon));
 	}

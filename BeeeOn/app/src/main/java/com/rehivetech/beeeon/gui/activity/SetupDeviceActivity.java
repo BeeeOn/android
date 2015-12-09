@@ -100,6 +100,11 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 				Spinner newIconSpinner = mFragment.getNewIconSpinner();
 				Device newDevice = Controller.getInstance(SetupDeviceActivity.this).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(0);
 
+				if (spinner == null || newIconSpinner == null || newDevice == null) {
+					// Temporary fix for temporary solution with 2-tabs pairing result - e.g. when user press "save" on the first tab, then spinner doesn't exists
+					return;
+				}
+
 				Location location;
 				if (spinner.getSelectedItemPosition() == spinner.getCount() - 1) {
 					// last location - means new one, so check its name
