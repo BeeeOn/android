@@ -25,6 +25,8 @@ import com.rehivetech.beeeon.gui.fragment.ModuleGraphFragment;
 import com.rehivetech.beeeon.gui.view.Slider;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
@@ -273,8 +275,19 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	}
 
 	private void updateActValue() {
-		Double actValue = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId).getValue().getDoubleValue();
-		mActValue.setText(String.format("%.2f", actValue));
+		BaseValue value = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId).getValue();
+		if (value instanceof EnumValue) {
+			mActValue.setText(((EnumValue) value).getStateStringResource());
+
+			mMinValue.setVisibility(View.GONE);
+			findViewById(R.id.module_graph_min_label).setVisibility(View.GONE);
+
+			mMaxValue.setVisibility(View.GONE);
+			findViewById(R.id.module_graph_max_label).setVisibility(View.GONE);
+
+		} else {
+			mActValue.setText(String.format("%.2f", value.getDoubleValue()));
+		}
 	}
 	private Map<ModuleLog.DataInterval, String> getIntervalString(ModuleLog.DataInterval[] intervals) {
 		Map<ModuleLog.DataInterval, String> intervalStringMap =new LinkedHashMap<>();

@@ -86,12 +86,13 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 				LineData data = ((LineChart) mChart).getLineData() == null ? new LineData(xValues) : ((LineChart) mChart).getLineData();
 				data.addDataSet((LineDataSet) dataSet);
 				((LineChart) mChart).setData(data);
+
+				mActivity.setMinValue(String.format("%.2f", dataSet.getYMin()));
+				mActivity.setMaxValue(String.format("%.2f", dataSet.getYMax()));
 			}
 
 			mChart.invalidate();
 
-			mActivity.setMinValue(String.format("%.2f", dataSet.getYMin()));
-			mActivity.setMaxValue(String.format("%.2f", dataSet.getYMax()));
 
 			Log.d(TAG, String.format("dataSet added: %s",dataSet.getLabel()));
 		}
@@ -190,8 +191,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			mChart = new BarChart(mActivity);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false);
 		} else {
-			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter);
 			mChart = new LineChart(mActivity);
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
 		}
 

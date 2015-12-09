@@ -83,7 +83,7 @@
 				android:id="@+id/module_graph_tab_layoout"
 				style="@style/ModuleGroupTabLayout"
 				android:layout_centerHorizontal="true"
-				android:layout_below="@id/module_graph_max_value"
+				android:layout_below="@id/module_graph_act_value"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"/>
 
