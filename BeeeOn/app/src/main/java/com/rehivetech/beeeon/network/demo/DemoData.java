@@ -55,13 +55,13 @@ public class DemoData {
 		List<GateInfo> gatesList = new ArrayList<>();
 
 		GateInfo demoGate1 = new GateInfo(GATE_1_ID, context.getString(R.string.gate_1_name));
-		demoGate1.setRole(User.Role.Admin);
+		demoGate1.setRole(getMyRole(demoGate1.getId()));
 		demoGate1.setUtcOffset(500);
 		demoGate1.setOwner(getGateOwner(demoGate1.getId()));
 		gatesList.add(demoGate1);
 
 		GateInfo demoGate2 = new GateInfo(GATE_2_ID, context.getString(R.string.gate_2_name));
-		demoGate2.setRole(User.Role.Owner);
+		demoGate1.setRole(getMyRole(demoGate2.getId()));
 		demoGate2.setUtcOffset(60);
 		demoGate2.setOwner(getGateOwner(demoGate2.getId()));
 		gatesList.add(demoGate2);
@@ -86,6 +86,25 @@ public class DemoData {
 		}
 
 		return owner;
+	}
+
+	/**
+	 * Helper for getting my role for given gate's id.
+	 *
+	 * @param gateId
+	 * @return
+	 */
+	private User.Role getMyRole(String gateId) {
+		User.Role role = User.Role.Guest;
+
+		List<User> users = getUsers(gateId);
+		for (User user : users) {
+			if (user.getId().equals(mUser.getId())) {
+				role = user.getRole();
+			}
+		}
+
+		return role;
 	}
 
 	public List<Location> getLocation(Context context, String gateId) {
