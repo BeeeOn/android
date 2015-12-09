@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
@@ -69,7 +70,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private DataSet mDataSetAvg;
 	private DataSet mDataSetMax;
 
-	//	private Button mShowLegendButton;
 	private StringBuffer mYlabels = new StringBuffer();
 
 	private ChartHelper.ChartLoadListener mChartLoadCallback = new ChartHelper.ChartLoadListener() {
@@ -144,17 +144,17 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mRootLayout = (RelativeLayout) view.findViewById(R.id.module_graph_layout);
 
 
-//		mShowLegendButton = (Button) view.findViewById(R.id.module_graph_show_legend_btn);
-//		mShowLegendButton.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
-//						.setTitle(getString(R.string.chart_helper_chart_y_axis))
-//						.setMessage(mYlabels.toString())
-//						.setNeutralButtonText("close")
-//						.show();
-//			}
-//		});
+
+		mActivity.setShowLegendButtonOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
+						.setTitle(getString(R.string.chart_helper_chart_y_axis))
+						.setMessage(mYlabels.toString())
+						.setNeutralButtonText("close")
+						.show();
+			}
+		});
 		return view;
 	}
 
@@ -186,6 +186,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		//set chart
 		DateTimeFormatter formatter = mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId));
+		mYlabels = new StringBuffer();
 
 		if (barchart) {
 			mChart = new BarChart(mActivity);

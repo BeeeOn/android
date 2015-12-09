@@ -70,6 +70,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private Button mButtonCancel;
 	private Button mButtonDone;
 	private FloatingActionButton mFab;
+	private Button mShowLegendButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +136,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
 		mButtonCancel = (Button) findViewById(R.id.module_graph_button_cancel);
 		mButtonDone = (Button) findViewById(R.id.module_graph_button_done);
+
+		mShowLegendButton = (Button) findViewById(R.id.module_graph_show_legend_btn);
 
 		setupViewPager();
 
@@ -287,6 +290,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		} else {
 			mActValue.setText(String.format("%.2f", value.getDoubleValue()));
+			mShowLegendButton.setVisibility(View.GONE);
 		}
 	}
 	private Map<ModuleLog.DataInterval, String> getIntervalString(ModuleLog.DataInterval[] intervals) {
@@ -363,6 +367,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 	public void setMaxValue(String maxValue) {
 		mMaxValue.setText(maxValue);
+	}
+
+	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {
+		mShowLegendButton.setOnClickListener(onClickListener);
 	}
 
 	private static class GraphPagerAdapter extends FragmentPagerAdapter {
