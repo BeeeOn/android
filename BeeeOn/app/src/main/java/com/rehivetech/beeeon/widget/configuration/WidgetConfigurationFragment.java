@@ -252,7 +252,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 
 		mLocations = controller.getLocationsModel().getLocationsByGate(gateId);
 
-		// get all devices by locations (avoiding mDevice without location)
+		// get all devices by locations (avoiding device without location)
 		mModules.clear();
 		for (Location loc : mLocations) {
 			List<Device> tempFac = controller.getDevicesModel().getDevicesByLocation(gateId, loc.getId());

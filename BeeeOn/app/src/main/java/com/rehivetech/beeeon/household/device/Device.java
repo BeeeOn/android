@@ -402,7 +402,7 @@ public final class Device implements IIdentifier {
 	 * Data holder used for saving device data to server.
 	 */
 	public static class DataPair {
-		public final Device mDevice;
+		public final Device device;
 		public final Location location;
 
 		public DataPair(final Device device) {
@@ -410,7 +410,7 @@ public final class Device implements IIdentifier {
 		}
 
 		public DataPair(final Device device, final Location location) {
-			this.mDevice = device;
+			this.device = device;
 			this.location = location;
 		}
 	}

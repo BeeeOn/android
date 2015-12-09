@@ -16,7 +16,7 @@ public class UninitializedDevicesModel extends BaseModel {
 
 	private final int mReloadEverySecs;
 
-	private final MultipleDataHolder<Device> mUninitializedDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
+	private final MultipleDataHolder<Device> mUninitializedDevices = new MultipleDataHolder<>(); // gateId => device dataHolder
 
 	public UninitializedDevicesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);

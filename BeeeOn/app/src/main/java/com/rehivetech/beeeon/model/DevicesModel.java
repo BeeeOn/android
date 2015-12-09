@@ -24,7 +24,7 @@ public class DevicesModel extends BaseModel {
 
 	private final int mReloadEverySecs;
 
-	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // gateId => mDevice dataHolder
+	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // gateId => device dataHolder
 
 	public DevicesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
 		super(network);
@@ -32,10 +32,10 @@ public class DevicesModel extends BaseModel {
 	}
 
 	/**
-	 * Return mDevice by ID.
+	 * Return device by ID.
 	 *
 	 * @param id
-	 * @return mDevice or null if no mDevice is found
+	 * @return device or null if no device is found
 	 */
 	public Device getDevice(String gateId, String id) {
 		return mDevices.getObject(gateId, id);

@@ -361,7 +361,7 @@ public class DemoNetwork implements INetwork {
 
 		Random rand = getRandomForGate(gateId);
 		if (rand.nextInt(10) == 0) {
-			// Create unique mDevice id
+			// Create unique device id
 			String address;
 			int i = 0;
 			do {
@@ -387,7 +387,7 @@ public class DemoNetwork implements INetwork {
 
 			device.setPairedTime(DateTime.now(DateTimeZone.UTC));
 			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
-			// mDevice.setLocationId(locationId); // uninitialized mDevice has no location
+			// device.setLocationId(locationId); // uninitialized device has no location
 			device.setNetworkQuality(rand.nextInt(101));
 			device.setStatus(Device.STATUS_AVAILABLE);
 

@@ -28,16 +28,16 @@ public class SaveDeviceTask extends CallbackTask<Device.DataPair> {
 			if (newLocation == null)
 				return false;
 
-			pair.mDevice.setLocationId(newLocation.getId());
+			pair.device.setLocationId(newLocation.getId());
 		}
 
 		DevicesModel devicesModel = controller.getDevicesModel();
 
 		// Save device data
-		devicesModel.saveDevice(pair.mDevice);
+		devicesModel.saveDevice(pair.device);
 
 		// Save refresh interval as actor switch
-		List<Module> refreshModules = pair.mDevice.getModulesByType(ModuleType.TYPE_REFRESH.getTypeId());
+		List<Module> refreshModules = pair.device.getModulesByType(ModuleType.TYPE_REFRESH.getTypeId());
 		if (!refreshModules.isEmpty()) {
 			devicesModel.switchActor(refreshModules.get(0));
 		}

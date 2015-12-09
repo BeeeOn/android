@@ -141,7 +141,7 @@ public class SetupDeviceFragment extends TrackFragment {
 			TimeHelper timeHelper = new TimeHelper(prefs);
 			Gate gate = controller.getGatesModel().getGate(device.getGateId());
 
-			// Set involved time of mDevice
+			// Set involved time of device
 			TextView time = (TextView) mView.findViewById(R.id.module_setup_info_text);
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getPairedTime(), gate)));
 		}

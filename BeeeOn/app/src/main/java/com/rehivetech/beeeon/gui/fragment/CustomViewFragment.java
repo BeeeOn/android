@@ -253,7 +253,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 		for (Device device : controller.getDevicesModel().getDevicesByGate(gate.getId())) {
 			List<Module> allModules = device.getAllModules(false);
-			Log.d(TAG, String.format("Preparing mDevice with %d modules", allModules.size()));
+			Log.d(TAG, String.format("Preparing device with %d modules", allModules.size()));
 
 			for (Module module : allModules) {
 				Log.d(TAG, String.format("Preparing module %s (type %d)", module.getModuleId().absoluteId, module.getType().getTypeId()));
