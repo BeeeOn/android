@@ -6,8 +6,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.Chart;
-import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
@@ -25,7 +24,7 @@ import org.joda.time.format.DateTimeFormatter;
 @SuppressLint("ViewConstructor")
 public class ModuleGraphMarkerView extends MarkerView {
 
-	private Chart mChart;
+	private LineChart mChart;
 
 	private TextView mTextMin;
 	private TextView mTextAvg;
@@ -39,7 +38,7 @@ public class ModuleGraphMarkerView extends MarkerView {
 	 * @param context
 	 * @param layoutResource
 	 */
-	public ModuleGraphMarkerView(Context context, int layoutResource, Chart chart, DateTimeFormatter formatter) {
+	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, DateTimeFormatter formatter) {
 		super(context, layoutResource);
 		mChart = chart;
 		mValueFormatter = ChartHelper.getXAxisValueFormatter(formatter);
@@ -74,7 +73,7 @@ public class ModuleGraphMarkerView extends MarkerView {
 		String xValue = mChart.getXValue(e.getXIndex());
 		xValue = mValueFormatter.getXValue(xValue, e.getXIndex(), null);
 
-		for (DataSet dataSet : ((CombinedChart) mChart).getData().getDataSets()) {
+		for (DataSet dataSet : mChart.getData().getDataSets()) {
 			if (dataSet.getLabel().contains("min")) {
 				mTextMin.setText(String.format("%s", dataSet.getYValForXIndex(e.getXIndex())));
 

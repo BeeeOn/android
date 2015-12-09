@@ -9,14 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
-import com.github.mikephil.charting.charts.CombinedChart;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.BarLineChartBase;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -57,10 +59,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 	private ModuleGraphActivity mActivity;
 
+	private RelativeLayout mRootLayout;
+
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
 
-	private CombinedChart mChart;
+	private BarLineChartBase mChart;
 	private DataSet mDataSetMin;
 	private DataSet mDataSetAvg;
 	private DataSet mDataSetMax;
@@ -72,31 +76,18 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		@Override
 		public void onChartLoaded(DataSet dataSet, List<String> xValues) {
-			CombinedData combinedData;
-
-			List<String> xvalsTmp = new ArrayList<>(xValues);
-
-			if (mChart.getData() != null) {
-				combinedData = mChart.getData();
-				combinedData.getXVals().clear();
-				combinedData.getXVals().addAll(xvalsTmp);
-
-			} else {
-				combinedData = new CombinedData(xvalsTmp);
-			}
 
 			if (dataSet instanceof BarDataSet) {
-				BarData data = (combinedData.getBarData() == null) ? new BarData(xvalsTmp) : combinedData.getBarData();
+				BarData data = ((BarChart) mChart).getBarData() == null ? new BarData(xValues) : ((BarChart) mChart).getBarData();
 				data.addDataSet((BarDataSet) dataSet);
-				combinedData.setData(data);
+				((BarChart) mChart).setData(data);
 
 			} else {
-				LineData data = (combinedData.getLineData() == null) ? new LineData(xvalsTmp) : combinedData.getLineData();
+				LineData data = ((LineChart) mChart).getLineData() == null ? new LineData(xValues) : ((LineChart) mChart).getLineData();
 				data.addDataSet((LineDataSet) dataSet);
-				combinedData.setData(data);
+				((LineChart) mChart).setData(data);
 			}
 
-			mChart.setData(combinedData);
 			mChart.invalidate();
 
 			mActivity.setMinValue(String.format("%.2f", dataSet.getYMin()));
@@ -148,8 +139,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
-		mChart = (CombinedChart) view.findViewById(R.id.module_graph_chart);
 
+		mRootLayout = (RelativeLayout) view.findViewById(R.id.module_graph_layout);
 
 
 //		mShowLegendButton = (Button) view.findViewById(R.id.module_graph_show_legend_btn);
@@ -193,11 +184,22 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		String moduleName = module.getName(mActivity);
 
 		//set chart
-
 		DateTimeFormatter formatter = mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId));
-		ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, mChart, formatter);
 
-		ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
+		if (barchart) {
+			mChart = new BarChart(mActivity);
+			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false);
+		} else {
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter);
+			mChart = new LineChart(mActivity);
+			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
+		}
+
+		mChart.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		mRootLayout.addView(mChart);
+
+
+
 
 		// prepare axis bottom
 		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false);

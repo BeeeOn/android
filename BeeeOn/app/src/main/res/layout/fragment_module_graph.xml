@@ -5,14 +5,6 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<com.github.mikephil.charting.charts.CombinedChart
-		android:id="@+id/module_graph_chart"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:layerType="software"
-		/>
-
-
 	<!--<Button-->
 	<!--android:id="@+id/module_graph_show_legend_btn"-->
 	<!--android:theme="@style/BeeeOn.Button"-->

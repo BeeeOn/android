@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
@@ -87,7 +88,7 @@ final public class ChartHelper {
 	 */
 	@SuppressLint("PrivateResource")
 	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels,
-									MarkerView markerView, boolean drawBorders) {
+									@Nullable MarkerView markerView, boolean drawBorders) {
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
