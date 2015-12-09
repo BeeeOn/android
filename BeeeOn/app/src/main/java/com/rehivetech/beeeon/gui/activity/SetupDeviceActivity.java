@@ -111,7 +111,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 				// Save that device
 				Log.d(TAG, String.format("InitializeDevice - device: %s, loc: %s", newDevice.getId(), location.getId()));
-				doInitializeDeviceTask(new Device.DataPair(newDevice, location));
+				doInitializeDeviceTask(new Device.DataPair(newDevice, location, true));
 			}
 		});
 	}

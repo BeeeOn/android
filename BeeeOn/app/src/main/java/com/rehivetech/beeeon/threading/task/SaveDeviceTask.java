@@ -36,10 +36,13 @@ public class SaveDeviceTask extends CallbackTask<Device.DataPair> {
 		// Save device data
 		devicesModel.saveDevice(pair.device);
 
-		// Save refresh interval as actor switch
-		List<Module> refreshModules = pair.device.getModulesByType(ModuleType.TYPE_REFRESH.getTypeId());
-		if (!refreshModules.isEmpty()) {
-			devicesModel.switchActor(refreshModules.get(0));
+		// Don't save refresh during initializing
+		if (!pair.initializing) {
+			// Save refresh interval as actor switch
+			List<Module> refreshModules = pair.device.getModulesByType(ModuleType.TYPE_REFRESH.getTypeId());
+			if (!refreshModules.isEmpty()) {
+				devicesModel.switchActor(refreshModules.get(0));
+			}
 		}
 
 		return true;

@@ -209,7 +209,7 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 			mDevice.setRefresh(refresh);
 		}
 
-		return new Device.DataPair(mDevice, mNewLocation); // TODO: remove the newLocation parameter and rework creating of default locations
+		return new Device.DataPair(mDevice, mNewLocation, false); // TODO: remove the newLocation parameter and rework creating of default locations
 	}
 
 	public void reloadLocationSpinner() {

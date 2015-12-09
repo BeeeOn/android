@@ -404,14 +404,12 @@ public final class Device implements IIdentifier {
 	public static class DataPair {
 		public final Device device;
 		public final Location location;
+		public final boolean initializing;
 
-		public DataPair(final Device device) {
-			this(device, null);
-		}
-
-		public DataPair(final Device device, final Location location) {
+		public DataPair(final Device device, final Location location, final boolean initializing) {
 			this.device = device;
 			this.location = location;
+			this.initializing = initializing;
 		}
 	}
 }
