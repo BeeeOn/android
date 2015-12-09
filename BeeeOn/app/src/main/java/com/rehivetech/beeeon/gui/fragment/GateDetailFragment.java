@@ -131,7 +131,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		mDetailsItemList.get(1).text = gateInfo.getOwner();
 		mDetailsItemList.get(2).text = getString(gateInfo.getRole().getStringResource());
 		mDetailsItemList.get(3).text = TimezoneWrapper.getZoneByOffset(offsetInMillis).toString();
-		mDetailsItemList.get(4).text = (altitude != -1 ? String.format("%d%s", altitude, getString(R.string.unit_meters_short)) : "");
+		mDetailsItemList.get(4).text = (altitude != -1 ? String.format("%d %s", altitude, getString(R.string.unit_meters_short)) : "");
 
 		int usersCount = gateInfo.getUsersCount();
 		DetailsItem usersDetailsItem = mDetailsItemList.get(5);
