@@ -4,9 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -18,14 +17,13 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.SetupDeviceFragmentAdapter;
 import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
+import com.rehivetech.beeeon.gui.fragment.UnPairedDeviceListFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
-import com.viewpagerindicator.CirclePageIndicator;
 
 public class SetupDeviceActivity extends BaseApplicationActivity {
 	private static final String TAG = SetupDeviceActivity.class.getSimpleName();
@@ -36,14 +34,10 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 	private SetupDeviceFragment mFragment;
 
-	private SetupDeviceFragmentAdapter mAdapter;
-
-	private ViewPager mViewPager;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_base_guide);
+		setContentView(R.layout.activity_device_setup);
 
 		setupToolbar(R.string.device_setup_title_setup_device);
 
@@ -54,31 +48,17 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 			return;
 		}
 
-		mAdapter = new SetupDeviceFragmentAdapter(getSupportFragmentManager(), mGateId);
-
-		mViewPager = (ViewPager) findViewById(R.id.base_guide_intro_pager);
-		mViewPager.setAdapter(mAdapter);
-		mViewPager.setOffscreenPageLimit(mAdapter.getCount());
-		mViewPager.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				return true;
-			}
-		});
-
-		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.base_guide_intro_indicator);
-		indicator.setViewPager(mViewPager);
-		indicator.setVisibility(View.GONE);
+		if (savedInstanceState == null) {
+			Fragment fragment = UnPairedDeviceListFragment.newInstance(mGateId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.device_setup_container, fragment).commit();
+		}
 
 		initButtons();
 	}
 
 	private void initButtons() {
-		Button skipBtn = (Button) findViewById(R.id.base_guide_add_gate_skip_button);
-		Button cancelBtn = (Button) findViewById(R.id.base_guide_add_gate_cancel_button);
-		Button nextBtn = (Button) findViewById(R.id.base_guide_add_gate_next_button);
-
-		skipBtn.setVisibility(View.INVISIBLE);
+		Button cancelBtn = (Button) findViewById(R.id.device_setup_cancel_button);
+		Button saveBtn = (Button) findViewById(R.id.device_setup_save_button);
 
 		cancelBtn.setOnClickListener(new OnClickListener() {
 
@@ -90,8 +70,7 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 				finish();
 			}
 		});
-		nextBtn.setText(getString(R.string.activity_gate_user_setup_device_btn_save));
-		nextBtn.setOnClickListener(new OnClickListener() {
+		saveBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -135,14 +114,6 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 	public void setFragment(SetupDeviceFragment fragment) {
 		mFragment = fragment;
 
-	}
-
-	public SetupDeviceFragmentAdapter getAdapter() {
-		return mAdapter;
-	}
-
-	public ViewPager getViewPager() {
-		return mViewPager;
 	}
 
 	private void doInitializeDeviceTask(final Device.DataPair pair) {

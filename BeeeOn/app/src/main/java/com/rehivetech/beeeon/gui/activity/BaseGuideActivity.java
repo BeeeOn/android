@@ -109,10 +109,6 @@ public abstract class BaseGuideActivity extends BaseApplicationActivity{
 		finish();
 	}
 
-	public void setNextButtonEnabled(boolean enabled){
-		mNext.setEnabled(enabled);
-	}
-
 	protected abstract void onLastFragmentActionNext();
 
 	protected abstract IntroFragmentPagerAdapter initPagerAdapter();

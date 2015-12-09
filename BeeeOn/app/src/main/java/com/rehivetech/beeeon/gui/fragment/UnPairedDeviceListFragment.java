@@ -1,7 +1,10 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,12 +31,12 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 
 	private String mGateId;
 
-	private RecyclerView mRecyclerView;
 	private DeviceRecycleAdapter mAdapter;
 
 	private ArrayList<Object> mAdapterList;
 	private List<Device> mDevicesList;
 
+	private SetupDeviceActivity mActivity;
 
 	public static UnPairedDeviceListFragment newInstance(String gateId) {
 
@@ -44,6 +47,16 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 		return fragment;
 	}
 
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		try {
+			mActivity = (SetupDeviceActivity) activity;
+		} catch (ClassCastException e) {
+			throw new UnsupportedOperationException("must be instance of SetupDeviceActivity");
+		}
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -56,16 +69,15 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		View view = inflater.inflate(R.layout.fragment_unpaired_devices_list, container, false);
 
-		((View)container.getParent()).findViewById(R.id.base_guide_add_gate_next_button).setVisibility(View.INVISIBLE);
+		mActivity.findViewById(R.id.device_setup_save_button).setVisibility(View.GONE);
 
 		mAdapter = new DeviceRecycleAdapter(getActivity(), this);
-		mRecyclerView = (RecyclerView) view.findViewById(R.id.unpaired_devices_recyclerview);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-		mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-		mRecyclerView.setAdapter(mAdapter);
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.unpaired_devices_recyclerview);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		recyclerView.setAdapter(mAdapter);
 		return view;
 	}
 
@@ -97,14 +109,18 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 	}
 
 	@Override
-	public void onRecyclerViewItemClick(int position, int viewType) { //TODO temp
+	public void onRecyclerViewItemClick(int position, int viewType) {
 		int index = findDeviceIndex(position);
 		SetupDeviceFragment fragment = SetupDeviceFragment.newInstance(index);
-		((SetupDeviceActivity) getActivity()).setFragment(fragment);
-		getActivity().findViewById(R.id.base_guide_add_gate_next_button).setVisibility(View.VISIBLE);
 
-		((SetupDeviceActivity) getActivity()).getAdapter().showNext(index);
-		((SetupDeviceActivity) getActivity()).getViewPager().setCurrentItem(1);
+		mActivity.setFragment(fragment);
+
+
+		FragmentManager fragmentManager2 = mActivity.getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction2 = fragmentManager2.beginTransaction();
+		fragmentTransaction2.addToBackStack(getTag());
+		fragmentTransaction2.replace(R.id.device_setup_container, fragment);
+		fragmentTransaction2.commit();
 	}
 
 	@Override

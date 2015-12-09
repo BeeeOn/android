@@ -88,10 +88,11 @@ public class SetupDeviceFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_module_setup, container, false);
+		mView = inflater.inflate(R.layout.fragment_device_setup, container, false);
 
 		initViews();
 
+		mActivity.findViewById(R.id.device_setup_save_button).setVisibility(View.VISIBLE);
 		return mView;
 	}
 

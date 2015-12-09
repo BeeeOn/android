@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<include layout="@layout/layout_beeeon_toolbar"/>
+
+	<FrameLayout
+		android:id="@+id/device_setup_container"
+		android:layout_below="@+id/beeeon_toolbar"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/device_setup_buttons_layout"/>
+
+	<FrameLayout
+		android:id="@id/device_setup_buttons_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/beeeon_primary"
+		android:layout_alignParentBottom="true">
+
+		<Button
+			android:id="@+id/device_setup_cancel_button"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:textColor="@color/white"
+			android:text="@string/activity_fragment_btn_cancel"/>
+
+		<Button
+			android:id="@+id/device_setup_save_button"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="end"
+			android:textColor="@color/white"
+			android:text="@string/activity_gate_user_setup_device_btn_save"/>
+	</FrameLayout>
+
+</RelativeLayout>
+
