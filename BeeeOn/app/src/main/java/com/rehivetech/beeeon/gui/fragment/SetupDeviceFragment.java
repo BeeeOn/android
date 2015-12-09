@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,7 +15,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
@@ -27,21 +26,32 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SetupDeviceFragment extends TrackFragment {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
+	private static final String KEY_DEVICE_INDEX = "device_index";
+
 	public SetupDeviceActivity mActivity;
 	private View mView;
 
-	private List<Device> mNewDevices;
+
+	private Device mNewDevice;
 
 	private String mGateId;
 
+	public static SetupDeviceFragment newInstance(int deviceIndex) {
+
+		Bundle args = new Bundle();
+		args.putInt(KEY_DEVICE_INDEX, deviceIndex);
+		SetupDeviceFragment fragment = new SetupDeviceFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
+
 	@Override
-	public void onAttach(Activity activity) {
+	public void onAttach(Context activity) {
 		super.onAttach(activity);
 
 		try {
@@ -64,8 +74,11 @@ public class SetupDeviceFragment extends TrackFragment {
 			// CHYBA
 			return;
 		}
+
+		int deviceIndex = getArguments().getInt(KEY_DEVICE_INDEX);
+
 		mGateId = gate.getId();
-		mNewDevices = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
+		mNewDevice = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(deviceIndex);
 
 		// TODO: sent as parameter if we want first uninitialized module or some module with particular id
 
@@ -126,24 +139,22 @@ public class SetupDeviceFragment extends TrackFragment {
 		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, locations);
 		spinner.setAdapter(dataAdapter);
 
-		Device device = mNewDevices.get(0);
-
 		TextView name = (TextView) mView.findViewById(R.id.module_setup_header_name);
-		name.setText(device.getName(mActivity));
+		name.setText(mNewDevice.getName(mActivity));
 
 		TextView manufacturer = (TextView) mView.findViewById(R.id.module_setup_header_manufacturer);
-		manufacturer.setText(getString(device.getType().getManufacturerRes()));
+		manufacturer.setText(getString(mNewDevice.getType().getManufacturerRes()));
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = controller.getUserSettings();
 
 		if (prefs != null) {
 			TimeHelper timeHelper = new TimeHelper(prefs);
-			Gate gate = controller.getGatesModel().getGate(device.getGateId());
+			Gate gate = controller.getGatesModel().getGate(mNewDevice.getGateId());
 
 			// Set involved time of device
 			TextView time = (TextView) mView.findViewById(R.id.module_setup_info_text);
-			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getPairedTime(), gate)));
+			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(mNewDevice.getPairedTime(), gate)));
 		}
 	}
 

@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
+import com.rehivetech.beeeon.gui.fragment.UnPairedDeviceListFragment;
 import com.viewpagerindicator.IconPagerAdapter;
 
 public class SetupDeviceFragmentAdapter extends FragmentPagerAdapter implements IconPagerAdapter {
@@ -17,20 +18,28 @@ public class SetupDeviceFragmentAdapter extends FragmentPagerAdapter implements 
 			R.drawable.ic_loc_dining_room_gray
 	};
 
-	private int mCount = 1;
+	private int mCount = 2;
+	private String mGateId;
+	private int mDeviceIndex;
 
-	public SetupDeviceFragmentAdapter(FragmentManager fm) {
+	public SetupDeviceFragmentAdapter(FragmentManager fm, String gateId) {
 		super(fm);
+		mGateId = gateId;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		switch (position) {
 			case 0:
-				// setup device
-				return new SetupDeviceFragment();
+				return UnPairedDeviceListFragment.newInstance(mGateId);
+			case 1:
+				return SetupDeviceFragment.newInstance(mDeviceIndex);
 		}
 		return null;
+	}
+
+	public void showNext(int deviceIndex) {
+		mDeviceIndex = deviceIndex;
 	}
 
 	@Override

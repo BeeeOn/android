@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
@@ -35,6 +36,10 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 	private SetupDeviceFragment mFragment;
 
+	private SetupDeviceFragmentAdapter mAdapter;
+
+	private ViewPager mViewPager;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,14 +54,20 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 			return;
 		}
 
-		SetupDeviceFragmentAdapter adapter = new SetupDeviceFragmentAdapter(getSupportFragmentManager());
+		mAdapter = new SetupDeviceFragmentAdapter(getSupportFragmentManager(), mGateId);
 
-		ViewPager viewPager = (ViewPager) findViewById(R.id.base_guide_intro_pager);
-		viewPager.setAdapter(adapter);
-		viewPager.setOffscreenPageLimit(adapter.getCount());
+		mViewPager = (ViewPager) findViewById(R.id.base_guide_intro_pager);
+		mViewPager.setAdapter(mAdapter);
+		mViewPager.setOffscreenPageLimit(mAdapter.getCount());
+		mViewPager.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				return true;
+			}
+		});
 
 		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.base_guide_intro_indicator);
-		indicator.setViewPager(viewPager);
+		indicator.setViewPager(mViewPager);
 		indicator.setVisibility(View.GONE);
 
 		initButtons();
@@ -118,6 +129,15 @@ public class SetupDeviceActivity extends BaseApplicationActivity {
 
 	public void setFragment(SetupDeviceFragment fragment) {
 		mFragment = fragment;
+
+	}
+
+	public SetupDeviceFragmentAdapter getAdapter() {
+		return mAdapter;
+	}
+
+	public ViewPager getViewPager() {
+		return mViewPager;
 	}
 
 	private void doInitializeDeviceTask(final Device.DataPair pair) {
