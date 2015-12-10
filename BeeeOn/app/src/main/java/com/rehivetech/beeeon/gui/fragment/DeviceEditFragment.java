@@ -167,17 +167,19 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 					}
 
 					RefreshInterval interval = (RefreshInterval) parent.getAdapter().getItem(position);
-					mWarningBattery.setVisibility(interval.getInterval() <= RefreshInterval.SEC_10.getInterval() ? View.VISIBLE : View.GONE);
-					mWarningRefresh.setVisibility(refreshInterval.getInterval() >= RefreshInterval.MIN_5.getInterval() ? View.VISIBLE : View.GONE);
+					boolean showBatteryWarning = mDevice.getBattery() != null && interval.getInterval() <= RefreshInterval.SEC_10.getInterval();
+					boolean showRefreshWarning = mDevice.getRefresh() != null && refreshInterval.getInterval() >= RefreshInterval.MIN_5.getInterval();
 
-					DateTime nexWakeUp = mDevice.getLastUpdate();
+					mWarningBattery.setVisibility(showBatteryWarning ? View.VISIBLE : View.GONE);
+					mWarningRefresh.setVisibility(showRefreshWarning ? View.VISIBLE : View.GONE);
 
-					if (nexWakeUp != null) {
-						nexWakeUp = nexWakeUp.plusSeconds(refreshInterval.getInterval());
+					DateTime nextWakeUp = mDevice.getLastUpdate();
+					if (nextWakeUp != null) {
+						nextWakeUp = nextWakeUp.plusSeconds(refreshInterval.getInterval());
 					}
-					mWarningRefresh.setText(getString(R.string.device_edit_warning_refresh, mTimeHelper.formatLastUpdate(nexWakeUp, Controller.getInstance(mActivity).getGatesModel().getGate(mGateId))));
+					mWarningRefresh.setText(getString(R.string.device_edit_warning_refresh, mTimeHelper.formatLastUpdate(nextWakeUp, Controller.getInstance(mActivity).getGatesModel().getGate(mGateId))));
 
-					if (mWarningBattery.getVisibility() == View.VISIBLE && mWarningRefresh.getVisibility() == View.VISIBLE) {
+					if (showBatteryWarning && showRefreshWarning) {
 						RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mWarningBattery.getLayoutParams();
 						layoutParams.addRule(RelativeLayout.BELOW, mWarningRefresh.getId());
 						mWarningBattery.setLayoutParams(layoutParams);
