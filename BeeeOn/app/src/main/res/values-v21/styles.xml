@@ -16,8 +16,4 @@
 	<!-- preference activity has support of material styles -->
 	<style name="SettingsActivity" parent="AppTheme" />
 
-	<style name="BeeeOn.Button" parent="AppTheme" >
-		<item name="android:colorButtonNormal">@color/beeeon_accent</item>
-		<item name="android:textColor">@color/white</item>
-	</style>
 </resources>

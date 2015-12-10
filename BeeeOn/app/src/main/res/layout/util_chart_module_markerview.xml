@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<LinearLayout
+		android:id="@+id/util_chart_markerview_text_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="5dp"
+		android:background="@drawable/chart_marker_bg_rectangle"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/util_chart_markerview_text_max"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/chart_marker_bg_rectangle"
+			android:textColor="@color/white"
+			android:gravity="center_horizontal"
+			android:drawablePadding="5dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+		<TextView
+			android:id="@+id/util_chart_markerview_text_avg"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:background="@drawable/chart_marker_bg_rectangle"
+			android:textColor="@color/white"
+			android:gravity="center_horizontal"
+			android:drawablePadding="5dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+		<TextView
+			android:id="@+id/util_chart_markerview_text_min"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/white"
+			android:gravity="center_horizontal"
+			android:drawablePadding="5dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+		<TextView
+			android:id="@+id/util_chart_markerview_text_xval"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@color/white"
+			android:gravity="center_horizontal"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+	</LinearLayout>
+
+	<com.rehivetech.beeeon.gui.view.TriangleView
+		android:layout_width="20dp"
+		android:layout_height="15dp"
+		android:padding="-2dp"
+		android:layout_centerHorizontal="true"
+		android:layout_below="@id/util_chart_markerview_text_layout"
+		app:triangleColor="@color/beeeon_accent"/>
+
+</RelativeLayout>

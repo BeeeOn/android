@@ -206,5 +206,8 @@
 		<item name="tabMode">scrollable</item>
     </style>
 
-    <style name="BeeeOn.Button" parent="AppTheme" />
+    <style name="BeeeOn.Button" parent="AppTheme">
+        <item name="colorButtonNormal">@color/beeeon_accent</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>

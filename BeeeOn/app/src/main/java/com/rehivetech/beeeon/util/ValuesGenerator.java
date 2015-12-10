@@ -82,13 +82,13 @@ public class ValuesGenerator {
 
 		RefreshInterval refresh = module.getDevice().getRefresh();
 
-		int everyMsecs;
+		long everyMsecs;
 		int changes = (refresh != null ? refresh.getIntervalIndex() + 1 : 1);
 
 		if (isEnum || refresh == null) {
 			// For enums we want fixed number of steps (because application surely wants raw values)
 			// For devices without refresh it is the similar situation
-			everyMsecs = (int) (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
+			everyMsecs = (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
 		} else {
 			int refreshInterval = module.getDevice().getRefresh().getInterval();
 			everyMsecs = Math.max(pair.gap.getSeconds(), refreshInterval) * 1000;

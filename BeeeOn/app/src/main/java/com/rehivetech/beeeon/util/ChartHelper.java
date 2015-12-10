@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
@@ -13,21 +17,59 @@ import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
+import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.GetModuleLogTask;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
 final public class ChartHelper {
+	private static final String TAG = ChartHelper.class.getSimpleName();
+
+	public static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
+
+	@IntDef(value = {RANGE_HOUR, RANGE_DAY, RANGE_WEEK, RANGE_MONTH})
+	@Retention(RetentionPolicy.CLASS)
+
+	public @interface DataRange {
+		int[] values() default {};
+	}
+
+	public static final int RANGE_HOUR = 60 * 60;
+	public static final int RANGE_DAY = RANGE_HOUR * 24;
+	public static final int RANGE_WEEK = RANGE_DAY * 7;
+	public static final int RANGE_MONTH = RANGE_WEEK * 4;
+
+
+	public static int[] ALL_RANGES = {RANGE_HOUR, RANGE_DAY, RANGE_WEEK, RANGE_MONTH};
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -45,9 +87,8 @@ final public class ChartHelper {
 	 * @param markerView chart markerView instance
 	 */
 	@SuppressLint("PrivateResource")
-	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue,
-									StringBuffer yLabels, MarkerView markerView) {
-		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
+	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels,
+									@Nullable MarkerView markerView, boolean drawBorders) {
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
@@ -62,33 +103,12 @@ final public class ChartHelper {
 		paint.setTypeface(tempText.getTypeface());
 		paint.setTextSize(tempText.getTextSize());
 
-		chart.setDrawBorders(true);
+		chart.setDrawBorders(drawBorders);
 		chart.setBorderColor(ContextCompat.getColor(context, R.color.gray));
 
 		chart.setDescription("");
 
-		chart.setGridBackgroundColor(ContextCompat.getColor(context, R.color.white));
-		//set bottom X axis style
-		XAxis xAxis = chart.getXAxis();
-		xAxis.setAvoidFirstLastClipping(true);
-		xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-		xAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
-		xAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
-		xAxis.setTypeface(tempText.getTypeface());
-		xAxis.setTextColor(tempText.getCurrentTextColor());
-
-		//set left Y axis style
-		YAxis yAxis = chart.getAxisLeft();
-		yAxis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
-		yAxis.setStartAtZero(false);
-		yAxis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
-		yAxis.setTypeface(tempText.getTypeface());
-		yAxis.setTextColor(tempText.getCurrentTextColor());
-
-
-		//disable right Y axis
-		chart.getAxisRight().setEnabled(false);
-		yAxis.setValueFormatter(yAxisValueFormatter);
+		chart.setGridBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
 
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
@@ -97,13 +117,8 @@ final public class ChartHelper {
 				for (int i = labels.size() - 1; i > -1; i--) {
 					yLabels.append(String.format("%d. %s\n", j++, context.getString(labels.get(i).getStringResource())));
 				}
-			} else {
-				yAxis.setShowOnlyMinMax(true);
 			}
 
-			yAxis.setLabelCount(labels.size(), true);
-			yAxis.setAxisMinValue(0);
-			yAxis.setAxisMaxValue(labels.size() - 1);
 			chart.setDoubleTapToZoomEnabled(false);
 			chart.setScaleYEnabled(false);
 		} else {
@@ -219,6 +234,57 @@ final public class ChartHelper {
 		dataset.setColor(color);
 	}
 
+	@SuppressLint("PrivateResource")
+	public static void prepareXAxis(Context context, XAxis axis, DateTimeFormatter formatter, @ColorInt Integer textColor,
+									XAxis.XAxisPosition position, boolean drawGridLines) {
+
+		//TextView to get text color and typeface from textAppearance
+		AppCompatTextView tempText = new AppCompatTextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
+		axis.setAvoidFirstLastClipping(true);
+		axis.setPosition(position);
+		axis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
+		axis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		axis.setTypeface(tempText.getTypeface());
+		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
+		axis.setDrawGridLines(drawGridLines);
+		axis.setValueFormatter(getXAxisValueFormatter(formatter));
+	}
+
+	@SuppressLint("PrivateResource")
+	public static void prepareYAxis(Context context, BaseValue baseValue, YAxis axis, @ColorInt Integer textColor,
+									YAxis.YAxisLabelPosition position, boolean drawGridLines, boolean drawAxisLine) {
+
+		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
+		//TextView to get text color and typeface from textAppearance
+		AppCompatTextView tempText = new AppCompatTextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+
+		axis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
+		axis.setStartAtZero(false);
+		axis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		axis.setTypeface(tempText.getTypeface());
+		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
+		axis.setValueFormatter(yAxisValueFormatter);
+		axis.setPosition(position);
+		axis.setDrawGridLines(drawGridLines);
+		axis.setDrawAxisLine(drawAxisLine);
+
+		if (baseValue instanceof EnumValue) {
+			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
+
+			if (labels.size() <= 2) {
+				axis.setShowOnlyMinMax(true);
+			}
+
+			axis.setLabelCount(labels.size(), true);
+			axis.setAxisMinValue(0);
+			axis.setAxisMaxValue(labels.size() - 1);
+		}
+	}
+
+
 	/**
 	 * Prepare ValueFormatter for bar and line chart
 	 *
@@ -258,6 +324,109 @@ final public class ChartHelper {
 		};
 	}
 
+	public static XAxisValueFormatter getXAxisValueFormatter(final DateTimeFormatter formatter) {
+
+		return new XAxisValueFormatter() {
+			@Override
+			public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
+				long value = Long.parseLong(original);
+				return formatter.print(value);
+			}
+		};
+	}
+
+
+
+	/**
+	 * @param activity     instance of activity
+	 * @param controller   instance of controller
+	 * @param dataSet      instance of chart dataSet
+	 * @param gateId       ID of gate
+	 * @param deviceId     ID of device
+	 * @param moduleId     ID of module
+	 * @param range        time range to be displayed
+	 * @param dataType     type of data (AVG, MIN, MAX)
+	 * @param dataInterval interval of values
+	 */
+	public static <T extends DataSet>
+	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, String gateId, String deviceId,
+					   String moduleId, @DataRange int range, ModuleLog.DataType dataType,
+					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback) {
+
+		final List<String> xValues = new ArrayList<>();
+		final Module module = controller.getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
+
+		if (module == null) {
+			return;
+		}
+
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusSeconds(range);
+		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(activity);
+
+		final ModuleLog.DataPair dataPair = new ModuleLog.DataPair(module, new Interval(start, end), dataType, dataInterval);
+		getModuleLogTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
+
+				if (moduleLog.getValues().size() > 1) {
+					fillDataSet(moduleLog, dataSet, xValues);
+					callback.onChartLoaded(dataSet, xValues);
+				}
+			}
+		});
+
+		activity.callbackTaskManager.executeTask(getModuleLogTask, dataPair);
+	}
+
+	/**
+	 * @param moduleLog data to be displayed
+	 * @param dataSet chart dataSet
+	 * @param xValues chart xValues
+	 */
+	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues) {
+		boolean barChart = (dataSet instanceof BarDataSet);
+		SortedMap<Long, Float> values = moduleLog.getValues();
+
+		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString()));
+
+		dataSet.clear();
+
+		int i = 0;
+		for (Map.Entry<Long, Float> entry : values.entrySet()) {
+			float value = Float.isNaN(entry.getValue()) ? moduleLog.getMinimum() : entry.getValue();
+			xValues.add(String.valueOf(entry.getKey()));
+
+			if (barChart) {
+				dataSet.addEntry(new BarEntry(value, i++));
+			} else {
+				dataSet.addEntry(new Entry(value, i++));
+			}
+		}
+	}
+
+
+	/**
+	 * @param interval Data range int interval
+	 * @return interval string representation
+	 */
+	public static
+	@StringRes
+	int getIntervalString(@ChartHelper.DataRange int interval) {
+		switch (interval) {
+			case ChartHelper.RANGE_HOUR:
+				return R.string.graph_range_hour;
+			case ChartHelper.RANGE_DAY:
+				return R.string.graph_range_day;
+			case ChartHelper.RANGE_WEEK:
+				return R.string.graph_range_week;
+			case ChartHelper.RANGE_MONTH:
+				return R.string.graph_range_month;
+		}
+		return -1;
+	}
+
 	/**
 	 * Custom fill formatter which allow fill chart from bottom
 	 */
@@ -267,5 +436,13 @@ final public class ChartHelper {
 		public float getFillLinePosition(LineDataSet dataSet, LineDataProvider dataProvider) {
 			return dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum;
 		}
+	}
+
+
+	/**
+	 * Callback interface for load chart data
+	 */
+	public interface ChartLoadListener {
+		void onChartLoaded(DataSet dataset, List<String> xValues);
 	}
 }

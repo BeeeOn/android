@@ -18,6 +18,8 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -108,9 +110,22 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
 
+		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
+
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, chart);
-		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView);
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, false);
 		chart.getLegend().setEnabled(false);
+
+		// prepare axis bottom
+		ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), fmt, null, XAxis.XAxisPosition.BOTTOM, false);
+		//prepare axis left
+		ChartHelper.prepareYAxis(mActivity, module.getValue(), chart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
+		//disable right axis
+		chart.getAxisRight().setEnabled(false);
+
+		chart.setDrawBorders(false);
+
 		chartLayout.setVisibility(View.VISIBLE);
 
 		//set legend title
@@ -157,9 +172,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	@SuppressWarnings("unchecked")
 	private void fillChart(ModuleLog log, Module module, int index) {
-		Controller controller = Controller.getInstance(mActivity);
-		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
 
 		boolean isBarChart = (module.getValue() instanceof EnumValue);
 
@@ -208,7 +220,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
-			xVals.add(fmt.print(dateMillis));
+			xVals.add(String.valueOf(dateMillis));
 			if (isBarChart) {
 				barEntries.add(new BarEntry(value, i++));
 			} else {
