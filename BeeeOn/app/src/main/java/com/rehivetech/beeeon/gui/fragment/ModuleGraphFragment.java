@@ -186,6 +186,10 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		//set chart
 		DateTimeFormatter formatter = mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId));
+		SharedPreferences prefs = controller.getUserSettings();
+		UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
+		String unit = unitsHelper.getStringUnit(baseValue);
+
 		mYlabels = new StringBuffer();
 
 		if (barchart) {
@@ -193,7 +197,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false);
 		} else {
 			mChart = new LineChart(mActivity);
-			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter);
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter, unit);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
 		}
 

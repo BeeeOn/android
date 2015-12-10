@@ -32,16 +32,18 @@ public class ModuleGraphMarkerView extends MarkerView {
 	private TextView mTextXval;
 
 	private XAxisValueFormatter mValueFormatter;
+	private String mUnit;
 	/**
 	 * Constructor. Sets up the MarkerView with a custom layout resource.
 	 *
 	 * @param context
 	 * @param layoutResource
 	 */
-	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, DateTimeFormatter formatter) {
+	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, DateTimeFormatter formatter, String unit) {
 		super(context, layoutResource);
 		mChart = chart;
 		mValueFormatter = ChartHelper.getXAxisValueFormatter(formatter);
+		mUnit = unit;
 
 		mTextMin = (TextView) findViewById(R.id.util_chart_markerview_text_min);
 		mTextAvg = (TextView) findViewById(R.id.util_chart_markerview_text_avg);
@@ -75,13 +77,13 @@ public class ModuleGraphMarkerView extends MarkerView {
 
 		for (DataSet dataSet : mChart.getData().getDataSets()) {
 			if (dataSet.getLabel().contains("min")) {
-				mTextMin.setText(String.format("%s", dataSet.getYValForXIndex(e.getXIndex())));
+				mTextMin.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
 
 			} else if (dataSet.getLabel().contains("avg")) {
-				mTextAvg.setText(String.format("%s", dataSet.getYValForXIndex(e.getXIndex())));
+				mTextAvg.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
 
 			} else if (dataSet.getLabel().contains("max")) {
-				mTextMax.setText(String.format("%s", dataSet.getYValForXIndex(e.getXIndex())));
+				mTextMax.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
 			}
 		}
 		mTextXval.setText(xValue);
