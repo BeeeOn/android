@@ -72,6 +72,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private FloatingActionButton mFab;
 	private Button mShowLegendButton;
 
+	private String mModuleUnit;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,16 +100,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		SharedPreferences prefs = controller.getUserSettings();
 		UnitsHelper unitsHelper = new UnitsHelper(prefs, this);
 
-		String moduleUnit = unitsHelper.getStringUnit(module.getValue());
+		mModuleUnit = unitsHelper.getStringUnit(module.getValue());
 		
-		if (moduleUnit.length() > 0) {
-			moduleUnit = String.format("[%s]", moduleUnit);
-		}
-
-		String toolbarTitle = String.format("%s %s",module.getName(this), moduleUnit);
-
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		toolbar.setTitle(toolbarTitle);
+		toolbar.setTitle(module.getName(this));
 		setSupportActionBar(toolbar);
 
 		ActionBar actionBar = getSupportActionBar();
@@ -289,7 +285,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			findViewById(R.id.module_graph_max_label).setVisibility(View.GONE);
 
 		} else {
-			mActValue.setText(String.format("%.2f", value.getDoubleValue()));
+			mActValue.setText(String.format("%.2f %s", value.getDoubleValue(), mModuleUnit));
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 	}
@@ -362,11 +358,11 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	}
 
 	public void setMinValue(String minValue) {
-		mMinValue.setText(minValue);
+		mMinValue.setText(String.format("%s %s", minValue, mModuleUnit));
 	}
 
 	public void setMaxValue(String maxValue) {
-		mMaxValue.setText(maxValue);
+		mMaxValue.setText(String.format("%s %s", maxValue, mModuleUnit));
 	}
 
 	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {
