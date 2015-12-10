@@ -292,6 +292,10 @@
 
 	<!--Module graph-->
 	<string name="module_graph_show_y_labels_button">Zobrazit Y hodnoty</string>
+	<string name="module_graph_type_of_data">Typ agregace</string>
+	<string name="module_graph_data_granularity">Míra agregace</string>
+	<string name="module_graph_min_label">MIN</string>
+	<string name="module_graph_max_label">MAX</string>
 
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Zařízení není dostupné</string>
@@ -386,9 +390,32 @@
 
 	<!-- Various strings -->
 	<string name="unit_meters_short">m</string>
+	<string name="button_done">Potvrdtit</string>
 
 	<!-- Server names -->
 	<string name="server_production">Produkční</string>
 	<string name="server_development">Vývojový</string>
+
+	<!--GRAPH RANGE-->
+	<string name="graph_range_hour">Hodina</string>
+	<string name="graph_range_day">Den</string>
+	<string name="graph_range_week">Týden</string>
+	<string name="graph_range_month">Měsíc</string>
+
+	<!--DATA INTERVAL-->
+	<string name="data_interval_raw">Surová data</string>
+	<string name="data_interval_minute">Minuta</string>
+	<string name="data_interval_five_minutes">5 minut</string>
+	<string name="data_interval_ten_minutes">10 minut</string>
+	<string name="data_interval_half_hour">Půl hodiny</string>
+	<string name="data_interval_hour">Hodina</string>
+	<string name="data_interval_day">Den</string>
+	<string name="data_interval_week">Týden</string>
+	<string name="data_interval_month">Měsíc</string>
+
+	<!--DATA TYPE-->
+	<string name="data_type_min">Minimum</string>
+	<string name="data_type_avg">Průměr</string>
+	<string name="data_type_max">Maximum</string>
 
 </resources>
