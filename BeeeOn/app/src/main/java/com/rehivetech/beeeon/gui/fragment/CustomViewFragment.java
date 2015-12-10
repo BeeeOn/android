@@ -18,6 +18,8 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -112,8 +114,18 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
 
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, chart);
-		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, true);
+		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, false);
 		chart.getLegend().setEnabled(false);
+
+		// prepare axis bottom
+		ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), fmt, null, XAxis.XAxisPosition.BOTTOM, false);
+		//prepare axis left
+		ChartHelper.prepareYAxis(mActivity, module.getValue(), chart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
+		//disable right axis
+		chart.getAxisRight().setEnabled(false);
+
+		chart.setDrawBorders(false);
+
 		chartLayout.setVisibility(View.VISIBLE);
 
 		//set legend title
