@@ -56,6 +56,13 @@ public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFra
 	}
 
 	@Override
+	public void setNextButtonEnabled(boolean enabled) {
+		if (mNext != null) {
+			mNext.setEnabled(enabled);
+		}
+	}
+
+	@Override
 	protected int getLastPageNextTextResource() {
 		return R.string.device_add_btn_send_pair;
 	}

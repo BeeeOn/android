@@ -3,9 +3,7 @@
 			xmlns:tools="http://schemas.android.com/tools"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:background="@color/gray_light"
-			android:orientation="vertical"
-			android:padding="@dimen/adddevice_layout_padding">
+			android:orientation="vertical">
 
 	<LinearLayout
 		android:orientation="vertical"
@@ -13,6 +11,7 @@
 		android:layout_height="wrap_content"
 		android:scrollbars="vertical"
 		android:scrollbarAlwaysDrawVerticalTrack="true"
+		android:padding="@dimen/adddevice_layout_padding"
 		>
 
 		<TextView

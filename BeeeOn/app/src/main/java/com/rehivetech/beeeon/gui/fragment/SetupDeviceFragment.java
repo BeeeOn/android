@@ -1,9 +1,10 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
@@ -27,25 +27,38 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SetupDeviceFragment extends TrackFragment {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
+	private static final String KEY_DEVICE_INDEX = "device_index";
+
 	public SetupDeviceActivity mActivity;
 	private View mView;
 
-	private List<Device> mNewDevices;
+
+	private Device mNewDevice;
 
 	private String mGateId;
+	private int mDeviceIndex;
+
+	public static SetupDeviceFragment newInstance(int deviceIndex) {
+
+		Bundle args = new Bundle();
+		args.putInt(KEY_DEVICE_INDEX, deviceIndex);
+		SetupDeviceFragment fragment = new SetupDeviceFragment();
+		fragment.setArguments(args);
+		return fragment;
+	}
 
 	@Override
-	public void onAttach(Activity activity) {
+	public void onAttach(Context activity) {
 		super.onAttach(activity);
 
 		try {
 			mActivity = (SetupDeviceActivity) getActivity();
+			mActivity.setFragment(this);
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must be subclass of SetupDeviceActivity");
@@ -64,8 +77,11 @@ public class SetupDeviceFragment extends TrackFragment {
 			// CHYBA
 			return;
 		}
+
+		mDeviceIndex = getArguments().getInt(KEY_DEVICE_INDEX);
+
 		mGateId = gate.getId();
-		mNewDevices = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
+		mNewDevice = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(mDeviceIndex);
 
 		// TODO: sent as parameter if we want first uninitialized module or some module with particular id
 
@@ -74,22 +90,13 @@ public class SetupDeviceFragment extends TrackFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_module_setup, container, false);
+		mView = inflater.inflate(R.layout.fragment_device_setup, container, false);
 
 		initViews();
 
+		mActivity.findViewById(R.id.device_setup_save_button).setVisibility(View.VISIBLE);
 		return mView;
 	}
-
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if (isVisibleToUser) {
-			Log.d(TAG, "SETUP MODULE fragment is visible");
-			mActivity.setFragment(this);
-		}
-	}
-
 
 	private void initViews() {
 		// Set listener for hide or unhide layout for add new location
@@ -126,24 +133,22 @@ public class SetupDeviceFragment extends TrackFragment {
 		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, locations);
 		spinner.setAdapter(dataAdapter);
 
-		Device device = mNewDevices.get(0);
-
 		TextView name = (TextView) mView.findViewById(R.id.module_setup_header_name);
-		name.setText(device.getName(mActivity));
+		name.setText(mNewDevice.getName(mActivity));
 
 		TextView manufacturer = (TextView) mView.findViewById(R.id.module_setup_header_manufacturer);
-		manufacturer.setText(getString(device.getType().getManufacturerRes()));
+		manufacturer.setText(getString(mNewDevice.getType().getManufacturerRes()));
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = controller.getUserSettings();
 
 		if (prefs != null) {
 			TimeHelper timeHelper = new TimeHelper(prefs);
-			Gate gate = controller.getGatesModel().getGate(device.getGateId());
+			Gate gate = controller.getGatesModel().getGate(mNewDevice.getGateId());
 
 			// Set involved time of device
 			TextView time = (TextView) mView.findViewById(R.id.module_setup_info_text);
-			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(device.getPairedTime(), gate)));
+			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(mNewDevice.getPairedTime(), gate)));
 		}
 	}
 
@@ -179,16 +184,23 @@ public class SetupDeviceFragment extends TrackFragment {
 		return false;
 	}
 
+	@Nullable
 	public Spinner getSpinner() {
 		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location));
 	}
 
+	@Nullable
 	public TextView getNewLocation() {
 		return ((EditText) mView.findViewById(R.id.module_setup_new_location_name));
 	}
 
+	@Nullable
 	public Spinner getNewIconSpinner() {
 		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon));
+	}
+
+	public int getDeviceIndex() {
+		return mDeviceIndex;
 	}
 
 }
