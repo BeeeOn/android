@@ -32,6 +32,7 @@ import com.rehivetech.beeeon.gui.view.ModuleGraphMarkerView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
@@ -62,6 +63,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private String mModuleId;
 	private @ChartHelper.DataRange int mRange;
 
+	private int mRefreshInterval = 1; // in seconds
 	private ChartHelper.CustomXAxisFormatter mXAxisFormatter;
 
 	private ModuleGraphActivity mActivity;
@@ -202,8 +204,11 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusSeconds(mRange);
 
+		RefreshInterval refresh = module.getDevice().getRefresh();
+		mRefreshInterval = refresh != null ? refresh.getInterval() : 1;
+
 		// TODO: TEN_MINUTES is used as some default value, but better would be to have it in parent fragment/activity, as stated above
-		mXAxisFormatter = new ChartHelper.CustomXAxisFormatter(formatter, start.getMillis(), ModuleLog.DataInterval.TEN_MINUTES);
+		mXAxisFormatter = new ChartHelper.CustomXAxisFormatter(formatter, start.getMillis(), ModuleLog.DataInterval.TEN_MINUTES.getSeconds() * 1000);
 
 		if (barchart) {
 			mChart = new BarChart(mActivity);
@@ -255,7 +260,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity) {
 		mChart.clear();
 
-		mXAxisFormatter.setStep(dataGranularity);
+		long step = (dataGranularity == ModuleLog.DataInterval.RAW ? mRefreshInterval : dataGranularity.getSeconds()) * 1000;
+		mXAxisFormatter.setStep(step);
 
 		if (drawMax) {
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,

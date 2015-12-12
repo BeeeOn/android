@@ -37,6 +37,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -120,7 +121,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, false);
 		chart.getLegend().setEnabled(false);
 
-		ChartHelper.CustomXAxisFormatter xAxisFormatter = new ChartHelper.CustomXAxisFormatter(fmt, mStart.getMillis(), mInterval);
+		RefreshInterval refresh = module.getDevice().getRefresh();
+		long step = (mInterval == DataInterval.RAW ? refresh.getInterval() : mInterval.getSeconds()) * 1000;
+
+		ChartHelper.CustomXAxisFormatter xAxisFormatter = new ChartHelper.CustomXAxisFormatter(fmt, mStart.getMillis(), step);
 
 		// prepare axis bottom
 		ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), fmt, null, XAxis.XAxisPosition.BOTTOM, false, xAxisFormatter);

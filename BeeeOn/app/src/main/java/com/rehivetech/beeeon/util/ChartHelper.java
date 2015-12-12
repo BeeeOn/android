@@ -467,20 +467,20 @@ final public class ChartHelper {
 		/**
 		 * @param formatter
 		 * @param startMillis        in milliseconds
-		 * @param step
+		 * @param stepMillis         in milliseconds
 		 */
-		public CustomXAxisFormatter(DateTimeFormatter formatter, long startMillis, ModuleLog.DataInterval step) {
+		public CustomXAxisFormatter(DateTimeFormatter formatter, long startMillis, long stepMillis) {
 			mFormatter = formatter;
 			mStartMillis = startMillis;
-			setStep(step);
+			setStep(stepMillis);
 		}
 
 		public void setStart(long startMillis) {
 			mStartMillis = startMillis;
 		}
 
-		public void setStep(ModuleLog.DataInterval step) {
-			mStepMillis = step.getSeconds() * 1000;
+		public void setStep(long stepMillis) {
+			mStepMillis = stepMillis;
 		}
 
 		@Override
