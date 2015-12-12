@@ -271,6 +271,13 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			}
 		});
+
+		mViewPager.post(new Runnable() {
+			@Override
+			public void run() {
+				redrawActiveFragment();
+			}
+		});
 	}
 
 	private void updateActValue() {
