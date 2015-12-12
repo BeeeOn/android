@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 public class SimpleDataHolder<O extends IIdentifier> {
 
-	protected final Map<String, O> mObjects = new HashMap<>();
+	protected final Map<String, O> mObjects = new WeakHashMap<>();
 
 	/**
 	 * Clear internal objects.
