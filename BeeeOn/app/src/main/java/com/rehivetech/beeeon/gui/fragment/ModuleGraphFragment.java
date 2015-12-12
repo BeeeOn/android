@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -204,8 +205,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mChart.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		mRootLayout.addView(mChart);
 
-
-
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			mChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 
 		// prepare axis bottom
 		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false);
