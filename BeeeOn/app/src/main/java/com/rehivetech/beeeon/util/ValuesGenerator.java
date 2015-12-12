@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.util;
 
+import android.util.Log;
+
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -10,6 +12,8 @@ import java.util.List;
 import java.util.Random;
 
 public class ValuesGenerator {
+	private static final String TAG = ValuesGenerator.class.getSimpleName();
+
 	private static final int RAW_ENUM_VALUES_COUNT_IN_LOG = 100;
 
 	public static String generateValue(Module module, Random rand) {
@@ -82,17 +86,16 @@ public class ValuesGenerator {
 
 		RefreshInterval refresh = module.getDevice().getRefresh();
 
-		long everyMsecs;
+		// use refresh interval for raw data, or 1 second when has no refresh
+		int refreshMsecs = (refresh != null ? refresh.getInterval() * 1000 : 1000);
+		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
+
+		// When wanting interval lower than refresh, we need to repeat same values to fill the refresh
+		long skipCount = (refreshMsecs > everyMsecs ? refreshMsecs / everyMsecs : 1);
+
 		int changes = (refresh != null ? refresh.getIntervalIndex() + 1 : 1);
 
-		if (isEnum || refresh == null) {
-			// For enums we want fixed number of steps (because application surely wants raw values)
-			// For devices without refresh it is the similar situation
-			everyMsecs = (end - start) / RAW_ENUM_VALUES_COUNT_IN_LOG;
-		} else {
-			int refreshInterval = module.getDevice().getRefresh().getInterval();
-			everyMsecs = Math.max(pair.gap.getSeconds(), refreshInterval) * 1000;
-		}
+		Log.d(TAG, String.format("Filling %d values", (end - start) / everyMsecs));
 
 		while (start < end) {
 			// First make decision if we want any change
@@ -117,8 +120,10 @@ public class ValuesGenerator {
 				lastValue = Math.max(min, Math.min(max, lastValue));
 			}
 
-			log.addValue(start, (float) lastValue);
-			start += everyMsecs;
+			for (long i=0; i<skipCount; i++) {
+				log.addValue(start, (float) lastValue);
+				start += everyMsecs;
+			}
 		}
 
 		return log;
