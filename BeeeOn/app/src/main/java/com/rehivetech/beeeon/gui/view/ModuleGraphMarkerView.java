@@ -39,10 +39,10 @@ public class ModuleGraphMarkerView extends MarkerView {
 	 * @param context
 	 * @param layoutResource
 	 */
-	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, DateTimeFormatter formatter, String unit) {
+	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, DateTimeFormatter formatter, String unit, XAxisValueFormatter xAxisFormatter) {
 		super(context, layoutResource);
 		mChart = chart;
-		mValueFormatter = ChartHelper.getXAxisValueFormatter(formatter);
+		mValueFormatter = xAxisFormatter;
 		mUnit = unit;
 
 		mTextMin = (TextView) findViewById(R.id.util_chart_markerview_text_min);

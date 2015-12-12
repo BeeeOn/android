@@ -236,7 +236,7 @@ final public class ChartHelper {
 
 	@SuppressLint("PrivateResource")
 	public static void prepareXAxis(Context context, XAxis axis, DateTimeFormatter formatter, @ColorInt Integer textColor,
-									XAxis.XAxisPosition position, boolean drawGridLines) {
+									XAxis.XAxisPosition position, boolean drawGridLines, XAxisValueFormatter xAxisFormatter) {
 
 		//TextView to get text color and typeface from textAppearance
 		AppCompatTextView tempText = new AppCompatTextView(context);
@@ -249,7 +249,7 @@ final public class ChartHelper {
 		axis.setTypeface(tempText.getTypeface());
 		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
 		axis.setDrawGridLines(drawGridLines);
-		axis.setValueFormatter(getXAxisValueFormatter(formatter));
+		axis.setValueFormatter(xAxisFormatter);
 	}
 
 	@SuppressLint("PrivateResource")
@@ -324,19 +324,6 @@ final public class ChartHelper {
 		};
 	}
 
-	public static XAxisValueFormatter getXAxisValueFormatter(final DateTimeFormatter formatter) {
-
-		return new XAxisValueFormatter() {
-			@Override
-			public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
-				long value = Long.parseLong(original);
-				return formatter.print(value);
-			}
-		};
-	}
-
-
-
 	/**
 	 * @param activity     instance of activity
 	 * @param controller   instance of controller
@@ -360,8 +347,10 @@ final public class ChartHelper {
 			return;
 		}
 
+		// FIXME: Better hold these in parent fragment/activity and have it same (and not duplicit on more places) for all of htem
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusSeconds(range);
+
 		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(activity);
 
 		final ModuleLog.DataPair dataPair = new ModuleLog.DataPair(module, new Interval(start, end), dataType, dataInterval);
@@ -445,4 +434,36 @@ final public class ChartHelper {
 	public interface ChartLoadListener {
 		void onChartLoaded(DataSet dataset, List<String> xValues);
 	}
+
+	public static class CustomXAxisFormatter implements XAxisValueFormatter {
+
+		private final DateTimeFormatter mFormatter;
+		private long mStartMillis;
+		private long mStepMillis;
+
+		/**
+		 * @param formatter
+		 * @param startMillis        in milliseconds
+		 * @param step
+		 */
+		public CustomXAxisFormatter(DateTimeFormatter formatter, long startMillis, ModuleLog.DataInterval step) {
+			mFormatter = formatter;
+			mStartMillis = startMillis;
+			setStep(step);
+		}
+
+		public void setStart(long startMillis) {
+			mStartMillis = startMillis;
+		}
+
+		public void setStep(ModuleLog.DataInterval step) {
+			mStepMillis = step.getSeconds() * 1000;
+		}
+
+		@Override
+		public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
+			long date = mStartMillis + index * mStepMillis;
+			return mFormatter.print(date);
+		}
+	};
 }

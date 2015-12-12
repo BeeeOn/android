@@ -24,6 +24,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
@@ -38,6 +39,8 @@ import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -58,6 +61,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private String mDeviceId;
 	private String mModuleId;
 	private @ChartHelper.DataRange int mRange;
+
+	private ChartHelper.CustomXAxisFormatter mXAxisFormatter;
 
 	private ModuleGraphActivity mActivity;
 
@@ -193,12 +198,19 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		mYlabels = new StringBuffer();
 
+		// FIXME: Better hold this in parent fragment/activity and have it same (and not duplicit on more places) for all of htem
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusSeconds(mRange);
+
+		// TODO: TEN_MINUTES is used as some default value, but better would be to have it in parent fragment/activity, as stated above
+		mXAxisFormatter = new ChartHelper.CustomXAxisFormatter(formatter, start.getMillis(), ModuleLog.DataInterval.TEN_MINUTES);
+
 		if (barchart) {
 			mChart = new BarChart(mActivity);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false);
 		} else {
 			mChart = new LineChart(mActivity);
-			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter, unit);
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter, unit, mXAxisFormatter);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
 		}
 
@@ -210,7 +222,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		}
 
 		// prepare axis bottom
-		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false);
+		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false, mXAxisFormatter);
 		//prepare axis left
 		ChartHelper.prepareYAxis(mActivity, module.getValue(), mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
 		//disable right axis
@@ -242,6 +254,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity) {
 		mChart.clear();
+
+		mXAxisFormatter.setStep(dataGranularity);
 
 		if (drawMax) {
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,

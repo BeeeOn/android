@@ -69,6 +69,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	private LinearLayout mLayout;
 
+	private final DateTime mEnd = DateTime.now(DateTimeZone.UTC);
+	private final DateTime mStart = mEnd.minusDays(3);// end.minusWeeks(1);
+	private final DataInterval mInterval = DataInterval.TEN_MINUTES;
 
 	public CustomViewFragment() {
 	}
@@ -117,8 +120,10 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, false);
 		chart.getLegend().setEnabled(false);
 
+		ChartHelper.CustomXAxisFormatter xAxisFormatter = new ChartHelper.CustomXAxisFormatter(fmt, mStart.getMillis(), mInterval);
+
 		// prepare axis bottom
-		ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), fmt, null, XAxis.XAxisPosition.BOTTOM, false);
+		ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), fmt, null, XAxis.XAxisPosition.BOTTOM, false, xAxisFormatter);
 		//prepare axis left
 		ChartHelper.prepareYAxis(mActivity, module.getValue(), chart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
 		//disable right axis
@@ -172,6 +177,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 
 	@SuppressWarnings("unchecked")
 	private void fillChart(ModuleLog log, Module module, int index) {
+		Controller controller = Controller.getInstance(mActivity);
+		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
+		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
 
 		boolean isBarChart = (module.getValue() instanceof EnumValue);
 
@@ -220,7 +228,7 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			Long dateMillis = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? log.getMinimum() : entry.getValue();
-			xVals.add(String.valueOf(dateMillis));
+			xVals.add(fmt.print(dateMillis));
 			if (isBarChart) {
 				barEntries.add(new BarEntry(value, i++));
 			} else {
@@ -284,9 +292,6 @@ public class CustomViewFragment extends BaseApplicationFragment {
 	}
 
 	private void loadData() {
-		DateTime end = DateTime.now(DateTimeZone.UTC);
-		DateTime start = end.minusDays(3);// end.minusWeeks(1);
-
 		for (int i = 0; i < mModules.size(); i++) {
 			// Prepare data for this chart
 			final List<ModuleLog.DataPair> pairs = new ArrayList<>();
@@ -294,9 +299,9 @@ public class CustomViewFragment extends BaseApplicationFragment {
 			for (Module module : mModules.valueAt(i)) {
 				ModuleLog.DataPair pair = new ModuleLog.DataPair( //
 						module, // module
-						new Interval(start, end), // interval from-to
+						new Interval(mStart, mEnd), // interval from-to
 						DataType.AVERAGE, // type
-						DataInterval.TEN_MINUTES); // interval
+						mInterval); // interval
 
 				pairs.add(pair);
 			}
