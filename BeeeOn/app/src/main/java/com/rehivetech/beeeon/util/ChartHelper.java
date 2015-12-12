@@ -34,6 +34,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -360,7 +361,7 @@ final public class ChartHelper {
 				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
 
 				if (moduleLog.getValues().size() > 1) {
-					fillDataSet(moduleLog, dataSet, xValues);
+					fillDataSet(moduleLog, dataSet, xValues, dataPair);
 					callback.onChartLoaded(dataSet, xValues);
 				}
 			}
@@ -373,8 +374,9 @@ final public class ChartHelper {
 	 * @param moduleLog data to be displayed
 	 * @param dataSet chart dataSet
 	 * @param xValues chart xValues
+	 * @param pair
 	 */
-	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues) {
+	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues, ModuleLog.DataPair pair) {
 		boolean barChart = (dataSet instanceof BarDataSet);
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
@@ -382,15 +384,36 @@ final public class ChartHelper {
 
 		dataSet.clear();
 
+		long start = pair.interval.getStartMillis();
+		long end = pair.interval.getEndMillis();
+
+		RefreshInterval refresh = pair.module.getDevice().getRefresh();
+
+		// use refresh interval for raw data, or 1 second when has no refresh
+		int refreshMsecs = (refresh != null ? refresh.getInterval() * 1000 : 1000);
+		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
+
+		Log.d(TAG, String.format("Computing %d values", (end - start) / everyMsecs));
+
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
+			long time = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? moduleLog.getMinimum() : entry.getValue();
-			xValues.add(String.valueOf(entry.getKey()));
 
-			if (barChart) {
-				dataSet.addEntry(new BarEntry(value, i++));
-			} else {
-				dataSet.addEntry(new Entry(value, i++));
+			if (start >= end) {
+				break;
+			}
+
+			while (start < time && start < end) {
+				xValues.add(String.valueOf(time));
+
+				if (barChart) {
+					dataSet.addEntry(new BarEntry(value, i++));
+				} else {
+					dataSet.addEntry(new Entry(value, i++));
+				}
+
+				start += everyMsecs;
 			}
 		}
 	}

@@ -90,8 +90,8 @@ public class ValuesGenerator {
 		int refreshMsecs = (refresh != null ? refresh.getInterval() * 1000 : 1000);
 		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
 
-		// When wanting interval lower than refresh, we need to repeat same values to fill the refresh
-		long skipCount = (refreshMsecs > everyMsecs ? refreshMsecs / everyMsecs : 1);
+		// Generate vales at minimum frequency of refresh interval (as server would do, then chart helper will transform them into time axis)
+		everyMsecs = Math.max(everyMsecs, refreshMsecs);
 
 		int changes = (refresh != null ? refresh.getIntervalIndex() + 1 : 1);
 
@@ -120,10 +120,8 @@ public class ValuesGenerator {
 				lastValue = Math.max(min, Math.min(max, lastValue));
 			}
 
-			for (long i=0; i<skipCount; i++) {
-				log.addValue(start, (float) lastValue);
-				start += everyMsecs;
-			}
+			log.addValue(start, (float) lastValue);
+			start += everyMsecs;
 		}
 
 		return log;
