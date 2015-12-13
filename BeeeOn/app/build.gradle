@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-project.ext.set("versionName", "1.5.0")
+project.ext.set("versionName", "1.5.1")
 
 android {
 	compileSdkVersion 23
@@ -9,7 +9,7 @@ android {
 		applicationId "com.rehivetech.beeeon"
 		minSdkVersion 10
 		targetSdkVersion 23
-		versionCode 69
+		versionCode 70
 		versionName project.versionName
 		signingConfig signingConfigs.debug
 		resConfigs "en", "cs", "sk"
