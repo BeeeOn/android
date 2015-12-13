@@ -27,16 +27,21 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	public static final int TYPE_UNKNOWN = -1;
 	public static final int TYPE_DEVICE = 0;
 	public static final int TYPE_LOCATION = 1;
+	public static final int TYPE_UNPAIRED_DEVICE = 2;
 
 	private ArrayList<Object> mObjects = new ArrayList<>();
 	private IItemClickListener mClickListener;
 
 	private TimeHelper mTimeHelper;
 
-	public DeviceRecycleAdapter(Context context, IItemClickListener listener) {
+	private boolean mUnpairedDevices;
+
+	public DeviceRecycleAdapter(Context context, IItemClickListener listener, boolean unpaired) {
 		super(context);
 
 		mClickListener = listener;
+
+		mUnpairedDevices = unpaired;
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = Controller.getInstance(context).getUserSettings();
@@ -51,7 +56,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	@Override
 	public int getItemViewType(int position) {
 		if(mObjects.get(position) instanceof Device){
-			return TYPE_DEVICE;
+			return (mUnpairedDevices) ? TYPE_UNPAIRED_DEVICE : TYPE_DEVICE;
 		}
 		else if(mObjects.get(position) instanceof Location){
 			return TYPE_LOCATION;
@@ -80,6 +85,10 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				v = inflater.inflate(R.layout.item_list_location_header, parent, false);
 				return new LocationViewHolder(v);
 
+			case TYPE_UNPAIRED_DEVICE:
+				v = inflater.inflate(R.layout.item_list_unpaired_device, parent, false);
+				return new DeviceViewHolder(v, mClickListener);
+
 			default:
 				// TODO should we use some kind of error viewHolder ?
 				v = inflater.inflate(R.layout.item_list_location_header, parent, false);
@@ -96,6 +105,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
 		switch(viewHolder.getItemViewType()){
 			case TYPE_DEVICE:
+			case TYPE_UNPAIRED_DEVICE:
 				Device device = (Device) mObjects.get(position);
 				if(device == null) return; // TODO should show error view or loading or sth
 				Gate gate = Controller.getInstance(mContext).getGatesModel().getGate(device.getGateId());
@@ -103,7 +113,9 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				DeviceViewHolder deviceHolder = (DeviceViewHolder) viewHolder;
 
 				deviceHolder.mTitle.setText(device.getName(mContext));
-				deviceHolder.mSubTitle.setText(device.getType().getManufacturerRes());
+				if (!mUnpairedDevices) {
+					deviceHolder.mSubTitle.setText(device.getType().getManufacturerRes());
+				}
 
 				// last update
 				deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "" );

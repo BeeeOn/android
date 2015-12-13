@@ -73,7 +73,7 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 
 		mActivity.findViewById(R.id.device_setup_save_button).setVisibility(View.GONE);
 
-		mAdapter = new DeviceRecycleAdapter(getActivity(), this);
+		mAdapter = new DeviceRecycleAdapter(getActivity(), this, true);
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.unpaired_devices_recyclerview);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		recyclerView.setItemAnimator(new DefaultItemAnimator());

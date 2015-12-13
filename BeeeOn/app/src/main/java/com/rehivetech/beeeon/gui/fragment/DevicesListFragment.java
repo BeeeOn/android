@@ -160,7 +160,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		mNoItemsTextView = (TextView) rootView.findViewById(R.id.devices_list_no_items_text);
 
 		// recyclerview
-		mDeviceAdapter = new DeviceRecycleAdapter(getActivity(), this);
+		mDeviceAdapter = new DeviceRecycleAdapter(getActivity(), this, false);
 		RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.devices_list_recyclerview);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		recyclerView.setItemAnimator(new DefaultItemAnimator());
