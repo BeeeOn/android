@@ -17,7 +17,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.SetupDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +72,7 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 
 		mActivity.findViewById(R.id.device_setup_save_button).setVisibility(View.GONE);
 
-		mAdapter = new DeviceRecycleAdapter(getActivity(), this);
+		mAdapter = new DeviceRecycleAdapter(getActivity(), this, true);
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.unpaired_devices_recyclerview);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 		recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -97,7 +96,7 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 		}
 
 		for (int manufacturer : manufacturers) {
-			mAdapterList.add(new Location("", getString(manufacturer), "", ""));  // TODO TEMP
+			mAdapterList.add(getString(manufacturer));
 			for (Device device : mDevicesList) {
 				if (manufacturer == device.getType().getManufacturerRes()) {
 					mAdapterList.add(device);

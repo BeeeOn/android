@@ -160,7 +160,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		mNoItemsTextView = (TextView) rootView.findViewById(R.id.devices_list_no_items_text);
 
 		// recyclerview
-		mDeviceAdapter = new DeviceRecycleAdapter(getActivity(), this);
+		mDeviceAdapter = new DeviceRecycleAdapter(getActivity(), this, false);
 		RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.devices_list_recyclerview);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -357,7 +357,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		if (position > 0) {
 			int itemPrevType = mDeviceAdapter.getItemViewType(position - 1);
 			// if before is location -> position item is first in location
-			if (itemPrevType == DeviceRecycleAdapter.TYPE_LOCATION) {
+			if (itemPrevType == DeviceRecycleAdapter.TYPE_HEADER) {
 				int itemNextType;
 				// if position item is not last (something is below it)
 				if (position < (mDeviceAdapter.getItemCount() - 1))
@@ -366,7 +366,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 					itemNextType = DeviceRecycleAdapter.TYPE_UNKNOWN;
 
 				// next item is location or it is last item in list (means its only one in location)
-				if (itemNextType == DeviceRecycleAdapter.TYPE_LOCATION || position >= (mDeviceAdapter.getItemCount() - 1)) {
+				if (itemNextType == DeviceRecycleAdapter.TYPE_HEADER || position >= (mDeviceAdapter.getItemCount() - 1)) {
 					positionToRemove -= 1;
 					tempLoc = (Location) mDeviceAdapter.getItem(positionToRemove);
 					mDeviceAdapter.removeItem(positionToRemove);
