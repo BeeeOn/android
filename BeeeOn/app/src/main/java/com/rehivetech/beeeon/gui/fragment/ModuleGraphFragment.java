@@ -117,8 +117,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 				updateMinMaxTexts();
 			}
 
-			mChart.invalidate();
+			ChartHelper.setDataSetCircles(dataSet, mChart.getViewPortHandler(), mChart.getData().getYValCount(), getResources().getInteger(R.integer.graph_number_circles));
 
+			mChart.invalidate();
 
 			Log.d(TAG, String.format("dataSet added: %s", dataSet.getLabel()));
 		}

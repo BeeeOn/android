@@ -171,18 +171,7 @@ final public class ChartHelper {
 
 
 				for (DataSet dataSet : dataSets) {
-
-					if (yValuesCount / viewPortHandler.getScaleX() < chartNumOfCircles) {
-
-						if (dataSet instanceof LineDataSet && !((LineDataSet) dataSet).isDrawCirclesEnabled()) {
-							((LineDataSet) dataSet).setDrawCircles(true);
-						}
-					} else {
-
-						if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
-							((LineDataSet) dataSet).setDrawCircles(false);
-						}
-					}
+					setDataSetCircles(dataSet, viewPortHandler, yValuesCount, chartNumOfCircles);
 				}
 			}
 
@@ -233,6 +222,20 @@ final public class ChartHelper {
 			}
 		}
 		dataset.setColor(color);
+	}
+
+	public static void setDataSetCircles(DataSet dataSet, ViewPortHandler viewPortHandler, int yValuesCount, int chartNumOfCircles) {
+		if (yValuesCount / viewPortHandler.getScaleX() < chartNumOfCircles) {
+
+			if (dataSet instanceof LineDataSet && !((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+				((LineDataSet) dataSet).setDrawCircles(true);
+			}
+		} else {
+
+			if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+				((LineDataSet) dataSet).setDrawCircles(false);
+			}
+		}
 	}
 
 	@SuppressLint("PrivateResource")
