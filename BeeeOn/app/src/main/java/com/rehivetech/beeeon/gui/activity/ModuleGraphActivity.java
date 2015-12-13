@@ -100,7 +100,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		UnitsHelper unitsHelper = new UnitsHelper(prefs, this);
 
 		mModuleUnit = unitsHelper.getStringUnit(module.getValue());
-		
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		toolbar.setTitle(module.getName(this));
 		setSupportActionBar(toolbar);
@@ -118,18 +118,38 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
 		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
 
-		mSlider = (Slider) findViewById(R.id.module_graph_slider);
 
 		mCheckBoxMin = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_min);
 		mCheckBoxAvg = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_avg);
 		mCheckBoxMax = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_max);
+
+		mSlider = (Slider) findViewById(R.id.module_graph_slider);
+		mSlider.setProgressChangeLister(new Slider.OnProgressChangeLister() {
+			@Override
+			public void onProgressChanged(int progress) {
+				if (progress == 0) {
+					mCheckBoxMin.setChecked(false);
+					mCheckBoxAvg.setChecked(true);
+					mCheckBoxMax.setChecked(false);
+					mCheckBoxMin.setEnabled(false);
+					mCheckBoxAvg.setEnabled(false);
+					mCheckBoxMax.setEnabled(false);
+				} else {
+					mCheckBoxMin.setEnabled(true);
+					mCheckBoxAvg.setEnabled(true);
+					mCheckBoxMax.setEnabled(true);
+				}
+			}
+		});
 
 		TextView textMin = ((TextView) findViewById(R.id.module_graph_text_min));
 		textMin.setTextColor(Utils.getGraphColor(this, 1));
 		textMin.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCheckBoxMin.setChecked(!mCheckBoxMin.isChecked());
+				if (mCheckBoxMin.isEnabled()) {
+					mCheckBoxMin.setChecked(!mCheckBoxMin.isChecked());
+				}
 			}
 		});
 
@@ -138,7 +158,9 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		textAvg.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCheckBoxAvg.setChecked(!mCheckBoxAvg.isChecked());
+				if (mCheckBoxAvg.isEnabled()) {
+					mCheckBoxAvg.setChecked(!mCheckBoxAvg.isChecked());
+				}
 			}
 		});
 
@@ -147,7 +169,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		textMax.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCheckBoxMax.setChecked(!mCheckBoxMax.isChecked());
+				if (mCheckBoxMax.isEnabled()) {
+					mCheckBoxMax.setChecked(!mCheckBoxMax.isChecked());
+				}
+
 			}
 		});
 
@@ -157,12 +182,17 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		mShowLegendButton = (Button) findViewById(R.id.module_graph_show_legend_btn);
 
-		setupViewPager();
+		setupViewPager(!(module.getValue() instanceof EnumValue));
 
 		Map<ModuleLog.DataInterval, String> intervals = getIntervalString(ModuleLog.DataInterval.values());
 
 		mSlider.setValues(new ArrayList<>(intervals.values()));
-		mSlider.setProgress(2);  // default dataInterval 5 minutes
+
+		if (module.getValue() instanceof EnumValue) {
+			mFab.setVisibility(View.GONE);
+		} else {
+			mSlider.setProgress(2);  // default dataInterval 5 minutes
+		}
 
 		final View footerBackground = findViewById(R.id.module_graph_footer_bg);
 
@@ -257,7 +287,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		outState.putInt(OUT_STATE_SLIDER_PROGRESS, mSlider.getProgress());
 	}
 
-	private void setupViewPager() {
+	private void setupViewPager(final boolean showFab) {
 		GraphPagerAdapter adapter = new GraphPagerAdapter(getSupportFragmentManager());
 
 
@@ -282,10 +312,13 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				if (state == ViewPager.SCROLL_STATE_IDLE) {
-					mFab.show();
-				} else {
-					mFab.hide();
+				if (showFab) {
+
+					if (state == ViewPager.SCROLL_STATE_IDLE) {
+						mFab.show();
+					} else {
+						mFab.hide();
+					}
 				}
 			}
 		});
@@ -307,8 +340,9 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 	}
+
 	private Map<ModuleLog.DataInterval, String> getIntervalString(ModuleLog.DataInterval[] intervals) {
-		Map<ModuleLog.DataInterval, String> intervalStringMap =new LinkedHashMap<>();
+		Map<ModuleLog.DataInterval, String> intervalStringMap = new LinkedHashMap<>();
 
 		for (ModuleLog.DataInterval interval : intervals) {
 
@@ -427,7 +461,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		public Fragment getActiveFragment(ViewPager container, int position) {
 			String name = makeFragmentName(container.getId(), position);
-			return  mFragmentManager.findFragmentByTag(name);
+			return mFragmentManager.findFragmentByTag(name);
 		}
 
 		private static String makeFragmentName(int viewId, int index) {

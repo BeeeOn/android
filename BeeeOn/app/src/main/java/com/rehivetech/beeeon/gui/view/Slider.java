@@ -32,6 +32,7 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 	private TextView mValue;
 	private AppCompatSeekBar mSeekbar;
 	private List<String> mValues;
+	private OnProgressChangeLister mProgressChangeLister;
 
 	public Slider(Context context) {
 		super(context);
@@ -81,6 +82,9 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (mValues != null) {
 			mValue.setText(mValues.get(progress));
+			if (mProgressChangeLister != null) {
+				mProgressChangeLister.onProgressChanged(progress);
+			}
 		}
 	}
 
@@ -100,6 +104,10 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 
 	public void setProgress(int progress) {
 		mSeekbar.setProgress(progress);
+	}
+
+	public void setProgressChangeLister(OnProgressChangeLister progressChangeLister) {
+		mProgressChangeLister = progressChangeLister;
 	}
 
 	private class ProgressDrawable extends Drawable {
@@ -159,5 +167,9 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 		public int getIntrinsicHeight() {
 			return -1;
 		}
+	}
+
+	public interface OnProgressChangeLister {
+		void onProgressChanged(int progress);
 	}
 }
