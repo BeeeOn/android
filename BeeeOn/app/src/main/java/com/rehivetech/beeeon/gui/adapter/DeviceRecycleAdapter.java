@@ -119,21 +119,28 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				deviceHolder.mTitle.setText(device.getName(mContext));
 				if (!mUnpairedDevices) {
 					deviceHolder.mSubTitle.setText(device.getType().getManufacturerRes());
+					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "" );
+				} else {
+					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getPairedTime(), gate) : "" );
+					deviceHolder.mSubTitle.setText(mContext.getString(R.string.device_setup_device_list_paired_label));
 				}
 
-				// last update
-				deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "" );
+
 
 				Integer battery = device.getBattery();
 				// no battery, hide info
-				if (battery == null || battery < 0){
-					deviceHolder.mAdditional.setVisibility(View.INVISIBLE);
+				if (!mUnpairedDevices) {
+
+					if (battery == null || battery < 0){
+						deviceHolder.mAdditional.setVisibility(View.INVISIBLE);
+					}
+					// otherwise set text and show
+					else {
+						deviceHolder.mAdditional.setText(String.format("%d %%", battery));
+						deviceHolder.mAdditional.setVisibility(View.VISIBLE);
+					}
 				}
-				// otherwise set text and show
-				else {
-					deviceHolder.mAdditional.setText(String.format("%d %%", battery));
-					deviceHolder.mAdditional.setVisibility(View.VISIBLE);
-				}
+
 
 				// sets selected background && icon
 				boolean statusOk = device.getStatus().equals(Device.STATUS_AVAILABLE);

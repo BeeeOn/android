@@ -225,6 +225,7 @@
 	<string name="device_setup_toast_empty_module_name">Please fill names of all modules</string>
 	<string name="device_setup_toast_need_module_location_name">Write name of new location please</string>
 	<string name="device_setup_toast_new_module_added">New module was added</string>
+	<string name="device_setup_device_list_paired_label">Paired:</string>
 
 	<!-- Device add -->
 	<string name="device_add_btn_send_pair">START</string>

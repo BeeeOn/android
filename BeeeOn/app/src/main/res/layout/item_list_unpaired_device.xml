@@ -23,19 +23,6 @@
 		/>
 
 	<TextView
-		android:id="@+id/list_item_additional"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_alignParentEnd="true"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		android:layout_centerVertical="true"
-		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		tools:text="100%"
-		/>
-
-	<TextView
 		android:id="@+id/list_item_title"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -56,6 +43,22 @@
 		/>
 
 	<TextView
+		android:id="@+id/list_item_subtitle"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:gravity="bottom"
+		android:singleLine="true"
+		android:textColor="@color/beeeon_secondary_text"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+		android:layout_below="@id/list_item_title"
+		android:layout_alignLeft="@id/list_item_title"
+		android:layout_alignStart="@id/list_item_title"
+		android:layout_alignRight="@id/list_item_additional"
+		android:layout_alignEnd="@id/list_item_additional"
+		tools:text="initialized:"
+		/>
+
+	<TextView
 		android:id="@+id/list_item_subtext"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -63,10 +66,11 @@
 		android:singleLine="true"
 		android:textColor="@color/beeeon_primary"
 		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		tools:text="Last updated 04:44"
+		tools:text="04:44 PM"
 		android:layout_below="@id/list_item_title"
-		android:layout_alignLeft="@id/list_item_title"
-		android:layout_alignStart="@id/list_item_title"
+		android:layout_toRightOf="@id/list_item_subtitle"
+		android:layout_toEndOf="@id/list_item_subtitle"
+		android:layout_marginLeft="5dp"
+		android:layout_marginStart="5dp"
 		/>
-
 </RelativeLayout>

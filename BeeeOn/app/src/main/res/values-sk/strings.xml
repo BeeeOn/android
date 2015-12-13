@@ -223,6 +223,7 @@
 	<string name="device_setup_toast_empty_module_name">Vyplňte názvy všetkých zariadení</string>
 	<string name="device_setup_toast_need_module_location_name">Napíšte názov umiestnenia</string>
 	<string name="device_setup_toast_new_module_added">Nové zariadenie bolo pridané</string>
+	<string name="device_setup_device_list_paired_label">Napárované:</string>
 
 	<!-- Device edit -->
 	<string name="device_edit_device_name">Názov zariadenia</string>
