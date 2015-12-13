@@ -24,7 +24,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
@@ -91,6 +90,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 				if (dataSet.getValueCount() < 2 && ((BarChart) mChart).getBarData() == null) {
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
+
+					mActivity.setMinValue("");
+					mActivity.setMaxValue("");
 					return;
 				}
 
@@ -103,6 +105,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 				if (dataSet.getValueCount() < 2 && ((LineChart) mChart).getLineData() == null) {
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
+
+					mActivity.setMinValue("");
+					mActivity.setMaxValue("");
 					return;
 				}
 

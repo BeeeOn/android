@@ -58,6 +58,9 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private TextView mMaxValue;
 	private TextView mActValue;
 
+	private TextView mMinValueLabel;
+	private TextView mMaxValuelabel;
+
 	private TabLayout mTabLayout;
 	private ViewPager mViewPager;
 
@@ -114,6 +117,9 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mMinValue = (TextView) findViewById(R.id.module_graph_min_value);
 		mMaxValue = (TextView) findViewById(R.id.module_graph_max_value);
 		mActValue = (TextView) findViewById(R.id.module_graph_act_value);
+
+		mMinValueLabel = (TextView) findViewById(R.id.module_graph_min_label);
+		mMaxValuelabel = (TextView) findViewById(R.id.module_graph_max_label);
 
 		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
 		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
@@ -330,10 +336,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			mActValue.setText(((EnumValue) value).getStateStringResource());
 
 			mMinValue.setVisibility(View.GONE);
-			findViewById(R.id.module_graph_min_label).setVisibility(View.GONE);
+			mMinValueLabel.setVisibility(View.GONE);
 
 			mMaxValue.setVisibility(View.GONE);
-			findViewById(R.id.module_graph_max_label).setVisibility(View.GONE);
+			mMaxValuelabel.setVisibility(View.GONE);
 
 		} else {
 			mActValue.setText(String.format("%.2f %s", value.getDoubleValue(), mModuleUnit));
@@ -410,11 +416,23 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	}
 
 	public void setMinValue(String minValue) {
-		mMinValue.setText(String.format("%s %s", minValue, mModuleUnit));
+		if (minValue.length() == 0) {
+			mMinValueLabel.setVisibility(View.INVISIBLE);
+			mMinValue.setText("");
+		} else {
+			mMinValueLabel.setVisibility(View.VISIBLE);
+			mMinValue.setText(String.format("%s %s", minValue, mModuleUnit));
+		}
 	}
 
 	public void setMaxValue(String maxValue) {
-		mMaxValue.setText(String.format("%s %s", maxValue, mModuleUnit));
+		if (maxValue.length() == 0) {
+			mMaxValuelabel.setVisibility(View.INVISIBLE);
+			mMaxValue.setText("");
+		} else {
+			mMaxValuelabel.setVisibility(View.VISIBLE);
+			mMaxValue.setText(String.format("%s %s", maxValue, mModuleUnit));
+		}
 	}
 
 	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {
