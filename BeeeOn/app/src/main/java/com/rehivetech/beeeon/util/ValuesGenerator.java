@@ -57,7 +57,7 @@ public class ValuesGenerator {
 	}
 
 	public static ModuleLog generateLog(Module module, ModuleLog.DataPair pair, Random rand) {
-		ModuleLog log = new ModuleLog(ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW);
+		ModuleLog log = new ModuleLog(pair.type, pair.gap);
 
 		long start = pair.interval.getStartMillis();
 		long end = pair.interval.getEndMillis();
