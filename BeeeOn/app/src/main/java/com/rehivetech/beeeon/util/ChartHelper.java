@@ -96,7 +96,7 @@ final public class ChartHelper {
 
 		//TextView to get text color and typeface from textAppearance
 		AppCompatTextView tempText = new AppCompatTextView(context);
-		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Body1);
 
 		//set paint when no chart data is avaiable
 		Paint paint = chart.getPaint(Chart.PAINT_INFO);
@@ -338,7 +338,7 @@ final public class ChartHelper {
 	 */
 	public static <T extends DataSet>
 	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, String gateId, String deviceId,
-					   String moduleId, @DataRange int range, ModuleLog.DataType dataType,
+					   String moduleId, @DataRange int range, final ModuleLog.DataType dataType,
 					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback) {
 
 		final List<String> xValues = new ArrayList<>();
@@ -360,10 +360,8 @@ final public class ChartHelper {
 			public void onExecute(boolean success) {
 				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
 
-				if (moduleLog.getValues().size() > 1) {
-					fillDataSet(moduleLog, dataSet, xValues, dataPair);
-					callback.onChartLoaded(dataSet, xValues);
-				}
+				fillDataSet(moduleLog, dataSet, xValues, dataPair);
+				callback.onChartLoaded(dataSet, xValues);
 			}
 		});
 

@@ -375,7 +375,8 @@
 	<string name="tutorial_helper_tut_module_add_text">To add your new module, please click on plus</string>
 
 	<!-- Chart helper -->
-	<string name="chart_helper_chart_no_data">No device data available.</string>
+	<string name="chart_helper_chart_no_data">No device data available for selected interval</string>
+	<string name="chart_helper_chart_loading">Chart data are loading…</string>
 	<string name="chart_helper_chart_y_axis">Y axis labels</string>
 
 	<!-- Intro, baseGuide -->

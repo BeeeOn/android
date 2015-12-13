@@ -87,11 +87,25 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 			if (dataSet instanceof BarDataSet) {
 				BarData data = ((BarChart) mChart).getBarData() == null ? new BarData(xValues) : ((BarChart) mChart).getBarData();
+
+				if (dataSet.getValueCount() < 2 && ((BarChart) mChart).getBarData() == null) {
+					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
+					mChart.invalidate();
+					return;
+				}
+
 				data.addDataSet((BarDataSet) dataSet);
 				((BarChart) mChart).setData(data);
 
 			} else {
 				LineData data = ((LineChart) mChart).getLineData() == null ? new LineData(xValues) : ((LineChart) mChart).getLineData();
+
+				if (dataSet.getValueCount() < 2 && ((LineChart) mChart).getLineData() == null) {
+					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
+					mChart.invalidate();
+					return;
+				}
+
 				data.addDataSet((LineDataSet) dataSet);
 				((LineChart) mChart).setData(data);
 
@@ -102,7 +116,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			mChart.invalidate();
 
 
-			Log.d(TAG, String.format("dataSet added: %s",dataSet.getLabel()));
+			Log.d(TAG, String.format("dataSet added: %s", dataSet.getLabel()));
 		}
 	};
 
@@ -259,6 +273,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity) {
 		mChart.clear();
+		mChart.setNoDataText(getString(R.string.chart_helper_chart_loading));
 
 		long step = (dataGranularity == ModuleLog.DataInterval.RAW ? mRefreshInterval : dataGranularity.getSeconds()) * 1000;
 		mXAxisFormatter.setStep(step);

@@ -370,7 +370,7 @@
 	<string name="tutorial_helper_tut_module_add_text">Pro přidání zařízení klepněte na plus (+)</string>
 
 	<!-- Chart helper -->
-	<string name="chart_helper_chart_no_data">Nejsou dostupná žádná data</string>
+	<string name="chart_helper_chart_no_data">Pro vybraný interval nejsou dostupná žádná data</string>
 	<string name="chart_helper_chart_y_axis">Popis osy Y</string>
 
 	<!-- Intro, baseGuide -->

@@ -365,7 +365,7 @@
 	<string name="tutorial_helper_tut_module_add_text">Pre pridanie zariadenia ťuknite na plus (+)</string>
 
 	<!-- Chart helper -->
-	<string name="chart_helper_chart_no_data">Nie sú dostupné žiadne dáta.</string>
+	<string name="chart_helper_chart_no_data">Pre vybraný interval nie sú dostupné žiadne dáta.</string>
 	<string name="chart_helper_chart_y_axis">Popis osi Y</string>
 
 	<!-- Intro, baseGuide -->
