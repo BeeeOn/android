@@ -85,5 +85,4 @@ dependencies {
 	compile 'com.facebook.android:facebook-android-sdk:4.5.0'
 	compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
 	compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.0.0@aar'
-	compile 'konifar:fab-transformation:1.0.0'
 }

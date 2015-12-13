@@ -7,18 +7,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.konifar.fab_transformation.FabTransformation;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.ModuleGraphFragment;
@@ -125,9 +124,32 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mCheckBoxAvg = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_avg);
 		mCheckBoxMax = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_max);
 
-		((TextView) findViewById(R.id.module_graph_text_min)).setTextColor(Utils.getGraphColor(this, 1));
-		((TextView) findViewById(R.id.module_graph_text_avg)).setTextColor(Utils.getGraphColor(this, 0));
-		((TextView) findViewById(R.id.module_graph_text_max)).setTextColor(Utils.getGraphColor(this, 2));
+		TextView textMin = ((TextView) findViewById(R.id.module_graph_text_min));
+		textMin.setTextColor(Utils.getGraphColor(this, 1));
+		textMin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCheckBoxMin.setChecked(!mCheckBoxMin.isChecked());
+			}
+		});
+
+		TextView textAvg = ((TextView) findViewById(R.id.module_graph_text_avg));
+		textAvg.setTextColor(Utils.getGraphColor(this, 0));
+		textAvg.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCheckBoxAvg.setChecked(!mCheckBoxAvg.isChecked());
+			}
+		});
+
+		TextView textMax = ((TextView) findViewById(R.id.module_graph_text_max));
+		textMax.setTextColor(Utils.getGraphColor(this, 2));
+		textMax.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mCheckBoxMax.setChecked(!mCheckBoxMax.isChecked());
+			}
+		});
 
 		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
 		mButtonCancel = (Button) findViewById(R.id.module_graph_button_cancel);
@@ -142,71 +164,50 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mSlider.setValues(new ArrayList<>(intervals.values()));
 		mSlider.setProgress(2);  // default dataInterval 5 minutes
 
-		final View transformView = findViewById(R.id.module_graph_footer);
+		final View footerBackground = findViewById(R.id.module_graph_footer_bg);
+
+		final FloatingActionButton.OnVisibilityChangedListener onVisibilityChangedListener = new FloatingActionButton.OnVisibilityChangedListener() {
+			@Override
+			public void onShown(FloatingActionButton fab) {
+				super.onShown(fab);
+				redrawActiveFragment();
+			}
+
+			@Override
+			public void onHidden(FloatingActionButton fab) {
+				super.onHidden(fab);
+				footerBackground.setVisibility(View.VISIBLE);
+			}
+		};
+
 		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(mFab);
-
-				builder.setListener(new FabTransformation.OnTransformListener() {
-					@Override
-					public void onStartTransform() {
-
-					}
-
-					@Override
-					public void onEndTransform() {
-						transformView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-					}
-				});
-
-				builder.transformTo(transformView);
-
+				mFab.hide(onVisibilityChangedListener);
 			}
 		});
 
 		mButtonCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(mFab);
-
-				builder.setListener(new FabTransformation.OnTransformListener() {
-					@Override
-					public void onStartTransform() {
-						transformView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.beeeon_accent));
-
-					}
-
-					@Override
-					public void onEndTransform() {
-					}
-				});
-
-				builder.transformFrom(transformView);
-
+				footerBackground.setVisibility(View.INVISIBLE);
+				mFab.show();
 			}
 		});
 
 		mButtonDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(mFab);
+				footerBackground.setVisibility(View.INVISIBLE);
+				mFab.show(onVisibilityChangedListener);
+			}
+		});
 
-				builder.setListener(new FabTransformation.OnTransformListener() {
-					@Override
-					public void onStartTransform() {
-						transformView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.beeeon_accent));
-
-					}
-
-					@Override
-					public void onEndTransform() {
-						redrawActiveFragment();
-					}
-				});
-
-				builder.transformFrom(transformView);
-
+		footerBackground.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				footerBackground.setVisibility(View.INVISIBLE);
+				mFab.show();
 			}
 		});
 
@@ -374,6 +375,13 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {
 		mShowLegendButton.setOnClickListener(onClickListener);
+	}
+
+
+	public int getScreenHeight() {
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		return metrics.heightPixels;
 	}
 
 	private static class GraphPagerAdapter extends FragmentPagerAdapter {
