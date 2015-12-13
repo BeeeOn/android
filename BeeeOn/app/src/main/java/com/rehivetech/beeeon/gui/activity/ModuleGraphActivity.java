@@ -269,7 +269,11 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
-
+				if (state == ViewPager.SCROLL_STATE_IDLE) {
+					mFab.show();
+				} else {
+					mFab.hide();
+				}
 			}
 		});
 
