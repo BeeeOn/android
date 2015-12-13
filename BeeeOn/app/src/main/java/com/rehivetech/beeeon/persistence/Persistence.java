@@ -134,7 +134,14 @@ public class Persistence {
 	 * @return File representing cache dir
 	 */
 	private File getCacheDir() {
-		File dir = mContext.getExternalCacheDir();
+		File dir;
+
+		try {   // sony xperia neo throw exception if external storage not available
+			dir = mContext.getExternalCacheDir();
+		} catch (ArrayIndexOutOfBoundsException e) {
+			dir = null;
+		}
+
 		if (dir == null) {
 			// If there is not present external sdcard, use internal one
 			dir = mContext.getCacheDir();
