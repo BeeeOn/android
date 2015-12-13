@@ -114,8 +114,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 				data.addDataSet((LineDataSet) dataSet);
 				((LineChart) mChart).setData(data);
 
-				mActivity.setMinValue(String.format("%.2f", dataSet.getYMin()));
-				mActivity.setMaxValue(String.format("%.2f", dataSet.getYMax()));
+				updateMinMaxTexts();
 			}
 
 			mChart.invalidate();
@@ -280,6 +279,10 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mChart.clear();
 		mChart.setNoDataText(getString(R.string.chart_helper_chart_loading));
 
+		mDataSetMin.clear();
+		mDataSetAvg.clear();
+		mDataSetMax.clear();
+
 		long step = (dataGranularity == ModuleLog.DataInterval.RAW ? mRefreshInterval : dataGranularity.getSeconds()) * 1000;
 		mXAxisFormatter.setStep(step);
 
@@ -296,5 +299,29 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback);
 		}
+	}
+
+	private void updateMinMaxTexts() {
+		float minValue;
+		float maxValue;
+
+		if (mDataSetMin.getValueCount() > 0) {
+			minValue = mDataSetMin.getYMin();
+		} else if (mDataSetAvg.getValueCount() > 0) {
+			minValue = mDataSetAvg.getYMin();
+		} else {
+			minValue = mDataSetMax.getYMin();
+		}
+
+		if (mDataSetMax.getValueCount() > 0) {
+			maxValue = mDataSetMax.getYMax();
+		} else if (mDataSetAvg.getValueCount() > 0) {
+			maxValue = mDataSetAvg.getYMax();
+		} else {
+			maxValue = mDataSetMin.getYMax();
+		}
+
+		mActivity.setMinValue(String.format("%.2f", minValue));
+		mActivity.setMaxValue(String.format("%.2f", maxValue));
 	}
 }
