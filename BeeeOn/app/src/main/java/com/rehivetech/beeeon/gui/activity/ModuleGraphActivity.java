@@ -7,18 +7,18 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.konifar.fab_transformation.FabTransformation;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.fragment.ModuleGraphFragment;
@@ -58,6 +58,9 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private TextView mMinValue;
 	private TextView mMaxValue;
 	private TextView mActValue;
+
+	private TextView mMinValueLabel;
+	private TextView mMaxValuelabel;
 
 	private TabLayout mTabLayout;
 	private ViewPager mViewPager;
@@ -101,7 +104,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		UnitsHelper unitsHelper = new UnitsHelper(prefs, this);
 
 		mModuleUnit = unitsHelper.getStringUnit(module.getValue());
-		
+
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		toolbar.setTitle(module.getName(this));
 		setSupportActionBar(toolbar);
@@ -116,18 +119,102 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mMaxValue = (TextView) findViewById(R.id.module_graph_max_value);
 		mActValue = (TextView) findViewById(R.id.module_graph_act_value);
 
+		mMinValueLabel = (TextView) findViewById(R.id.module_graph_min_label);
+		mMaxValuelabel = (TextView) findViewById(R.id.module_graph_max_label);
+
 		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
 		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
 
-		mSlider = (Slider) findViewById(R.id.module_graph_slider);
 
 		mCheckBoxMin = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_min);
 		mCheckBoxAvg = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_avg);
 		mCheckBoxMax = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_max);
 
-		((TextView) findViewById(R.id.module_graph_text_min)).setTextColor(Utils.getGraphColor(this, 1));
-		((TextView) findViewById(R.id.module_graph_text_avg)).setTextColor(Utils.getGraphColor(this, 0));
-		((TextView) findViewById(R.id.module_graph_text_max)).setTextColor(Utils.getGraphColor(this, 2));
+		mCheckBoxAvg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (!isChecked) {
+					if (!mCheckBoxMin.isChecked() && !mCheckBoxMax.isChecked()) {
+						mCheckBoxAvg.setChecked(true);
+					}
+				}
+			}
+		});
+
+		mCheckBoxMin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (!isChecked) {
+					if (!mCheckBoxAvg.isChecked() && !mCheckBoxMax.isChecked()) {
+						mCheckBoxMin.setChecked(true);
+					}
+				}
+			}
+		});
+
+		mCheckBoxMax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (!isChecked) {
+					if (!mCheckBoxMin.isChecked() && !mCheckBoxAvg.isChecked()) {
+						mCheckBoxMax.setChecked(true);
+					}
+				}
+			}
+		});
+
+		mSlider = (Slider) findViewById(R.id.module_graph_slider);
+		mSlider.setProgressChangeLister(new Slider.OnProgressChangeLister() {
+			@Override
+			public void onProgressChanged(int progress) {
+				if (progress == 0) {
+					mCheckBoxMin.setChecked(false);
+					mCheckBoxAvg.setChecked(true);
+					mCheckBoxMax.setChecked(false);
+					mCheckBoxMin.setEnabled(false);
+					mCheckBoxAvg.setEnabled(false);
+					mCheckBoxMax.setEnabled(false);
+				} else {
+					mCheckBoxMin.setEnabled(true);
+					mCheckBoxAvg.setEnabled(true);
+					mCheckBoxMax.setEnabled(true);
+				}
+			}
+		});
+
+		TextView textMin = ((TextView) findViewById(R.id.module_graph_text_min));
+		textMin.setTextColor(Utils.getGraphColor(this, 1));
+		textMin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mCheckBoxMin.isEnabled()) {
+					mCheckBoxMin.setChecked(!mCheckBoxMin.isChecked());
+				}
+			}
+		});
+
+		TextView textAvg = ((TextView) findViewById(R.id.module_graph_text_avg));
+		textAvg.setTextColor(Utils.getGraphColor(this, 0));
+		textAvg.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mCheckBoxAvg.isEnabled()) {
+					mCheckBoxAvg.setChecked(!mCheckBoxAvg.isChecked());
+				}
+			}
+		});
+
+		TextView textMax = ((TextView) findViewById(R.id.module_graph_text_max));
+		textMax.setTextColor(Utils.getGraphColor(this, 2));
+		textMax.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mCheckBoxMax.isEnabled()) {
+					mCheckBoxMax.setChecked(!mCheckBoxMax.isChecked());
+				}
+
+			}
+		});
 
 		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
 		mButtonCancel = (Button) findViewById(R.id.module_graph_button_cancel);
@@ -135,78 +222,62 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		mShowLegendButton = (Button) findViewById(R.id.module_graph_show_legend_btn);
 
-		setupViewPager();
+		setupViewPager(!(module.getValue() instanceof EnumValue));
 
 		Map<ModuleLog.DataInterval, String> intervals = getIntervalString(ModuleLog.DataInterval.values());
 
 		mSlider.setValues(new ArrayList<>(intervals.values()));
-		mSlider.setProgress(2);  // default dataInterval 5 minutes
 
-		final View transformView = findViewById(R.id.module_graph_footer);
+		if (module.getValue() instanceof EnumValue) {
+			mFab.setVisibility(View.GONE);
+		} else {
+			mSlider.setProgress(2);  // default dataInterval 5 minutes
+		}
+
+		final View footerBackground = findViewById(R.id.module_graph_footer_bg);
+
+		final FloatingActionButton.OnVisibilityChangedListener onVisibilityChangedListener = new FloatingActionButton.OnVisibilityChangedListener() {
+			@Override
+			public void onShown(FloatingActionButton fab) {
+				super.onShown(fab);
+				redrawActiveFragment();
+			}
+
+			@Override
+			public void onHidden(FloatingActionButton fab) {
+				super.onHidden(fab);
+				footerBackground.setVisibility(View.VISIBLE);
+			}
+		};
+
 		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(mFab);
-
-				builder.setListener(new FabTransformation.OnTransformListener() {
-					@Override
-					public void onStartTransform() {
-
-					}
-
-					@Override
-					public void onEndTransform() {
-						transformView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
-					}
-				});
-
-				builder.transformTo(transformView);
-
+				mFab.hide(onVisibilityChangedListener);
 			}
 		});
 
 		mButtonCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(mFab);
-
-				builder.setListener(new FabTransformation.OnTransformListener() {
-					@Override
-					public void onStartTransform() {
-						transformView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.beeeon_accent));
-
-					}
-
-					@Override
-					public void onEndTransform() {
-					}
-				});
-
-				builder.transformFrom(transformView);
-
+				footerBackground.setVisibility(View.INVISIBLE);
+				mFab.show();
 			}
 		});
 
 		mButtonDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FabTransformation.Builder builder = FabTransformation.with(mFab);
+				footerBackground.setVisibility(View.INVISIBLE);
+				mFab.show(onVisibilityChangedListener);
+			}
+		});
 
-				builder.setListener(new FabTransformation.OnTransformListener() {
-					@Override
-					public void onStartTransform() {
-						transformView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.beeeon_accent));
-
-					}
-
-					@Override
-					public void onEndTransform() {
-						redrawActiveFragment();
-					}
-				});
-
-				builder.transformFrom(transformView);
-
+		footerBackground.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				footerBackground.setVisibility(View.INVISIBLE);
+				mFab.show();
 			}
 		});
 
@@ -222,6 +293,19 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		}
 
 		updateActValue();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+
+		mViewPager.post(new Runnable() {
+			@Override
+			public void run() {
+				redrawActiveFragment();
+			}
+		});
+
 	}
 
 	@Override
@@ -243,7 +327,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		outState.putInt(OUT_STATE_SLIDER_PROGRESS, mSlider.getProgress());
 	}
 
-	private void setupViewPager() {
+	private void setupViewPager(final boolean showFab) {
 		GraphPagerAdapter adapter = new GraphPagerAdapter(getSupportFragmentManager());
 
 
@@ -268,7 +352,14 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
+				if (showFab) {
 
+					if (state == ViewPager.SCROLL_STATE_IDLE) {
+						mFab.show();
+					} else {
+						mFab.hide();
+					}
+				}
 			}
 		});
 	}
@@ -279,18 +370,19 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			mActValue.setText(((EnumValue) value).getStateStringResource());
 
 			mMinValue.setVisibility(View.GONE);
-			findViewById(R.id.module_graph_min_label).setVisibility(View.GONE);
+			mMinValueLabel.setVisibility(View.GONE);
 
 			mMaxValue.setVisibility(View.GONE);
-			findViewById(R.id.module_graph_max_label).setVisibility(View.GONE);
+			mMaxValuelabel.setVisibility(View.GONE);
 
 		} else {
 			mActValue.setText(String.format("%.2f %s", value.getDoubleValue(), mModuleUnit));
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 	}
+
 	private Map<ModuleLog.DataInterval, String> getIntervalString(ModuleLog.DataInterval[] intervals) {
-		Map<ModuleLog.DataInterval, String> intervalStringMap =new LinkedHashMap<>();
+		Map<ModuleLog.DataInterval, String> intervalStringMap = new LinkedHashMap<>();
 
 		for (ModuleLog.DataInterval interval : intervals) {
 
@@ -358,15 +450,34 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	}
 
 	public void setMinValue(String minValue) {
-		mMinValue.setText(String.format("%s %s", minValue, mModuleUnit));
+		if (minValue.length() == 0) {
+			mMinValueLabel.setVisibility(View.INVISIBLE);
+			mMinValue.setText("");
+		} else {
+			mMinValueLabel.setVisibility(View.VISIBLE);
+			mMinValue.setText(String.format("%s %s", minValue, mModuleUnit));
+		}
 	}
 
 	public void setMaxValue(String maxValue) {
-		mMaxValue.setText(String.format("%s %s", maxValue, mModuleUnit));
+		if (maxValue.length() == 0) {
+			mMaxValuelabel.setVisibility(View.INVISIBLE);
+			mMaxValue.setText("");
+		} else {
+			mMaxValuelabel.setVisibility(View.VISIBLE);
+			mMaxValue.setText(String.format("%s %s", maxValue, mModuleUnit));
+		}
 	}
 
 	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {
 		mShowLegendButton.setOnClickListener(onClickListener);
+	}
+
+
+	public int getScreenHeight() {
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		return metrics.heightPixels;
 	}
 
 	private static class GraphPagerAdapter extends FragmentPagerAdapter {
@@ -402,7 +513,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		public Fragment getActiveFragment(ViewPager container, int position) {
 			String name = makeFragmentName(container.getId(), position);
-			return  mFragmentManager.findFragmentByTag(name);
+			return mFragmentManager.findFragmentByTag(name);
 		}
 
 		private static String makeFragmentName(int viewId, int index) {

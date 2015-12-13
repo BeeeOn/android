@@ -96,7 +96,7 @@ final public class ChartHelper {
 
 		//TextView to get text color and typeface from textAppearance
 		AppCompatTextView tempText = new AppCompatTextView(context);
-		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Body1);
 
 		//set paint when no chart data is avaiable
 		Paint paint = chart.getPaint(Chart.PAINT_INFO);
@@ -171,18 +171,7 @@ final public class ChartHelper {
 
 
 				for (DataSet dataSet : dataSets) {
-
-					if (yValuesCount / viewPortHandler.getScaleX() < chartNumOfCircles) {
-
-						if (dataSet instanceof LineDataSet && !((LineDataSet) dataSet).isDrawCirclesEnabled()) {
-							((LineDataSet) dataSet).setDrawCircles(true);
-						}
-					} else {
-
-						if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
-							((LineDataSet) dataSet).setDrawCircles(false);
-						}
-					}
+					setDataSetCircles(dataSet, viewPortHandler, yValuesCount, chartNumOfCircles);
 				}
 			}
 
@@ -233,6 +222,20 @@ final public class ChartHelper {
 			}
 		}
 		dataset.setColor(color);
+	}
+
+	public static void setDataSetCircles(DataSet dataSet, ViewPortHandler viewPortHandler, int yValuesCount, int chartNumOfCircles) {
+		if (yValuesCount / viewPortHandler.getScaleX() < chartNumOfCircles) {
+
+			if (dataSet instanceof LineDataSet && !((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+				((LineDataSet) dataSet).setDrawCircles(true);
+			}
+		} else {
+
+			if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
+				((LineDataSet) dataSet).setDrawCircles(false);
+			}
+		}
 	}
 
 	@SuppressLint("PrivateResource")
@@ -338,7 +341,7 @@ final public class ChartHelper {
 	 */
 	public static <T extends DataSet>
 	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, String gateId, String deviceId,
-					   String moduleId, @DataRange int range, ModuleLog.DataType dataType,
+					   String moduleId, @DataRange int range, final ModuleLog.DataType dataType,
 					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback) {
 
 		final List<String> xValues = new ArrayList<>();
@@ -360,10 +363,8 @@ final public class ChartHelper {
 			public void onExecute(boolean success) {
 				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
 
-				if (moduleLog.getValues().size() > 1) {
-					fillDataSet(moduleLog, dataSet, xValues, dataPair);
-					callback.onChartLoaded(dataSet, xValues);
-				}
+				fillDataSet(moduleLog, dataSet, xValues, dataPair);
+				callback.onChartLoaded(dataSet, xValues);
 			}
 		});
 
@@ -389,8 +390,23 @@ final public class ChartHelper {
 
 		RefreshInterval refresh = pair.module.getDevice().getRefresh();
 
-		// use refresh interval for raw data, or 1 second when has no refresh
-		int refreshMsecs = (refresh != null ? refresh.getInterval() * 1000 : 1000);
+		// use refresh interval for raw data, or 5 min / 1 hod when has no refresh
+
+		int refreshMsecs;
+
+		if (refresh == null) {
+			long interval = end - start;
+			if (interval == RANGE_WEEK * 1000) {
+				refreshMsecs = 1000 * 60 * 5;
+			} else if (interval == (long)RANGE_MONTH * 1000) {
+				refreshMsecs = 1000 * 60 * 60;
+			} else {
+				refreshMsecs = 1000;
+			}
+		} else {
+			refreshMsecs = refresh.getInterval() * 1000;
+		}
+
 		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
 
 		Log.d(TAG, String.format("Computing %d values", (end - start) / everyMsecs));

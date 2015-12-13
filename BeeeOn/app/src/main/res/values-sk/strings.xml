@@ -291,6 +291,11 @@
 
 	<!--Module graph-->
 	<string name="module_graph_show_y_labels_button">Zobraziť Y hodnoty</string>
+	<string name="module_graph_type_of_data">Typ agregácie</string>
+	<string name="module_graph_data_granularity">Miera agregácie</string>
+	<string name="module_graph_min_label">MIN</string>
+	<string name="module_graph_max_label">MAX</string>
+
 
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Zariadenie nie je dostupné</string>
@@ -365,7 +370,8 @@
 	<string name="tutorial_helper_tut_module_add_text">Pre pridanie zariadenia ťuknite na plus (+)</string>
 
 	<!-- Chart helper -->
-	<string name="chart_helper_chart_no_data">Nie sú dostupné žiadne dáta.</string>
+	<string name="chart_helper_chart_no_data">Pre vybraný interval nie sú dostupné žiadne dáta.</string>
+	<string name="chart_helper_chart_loading">Načítanie dát pre graf…</string>
 	<string name="chart_helper_chart_y_axis">Popis osi Y</string>
 
 	<!-- Intro, baseGuide -->
@@ -385,9 +391,32 @@
 
 	<!-- Various strings -->
 	<string name="unit_meters_short">m</string>
+	<string name="button_done">POTVRDIŤ</string>
 
 	<!-- Server names -->
 	<string name="server_production">Produkčný</string>
 	<string name="server_development">Vývojový</string>
+
+	<!--GRAPH RANGE-->
+	<string name="graph_range_hour">Hodina</string>
+	<string name="graph_range_day">Deň</string>
+	<string name="graph_range_week">Týždeň</string>
+	<string name="graph_range_month">Mesiac</string>
+
+	<!--DATA INTERVAL-->
+	<string name="data_interval_raw">Bez agregácie</string>
+	<string name="data_interval_minute">Minúta</string>
+	<string name="data_interval_five_minutes">5 minút</string>
+	<string name="data_interval_ten_minutes">10 minút</string>
+	<string name="data_interval_half_hour">Pol hodina</string>
+	<string name="data_interval_hour">Hodina</string>
+	<string name="data_interval_day">Deň</string>
+	<string name="data_interval_week">Týždeň</string>
+	<string name="data_interval_month">Mesiac</string>
+
+	<!--DATA TYPE-->
+	<string name="data_type_min">Minimum</string>
+	<string name="data_type_avg">Priemer</string>
+	<string name="data_type_max">Maximum</string>
 
 </resources>

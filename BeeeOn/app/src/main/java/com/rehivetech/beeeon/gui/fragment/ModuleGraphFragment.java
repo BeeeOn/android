@@ -24,7 +24,6 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
@@ -87,22 +86,42 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 			if (dataSet instanceof BarDataSet) {
 				BarData data = ((BarChart) mChart).getBarData() == null ? new BarData(xValues) : ((BarChart) mChart).getBarData();
+
+				if (dataSet.getValueCount() < 2 && ((BarChart) mChart).getBarData() == null) {
+					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
+					mChart.invalidate();
+
+					mActivity.setMinValue("");
+					mActivity.setMaxValue("");
+					return;
+				}
+
 				data.addDataSet((BarDataSet) dataSet);
 				((BarChart) mChart).setData(data);
 
 			} else {
 				LineData data = ((LineChart) mChart).getLineData() == null ? new LineData(xValues) : ((LineChart) mChart).getLineData();
+
+				if (dataSet.getValueCount() < 2 && ((LineChart) mChart).getLineData() == null) {
+					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
+					mChart.invalidate();
+
+					mActivity.setMinValue("");
+					mActivity.setMaxValue("");
+					return;
+				}
+
 				data.addDataSet((LineDataSet) dataSet);
 				((LineChart) mChart).setData(data);
 
-				mActivity.setMinValue(String.format("%.2f", dataSet.getYMin()));
-				mActivity.setMaxValue(String.format("%.2f", dataSet.getYMax()));
+				updateMinMaxTexts();
 			}
+
+			ChartHelper.setDataSetCircles(dataSet, mChart.getViewPortHandler(), mChart.getData().getYValCount(), getResources().getInteger(R.integer.graph_number_circles));
 
 			mChart.invalidate();
 
-
-			Log.d(TAG, String.format("dataSet added: %s",dataSet.getLabel()));
+			Log.d(TAG, String.format("dataSet added: %s", dataSet.getLabel()));
 		}
 	};
 
@@ -259,6 +278,11 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity) {
 		mChart.clear();
+		mChart.setNoDataText(getString(R.string.chart_helper_chart_loading));
+
+		mDataSetMin.clear();
+		mDataSetAvg.clear();
+		mDataSetMax.clear();
 
 		long step = (dataGranularity == ModuleLog.DataInterval.RAW ? mRefreshInterval : dataGranularity.getSeconds()) * 1000;
 		mXAxisFormatter.setStep(step);
@@ -276,5 +300,29 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback);
 		}
+	}
+
+	private void updateMinMaxTexts() {
+		float minValue;
+		float maxValue;
+
+		if (mDataSetMin.getValueCount() > 0) {
+			minValue = mDataSetMin.getYMin();
+		} else if (mDataSetAvg.getValueCount() > 0) {
+			minValue = mDataSetAvg.getYMin();
+		} else {
+			minValue = mDataSetMax.getYMin();
+		}
+
+		if (mDataSetMax.getValueCount() > 0) {
+			maxValue = mDataSetMax.getYMax();
+		} else if (mDataSetAvg.getValueCount() > 0) {
+			maxValue = mDataSetAvg.getYMax();
+		} else {
+			maxValue = mDataSetMin.getYMax();
+		}
+
+		mActivity.setMinValue(String.format("%.2f", minValue));
+		mActivity.setMaxValue(String.format("%.2f", maxValue));
 	}
 }

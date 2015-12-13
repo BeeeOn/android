@@ -24,6 +24,7 @@
 				android:id="@+id/module_graph_min_label"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:visibility="invisible"
 				android:layout_below="@id/beeeon_toolbar"
 				android:layout_alignParentLeft="true"
 				android:layout_alignParentStart="true"
@@ -37,6 +38,7 @@
 				android:id="@+id/module_graph_max_label"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
+				android:visibility="invisible"
 				android:layout_below="@id/beeeon_toolbar"
 				android:layout_alignParentRight="true"
 				android:layout_alignParentEnd="true"
@@ -120,17 +122,21 @@
 		android:textColor="@color/beeeon_accent"
 		android:text="@string/module_graph_show_y_labels_button"/>
 
-	<io.codetail.widget.RevealFrameLayout
+	<FrameLayout
+		android:id="@+id/module_graph_footer_bg"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom">
+		android:layout_height="match_parent"
+		android:background="@color/background_dim_overlay"
+		android:visibility="invisible">
 
 		<RelativeLayout
 			android:id="@+id/module_graph_footer"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:background="@color/beeeon_accent"
-			android:visibility="invisible"
+			style="@style/GraphSettingStyle"
+			android:layout_height="wrap_content"
+			android:elevation="6dp"
+			android:background="@color/white"
+			android:clickable="true"
+			android:layout_gravity="bottom|center_horizontal"
 			android:padding="16dp">
 
 			<TextView
@@ -228,6 +234,6 @@
 				android:layout_below="@id/module_graph_slider"/>
 
 		</RelativeLayout>
+	</FrameLayout>
 
-	</io.codetail.widget.RevealFrameLayout>
 </android.support.design.widget.CoordinatorLayout>
