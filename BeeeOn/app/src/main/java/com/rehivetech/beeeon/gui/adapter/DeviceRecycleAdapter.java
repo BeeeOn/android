@@ -28,6 +28,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	public static final int TYPE_DEVICE = 0;
 	public static final int TYPE_LOCATION = 1;
 	public static final int TYPE_UNPAIRED_DEVICE = 2;
+	public static final int TYPE_HEADER = 3;
 
 	private ArrayList<Object> mObjects = new ArrayList<>();
 	private IItemClickListener mClickListener;
@@ -60,9 +61,11 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 		}
 		else if(mObjects.get(position) instanceof Location){
 			return TYPE_LOCATION;
+		} else if (mObjects.get(position) instanceof String) {
+			return TYPE_HEADER;
 		}
 		else{
-			throw new ClassCastException(String.format("%s must be Device or Location!", mObjects.get(position).toString()));
+			throw new ClassCastException(String.format("%s must be Device or String!", mObjects.get(position).toString()));
 		}
 	}
 
@@ -82,8 +85,9 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				return new DeviceViewHolder(v, mClickListener);
 
 			case TYPE_LOCATION:
-				v = inflater.inflate(R.layout.item_list_location_header, parent, false);
-				return new LocationViewHolder(v);
+			case TYPE_HEADER:
+				v = inflater.inflate(R.layout.item_list_header, parent, false);
+				return new HeaderViewHolder(v);
 
 			case TYPE_UNPAIRED_DEVICE:
 				v = inflater.inflate(R.layout.item_list_unpaired_device, parent, false);
@@ -91,8 +95,8 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 			default:
 				// TODO should we use some kind of error viewHolder ?
-				v = inflater.inflate(R.layout.item_list_location_header, parent, false);
-				return new LocationViewHolder(v);
+				v = inflater.inflate(R.layout.item_list_header, parent, false);
+				return new HeaderViewHolder(v);
 		}
 	}
 
@@ -142,12 +146,20 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				break;
 
 			case TYPE_LOCATION:
-				Location location = (Location) mObjects.get(position);
-				if(location == null) return; // TODO should show error view or loading or sth
-				LocationViewHolder locationHolder = (LocationViewHolder) viewHolder;
+			case TYPE_HEADER:
+				String header;
+
+				if (mUnpairedDevices) {
+					header = (String) mObjects.get(position);
+				} else {
+					header = ((Location) mObjects.get(position)).getName();
+				}
+
+				if(header == null) return; // TODO should show error view or loading or sth
+				HeaderViewHolder locationHolder = (HeaderViewHolder) viewHolder;
 
 				//locationHolder.mDivider.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
-				locationHolder.mHeader.setText(location.getName());
+				locationHolder.mHeader.setText(header);
 				break;
 		}
 	}
@@ -234,13 +246,13 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	}
 
 	/**
-	 * ViewHolder for Location Header
+	 * ViewHolder for Header
 	 */
-	public static class LocationViewHolder extends RecyclerView.ViewHolder{
+	public static class HeaderViewHolder extends RecyclerView.ViewHolder{
 		public TextView mHeader;
 		//public View mDivider;
 
-		public LocationViewHolder(View itemView) {
+		public HeaderViewHolder(View itemView) {
 			super(itemView);
 			mHeader = (TextView) itemView.findViewById(R.id.list_location_header_text);
 			//mDivider = itemView.findViewById(R.id.list_module_item_sep_middle);

@@ -17,7 +17,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.SetupDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.location.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +96,7 @@ public class UnPairedDeviceListFragment  extends BaseApplicationFragment impleme
 		}
 
 		for (int manufacturer : manufacturers) {
-			mAdapterList.add(new Location("", getString(manufacturer), "", ""));  // TODO TEMP
+			mAdapterList.add(getString(manufacturer));
 			for (Device device : mDevicesList) {
 				if (manufacturer == device.getType().getManufacturerRes()) {
 					mAdapterList.add(device);
