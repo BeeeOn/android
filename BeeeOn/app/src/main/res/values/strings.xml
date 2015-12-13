@@ -221,7 +221,7 @@
 	<string name="gate_users_title_gate_users">Manage users</string>
 
 	<!-- Device  setup -->
-	<string name="device_setup_title_setup_device">Device setup</string>
+	<string name="device_setup_title_setup_device">Device add</string>
 	<string name="device_setup_toast_empty_module_name">Please fill names of all modules</string>
 	<string name="device_setup_toast_need_module_location_name">Write name of new location please</string>
 	<string name="device_setup_toast_new_module_added">New module was added</string>

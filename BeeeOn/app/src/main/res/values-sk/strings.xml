@@ -219,7 +219,7 @@
 	<string name="gate_users_title_gate_users">Používatelia brány</string>
 
 	<!-- Device setup -->
-	<string name="device_setup_title_setup_device">Nastavenie zariadenia</string>
+	<string name="device_setup_title_setup_device">Pridanie zariadenia</string>
 	<string name="device_setup_toast_empty_module_name">Vyplňte názvy všetkých zariadení</string>
 	<string name="device_setup_toast_need_module_location_name">Napíšte názov umiestnenia</string>
 	<string name="device_setup_toast_new_module_added">Nové zariadenie bolo pridané</string>
