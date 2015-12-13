@@ -371,6 +371,7 @@
 
 	<!-- Chart helper -->
 	<string name="chart_helper_chart_no_data">Pro vybraný interval nejsou dostupná žádná data</string>
+	<string name="chart_helper_chart_loading">Načítání dat pro graf…</string>
 	<string name="chart_helper_chart_y_axis">Popis osy Y</string>
 
 	<!-- Intro, baseGuide -->
@@ -390,7 +391,7 @@
 
 	<!-- Various strings -->
 	<string name="unit_meters_short">m</string>
-	<string name="button_done">Potvrdtit</string>
+	<string name="button_done">POTVRDIT</string>
 
 	<!-- Server names -->
 	<string name="server_production">Produkční</string>

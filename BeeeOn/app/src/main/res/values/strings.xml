@@ -376,7 +376,7 @@
 
 	<!-- Chart helper -->
 	<string name="chart_helper_chart_no_data">No device data available for selected interval</string>
-	<string name="chart_helper_chart_loading">Chart data are loading…</string>
+	<string name="chart_helper_chart_loading">Loading chart data…</string>
 	<string name="chart_helper_chart_y_axis">Y axis labels</string>
 
 	<!-- Intro, baseGuide -->
@@ -397,32 +397,32 @@
 	<!-- Various strings -->
 
 	<string name="unit_meters_short">m</string>
-	<string name="button_done">done</string>
+	<string name="button_done">DONE</string>
 
 	<!-- Server names -->
 	<string name="server_production">Production</string>
 	<string name="server_development">Development</string>
 
 	<!--GRAPH RANGE-->
-	<string name="graph_range_hour">hour</string>
-	<string name="graph_range_day">day</string>
-	<string name="graph_range_week">week</string>
-	<string name="graph_range_month">month</string>
+	<string name="graph_range_hour">Hour</string>
+	<string name="graph_range_day">Day</string>
+	<string name="graph_range_week">Week</string>
+	<string name="graph_range_month">Month</string>
 
 	<!--DATA INTERVAL-->
-	<string name="data_interval_raw">raw data</string>
-	<string name="data_interval_minute">minute</string>
+	<string name="data_interval_raw">No aggregation</string>
+	<string name="data_interval_minute">Minute</string>
 	<string name="data_interval_five_minutes">5 minutes</string>
 	<string name="data_interval_ten_minutes">10 minutes</string>
-	<string name="data_interval_half_hour">half hour</string>
-	<string name="data_interval_hour">hour</string>
-	<string name="data_interval_day">day</string>
-	<string name="data_interval_week">week</string>
-	<string name="data_interval_month">month</string>
+	<string name="data_interval_half_hour">Half hour</string>
+	<string name="data_interval_hour">Hour</string>
+	<string name="data_interval_day">Day</string>
+	<string name="data_interval_week">Week</string>
+	<string name="data_interval_month">Month</string>
 
 	<!--DATA TYPE-->
-	<string name="data_type_min">minimum</string>
-	<string name="data_type_avg">average</string>
-	<string name="data_type_max">maximum</string>
+	<string name="data_type_min">Minimum</string>
+	<string name="data_type_avg">Average</string>
+	<string name="data_type_max">Maximum</string>
 </resources>
 
