@@ -34,6 +34,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -236,7 +237,7 @@ final public class ChartHelper {
 
 	@SuppressLint("PrivateResource")
 	public static void prepareXAxis(Context context, XAxis axis, DateTimeFormatter formatter, @ColorInt Integer textColor,
-									XAxis.XAxisPosition position, boolean drawGridLines) {
+									XAxis.XAxisPosition position, boolean drawGridLines, XAxisValueFormatter xAxisFormatter) {
 
 		//TextView to get text color and typeface from textAppearance
 		AppCompatTextView tempText = new AppCompatTextView(context);
@@ -249,7 +250,7 @@ final public class ChartHelper {
 		axis.setTypeface(tempText.getTypeface());
 		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
 		axis.setDrawGridLines(drawGridLines);
-		axis.setValueFormatter(getXAxisValueFormatter(formatter));
+		axis.setValueFormatter(xAxisFormatter);
 	}
 
 	@SuppressLint("PrivateResource")
@@ -324,19 +325,6 @@ final public class ChartHelper {
 		};
 	}
 
-	public static XAxisValueFormatter getXAxisValueFormatter(final DateTimeFormatter formatter) {
-
-		return new XAxisValueFormatter() {
-			@Override
-			public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
-				long value = Long.parseLong(original);
-				return formatter.print(value);
-			}
-		};
-	}
-
-
-
 	/**
 	 * @param activity     instance of activity
 	 * @param controller   instance of controller
@@ -360,8 +348,10 @@ final public class ChartHelper {
 			return;
 		}
 
+		// FIXME: Better hold these in parent fragment/activity and have it same (and not duplicit on more places) for all of htem
 		DateTime end = DateTime.now(DateTimeZone.UTC);
 		DateTime start = end.minusSeconds(range);
+
 		GetModuleLogTask getModuleLogTask = new GetModuleLogTask(activity);
 
 		final ModuleLog.DataPair dataPair = new ModuleLog.DataPair(module, new Interval(start, end), dataType, dataInterval);
@@ -371,7 +361,7 @@ final public class ChartHelper {
 				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
 
 				if (moduleLog.getValues().size() > 1) {
-					fillDataSet(moduleLog, dataSet, xValues);
+					fillDataSet(moduleLog, dataSet, xValues, dataPair);
 					callback.onChartLoaded(dataSet, xValues);
 				}
 			}
@@ -384,8 +374,9 @@ final public class ChartHelper {
 	 * @param moduleLog data to be displayed
 	 * @param dataSet chart dataSet
 	 * @param xValues chart xValues
+	 * @param pair
 	 */
-	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues) {
+	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues, ModuleLog.DataPair pair) {
 		boolean barChart = (dataSet instanceof BarDataSet);
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
@@ -393,15 +384,36 @@ final public class ChartHelper {
 
 		dataSet.clear();
 
+		long start = pair.interval.getStartMillis();
+		long end = pair.interval.getEndMillis();
+
+		RefreshInterval refresh = pair.module.getDevice().getRefresh();
+
+		// use refresh interval for raw data, or 1 second when has no refresh
+		int refreshMsecs = (refresh != null ? refresh.getInterval() * 1000 : 1000);
+		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
+
+		Log.d(TAG, String.format("Computing %d values", (end - start) / everyMsecs));
+
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
+			long time = entry.getKey();
 			float value = Float.isNaN(entry.getValue()) ? moduleLog.getMinimum() : entry.getValue();
-			xValues.add(String.valueOf(entry.getKey()));
 
-			if (barChart) {
-				dataSet.addEntry(new BarEntry(value, i++));
-			} else {
-				dataSet.addEntry(new Entry(value, i++));
+			if (start >= end) {
+				break;
+			}
+
+			while (start < time && start < end) {
+				xValues.add(String.valueOf(time));
+
+				if (barChart) {
+					dataSet.addEntry(new BarEntry(value, i++));
+				} else {
+					dataSet.addEntry(new Entry(value, i++));
+				}
+
+				start += everyMsecs;
 			}
 		}
 	}
@@ -445,4 +457,36 @@ final public class ChartHelper {
 	public interface ChartLoadListener {
 		void onChartLoaded(DataSet dataset, List<String> xValues);
 	}
+
+	public static class CustomXAxisFormatter implements XAxisValueFormatter {
+
+		private final DateTimeFormatter mFormatter;
+		private long mStartMillis;
+		private long mStepMillis;
+
+		/**
+		 * @param formatter
+		 * @param startMillis        in milliseconds
+		 * @param stepMillis         in milliseconds
+		 */
+		public CustomXAxisFormatter(DateTimeFormatter formatter, long startMillis, long stepMillis) {
+			mFormatter = formatter;
+			mStartMillis = startMillis;
+			setStep(stepMillis);
+		}
+
+		public void setStart(long startMillis) {
+			mStartMillis = startMillis;
+		}
+
+		public void setStep(long stepMillis) {
+			mStepMillis = stepMillis;
+		}
+
+		@Override
+		public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
+			long date = mStartMillis + index * mStepMillis;
+			return mFormatter.print(date);
+		}
+	};
 }

@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +24,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
@@ -30,6 +32,7 @@ import com.rehivetech.beeeon.gui.view.ModuleGraphMarkerView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
@@ -37,6 +40,8 @@ import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -57,6 +62,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private String mDeviceId;
 	private String mModuleId;
 	private @ChartHelper.DataRange int mRange;
+
+	private int mRefreshInterval = 1; // in seconds
+	private ChartHelper.CustomXAxisFormatter mXAxisFormatter;
 
 	private ModuleGraphActivity mActivity;
 
@@ -192,23 +200,34 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		mYlabels = new StringBuffer();
 
+		// FIXME: Better hold this in parent fragment/activity and have it same (and not duplicit on more places) for all of htem
+		DateTime end = DateTime.now(DateTimeZone.UTC);
+		DateTime start = end.minusSeconds(mRange);
+
+		RefreshInterval refresh = module.getDevice().getRefresh();
+		mRefreshInterval = refresh != null ? refresh.getInterval() : 1;
+
+		// TODO: TEN_MINUTES is used as some default value, but better would be to have it in parent fragment/activity, as stated above
+		mXAxisFormatter = new ChartHelper.CustomXAxisFormatter(formatter, start.getMillis(), ModuleLog.DataInterval.TEN_MINUTES.getSeconds() * 1000);
+
 		if (barchart) {
 			mChart = new BarChart(mActivity);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false);
 		} else {
 			mChart = new LineChart(mActivity);
-			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter, unit);
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter, unit, mXAxisFormatter);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
 		}
 
 		mChart.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 		mRootLayout.addView(mChart);
 
-
-
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			mChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+		}
 
 		// prepare axis bottom
-		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false);
+		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false, mXAxisFormatter);
 		//prepare axis left
 		ChartHelper.prepareYAxis(mActivity, module.getValue(), mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
 		//disable right axis
@@ -240,6 +259,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity) {
 		mChart.clear();
+
+		long step = (dataGranularity == ModuleLog.DataInterval.RAW ? mRefreshInterval : dataGranularity.getSeconds()) * 1000;
+		mXAxisFormatter.setStep(step);
 
 		if (drawMax) {
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,
