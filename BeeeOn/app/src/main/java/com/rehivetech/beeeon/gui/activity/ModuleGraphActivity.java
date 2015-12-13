@@ -15,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -128,6 +129,39 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mCheckBoxMin = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_min);
 		mCheckBoxAvg = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_avg);
 		mCheckBoxMax = (AppCompatCheckBox) findViewById(R.id.module_graph_checkbox_max);
+
+		mCheckBoxAvg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (!isChecked) {
+					if (!mCheckBoxMin.isChecked() && !mCheckBoxMax.isChecked()) {
+						mCheckBoxAvg.setChecked(true);
+					}
+				}
+			}
+		});
+
+		mCheckBoxMin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (!isChecked) {
+					if (!mCheckBoxAvg.isChecked() && !mCheckBoxMax.isChecked()) {
+						mCheckBoxMin.setChecked(true);
+					}
+				}
+			}
+		});
+
+		mCheckBoxMax.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (!isChecked) {
+					if (!mCheckBoxMin.isChecked() && !mCheckBoxAvg.isChecked()) {
+						mCheckBoxMax.setChecked(true);
+					}
+				}
+			}
+		});
 
 		mSlider = (Slider) findViewById(R.id.module_graph_slider);
 		mSlider.setProgressChangeLister(new Slider.OnProgressChangeLister() {
