@@ -3,10 +3,12 @@ package com.rehivetech.beeeon.model;
 import android.util.Log;
 
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormat;
@@ -25,17 +27,19 @@ public class ModuleLogsModel extends BaseModel {
 
 	private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
 
-	private final Map<String, ModuleLog> mModulesLogs = new HashMap<>();
+	private final MultipleDataHolder<ModuleLog> mModulesLogs = new MultipleDataHolder<>(); // moduleId => ModuleLog dataHolder
 
 	public ModuleLogsModel(INetwork network) {
 		super(network);
 	}
 
-	private void saveModuleLog(String moduleId, ModuleLog log) {
-		ModuleLog data = mModulesLogs.get(moduleId);
+	private void saveModuleLog(ModuleLog.DataPair pair, ModuleLog log) {
+		String moduleId = pair.module.getModuleId().absoluteId;
+
+		ModuleLog data = mModulesLogs.getObject(moduleId, log.getId());
 		if (data == null) {
 			// Just save new item
-			mModulesLogs.put(moduleId, log);
+			mModulesLogs.addObject(moduleId, log);
 		} else {
 			// We need to append these values to existing log
 			for (Entry<Long, Float> entry : log.getValues().entrySet()) {
@@ -48,22 +52,23 @@ public class ModuleLogsModel extends BaseModel {
 		List<Interval> downloadIntervals = new ArrayList<>();
 		Interval interval = pair.interval;
 		String moduleId = pair.module.getModuleId().absoluteId;
+		ModuleLog log = new ModuleLog(pair.type, pair.gap);
 
-		Log.d(TAG, String.format("We want interval: %s -> %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd())));
+		Log.d(TAG, String.format("We want interval: %s -> %s (%s)", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), log.getId()));
 
-		if (!mModulesLogs.containsKey(moduleId)) {
+		if (!mModulesLogs.hasObject(moduleId, log.getId())) {
 			// No log for this module, download whole interval
-			Log.d(TAG, String.format("No cached log for module %s", moduleId));
+			Log.d(TAG, String.format("No cached log (%s) for module %s", log.getId(), moduleId));
 			downloadIntervals.add(interval);
 		} else {
 			// We have this ModuleLog with (not necessarily all) values
-			ModuleLog data = mModulesLogs.get(moduleId);
+			ModuleLog data = mModulesLogs.getObject(moduleId, log.getId());
 
 			// Values are returned as sorted
 			SortedMap<Long, Float> rows = data.getValues();
 			if (rows.isEmpty()) {
 				// No values in this log, download whole interval
-				Log.d(TAG, String.format("We have log, but with no values for module %s", moduleId));
+				Log.d(TAG, String.format("We have log (%s), but with no values for module %s", log.getId(), moduleId));
 				downloadIntervals.add(interval);
 			} else {
 				// Use pair gap to make sure we won't make useless request when there won't be no new value anyway
@@ -75,7 +80,7 @@ public class ModuleLogsModel extends BaseModel {
 
 				Log.d(TAG, String.format("We have cached: %s -> %s for module %s", fmt.print(first), fmt.print(last), moduleId));
 
-				Log.d(TAG, String.format("We have log and there are some values for module %s", moduleId));
+				Log.d(TAG, String.format("We have log (%s) and there are some values for module %s", log.getId(), moduleId));
 				Log.v(TAG, String.format("Gap: %d ms", gap));
 
 				if (interval.isBefore(first) || interval.isAfter(last)) {
@@ -117,12 +122,12 @@ public class ModuleLogsModel extends BaseModel {
 	 * @return
 	 */
 	public ModuleLog getModuleLog(ModuleLog.DataPair pair) {
-		ModuleLog log = new ModuleLog(DataType.AVERAGE, DataInterval.RAW);
+		ModuleLog log = new ModuleLog(pair.type, pair.gap);
 
 		String moduleId = pair.module.getModuleId().absoluteId;
-		if (mModulesLogs.containsKey(moduleId)) {
+		if (mModulesLogs.hasObject(moduleId, log.getId())) {
 			// We have this ModuleLog, lets load wanted values from it
-			ModuleLog data = mModulesLogs.get(moduleId);
+			ModuleLog data = mModulesLogs.getObject(moduleId, log.getId());
 			for (Entry<Long, Float> entry : data.getValues(pair.interval).entrySet()) {
 				log.addValue(entry.getKey(), entry.getValue());
 			}
@@ -153,7 +158,7 @@ public class ModuleLogsModel extends BaseModel {
 				ModuleLog log = mNetwork.devices_getLog(downPair.module.getDevice().getGateId(), downPair.module, downPair);
 
 				// Save it
-				saveModuleLog(moduleId, log);
+				saveModuleLog(downPair, log);
 			}
 		} catch (AppException e) {
 			throw AppException.wrap(e);

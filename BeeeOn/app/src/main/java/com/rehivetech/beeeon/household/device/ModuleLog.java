@@ -11,13 +11,19 @@ import java.util.TreeMap;
 /**
  * Represents history of values for module.
  */
-public class ModuleLog {
+public class ModuleLog implements IIdentifier {
 	private SortedMap<Long, Float> mValues = new TreeMap<>();
 	private DataType mType;
 	private DataInterval mInterval;
 
 	private float mMinValue;
 	private float mMaxValue;
+
+	@Override
+	public String getId() {
+		// Prepare unique identifier for type of data in this log (datatype + datainterval)
+		return String.format("%s_%d", mType.mValue, mInterval.mValue);
+	}
 
 	public enum DataType implements IIdentifier {
 		MINIMUM("min"), //
