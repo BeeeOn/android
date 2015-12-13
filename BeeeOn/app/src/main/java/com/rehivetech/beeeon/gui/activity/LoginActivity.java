@@ -563,9 +563,9 @@ public class LoginActivity extends BaseActivity {
 	private void onLoggedIn() {
 		mProgress.dismiss();
 
-		// Check if this is redirect (e.g., after connection loss) or classic start
+		// Check whether this activity started as redirect (e.g., after connection loss) or it is task's root (probably classic start)
 		Bundle bundle = getIntent().getExtras();
-		if (bundle == null || !bundle.getBoolean(BUNDLE_REDIRECT, false)) {
+		if (bundle == null || !bundle.getBoolean(BUNDLE_REDIRECT, false) || isTaskRoot()) {
 			Intent intent = new Intent(this, MainActivity.class);
 			startActivity(intent);
 		}
