@@ -129,12 +129,12 @@
 
 		<RelativeLayout
 			android:id="@+id/module_graph_footer"
-			android:layout_width="match_parent"
+			style="@style/GraphSettingStyle"
 			android:layout_height="wrap_content"
 			android:elevation="6dp"
 			android:background="@color/white"
 			android:clickable="true"
-			android:layout_gravity="bottom"
+			android:layout_gravity="bottom|center_horizontal"
 			android:padding="16dp">
 
 			<TextView
