@@ -226,6 +226,19 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+
+		mViewPager.post(new Runnable() {
+			@Override
+			public void run() {
+				redrawActiveFragment();
+			}
+		});
+
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
@@ -274,13 +287,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 				} else {
 					mFab.hide();
 				}
-			}
-		});
-
-		mViewPager.post(new Runnable() {
-			@Override
-			public void run() {
-				redrawActiveFragment();
 			}
 		});
 	}
