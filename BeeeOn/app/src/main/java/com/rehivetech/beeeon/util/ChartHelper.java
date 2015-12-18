@@ -398,7 +398,7 @@ final public class ChartHelper {
 			long interval = end - start;
 			if (interval == RANGE_WEEK * 1000) {
 				refreshMsecs = 1000 * 60 * 5;
-			} else if (interval == (long)RANGE_MONTH * 1000) {
+			} else if (interval == (long) RANGE_MONTH * 1000) {
 				refreshMsecs = 1000 * 60 * 60;
 			} else {
 				refreshMsecs = 1000;
@@ -414,26 +414,37 @@ final public class ChartHelper {
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
 			long time = entry.getKey();
-			float value = Float.isNaN(entry.getValue()) ? moduleLog.getMinimum() : entry.getValue();
+			float value = entry.getValue();
+
+			// Fill missing data between start (or previous timestamp) and timestamp of given value
+			while ((start + everyMsecs) <= time && start < end) {
+				xValues.add("");
+				start += everyMsecs;
+				i++;
+			}
 
 			if (start >= end) {
 				break;
 			}
 
-			while (start < time && start < end) {
-				xValues.add(String.valueOf(time));
+			xValues.add(String.valueOf(time));
 
-				if (barChart) {
-					dataSet.addEntry(new BarEntry(value, i++));
-				} else {
-					dataSet.addEntry(new Entry(value, i++));
-				}
-
-				start += everyMsecs;
+			if (barChart) {
+				dataSet.addEntry(new BarEntry(value, i++));
+			} else {
+				dataSet.addEntry(new Entry(value, i++));
 			}
+
+			start += everyMsecs;
+		}
+
+		// Fill missing data between last given value and end of interval
+		while ((start + everyMsecs) <= end) {
+			xValues.add("");
+			start += everyMsecs;
+			i++;
 		}
 	}
-
 
 	/**
 	 * @param interval Data range int interval
