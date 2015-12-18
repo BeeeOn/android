@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class MultipleDataHolder<O extends IIdentifier> {
 
-	private final Map<String, DataHolder<O>> mHolders = new WeakHashMap<>(); // holderId => (objectId => object)
+	private final Map<String, DataHolder<O>> mHolders = new HashMap<>(); // holderId => (objectId => object)
 
 	/**
 	 * Clear underlaying holders.
