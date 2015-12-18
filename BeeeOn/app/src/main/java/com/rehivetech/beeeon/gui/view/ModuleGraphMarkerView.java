@@ -31,18 +31,17 @@ public class ModuleGraphMarkerView extends MarkerView {
 	private TextView mTextMax;
 	private TextView mTextXval;
 
-	private XAxisValueFormatter mValueFormatter;
 	private String mUnit;
+
 	/**
 	 * Constructor. Sets up the MarkerView with a custom layout resource.
 	 *
 	 * @param context
 	 * @param layoutResource
 	 */
-	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, DateTimeFormatter formatter, String unit, XAxisValueFormatter xAxisFormatter) {
+	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, String unit) {
 		super(context, layoutResource);
 		mChart = chart;
-		mValueFormatter = xAxisFormatter;
 		mUnit = unit;
 
 		mTextMin = (TextView) findViewById(R.id.util_chart_markerview_text_min);
@@ -72,9 +71,6 @@ public class ModuleGraphMarkerView extends MarkerView {
 	public void refreshContent(Entry e, Highlight highlight) {
 		clearTexts();
 
-		String xValue = mChart.getXValue(e.getXIndex());
-		xValue = mValueFormatter.getXValue(xValue, e.getXIndex(), null);
-
 		for (DataSet dataSet : mChart.getData().getDataSets()) {
 			if (dataSet.getLabel().contains("min")) {
 				mTextMin.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
@@ -86,7 +82,7 @@ public class ModuleGraphMarkerView extends MarkerView {
 				mTextMax.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
 			}
 		}
-		mTextXval.setText(xValue);
+		mTextXval.setText(mChart.getXValue(e.getXIndex()));
 
 		mTextMin.setVisibility(mTextMin.getText().length() > 0 ? VISIBLE : GONE);
 		mTextAvg.setVisibility(mTextAvg.getText().length() > 0 ? VISIBLE : GONE);
