@@ -39,6 +39,7 @@ import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.gui.view.DeviceFeatureView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -171,26 +172,48 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		LinearLayout featuresLayout = (LinearLayout) view.findViewById(R.id.device_detail_features_layout);
 
-		if (mDevice.getRssi() != null) {
+		final Module rssi = mDevice.getFirstModuleByType(ModuleType.TYPE_RSSI);
+		if (rssi != null) {
 			mDeviceSignal = new DeviceFeatureView(mActivity);
 			mDeviceSignal.setCaption(getString(R.string.module_detail_label_signal));
 			mDeviceSignal.setIcon(R.drawable.ic_signal_wifi_4_bar_white_24dp);
+			mDeviceSignal.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onItemClick(rssi.getId());
+				}
+			});
 			featuresLayout.addView(mDeviceSignal);
 		}
 
-		if (mDevice.getBattery() != null) {
+		final Module battery = mDevice.getFirstModuleByType(ModuleType.TYPE_BATTERY);
+		if (battery != null) {
 			mDeviceBattery = new DeviceFeatureView(mActivity);
 			mDeviceBattery.setCaption(getString(R.string.devices__type_battery));
 			mDeviceBattery.setIcon(R.drawable.ic_battery);
+			mDeviceBattery.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onItemClick(battery.getId());
+				}
+			});
 			featuresLayout.addView(mDeviceBattery);
 		}
 
+		final Module refresh = mDevice.getFirstModuleByType(ModuleType.TYPE_REFRESH);
 		if (mDevice.getRefresh() != null) {
 			mDeviceRefresh = new DeviceFeatureView(mActivity);
 			mDeviceRefresh.setCaption(getString(R.string.devices__type_refresh));
 			mDeviceRefresh.setIcon(R.drawable.ic_refresh);
+			mDeviceRefresh.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					onItemClick(refresh.getId());
+				}
+			});
 			featuresLayout.addView(mDeviceRefresh);
 		}
+
 //		TODO device LED
 
 		mDeviceLastUpdate = new DeviceFeatureView(mActivity);
