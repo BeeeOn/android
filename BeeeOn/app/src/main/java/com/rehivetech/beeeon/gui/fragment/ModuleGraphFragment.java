@@ -41,6 +41,7 @@ import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -63,7 +64,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private @ChartHelper.DataRange int mRange;
 
 	private int mRefreshInterval = 1; // in seconds
-	private ChartHelper.CustomXAxisFormatter mXAxisFormatter;
 
 	private ModuleGraphActivity mActivity;
 
@@ -71,6 +71,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
+	private DateTimeFormatter mFormatter;
 
 	private BarLineChartBase mChart;
 	private DataSet mDataSetMin;
@@ -158,9 +159,14 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 
 		// UserSettings can be null when user is not logged in!
-		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
+		Controller controller = Controller.getInstance(mActivity);
+		SharedPreferences prefs = controller.getUserSettings();
 		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+
+		mFormatter = mTimeHelper != null
+				? mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId))
+				: DateTimeFormat.forPattern(ChartHelper.GRAPH_DATE_TIME_FORMAT).withZone(DateTimeZone.getDefault());
 	}
 
 	@Nullable
@@ -212,29 +218,16 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		String moduleName = module.getName(mActivity);
 
 		//set chart
-		DateTimeFormatter formatter = mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId));
-		SharedPreferences prefs = controller.getUserSettings();
-		UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
-		String unit = unitsHelper.getStringUnit(baseValue);
+		String unit = mUnitsHelper.getStringUnit(baseValue);
 
 		mYlabels = new StringBuffer();
-
-		// FIXME: Better hold this in parent fragment/activity and have it same (and not duplicit on more places) for all of htem
-		DateTime end = DateTime.now(DateTimeZone.UTC);
-		DateTime start = end.minusSeconds(mRange);
-
-		RefreshInterval refresh = module.getDevice().getRefresh();
-		mRefreshInterval = refresh != null ? refresh.getInterval() : 1;
-
-		// TODO: TEN_MINUTES is used as some default value, but better would be to have it in parent fragment/activity, as stated above
-		mXAxisFormatter = new ChartHelper.CustomXAxisFormatter(formatter, start.getMillis(), ModuleLog.DataInterval.TEN_MINUTES.getSeconds() * 1000);
 
 		if (barchart) {
 			mChart = new BarChart(mActivity);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false);
 		} else {
 			mChart = new LineChart(mActivity);
-			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, formatter, unit, mXAxisFormatter);
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, unit);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
 		}
 
@@ -246,7 +239,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		}
 
 		// prepare axis bottom
-		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), formatter, null, XAxis.XAxisPosition.BOTTOM, false, mXAxisFormatter);
+		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
 		//prepare axis left
 		ChartHelper.prepareYAxis(mActivity, module.getValue(), mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
 		//disable right axis
@@ -284,21 +277,18 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mDataSetAvg.clear();
 		mDataSetMax.clear();
 
-		long step = (dataGranularity == ModuleLog.DataInterval.RAW ? mRefreshInterval : dataGranularity.getSeconds()) * 1000;
-		mXAxisFormatter.setStep(step);
-
 		if (drawMax) {
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,
-					ModuleLog.DataType.MAXIMUM, dataGranularity, mChartLoadCallback);
+					ModuleLog.DataType.MAXIMUM, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 		if (drawAvg) {
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
-					ModuleLog.DataType.AVERAGE, dataGranularity, mChartLoadCallback);
+					ModuleLog.DataType.AVERAGE, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 
 		if (drawMin) {
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
-					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback);
+					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 	}
 

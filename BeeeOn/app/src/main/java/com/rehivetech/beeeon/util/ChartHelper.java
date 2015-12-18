@@ -23,7 +23,6 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
-import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.LineDataProvider;
 import com.github.mikephil.charting.listener.ChartTouchListener;
@@ -239,8 +238,8 @@ final public class ChartHelper {
 	}
 
 	@SuppressLint("PrivateResource")
-	public static void prepareXAxis(Context context, XAxis axis, DateTimeFormatter formatter, @ColorInt Integer textColor,
-									XAxis.XAxisPosition position, boolean drawGridLines, XAxisValueFormatter xAxisFormatter) {
+	public static void prepareXAxis(Context context, XAxis axis, @ColorInt Integer textColor,
+									XAxis.XAxisPosition position, boolean drawGridLines) {
 
 		//TextView to get text color and typeface from textAppearance
 		AppCompatTextView tempText = new AppCompatTextView(context);
@@ -253,7 +252,6 @@ final public class ChartHelper {
 		axis.setTypeface(tempText.getTypeface());
 		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
 		axis.setDrawGridLines(drawGridLines);
-		axis.setValueFormatter(xAxisFormatter);
 	}
 
 	@SuppressLint("PrivateResource")
@@ -340,9 +338,9 @@ final public class ChartHelper {
 	 * @param dataInterval interval of values
 	 */
 	public static <T extends DataSet>
-	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, String gateId, String deviceId,
+	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, final String gateId, String deviceId,
 					   String moduleId, @DataRange int range, final ModuleLog.DataType dataType,
-					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback) {
+					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback, final DateTimeFormatter formatter) {
 
 		final List<String> xValues = new ArrayList<>();
 		final Module module = controller.getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
@@ -363,7 +361,7 @@ final public class ChartHelper {
 			public void onExecute(boolean success) {
 				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
 
-				fillDataSet(moduleLog, dataSet, xValues, dataPair);
+				fillDataSet(moduleLog, dataSet, xValues, dataPair, formatter);
 				callback.onChartLoaded(dataSet, xValues);
 			}
 		});
@@ -377,7 +375,7 @@ final public class ChartHelper {
 	 * @param xValues chart xValues
 	 * @param pair
 	 */
-	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues, ModuleLog.DataPair pair) {
+	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues, ModuleLog.DataPair pair, DateTimeFormatter formatter) {
 		boolean barChart = (dataSet instanceof BarDataSet);
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
@@ -390,8 +388,7 @@ final public class ChartHelper {
 
 		RefreshInterval refresh = pair.module.getDevice().getRefresh();
 
-		// use refresh interval for raw data, or 5 min / 1 hod when has no refresh
-
+		// use refresh interval for raw data, or 5 min / 1 hour when device has no refresh
 		int refreshMsecs;
 
 		if (refresh == null) {
@@ -418,7 +415,7 @@ final public class ChartHelper {
 
 			// Fill missing data between start (or previous timestamp) and timestamp of given value
 			while ((start + everyMsecs) <= time && start < end) {
-				xValues.add("");
+				xValues.add(formatter.print(start));
 				start += everyMsecs;
 				i++;
 			}
@@ -427,7 +424,11 @@ final public class ChartHelper {
 				break;
 			}
 
-			xValues.add(String.valueOf(time));
+			xValues.add(formatter.print(time));
+
+			if (Float.isNaN(value)) {
+				continue;
+			}
 
 			if (barChart) {
 				dataSet.addEntry(new BarEntry(value, i++));
@@ -440,7 +441,7 @@ final public class ChartHelper {
 
 		// Fill missing data between last given value and end of interval
 		while ((start + everyMsecs) <= end) {
-			xValues.add("");
+			xValues.add(formatter.print(start));
 			start += everyMsecs;
 			i++;
 		}
@@ -484,36 +485,4 @@ final public class ChartHelper {
 	public interface ChartLoadListener {
 		void onChartLoaded(DataSet dataset, List<String> xValues);
 	}
-
-	public static class CustomXAxisFormatter implements XAxisValueFormatter {
-
-		private final DateTimeFormatter mFormatter;
-		private long mStartMillis;
-		private long mStepMillis;
-
-		/**
-		 * @param formatter
-		 * @param startMillis        in milliseconds
-		 * @param stepMillis         in milliseconds
-		 */
-		public CustomXAxisFormatter(DateTimeFormatter formatter, long startMillis, long stepMillis) {
-			mFormatter = formatter;
-			mStartMillis = startMillis;
-			setStep(stepMillis);
-		}
-
-		public void setStart(long startMillis) {
-			mStartMillis = startMillis;
-		}
-
-		public void setStep(long stepMillis) {
-			mStepMillis = stepMillis;
-		}
-
-		@Override
-		public String getXValue(String original, int index, ViewPortHandler viewPortHandler) {
-			long date = mStartMillis + index * mStepMillis;
-			return mFormatter.print(date);
-		}
-	};
 }

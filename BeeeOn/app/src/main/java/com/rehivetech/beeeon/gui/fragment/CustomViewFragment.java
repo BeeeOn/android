@@ -37,7 +37,6 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
 import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -114,20 +113,12 @@ public class CustomViewFragment extends BaseApplicationFragment {
 		chartLayout.addView(chart);
 		final StringBuffer yLabels = new StringBuffer();
 
-		final TimeHelper timeHelper = new TimeHelper(controller.getUserSettings());
-		final DateTimeFormatter fmt = timeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getActiveGate());
-
 		MarkerView markerView = new ChartMarkerView(mActivity, R.layout.util_chart_markerview, chart);
 		ChartHelper.prepareChart(chart, mActivity, baseValue, yLabels, markerView, false);
 		chart.getLegend().setEnabled(false);
 
-		RefreshInterval refresh = module.getDevice().getRefresh();
-		long step = (mInterval == DataInterval.RAW ? refresh.getInterval() : mInterval.getSeconds()) * 1000;
-
-		ChartHelper.CustomXAxisFormatter xAxisFormatter = new ChartHelper.CustomXAxisFormatter(fmt, mStart.getMillis(), step);
-
 		// prepare axis bottom
-		ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), fmt, null, XAxis.XAxisPosition.BOTTOM, false, xAxisFormatter);
+		ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
 		//prepare axis left
 		ChartHelper.prepareYAxis(mActivity, module.getValue(), chart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
 		//disable right axis
