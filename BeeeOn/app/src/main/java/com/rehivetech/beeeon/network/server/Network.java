@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
+import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
@@ -72,7 +73,7 @@ public class Network implements INetwork {
 	/**
 	 * Number of retries when we receive no response from server (e.g. because persistent connection expires from server side)
 	 */
-	private static final int RETRIES_COUNT = 2;
+	private static final int RETRIES_COUNT = 3;
 
 	/**
 	 * Alias (tag) for CA certificate
@@ -334,15 +335,29 @@ public class Network implements INetwork {
 		if (checkBT && !hasSessionId())
 			throw new AppException(NetworkError.BAD_BT);
 
+		String result = "";
+		AppException cause = null;
+
 		Log.i(TAG + " fromApp >>", messageToSend);
-		String result = startCommunication(messageToSend);
+		try {
+			result = startCommunication(messageToSend);
+		} catch (AppException e) {
+			IErrorCode error = e.getErrorCode();
+
+			// Rethrow all errors except some special
+			if (error instanceof NetworkError || error != ClientError.SOCKET)
+				throw e;
+
+			// In other cases remember it
+			cause = e;
+		}
 		Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
 
 		// Check if we received no response and try it again eventually
 		if (result.isEmpty()) {
 			if (retries <= 0) {
 				// We can't try again anymore, just throw error
-				throw new AppException("No response from server.", ClientError.NO_RESPONSE);
+				throw cause != null ? cause : new AppException("No response from server.", ClientError.NO_RESPONSE);
 			}
 
 			// Probably connection is lost so we need to reinit socket at next call of doRequest
