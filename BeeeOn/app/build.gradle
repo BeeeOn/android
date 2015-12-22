@@ -83,6 +83,6 @@ dependencies {
 	compile 'com.github.lzyzsd:circleprogress:1.1.0@aar'
 	compile 'com.avast:android-styled-dialogs:2.2.0'
 	compile 'com.facebook.android:facebook-android-sdk:4.5.0'
-	compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
+	compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
 	compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.0.0@aar'
 }

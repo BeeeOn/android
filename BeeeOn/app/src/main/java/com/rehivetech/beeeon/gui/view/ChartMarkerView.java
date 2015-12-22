@@ -41,12 +41,12 @@ public class ChartMarkerView extends MarkerView {
 	}
 
 	@Override
-	public int getXOffset() {
+	public int getXOffset(float xpos) {
 		return -(getWidth() / 2);
 	}
 
 	@Override
-	public int getYOffset() {
+	public int getYOffset(float ypos) {
 		return -getHeight();
 	}
 }

@@ -10,13 +10,9 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.XAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Utils;
-
-import org.joda.time.format.DateTimeFormatter;
 
 /**
  * Created by martin on 8.12.15.
@@ -90,12 +86,12 @@ public class ModuleGraphMarkerView extends MarkerView {
 	}
 
 	@Override
-	public int getXOffset() {
+	public int getXOffset(float xpos) {
 		return -(getWidth() / 2);
 	}
 
 	@Override
-	public int getYOffset() {
+	public int getYOffset(float ypos) {
 		return -getHeight();
 	}
 
