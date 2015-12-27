@@ -223,7 +223,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 		mShowLegendButton = (Button) findViewById(R.id.module_graph_show_legend_btn);
 
-		setupViewPager(!(module.getValue() instanceof EnumValue));
+		setupViewPager();
 
 		Map<ModuleLog.DataInterval, String> intervals = getIntervalString(ModuleLog.DataInterval.values());
 
@@ -330,7 +330,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		outState.putInt(OUT_STATE_SLIDER_PROGRESS, mSlider.getProgress());
 	}
 
-	private void setupViewPager(final boolean showFab) {
+	private void setupViewPager() {
 		GraphPagerAdapter adapter = new GraphPagerAdapter(getSupportFragmentManager());
 
 
@@ -360,14 +360,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				if (showFab) {
 
-					if (state == ViewPager.SCROLL_STATE_IDLE) {
-						mFab.show();
-					} else {
-						mFab.hide();
-					}
-				}
 			}
 		});
 	}
