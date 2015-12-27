@@ -71,10 +71,6 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 	public void setValues(List<String> values) {
 		mSeekbar.setMax(values.size() - 1);
 		mValues = values;
-
-		ProgressDrawable progressDrawable = new ProgressDrawable(mSeekbar.getThumbOffset(), ContextCompat.getColor(mContext, R.color.beeeon_accent), mValues.size());
-		mSeekbar.setProgressDrawable(progressDrawable);
-
 		mValue.setText(mValues.get(mSeekbar.getProgress()));
 	}
 
@@ -108,6 +104,12 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 
 	public void setProgressChangeLister(OnProgressChangeLister progressChangeLister) {
 		mProgressChangeLister = progressChangeLister;
+	}
+
+	public void setMaxValue(int value) {
+		mSeekbar.setMax(value);
+		ProgressDrawable progressDrawable = new ProgressDrawable(mSeekbar.getThumbOffset(), ContextCompat.getColor(mContext, R.color.beeeon_accent), value + 1);
+		mSeekbar.setProgressDrawable(progressDrawable);
 	}
 
 	private class ProgressDrawable extends Drawable {

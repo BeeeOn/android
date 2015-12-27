@@ -372,6 +372,23 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		});
 	}
 
+	private void setupGraphSettings(int fragmentIndex) {
+		switch (fragmentIndex) {
+			case 0:
+				mSlider.setMaxValue(4);
+				break;
+			case 1:
+				mSlider.setMaxValue(5);
+				break;
+			case 2:
+				mSlider.setMaxValue(6);
+				break;
+			case 3:
+				mSlider.setMaxValue(7);
+				break;
+		}
+	}
+
 	private void updateActValue() {
 		BaseValue value = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId).getValue();
 		if (value instanceof EnumValue) {
@@ -455,6 +472,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		ModuleGraphFragment currentFragment = (ModuleGraphFragment) ((GraphPagerAdapter) mViewPager.getAdapter()).getActiveFragment(mViewPager, mViewPager.getCurrentItem());
 
 		currentFragment.onChartSettingChanged(mCheckBoxMin.isChecked(), mCheckBoxAvg.isChecked(), mCheckBoxMax.isChecked(), getIntervalBySliderProgress());
+		setupGraphSettings(mViewPager.getCurrentItem());
 	}
 
 	public void setMinValue(String minValue) {
