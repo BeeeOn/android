@@ -2,6 +2,7 @@
 <!-- Don't edit this file; it was generated automatically by DevicesTransformer. -->
 <resources>
 	<string name="devices__boiler">Kotel</string>
+	<string name="devices__dev_fs20_switch">Spínaná zásuvka FS20</string>
 	<string name="devices__dev_internal_pressure">Senzor tlaku vzduchu</string>
 	<string name="devices__dev_presence_monitor">Sledování přítomnosti</string>
 	<string name="devices__dev_regulator_vpt">Regulátor VPT</string>
@@ -12,7 +13,11 @@
 	<string name="devices__frost_protection">Protimrazová ochrana</string>
 	<string name="devices__frost_protection_threshold">Práh protimrazové ochrany</string>
 	<string name="devices__frost_protection_water_temperature">Teplota topné vody při protimrazové ochraně</string>
+	<string name="devices__fs20_switch">Stav spínače</string>
+	<string name="devices__fs20_switch_state_off">Vypnutý</string>
+	<string name="devices__fs20_switch_state_on">Zapnutý</string>
 	<string name="devices__manufacturer_but">VUT</string>
+	<string name="devices__manufacturer_conrad">Conrad</string>
 	<string name="devices__manufacturer_openhab">OpenHAB</string>
 	<string name="devices__manufacturer_thermona">Thermona</string>
 	<string name="devices__manufacturer_virtual">Virtuální</string>

@@ -331,13 +331,24 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "63", 0x0B, 7, R.string.devices__boiler, R.string.devices__mod_current_boiler_error, false, null, null)
 			);
 		}
+	},
+	TYPE_7("7", "Conrad FS20 Wireless switch", R.string.devices__dev_fs20_switch, R.string.devices__manufacturer_conrad) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__fs20_switch, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__fs20_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__fs20_switch_state_on)
+					), null)
+			);
+		}
 	};
 
 	/** Version from specification of this devices list */
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1448486007727l;
+	public static final long DEVICES_DATE = 1451303566581l;
 
 	/** END OF GENERATED CONTENT **/
 
