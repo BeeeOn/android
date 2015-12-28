@@ -78,8 +78,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private AppCompatCheckBox mCheckBoxAvg;
 	private AppCompatCheckBox mCheckBoxMax;
 
-	private Button mButtonCancel;
-	private Button mButtonDone;
 	private FloatingActionButton mFab;
 	private Button mShowLegendButton;
 
@@ -225,8 +223,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		});
 
 		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
-		mButtonCancel = (Button) findViewById(R.id.module_graph_button_cancel);
-		mButtonDone = (Button) findViewById(R.id.module_graph_button_done);
+		Button buttonDone = (Button) findViewById(R.id.module_graph_button_done);
 
 		mShowLegendButton = (Button) findViewById(R.id.module_graph_show_legend_btn);
 
@@ -319,16 +316,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			}
 		});
 
-		mButtonCancel.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				backgroundAnimDownCancel.start();
-				graphSettings.startAnimation(animDown);
-				graphSettings.setVisibility(View.GONE);
-			}
-		});
-
-		mButtonDone.setOnClickListener(new View.OnClickListener() {
+		buttonDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				backgroundAnimDownDone.start();
