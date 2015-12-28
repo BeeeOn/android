@@ -73,11 +73,7 @@ public class TimezoneWrapper implements Comparable<TimezoneWrapper> {
 		int hours = Math.abs(period.getHours());
 		int minutes = Math.abs(period.getMinutes());
 
-		String time = String.format("GMT%s%s:%s",
-				offsetInMillis >= 0 ? "+" : "-",
-				(hours < 10 ? "0" : "") + hours,
-				(minutes < 10 ? "0" : "") + minutes);
-
+		String time = String.format("GMT%s%02d:%02d", offsetInMillis >= 0 ? "+" : "-", hours, minutes);
 		String name = timezone.toTimeZone().getDisplayName();
 		if (name.equalsIgnoreCase(time))
 			return time;
