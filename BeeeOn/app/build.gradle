@@ -7,7 +7,7 @@ android {
 	buildToolsVersion "23.0.2"
 	defaultConfig {
 		applicationId "com.rehivetech.beeeon"
-		minSdkVersion 10
+		minSdkVersion 15
 		targetSdkVersion 23
 		versionCode 70
 		versionName project.versionName
