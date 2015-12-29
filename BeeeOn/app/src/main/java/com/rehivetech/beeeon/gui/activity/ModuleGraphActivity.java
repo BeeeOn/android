@@ -1,5 +1,10 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +18,8 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -235,7 +242,33 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			mSlider.setProgress(2);  // default dataInterval 5 minutes
 		}
 
-		final View footerBackground = findViewById(R.id.module_graph_footer_bg);
+		final View graphSettingsBackground = findViewById(R.id.module_graph_settings_background);
+
+		final View graphSettings = findViewById(R.id.module_graph_graph_settings);
+		graphSettings.setVisibility(View.GONE);
+
+		final Animation animDown = AnimationUtils.loadAnimation(this, R.anim.graph_settings_anim_down);
+		final Animation animUp = AnimationUtils.loadAnimation(this, R.anim.graph_settings_anim_up);
+
+
+		final ObjectAnimator backgroundAnimUp = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.graph_settings_background_animator_up);
+		backgroundAnimUp.setTarget(graphSettingsBackground);
+		backgroundAnimUp.setEvaluator(new ArgbEvaluator());
+		backgroundAnimUp.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+				super.onAnimationStart(animation);
+				graphSettingsBackground.setVisibility(View.VISIBLE);
+			}
+		});
+
+		final ObjectAnimator backgroundAnimDownDone = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.graph_settings_background_animator_down);
+		backgroundAnimDownDone.setTarget(graphSettingsBackground);
+		backgroundAnimDownDone.setEvaluator(new ArgbEvaluator());
+
+		final ObjectAnimator backgroundAnimDownCancel = (ObjectAnimator) AnimatorInflater.loadAnimator(this, R.animator.graph_settings_background_animator_down);
+		backgroundAnimDownCancel.setTarget(graphSettingsBackground);
+		backgroundAnimDownCancel.setEvaluator(new ArgbEvaluator());
 
 		final FloatingActionButton.OnVisibilityChangedListener onVisibilityChangedListener = new FloatingActionButton.OnVisibilityChangedListener() {
 			@Override
@@ -247,41 +280,71 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 			@Override
 			public void onHidden(FloatingActionButton fab) {
 				super.onHidden(fab);
-				footerBackground.setVisibility(View.VISIBLE);
+				graphSettings.setVisibility(View.VISIBLE);
+				graphSettings.startAnimation(animUp);
+				backgroundAnimUp.start();
 			}
 		};
+
+		backgroundAnimDownDone.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				super.onAnimationEnd(animation);
+				graphSettingsBackground.setVisibility(View.GONE);
+				mFab.show(onVisibilityChangedListener);
+			}
+		});
+
+		backgroundAnimDownCancel.addListener(new AnimatorListenerAdapter() {
+			@Override
+			public void onAnimationStart(Animator animation) {
+				super.onAnimationStart(animation);
+				graphSettingsBackground.setClickable(false);
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animation) {
+				super.onAnimationEnd(animation);
+				graphSettingsBackground.setVisibility(View.GONE);
+				graphSettingsBackground.setClickable(true);
+				mFab.show();
+			}
+		});
 
 		mFab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mFab.hide(onVisibilityChangedListener);
+				graphSettingsBackground.setVisibility(View.VISIBLE);
 			}
 		});
 
 		mButtonCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				footerBackground.setVisibility(View.INVISIBLE);
-				mFab.show();
+				backgroundAnimDownCancel.start();
+				graphSettings.startAnimation(animDown);
+				graphSettings.setVisibility(View.GONE);
 			}
 		});
 
 		mButtonDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				footerBackground.setVisibility(View.INVISIBLE);
-				mFab.show(onVisibilityChangedListener);
+				backgroundAnimDownDone.start();
+				graphSettings.startAnimation(animDown);
+				graphSettings.setVisibility(View.GONE);
 			}
 		});
 
-		footerBackground.setOnClickListener(new View.OnClickListener() {
+		graphSettingsBackground.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				footerBackground.setVisibility(View.INVISIBLE);
-				mFab.show();
+				backgroundAnimDownCancel.start();
+				graphSettings.startAnimation(animDown);
+				graphSettings.setVisibility(View.GONE);
 			}
 		});
-
 
 		if (savedInstanceState != null) {
 			mCheckBoxMin.setChecked(savedInstanceState.getBoolean(OUT_STATE_CHECK_BOX_MIN));
