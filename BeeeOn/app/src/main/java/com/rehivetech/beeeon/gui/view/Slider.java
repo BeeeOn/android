@@ -20,6 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
@@ -123,7 +124,7 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 			mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 			mPaint.setColor(color);
 			mPaint.setTextAlign(Paint.Align.CENTER);
-			mPaint.setStrokeWidth(4f);
+			mPaint.setStrokeWidth(Utils.convertDpToPixel(2f));
 
 			mOffset = offset;
 			mSteps = steps;
@@ -141,13 +142,15 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 
 			int y = height / 2 - mOffset;
 
-			canvas.drawLine(left, y, right + 10, y, mPaint);
+			canvas.drawLine(left, y, right, y, mPaint);
 
 			int step = (right + mSteps) / (mSteps - 1);
 			int current = 0;
 
+			float circleRadius = Utils.convertDpToPixel(3f);
+
 			for (int i = 0; i < mSteps; i++) {
-				canvas.drawCircle(current, height/2 - mOffset, 5f, mPaint);
+				canvas.drawCircle(current, height/2 - mOffset, circleRadius, mPaint);
 				current += step;
 			}
 		}
