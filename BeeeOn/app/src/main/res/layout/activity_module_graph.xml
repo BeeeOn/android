@@ -134,13 +134,14 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="bottom|center_horizontal"
 			app:cardElevation="6dp"
+			app:cardMaxElevation="6dp"
 			app:cardCornerRadius="0dp"
-			app:contentPaddingLeft="-5dp"
-			app:contentPaddingBottom="-10dp"
-			app:contentPaddingRight="-5dp">
+			app:cardUseCompatPadding="false"
+			app:cardPreventCornerOverlap="false"
+			>
 
 			<RelativeLayout
-				style="@style/GraphSettingStyle"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:background="@color/white"
 				android:clickable="true"
