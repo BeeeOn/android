@@ -200,7 +200,7 @@ final public class ChartHelper {
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
 			((LineDataSet) dataset).setCircleColor(color);
-			((LineDataSet) dataset).setCircleSize(Utils.convertDpToPixel(2));
+			((LineDataSet) dataset).setCircleSize(4f);
 
 			dataset.setDrawValues(true);
 

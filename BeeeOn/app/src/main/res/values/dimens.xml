@@ -66,5 +66,5 @@
 	<dimen name="module_detail_list_padding">16dp</dimen>
 
 	<integer name="graph_values_count">7</integer>
-	<integer name="graph_number_circles">30</integer>
+	<integer name="graph_number_circles">20</integer>
 </resources>

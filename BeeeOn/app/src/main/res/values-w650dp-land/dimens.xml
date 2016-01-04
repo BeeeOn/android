@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<integer name="graph_values_count">10</integer>
+	<integer name="graph_number_circles">50</integer>
+</resources>
