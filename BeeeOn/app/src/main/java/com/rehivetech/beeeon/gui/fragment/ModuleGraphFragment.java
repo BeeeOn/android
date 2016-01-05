@@ -31,7 +31,6 @@ import com.rehivetech.beeeon.gui.view.ModuleGraphMarkerView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
@@ -39,7 +38,6 @@ import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -121,6 +119,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			ChartHelper.setDataSetCircles(dataSet, mChart.getViewPortHandler(), mChart.getData().getYValCount(), getResources().getInteger(R.integer.graph_number_circles));
 
 			mChart.invalidate();
+
+			mActivity.setRequestRedrawActiveFragmentCalled(false);
 
 			Log.d(TAG, String.format("dataSet added: %s", dataSet.getLabel()));
 		}

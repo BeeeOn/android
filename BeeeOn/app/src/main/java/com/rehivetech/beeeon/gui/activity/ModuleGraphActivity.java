@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +49,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private static final String OUT_STATE_CHECK_BOX_MAX = "check_box_max";
 	private static final String OUT_STET_CHECK_BOX_AVG = "check_box_avg";
 	private static final String OUT_STATE_SLIDER_PROGRESS = "slider_progress";
+
+	private boolean mRequestRedrawActiveFragmentCalled = false;
 
 	private String mGateId;
 	private String mDeviceId;
@@ -299,13 +300,15 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	public void onResume() {
 		super.onResume();
 
-		mViewPager.post(new Runnable() {
-			@Override
-			public void run() {
-				redrawActiveFragment();
-			}
-		});
-
+		if (!mRequestRedrawActiveFragmentCalled) {
+			mRequestRedrawActiveFragmentCalled = true;
+			mViewPager.post(new Runnable() {
+				@Override
+				public void run() {
+					redrawActiveFragment();
+				}
+			});
+		}
 	}
 
 	@Override
@@ -347,6 +350,11 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 
 			@Override
 			public void onPageSelected(int position) {
+
+				if (!mRequestRedrawActiveFragmentCalled) {
+					mRequestRedrawActiveFragmentCalled = true;
+				}
+
 				redrawActiveFragment();
 			}
 
@@ -473,11 +481,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		mShowLegendButton.setOnClickListener(onClickListener);
 	}
 
-
-	public int getScreenHeight() {
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		return metrics.heightPixels;
+	public void setRequestRedrawActiveFragmentCalled(boolean requestRedrawActiveFragmentCalled) {
+		mRequestRedrawActiveFragmentCalled = requestRedrawActiveFragmentCalled;
 	}
 
 	private static class GraphPagerAdapter extends FragmentPagerAdapter {
