@@ -16,4 +16,11 @@
 	<!-- preference activity has support of material styles -->
 	<style name="SettingsActivity" parent="AppTheme" />
 
+	<style name="GraphSettingStyle" parent="">
+		<item name="android:layout_width">match_parent</item>
+		<item name="contentPaddingLeft">0dp</item>
+		<item name="contentPaddingRight">0dp</item>
+		<item name="contentPaddingBottom">0dp</item>
+	</style>
+
 </resources>

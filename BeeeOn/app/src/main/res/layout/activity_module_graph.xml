@@ -123,117 +123,116 @@
 		android:text="@string/module_graph_show_y_labels_button"/>
 
 	<FrameLayout
-		android:id="@+id/module_graph_footer_bg"
+		android:id="@+id/module_graph_settings_background"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:background="@color/background_dim_overlay"
-		android:visibility="invisible">
+		android:visibility="gone">
 
-		<RelativeLayout
-			android:id="@+id/module_graph_footer"
+		<android.support.v7.widget.CardView
+			android:id="@+id/module_graph_graph_settings"
 			style="@style/GraphSettingStyle"
 			android:layout_height="wrap_content"
-			android:elevation="6dp"
-			android:background="@color/white"
-			android:clickable="true"
 			android:layout_gravity="bottom|center_horizontal"
-			android:padding="16dp">
+			app:cardElevation="6dp"
+			app:cardMaxElevation="6dp"
+			app:cardCornerRadius="0dp"
+			app:cardUseCompatPadding="false"
+			app:cardPreventCornerOverlap="false"
+			>
 
-			<TextView
-				android:id="@+id/module_graph_label_type_data"
+			<RelativeLayout
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-				android:paddingBottom="5dp"
-				android:text="@string/module_graph_type_of_data"/>
+				android:background="@color/white"
+				android:clickable="true"
+				android:padding="16dp">
 
-			<android.support.v7.widget.AppCompatCheckBox
-				android:id="@+id/module_graph_checkbox_min"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/module_graph_label_type_data"/>
+				<TextView
+					android:id="@+id/module_graph_label_type_data"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+					android:paddingBottom="5dp"
+					android:text="@string/module_graph_type_of_data"/>
 
-			<TextView
-				android:id="@+id/module_graph_text_min"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingTop="6dp"
-				android:layout_toRightOf="@id/module_graph_checkbox_min"
-				android:layout_toEndOf="@id/module_graph_checkbox_min"
-				android:layout_below="@id/module_graph_label_type_data"
-				android:text="@string/data_type_min"/>
+				<android.support.v7.widget.AppCompatCheckBox
+					android:id="@+id/module_graph_checkbox_min"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/module_graph_label_type_data"/>
 
-
-			<android.support.v7.widget.AppCompatCheckBox
-				android:id="@+id/module_graph_checkbox_avg"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/module_graph_checkbox_min"/>
-
-			<TextView
-				android:id="@+id/module_graph_text_avg"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingTop="12dp"
-				android:layout_toRightOf="@id/module_graph_checkbox_avg"
-				android:layout_toEndOf="@id/module_graph_checkbox_avg"
-				android:layout_below="@id/module_graph_text_min"
-				android:text="@string/data_type_avg"/>
-
-			<android.support.v7.widget.AppCompatCheckBox
-				android:id="@+id/module_graph_checkbox_max"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/module_graph_checkbox_avg"/>
-
-			<TextView
-				android:id="@+id/module_graph_text_max"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:paddingTop="12dp"
-				android:layout_toRightOf="@id/module_graph_checkbox_max"
-				android:layout_toEndOf="@id/module_graph_checkbox_max"
-				android:layout_below="@id/module_graph_text_avg"
-				android:text="@string/data_type_max"/>
+				<TextView
+					android:id="@+id/module_graph_text_min"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingTop="6dp"
+					android:layout_toRightOf="@id/module_graph_checkbox_min"
+					android:layout_toEndOf="@id/module_graph_checkbox_min"
+					android:layout_below="@id/module_graph_label_type_data"
+					android:text="@string/data_type_min"/>
 
 
-			<TextView
-				android:id="@+id/module_graph_label_data_granularity"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-				android:paddingTop="5dp"
-				android:paddingBottom="5dp"
-				android:layout_below="@id/module_graph_checkbox_max"
-				android:text="@string/module_graph_data_granularity"/>
+				<android.support.v7.widget.AppCompatCheckBox
+					android:id="@+id/module_graph_checkbox_avg"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/module_graph_checkbox_min"/>
 
-			<com.rehivetech.beeeon.gui.view.Slider
-				android:id="@+id/module_graph_slider"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/module_graph_label_data_granularity"/>
+				<TextView
+					android:id="@+id/module_graph_text_avg"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingTop="12dp"
+					android:layout_toRightOf="@id/module_graph_checkbox_avg"
+					android:layout_toEndOf="@id/module_graph_checkbox_avg"
+					android:layout_below="@id/module_graph_text_min"
+					android:text="@string/data_type_avg"/>
 
-			<Button
-				android:id="@+id/module_graph_button_cancel"
-				android:theme="@style/BeeeOn.Button"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/activity_fragment_btn_cancel"
-				android:layout_alignParentStart="true"
-				android:layout_alignParentLeft="true"
-				android:layout_below="@id/module_graph_slider"/>
+				<android.support.v7.widget.AppCompatCheckBox
+					android:id="@+id/module_graph_checkbox_max"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/module_graph_checkbox_avg"/>
 
-			<Button
-				android:id="@+id/module_graph_button_done"
-				android:theme="@style/BeeeOn.Button"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="@string/button_done"
-				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true"
-				android:layout_below="@id/module_graph_slider"/>
+				<TextView
+					android:id="@+id/module_graph_text_max"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:paddingTop="12dp"
+					android:layout_toRightOf="@id/module_graph_checkbox_max"
+					android:layout_toEndOf="@id/module_graph_checkbox_max"
+					android:layout_below="@id/module_graph_text_avg"
+					android:text="@string/data_type_max"/>
 
-		</RelativeLayout>
+
+				<TextView
+					android:id="@+id/module_graph_label_data_granularity"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+					android:paddingTop="5dp"
+					android:paddingBottom="5dp"
+					android:layout_below="@id/module_graph_checkbox_max"
+					android:text="@string/module_graph_data_granularity"/>
+
+				<com.rehivetech.beeeon.gui.view.Slider
+					android:id="@+id/module_graph_slider"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/module_graph_label_data_granularity"/>
+
+				<Button
+					android:id="@+id/module_graph_button_done"
+					style="@style/Widget.AppCompat.Button.Borderless"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/button_done"
+					android:textColor="@color/beeeon_accent"
+					android:layout_centerHorizontal="true"
+					android:layout_below="@id/module_graph_slider"/>
+
+			</RelativeLayout>
+		</android.support.v7.widget.CardView>
 	</FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
