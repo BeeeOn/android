@@ -3,11 +3,18 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gui.adapter.DashboardAdapter;
+import com.rehivetech.beeeon.util.ChartHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by martin on 15.11.15.
@@ -17,6 +24,8 @@ public class DashboardFragment extends BaseApplicationFragment {
 	private static final String TAG = DashboardFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
+
+	private DashboardAdapter mAdapter;
 
 	public static DashboardFragment newInstance(String gateId) {
 
@@ -41,7 +50,17 @@ public class DashboardFragment extends BaseApplicationFragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_dashboard, container, false);
+		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dashboard_recyclerview);
+		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+		mAdapter = new DashboardAdapter(mActivity);
+		recyclerView.setAdapter(mAdapter);
+
+		//TODO temp
+		DashboardAdapter.GraphItem graphItem = new DashboardAdapter.GraphItem("Graph 1", "64206", "1001", new ArrayList<>(Arrays.asList("0", "2")), ChartHelper.RANGE_DAY);
+		mAdapter.addItem((graphItem));
+
+		return view;
 	}
 
 	@Override
