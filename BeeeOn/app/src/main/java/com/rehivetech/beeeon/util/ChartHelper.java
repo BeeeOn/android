@@ -88,7 +88,7 @@ final public class ChartHelper {
 	 * @param markerView chart markerView instance
 	 */
 	@SuppressLint("PrivateResource")
-	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels,
+	public static void prepareChart(final BarLineChartBase chart, final Context context, @Nullable BaseValue baseValue, @Nullable StringBuffer yLabels,
 									@Nullable MarkerView markerView, boolean drawBorders) {
 
 		chart.getLegend().setEnabled(false);
@@ -111,7 +111,7 @@ final public class ChartHelper {
 
 		chart.setGridBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
 
-		if (baseValue instanceof EnumValue) {
+		if (baseValue != null && baseValue instanceof EnumValue && yLabels != null) {
 			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
 			if (labels.size() > 2) {
 				int j = 1;
@@ -239,7 +239,7 @@ final public class ChartHelper {
 	}
 
 	@SuppressLint("PrivateResource")
-	public static void prepareXAxis(Context context, XAxis axis, @ColorInt Integer textColor,
+	public static void prepareXAxis(Context context, XAxis axis,@Nullable @ColorInt Integer textColor,
 									XAxis.XAxisPosition position, boolean drawGridLines) {
 
 		//TextView to get text color and typeface from textAppearance
@@ -256,7 +256,7 @@ final public class ChartHelper {
 	}
 
 	@SuppressLint("PrivateResource")
-	public static void prepareYAxis(Context context, BaseValue baseValue, YAxis axis, @ColorInt Integer textColor,
+	public static void prepareYAxis(Context context, @Nullable BaseValue baseValue, YAxis axis, @Nullable @ColorInt Integer textColor,
 									YAxis.YAxisLabelPosition position, boolean drawGridLines, boolean drawAxisLine) {
 
 		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
