@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -15,9 +16,12 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -39,6 +43,8 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
 	private static final int VIEW_TYPE_GRAPH = 0;
+	private static final int VIEW_TYPE_ACT_VALUE = 1;
+
 	private final TimeHelper mTimeHelper;
 
 	private BaseApplicationActivity mActivity;
@@ -56,9 +62,15 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
 		switch (viewType) {
-			case VIEW_TYPE_GRAPH:
+			case VIEW_TYPE_GRAPH: {
 				View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dashboard_item_graph, parent, false);
 				return new DashboardGraphViewHolder(view);
+			}
+
+			case VIEW_TYPE_ACT_VALUE: {
+				View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dashboard_item_act_value, parent, false);
+				return new ActualValueViewHolder(view);
+			}
 
 			default:
 				break;
@@ -71,7 +83,10 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 	public int getItemViewType(int position) {
 		if (mItems.get(position) instanceof GraphItem) {
 			return VIEW_TYPE_GRAPH;
+		} else if (mItems.get(position) instanceof ActualValueItem) {
+			return VIEW_TYPE_ACT_VALUE;
 		}
+
 		return -1;
 	}
 
@@ -119,6 +134,18 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 				}
 				break;
 			}
+			case VIEW_TYPE_ACT_VALUE: {
+				final ActualValueItem actualValueItem = (ActualValueItem) item;
+				ActualValueViewHolder viewHolder = (ActualValueViewHolder) holder;
+				viewHolder.mLabel.setText(actualValueItem.getName());
+				Device device = controller.getDevicesModel().getDevice(actualValueItem.getGateId(), actualValueItem.getDeviceId());
+				device.getLastUpdate();
+				Module module = device.getModuleById(actualValueItem.getModuleId());
+				viewHolder.mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
+				viewHolder.mValue.setText(String.format("%.2f %s", module.getValue().getDoubleValue(), "°C"));
+				viewHolder.mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(actualValueItem.getGateId())));
+				break;
+			}
 
 		}
 	}
@@ -136,6 +163,24 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			super(itemView);
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_graph_name);
 			mChart = (LineChart) itemView.findViewById(R.id.dashboard_item_graph_chart);
+		}
+	}
+
+	public class ActualValueViewHolder extends RecyclerView.ViewHolder {
+		public final ImageView mIcon;
+		public final TextView mLabel;
+		public final TextView mValue;
+		public final TextView mLastUpdate;
+
+
+		public ActualValueViewHolder(View itemView) {
+			super(itemView);
+
+			mIcon = (ImageView) itemView.findViewById(R.id.dashboard_item_act_value_icon);
+			mLabel = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_label);
+			mValue = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_value);
+			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_las_update_value);
+
 		}
 	}
 
@@ -188,6 +233,21 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 		@DataRange
 		public int getDataRange() {
 			return mDataRange;
+		}
+	}
+
+	public static class ActualValueItem extends BaseItem {
+
+		private String mModuleId;
+
+		public ActualValueItem(String name, String gateId, String deviceId, String moduleId) {
+			super(name, gateId, deviceId);
+
+			mModuleId = moduleId;
+		}
+
+		public String getModuleId() {
+			return mModuleId;
 		}
 	}
 

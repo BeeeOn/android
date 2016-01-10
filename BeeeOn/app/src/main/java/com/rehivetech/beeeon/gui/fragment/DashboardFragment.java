@@ -58,7 +58,9 @@ public class DashboardFragment extends BaseApplicationFragment {
 
 		//TODO temp
 		DashboardAdapter.GraphItem graphItem = new DashboardAdapter.GraphItem("Graph 1", "64206", "1001", new ArrayList<>(Arrays.asList("0", "2")), ChartHelper.RANGE_DAY);
+		DashboardAdapter.ActualValueItem actualValueItem = new DashboardAdapter.ActualValueItem("Indoor temperature", "64206", "1001", "0");
 		mAdapter.addItem((graphItem));
+		mAdapter.addItem(actualValueItem);
 
 		return view;
 	}
