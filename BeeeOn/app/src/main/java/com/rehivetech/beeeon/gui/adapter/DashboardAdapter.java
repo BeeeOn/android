@@ -195,7 +195,7 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			mIcon = (ImageView) itemView.findViewById(R.id.dashboard_item_act_value_icon);
 			mLabel = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_label);
 			mValue = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_value);
-			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_las_update_value);
+			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_last_update_value);
 
 		}
 
