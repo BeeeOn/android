@@ -475,7 +475,7 @@ final public class ChartHelper {
 
 		@Override
 		public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-			return dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum;
+			return Math.min(dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum, dataProvider.getAxis(YAxis.AxisDependency.RIGHT).mAxisMinimum);
 		}
 	}
 
