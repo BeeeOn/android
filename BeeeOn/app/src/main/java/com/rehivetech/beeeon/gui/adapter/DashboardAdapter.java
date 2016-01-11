@@ -23,6 +23,7 @@ import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.Utils;
@@ -100,27 +101,41 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 		switch (viewType) {
 			case VIEW_TYPE_GRAPH: {
 				final GraphItem graphItem = (GraphItem) item;
+				Gate gate = controller.getGatesModel().getGate(graphItem.getGateId());
+				Device device = controller.getDevicesModel().getDevice(graphItem.getGateId(), graphItem.getDeviceId());
 				((DashboardGraphViewHolder) holder).mGraphName.setText(item.getName());
-				final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(graphItem.getGateId()));
+				final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 				final LineChart chart = ((DashboardGraphViewHolder) holder).mChart;
+				chart.clear();
 
 				ChartHelper.prepareChart(chart, mActivity, null, null, null, false);
 				ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
-				ChartHelper.prepareYAxis(mActivity, null, chart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, true);
-				chart.getAxisRight().setEnabled(false);
+				ChartHelper.prepareYAxis(mActivity, null, chart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
+
+				if (graphItem.getModules().size() > 1) {
+					ChartHelper.prepareYAxis(mActivity, null, chart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
+				} else {
+					chart.getAxisRight().setEnabled(false);
+				}
 
 				YAxis.AxisDependency axisDependency = YAxis.AxisDependency.LEFT;
 				List<String> modules = graphItem.getModules();
 				for (int i = 0; i < modules.size(); i++) {
 
 					final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
-					ChartHelper.prepareDataSet(mActivity, dataSet, false, false, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+					dataSet.setAxisDependency(axisDependency);
+					ChartHelper.prepareDataSet(mActivity, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
 
 					ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
 						@Override
 						public void onChartLoaded(DataSet dataset, List<String> xValues) {
-							LineData lineData = new LineData(xValues);
+							LineData lineData;
+							if (chart.getLineData() != null) {
+								lineData = chart.getLineData();
+							} else {
+								lineData = new LineData(xValues);
+							}
 							lineData.addDataSet(dataSet);
 							chart.setData(lineData);
 							chart.invalidate();
@@ -132,6 +147,8 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 
 					axisDependency = YAxis.AxisDependency.RIGHT;
 				}
+
+				((DashboardGraphViewHolder) holder).mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
 				break;
 			}
 			case VIEW_TYPE_ACT_VALUE: {
@@ -158,11 +175,13 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 	public class DashboardGraphViewHolder extends RecyclerView.ViewHolder {
 		public final TextView mGraphName;
 		public final LineChart mChart;
+		public final TextView mLastUpdate;
 
 		public DashboardGraphViewHolder(View itemView) {
 			super(itemView);
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_graph_name);
 			mChart = (LineChart) itemView.findViewById(R.id.dashboard_item_graph_chart);
+			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_graph_last_update_value);
 		}
 	}
 
