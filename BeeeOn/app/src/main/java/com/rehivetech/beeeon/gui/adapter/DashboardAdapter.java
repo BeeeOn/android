@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.format.DateTimeFormatter;
@@ -99,68 +100,11 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 
 		int viewType = holder.getItemViewType();
 		switch (viewType) {
-			case VIEW_TYPE_GRAPH: {
-				final GraphItem graphItem = (GraphItem) item;
-				Gate gate = controller.getGatesModel().getGate(graphItem.getGateId());
-				Device device = controller.getDevicesModel().getDevice(graphItem.getGateId(), graphItem.getDeviceId());
-				((DashboardGraphViewHolder) holder).mGraphName.setText(item.getName());
-				final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
-
-				final LineChart chart = ((DashboardGraphViewHolder) holder).mChart;
-				chart.clear();
-
-				ChartHelper.prepareChart(chart, mActivity, null, null, null, false);
-				ChartHelper.prepareXAxis(mActivity, chart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
-				ChartHelper.prepareYAxis(mActivity, null, chart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
-
-				if (graphItem.getModules().size() > 1) {
-					ChartHelper.prepareYAxis(mActivity, null, chart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
-				} else {
-					chart.getAxisRight().setEnabled(false);
-				}
-
-				YAxis.AxisDependency axisDependency = YAxis.AxisDependency.LEFT;
-				List<String> modules = graphItem.getModules();
-				for (int i = 0; i < modules.size(); i++) {
-
-					final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
-					dataSet.setAxisDependency(axisDependency);
-					ChartHelper.prepareDataSet(mActivity, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
-
-					ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
-						@Override
-						public void onChartLoaded(DataSet dataset, List<String> xValues) {
-							LineData lineData;
-							if (chart.getLineData() != null) {
-								lineData = chart.getLineData();
-							} else {
-								lineData = new LineData(xValues);
-							}
-							lineData.addDataSet(dataSet);
-							chart.setData(lineData);
-							chart.invalidate();
-						}
-					};
-
-					ChartHelper.loadChartData(mActivity, controller, dataSet, graphItem.getGateId(), graphItem.getDeviceId(), modules.get(i), graphItem.getDataRange(),
-							ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW, chartLoadListener, dateTimeFormatter);
-
-					axisDependency = YAxis.AxisDependency.RIGHT;
-				}
-
-				((DashboardGraphViewHolder) holder).mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+			case VIEW_TYPE_GRAPH:
+				((DashboardGraphViewHolder) holder).bind(controller, (GraphItem) item);
 				break;
-			}
 			case VIEW_TYPE_ACT_VALUE: {
-				final ActualValueItem actualValueItem = (ActualValueItem) item;
-				ActualValueViewHolder viewHolder = (ActualValueViewHolder) holder;
-				viewHolder.mLabel.setText(actualValueItem.getName());
-				Device device = controller.getDevicesModel().getDevice(actualValueItem.getGateId(), actualValueItem.getDeviceId());
-				device.getLastUpdate();
-				Module module = device.getModuleById(actualValueItem.getModuleId());
-				viewHolder.mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
-				viewHolder.mValue.setText(String.format("%.2f %s", module.getValue().getDoubleValue(), "°C"));
-				viewHolder.mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(actualValueItem.getGateId())));
+				((ActualValueViewHolder) holder).bind(controller, (ActualValueItem) item);
 				break;
 			}
 
@@ -183,6 +127,59 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			mChart = (LineChart) itemView.findViewById(R.id.dashboard_item_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_graph_last_update_value);
 		}
+
+		public void bind(Controller controller, GraphItem item) {
+			Gate gate = controller.getGatesModel().getGate(item.getGateId());
+			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceId());
+
+			mGraphName.setText(item.getName());
+			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+
+			mChart.clear();
+			prepareChart(item);
+			fillChart(controller, item, gate);
+		}
+
+		private void prepareChart(GraphItem item) {
+			ChartHelper.prepareChart(mChart, mActivity, null, null, null, false);
+			ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
+			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
+
+			if (item.getModules().size() > 1) {
+				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
+			} else {
+				mChart.getAxisRight().setEnabled(false);
+			}
+		}
+
+		private void fillChart(Controller controller, GraphItem item, Gate gate) {
+			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
+
+			YAxis.AxisDependency axisDependency = YAxis.AxisDependency.LEFT;
+			List<String> modules = item.getModules();
+			for (int i = 0; i < modules.size(); i++) {
+
+				final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
+				dataSet.setAxisDependency(axisDependency);
+				ChartHelper.prepareDataSet(mActivity, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+
+				ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
+					@Override
+					public void onChartLoaded(DataSet dataset, List<String> xValues) {
+						LineData lineData = mChart.getLineData() != null ? mChart.getLineData() : new LineData(xValues);
+						lineData.addDataSet(dataSet);
+
+						mChart.setData(lineData);
+						mChart.invalidate();
+					}
+				};
+
+				ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), item.getDeviceId(), modules.get(i), item.getDataRange(),
+						ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW, chartLoadListener, dateTimeFormatter);
+
+				axisDependency = YAxis.AxisDependency.RIGHT;
+			}
+		}
 	}
 
 	public class ActualValueViewHolder extends RecyclerView.ViewHolder {
@@ -200,6 +197,18 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			mValue = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_value);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_las_update_value);
 
+		}
+
+		public void bind(Controller controller, ActualValueItem item) {
+			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceId());
+			Module module = device.getModuleById(item.getModuleId());
+			SharedPreferences prefs = controller.getUserSettings();
+			UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
+
+			mLabel.setText(item.getName());
+			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
+			mValue.setText(String.format("%.2f %s", module.getValue().getDoubleValue(), unitsHelper.getStringUnit(module.getValue())));
+			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(item.getGateId())));
 		}
 	}
 
