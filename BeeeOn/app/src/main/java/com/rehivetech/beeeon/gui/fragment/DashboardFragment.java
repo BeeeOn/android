@@ -52,7 +52,10 @@ public class DashboardFragment extends BaseApplicationFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dashboard_recyclerview);
-		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL));
+
+		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
+		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+
 		mAdapter = new DashboardAdapter(mActivity);
 		recyclerView.setAdapter(mAdapter);
 
