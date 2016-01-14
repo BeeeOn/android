@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.avast.android.dialogs.fragment.ListDialogFragment;
+import com.avast.android.dialogs.iface.IListDialogListener;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -57,7 +58,7 @@ import java.util.List;
  * @author martin on 4.8.2015.
  */
 public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener,
-		AppBarLayout.OnOffsetChangedListener {
+		AppBarLayout.OnOffsetChangedListener, IListDialogListener {
 
 	private static final String TAG = DeviceDetailFragment.class.getSimpleName();
 
@@ -74,6 +75,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private TimeHelper mTimeHelper;
 	private String mGateId;
 	private String mDeviceId;
+	private String mModuleId;
 
 	private CoordinatorLayout mRootLayout;
 	private ImageView mIcon;
@@ -139,6 +141,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
 
 		setHasOptionsMenu(true);
+		mModuleId = "-1";
 	}
 
 	@Nullable
@@ -406,12 +409,27 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onButtonChangeState(String moduleId) {
+		mModuleId = moduleId;
 		showListDialog(moduleId);
 	}
 
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
 		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
+	}
+
+	@Override
+	public void onListItemSelected(CharSequence charSequence, int number, int requestCode) {
+		if (requestCode == REQUEST_SET_ACTUATOR) {
+			Module module = mDevice.getModuleById(mModuleId);
+			if (module == null) {
+				Log.e(TAG, "Can't load module for changing its value");
+				return;
+			}
+
+			module.setValue(String.valueOf(number));
+			doChangeStateModuleTask(module);
+		}
 	}
 
 	@Override
@@ -446,6 +464,24 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		// Execute and remember task so it can be stopped automatically
 		if (mDeviceCallback != null)
 			mActivity.callbackTaskManager.executeTask(mDeviceCallback.createReloadDevicesTask(forceReload), gateId);
+	}
+
+
+	private void doChangeStateModuleTask(final Module module) {
+		ActorActionTask changeStateModuleTask = new ActorActionTask(mActivity);
+
+		changeStateModuleTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
+					updateData();
+				}
+			}
+		});
+
+		// Execute and remember task so it can be stopped automatically
+		mActivity.callbackTaskManager.executeTask(changeStateModuleTask, module);
 	}
 
 	private void doActorAction(final Module module) {
