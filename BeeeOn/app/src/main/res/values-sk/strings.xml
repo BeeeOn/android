@@ -292,8 +292,8 @@
 
 	<!--Module graph-->
 	<string name="module_graph_show_y_labels_button">Zobraziť Y hodnoty</string>
-	<string name="module_graph_type_of_data">Typ agregácie</string>
-	<string name="module_graph_data_granularity">Miera agregácie</string>
+	<string name="module_graph_type_of_data">Typ dát</string>
+	<string name="module_graph_data_granularity">Frekvencia obnovy dát</string>
 	<string name="module_graph_min_label">MIN</string>
 	<string name="module_graph_max_label">MAX</string>
 
@@ -405,7 +405,7 @@
 	<string name="graph_range_month">Mesiac</string>
 
 	<!--DATA INTERVAL-->
-	<string name="data_interval_raw">Bez agregácie</string>
+	<string name="data_interval_raw">Podľa nastavenia zariadenia</string>
 	<string name="data_interval_minute">Minúta</string>
 	<string name="data_interval_five_minutes">5 minút</string>
 	<string name="data_interval_ten_minutes">10 minút</string>

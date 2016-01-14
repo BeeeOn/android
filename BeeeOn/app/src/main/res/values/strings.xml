@@ -296,7 +296,7 @@
 	<!--Module graph-->
 	<string name="module_graph_show_y_labels_button">Show Y labels</string>
 	<string name="module_graph_type_of_data">Type of data</string>
-	<string name="module_graph_data_granularity">Data granularity</string>
+	<string name="module_graph_data_granularity">Refresh frequency of data</string>
 	<string name="module_graph_min_label">MIN</string>
 	<string name="module_graph_max_label">MAX</string>
 
@@ -411,7 +411,7 @@
 	<string name="graph_range_month">Month</string>
 
 	<!--DATA INTERVAL-->
-	<string name="data_interval_raw">No aggregation</string>
+	<string name="data_interval_raw">By settings of device</string>
 	<string name="data_interval_minute">Minute</string>
 	<string name="data_interval_five_minutes">5 minutes</string>
 	<string name="data_interval_ten_minutes">10 minutes</string>

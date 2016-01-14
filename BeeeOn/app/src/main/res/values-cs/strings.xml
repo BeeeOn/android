@@ -293,8 +293,8 @@
 
 	<!--Module graph-->
 	<string name="module_graph_show_y_labels_button">Zobrazit Y hodnoty</string>
-	<string name="module_graph_type_of_data">Typ agregace</string>
-	<string name="module_graph_data_granularity">Míra agregace</string>
+	<string name="module_graph_type_of_data">Typ dat</string>
+	<string name="module_graph_data_granularity">Frekvence obnovy dat</string>
 	<string name="module_graph_min_label">MIN</string>
 	<string name="module_graph_max_label">MAX</string>
 
@@ -405,7 +405,7 @@
 	<string name="graph_range_month">Měsíc</string>
 
 	<!--DATA INTERVAL-->
-	<string name="data_interval_raw">Bez agregace</string>
+	<string name="data_interval_raw">Podle nastavení zařízení</string>
 	<string name="data_interval_minute">Minuta</string>
 	<string name="data_interval_five_minutes">5 minut</string>
 	<string name="data_interval_ten_minutes">10 minut</string>
