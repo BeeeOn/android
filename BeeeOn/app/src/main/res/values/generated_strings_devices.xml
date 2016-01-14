@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Don't edit this file; it was generated automatically by DevicesTransformer. -->
 <resources xmlns:tools="http://schemas.android.com/tools" tools:locale="en">
+	<string name="devices__ac_88_mains_outlet">Outlet state</string>
+	<string name="devices__ac_88_mains_outlet_state_off">off</string>
+	<string name="devices__ac_88_mains_outlet_state_on">on</string>
 	<string name="devices__boiler">Boiler</string>
+	<string name="devices__dev_ac_88_mains_outlet">Wireless mains outlet AC-88</string>
 	<string name="devices__dev_fs20_switch">Socket switch FS20</string>
 	<string name="devices__dev_internal_pressure">Air pressure sensor</string>
+	<string name="devices__dev_ja_80l_internal_siren">Wireless internal siren JA-80L</string>
+	<string name="devices__dev_ja_83m_magnetic_door_contact">Wireless magnetic door contact JA-83M</string>
 	<string name="devices__dev_presence_monitor">Presence monitor</string>
 	<string name="devices__dev_regulator_vpt">Regulator VPT</string>
 	<string name="devices__dev_regulator_vpt_lan">Regulator VPT LAN</string>
 	<string name="devices__dev_temperature_humidity">Temperature and humidity sensor</string>
+	<string name="devices__dev_tp_82n_thermostat">Wireless thermostat TP-82N</string>
 	<string name="devices__dev_virtual_thn">TempHumNoise</string>
 	<string name="devices__dev_virtual_thn_x3">TempHumNoise x3</string>
 	<string name="devices__frost_protection">Frost protection</string>
@@ -16,8 +23,20 @@
 	<string name="devices__fs20_switch">Switch state</string>
 	<string name="devices__fs20_switch_state_off">off</string>
 	<string name="devices__fs20_switch_state_on">on</string>
+	<string name="devices__ja_80l_internal_siren">Siren state</string>
+	<string name="devices__ja_80l_internal_siren_state_off">off</string>
+	<string name="devices__ja_80l_internal_siren_state_on">on</string>
+	<string name="devices__ja_83m_magnetic_door_contact">Contact state</string>
+	<string name="devices__ja_83m_magnetic_door_contact_state_closed">Closed</string>
+	<string name="devices__ja_83m_magnetic_door_contact_state_opened">Opened</string>
+	<string name="devices__ja_83m_magnetic_door_contact_state_unknown">Unknown</string>
+	<string name="devices__manual_offset_ekviterm_curve">Offset of ekviterm curve</string>
+	<string name="devices__manual_requested_room_temperature">Requested room temperature</string>
+	<string name="devices__manual_requested_tuv_temperature">Requested TUV temperature</string>
+	<string name="devices__manual_requested_water_temperature">Requested water temperature</string>
 	<string name="devices__manufacturer_but">BUT</string>
 	<string name="devices__manufacturer_conrad">Conrad</string>
+	<string name="devices__manufacturer_jablotron">Jablotron</string>
 	<string name="devices__manufacturer_openhab">OpenHAB</string>
 	<string name="devices__manufacturer_thermona">Thermona</string>
 	<string name="devices__manufacturer_virtual">Virtual</string>
@@ -37,7 +56,7 @@
 	<string name="devices__mod_minimal_water_temperature">Minimal water temperature</string>
 	<string name="devices__mod_offset_ekviterm_curve">Offset of ekviterm curve</string>
 	<string name="devices__mod_outside_temperature">Outside temperature</string>
-	<string name="devices__mod_presence_status">Stav přítomnosti</string>
+	<string name="devices__mod_presence_status">Presence status</string>
 	<string name="devices__mod_requested_room_temperature">Requested room temperature</string>
 	<string name="devices__mod_requested_water_temperature">Requested water temperature</string>
 	<string name="devices__mod_requested_water_temperature_read">Requested water temperature</string>

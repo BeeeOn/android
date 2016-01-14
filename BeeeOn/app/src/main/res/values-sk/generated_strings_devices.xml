@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Don't edit this file; it was generated automatically by DevicesTransformer. -->
 <resources>
+	<string name="devices__ac_88_mains_outlet">Stav zásuvky</string>
+	<string name="devices__ac_88_mains_outlet_state_off">Vypnutá</string>
+	<string name="devices__ac_88_mains_outlet_state_on">Zapnutá</string>
 	<string name="devices__boiler">Kotol</string>
+	<string name="devices__dev_ac_88_mains_outlet">Diaľkovo ovládaná zásuvka AC-88</string>
 	<string name="devices__dev_fs20_switch">Spínaná zásuvka FS20</string>
 	<string name="devices__dev_internal_pressure">Senzor tlaku vzduchu</string>
+	<string name="devices__dev_ja_80l_internal_siren">Bezdrôtová interná siréna JA-80L</string>
+	<string name="devices__dev_ja_83m_magnetic_door_contact">Bezdrôtový magnetický detektor otvorenia JA-83M</string>
 	<string name="devices__dev_presence_monitor">Sledovanie prítomnosti</string>
 	<string name="devices__dev_regulator_vpt">Regulátor VPT</string>
 	<string name="devices__dev_regulator_vpt_lan">Regulátor VPT LAN</string>
 	<string name="devices__dev_temperature_humidity">Senzor teploty a vlhkosti</string>
+	<string name="devices__dev_tp_82n_thermostat">Bezdrôtový termostat TP-82N</string>
 	<string name="devices__dev_virtual_thn">TepVlhHluk</string>
 	<string name="devices__dev_virtual_thn_x3">TepVlhHluk x3</string>
 	<string name="devices__frost_protection">Protimrazová ochrana</string>
@@ -16,8 +23,20 @@
 	<string name="devices__fs20_switch">Stav spínača</string>
 	<string name="devices__fs20_switch_state_off">Vypnutý</string>
 	<string name="devices__fs20_switch_state_on">Zapnutý</string>
+	<string name="devices__ja_80l_internal_siren">Stav sirény</string>
+	<string name="devices__ja_80l_internal_siren_state_off">Vypnutá</string>
+	<string name="devices__ja_80l_internal_siren_state_on">Zapnutá</string>
+	<string name="devices__ja_83m_magnetic_door_contact">Stav detektora</string>
+	<string name="devices__ja_83m_magnetic_door_contact_state_closed">Zatvorené</string>
+	<string name="devices__ja_83m_magnetic_door_contact_state_opened">Otvorené</string>
+	<string name="devices__ja_83m_magnetic_door_contact_state_unknown">Neznáme</string>
+	<string name="devices__manual_offset_ekviterm_curve">Posun ekvitermickej krivky</string>
+	<string name="devices__manual_requested_room_temperature">Žiadaná teplota miestnosti</string>
+	<string name="devices__manual_requested_tuv_temperature">Žiadaná teplota TUV</string>
+	<string name="devices__manual_requested_water_temperature">Žiadaná teplota vody</string>
 	<string name="devices__manufacturer_but">VUT</string>
 	<string name="devices__manufacturer_conrad">Conrad</string>
+	<string name="devices__manufacturer_jablotron">Jablotron</string>
 	<string name="devices__manufacturer_openhab">OpenHAB</string>
 	<string name="devices__manufacturer_thermona">Thermona</string>
 	<string name="devices__manufacturer_virtual">Virtuálny</string>
