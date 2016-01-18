@@ -132,11 +132,6 @@
 		<item name="android:background">@drawable/appwidget_actionbar_background</item>
 	</style>
 
-	<style name="numberPicker" parent="@style/NPWidget.Holo.Light.NumberPicker">
-        <item name="virtualButtonPressedDrawable">?attr/selectableItemBackground</item>
-        <item name="selectionDivider">?attr/colorPrimary</item>
-    </style>
-
 	<style name="BeeeOn" />
 
 	<style name="BeeeOn.Spinner" parent="Base.Widget.AppCompat.Spinner">

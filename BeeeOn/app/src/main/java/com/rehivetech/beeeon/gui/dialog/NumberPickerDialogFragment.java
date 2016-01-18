@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.avast.android.dialogs.core.BaseDialogBuilder;
@@ -23,7 +24,6 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.rekisoft.android.numberpicker.NumberPicker;
 
 
 /**
@@ -133,7 +133,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			}
 		} else {
 
-			for (int i = minValue.intValue(); i < maxValue.intValue(); i += granularity.intValue()) {
+			for (int i = minValue.intValue(); i < maxValue.intValue(); i += Math.ceil(granularity)) {
 				wholeSteps.add(String.valueOf(i));
 			}
 		}
