@@ -7,6 +7,7 @@
 
 	<NumberPicker
 		android:id="@+id/dialog_number_picker_numberpicker_whole"
+		android:theme="@style/android:Theme.Holo.Light"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="center"/>
@@ -21,6 +22,7 @@
 
 	<NumberPicker
 		android:id="@+id/dialog_number_picker_numberpicker_decimal"
+		android:theme="@style/android:Theme.Holo.Light"
 		android:visibility="gone"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
