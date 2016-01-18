@@ -133,7 +133,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			}
 		} else {
 
-			for (int i = minValue.intValue(); i < maxValue.intValue(); i += granularity.intValue()) {
+			for (int i = minValue.intValue(); i < maxValue.intValue(); i += Math.ceil(granularity)) {
 				wholeSteps.add(String.valueOf(i));
 			}
 		}
