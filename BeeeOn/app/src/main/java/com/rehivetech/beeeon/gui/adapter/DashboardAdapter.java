@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -134,6 +135,10 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 
 			mGraphName.setText(item.getName());
 			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+
+			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+				mChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+			}
 
 			mChart.clear();
 			prepareChart(item);
