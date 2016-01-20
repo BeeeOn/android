@@ -86,7 +86,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			if (dataSet instanceof BarDataSet) {
 				BarData data = ((BarChart) mChart).getBarData() == null ? new BarData(xValues) : ((BarChart) mChart).getBarData();
 
-				if (dataSet.getValueCount() < 2 && ((BarChart) mChart).getBarData() == null) {
+				if (dataSet.getYVals().size() < 2 && ((BarChart) mChart).getBarData() == null) {
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
@@ -101,7 +101,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			} else {
 				LineData data = ((LineChart) mChart).getLineData() == null ? new LineData(xValues) : ((LineChart) mChart).getLineData();
 
-				if (dataSet.getValueCount() < 2 && ((LineChart) mChart).getLineData() == null) {
+				if (dataSet.getYVals().size() < 2 && ((LineChart) mChart).getLineData() == null) {
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
@@ -296,17 +296,17 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		float minValue;
 		float maxValue;
 
-		if (mDataSetMin.getValueCount() > 0) {
+		if (mDataSetMin.getYVals().size() > 0) {
 			minValue = mDataSetMin.getYMin();
-		} else if (mDataSetAvg.getValueCount() > 0) {
+		} else if (mDataSetAvg.getYVals().size() > 0) {
 			minValue = mDataSetAvg.getYMin();
 		} else {
 			minValue = mDataSetMax.getYMin();
 		}
 
-		if (mDataSetMax.getValueCount() > 0) {
+		if (mDataSetMax.getYVals().size() > 0) {
 			maxValue = mDataSetMax.getYMax();
-		} else if (mDataSetAvg.getValueCount() > 0) {
+		} else if (mDataSetAvg.getYVals().size() > 0) {
 			maxValue = mDataSetAvg.getYMax();
 		} else {
 			maxValue = mDataSetMin.getYMax();

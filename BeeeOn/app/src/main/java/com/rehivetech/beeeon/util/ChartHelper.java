@@ -24,7 +24,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
-import com.github.mikephil.charting.interfaces.LineDataProvider;
+import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.ViewPortHandler;
@@ -473,7 +474,7 @@ final public class ChartHelper {
 	private static class CustomFillFormatter implements FillFormatter {
 
 		@Override
-		public float getFillLinePosition(LineDataSet dataSet, LineDataProvider dataProvider) {
+		public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
 			return dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum;
 		}
 	}

@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.MarkerView;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -67,7 +67,7 @@ public class ModuleGraphMarkerView extends MarkerView {
 	public void refreshContent(Entry e, Highlight highlight) {
 		clearTexts();
 
-		for (DataSet dataSet : mChart.getData().getDataSets()) {
+		for (ILineDataSet dataSet : mChart.getData().getDataSets()) {
 			if (dataSet.getLabel().contains("min")) {
 				mTextMin.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
 
