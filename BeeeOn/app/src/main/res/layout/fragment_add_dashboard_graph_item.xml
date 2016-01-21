@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/fragment_add_dashboard_item_text_input"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<EditText
+			android:id="@+id/fragment_add_dashboard_item_graph_name_edit_text"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="Graph name"/>
+	</android.support.design.widget.TextInputLayout>
+
+	<TextView
+		android:id="@+id/fragment_add_dashboard_item_left_axis_label"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/fragment_add_dashboard_item_text_input"
+		android:text="Select left axis module"/>
+
+	<Spinner
+		android:id="@+id/fragment_add_dashboard_item_left_axis_spinner"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/fragment_add_dashboard_item_left_axis_label"/>
+
+	<TextView
+		android:id="@+id/fragment_add_dashboard_item_right_axis_label"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Select right axis module"
+		android:layout_below="@id/fragment_add_dashboard_item_left_axis_spinner"/>
+
+	<Spinner
+		android:id="@+id/fragment_add_dashboard_item_right_axis_spinner"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/fragment_add_dashboard_item_right_axis_label"/>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="?attr/actionBarSize"
+		android:layout_alignParentBottom="true"
+		android:background="@color/beeeon_primary">
+
+		<Button
+			android:id="@+id/fragment_add_dashboard_item_button_done"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:text="@string/button_done"
+			android:textColor="@color/white"/>
+
+	</FrameLayout>
+</RelativeLayout>
