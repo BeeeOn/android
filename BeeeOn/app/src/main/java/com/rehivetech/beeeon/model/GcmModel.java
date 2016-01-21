@@ -1,13 +1,10 @@
 package com.rehivetech.beeeon.model;
 
 import android.content.Context;
-import android.os.Process;
-import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
@@ -47,66 +44,86 @@ public class GcmModel extends BaseModel {
 	/**
 	 * This CAN'T be called on UI thread!
 	 */
-	public void registerGCM() {
-		// If we don't have Play services, delete GCM ID from server (there might have been from previous login with play services)
-		if (!Utils.isGooglePlayServicesAvailable(mContext)) {
-			setGCMIdLocal("");
-			setGCMIdServer("");
-			return;
-		}
+//	public void registerGCM() {
+//		// If we don't have Play services, delete GCM ID from server (there might have been from previous login with play services)
+//		if (!Utils.isGooglePlayServicesAvailable(mContext)) {
+//			setGCMIdLocal("");
+//			setGCMIdServer("");
+//			return;
+//		}
+//
+//		final String gcmId = getGCMRegistrationId();
+//		if (!gcmId.isEmpty()) {
+//			// Just send existing GCM ID to server
+//			setGCMIdServer(gcmId);
+//			return;
+//		}
+//
+//		// Get new GCM ID via new thread
+//		Log.w(TAG, Constants.GCM_TAG + "GCM ID is not accessible in persistence, creating new thread");
+//
+//		Thread thread = new Thread(new Runnable() {
+//			@Override
+//			public void run() {
+//				// Moves the current Thread into the background
+//				android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+//
+//				Controller controller = Controller.getInstance(mContext);
+//				GcmModel gcmModel = controller.getGcmModel();
+//
+//				// if there is not Internet connection, locally invalidate and next event will try again to get new GCM ID
+//				if (!Utils.isInternetAvailable(mContext)) {
+//					Log.w(TAG, Constants.GCM_TAG + "No Internet, locally invalidate GCM ID");
+//					gcmModel.setGCMIdLocal("");
+//					return;
+//				}
+//
+//				GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
+//				int timeToSleep = 500; // Minimum delay in milliseconds after register GCM fail and then exponentially more.
+//				int attempt = 0;
+//				String gcmIdNew = null;
+//				while (gcmIdNew == null || gcmIdNew.isEmpty()) {
+//					attempt++;
+//
+//					try {
+//						gcmIdNew = gcm.register(mContext.getString(R.string.api_keys_google_console_project_id));
+//					} catch (Exception e) {
+//						Log.e(TAG, Constants.GCM_TAG + "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
+//						// No matter how many times you call register, it will always fail and throw an exception on some devices. On these devices we need to get GCM ID this way:
+//						/* final String registrationId = context.getIntent().getStringExtra("registration_id");
+//						if (registrationId != null && registrationId != "") {
+//							mRegId = registrationId;
+//							break;
+//						} */
+//						SystemClock.sleep(timeToSleep);
+//						timeToSleep = timeToSleep * 2;
+//					}
+//				}
+//
+//				Log.i(TAG, Constants.GCM_TAG + "Device registered, attempt number " + String.valueOf(attempt) + ", registration ID=" + gcmIdNew);
+//
+//				// if new GCM ID is different then the old one, delete old on server side and apply new one
+//				String gcmIdOld = gcmModel.getGCMRegistrationId();
+//				if (!gcmIdOld.equals(gcmIdNew)) {
+//					gcmModel.deleteGCM(controller.getActualUser().getId(), gcmIdOld);
+//
+//					// Persist the GCM ID - no need to register again.
+//					gcmModel.setGCMIdLocal(gcmIdNew);
+//					gcmModel.setGCMIdServer(gcmIdNew);
+//				} else {
+//					// Save it just locally to update app version
+//					gcmModel.setGCMIdLocal(gcmIdNew);
+//					Log.i(TAG, Constants.GCM_TAG + "New GCM ID is the same, no need to change");
+//				}
+//			}
+//		});
+//		thread.start();
+//	}
 
-		final String gcmId = getGCMRegistrationId();
-		if (!gcmId.isEmpty()) {
-			// Just send existing GCM ID to server
-			setGCMIdServer(gcmId);
-			return;
-		}
-
-		// Get new GCM ID via new thread
-		Log.w(TAG, Constants.GCM_TAG + "GCM ID is not accessible in persistence, creating new thread");
-
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				// Moves the current Thread into the background
-				android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-
-				Controller controller = Controller.getInstance(mContext);
-				GcmModel gcmModel = controller.getGcmModel();
-
-				// if there is not Internet connection, locally invalidate and next event will try again to get new GCM ID
-				if (!Utils.isInternetAvailable(mContext)) {
-					Log.w(TAG, Constants.GCM_TAG + "No Internet, locally invalidate GCM ID");
-					gcmModel.setGCMIdLocal("");
-					return;
-				}
-
-				GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(mContext);
-				int timeToSleep = 500; // Minimum delay in milliseconds after register GCM fail and then exponentially more.
-				int attempt = 0;
-				String gcmIdNew = null;
-				while (gcmIdNew == null || gcmIdNew.isEmpty()) {
-					attempt++;
-
-					try {
-						gcmIdNew = gcm.register(mContext.getString(R.string.api_keys_google_console_project_id));
-					} catch (Exception e) {
-						Log.e(TAG, Constants.GCM_TAG + "Error: attempt n." + String.valueOf(attempt) + " :" + e.getMessage());
-						// No matter how many times you call register, it will always fail and throw an exception on some devices. On these devices we need to get GCM ID this way:
-						/* final String registrationId = context.getIntent().getStringExtra("registration_id");
-						if (registrationId != null && registrationId != "") {
-							mRegId = registrationId;
-							break;
-						} */
-						SystemClock.sleep(timeToSleep);
-						timeToSleep = timeToSleep * 2;
-					}
-				}
-
-				Log.i(TAG, Constants.GCM_TAG + "Device registered, attempt number " + String.valueOf(attempt) + ", registration ID=" + gcmIdNew);
-
-				// if new GCM ID is different then the old one, delete old on server side and apply new one
-				String gcmIdOld = gcmModel.getGCMRegistrationId();
+	public void saveGcm(@NonNull String gcmIdNew) {
+		Controller controller = Controller.getInstance(mContext);
+		GcmModel gcmModel = controller.getGcmModel();
+		String gcmIdOld = gcmModel.getGCMRegistrationId();
 				if (!gcmIdOld.equals(gcmIdNew)) {
 					gcmModel.deleteGCM(controller.getActualUser().getId(), gcmIdOld);
 
@@ -118,9 +135,6 @@ public class GcmModel extends BaseModel {
 					gcmModel.setGCMIdLocal(gcmIdNew);
 					Log.i(TAG, Constants.GCM_TAG + "New GCM ID is the same, no need to change");
 				}
-			}
-		});
-		thread.start();
 	}
 
 	/**
@@ -187,7 +201,7 @@ public class GcmModel extends BaseModel {
 	 *
 	 * @param gcmId registration ID
 	 */
-	public void setGCMIdLocal(String gcmId) {
+	private void setGCMIdLocal(String gcmId) {
 		int appVersion = Utils.getAppVersion(mContext);
 		Log.i(TAG, Constants.GCM_TAG + "Saving GCM ID on app version " + appVersion);
 
@@ -202,7 +216,7 @@ public class GcmModel extends BaseModel {
 	 *
 	 * @param gcmID to be set
 	 */
-	public void setGCMIdServer(String gcmID) {
+	private void setGCMIdServer(String gcmID) {
 		if (!(mNetwork instanceof Network) || mUser.getId().isEmpty())
 			return;
 

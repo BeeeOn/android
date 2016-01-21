@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.gcm.GcmRegistrationIntentService;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
@@ -371,7 +372,8 @@ public final class Controller {
 			mPersistence.saveLastUserId(mUser.getId());
 			mPersistence.saveLastAuthProvider(authProvider);
 
-			getGcmModel().registerGCM();
+			Intent intent = new Intent(mContext, GcmRegistrationIntentService.class);
+			mContext.startService(intent);
 		}
 
 		// send logout broadcast so widget can set cached

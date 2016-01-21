@@ -18,7 +18,7 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
 	public static void onUpdate(Context context) {
 		Log.i(TAG, Constants.GCM_TAG + "App updated, starting service for re-registering GCM ID.");
-		context.startService(new Intent(context, GcmReRegistrationHandler.class));
+		context.startService(new Intent(context, GcmRegistrationIntentService.class));
 	}
 
 	public static class LegacyUpdateBroadcastReceiver extends BroadcastReceiver {

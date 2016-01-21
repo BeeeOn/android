@@ -237,13 +237,12 @@
 
 		<!-- GOOGLE CLOUD MESSAGING -->
 		<receiver
-			android:name=".gcm.GcmBroadcastReceiver"
+			android:name="com.google.android.gms.gcm.GcmReceiver"
 			android:permission="com.google.android.c2dm.permission.SEND">
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+				<!-- for Gingerbread GSF backward compat -->
 				<action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
-
-				<category android:name="com.rehivetech.beeeon"/>
 			</intent-filter>
 		</receiver>
 		<receiver android:name=".gcm.UpdateBroadcastReceiver$LegacyUpdateBroadcastReceiver" android:enabled="@bool/is_at_most_api_11">
@@ -257,14 +256,30 @@
 				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
 			</intent-filter>
 		</receiver>
-		<receiver android:name=".gcm.BootBroadcastReceiver">
+		<!--<receiver android:name=".gcm.BootBroadcastReceiver">-->
+			<!--<intent-filter>-->
+				<!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+			<!--</intent-filter>-->
+		<!--</receiver>-->
+		<service
+			android:name=".gcm.MyGcmListenerService"
+			android:exported="false">
 			<intent-filter>
-				<action android:name="android.intent.action.BOOT_COMPLETED"/>
+				<action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+				<category android:name="com.rehivetech.beeeon"/>
 			</intent-filter>
-		</receiver>
-
-		<service android:name=".gcm.GcmMessageHandler"/>
-		<service android:name=".gcm.GcmReRegistrationHandler"/>
+		</service>
+		<service
+			android:name=".gcm.MyInstanceIdListenerService"
+			android:exported="false">
+			<intent-filter>
+				<action android:name="com.google.android.gms.iid.InstanceID"/>
+			</intent-filter>
+		</service>
+		<service
+			android:name=".gcm.GcmRegistrationIntentService"
+			android:exported="false">
+		</service>
 
 	</application>
 
