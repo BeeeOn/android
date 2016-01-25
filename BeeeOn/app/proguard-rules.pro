@@ -182,4 +182,5 @@
 
 # FIXME odstranit - pouze docasne reseni matematicke knihovny, ktere jsou vyuzity v externich knihovnach
 -dontwarn com.viewpagerindicator.**
--dontwarn net.simonvt.numberpicker.**
+
+-dontwarn io.realm.** # MP android chart now supports realm db
