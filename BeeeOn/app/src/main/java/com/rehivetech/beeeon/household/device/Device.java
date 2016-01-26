@@ -244,8 +244,8 @@ public final class Device implements IIdentifier {
 		Iterator<Module> it = modules.iterator();
 		while (it.hasNext()) {
 			Module module = it.next();
-			// Remove modules to be hidden based on rules
-			if (hideModuleIds.contains(module.getId())) {
+			// Remove modules to be hidden based on rules or if module is unavailable
+			if (hideModuleIds.contains(module.getId()) || module.getStatus().equals(Module.STATUS_UNAVAILABLE)) {
 				it.remove();
 			}
 		}
