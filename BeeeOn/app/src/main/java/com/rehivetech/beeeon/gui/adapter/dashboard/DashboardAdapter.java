@@ -1,4 +1,4 @@
-package com.rehivetech.beeeon.gui.adapter;
+package com.rehivetech.beeeon.gui.adapter.dashboard;
 
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -21,6 +21,9 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -34,8 +37,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.rehivetech.beeeon.util.ChartHelper.DataRange;
 
 /**
  * Created by martin on 15.11.15.
@@ -131,7 +132,7 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 
 		public void bind(Controller controller, GraphItem item) {
 			Gate gate = controller.getGatesModel().getGate(item.getGateId());
-			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceId());
+			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceIds().get(0));
 
 			mGraphName.setText(item.getName());
 			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
@@ -150,7 +151,7 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
 			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
 
-			if (item.getModules().size() > 1) {
+			if (item.getModuleIds().size() > 1) {
 				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
 			} else {
 				mChart.getAxisRight().setEnabled(false);
@@ -161,7 +162,8 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 			YAxis.AxisDependency axisDependency = YAxis.AxisDependency.LEFT;
-			List<String> modules = item.getModules();
+			List<String> devices = item.getDeviceIds();
+			List<String> modules = item.getModuleIds();
 			for (int i = 0; i < modules.size(); i++) {
 
 				final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
@@ -179,8 +181,9 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 					}
 				};
 
-				ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), item.getDeviceId(), modules.get(i), item.getDataRange(),
-						ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW, chartLoadListener, dateTimeFormatter);
+				ModuleLog.DataInterval dataInterval = (item.getDataRange() > ChartHelper.RANGE_DAY) ? ModuleLog.DataInterval.HALF_HOUR : ModuleLog.DataInterval.TEN_MINUTES;
+				ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), devices.get(i), modules.get(i), item.getDataRange(),
+						ModuleLog.DataType.AVERAGE, dataInterval, chartLoadListener, dateTimeFormatter);
 
 				axisDependency = YAxis.AxisDependency.RIGHT;
 			}
@@ -219,69 +222,15 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 
 	public void addItem(BaseItem item) {
 		mItems.add(item);
-		notifyDataSetChanged();
+
+		notifyItemRangeInserted(0, mItems.size());
 	}
 
-	public static class BaseItem {
-		private String mName;
-		private String mGateId;
-		private String mDeviceId;
-
-		public BaseItem(String name, String gateId, String deviceId) {
-			mName = name;
-			mGateId = gateId;
-			mDeviceId = deviceId;
-		}
-
-		public String getGateId() {
-			return mGateId;
-		}
-
-		public String getDeviceId() {
-			return mDeviceId;
-		}
-
-		public String getName() {
-			return mName;
-		}
+	public List<BaseItem> getItems() {
+		return mItems;
 	}
 
-	public static class GraphItem extends BaseItem {
-		private List<String> mModules;
-
-		@DataRange
-		private int mDataRange;
-
-		public GraphItem(String name, String gateId, String deviceId, List<String> modules, @DataRange int range) {
-			super(name, gateId, deviceId);
-
-			mModules = modules;
-			mDataRange = range;
-		}
-
-		public List<String> getModules() {
-			return mModules;
-		}
-
-		@DataRange
-		public int getDataRange() {
-			return mDataRange;
-		}
+	public void setItems(List<BaseItem> items) {
+		mItems = items;
 	}
-
-	public static class ActualValueItem extends BaseItem {
-
-		private String mModuleId;
-
-		public ActualValueItem(String name, String gateId, String deviceId, String moduleId) {
-			super(name, gateId, deviceId);
-
-			mModuleId = moduleId;
-		}
-
-		public String getModuleId() {
-			return mModuleId;
-		}
-	}
-
 }
