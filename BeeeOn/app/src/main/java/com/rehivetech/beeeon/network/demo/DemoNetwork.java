@@ -101,6 +101,7 @@ public class DemoNetwork implements INetwork {
 
 		// Set error status randomly (but rarely)
 		module.getDevice().setStatus(rand.nextInt() % 10 != 0 ? Device.STATUS_AVAILABLE : Device.STATUS_UNAVAILABLE);
+		module.setStatus(rand.nextInt() % 10 != 0 ? Module.STATUS_AVAILABLE : Module.STATUS_UNAVAILABLE);
 	}
 
 	public void initDemoData() throws AppException {

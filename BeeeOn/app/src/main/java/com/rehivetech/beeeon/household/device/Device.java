@@ -284,8 +284,9 @@ public final class Device implements IIdentifier {
 	 *
 	 * @param id
 	 * @param value
+	 * @param moduleStatus
 	 */
-	public void setModuleValue(String id, String value) throws IllegalStateException {
+	public void setModuleValue(String id, String value, String moduleStatus) throws IllegalStateException {
 		synchronized (mModules) {
 			if (!mModules.hasObject(id)) {
 				if (!isUnknownType()) {
@@ -301,6 +302,8 @@ public final class Device implements IIdentifier {
 			// At this moment module will surely exist in data holder
 			Module module = mModules.getObject(id);
 			module.setValue(value);
+			// TODO change status not to have as string but as Enum
+			module.setStatus(moduleStatus.isEmpty() ? STATUS_AVAILABLE : moduleStatus);
 		}
 	}
 
@@ -315,6 +318,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -331,6 +335,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -341,6 +346,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -351,6 +357,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @param refresh
 	 */
 	public void setRefresh(RefreshInterval refresh) {
@@ -361,6 +368,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @param battery
 	 */
 	public void setBattery(int battery) {
@@ -371,6 +379,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @param quality
 	 */
 	public void setNetworkQuality(int quality) {
@@ -381,6 +390,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * Get all modules groups
+	 *
 	 * @param context context to get string resource
 	 * @return list of group names
 	 */
@@ -388,7 +398,7 @@ public final class Device implements IIdentifier {
 		ArrayList<String> moduleGroups = new ArrayList<>();
 		List<Module> modules = getVisibleModules();
 
-		for(Module module: modules) {
+		for (Module module : modules) {
 			String groupName = module.getGroupName(context);
 			if (!moduleGroups.contains(groupName)) {
 				moduleGroups.add(groupName);

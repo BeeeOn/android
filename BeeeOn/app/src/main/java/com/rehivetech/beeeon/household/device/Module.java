@@ -15,6 +15,10 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Module implements IOrderIdentifier {
+
+	public static final String STATUS_AVAILABLE = "available";
+	public static final String STATUS_UNAVAILABLE = "unavailable";
+
 	/**
 	 * Properties inherited from device's specification table.
 	 */
@@ -30,6 +34,7 @@ public final class Module implements IOrderIdentifier {
 	private final Device mDevice; // parent device
 	private final BaseValue mValue;
 	private final ModuleId mModuleId;
+	private String mStatus = STATUS_AVAILABLE;
 
 	public static Module createUnknownModule(@NonNull Device device, @NonNull String id) {
 		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), null, null, null, false, null, null);
@@ -197,6 +202,14 @@ public final class Module implements IOrderIdentifier {
 	@Override
 	public Integer getSort() {
 		return mSort;
+	}
+
+	public String getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(String status) {
+		mStatus = status;
 	}
 
 	public static class Rule {
