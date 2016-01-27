@@ -27,7 +27,7 @@ public class Language extends SettingsItem {
 
 		public String getCode() {
 			if (mCode == null) {
-				return Locale.getDefault().toString();
+				return Locale.getDefault().getLanguage().toString();
 			}
 			return mCode;
 		}
