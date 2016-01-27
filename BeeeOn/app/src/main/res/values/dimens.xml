@@ -4,6 +4,12 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+	<!--Common spaces-->
+	<dimen name="space_mini">4dp</dimen>
+	<dimen name="space_normal">8dp</dimen>
+	<dimen name="space_big">16dp</dimen>
+	<dimen name="space_bigger">32dp</dimen>
+
 	<!--  Widgets -->
 	<dimen name="widget_margin">8dp</dimen>
 
