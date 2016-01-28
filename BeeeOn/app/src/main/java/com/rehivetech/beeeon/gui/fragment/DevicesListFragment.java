@@ -175,6 +175,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), AddDeviceActivity.class);
+				intent.putExtra(AddDeviceActivity.EXTRA_GATE_ID, mActiveGateId);
+				intent.putExtra(AddDeviceActivity.EXTRA_ACTION_STATE, AddDeviceActivity.ACTION_INITIAL);
 				mActivity.startActivityForResult(intent, Constants.ADD_DEVICE_REQUEST_CODE);
 				fabMenu.collapse();
 			}

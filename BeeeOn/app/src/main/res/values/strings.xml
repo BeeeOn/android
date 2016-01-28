@@ -228,7 +228,9 @@
 	<string name="device_setup_device_list_paired_label">Paired:</string>
 
 	<!-- Device add -->
-	<string name="device_add_btn_send_pair">START</string>
+	<string name="device_add_title">Add device</string>
+	<string name="device_add_guide_text">Devices differ in the way in which it sought with your gateway. How to connect device with your gateway, see in <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">this website</a></string>
+	<string name="device_add_btn_search">SEARCH DEVICES</string>
 	<string name="device_add_device_found">Device was found</string>
 	<string name="device_add_device_not_found_in_time">Device was not found, check if it\'s really switched on and try it again</string>
 	<string name="device_add_dialog_device_add_text">Click on START to begin pairing</string>
