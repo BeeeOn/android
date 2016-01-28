@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
@@ -9,14 +9,13 @@ public abstract class BaseApplicationFragment extends TrackFragment {
 	protected BaseApplicationActivity mActivity;
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 
 		try {
-			mActivity = (BaseApplicationActivity) activity;
+			mActivity = (BaseApplicationActivity) context;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must be subclass of BaseApplicationActivity");
+			throw new ClassCastException(context.toString()+ " must be subclass of BaseApplicationActivity");
 		}
 
 		mActivity.onFragmentAttached(this);
