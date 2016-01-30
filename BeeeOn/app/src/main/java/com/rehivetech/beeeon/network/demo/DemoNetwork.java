@@ -360,21 +360,19 @@ public class DemoNetwork implements INetwork {
 		}
 
 		Random rand = getRandomForGate(gateId);
-
-		for (DeviceType type : DeviceType.values()) {
-			// We don't want to show unknown device
-			if (type == DeviceType.TYPE_UNKNOWN) {
-				continue;
-			}
-
+		if (rand.nextInt(10) == 0) {
 			// Create unique device id
 			String address;
 			do {
 				address = gateId + "/" + String.valueOf(rand.nextInt());
 			} while (mDevices.hasObject(gateId, address));
 
+			// Get random device type
+			DeviceType[] types = DeviceType.values();
+			DeviceType randType = types[1 + rand.nextInt(types.length - 1)]; // 1+ because we don't want unknown type, which is on beginning
+
 			// Create new device
-			Device device = Device.createDeviceByType(type.getId(), gateId, address);
+			Device device = Device.createDeviceByType(randType.getId(), gateId, address);
 
 			Integer battery = device.getBattery();
 			if (battery != null) {
