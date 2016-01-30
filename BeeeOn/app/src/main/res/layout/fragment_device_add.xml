@@ -3,24 +3,18 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:padding="@dimen/space_big">
+	android:background="@color/beeeon_primary">
 
-	<TextView
-		android:id="@+id/device_add_title"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:textColor="@color/white"
-		android:text="@string/device_add_title"
-		android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
+
+	<include layout="@layout/layout_beeeon_toolbar"/>
 
 	<ImageView
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
-		android:layout_below="@id/device_add_title"
+		android:layout_below="@id/beeeon_toolbar"
 		android:layout_marginTop="@dimen/space_big"
-		android:paddingBottom="@dimen/space_big"
+		android:padding="@dimen/space_big"
 		android:scaleType="centerInside"
 		android:layout_above="@+id/device_add_guide_text"
 		android:src="@drawable/beeeon_tutorial_as_first_step"/>
@@ -31,6 +25,7 @@
 		android:layout_height="wrap_content"
 		android:layout_centerInParent="true"
 		android:layout_marginTop="@dimen/space_big"
+		android:padding="@dimen/space_big"
 		android:gravity="center_horizontal"
 		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
 		android:textColor="@color/white"

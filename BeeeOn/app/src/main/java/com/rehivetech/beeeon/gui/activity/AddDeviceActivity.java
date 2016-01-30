@@ -1,11 +1,13 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddDeviceFragment;
+import com.rehivetech.beeeon.gui.fragment.SearchDeviceFragment;
 
 public class AddDeviceActivity extends BaseApplicationActivity {
 
@@ -17,17 +19,15 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 	public static final int ACTION_INITIAL = 0;
 	public static final int ACTION_SEARCH = 1;
 	public static final int ACTION_SETUP = 2;
+
+	@StringRes
+	private int mToolbarTitleRes;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_add_device);
-
-		setupToolbar(0);
-		if (mActionBar != null) {
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setDisplayShowTitleEnabled(false);
-		}
 
 		Bundle args = getIntent().getExtras();
 
@@ -37,9 +37,12 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 		Fragment fragment = null;
 		switch (action) {
 			case ACTION_INITIAL:
-				fragment = AddDeviceFragment.newInstance();
+				fragment = AddDeviceFragment.newInstance(gateId);
+				mToolbarTitleRes = R.string.device_add_title;
 				break;
 			case ACTION_SEARCH:
+				fragment = SearchDeviceFragment.newInstance(gateId);
+				mToolbarTitleRes = R.string.device_search_title;
 				break;
 			case ACTION_SETUP:
 
@@ -51,7 +54,16 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_add_device_container, fragment).commit();
 		}
+	}
 
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+
+		setupToolbar(mToolbarTitleRes);
+		if (mActionBar != null) {
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+		}
 	}
 
 	@Override
