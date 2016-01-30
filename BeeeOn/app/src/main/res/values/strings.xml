@@ -233,6 +233,7 @@
 	<string name="device_add_btn_search">SEARCH DEVICES</string>
 
 	<string name="device_search_title">Search devices</string>
+	<string name="device_search_manual_button">Manual search</string>
 	<string name="device_search_no_devices_text">No devices found</string>
 	<string name="device_search_snack_bar_title_searching">Searching…</string>
 	<string name="device_search_snack_bar_title_search_end">Search finished</string>
