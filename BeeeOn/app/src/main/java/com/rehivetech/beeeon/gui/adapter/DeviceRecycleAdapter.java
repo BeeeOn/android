@@ -190,12 +190,29 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	}
 
 	/**
+	 * Adds item to the end
+	 * @param data item
+	 */
+	public void addItem(Object data) {
+		mObjects.add(data);
+		notifyItemInserted(mObjects.size() - 1);
+	}
+
+	/**
 	 * Removes item & animate it if animator set
 	 * @param position
 	 */
 	public void removeItem(int position){
 		mObjects.remove(position);
 		notifyItemRemoved(position);
+	}
+
+	/**
+	 * Clears adapter data
+	 */
+	public void clearData() {
+		mObjects.clear();
+		notifyDataSetChanged();
 	}
 
 	/**
