@@ -18,7 +18,6 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.AccountPicker;
-import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
@@ -100,7 +99,11 @@ public class GoogleAuthProvider implements IAuthProvider {
 	 * @param context
 	 */
 	public void invalidateToken(Context context) {
-		GoogleAuthUtil.invalidateToken(context, mParameters.get(PARAMETER_TOKEN));
+		try {
+			GoogleAuthUtil.clearToken(context, mParameters.get(PARAMETER_TOKEN));
+		} catch (GoogleAuthException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
