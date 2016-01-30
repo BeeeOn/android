@@ -50,7 +50,10 @@ public class UninitializedDevicesModel extends BaseModel {
 			return false;
 		}
 
-		mUninitializedDevices.setObjects(gateId, mNetwork.devices_getNew(gateId));
+		List<Device> newDevices = mNetwork.devices_getNew(gateId);
+		for (Device device : newDevices) {
+			mUninitializedDevices.addObject(gateId, device);
+		}
 		mUninitializedDevices.setLastUpdate(gateId, DateTime.now());
 
 		return true;
