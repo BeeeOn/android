@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -17,12 +19,14 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -123,9 +127,19 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+
 		outState.putLong(STATE_COUNTDOWN_TIME_ELAPSED, mCountDownTimeElapsed);
 		mActivity.callbackTaskManager.cancelAndRemoveAll();
 		mHandler.removeCallbacksAndMessages(null);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK) {
+			mActivity.setResult(Activity.RESULT_OK);
+			mActivity.finish();
+		}
 	}
 
 	private void startPairing() {
@@ -151,7 +165,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 				}
 
 				if (mCountDownTimeElapsed < COUNTDOWN_INTERVAL && mCountDownTimeElapsed % PAIR_REQUEST_REPEAT_INTERVAL == 0) {
-					doPairRequestTask();
+					doPairRequestTask(mCountDownTimeElapsed < (DateUtils.SECOND_IN_MILLIS * 4));
 				}
 				mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
 			}
@@ -169,9 +183,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		return String.format("%2d:%02d", minutes, seconds);
 	}
 
-	private void doPairRequestTask() {
+	private void doPairRequestTask(boolean sendPairRequest) {
 		// function creates and starts Task that handles pairing between the gate and the account
-		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId);
+		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId, sendPairRequest);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -179,6 +193,12 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 				if (success) {
 					List devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 					updateAdapter(devices);
+				} else {
+					if (pairDeviceTask.getException() != null) {
+						mActivity.callbackTaskManager.cancelAndRemoveAll();
+						mHandler.removeCallbacksAndMessages(null);
+						mActivity.finish();
+					}
 				}
 			}
 		});
@@ -186,19 +206,19 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		mActivity.callbackTaskManager.executeTask(pairDeviceTask, mGateId, CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
 	}
 
-	private void updateAdapter(List<Device> adapterData) {
-		for (Device device : adapterData) {
-			mAdapter.addItem(device);
-		}
+	private void updateAdapter(List adapterData) {
+		mAdapter.updateData((ArrayList<Object>) adapterData);
 
 		if (mAdapter.getItemCount() > 0) {
 			mRecyclerView.setVisibility(View.VISIBLE);
 			mSearchingText.setVisibility(View.GONE);
 		}
 	}
+
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
-
+		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, position);
+		startActivityForResult(intent, 50);
 	}
 
 	@Override
