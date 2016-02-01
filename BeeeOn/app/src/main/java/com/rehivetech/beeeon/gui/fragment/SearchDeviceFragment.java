@@ -15,12 +15,14 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
+import com.rehivetech.beeeon.gui.dialog.ManualSearchDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
@@ -32,7 +34,7 @@ import java.util.List;
 /**
  * Created by martin on 28.1.16.
  */
-public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener {
+public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ManualSearchDialog.ManualSearchDialogListener{
 	private static final String TAG = SearchDeviceFragment.class.getSimpleName();
 
 	private static final long COUNTDOWN_INTERVAL = DateUtils.MINUTE_IN_MILLIS * 2;
@@ -45,6 +47,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 	private CoordinatorLayout mRootView;
 	private TextView mCountDownText;
+	private Button mManualSearchButton;
 	private RecyclerView mRecyclerView;
 	private TextView mSearchingText;
 
@@ -83,6 +86,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		layoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
 		toolbar.setLayoutParams(layoutParams);
 
+		mManualSearchButton = (Button) mRootView.findViewById(R.id.search_manual_button);
 		mCountDownText = (TextView) mRootView.findViewById(R.id.search_countdown_text);
 		mSearchingText = (TextView) mRootView.findViewById(R.id.search_device_searching_text);
 		mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.search_device_recycler_view);
@@ -91,6 +95,17 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		mAdapter = new DeviceRecycleAdapter(mActivity, this, true);
 		mRecyclerView.setAdapter(mAdapter);
 		return mRootView;
+	}
+
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		mManualSearchButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				ManualSearchDialog.show(mActivity, SearchDeviceFragment.this);
+			}
+		});
 	}
 
 	@Override
@@ -246,5 +261,10 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
 		return false;
+	}
+
+	@Override
+	public void onPositiveButtonClicked(String ipAddress) {
+		//TODO send request for manual search
 	}
 }

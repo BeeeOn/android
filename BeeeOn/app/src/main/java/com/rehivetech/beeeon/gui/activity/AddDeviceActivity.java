@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gui.dialog.ManualSearchDialog;
 import com.rehivetech.beeeon.gui.fragment.AddDeviceFragment;
 import com.rehivetech.beeeon.gui.fragment.SearchDeviceFragment;
 import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
@@ -17,7 +18,7 @@ import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class AddDeviceActivity extends BaseApplicationActivity {
+public class AddDeviceActivity extends BaseApplicationActivity implements ManualSearchDialog.ManualSearchDialogListener {
 
 	private static final String TAG = AddDeviceActivity.class.getSimpleName();
 
@@ -28,7 +29,8 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 	@IntDef({ACTION_INITIAL, ACTION_SEARCH, ACTION_SETUP})
 	@Retention(RetentionPolicy.CLASS)
 
-	public @interface AddDeviceActivityState {}
+	public @interface AddDeviceActivityState {
+	}
 
 	public static final int ACTION_INITIAL = 0;
 	public static final int ACTION_SEARCH = 1;
@@ -37,7 +39,9 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 	@StringRes
 	private int mToolbarTitleRes;
 
-	public static Intent prepareAddDeviceActivityIntent(Context context, String gateId,@AddDeviceActivityState int state, @Nullable String newDeviceId) {
+	private Fragment mFragment;
+
+	public static Intent prepareAddDeviceActivityIntent(Context context, String gateId, @AddDeviceActivityState int state, @Nullable String newDeviceId) {
 		Intent intent = new Intent(context, AddDeviceActivity.class);
 		intent.putExtra(EXTRA_GATE_ID, gateId);
 		intent.putExtra(EXTRA_ACTION_STATE, state);
@@ -58,25 +62,26 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 		int action = args.getInt(EXTRA_ACTION_STATE);
 		String newDeviceId = args.getString(EXTRA_SETUP_DEVICE_ID);
 
-		Fragment fragment;
-		switch (action) {
-			case ACTION_INITIAL:
-				fragment = AddDeviceFragment.newInstance(gateId);
-				mToolbarTitleRes = R.string.device_add_title;
-				break;
-			case ACTION_SEARCH:
-				fragment = SearchDeviceFragment.newInstance(gateId);
-				mToolbarTitleRes = R.string.device_search_title;
-				break;
-			case ACTION_SETUP:
-				fragment = SetupDeviceFragment.newInstance(gateId, newDeviceId);
-				break;
-			default:
-				throw new UnsupportedOperationException("AddDeviceActivity - unsupported action");
-		}
-
 		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction().replace(R.id.activity_add_device_container, fragment).commit();
+			switch (action) {
+				case ACTION_INITIAL:
+					mFragment = AddDeviceFragment.newInstance(gateId);
+					mToolbarTitleRes = R.string.device_add_title;
+					break;
+				case ACTION_SEARCH:
+					mFragment = SearchDeviceFragment.newInstance(gateId);
+					mToolbarTitleRes = R.string.device_search_title;
+					break;
+				case ACTION_SETUP:
+					mFragment = SetupDeviceFragment.newInstance(gateId, newDeviceId);
+					break;
+				default:
+					throw new UnsupportedOperationException("AddDeviceActivity - unsupported action");
+			}
+
+			getSupportFragmentManager().beginTransaction().replace(R.id.activity_add_device_container, mFragment).commit();
+		} else {
+			mFragment = getSupportFragmentManager().findFragmentById(R.id.activity_add_device_container);
 		}
 	}
 
@@ -99,5 +104,13 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 			}
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onPositiveButtonClicked(String ipAddress) {
+		//FIXME maybe add into fragment
+		if (mFragment instanceof SearchDeviceFragment) {
+			((SearchDeviceFragment) mFragment).onPositiveButtonClicked(ipAddress);
+		}
 	}
 }
