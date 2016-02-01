@@ -64,7 +64,7 @@ public class AddDeviceFragment extends BaseApplicationFragment {
 	}
 
 	private void startActivityForDeviceSearch() {
-		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SEARCH, 0);
+		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SEARCH, null);
 		startActivityForResult(intent, 0);
 	}
 }

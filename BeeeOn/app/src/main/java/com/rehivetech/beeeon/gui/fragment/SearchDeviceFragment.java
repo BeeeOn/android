@@ -206,8 +206,26 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		mActivity.callbackTaskManager.executeTask(pairDeviceTask, mGateId, CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
 	}
 
-	private void updateAdapter(List adapterData) {
-		mAdapter.updateData((ArrayList<Object>) adapterData);
+	private void updateAdapter(List<Device> adapterData) {
+
+		List<Integer> manufacturers = new ArrayList<>();
+		for (Device device : adapterData) {
+			if (!manufacturers.contains(device.getType().getManufacturerRes())) {
+				manufacturers.add(device.getType().getManufacturerRes());
+			}
+		}
+
+		ArrayList<Object> adapterList = new ArrayList<>();
+		for (int manufacturer : manufacturers) {
+			adapterList.add(getString(manufacturer));
+			for (Device device : adapterData) {
+				if (manufacturer == device.getType().getManufacturerRes()) {
+					adapterList.add(device);
+				}
+			}
+		}
+
+		mAdapter.updateData(adapterList);
 
 		if (mAdapter.getItemCount() > 0) {
 			mRecyclerView.setVisibility(View.VISIBLE);
@@ -217,8 +235,12 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
-		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, position);
-		startActivityForResult(intent, 50);
+		if (viewType == DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
+			Device device = (Device) mAdapter.getItem(position);
+
+			Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
+			startActivityForResult(intent, 50);
+		}
 	}
 
 	@Override

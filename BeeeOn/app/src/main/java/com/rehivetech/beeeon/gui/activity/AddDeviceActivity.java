@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -22,7 +23,7 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_ACTION_STATE = "action_state";
-	public static final String EXTRA_DEVICE_INDEX = "device_index";
+	public static final String EXTRA_SETUP_DEVICE_ID = "setup_device_id";
 
 	@IntDef({ACTION_INITIAL, ACTION_SEARCH, ACTION_SETUP})
 	@Retention(RetentionPolicy.CLASS)
@@ -36,11 +37,11 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 	@StringRes
 	private int mToolbarTitleRes;
 
-	public static Intent prepareAddDeviceActivityIntent(Context context, String gateId,@AddDeviceActivityState int state, int newDeviceIndex) {
+	public static Intent prepareAddDeviceActivityIntent(Context context, String gateId,@AddDeviceActivityState int state, @Nullable String newDeviceId) {
 		Intent intent = new Intent(context, AddDeviceActivity.class);
 		intent.putExtra(EXTRA_GATE_ID, gateId);
 		intent.putExtra(EXTRA_ACTION_STATE, state);
-		intent.putExtra(EXTRA_DEVICE_INDEX, newDeviceIndex);
+		intent.putExtra(EXTRA_SETUP_DEVICE_ID, newDeviceId);
 
 		return intent;
 	}
@@ -55,7 +56,7 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 
 		String gateId = args.getString(EXTRA_GATE_ID);
 		int action = args.getInt(EXTRA_ACTION_STATE);
-		int deviceIndex = args.getInt(EXTRA_DEVICE_INDEX);
+		String newDeviceId = args.getString(EXTRA_SETUP_DEVICE_ID);
 
 		Fragment fragment;
 		switch (action) {
@@ -68,7 +69,7 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 				mToolbarTitleRes = R.string.device_search_title;
 				break;
 			case ACTION_SETUP:
-				fragment = SetupDeviceFragment.newInstance(gateId, deviceIndex);
+				fragment = SetupDeviceFragment.newInstance(gateId, newDeviceId);
 				break;
 			default:
 				throw new UnsupportedOperationException("AddDeviceActivity - unsupported action");

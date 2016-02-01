@@ -40,16 +40,16 @@ public class SetupDeviceFragment extends BaseApplicationFragment {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
-	private static final String KEY_DEVICE_INDEX = "device_index";
+	private static final String KEY_NEW_DEVICE_ID = "new_device_id";
 
 	private Device mNewDevice;
 	private String mGateId;
-	private int mDeviceIndex;
+	private String mDeviceId;
 
-	public static SetupDeviceFragment newInstance(String gateId, int deviceIndex) {
+	public static SetupDeviceFragment newInstance(String gateId, String newDeviceId) {
 
 		Bundle args = new Bundle();
-		args.putInt(KEY_DEVICE_INDEX, deviceIndex);
+		args.putString(KEY_NEW_DEVICE_ID, newDeviceId);
 		args.putString(KEY_GATE_ID, gateId);
 		SetupDeviceFragment fragment = new SetupDeviceFragment();
 		fragment.setArguments(args);
@@ -64,10 +64,15 @@ public class SetupDeviceFragment extends BaseApplicationFragment {
 
 		if (args != null) {
 			mGateId = args.getString(KEY_GATE_ID);
-			mDeviceIndex = args.getInt(KEY_DEVICE_INDEX);
+			mDeviceId = args.getString(KEY_NEW_DEVICE_ID);
 		}
 
-		mNewDevice = Controller.getInstance(mActivity).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(mDeviceIndex);
+		List<Device> newDevices = Controller.getInstance(mActivity).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
+		for (Device device : newDevices) {
+			if (device.getId().equals(mDeviceId)) {
+				mNewDevice = device;
+			}
+		}
 	}
 
 	@SuppressLint("InflateParams")
