@@ -23,7 +23,9 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.dialog.ManualSearchDialog;
+import com.rehivetech.beeeon.gui.dialog.PasswordDialog;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
@@ -253,8 +255,13 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		if (viewType == DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
 			Device device = (Device) mAdapter.getItem(position);
 
-			Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
-			startActivityForResult(intent, 50);
+			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
+				PasswordDialog.show(mActivity, SearchDeviceFragment.this);
+			} else {
+				Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
+				startActivityForResult(intent, 50);
+			}
+
 		}
 	}
 

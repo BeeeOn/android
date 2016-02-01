@@ -18,13 +18,15 @@ import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class AddDeviceActivity extends BaseApplicationActivity implements ManualSearchDialog.ManualSearchDialogListener {
+public class AddDeviceActivity extends BaseApplicationActivity implements ManualSearchDialog.ManualSearchDialogListener{
 
 	private static final String TAG = AddDeviceActivity.class.getSimpleName();
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_ACTION_STATE = "action_state";
 	public static final String EXTRA_SETUP_DEVICE_ID = "setup_device_id";
+
+
 
 	@IntDef({ACTION_INITIAL, ACTION_SEARCH, ACTION_SETUP})
 	@Retention(RetentionPolicy.CLASS)
