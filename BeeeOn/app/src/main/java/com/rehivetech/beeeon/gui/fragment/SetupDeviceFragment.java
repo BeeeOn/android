@@ -80,9 +80,7 @@ public class SetupDeviceFragment extends BaseApplicationFragment {
 
 		switch (mNewDevice.getType()) {
 
-			case TYPE_1:
-			case TYPE_6:
-				break;
+			// TODO custom layout by device type
 			default:
 				deviceSetupView = inflater.inflate(R.layout.device_setup_other_devices, null);
 				scrollView.addView(deviceSetupView);
