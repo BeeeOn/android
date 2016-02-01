@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+	   xmlns:tools="http://schemas.android.com/tools"
+	   android:layout_width="match_parent"
+	   android:layout_height="match_parent">
+
+	<TextView
+		android:id="@+id/device_setup_header_name"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="5dp"
+		tools:text="Regulator VPT v1.0"
+		android:textColor="@color/beeeon_primary_text"
+		android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+	<TextView
+		android:id="@+id/device_setup_header_manufacturer"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="15dp"
+		android:layout_below="@id/device_setup_header_name"
+		tools:text="Thermona"
+		android:textColor="@color/beeeon_secondary_text"
+		android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+	<TextView
+		android:id="@+id/device_setup_info_text"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/device_setup_header_manufacturer"
+		android:layout_marginBottom="15dp"
+		android:text="@string/device_setup_device_info_text"
+		android:textColor="@color/beeeon_secondary_text"
+		android:textIsSelectable="false"/>
+
+	<View
+		android:id="@+id/device_setup_divider"
+		style="@style/BeeeOn.Divider.Full"
+		android:layout_below="@id/device_setup_info_text"
+		android:layout_marginBottom="10dp"/>
+
+	<TextView
+		android:id="@+id/device_setup_header_location"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/device_setup_divider"
+		android:text="@string/device_setup_device_header_location"
+		android:textColor="@color/beeeon_primary_text"
+		android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+	<Spinner
+		android:id="@+id/device_setup_spinner_choose_location"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/device_setup_header_location"
+		android:layout_marginBottom="5dp"/>
+
+
+	<Spinner
+		android:id="@+id/device_setup_spinner_choose_new_location_icon"
+		android:layout_width="60dp"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/device_setup_spinner_choose_location"
+		android:paddingTop="@dimen/space_mini"
+		/>
+
+	<android.support.design.widget.TextInputLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/device_setup_spinner_choose_location"
+		android:layout_toRightOf="@id/device_setup_spinner_choose_new_location_icon"
+		android:layout_toEndOf="@id/device_setup_spinner_choose_new_location_icon"
+		>
+
+		<EditText
+			android:id="@+id/device_setup_new_location_name"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:ems="10"
+			android:hint="@string/module_edit_setup_new_location_hint"
+			android:inputType="text"/>
+	</android.support.design.widget.TextInputLayout>
+</merge>

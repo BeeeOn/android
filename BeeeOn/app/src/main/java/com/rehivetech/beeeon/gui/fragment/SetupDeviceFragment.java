@@ -1,126 +1,120 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
-import com.rehivetech.beeeon.gui.activity.SetupDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 import com.rehivetech.beeeon.util.TimeHelper;
 
 import java.util.List;
 
-public class SetupDeviceFragment extends TrackFragment {
+public class SetupDeviceFragment extends BaseApplicationFragment {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
+	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_DEVICE_INDEX = "device_index";
 
-	public SetupDeviceActivity mActivity;
-	private View mView;
-
-
 	private Device mNewDevice;
-
 	private String mGateId;
 	private int mDeviceIndex;
 
-	public static SetupDeviceFragment newInstance(int deviceIndex) {
+	public static SetupDeviceFragment newInstance(String gateId, int deviceIndex) {
 
 		Bundle args = new Bundle();
 		args.putInt(KEY_DEVICE_INDEX, deviceIndex);
+		args.putString(KEY_GATE_ID, gateId);
 		SetupDeviceFragment fragment = new SetupDeviceFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
 
 	@Override
-	public void onAttach(Context activity) {
-		super.onAttach(activity);
-
-		try {
-			mActivity = (SetupDeviceActivity) getActivity();
-			mActivity.setFragment(this);
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must be subclass of SetupDeviceActivity");
-		}
-	}
-
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// Get activity and controller
-		Controller controller = Controller.getInstance(mActivity);
+		Bundle args = getArguments();
 
-		Gate gate = controller.getActiveGate();
-		if (gate == null) {
-			// CHYBA
-			return;
+		if (args != null) {
+			mGateId = args.getString(KEY_GATE_ID);
+			mDeviceIndex = args.getInt(KEY_DEVICE_INDEX);
 		}
 
-		mDeviceIndex = getArguments().getInt(KEY_DEVICE_INDEX);
-
-		mGateId = gate.getId();
-		mNewDevice = controller.getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(mDeviceIndex);
-
-		// TODO: sent as parameter if we want first uninitialized module or some module with particular id
-
-		// Create the AlertDialog object and return it
+		mNewDevice = Controller.getInstance(mActivity).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId).get(mDeviceIndex);
 	}
 
+	@SuppressLint("InflateParams")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_device_setup, container, false);
+		View view = inflater.inflate(R.layout.fragment_device_setup, container, false);
 
-		initViews();
+		NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.device_setup_scrollview);
+		View deviceSetupView;
 
-		mActivity.findViewById(R.id.device_setup_save_button).setVisibility(View.VISIBLE);
-		return mView;
+		switch (mNewDevice.getType()) {
+
+			case TYPE_1:
+			case TYPE_6:
+				break;
+			default:
+				deviceSetupView = inflater.inflate(R.layout.device_setup_other_devices, null);
+				scrollView.addView(deviceSetupView);
+				initViews(view);
+				break;
+		}
+		return view;
 	}
 
-	private void initViews() {
+	private void initViews(View view) {
+		final EditText newLocation = (EditText) view.findViewById(R.id.device_setup_new_location_name);
+		final Spinner newIconSpinner = (Spinner) view.findViewById(R.id.device_setup_spinner_choose_new_location_icon);
+		newIconSpinner.setAdapter(new LocationIconAdapter(mActivity));
+		setVisibleNewLocation(newIconSpinner, newLocation, false);
 		// Set listener for hide or unhide layout for add new location
-		final Spinner spinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location);
+		final Spinner spinner = (Spinner) view.findViewById(R.id.device_setup_spinner_choose_location);
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if (position == spinner.getCount() - 1) {
 					// show new location
-					if (!hideInputForNewLocation(false) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-						shringSpinner(true);
-					}
+					setVisibleNewLocation(newIconSpinner, newLocation, true);
 				} else {
 					// hide input for new location
-					if (hideInputForNewLocation(true) && getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-						shringSpinner(false);
-					}
+					setVisibleNewLocation(newIconSpinner, newLocation, false);
 				}
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				hideInputForNewLocation(true);
+				setVisibleNewLocation(newIconSpinner, newLocation, false);
 			}
 		});
 
@@ -133,10 +127,10 @@ public class SetupDeviceFragment extends TrackFragment {
 		LocationArrayAdapter dataAdapter = new LocationArrayAdapter(mActivity, locations);
 		spinner.setAdapter(dataAdapter);
 
-		TextView name = (TextView) mView.findViewById(R.id.module_setup_header_name);
+		TextView name = (TextView) view.findViewById(R.id.device_setup_header_name);
 		name.setText(mNewDevice.getName(mActivity));
 
-		TextView manufacturer = (TextView) mView.findViewById(R.id.module_setup_header_manufacturer);
+		TextView manufacturer = (TextView) view.findViewById(R.id.device_setup_header_manufacturer);
 		manufacturer.setText(getString(mNewDevice.getType().getManufacturerRes()));
 
 		// UserSettings can be null when user is not logged in!
@@ -147,60 +141,77 @@ public class SetupDeviceFragment extends TrackFragment {
 			Gate gate = controller.getGatesModel().getGate(mNewDevice.getGateId());
 
 			// Set involved time of device
-			TextView time = (TextView) mView.findViewById(R.id.module_setup_info_text);
+			TextView time = (TextView) view.findViewById(R.id.device_setup_info_text);
 			time.setText(String.format("%s %s", time.getText(), timeHelper.formatLastUpdate(mNewDevice.getPairedTime(), gate)));
 		}
+
+
+		Button button = (Button) view.findViewById(R.id.device_setup_save_button);
+		button.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				Location location;
+				if (spinner.getSelectedItemPosition() == spinner.getCount() - 1) {
+					// last location - means new one, so check its name
+					if (newLocation == null || newLocation.length() < 1) {
+						Toast.makeText(mActivity, getString(R.string.device_setup_toast_need_module_location_name), Toast.LENGTH_LONG).show();
+						return;
+					}
+					if ((newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).equals(Location.LocationIcon.UNKNOWN)) {
+						Toast.makeText(mActivity, getString(R.string.activity_module_edit_setup_device_toast_location_icon), Toast.LENGTH_LONG).show();
+						return;
+					}
+
+					location = new Location(Location.NEW_LOCATION_ID, newLocation.getText().toString(), mGateId, ((Location.LocationIcon) newIconSpinner.getAdapter().getItem(newIconSpinner.getSelectedItemPosition())).getId());
+				} else {
+					location = (Location) spinner.getSelectedItem();
+				}
+
+				// Set location to device
+				mNewDevice.setLocationId(location.getId());
+
+				// Save that device
+				Log.d(TAG, String.format("InitializeDevice - device: %s, loc: %s", mNewDevice.getId(), location.getId()));
+				doInitializeDeviceTask(new Device.DataPair(mNewDevice, location, true));
+			}
+		});
 	}
 
 	/**
-	 * Method take needed inputs and switch visibility
+	 * Method to switch visibility new location spinner and editText
 	 *
-	 * @param hide items is hidden if true, visible otherwise
-	 * @return true if is item hidden
+	 * @param visible items is visible if true, hidden otherwise
 	 */
-	private boolean hideInputForNewLocation(boolean hide) {
-		EditText newLocation = (EditText) mView.findViewById(R.id.module_setup_new_location_name);
-
-		Spinner newIconSpinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon);
-
-		// first call need to add gate
-		newIconSpinner.setAdapter(new LocationIconAdapter(mActivity));
-
-		int visibility = (hide ? View.GONE : View.VISIBLE);
+	private void setVisibleNewLocation(Spinner newIconSpinner, EditText newLocation, boolean visible) {
+		int visibility = visible ? View.VISIBLE : View.GONE;
 		newLocation.setVisibility(visibility);
 		newIconSpinner.setVisibility(visibility);
-
-		return hide;
 	}
 
-	private boolean shringSpinner(boolean shrink) {
-		Spinner spinner = (Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location);
-		LayoutParams params = (LayoutParams) spinner.getLayoutParams();
-		if (shrink)
-			params.width = 180;
-		else
-			params.width = LayoutParams.MATCH_PARENT;
-		spinner.setLayoutParams(params);
-		return false;
-	}
+	private void doInitializeDeviceTask(final Device.DataPair pair) {
+		SaveDeviceTask initializeDeviceTask = new SaveDeviceTask(mActivity);
 
-	@Nullable
-	public Spinner getSpinner() {
-		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_location));
-	}
+		initializeDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 
-	@Nullable
-	public TextView getNewLocation() {
-		return ((EditText) mView.findViewById(R.id.module_setup_new_location_name));
-	}
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					Toast.makeText(mActivity, R.string.device_setup_toast_new_module_added, Toast.LENGTH_LONG).show();
 
-	@Nullable
-	public Spinner getNewIconSpinner() {
-		return ((Spinner) mView.findViewById(R.id.module_setup_spinner_choose_new_location_icon));
-	}
+					Intent intent = new Intent();
+					intent.putExtra(Constants.SETUP_DEVICE_ACT_LOC, pair.location.getId());
+					mActivity.setResult(Activity.RESULT_OK, intent);
+					//HIDE keyboard
+					InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+					mActivity.finish();
+				}
+			}
 
-	public int getDeviceIndex() {
-		return mDeviceIndex;
-	}
+		});
 
+		// Execute and remember task so it can be stopped automatically
+		mActivity.callbackTaskManager.executeTask(initializeDeviceTask, pair, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
+	}
 }
