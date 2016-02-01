@@ -1,6 +1,9 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.view.MenuItem;
@@ -8,6 +11,10 @@ import android.view.MenuItem;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddDeviceFragment;
 import com.rehivetech.beeeon.gui.fragment.SearchDeviceFragment;
+import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public class AddDeviceActivity extends BaseApplicationActivity {
 
@@ -15,6 +22,12 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_ACTION_STATE = "action_state";
+	public static final String EXTRA_DEVICE_INDEX = "device_index";
+
+	@IntDef({ACTION_INITIAL, ACTION_SEARCH, ACTION_SETUP})
+	@Retention(RetentionPolicy.CLASS)
+
+	public @interface AddDeviceActivityState {}
 
 	public static final int ACTION_INITIAL = 0;
 	public static final int ACTION_SEARCH = 1;
@@ -22,6 +35,15 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 
 	@StringRes
 	private int mToolbarTitleRes;
+
+	public static Intent prepareAddDeviceActivityIntent(Context context, String gateId,@AddDeviceActivityState int state, int newDeviceIndex) {
+		Intent intent = new Intent(context, AddDeviceActivity.class);
+		intent.putExtra(EXTRA_GATE_ID, gateId);
+		intent.putExtra(EXTRA_ACTION_STATE, state);
+		intent.putExtra(EXTRA_DEVICE_INDEX, newDeviceIndex);
+
+		return intent;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +55,9 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 
 		String gateId = args.getString(EXTRA_GATE_ID);
 		int action = args.getInt(EXTRA_ACTION_STATE);
+		int deviceIndex = args.getInt(EXTRA_DEVICE_INDEX);
 
-		Fragment fragment = null;
+		Fragment fragment;
 		switch (action) {
 			case ACTION_INITIAL:
 				fragment = AddDeviceFragment.newInstance(gateId);
@@ -45,7 +68,7 @@ public class AddDeviceActivity extends BaseApplicationActivity {
 				mToolbarTitleRes = R.string.device_search_title;
 				break;
 			case ACTION_SETUP:
-
+				fragment = SetupDeviceFragment.newInstance(gateId, deviceIndex);
 				break;
 			default:
 				throw new UnsupportedOperationException("AddDeviceActivity - unsupported action");

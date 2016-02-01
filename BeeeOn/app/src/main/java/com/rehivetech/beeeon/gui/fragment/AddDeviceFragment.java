@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
@@ -53,10 +54,17 @@ public class AddDeviceFragment extends BaseApplicationFragment {
 		return view;
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == Activity.RESULT_OK) {
+			mActivity.setResult(Activity.RESULT_OK);
+			mActivity.finish();
+		}
+	}
+
 	private void startActivityForDeviceSearch() {
-		Intent intent = new Intent(mActivity, AddDeviceActivity.class);
-		intent.putExtra(AddDeviceActivity.EXTRA_GATE_ID, mGateId);
-		intent.putExtra(AddDeviceActivity.EXTRA_ACTION_STATE, AddDeviceActivity.ACTION_SEARCH);
-		mActivity.startActivity(intent);
+		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SEARCH, 0);
+		startActivityForResult(intent, 0);
 	}
 }
