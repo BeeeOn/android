@@ -291,6 +291,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 				break;
 			case DIALOG_CODE_MANUAL:
+				if (mHandler != null) {
+					mHandler.removeCallbacksAndMessages(null);
+				}
 				mAdapter.clearData();
 				mCountDownTimeElapsed = 0;
 				startPairing(dialogText);

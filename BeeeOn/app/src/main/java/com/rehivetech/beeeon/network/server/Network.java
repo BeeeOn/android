@@ -612,6 +612,11 @@ public class Network implements INetwork {
 		return true;
 	}
 
+	@Override
+	public boolean devices_createParameter(Device device, String key, String value){
+		processCommunication(XmlCreator.Devices.createParameter(mSessionId, device, key, value));
+		return true;
+	}
 
 	/**************************************************************************
 	 * GATES

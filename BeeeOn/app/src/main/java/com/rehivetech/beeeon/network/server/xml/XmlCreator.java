@@ -443,6 +443,57 @@ public class XmlCreator {
 				throw AppException.wrap(e, ClientError.XML);
 			}
 		}
+
+		/**
+		 * Sends creating device parameter
+		 *
+		 * @param sessionId userId
+		 * @param device    specified device
+		 * @param key       parameter key
+		 * @param value     parameter value
+		 * @return
+		 */
+		public static Request createParameter(String sessionId, Device device, String key, String value) {
+			try {
+				Request req = beginXml("createParameter", sessionId, XmlParser.Result.OK);
+				req.addAttribute("gateid", device.getGateId());
+
+				req.addTag("device",
+						"euid", device.getAddress(),
+						"parameterkey", key,
+						"parametervalue", value
+				);
+
+				return req.endXml();
+			} catch (IOException e) {
+				throw AppException.wrap(e, ClientError.XML);
+			}
+		}
+
+		/**
+		 * Sends getting device parameter
+		 *
+		 * @param sessionId userId
+		 * @param device    specified device
+		 * @param key       parameter key
+		 * @return
+		 */
+		public static Request getParameter(String sessionId, Device device, String key) {
+			try {
+				Request req = beginXml("createParameter", sessionId, XmlParser.Result.DATA);
+				req.addAttribute("gateid", device.getGateId());
+
+				req.addTag("device",
+						"euid", device.getAddress(),
+						"parameterkey", key
+				);
+
+				return req.endXml();
+			} catch (IOException e) {
+				throw AppException.wrap(e, ClientError.XML);
+			}
+		}
+
 	}
 
 	public static class Gates {

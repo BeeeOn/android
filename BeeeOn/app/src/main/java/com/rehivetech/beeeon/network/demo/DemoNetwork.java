@@ -313,6 +313,12 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean devices_createParameter(Device device, String key, String value) {
+		return false;
+		// TODO
+	}
+
+	@Override
 	public List<Device> devices_get(List<Device> devices) {
 		List<Device> result = new ArrayList<>();
 

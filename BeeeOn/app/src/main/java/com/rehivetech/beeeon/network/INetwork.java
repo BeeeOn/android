@@ -193,6 +193,14 @@ public interface INetwork {
 	 */
 	boolean devices_unregister(Device device);
 
+	/**
+	 * Method for creating device parameter to server
+	 * @param device
+	 * @param key of parameter
+	 * @param value of parameter
+	 * @return success
+	 */
+	boolean devices_createParameter(Device device, String key, String value);
 
 	/**************************************************************************
 	 * GATES
