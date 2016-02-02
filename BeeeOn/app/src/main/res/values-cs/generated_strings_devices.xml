@@ -31,7 +31,7 @@
 	<string name="devices__ja_83m_magnetic_door_contact_state_opened">Otevřeno</string>
 	<string name="devices__ja_83m_magnetic_door_contact_state_unknown">Nezjištěno</string>
 	<string name="devices__manual_offset_ekviterm_curve">Posun ekvitermní křivky</string>
-	<string name="devices__manual_requested_room_temperature">Žádaná teplota místnosti</string>
+	<string name="devices__manual_requested_room_temperature">Žádaná teplota v místnosti</string>
 	<string name="devices__manual_requested_tuv_temperature">Žádaná teplota TUV</string>
 	<string name="devices__manual_requested_water_temperature">Žádaná teplota vody</string>
 	<string name="devices__manufacturer_but">VUT</string>
@@ -50,14 +50,14 @@
 	<string name="devices__mod_current_boiler_pressure">Tlak v topné soustavě</string>
 	<string name="devices__mod_current_ip_address">IP adresa</string>
 	<string name="devices__mod_current_outside_temperature">Venkovní teplota</string>
-	<string name="devices__mod_current_requested_water_temperature">Aktuálni žádaná teplota vody</string>
-	<string name="devices__mod_current_room_temperature">Aktuální teplota místnosti</string>
+	<string name="devices__mod_current_requested_water_temperature">Aktuální žádaná teplota vody</string>
+	<string name="devices__mod_current_room_temperature">Aktuální teplota v místnosti</string>
 	<string name="devices__mod_current_water_temperature">Aktuální teplota vody</string>
 	<string name="devices__mod_maximal_water_temperature">Maximální teplota topné vody</string>
 	<string name="devices__mod_minimal_water_temperature">Minimální teplota topné vody</string>
 	<string name="devices__mod_outside_temperature">Teplota venkovní</string>
 	<string name="devices__mod_presence_status">Stav přítomnosti</string>
-	<string name="devices__mod_requested_room_temperature">Žádaná teplota místnosti</string>
+	<string name="devices__mod_requested_room_temperature">Aktuální žádaná teplota v místnosti</string>
 	<string name="devices__mod_requested_water_temperature">Žádaná teplota vody</string>
 	<string name="devices__mod_room_humidity">Vlhkost v místnosti</string>
 	<string name="devices__mod_room_temperature">Teplota místnosti</string>

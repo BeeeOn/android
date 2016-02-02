@@ -57,7 +57,7 @@
 	<string name="devices__mod_minimal_water_temperature">Minimal water temperature</string>
 	<string name="devices__mod_outside_temperature">Outside temperature</string>
 	<string name="devices__mod_presence_status">Presence status</string>
-	<string name="devices__mod_requested_room_temperature">Requested room temperature</string>
+	<string name="devices__mod_requested_room_temperature">Current requested room temperature</string>
 	<string name="devices__mod_requested_water_temperature">Requested water temperature</string>
 	<string name="devices__mod_room_humidity">Room humidity</string>
 	<string name="devices__mod_room_temperature">Room temperature</string>

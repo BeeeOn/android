@@ -19,6 +19,7 @@ public enum DeviceType implements IIdentifier {
 		}
 	},
 
+	/** BEGIN OF GENERATED CONTENT **/
 	TYPE_0("0", "BeeeOn v1.0", R.string.devices__dev_temperature_humidity, R.string.devices__manufacturer_but) {
 		@Override
 		public List<Module> createModules(Device device) {
@@ -190,8 +191,8 @@ public enum DeviceType implements IIdentifier {
 							new Module.Rule(0, new int[] {1, 2, 3, 5, 6, 7, 11, 12, 13, 65, 73, 74, 75, 76}),
 							new Module.Rule(1, new int[] {6, 7, 74, 75}),
 							new Module.Rule(2, new int[] {6, 7, 74, 75}),
-							new Module.Rule(3, new int[] {2, 6, 7, 73, 75, 76}),
-							new Module.Rule(4, new int[] {2, 65, 73, 74, 76})
+							new Module.Rule(3, new int[] {2, 5, 6, 7, 73, 75, 76}),
+							new Module.Rule(4, new int[] {2, 5, 65, 73, 74, 76})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -224,13 +225,13 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "73", 0x02, 3, R.string.devices__zone_1, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
 					new Module(device, "74", 0x02, 6, R.string.devices__zone_1, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
 					new Module(device, "75", 0x02, 7, R.string.devices__zone_1, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "76", 0x0C, 8, R.string.devices__zone_1, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
+					new Module(device, "76", 0x02, 8, R.string.devices__zone_1, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
 					new Module(device, "14", 0x01, 61, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {15, 16, 17, 19, 20, 21, 25, 26, 27, 66, 77, 78, 79, 80}),
 							new Module.Rule(1, new int[] {20, 21, 78, 79}),
 							new Module.Rule(2, new int[] {20, 21, 78, 79}),
-							new Module.Rule(3, new int[] {16, 20, 21, 77, 79, 80}),
-							new Module.Rule(4, new int[] {16, 66, 77, 78, 80})
+							new Module.Rule(3, new int[] {16, 19, 20, 21, 77, 79, 80}),
+							new Module.Rule(4, new int[] {16, 19, 66, 77, 78, 80})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -263,13 +264,13 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "77", 0x02, 53, R.string.devices__zone_2, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
 					new Module(device, "78", 0x02, 56, R.string.devices__zone_2, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
 					new Module(device, "79", 0x02, 57, R.string.devices__zone_2, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "80", 0x0C, 58, R.string.devices__zone_2, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
+					new Module(device, "80", 0x02, 58, R.string.devices__zone_2, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
 					new Module(device, "28", 0x01, 111, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {29, 30, 31, 33, 34, 35, 39, 40, 41, 67, 81, 82, 83, 84}),
 							new Module.Rule(1, new int[] {34, 35, 82, 83}),
 							new Module.Rule(2, new int[] {34, 35, 82, 83}),
-							new Module.Rule(3, new int[] {30, 34, 35, 81, 83, 84}),
-							new Module.Rule(4, new int[] {30, 67, 81, 82, 84})
+							new Module.Rule(3, new int[] {30, 33, 34, 35, 81, 83, 84}),
+							new Module.Rule(4, new int[] {30, 33, 67, 81, 82, 84})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -302,13 +303,13 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "81", 0x02, 103, R.string.devices__zone_3, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
 					new Module(device, "82", 0x02, 106, R.string.devices__zone_3, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
 					new Module(device, "83", 0x02, 107, R.string.devices__zone_3, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "84", 0x0C, 108, R.string.devices__zone_3, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
+					new Module(device, "84", 0x02, 108, R.string.devices__zone_3, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
 					new Module(device, "42", 0x01, 161, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {43, 44, 45, 47, 48, 49, 53, 54, 55, 68, 85, 86, 87, 88}),
 							new Module.Rule(1, new int[] {48, 49, 86, 87}),
 							new Module.Rule(2, new int[] {48, 49, 86, 87}),
-							new Module.Rule(3, new int[] {44, 48, 49, 85, 87, 88}),
-							new Module.Rule(4, new int[] {44, 68, 85, 86, 88})
+							new Module.Rule(3, new int[] {44, 47, 48, 49, 85, 87, 88}),
+							new Module.Rule(4, new int[] {44, 47, 68, 85, 86, 88})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -341,7 +342,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "85", 0x02, 153, R.string.devices__zone_4, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
 					new Module(device, "86", 0x02, 156, R.string.devices__zone_4, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
 					new Module(device, "87", 0x02, 157, R.string.devices__zone_4, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "88", 0x0C, 158, R.string.devices__zone_4, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
+					new Module(device, "88", 0x02, 158, R.string.devices__zone_4, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
 					new Module(device, "56", 0x01, 206, R.string.devices__boiler, R.string.devices__mod_boiler_status, false, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_status_undefined),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_status_heating),
@@ -354,12 +355,12 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_mode_on),
 							new EnumValue.Item(2, "2", R.string.devices__val_boiler_mode_off)
 					), null),
-					new Module(device, "58", 0x02, 200, R.string.devices__boiler, R.string.devices__mod_current_water_temperature, false, null, new BaseValue.Constraints(20.0, 120.0, 1.0), null),
-					new Module(device, "59", 0x02, 201, R.string.devices__boiler, R.string.devices__mod_current_outside_temperature, false, null, new BaseValue.Constraints(-50.0, 60.0, 1.0), null),
-					new Module(device, "60", 0x02, 202, R.string.devices__boiler, R.string.devices__mod_average_outside_temperature, false, null, new BaseValue.Constraints(-40.0, 40.0, 1.0), null),
-					new Module(device, "61", 0x03, 204, R.string.devices__boiler, R.string.devices__mod_current_boiler_performance, false, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
-					new Module(device, "62", 0x04, 203, R.string.devices__boiler, R.string.devices__mod_current_boiler_pressure, false, null, new BaseValue.Constraints(0.0, 10.0, 0.02), null),
-					new Module(device, "63", 0x0B, 207, R.string.devices__boiler, R.string.devices__mod_current_boiler_error, false, null, null)
+					new Module(device, "58", 0x02, -10, R.string.devices__boiler, R.string.devices__mod_current_water_temperature, false, null, new BaseValue.Constraints(20.0, 120.0, 1.0), null),
+					new Module(device, "59", 0x02, -9, R.string.devices__boiler, R.string.devices__mod_current_outside_temperature, false, null, new BaseValue.Constraints(-50.0, 60.0, 1.0), null),
+					new Module(device, "60", 0x02, -8, R.string.devices__boiler, R.string.devices__mod_average_outside_temperature, false, null, new BaseValue.Constraints(-40.0, 40.0, 1.0), null),
+					new Module(device, "61", 0x03, -7, R.string.devices__boiler, R.string.devices__mod_current_boiler_performance, false, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
+					new Module(device, "62", 0x04, -6, R.string.devices__boiler, R.string.devices__mod_current_boiler_pressure, false, null, new BaseValue.Constraints(0.0, 10.0, 0.02), null),
+					new Module(device, "63", 0x0B, -5, R.string.devices__boiler, R.string.devices__mod_current_boiler_error, false, null, null)
 			);
 		}
 	},
@@ -424,7 +425,7 @@ public enum DeviceType implements IIdentifier {
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1453745751557l;
+	public static final long DEVICES_DATE = 1454444892265l;
 
 	/** END OF GENERATED CONTENT **/
 
