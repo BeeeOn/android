@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
@@ -41,7 +43,7 @@ import java.util.List;
 /**
  * Created by martin on 15.11.15.
  */
-public class DashboardAdapter extends RecyclerView.Adapter {
+public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	private static final String TAG = DashboardAdapter.class.getSimpleName();
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
@@ -52,10 +54,13 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 	private final TimeHelper mTimeHelper;
 
 	private BaseApplicationActivity mActivity;
+	private IItemClickListener mItemClickListener;
 	private List<BaseItem> mItems = new ArrayList<>();
 
-	public DashboardAdapter(BaseApplicationActivity context) {
-		mActivity = context;
+	public DashboardAdapter(BaseApplicationActivity activity, IItemClickListener itemClickListener) {
+		super(activity);
+		mActivity = activity;
+		mItemClickListener = itemClickListener;
 
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
@@ -103,7 +108,7 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 		int viewType = holder.getItemViewType();
 		switch (viewType) {
 			case VIEW_TYPE_GRAPH:
-				((DashboardGraphViewHolder) holder).bind(controller, (GraphItem) item);
+				((DashboardGraphViewHolder) holder).bind(controller, (GraphItem) item, position);
 				break;
 			case VIEW_TYPE_ACT_VALUE: {
 				((ActualValueViewHolder) holder).bind(controller, (ActualValueItem) item);
@@ -118,19 +123,35 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 		return mItems.size();
 	}
 
-	public class DashboardGraphViewHolder extends RecyclerView.ViewHolder {
+
+	public BaseItem getItem(int position) {
+		return mItems.get(position);
+	}
+
+	public void deleteItem(int position) {
+		mItems.remove(position);
+		notifyItemRemoved(position);
+	}
+
+
+	public class DashboardGraphViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener{
 		public final TextView mGraphName;
 		public final LineChart mChart;
 		public final TextView mLastUpdate;
+		public final View mRoot;
 
 		public DashboardGraphViewHolder(View itemView) {
 			super(itemView);
+			mRoot = itemView;
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_graph_name);
 			mChart = (LineChart) itemView.findViewById(R.id.dashboard_item_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_graph_last_update_value);
+
+			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
 		}
 
-		public void bind(Controller controller, GraphItem item) {
+		public void bind(Controller controller, GraphItem item, int position) {
 			Gate gate = controller.getGatesModel().getGate(item.getGateId());
 			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceIds().get(0));
 
@@ -144,6 +165,8 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			mChart.clear();
 			prepareChart(item);
 			fillChart(controller, item, gate);
+
+			setSelected(isSelected(position));
 		}
 
 		private void prepareChart(GraphItem item) {
@@ -156,6 +179,8 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 			} else {
 				mChart.getAxisRight().setEnabled(false);
 			}
+
+			mChart.setOnTouchListener(null);
 		}
 
 		private void fillChart(Controller controller, GraphItem item, Gate gate) {
@@ -187,6 +212,28 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 
 				axisDependency = YAxis.AxisDependency.RIGHT;
 			}
+		}
+
+
+		@Override
+		protected void setSelectedBackground(boolean isSelected) {
+			if (isSelected) {
+				mRoot.setBackgroundResource(R.color.gray_material_400);
+			}
+		}
+
+		@Override
+		public void onClick(View v) {
+
+		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			if(mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
+				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -224,6 +271,11 @@ public class DashboardAdapter extends RecyclerView.Adapter {
 		mItems.add(item);
 
 		notifyItemRangeInserted(0, mItems.size());
+	}
+
+	public void addItem(int position, BaseItem item) {
+		mItems.add(position, item);
+		notifyItemInserted(position);
 	}
 
 	public List<BaseItem> getItems() {

@@ -2,17 +2,27 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
+import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
+import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 
@@ -23,7 +33,7 @@ import java.util.List;
 /**
  * Created by martin on 15.11.15.
  */
-public class DashboardFragment extends BaseApplicationFragment {
+public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener{
 
 	private static final String TAG = DashboardFragment.class.getSimpleName();
 
@@ -33,6 +43,7 @@ public class DashboardFragment extends BaseApplicationFragment {
 
 	private String mGateId;
 	private DashboardAdapter mAdapter;
+	private ActionMode mActionMode;
 
 	public static DashboardFragment newInstance(String gateId) {
 
@@ -68,7 +79,7 @@ public class DashboardFragment extends BaseApplicationFragment {
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
 		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 
-		mAdapter = new DashboardAdapter(mActivity);
+		mAdapter = new DashboardAdapter(mActivity, this);
 		recyclerView.setAdapter(mAdapter);
 
 		FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.dashboard_add_graph);
@@ -131,5 +142,68 @@ public class DashboardFragment extends BaseApplicationFragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		Controller controller = Controller.getInstance(mActivity);
+		controller.saveDashboardItems(controller.getActualUser().getId(), mAdapter.getItems());
+	}
+
+	@Override
+	public void onRecyclerViewItemClick(int position, int viewType) {
+
+	}
+
+	@Override
+	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
+		if (mActionMode == null) {
+			mActionMode = mActivity.startSupportActionMode(new ActionModeDashboard());
+			mActivity.setStatusBarColor(Color.GRAY);
+		}
+		mAdapter.toggleSelection(position);
+		return true;
+	}
+
+	private class ActionModeDashboard implements ActionMode.Callback {
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.actionmode_delete, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			if (item.getItemId() == R.id.action_delete) {
+				final int firstSelected = mAdapter.getFirstSelectedItem();
+
+				if (mActionMode != null) {
+					mActionMode.finish();
+				}
+				if (mAdapter.getItemViewType(firstSelected) == DeviceRecycleAdapter.TYPE_DEVICE) {
+					final BaseItem dashboardItem = mAdapter.getItem(firstSelected);
+					mAdapter.deleteItem(firstSelected);
+					Snackbar.make(getView(), R.string.dashboard_delete_snackbar, Snackbar.LENGTH_LONG)
+							.setAction(R.string.dashboard_undo, new View.OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									mAdapter.addItem(firstSelected, dashboardItem);
+								}
+							})
+					.show();
+				}
+			}
+			return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mAdapter.clearSelection();
+			mActionMode = null;
+			mActivity.setStatusBarColor(ContextCompat.getColor(mActivity, R.color.beeeon_primary_dark));
+		}
 	}
 }

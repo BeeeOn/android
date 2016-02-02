@@ -170,5 +170,9 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	}
 
+	public interface IItemClickListener {
+		void onRecyclerViewItemClick(int position, int viewType);
+		boolean onRecyclerViewItemLongClick(int position, int viewType);
+	}
 
 }

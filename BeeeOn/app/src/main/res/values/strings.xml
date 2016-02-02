@@ -450,5 +450,11 @@
 
 	<!--Dashboard-->
 	<string name="dashboard_fab_add_graph">Add graph</string>
+	<string name="dashboard_add_graph_name_hint">Graph name</string>
+	<string name="dashboard_add_graph_left_axis_label">Select left axis module</string>
+	<string name="dashboard_add_graph_right_axis_label">Select right axis module</string>
+	<string name="dashboard_add_graph_graph_range_label">Select graph range</string>
+	<string name="dashboard_delete_snackbar">Card was deleted</string>
+	<string name="dashboard_undo">Undo</string>
 </resources>
 

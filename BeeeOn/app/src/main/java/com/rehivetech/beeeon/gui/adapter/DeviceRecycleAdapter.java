@@ -285,8 +285,5 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 		}
 	}
 
-	public interface IItemClickListener {
-		void onRecyclerViewItemClick(int position, int viewType);
-		boolean onRecyclerViewItemLongClick(int position, int viewType);
-	}
+
 }
