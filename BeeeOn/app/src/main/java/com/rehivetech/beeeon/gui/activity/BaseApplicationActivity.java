@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -286,5 +288,15 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 				return true;
 			}
 		});
+	}
+
+	/**
+	 * Set's status bar color programmatically
+	 * @param statusBarColor
+	 */
+	public void setStatusBarColor(@ColorInt int statusBarColor) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().setStatusBarColor(statusBarColor);
+		}
 	}
 }
