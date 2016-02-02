@@ -1,52 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
-	<android.support.design.widget.TextInputLayout
-		android:id="@+id/fragment_add_dashboard_item_text_input"
+	<ScrollView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="match_parent">
 
-		<EditText
-			android:id="@+id/fragment_add_dashboard_item_graph_name_edit_text"
+		<RelativeLayout
+			android:orientation="vertical"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:hint="Graph name"/>
-	</android.support.design.widget.TextInputLayout>
+			android:layout_marginLeft="@dimen/space_big"
+			android:layout_marginRight="@dimen/space_big"
+			android:layout_marginTop="@dimen/space_big"
+			android:paddingBottom="?attr/actionBarSize">
 
-	<TextView
-		android:id="@+id/fragment_add_dashboard_item_left_axis_label"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/fragment_add_dashboard_item_text_input"
-		android:text="Select left axis module"/>
+			<android.support.design.widget.TextInputLayout
+				android:id="@+id/fragment_add_dashboard_item_text_input"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
 
-	<Spinner
-		android:id="@+id/fragment_add_dashboard_item_left_axis_spinner"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/fragment_add_dashboard_item_left_axis_label"/>
+				<EditText
+					android:id="@+id/fragment_add_dashboard_item_graph_name_edit_text"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:hint="@string/dashboard_add_graph_name_hint"/>
+			</android.support.design.widget.TextInputLayout>
 
-	<TextView
-		android:id="@+id/fragment_add_dashboard_item_right_axis_label"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Select right axis module"
-		android:layout_below="@id/fragment_add_dashboard_item_left_axis_spinner"/>
+			<TextView
+				android:id="@+id/fragment_add_dashboard_item_left_axis_label"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/space_big"
+				android:layout_below="@id/fragment_add_dashboard_item_text_input"
+				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+				android:text="@string/dashboard_add_graph_left_axis_label"/>
 
-	<Spinner
-		android:id="@+id/fragment_add_dashboard_item_right_axis_spinner"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_below="@id/fragment_add_dashboard_item_right_axis_label"/>
+			<Spinner
+				android:id="@+id/fragment_add_dashboard_item_left_axis_spinner"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/fragment_add_dashboard_item_left_axis_label"/>
+
+			<TextView
+				android:id="@+id/fragment_add_dashboard_item_right_axis_label"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/space_big"
+				android:text="@string/dashboard_add_graph_right_axis_label"
+				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+				android:layout_below="@id/fragment_add_dashboard_item_left_axis_spinner"/>
+
+			<Spinner
+				android:id="@+id/fragment_add_dashboard_item_right_axis_spinner"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/fragment_add_dashboard_item_right_axis_label"/>
+
+
+			<TextView
+				android:id="@+id/fragment_add_dashboard_item_graph_range_label"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/space_big"
+				android:text="@string/dashboard_add_graph_graph_range_label"
+				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+				android:layout_below="@id/fragment_add_dashboard_item_right_axis_spinner"/>
+
+			<Spinner
+				android:id="@+id/fragment_add_dashboard_item_graph_range_spinner"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_below="@id/fragment_add_dashboard_item_graph_range_label"/>
+
+		</RelativeLayout>
+	</ScrollView>
 
 	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="?attr/actionBarSize"
-		android:layout_alignParentBottom="true"
+		android:layout_gravity="bottom"
 		android:background="@color/beeeon_primary">
 
 		<Button
@@ -59,4 +95,4 @@
 			android:textColor="@color/white"/>
 
 	</FrameLayout>
-</RelativeLayout>
+</FrameLayout>

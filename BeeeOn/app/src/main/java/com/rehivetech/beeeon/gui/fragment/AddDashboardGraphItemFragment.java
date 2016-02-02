@@ -34,6 +34,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 	private EditText mGraphNameEditText;
 	private Spinner mLeftAxisSpinner;
 	private Spinner mRightAxisSpinner;
+	private Spinner mGraphRangeSpinner;
 
 	private Button mButtonDone;
 
@@ -66,6 +67,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 		mGraphNameEditText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_graph_name_edit_text);
 		mLeftAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_left_axis_spinner);
 		mRightAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_right_axis_spinner);
+		mGraphRangeSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_graph_range_spinner);
 		mButtonDone = (Button) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 
 		return view;
@@ -77,31 +79,40 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 
 		ArrayAdapter<SpinnerHolder> leftAxisAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item);
 		ArrayAdapter<SpinnerHolder> rightAxisAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item);
+		ArrayAdapter<String> graphRangeAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item);
 
 		final Controller controller = Controller.getInstance(mActivity);
 
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
 
+		rightAxisAdapter.add(new SpinnerHolder(null, null));
 		for (Device device : devices) {
-			for (Module module : device.getAllModules(false)) {
+			for (Module module : device.getVisibleModules()) {
 				leftAxisAdapter.add(new SpinnerHolder(device, module));
 				rightAxisAdapter.add(new SpinnerHolder(device, module));
 			}
 		}
 
+		for (int range : ChartHelper.ALL_RANGES) {
+			graphRangeAdapter.add(getString(ChartHelper.getIntervalString(range)));
+		}
+
 		mLeftAxisSpinner.setAdapter(leftAxisAdapter);
 		mRightAxisSpinner.setAdapter(rightAxisAdapter);
+		mGraphRangeSpinner.setAdapter(graphRangeAdapter);
 
 		mButtonDone.setOnClickListener(new View.OnClickListener() {
+
 			@Override
+			@SuppressWarnings("ResourceType")
 			public void onClick(View v) {
 				SpinnerHolder leftItem = ((SpinnerHolder) mLeftAxisSpinner.getSelectedItem());
 				SpinnerHolder rightItem = ((SpinnerHolder) mRightAxisSpinner.getSelectedItem());
 
 				List<String> deviceIds = Arrays.asList(leftItem.getDevice().getId(), rightItem.getDevice().getId());
 				List<String> moduleIds = Arrays.asList(leftItem.getModule().getId(), rightItem.getModule().getId());
-				GraphItem graphItem = new GraphItem(mGraphNameEditText.getText().toString(), mGateId, deviceIds, moduleIds, ChartHelper.RANGE_HOUR);
+				GraphItem graphItem = new GraphItem(mGraphNameEditText.getText().toString(), mGateId, deviceIds, moduleIds, ChartHelper.ALL_RANGES[mGraphRangeSpinner.getSelectedItemPosition()]);
 
 				Intent data = new Intent();
 				data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, graphItem);
@@ -118,7 +129,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 		private Device mDevice;
 		private Module mModule;
 
-		public SpinnerHolder(Device device, Module module) {
+		public SpinnerHolder(@Nullable Device device, @Nullable Module module) {
 			mDevice = device;
 			mModule = module;
 		}
@@ -133,6 +144,9 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 
 		@Override
 		public String toString() {
+			if (mDevice == null || mModule == null) {
+				return "";
+			}
 			return String.format("%s - %s", mDevice.getName(mActivity), mModule.getName(mActivity));
 		}
 	}
