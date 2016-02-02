@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * Created by martin on 28.1.16.
  */
-public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ManualSearchDialog.ManualSearchDialogListener{
+public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ManualSearchDialog.ManualSearchDialogListener {
 	private static final String TAG = SearchDeviceFragment.class.getSimpleName();
 
 	private static final long COUNTDOWN_INTERVAL = DateUtils.MINUTE_IN_MILLIS * 2;
@@ -125,7 +125,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		super.onResume();
 
 		if (mCountDownTimeElapsed != COUNTDOWN_INTERVAL) {
-			startPairing();
+			startAutomaticPairing();
 		} else {
 			mCountDownText.setText(convertMillisToText(0));
 			Snackbar.make(mRootView, R.string.device_search_snack_bar_title_search_end, Snackbar.LENGTH_INDEFINITE)
@@ -134,7 +134,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 						public void onClick(View v) {
 							mAdapter.clearData();
 							mCountDownTimeElapsed = 0;
-							startPairing();
+							startAutomaticPairing();
 						}
 					})
 					.show();
@@ -159,7 +159,11 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		}
 	}
 
-	private void startPairing() {
+	private void startAutomaticPairing(){
+		startPairing(null);
+	}
+
+	private void startPairing(@Nullable final String deviceIpAddress) {
 		mHandler = new Handler();
 		mHandler.post(new Runnable() {
 			@Override
@@ -174,7 +178,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 								public void onClick(View v) {
 									mAdapter.clearData();
 									mCountDownTimeElapsed = 0;
-									startPairing();
+									startPairing(deviceIpAddress);
 								}
 							})
 							.show();
@@ -182,7 +186,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 				}
 
 				if (mCountDownTimeElapsed < COUNTDOWN_INTERVAL && mCountDownTimeElapsed % PAIR_REQUEST_REPEAT_INTERVAL == 0) {
-					doPairRequestTask(mCountDownTimeElapsed < (DateUtils.SECOND_IN_MILLIS * 4));
+					doPairRequestTask(mCountDownTimeElapsed < (DateUtils.SECOND_IN_MILLIS * 4), deviceIpAddress);
 				}
 				mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
 			}
@@ -200,15 +204,15 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		return String.format("%2d:%02d", minutes, seconds);
 	}
 
-	private void doPairRequestTask(boolean sendPairRequest) {
+	private void doPairRequestTask(boolean sendPairRequest, String deviceIpAddress) {
 		// function creates and starts Task that handles pairing between the gate and the account
-		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId, sendPairRequest);
+		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId, sendPairRequest, deviceIpAddress);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 
 				if (success) {
-					List devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
+					List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 					updateAdapter(devices);
 				} else {
 					if (pairDeviceTask.getException() != null) {
@@ -272,6 +276,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onPositiveButtonClicked(String ipAddress) {
-		//TODO send request for manual search
+		startPairing(ipAddress);
 	}
 }

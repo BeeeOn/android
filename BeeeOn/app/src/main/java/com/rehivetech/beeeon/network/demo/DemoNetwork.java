@@ -303,6 +303,11 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean gates_search(String gateId, String deviceIpAddress) {
+		return isGateAllowed(gateId); // TODO I guess that is what should be
+	}
+
+	@Override
 	public boolean devices_unregister(Device device) {
 		return mDevices.removeObject(device.getGateId(), device.getId()) != null;
 	}

@@ -536,8 +536,8 @@ public class XmlCreator {
 		/**
 		 * New method create XML of SetDevs message with only one module in it. toSave parameter must by set properly.
 		 *
-		 * @param bt   BeeeOn token (active session)
-		 * @param gate to save
+		 * @param bt      BeeeOn token (active session)
+		 * @param gate    to save
 		 * @param gpsData
 		 * @return SetGate message
 		 * @since 2.5
@@ -577,6 +577,20 @@ public class XmlCreator {
 
 				return req.endXml();
 			} catch (Exception e) {
+				throw AppException.wrap(e, ClientError.XML);
+			}
+		}
+
+		public static Request search(String bt, String gateId, @Nullable String deviceIpAddress) {
+			try {
+				Request req = beginXml("search", bt, XmlParser.Result.OK);
+				req.addTag("gate",
+						"id", gateId,
+						"deviceip", deviceIpAddress
+				);
+
+				return req.endXml();
+			} catch (IOException e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
 		}

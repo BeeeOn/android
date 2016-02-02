@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.threading.task;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
@@ -10,13 +11,23 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 public class PairDeviceTask extends CallbackTask<String> {
 	private final String mGateId;
 	private final boolean mSendPairRequest;
+	@Nullable private final String mDeviceIpAddress;
 
-	public PairDeviceTask(Context context, String GateId, boolean sendPairRequest) {
+	/**
+	 * Constructor for automatic pairing
+	 *
+	 * @param context
+	 * @param gateId
+	 * @param sendPairRequest
+	 * @param deviceIpAddress
+	 */
+	public PairDeviceTask(Context context, String gateId, boolean sendPairRequest, @Nullable String deviceIpAddress) {
 		super(context);
-		mGateId = GateId;
+		mGateId = gateId;
 		mSendPairRequest = sendPairRequest;
-
+		mDeviceIpAddress = deviceIpAddress;
 	}
+
 
 	@Override
 	protected Boolean doInBackground(String gateId) {
@@ -25,7 +36,7 @@ public class PairDeviceTask extends CallbackTask<String> {
 
 		if (mSendPairRequest) {
 			// Make pair request
-			controller.getGatesModel().sendPairRequest(mGateId);
+			controller.getGatesModel().sendPairRequest(mGateId, mDeviceIpAddress);
 		}
 
 		uninitializedDevicesModel.reloadUninitializedDevicesByGate(mGateId, true);

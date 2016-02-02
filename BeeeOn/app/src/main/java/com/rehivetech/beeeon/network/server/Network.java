@@ -658,13 +658,18 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	public boolean gates_search(String gateId, String deviceIpAddress) {
+		processCommunication(XmlCreator.Gates.search(mSessionId, gateId, deviceIpAddress));
+		return false;
+	}
+
+	@Override
 	public boolean gates_update(Gate gate, GpsData gpsData) {
 		processCommunication(
 				XmlCreator.Gates.update(mSessionId, gate, gpsData));
 
 		return true;
 	}
-
 
 	/**************************************************************************
 	 * GATEUSERS
