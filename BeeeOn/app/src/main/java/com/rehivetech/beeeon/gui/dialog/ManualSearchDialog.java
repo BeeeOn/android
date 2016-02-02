@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
  * Created by martin on 1.2.16.
  */
 public class ManualSearchDialog extends SimpleDialogFragment {
-	public static String TAG = "manual_search";
+	private static final String TAG = "manual_search";
 
 	private static final String IP_ADDRESS_PATTERN = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
@@ -28,9 +28,9 @@ public class ManualSearchDialog extends SimpleDialogFragment {
 		sPattern = Pattern.compile(IP_ADDRESS_PATTERN);
 	}
 
-	public static void show(FragmentActivity activity, Fragment fragment) {
+	public static void show(FragmentActivity activity, Fragment fragment, int requestCode) {
 		ManualSearchDialog dialog = new ManualSearchDialog();
-		dialog.setTargetFragment(fragment, 0);
+		dialog.setTargetFragment(fragment, requestCode);
 		dialog.show(activity.getSupportFragmentManager(), TAG);
 	}
 
@@ -50,16 +50,13 @@ public class ManualSearchDialog extends SimpleDialogFragment {
 				if (!validateInput(editText.getText().toString())) {
 					textInputLayout.setError(getString(R.string.device_search_manual_error));
 				} else {
-					for (ManualSearchDialogListener listener : ManualSearchDialog.this.getListeners()) {
-						listener.onPositiveButtonClicked(editText.getText().toString());
+					for (ManualSearchDialogListener listener : ManualSearchDialog.this.getDialogListeners(ManualSearchDialogListener.class)) {
+						listener.onPositiveButtonClicked(mRequestCode, editText.getText().toString());
 					}
 					dismiss();
 				}
 			}
 		});
-
-		setTargetFragment(getParentFragment(), 0);
-
 		return builder;
 	}
 
@@ -67,11 +64,8 @@ public class ManualSearchDialog extends SimpleDialogFragment {
 		return sPattern.matcher(inputString).matches();
 	}
 
-	protected List<ManualSearchDialogListener> getListeners() {
-		return this.getDialogListeners(ManualSearchDialogListener.class);
-	}
 
 	public interface ManualSearchDialogListener {
-		void onPositiveButtonClicked(String ipAddress);
+		void onPositiveButtonClicked(int requestCode, String ipAddress);
 	}
 }

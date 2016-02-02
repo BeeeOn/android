@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by martin on 28.1.16.
+ * @author Martin Matejcik
+ * @author Tomas Mlynaric
  */
-public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ManualSearchDialog.ManualSearchDialogListener {
+public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ManualSearchDialog.ManualSearchDialogListener, PasswordDialog.PasswordDialogListener {
 	private static final String TAG = SearchDeviceFragment.class.getSimpleName();
 
 	private static final long COUNTDOWN_INTERVAL = DateUtils.MINUTE_IN_MILLIS * 2;
@@ -44,6 +46,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	public static final String KEY_GATE_ID = "gate_id";
 
 	private static final String STATE_COUNTDOWN_TIME_ELAPSED = "countdown_time_elapsed";
+
+	private static final int DIALOG_CODE_MANUAL = 1;
+	private static final int DIALOG_CODE_PASSWORD = 2;
 
 	private String mGateId;
 
@@ -54,7 +59,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	private TextView mSearchingText;
 
 	private DeviceRecycleAdapter mAdapter;
-	private Handler mHandler;
+	@Nullable private Handler mHandler;
 	private long mCountDownTimeElapsed;
 
 	public static SearchDeviceFragment newInstance(String gateId) {
@@ -105,7 +110,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		mManualSearchButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ManualSearchDialog.show(mActivity, SearchDeviceFragment.this);
+				ManualSearchDialog.show(mActivity, SearchDeviceFragment.this, DIALOG_CODE_MANUAL);
 			}
 		});
 	}
@@ -147,7 +152,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 		outState.putLong(STATE_COUNTDOWN_TIME_ELAPSED, mCountDownTimeElapsed);
 		mActivity.callbackTaskManager.cancelAndRemoveAll();
-		mHandler.removeCallbacksAndMessages(null);
+		if (mHandler != null) {
+			mHandler.removeCallbacksAndMessages(null);
+		}
 	}
 
 	@Override
@@ -159,7 +166,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		}
 	}
 
-	private void startAutomaticPairing(){
+	private void startAutomaticPairing() {
 		startPairing(null);
 	}
 
@@ -217,7 +224,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 				} else {
 					if (pairDeviceTask.getException() != null) {
 						mActivity.callbackTaskManager.cancelAndRemoveAll();
-						mHandler.removeCallbacksAndMessages(null);
+						if (mHandler != null) {
+							mHandler.removeCallbacksAndMessages(null);
+						}
 						mActivity.finish();
 					}
 				}
@@ -259,8 +268,8 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		if (viewType == DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
 			Device device = (Device) mAdapter.getItem(position);
 
-			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
-				PasswordDialog.show(mActivity, SearchDeviceFragment.this);
+			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) { // TODO should be in DeviceType as parameter "password_protected"
+				PasswordDialog.show(mActivity, SearchDeviceFragment.this, DIALOG_CODE_PASSWORD);
 			} else {
 				Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
 				startActivityForResult(intent, 50);
@@ -275,7 +284,22 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	}
 
 	@Override
-	public void onPositiveButtonClicked(String ipAddress) {
-		startPairing(ipAddress);
+	public void onPositiveButtonClicked(int requestCode, String dialogText) {
+		switch (requestCode) {
+			case DIALOG_CODE_PASSWORD:
+
+
+				break;
+			case DIALOG_CODE_MANUAL:
+				mAdapter.clearData();
+				mCountDownTimeElapsed = 0;
+				startPairing(dialogText);
+				break;
+
+			default:
+				// not implemented
+				// TODO -> exception?
+				break;
+		}
 	}
 }
