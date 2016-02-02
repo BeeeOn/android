@@ -21,21 +21,17 @@
 		android:paddingBottom="?attr/actionBarSize"
 		/>
 
-	<android.support.v7.widget.CardView
-		android:layout_width="match_parent"
-		android:layout_height="?attr/actionBarSize"
-		app:cardBackgroundColor="@color/beeeon_primary"
-		app:cardElevation="@dimen/space_big"
-		app:cardCornerRadius="0dp"
-		android:layout_gravity="bottom">
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/device_setup_save_button"
+		style="@style/BeeeOn.Button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/space_big"
+		android:layout_gravity="bottom|center"
+		app:borderWidth="0dp"
+		app:fabSize="normal"
+		android:clickable="true"
+		android:src="@drawable/ic_content_save_white_24dp"
+		/>
 
-		<Button
-			android:id="@+id/device_setup_save_button"
-			android:theme="@style/BeeeOn.Button"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/activity_gate_user_setup_device_btn_save"
-			android:layout_gravity="center"/>
-
-	</android.support.v7.widget.CardView>
 </android.support.design.widget.CoordinatorLayout>
