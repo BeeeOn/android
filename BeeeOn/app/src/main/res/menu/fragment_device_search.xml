@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/device_search_manual_button"
+		android:title="@string/device_search_manual_button"
+		android:orderInCategory="100"
+		app:showAsAction="never"/>
+</menu>

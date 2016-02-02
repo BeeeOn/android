@@ -12,11 +12,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
@@ -54,7 +55,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 	private CoordinatorLayout mRootView;
 	private TextView mCountDownText;
-	private Button mManualSearchButton;
 	private RecyclerView mRecyclerView;
 	private TextView mSearchingText;
 
@@ -80,7 +80,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		if (args != null) {
 			mGateId = args.getString(KEY_GATE_ID);
 		}
-
+		setHasOptionsMenu(true);
 	}
 
 	@Nullable
@@ -93,7 +93,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		layoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
 		toolbar.setLayoutParams(layoutParams);
 
-		mManualSearchButton = (Button) mRootView.findViewById(R.id.search_manual_button);
 		mCountDownText = (TextView) mRootView.findViewById(R.id.search_countdown_text);
 		mSearchingText = (TextView) mRootView.findViewById(R.id.search_device_searching_text);
 		mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.search_device_recycler_view);
@@ -105,17 +104,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		mManualSearchButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				ManualSearchDialog.show(mActivity, SearchDeviceFragment.this, DIALOG_CODE_MANUAL);
-			}
-		});
-	}
-
-	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
@@ -123,6 +111,22 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 			List<Device> devices = Controller.getInstance(mActivity).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 			updateAdapter(devices);
 		}
+	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.fragment_device_search, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.device_search_manual_button:
+				ManualSearchDialog.show(mActivity, SearchDeviceFragment.this, DIALOG_CODE_MANUAL);
+				return true;
+		}
+
+		return false;
 	}
 
 	@Override
