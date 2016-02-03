@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -153,7 +154,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 	}
 
 	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, EditTextDialog fragment) {
+	public void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment fragment) {
 		TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		if(!Utils.validateInput(this, textInputLayout)){
 			return;

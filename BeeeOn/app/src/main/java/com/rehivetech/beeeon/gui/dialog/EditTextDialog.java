@@ -1,8 +1,11 @@
 package com.rehivetech.beeeon.gui.dialog;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
@@ -20,18 +23,22 @@ import com.rehivetech.beeeon.R;
 import java.util.List;
 
 /**
- * Created by mlyko on 25. 4. 2015.
+ * @author Tomas Mlynaric
+ * @since 25. 4. 2015.
  */
 public class EditTextDialog extends BaseDialogFragment {
 	public static String TAG = "edit_text_picker";
 
 	public static final String ARG_TITLE = "title";
+	public static final String ARG_LAYOUT_RES = "layout_res";
 	public static final String ARG_EDIT_TEXT_VALUE = "edit_text_value";
 	public static final String ARG_EDIT_TEXT_HINT = "edit_text_hint";
 	public static final String ARG_EDIT_TEXT_INPUT_TYPE = "edit_text_input_type";
 	public static final String ARG_POSITIVE_BUTTON_TEXT = "positive_button_text";
 	public static final String ARG_NEGATIVE_BUTTON_TEXT = "negative_button_text";
 	public static final String ARG_SHOW_KEYBOARD = "show_keyboard";
+
+	public static final int R_DEFAULT_LAYOUT = R.layout.fragment_dialog_edit_text;
 
 	public EditTextDialog() {
 	}
@@ -41,9 +48,15 @@ public class EditTextDialog extends BaseDialogFragment {
 	}
 
 	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
+	@SuppressLint("InflateParams")
+	@Override
 	public Builder build(Builder builder) {
 		LayoutInflater inflater = builder.getLayoutInflater();
-		final View view = inflater.inflate(R.layout.fragment_dialog_edit_text, null, false);
+		final View view = inflater.inflate(this.getArguments().getInt(ARG_LAYOUT_RES), null, false);
 
 		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 
@@ -57,7 +70,7 @@ public class EditTextDialog extends BaseDialogFragment {
 
 		// shows keyboard immediately
 		boolean showKeyboard = this.getArguments().getBoolean(ARG_SHOW_KEYBOARD);
-		if(showKeyboard) {
+		if (showKeyboard) {
 			textInputLayout.requestFocus();
 			getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
@@ -74,7 +87,7 @@ public class EditTextDialog extends BaseDialogFragment {
 			builder.setPositiveButton(positiveButtonText, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					for(IPositiveButtonDialogListener listener : EditTextDialog.this.getPositiveButtonDialogListeners()){
+					for (IPositiveButtonDialogListener listener : EditTextDialog.this.getPositiveButtonDialogListeners()) {
 						listener.onPositiveButtonClicked(EditTextDialog.this.mRequestCode, view, EditTextDialog.this);
 					}
 				}
@@ -87,7 +100,7 @@ public class EditTextDialog extends BaseDialogFragment {
 			builder.setNegativeButton(negativeButtonText, new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					for(INegativeButtonDialogListener listener : EditTextDialog.this.getNegativeButtonDialogListeners()){
+					for (INegativeButtonDialogListener listener : EditTextDialog.this.getNegativeButtonDialogListeners()) {
 						listener.onNegativeButtonClicked(EditTextDialog.this.mRequestCode, view, EditTextDialog.this);
 					}
 
@@ -108,6 +121,8 @@ public class EditTextDialog extends BaseDialogFragment {
 	}
 
 	public static class EditTextDialogBuilder extends BaseDialogBuilder<EditTextDialogBuilder> {
+		@LayoutRes
+		private int mLayoutRes = R_DEFAULT_LAYOUT;
 		private String mEditTextValue;
 		private String mEditTextHint;
 		private int mEditTextInputType = InputType.TYPE_CLASS_TEXT;
@@ -125,12 +140,22 @@ public class EditTextDialog extends BaseDialogFragment {
 			return this;
 		}
 
+		/**
+		 * Must be LinearLayout with TextInputLayout and EditText inside!
+		 *
+		 * @param layoutRes id of TextInputLayout is R.id.dialog_edit_text_input_layout and EditText is R.id.dialog_edit_text
+		 */
+		public EditTextDialogBuilder setLayoutRes(@LayoutRes int layoutRes) {
+			mLayoutRes = layoutRes;
+			return this;
+		}
+
 		public EditTextDialogBuilder setTitle(String title) {
 			this.mTitle = title;
 			return this;
 		}
 
-		public EditTextDialogBuilder setTitle(@StringRes int stringRes){
+		public EditTextDialogBuilder setTitle(@StringRes int stringRes) {
 			this.mTitle = this.mContext.getString(stringRes);
 			return this;
 		}
@@ -140,12 +165,12 @@ public class EditTextDialog extends BaseDialogFragment {
 			return this;
 		}
 
-		public EditTextDialogBuilder setEditTextValue(@StringRes int stringRes){
+		public EditTextDialogBuilder setEditTextValue(@StringRes int stringRes) {
 			this.mEditTextValue = this.mContext.getString(stringRes);
 			return this;
 		}
 
-		public EditTextDialogBuilder setInputType(int type){
+		public EditTextDialogBuilder setInputType(int type) {
 			this.mEditTextInputType = type;
 			return this;
 		}
@@ -155,7 +180,7 @@ public class EditTextDialog extends BaseDialogFragment {
 			return this;
 		}
 
-		public EditTextDialogBuilder setHint(@StringRes int stringRes){
+		public EditTextDialogBuilder setHint(@StringRes int stringRes) {
 			this.mEditTextHint = this.mContext.getString(stringRes);
 			return this;
 		}
@@ -165,7 +190,7 @@ public class EditTextDialog extends BaseDialogFragment {
 			return this;
 		}
 
-		public EditTextDialogBuilder setPositiveButtonText(@StringRes int stringRes){
+		public EditTextDialogBuilder setPositiveButtonText(@StringRes int stringRes) {
 			this.mPositiveButtonText = this.mContext.getString(stringRes);
 			return this;
 		}
@@ -175,12 +200,12 @@ public class EditTextDialog extends BaseDialogFragment {
 			return this;
 		}
 
-		public EditTextDialogBuilder setNegativeButtonText(@StringRes int stringRes){
+		public EditTextDialogBuilder setNegativeButtonText(@StringRes int stringRes) {
 			this.mNegativeButtonText = this.mContext.getString(stringRes);
 			return this;
 		}
 
-		public EditTextDialogBuilder showKeyboard(){
+		public EditTextDialogBuilder showKeyboard() {
 			this.mShowKeyboard = true;
 			return this;
 		}
@@ -188,6 +213,7 @@ public class EditTextDialog extends BaseDialogFragment {
 		protected Bundle prepareArguments() {
 			Bundle args = new Bundle();
 			args.putString(ARG_TITLE, this.mTitle);
+			args.putInt(ARG_LAYOUT_RES, this.mLayoutRes);
 			args.putString(ARG_EDIT_TEXT_VALUE, this.mEditTextValue);
 			args.putString(ARG_EDIT_TEXT_HINT, this.mEditTextHint);
 			args.putInt(ARG_EDIT_TEXT_INPUT_TYPE, this.mEditTextInputType);
@@ -207,11 +233,11 @@ public class EditTextDialog extends BaseDialogFragment {
 		return this.getDialogListeners(INegativeButtonDialogListener.class);
 	}
 
-	public interface IPositiveButtonDialogListener{
-		void onPositiveButtonClicked(int requestCode, View view, EditTextDialog fragment);
+	public interface IPositiveButtonDialogListener {
+		void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment fragment);
 	}
 
-	public interface INegativeButtonDialogListener{
-		void onNegativeButtonClicked(int requestCode, View view, EditTextDialog fragment);
+	public interface INegativeButtonDialogListener {
+		void onNegativeButtonClicked(int requestCode, View view, BaseDialogFragment fragment);
 	}
 }

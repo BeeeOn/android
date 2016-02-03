@@ -26,12 +26,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
-import com.rehivetech.beeeon.gui.dialog.ManualSearchDialog;
-import com.rehivetech.beeeon.gui.dialog.PasswordDialog;
+import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -42,12 +42,13 @@ import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author Martin Matejcik
  * @author Tomas Mlynaric
  */
-public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ManualSearchDialog.ManualSearchDialogListener, PasswordDialog.PasswordDialogListener {
+public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, EditTextDialog.IPositiveButtonDialogListener {
 	private static final String TAG = SearchDeviceFragment.class.getSimpleName();
 
 	private static final long COUNTDOWN_INTERVAL = DateUtils.MINUTE_IN_MILLIS * 2;
@@ -134,7 +135,17 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.device_search_manual_button:
-				ManualSearchDialog.show(mActivity, SearchDeviceFragment.this, DIALOG_CODE_MANUAL);
+				EditTextDialog
+						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+						.setTitle(R.string.device_search_manual_button)
+						.setLayoutRes(R.layout.dialog_device_manual_search)
+//						.setEditTextValue(mWeatherCity != null ? mWeatherCity.name : mWidgetData.weather.cityName)
+						.setHint(R.string.device_search_manual_search_hint)
+						.setPositiveButtonText(mActivity.getString(R.string.device_search_manual_search_dialog_button))
+//						.setNegativeButtonText(mActivity.getString(R.string.activity_fragment_btn_cancel))
+						.showKeyboard()
+						.setTargetFragment(SearchDeviceFragment.this, DIALOG_CODE_MANUAL)
+						.show();
 				return true;
 		}
 
@@ -295,7 +306,16 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 			// TODO should be in DeviceType as parameter "password_protected"
 			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
-				PasswordDialog.show(mActivity, SearchDeviceFragment.this, DIALOG_CODE_PASSWORD);
+				EditTextDialog
+						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+						.setTitle(R.string.device_search_enter_password)
+						.setLayoutRes(R.layout.dialog_device_enter_password)
+						.setHint(R.string.device_search_enter_password_hint)
+						.setPositiveButtonText(R.string.device_search_enter_password_ok)
+						.setCancelableOnTouchOutside(false)
+						.showKeyboard()
+						.setTargetFragment(SearchDeviceFragment.this, DIALOG_CODE_PASSWORD)
+						.show();
 			} else {
 				startDeviceSetupActivity(device);
 			}
@@ -317,36 +337,61 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		startActivityForResult(intent, 50);
 	}
 
+	/**
+	 * Handling dialogs buttons clicks
+	 *
+	 * @param requestCode determines which dialog was clicked
+	 * @param view        base view of the dialog
+	 * @param dialog      dialog itself (so that it can be dismissed)
+	 */
 	@Override
-	public void onPositiveButtonClicked(int requestCode, String dialogText) {
-		switch (requestCode) {
-			case DIALOG_CODE_MANUAL:
-				if (mHandler != null) {
-					mHandler.removeCallbacksAndMessages(null);
-				}
-				mAdapter.clearData();
-				mCountDownTimeElapsed = 0;
-				startPairing(dialogText);
-				break;
-		}
-	}
-
-	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, PasswordDialog dialog) {
+	public void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment dialog) {
 		switch (requestCode) {
 			case DIALOG_CODE_PASSWORD:
 				dialogEnterPasswordSubmitted(view, dialog);
 				break;
+
+			case DIALOG_CODE_MANUAL:
+				dialogManualSearchSubmitted(view, dialog);
+				break;
 		}
+	}
+
+	private static final String IP_ADDRESS_PATTERN = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+	private static Pattern sPattern = Pattern.compile(IP_ADDRESS_PATTERN);
+
+	/**
+	 * Handling when manual search dialog submitted (clicked ok)
+	 *
+	 * @param view
+	 * @param dialog
+	 */
+	private void dialogManualSearchSubmitted(View view, BaseDialogFragment dialog) {
+		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
+		EditText editText = textInputLayout.getEditText();
+
+		if (editText == null || !sPattern.matcher(editText.getText().toString()).matches()) {
+			textInputLayout.setError(getString(R.string.device_search_manual_error));
+			return;
+		}
+
+		if (mHandler != null) {
+			mHandler.removeCallbacksAndMessages(null);
+		}
+		mAdapter.clearData();
+		mCountDownTimeElapsed = 0;
+		startPairing(editText.getText().toString());
+		dialog.dismiss();
 	}
 
 	/**
 	 * Handling when password dialog was submited (clicked ok).
 	 * Checks user input and asynchronously sends request to the server if password was ok.
-	 * @param view dialog basic layout view
+	 *
+	 * @param view   dialog basic layout view
 	 * @param dialog dialog which is closed when success
 	 */
-	private void dialogEnterPasswordSubmitted(View view, final PasswordDialog dialog) {
+	private void dialogEnterPasswordSubmitted(View view, final BaseDialogFragment dialog) {
 		// check device selected before we shown dialog
 		List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 		final Device selectedDevice = Utils.getFromList(mSelectedItemId, devices);
@@ -357,13 +402,13 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 			return;
 		}
 
-		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_enter_password_input_layout);
-		EditText editText = (EditText) view.findViewById(R.id.dialog_enter_password_edit_text);
+		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
+		EditText editText = textInputLayout.getEditText();
 		final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.dialog_enter_password_progressbar);
 		CheckBox checkBox = (CheckBox) view.findViewById(R.id.dialog_enter_password_checkbox);
 
 		// check whether any text was entered
-		if (editText.getText().toString().isEmpty()) {
+		if (editText == null || editText.getText().toString().isEmpty()) {
 			textInputLayout.setError(getString(R.string.activity_utils_toast_field_must_be_filled));
 			return;
 		}
