@@ -40,6 +40,7 @@
 	<string name="util_timezone_gate_timezone">Gateway timezone</string>
 	<string name="utils_toast_field_must_be_email">Enter a valid e-mail address</string>
 	<string name="utils_toast_field_must_be_number">Enter a valid number</string>
+	<string name="utils_toast_field_must_be_ip_address">Enter a valid IP address. It should look like 192.168.100.100.</string>
 
 	<!-- Adapter location -->
 	<string name="adapter_location_array_new_location_spinner">New location</string>
@@ -241,7 +242,6 @@
 	<string name="device_search_snack_bar_retry">Retry</string>
 	<string name="device_search_manual_search_hint">Enter IP address</string>
 	<string name="device_search_manual_search_dialog_button">Search</string>
-	<string name="device_search_manual_error">This is not a valid IP address. It should look like 192.168.100.100</string>
 	<string name="device_search_enter_password">Enter password</string>
 	<string name="device_search_enter_password_hint">Password</string>
 	<string name="device_search_enter_password_ok">OK</string>

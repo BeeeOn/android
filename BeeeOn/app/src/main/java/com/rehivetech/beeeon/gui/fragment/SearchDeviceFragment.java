@@ -72,6 +72,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Nullable
 	private Handler mHandler;
 	private long mCountDownTimeElapsed;
+	@Nullable
 	private String mSelectedItemId;
 
 	public static SearchDeviceFragment newInstance(String gateId) {
@@ -135,17 +136,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.device_search_manual_button:
-				EditTextDialog
-						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-						.setTitle(R.string.device_search_manual_button)
-						.setLayoutRes(R.layout.dialog_device_manual_search)
-//						.setEditTextValue(mWeatherCity != null ? mWeatherCity.name : mWidgetData.weather.cityName)
-						.setHint(R.string.device_search_manual_search_hint)
-						.setPositiveButtonText(mActivity.getString(R.string.device_search_manual_search_dialog_button))
-//						.setNegativeButtonText(mActivity.getString(R.string.activity_fragment_btn_cancel))
-						.showKeyboard()
-						.setTargetFragment(SearchDeviceFragment.this, DIALOG_CODE_MANUAL)
-						.show();
+				dialogManualSearchShow();
 				return true;
 		}
 
@@ -301,21 +292,11 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	public void onRecyclerViewItemClick(int position, int viewType) {
 		if (viewType == DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
 			Device device = (Device) mAdapter.getItem(position);
-
 			mSelectedItemId = device.getId();
 
 			// TODO should be in DeviceType as parameter "password_protected"
 			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
-				EditTextDialog
-						.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-						.setTitle(R.string.device_search_enter_password)
-						.setLayoutRes(R.layout.dialog_device_enter_password)
-						.setHint(R.string.device_search_enter_password_hint)
-						.setPositiveButtonText(R.string.device_search_enter_password_ok)
-						.setCancelableOnTouchOutside(false)
-						.showKeyboard()
-						.setTargetFragment(SearchDeviceFragment.this, DIALOG_CODE_PASSWORD)
-						.show();
+				dialogEnterPasswordShow();
 			} else {
 				startDeviceSetupActivity(device);
 			}
@@ -328,12 +309,13 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	}
 
 	/**
-	 * Opens device setup activity
+	 * Opens device setup activity and clears selected device id
 	 *
 	 * @param device specified device
 	 */
 	private void startDeviceSetupActivity(Device device) {
 		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
+		mSelectedItemId = null;
 		startActivityForResult(intent, 50);
 	}
 
@@ -357,23 +339,33 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		}
 	}
 
-	private static final String IP_ADDRESS_PATTERN = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
-	private static Pattern sPattern = Pattern.compile(IP_ADDRESS_PATTERN);
+	/**
+	 * Shows dialog for manual searching
+	 */
+	private void dialogManualSearchShow() {
+		EditTextDialog
+				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+				.setTitle(R.string.device_search_manual_button)
+				.setLayoutRes(R.layout.dialog_device_manual_search)
+				.setHint(R.string.device_search_manual_search_hint)
+				.setPositiveButtonText(mActivity.getString(R.string.device_search_manual_search_dialog_button))
+				.showKeyboard()
+				.setTargetFragment(SearchDeviceFragment.this, DIALOG_CODE_MANUAL)
+				.show();
+	}
 
 	/**
 	 * Handling when manual search dialog submitted (clicked ok)
 	 *
-	 * @param view
-	 * @param dialog
+	 * @param view   dialog basic layout view
+	 * @param dialog dialog which is closed when success
 	 */
 	private void dialogManualSearchSubmitted(View view, BaseDialogFragment dialog) {
 		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		EditText editText = textInputLayout.getEditText();
 
-		if (editText == null || !sPattern.matcher(editText.getText().toString()).matches()) {
-			textInputLayout.setError(getString(R.string.device_search_manual_error));
-			return;
-		}
+		// validate input if is in specified format
+		if (editText == null || !Utils.validateInput(mActivity, textInputLayout, Utils.ValidationType.IP_ADDRESS)) return;
 
 		if (mHandler != null) {
 			mHandler.removeCallbacksAndMessages(null);
@@ -382,6 +374,23 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		mCountDownTimeElapsed = 0;
 		startPairing(editText.getText().toString());
 		dialog.dismiss();
+	}
+
+	/**
+	 * Shows dialog for entering password
+	 */
+	private void dialogEnterPasswordShow() {
+		EditTextDialog
+				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
+				.setTitle(R.string.device_search_enter_password)
+				.setLayoutRes(R.layout.dialog_device_enter_password)
+				.setHint(R.string.device_search_enter_password_hint)
+				.setPositiveButtonText(R.string.device_search_enter_password_ok)
+				.setCancelableOnTouchOutside(false)
+				.setNegativeButtonText(mActivity.getString(R.string.activity_fragment_btn_cancel))
+				.showKeyboard()
+				.setTargetFragment(SearchDeviceFragment.this, DIALOG_CODE_PASSWORD)
+				.show();
 	}
 
 	/**
@@ -418,12 +427,13 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		parameterTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
+				progressBar.setVisibility(View.INVISIBLE);
+
 				if (!success) {
 					textInputLayout.setError(getString(R.string.device_search_enter_password_wrong));
 					return;
 				}
 
-				progressBar.setVisibility(View.INVISIBLE);
 				dialog.dismiss();
 				startDeviceSetupActivity(selectedDevice);
 			}

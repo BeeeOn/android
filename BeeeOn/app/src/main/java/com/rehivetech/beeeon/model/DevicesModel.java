@@ -223,7 +223,6 @@ public class DevicesModel extends BaseModel {
 	 * @return success
 	 */
 	public boolean createParameter(Device device, String key, String value){
-		mNetwork.devices_createParameter(device, key, value);
-		return true;
+		return mNetwork.devices_createParameter(device, key, value);
 	}
 }

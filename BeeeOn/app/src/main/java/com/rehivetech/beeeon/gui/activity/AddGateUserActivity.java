@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +53,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 	}
 
 	private void initLayout() {
-		final EditText email = (EditText) findViewById(R.id.gate_user_add_user_email);
+		final TextInputLayout emailInput = (TextInputLayout) findViewById(R.id.gate_user_add_user_email);
 		final Spinner role = (Spinner) findViewById(R.id.gate_user_add_user_role);
 		Button button = (Button) findViewById(R.id.gate_user_add_user_gate_save_button);
 
@@ -86,10 +87,12 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 
 			@Override
 			public void onClick(View v) {
+				EditText email = emailInput.getEditText();
 				// check if email is set && valid
-				if (!Utils.validateInput(AddGateUserActivity.this, email, Utils.ValidationType.EMAIL)) {
+				if (email == null || !Utils.validateInput(AddGateUserActivity.this, emailInput, Utils.ValidationType.EMAIL)) {
 					return;
 				}
+
 
 				// create temporary user with email
 				mNewUser = new User();
