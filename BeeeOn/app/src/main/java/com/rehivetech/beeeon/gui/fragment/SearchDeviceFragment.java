@@ -9,6 +9,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,6 +33,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
+import com.rehivetech.beeeon.gui.dialog.EnterPasswordDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -42,7 +44,6 @@ import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * @author Martin Matejcik
@@ -380,7 +381,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	 * Shows dialog for entering password
 	 */
 	private void dialogEnterPasswordShow() {
-		EditTextDialog
+		EnterPasswordDialog
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 				.setTitle(R.string.device_search_enter_password)
 				.setLayoutRes(R.layout.dialog_device_enter_password)
@@ -414,13 +415,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		EditText editText = textInputLayout.getEditText();
 		final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.dialog_enter_password_progressbar);
-		CheckBox checkBox = (CheckBox) view.findViewById(R.id.dialog_enter_password_checkbox);
 
 		// check whether any text was entered
-		if (editText == null || editText.getText().toString().isEmpty()) {
-			textInputLayout.setError(getString(R.string.activity_utils_toast_field_must_be_filled));
-			return;
-		}
+		if (editText == null || !Utils.validateInput(mActivity, textInputLayout)) return;
 
 		// async task to send password
 		SendParameterTask parameterTask = new SendParameterTask(mActivity, selectedDevice);
@@ -439,6 +436,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 			}
 		});
 
+		// run async task
 		progressBar.setVisibility(View.VISIBLE);
 		mActivity.callbackTaskManager.executeTask(parameterTask, Pair.create("password", editText.getText().toString()), CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
 	}

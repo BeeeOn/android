@@ -40,25 +40,19 @@ public class EditTextDialog extends BaseDialogFragment {
 
 	public static final int R_DEFAULT_LAYOUT = R.layout.fragment_dialog_edit_text;
 
-	public EditTextDialog() {
-	}
-
 	public static EditTextDialogBuilder createBuilder(Context context, FragmentManager fragmentManager) {
 		return new EditTextDialogBuilder(context, fragmentManager);
 	}
 
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	}
+	protected View mView;
 
 	@SuppressLint("InflateParams")
 	@Override
 	public Builder build(Builder builder) {
 		LayoutInflater inflater = builder.getLayoutInflater();
-		final View view = inflater.inflate(this.getArguments().getInt(ARG_LAYOUT_RES), null, false);
+		mView = inflater.inflate(this.getArguments().getInt(ARG_LAYOUT_RES), null, false);
 
-		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
+		final TextInputLayout textInputLayout = (TextInputLayout) mView.findViewById(R.id.dialog_edit_text_input_layout);
 
 		// setting EditText options
 		EditText editText = textInputLayout.getEditText();
@@ -75,11 +69,9 @@ public class EditTextDialog extends BaseDialogFragment {
 			getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		}
 
-
 		// setting title from args
 		builder.setTitle(this.getArguments().getString(ARG_TITLE));
-
-		builder.setView(view);
+		builder.setView(mView);
 
 		// positive button
 		String positiveButtonText = this.getArguments().getString(ARG_POSITIVE_BUTTON_TEXT);
@@ -88,7 +80,7 @@ public class EditTextDialog extends BaseDialogFragment {
 				@Override
 				public void onClick(View v) {
 					for (IPositiveButtonDialogListener listener : EditTextDialog.this.getPositiveButtonDialogListeners()) {
-						listener.onPositiveButtonClicked(EditTextDialog.this.mRequestCode, view, EditTextDialog.this);
+						listener.onPositiveButtonClicked(EditTextDialog.this.mRequestCode, mView, EditTextDialog.this);
 					}
 				}
 			});
@@ -101,7 +93,7 @@ public class EditTextDialog extends BaseDialogFragment {
 				@Override
 				public void onClick(View v) {
 					for (INegativeButtonDialogListener listener : EditTextDialog.this.getNegativeButtonDialogListeners()) {
-						listener.onNegativeButtonClicked(EditTextDialog.this.mRequestCode, view, EditTextDialog.this);
+						listener.onNegativeButtonClicked(EditTextDialog.this.mRequestCode, mView, EditTextDialog.this);
 					}
 
 					EditTextDialog.this.dismiss();
@@ -111,6 +103,7 @@ public class EditTextDialog extends BaseDialogFragment {
 
 		return builder;
 	}
+
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -223,7 +216,6 @@ public class EditTextDialog extends BaseDialogFragment {
 			return args;
 		}
 	}
-
 
 	protected List<IPositiveButtonDialogListener> getPositiveButtonDialogListeners() {
 		return this.getDialogListeners(IPositiveButtonDialogListener.class);

@@ -582,10 +582,12 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean devices_update(String gateId, List<Device> devices) {
-		processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.Devices.update(mSessionId, gateId, devices));
 
-		return true;
+		// TODO really dont know if should do something and knew that returned boolean
+		return true
+//		return parser.parse;
 	}
 
 	@Override
@@ -613,7 +615,7 @@ public class Network implements INetwork {
 	}
 
 	@Override
-	public boolean devices_createParameter(Device device, String key, String value){
+	public boolean devices_createParameter(Device device, String key, String value) {
 		processCommunication(XmlCreator.Devices.createParameter(mSessionId, device, key, value));
 		return true;
 	}
