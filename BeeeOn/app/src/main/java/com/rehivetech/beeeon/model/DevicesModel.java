@@ -215,4 +215,15 @@ public class DevicesModel extends BaseModel {
 		return true;
 	}
 
+	/**
+	 * Sends specified parameter to the server
+	 * @param device which device relates on parameter
+	 * @param key parameter key (e.g "password")
+	 * @param value parameter value (e.g "value")
+	 * @return success
+	 */
+	public boolean createParameter(Device device, String key, String value){
+		mNetwork.devices_createParameter(device, key, value);
+		return true;
+	}
 }

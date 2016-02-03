@@ -15,7 +15,8 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.List;
 
 /**
- * Created by martin on 1.2.16.
+ * @author Martin Matejcik
+ * @author Tomas Mlynaric
  */
 public class PasswordDialog extends SimpleDialogFragment {
 
@@ -33,29 +34,22 @@ public class PasswordDialog extends SimpleDialogFragment {
 
 		builder.setTitle(R.string.device_search_enter_password);
 
-		final TextInputLayout textInputLayout = (TextInputLayout) LayoutInflater.from(getContext()).inflate(R.layout.dialog_device_enter_password, null);
-		final EditText editText = (EditText) textInputLayout.findViewById(R.id.dialog_enter_password_edit_text);
-		builder.setView(textInputLayout);
+		final View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_device_enter_password, null);
+		builder.setView(view);
 
 		builder.setPositiveButton(R.string.device_search_enter_password_ok, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(editText.getText().toString().isEmpty()){
-					textInputLayout.setError(getString(R.string.activity_utils_toast_field_must_be_filled));
-					return;
-				}
-
 				for (PasswordDialogListener listener : PasswordDialog.this.getDialogListeners(PasswordDialogListener.class)) {
-					listener.onPositiveButtonClicked(mRequestCode, editText.getText().toString());
+					listener.onPositiveButtonClicked(mRequestCode, view, PasswordDialog.this);
 				}
-				dismiss();
 			}
 		});
 		return builder;
 	}
 
 
-	public interface PasswordDialogListener{
-		void onPositiveButtonClicked(int requestCode, String password);
+	public interface PasswordDialogListener {
+		void onPositiveButtonClicked(int requestCode, View view, PasswordDialog dialog);
 	}
 }

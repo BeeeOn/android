@@ -314,8 +314,8 @@ public class DemoNetwork implements INetwork {
 
 	@Override
 	public boolean devices_createParameter(Device device, String key, String value) {
-		return false;
-		// TODO
+		Random rand = getRandomForGate(device.getGateId());
+		return rand.nextBoolean();
 	}
 
 	@Override

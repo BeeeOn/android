@@ -8,17 +8,23 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -31,6 +37,8 @@ import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
+import com.rehivetech.beeeon.threading.task.SendParameterTask;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +55,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	public static final String KEY_GATE_ID = "gate_id";
 
 	private static final String STATE_COUNTDOWN_TIME_ELAPSED = "countdown_time_elapsed";
+	private static final String STATE_SELECTED_ITEM_ID = "selected_item_id";
 
 	private static final int DIALOG_CODE_MANUAL = 1;
 	private static final int DIALOG_CODE_PASSWORD = 2;
@@ -59,8 +68,10 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	private TextView mSearchingText;
 
 	private DeviceRecycleAdapter mAdapter;
-	@Nullable private Handler mHandler;
+	@Nullable
+	private Handler mHandler;
 	private long mCountDownTimeElapsed;
+	private String mSelectedItemId;
 
 	public static SearchDeviceFragment newInstance(String gateId) {
 
@@ -108,6 +119,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
 			mCountDownTimeElapsed = savedInstanceState.getLong(STATE_COUNTDOWN_TIME_ELAPSED);
+			mSelectedItemId = savedInstanceState.getString(STATE_SELECTED_ITEM_ID);
 			List<Device> devices = Controller.getInstance(mActivity).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 			updateAdapter(devices);
 		}
@@ -154,6 +166,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
+		outState.putString(STATE_SELECTED_ITEM_ID, mSelectedItemId);
 		outState.putLong(STATE_COUNTDOWN_TIME_ELAPSED, mCountDownTimeElapsed);
 		mActivity.callbackTaskManager.cancelAndRemoveAll();
 		if (mHandler != null) {
@@ -267,18 +280,25 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		}
 	}
 
+	/**
+	 * When clicked on list item
+	 *
+	 * @param position position where clicked
+	 * @param viewType view type which was clicked
+	 */
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
 		if (viewType == DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
 			Device device = (Device) mAdapter.getItem(position);
 
-			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) { // TODO should be in DeviceType as parameter "password_protected"
+			mSelectedItemId = device.getId();
+
+			// TODO should be in DeviceType as parameter "password_protected"
+			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
 				PasswordDialog.show(mActivity, SearchDeviceFragment.this, DIALOG_CODE_PASSWORD);
 			} else {
-				Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
-				startActivityForResult(intent, 50);
+				startDeviceSetupActivity(device);
 			}
-
 		}
 	}
 
@@ -287,13 +307,19 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		return false;
 	}
 
+	/**
+	 * Opens device setup activity
+	 *
+	 * @param device specified device
+	 */
+	private void startDeviceSetupActivity(Device device) {
+		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
+		startActivityForResult(intent, 50);
+	}
+
 	@Override
 	public void onPositiveButtonClicked(int requestCode, String dialogText) {
 		switch (requestCode) {
-			case DIALOG_CODE_PASSWORD:
-
-
-				break;
 			case DIALOG_CODE_MANUAL:
 				if (mHandler != null) {
 					mHandler.removeCallbacksAndMessages(null);
@@ -302,11 +328,63 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 				mCountDownTimeElapsed = 0;
 				startPairing(dialogText);
 				break;
+		}
+	}
 
-			default:
-				// not implemented
-				// TODO -> exception?
+	@Override
+	public void onPositiveButtonClicked(int requestCode, View view, PasswordDialog dialog) {
+		switch (requestCode) {
+			case DIALOG_CODE_PASSWORD:
+				dialogEnterPasswordSubmitted(view, dialog);
 				break;
 		}
+	}
+
+	/**
+	 * Handling when password dialog was submited (clicked ok).
+	 * Checks user input and asynchronously sends request to the server if password was ok.
+	 * @param view dialog basic layout view
+	 * @param dialog dialog which is closed when success
+	 */
+	private void dialogEnterPasswordSubmitted(View view, final PasswordDialog dialog) {
+		// check device selected before we shown dialog
+		List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
+		final Device selectedDevice = Utils.getFromList(mSelectedItemId, devices);
+
+		if (selectedDevice == null) {
+			Toast.makeText(mActivity, R.string.device_add_activity_opening_error, Toast.LENGTH_LONG).show();
+			dialog.dismiss();
+			return;
+		}
+
+		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_enter_password_input_layout);
+		EditText editText = (EditText) view.findViewById(R.id.dialog_enter_password_edit_text);
+		final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.dialog_enter_password_progressbar);
+		CheckBox checkBox = (CheckBox) view.findViewById(R.id.dialog_enter_password_checkbox);
+
+		// check whether any text was entered
+		if (editText.getText().toString().isEmpty()) {
+			textInputLayout.setError(getString(R.string.activity_utils_toast_field_must_be_filled));
+			return;
+		}
+
+		// async task to send password
+		SendParameterTask parameterTask = new SendParameterTask(mActivity, selectedDevice);
+		parameterTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success) {
+					textInputLayout.setError(getString(R.string.device_search_enter_password_wrong));
+					return;
+				}
+
+				progressBar.setVisibility(View.INVISIBLE);
+				dialog.dismiss();
+				startDeviceSetupActivity(selectedDevice);
+			}
+		});
+
+		progressBar.setVisibility(View.VISIBLE);
+		mActivity.callbackTaskManager.executeTask(parameterTask, Pair.create("password", editText.getText().toString()), CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
 	}
 }
