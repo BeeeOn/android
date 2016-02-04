@@ -9,7 +9,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -267,7 +265,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 		ArrayList<Object> adapterList = new ArrayList<>();
 		for (int manufacturer : manufacturers) {
-			adapterList.add(getString(manufacturer));
+			adapterList.add(mActivity.getString(manufacturer));
 			for (Device device : adapterData) {
 				if (manufacturer == device.getType().getManufacturerRes()) {
 					adapterList.add(device);
