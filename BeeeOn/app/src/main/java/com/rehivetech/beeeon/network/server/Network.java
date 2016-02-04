@@ -28,7 +28,6 @@ import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -586,7 +585,7 @@ public class Network implements INetwork {
 				XmlCreator.Devices.update(mSessionId, gateId, devices));
 
 		// TODO really dont know if should do something and knew that returned boolean
-		return true
+		return true;
 //		return parser.parse;
 	}
 
