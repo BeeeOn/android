@@ -137,6 +137,12 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 			case R.id.device_search_manual_button:
 				dialogManualSearchShow();
 				return true;
+			case android.R.id.home: {
+				if (mHandler != null) {
+					mHandler.removeCallbacksAndMessages(null);
+				}
+				break;
+			}
 		}
 
 		return false;
