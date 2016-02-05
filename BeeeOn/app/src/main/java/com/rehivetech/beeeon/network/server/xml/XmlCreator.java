@@ -9,7 +9,6 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
@@ -455,7 +454,7 @@ public class XmlCreator {
 		 */
 		public static Request createParameter(String sessionId, Device device, String key, String value) {
 			try {
-				Request req = beginXml("createParameter", sessionId, XmlParser.Result.OK);
+				Request req = beginXml("createparameter", sessionId, XmlParser.Result.OK);
 				req.addAttribute("gateid", device.getGateId());
 
 				req.addTag("device",
