@@ -315,6 +315,11 @@ public class DemoNetwork implements INetwork {
 	@Override
 	public boolean devices_createParameter(Device device, String key, String value) {
 		Random rand = getRandomForGate(device.getGateId());
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return rand.nextBoolean();
 	}
 

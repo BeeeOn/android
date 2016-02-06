@@ -20,6 +20,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -47,7 +48,7 @@ import java.util.List;
  * @author Martin Matejcik
  * @author Tomas Mlynaric
  */
-public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, EditTextDialog.IPositiveButtonDialogListener {
+public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, EditTextDialog.IPositiveButtonDialogListener, EnterPasswordDialog.PasswordDialogListener {
 	private static final String TAG = SearchDeviceFragment.class.getSimpleName();
 
 	private static final long COUNTDOWN_INTERVAL = DateUtils.MINUTE_IN_MILLIS * 2;
@@ -333,14 +334,8 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	 */
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment dialog) {
-		switch (requestCode) {
-			case DIALOG_CODE_PASSWORD:
-				dialogEnterPasswordSubmitted(view, dialog);
-				break;
-
-			case DIALOG_CODE_MANUAL:
-				dialogManualSearchSubmitted(view, dialog);
-				break;
+		if (requestCode == DIALOG_CODE_MANUAL) {
+			dialogManualSearchSubmitted(view, dialog);
 		}
 	}
 
@@ -385,17 +380,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	 * Shows dialog for entering password
 	 */
 	private void dialogEnterPasswordShow() {
-		EnterPasswordDialog
-				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-				.setTitle(R.string.device_search_enter_password)
-				.setLayoutRes(R.layout.dialog_device_enter_password)
-				.setHint(R.string.device_search_enter_password_hint)
-				.setPositiveButtonText(R.string.device_search_enter_password_ok)
-				.setCancelableOnTouchOutside(false)
-				.setNegativeButtonText(mActivity.getString(R.string.activity_fragment_btn_cancel))
-				.showKeyboard()
-				.setTargetFragment(SearchDeviceFragment.this, DIALOG_CODE_PASSWORD)
-				.show();
+		EnterPasswordDialog.show(mActivity, this, DIALOG_CODE_PASSWORD);
 	}
 
 	/**
@@ -418,10 +403,23 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 		final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		EditText editText = textInputLayout.getEditText();
+		final CheckBox checkBox = (CheckBox) view.findViewById(R.id.dialog_enter_password_checkbox);
 		final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.dialog_enter_password_progressbar);
 
 		// check whether any text was entered
-		if (editText == null || !Utils.validateInput(mActivity, textInputLayout)) return;
+		if (editText == null)
+			return;
+
+		String password = editText.getText().toString().trim();
+		if (password.length() == 0 && !checkBox.isChecked()) {
+			textInputLayout.requestFocus();
+			textInputLayout.setError(mActivity.getString(R.string.activity_utils_toast_field_must_be_filled));
+			return;
+
+		} else if (checkBox.isChecked()) {
+			dialog.dismiss();
+			startDeviceSetupActivity(selectedDevice);
+		}
 
 		// async task to send password
 		SendParameterTask parameterTask = new SendParameterTask(mActivity, selectedDevice);
@@ -443,5 +441,10 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		// run async task
 		progressBar.setVisibility(View.VISIBLE);
 		mActivity.callbackTaskManager.executeTask(parameterTask, Pair.create("password", editText.getText().toString()), CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
+	}
+
+	@Override
+	public void onPositiveButtonClicked(int requestCode, View view, EnterPasswordDialog dialog) {
+		dialogEnterPasswordSubmitted(view, dialog);
 	}
 }

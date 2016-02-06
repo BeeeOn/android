@@ -5,13 +5,8 @@ import android.util.Pair;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.ModuleType;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.model.DevicesModel;
 import com.rehivetech.beeeon.threading.CallbackTask;
-
-import java.util.List;
 
 /**
  * @author Tomas Mlynaric
