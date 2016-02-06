@@ -5,11 +5,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.FragmentManager;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +57,10 @@ public class EditTextDialog extends BaseDialogFragment {
 		if (editText != null) {
 			editText.setText(this.getArguments().getString(ARG_EDIT_TEXT_VALUE));
 			textInputLayout.setHint(this.getArguments().getString(ARG_EDIT_TEXT_HINT));
-			editText.setInputType(this.getArguments().getInt(ARG_EDIT_TEXT_INPUT_TYPE));
+			int inputType = this.getArguments().getInt(ARG_EDIT_TEXT_INPUT_TYPE);
+			if (inputType != 0) {
+				editText.setInputType(this.getArguments().getInt(ARG_EDIT_TEXT_INPUT_TYPE));
+			}
 		}
 
 		// shows keyboard immediately
@@ -118,7 +119,7 @@ public class EditTextDialog extends BaseDialogFragment {
 		private int mLayoutRes = R_DEFAULT_LAYOUT;
 		private String mEditTextValue;
 		private String mEditTextHint;
-		private int mEditTextInputType = InputType.TYPE_CLASS_TEXT;
+		private int mEditTextInputType;
 		private String mTitle;
 		private String mPositiveButtonText;
 		private String mNegativeButtonText;
