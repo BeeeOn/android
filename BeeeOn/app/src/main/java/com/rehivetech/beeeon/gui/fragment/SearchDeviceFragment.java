@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -103,11 +101,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mRootView = (CoordinatorLayout) inflater.inflate(R.layout.fragment_search_devices, container, false);
-
-		Toolbar toolbar = (Toolbar) mRootView.findViewById(R.id.beeeon_toolbar);
-		AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
-		layoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
-		toolbar.setLayoutParams(layoutParams);
 
 		mCountDownText = (TextView) mRootView.findViewById(R.id.search_countdown_text);
 		mSearchingText = (TextView) mRootView.findViewById(R.id.search_device_searching_text);

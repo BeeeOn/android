@@ -151,6 +151,11 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		// FIXME: Why this doesn't work when it's in DeviceDetailActivity?
 		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
+
+		CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+		layoutParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
+		toolbar.setLayoutParams(layoutParams);
+
 		AppCompatActivity activity = (AppCompatActivity) getActivity();
 		activity.setSupportActionBar(toolbar);
 		ActionBar actionBar = activity.getSupportActionBar();
