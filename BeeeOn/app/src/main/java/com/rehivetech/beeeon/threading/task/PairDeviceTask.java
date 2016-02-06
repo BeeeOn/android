@@ -35,6 +35,11 @@ public class PairDeviceTask extends CallbackTask<String> {
 		UninitializedDevicesModel uninitializedDevicesModel = controller.getUninitializedDevicesModel();
 
 		if (mSendPairRequest) {
+			//clear uninitialized devices cache before first pair request
+			if (mDeviceIpAddress == null) {
+				uninitializedDevicesModel.clearUninitializedDevicesChaceByGate(mGateId);
+			}
+
 			// Make pair request
 			controller.getGatesModel().sendPairRequest(mGateId, mDeviceIpAddress);
 		}

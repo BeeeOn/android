@@ -39,6 +39,14 @@ public class UninitializedDevicesModel extends BaseModel {
 	}
 
 	/**
+	 * Clears list of uninitialized devices in cache
+	 * @param gateId gate id
+	 */
+	public void clearUninitializedDevicesChaceByGate(String gateId) {
+		mUninitializedDevices.removeHolder(gateId);
+	}
+
+	/**
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param gateId
