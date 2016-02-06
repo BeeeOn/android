@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.model;
 
+import android.support.annotation.Nullable;
+
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -77,10 +79,11 @@ public class GatesModel extends BaseModel {
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param gateId
+	 * @param deviceIpAddress if specified, sending search instead of startListen
 	 * @return true on successfully started pairing mode, false otherwise
 	 */
-	public boolean sendPairRequest(String gateId) {
-		return mNetwork.gates_startListen(gateId);
+	public boolean sendPairRequest(String gateId, @Nullable String deviceIpAddress) {
+		return deviceIpAddress != null ? mNetwork.gates_search(gateId, deviceIpAddress) : mNetwork.gates_startListen(gateId);
 	}
 
 	/**

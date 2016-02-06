@@ -64,6 +64,15 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	}
 
 	/**
+	 * Selects only one item at a time
+	 * @param position
+	 */
+	public void selectOne(int position){
+		clearSelection();
+		toggleSelection(position);
+	}
+
+	/**
 	 * Count the selected items
 	 * @return Selected items count
 	 */

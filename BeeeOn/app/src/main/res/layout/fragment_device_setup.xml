@@ -1,82 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-			xmlns:tools="http://schemas.android.com/tools"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical">
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-	<LinearLayout
-		android:orientation="vertical"
+	<android.support.design.widget.AppBarLayout
 		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<include layout="@layout/layout_beeeon_toolbar"/>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<android.support.v4.widget.NestedScrollView
+		android:id="@+id/device_setup_scrollview"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		android:paddingBottom="?attr/actionBarSize"
+		/>
+
+	<android.support.design.widget.FloatingActionButton
+		android:id="@+id/device_setup_save_button"
+		style="@style/BeeeOn.Button"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:scrollbars="vertical"
-		android:scrollbarAlwaysDrawVerticalTrack="true"
-		android:padding="@dimen/adddevice_layout_padding"
-		>
+		android:layout_margin="@dimen/space_big"
+		android:layout_gravity="bottom|end"
+		app:borderWidth="0dp"
+		app:fabSize="normal"
+		android:clickable="true"
+		android:src="@drawable/ic_content_save_white_24dp"
+		/>
 
-		<TextView
-			android:id="@+id/module_setup_header_name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="5dp"
-			tools:text="Regulator VPT v1.0"
-			android:textColor="@color/beeeon_primary_text"
-			android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-		<TextView
-			android:id="@+id/module_setup_header_manufacturer"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="15dp"
-			tools:text="Thermona"
-			android:textColor="@color/beeeon_secondary_text"
-			android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-		<TextView
-			android:id="@+id/module_setup_info_text"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="15dp"
-			android:text="@string/device_setup_device_info_text"
-			android:textColor="@color/beeeon_secondary_text"
-			android:textIsSelectable="false"/>
-
-		<View
-			style="@style/BeeeOn.Divider.Full"
-			android:layout_marginBottom="10dp" />
-
-		<TextView
-			android:id="@+id/module_setup_header_location"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/device_setup_device_header_location"
-			android:textColor="@color/beeeon_primary_text"
-			android:textAppearance="?android:attr/textAppearanceMedium"/>
-
-		<Spinner
-			android:id="@+id/module_setup_spinner_choose_location"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="5dp"/>
-
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="15dp"
-			android:orientation="horizontal">
-
-			<Spinner
-				android:id="@+id/module_setup_spinner_choose_new_location_icon"
-				android:layout_width="60dp"
-				android:layout_height="match_parent"/>
-
-			<EditText
-				android:id="@+id/module_setup_new_location_name"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:ems="10"
-				android:hint="@string/module_edit_setup_new_location_hint"
-				android:inputType="text"/>
-		</LinearLayout>
-	</LinearLayout>
-</ScrollView>
+</android.support.design.widget.CoordinatorLayout>

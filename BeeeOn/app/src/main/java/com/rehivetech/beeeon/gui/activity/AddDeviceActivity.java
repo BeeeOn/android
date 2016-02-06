@@ -1,69 +1,107 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.util.Log;
-import android.widget.Toast;
+import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
+import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
 import com.rehivetech.beeeon.gui.fragment.AddDeviceFragment;
-import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
-import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.gui.fragment.SearchDeviceFragment;
+import com.rehivetech.beeeon.gui.fragment.SetupDeviceFragment;
 
-import java.util.Arrays;
-import java.util.List;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
-public class AddDeviceActivity extends BaseGuideActivity implements AddDeviceFragment.OnAddDeviceListener {
+public class AddDeviceActivity extends BaseApplicationActivity{
 
 	private static final String TAG = AddDeviceActivity.class.getSimpleName();
 
-	@Override
-	protected void onLastFragmentActionNext() {
-		AddDeviceFragment fragment = (AddDeviceFragment) mPagerAdapter.getFinalFragment();
-		if (fragment == null) {
-			Log.e(TAG, "AddSensorActivity.onLastFragmentActionNext() return null fragment");
-			return;
-		}
-		fragment.doAction();
+	public static final String EXTRA_GATE_ID = "gate_id";
+	public static final String EXTRA_ACTION_STATE = "action_state";
+	public static final String EXTRA_SETUP_DEVICE_ID = "setup_device_id";
+
+	@IntDef({ACTION_INITIAL, ACTION_SEARCH, ACTION_SETUP})
+	@Retention(RetentionPolicy.CLASS)
+
+	public @interface AddDeviceActivityState {
 	}
 
-	@Nullable
-	@Override
-	protected IntroFragmentPagerAdapter initPagerAdapter() {
-		// If there is no gate, then the activity ends immediately
-		Gate gate = Controller.getInstance(this).getActiveGate();
-		if (gate == null) {
-			Toast.makeText(this, R.string.device_add_toast_no_gate, Toast.LENGTH_LONG).show();
-			return null;
-		}
+	public static final int ACTION_INITIAL = 0;
+	public static final int ACTION_SEARCH = 1;
+	public static final int ACTION_SETUP = 2;
 
-		//the List and the FragmentManager objects are needed as arguments for the constructor
-		List<IntroImageFragment.ImageTextPair> pairs = Arrays.asList(
-				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_as_first_step, R.string.device_add_tut_text_add_module, R.string.device_add_tut_title_add_device)
-		);
+	@StringRes
+	private int mToolbarTitleRes;
 
-		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, AddDeviceFragment.newInstance(gate.getId()));
-	}
+	private Fragment mFragment;
 
-	@Override
-	public void onAddDevice(boolean success) {
-		setResult(success ? Activity.RESULT_OK : Activity.RESULT_CANCELED);
-		if (success) {
-			finish();
-		}
+	public static Intent prepareAddDeviceActivityIntent(Context context, String gateId, @AddDeviceActivityState int state, @Nullable String newDeviceId) {
+		Intent intent = new Intent(context, AddDeviceActivity.class);
+		intent.putExtra(EXTRA_GATE_ID, gateId);
+		intent.putExtra(EXTRA_ACTION_STATE, state);
+		intent.putExtra(EXTRA_SETUP_DEVICE_ID, newDeviceId);
+
+		return intent;
 	}
 
 	@Override
-	public void setNextButtonEnabled(boolean enabled) {
-		if (mNext != null) {
-			mNext.setEnabled(enabled);
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		setContentView(R.layout.activity_add_device);
+
+		Bundle args = getIntent().getExtras();
+
+		String gateId = args.getString(EXTRA_GATE_ID);
+		int action = args.getInt(EXTRA_ACTION_STATE);
+		String newDeviceId = args.getString(EXTRA_SETUP_DEVICE_ID);
+
+		if (savedInstanceState == null) {
+			switch (action) {
+				case ACTION_INITIAL:
+					mFragment = AddDeviceFragment.newInstance(gateId);
+					mToolbarTitleRes = R.string.device_add_title;
+					break;
+				case ACTION_SEARCH:
+					mFragment = SearchDeviceFragment.newInstance(gateId);
+					mToolbarTitleRes = R.string.device_search_title;
+					break;
+				case ACTION_SETUP:
+					mFragment = SetupDeviceFragment.newInstance(gateId, newDeviceId);
+					break;
+				default:
+					throw new UnsupportedOperationException("AddDeviceActivity - unsupported action");
+			}
+
+			getSupportFragmentManager().beginTransaction().replace(R.id.activity_add_device_container, mFragment).commit();
+		} else {
+			mFragment = getSupportFragmentManager().findFragmentById(R.id.activity_add_device_container);
 		}
 	}
 
 	@Override
-	protected int getLastPageNextTextResource() {
-		return R.string.device_add_btn_send_pair;
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+
+		setupToolbar(mToolbarTitleRes);
+		if (mActionBar != null) {
+			mActionBar.setDisplayHomeAsUpEnabled(true);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home: {
+				finish();
+				break;
+			}
+		}
+		return super.onOptionsItemSelected(item);
 	}
 }

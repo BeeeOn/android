@@ -419,5 +419,6 @@
 	<string name="data_type_min">Minimum</string>
 	<string name="data_type_avg">Průměr</string>
 	<string name="data_type_max">Maximum</string>
+	<string name="utils_toast_field_must_be_ip_address">Vložte platnou IP adresu ve tvaru podobném do 192.168.100.100.</string>
 
 </resources>

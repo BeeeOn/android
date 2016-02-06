@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/search_appbar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<include layout="@layout/layout_beeeon_toolbar"/>
+
+		<TextView
+			android:id="@+id/search_countdown_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:paddingBottom="@dimen/space_normal"
+			android:textColor="@color/white"
+			tools:text="2:00"
+			android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<FrameLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		>
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/search_device_recycler_view"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:scrollbars="vertical"
+			android:paddingBottom="72dp"
+			android:clipToPadding="false"
+			/>
+
+		<TextView
+			android:id="@+id/search_device_searching_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:text="@string/device_search_no_devices_text"
+			android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+			android:textColor="@color/gray_dark"
+			/>
+
+	</FrameLayout>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
+import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -51,11 +52,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 final public class Utils {
 	private static final String TAG = Utils.class.getSimpleName();
 
-	private static final int[] sGraphColors = new int[] {R.color.graph1, R.color.graph2, R.color.graph3, R.color.graph4, R.color.graph5,
+	private static final int[] sGraphColors = new int[]{R.color.graph1, R.color.graph2, R.color.graph3, R.color.graph4, R.color.graph5,
 			R.color.graph6, R.color.graph7, R.color.graph8, R.color.graph9, R.color.graph10, R.color.graph11, R.color.graph12,
 			R.color.graph13, R.color.graph14, R.color.graph15, R.color.graph16, R.color.graph17, R.color.graph18,
 			R.color.graph19, R.color.graph20};
@@ -168,7 +170,7 @@ final public class Utils {
 		for (String key : params.keySet())
 			query += key + "=" + params.get(key) + "&";
 
-		HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		//connection.setRequestProperty("Cookie", cookie);
 		//Set to POST
 		connection.setDoOutput(true);
@@ -485,21 +487,26 @@ final public class Utils {
 	public enum ValidationType {
 		INTEGER,
 		DOUBLE,
-		EMAIL
+		EMAIL,
+		IP_ADDRESS
 	}
 
 	/**
-	 * Helper function for validating EditText input
+	 * Helper function for validating TextInputLayout (EditText) input
 	 *
-	 * @param editText
-	 * @param additional Array of additional rules to validate: parseInt
-	 * @return
+	 * @param context
+	 * @param textInputLayout
+	 * @param additional
+	 * @return success
 	 */
-	public static boolean validateInput(Context context, EditText editText, ValidationType... additional) {
+	public static boolean validateInput(Context context, TextInputLayout textInputLayout, ValidationType... additional) {
+		EditText editText = textInputLayout.getEditText();
+		if (editText == null) return false;
+
 		String inputText = editText.getText().toString().trim();
 		if (inputText.length() == 0) {
-			editText.requestFocus();
-			editText.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
+			textInputLayout.requestFocus();
+			textInputLayout.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
 			return false;
 		}
 
@@ -510,8 +517,8 @@ final public class Utils {
 						//noinspection ResultOfMethodCallIgnored
 						Integer.parseInt(inputText);
 					} catch (NumberFormatException e) {
-						editText.requestFocus();
-						editText.setError(context.getString(R.string.utils_toast_field_must_be_number));
+						textInputLayout.requestFocus();
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
@@ -521,35 +528,32 @@ final public class Utils {
 						//noinspection ResultOfMethodCallIgnored
 						Double.parseDouble(inputText);
 					} catch (NumberFormatException e) {
-						editText.requestFocus();
-						editText.setError(context.getString(R.string.utils_toast_field_must_be_number));
+						textInputLayout.requestFocus();
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
 						return false;
 					}
 					break;
 
 				case EMAIL:
 					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
-						editText.requestFocus();
-						editText.setError(context.getString(R.string.utils_toast_field_must_be_email));
+						textInputLayout.requestFocus();
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_email));
 						return false;
 					}
+					break;
+
+				case IP_ADDRESS:
+					if(!Patterns.IP_ADDRESS.matcher(inputText).matches()){
+						textInputLayout.requestFocus();
+						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_ip_address));
+						return false;
+					}
+					break;
 			}
 		}
 
 		return true;
-	}
 
-	/**
-	 * Validating TextInputLayout
-	 *
-	 * @param context
-	 * @param textInputLayout
-	 * @param additional
-	 * @return
-	 */
-	public static boolean validateInput(Context context, TextInputLayout textInputLayout, ValidationType... additional) {
-		EditText editText = textInputLayout.getEditText();
-		return editText != null && validateInput(context, editText, additional);
 	}
 
 	@ColorInt

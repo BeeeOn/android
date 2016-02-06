@@ -9,7 +9,6 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
@@ -443,6 +442,57 @@ public class XmlCreator {
 				throw AppException.wrap(e, ClientError.XML);
 			}
 		}
+
+		/**
+		 * Sends creating device parameter
+		 *
+		 * @param sessionId userId
+		 * @param device    specified device
+		 * @param key       parameter key
+		 * @param value     parameter value
+		 * @return
+		 */
+		public static Request createParameter(String sessionId, Device device, String key, String value) {
+			try {
+				Request req = beginXml("createparameter", sessionId, XmlParser.Result.OK);
+				req.addAttribute("gateid", device.getGateId());
+
+				req.addTag("device",
+						"euid", device.getAddress(),
+						"parameterkey", key,
+						"parametervalue", value
+				);
+
+				return req.endXml();
+			} catch (IOException e) {
+				throw AppException.wrap(e, ClientError.XML);
+			}
+		}
+
+		/**
+		 * Sends getting device parameter
+		 *
+		 * @param sessionId userId
+		 * @param device    specified device
+		 * @param key       parameter key
+		 * @return
+		 */
+		public static Request getParameter(String sessionId, Device device, String key) {
+			try {
+				Request req = beginXml("createParameter", sessionId, XmlParser.Result.DATA);
+				req.addAttribute("gateid", device.getGateId());
+
+				req.addTag("device",
+						"euid", device.getAddress(),
+						"parameterkey", key
+				);
+
+				return req.endXml();
+			} catch (IOException e) {
+				throw AppException.wrap(e, ClientError.XML);
+			}
+		}
+
 	}
 
 	public static class Gates {
@@ -536,8 +586,8 @@ public class XmlCreator {
 		/**
 		 * New method create XML of SetDevs message with only one module in it. toSave parameter must by set properly.
 		 *
-		 * @param bt   BeeeOn token (active session)
-		 * @param gate to save
+		 * @param bt      BeeeOn token (active session)
+		 * @param gate    to save
 		 * @param gpsData
 		 * @return SetGate message
 		 * @since 2.5
@@ -577,6 +627,20 @@ public class XmlCreator {
 
 				return req.endXml();
 			} catch (Exception e) {
+				throw AppException.wrap(e, ClientError.XML);
+			}
+		}
+
+		public static Request search(String bt, String gateId, @Nullable String deviceIpAddress) {
+			try {
+				Request req = beginXml("search", bt, XmlParser.Result.OK);
+				req.addTag("gate",
+						"id", gateId,
+						"deviceip", deviceIpAddress
+				);
+
+				return req.endXml();
+			} catch (IOException e) {
 				throw AppException.wrap(e, ClientError.XML);
 			}
 		}

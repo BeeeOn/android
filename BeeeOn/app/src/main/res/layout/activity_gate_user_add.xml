@@ -23,16 +23,21 @@
 				style="@style/LinearRow.Caption"
 				/>
 
-			<EditText
-				android:id="@+id/gate_user_add_user_email"
+			<android.support.design.widget.TextInputLayout
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:ems="10"
-				android:inputType="textEmailAddress"
-				>
+				android:id="@+id/gate_user_add_user_email"
+				android:layout_height="wrap_content">
 
-				<requestFocus/>
-			</EditText>
+				<EditText
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:ems="10"
+					android:inputType="textEmailAddress"
+					>
+
+					<requestFocus/>
+				</EditText>
+			</android.support.design.widget.TextInputLayout>
 
 			<View
 				style="@style/BeeeOn.Divider.Full"

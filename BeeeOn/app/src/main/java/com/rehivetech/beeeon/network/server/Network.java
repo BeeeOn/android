@@ -28,7 +28,6 @@ import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -582,10 +581,12 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean devices_update(String gateId, List<Device> devices) {
-		processCommunication(
+		XmlParser parser = processCommunication(
 				XmlCreator.Devices.update(mSessionId, gateId, devices));
 
+		// TODO really dont know if should do something and knew that returned boolean
 		return true;
+//		return parser.parse;
 	}
 
 	@Override
@@ -612,6 +613,11 @@ public class Network implements INetwork {
 		return true;
 	}
 
+	@Override
+	public boolean devices_createParameter(Device device, String key, String value) {
+		processCommunication(XmlCreator.Devices.createParameter(mSessionId, device, key, value));
+		return true;
+	}
 
 	/**************************************************************************
 	 * GATES
@@ -658,13 +664,18 @@ public class Network implements INetwork {
 	}
 
 	@Override
+	public boolean gates_search(String gateId, String deviceIpAddress) {
+		processCommunication(XmlCreator.Gates.search(mSessionId, gateId, deviceIpAddress));
+		return false;
+	}
+
+	@Override
 	public boolean gates_update(Gate gate, GpsData gpsData) {
 		processCommunication(
 				XmlCreator.Gates.update(mSessionId, gate, gpsData));
 
 		return true;
 	}
-
 
 	/**************************************************************************
 	 * GATEUSERS

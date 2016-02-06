@@ -142,13 +142,15 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				}
 
 
-				// sets selected background && icon
-				boolean statusOk = device.getStatus().equals(Device.STATUS_AVAILABLE);
-				int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
-				int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
+				if (deviceHolder.mIcon != null) {
+					// sets selected background && icon
+					boolean statusOk = device.getStatus().equals(Device.STATUS_AVAILABLE);
+					int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
+					int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
 
-				deviceHolder.setSelected(isSelected(position), deviceHolder.mIcon, iconRes);
-				deviceHolder.mIcon.setBackgroundResource(backRes);
+					deviceHolder.setSelected(isSelected(position), deviceHolder.mIcon, iconRes);
+					deviceHolder.mIcon.setBackgroundResource(backRes);
+				}
 
 				break;
 
@@ -190,12 +192,29 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	}
 
 	/**
+	 * Adds item to the end
+	 * @param data item
+	 */
+	public void addItem(Object data) {
+		mObjects.add(data);
+		notifyItemInserted(mObjects.size() - 1);
+	}
+
+	/**
 	 * Removes item & animate it if animator set
 	 * @param position
 	 */
 	public void removeItem(int position){
 		mObjects.remove(position);
 		notifyItemRemoved(position);
+	}
+
+	/**
+	 * Clears adapter data
+	 */
+	public void clearData() {
+		mObjects.clear();
+		notifyDataSetChanged();
 	}
 
 	/**

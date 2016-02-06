@@ -193,6 +193,14 @@ public interface INetwork {
 	 */
 	boolean devices_unregister(Device device);
 
+	/**
+	 * Method for creating device parameter to server
+	 * @param device
+	 * @param key of parameter
+	 * @param value of parameter
+	 * @return success
+	 */
+	boolean devices_createParameter(Device device, String key, String value);
 
 	/**************************************************************************
 	 * GATES
@@ -216,8 +224,8 @@ public interface INetwork {
 	/**
 	 * Method register gate to server
 	 *
-	 * @param gateId   gate id
-	 * @param gateName gate name
+	 * @param gateId          gate id
+	 * @param gateName        gate name
 	 * @param offsetInMinutes
 	 * @return true if gate has been registered, false otherwise
 	 */
@@ -241,9 +249,18 @@ public interface INetwork {
 	boolean gates_startListen(String gateId);
 
 	/**
+	 * Gate starts to search for new devices
+	 *
+	 * @param gateId
+	 * @param deviceIpAddress
+	 * @return
+	 */
+	boolean gates_search(String gateId, String deviceIpAddress);
+
+	/**
 	 * Method edits gate's name and timezone
 	 *
-	 * @param gate new gate with new data
+	 * @param gate    new gate with new data
 	 * @param gpsData gps data of this gate
 	 * @return true if change was successful
 	 */

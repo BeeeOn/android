@@ -303,8 +303,24 @@ public class DemoNetwork implements INetwork {
 	}
 
 	@Override
+	public boolean gates_search(String gateId, String deviceIpAddress) {
+		return isGateAllowed(gateId); // TODO I guess that is what should be
+	}
+
+	@Override
 	public boolean devices_unregister(Device device) {
 		return mDevices.removeObject(device.getGateId(), device.getId()) != null;
+	}
+
+	@Override
+	public boolean devices_createParameter(Device device, String key, String value) {
+		Random rand = getRandomForGate(device.getGateId());
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return rand.nextBoolean();
 	}
 
 	@Override
@@ -360,47 +376,42 @@ public class DemoNetwork implements INetwork {
 		}
 
 		Random rand = getRandomForGate(gateId);
+		// Create unique device id
+		String address;
+		do {
+			address = gateId + "/" + String.valueOf(rand.nextInt());
+		} while (mDevices.hasObject(gateId, address));
 
-		for (DeviceType type : DeviceType.values()) {
-			// We don't want to show unknown device
-			if (type == DeviceType.TYPE_UNKNOWN) {
-				continue;
-			}
+		// Get random device type
+		DeviceType[] types = DeviceType.values();
+		DeviceType randType = types[1 + rand.nextInt(types.length - 1)]; // 1+ because we don't want unknown type, which is on beginning
 
-			// Create unique device id
-			String address;
-			do {
-				address = gateId + "/" + String.valueOf(rand.nextInt());
-			} while (mDevices.hasObject(gateId, address));
+		// Create new device
+		Device device = Device.createDeviceByType(randType.getId(), gateId, address);
 
-			// Create new device
-			Device device = Device.createDeviceByType(type.getId(), gateId, address);
-
-			Integer battery = device.getBattery();
-			if (battery != null) {
-				device.setBattery(rand.nextInt(101));
-			}
-			RefreshInterval refresh = device.getRefresh();
-			if (refresh != null) {
-				RefreshInterval[] refreshes = RefreshInterval.values();
-				device.setRefresh(refreshes[rand.nextInt(refreshes.length)]);
-			}
-
-			device.setPairedTime(DateTime.now(DateTimeZone.UTC));
-			device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
-			// device.setLocationId(locationId); // uninitialized device has no location
-			device.setNetworkQuality(rand.nextInt(101));
-			device.setStatus(Device.STATUS_AVAILABLE);
-
-			// Set random values for device modules
-			for (Module module : device.getAllModules(true)) {
-				setNewValue(module);
-			}
-
-			// Add to list that we return
-			newDevices.add(device);
+		Integer battery = device.getBattery();
+		if (battery != null) {
+			device.setBattery(rand.nextInt(101));
+		}
+		RefreshInterval refresh = device.getRefresh();
+		if (refresh != null) {
+			RefreshInterval[] refreshes = RefreshInterval.values();
+			device.setRefresh(refreshes[rand.nextInt(refreshes.length)]);
 		}
 
+		device.setPairedTime(DateTime.now(DateTimeZone.UTC));
+		device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
+		// device.setLocationId(locationId); // uninitialized device has no location
+		device.setNetworkQuality(rand.nextInt(101));
+		device.setStatus(Device.STATUS_AVAILABLE);
+
+		// Set random values for device modules
+		for (Module module : device.getAllModules(true)) {
+			setNewValue(module);
+		}
+
+		// Add to list that we return
+		newDevices.add(device);
 		return newDevices;
 	}
 

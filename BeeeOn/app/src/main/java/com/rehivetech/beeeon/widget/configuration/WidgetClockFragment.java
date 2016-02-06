@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
 import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
@@ -176,7 +177,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, final EditTextDialog dialog) {
+	public void onPositiveButtonClicked(int requestCode, View view, final BaseDialogFragment dialog) {
 		TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
 		if(!Utils.validateInput(mActivity, cityTextInputLayout)){
 			return;
@@ -225,7 +226,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
 	}
 
-	private void loadingCitySuccess(WeatherProvider.City city, EditTextDialog dialog) {
+	private void loadingCitySuccess(WeatherProvider.City city, BaseDialogFragment dialog) {
 		mWeatherCity = city;
 		// setup city label
 		mCityLabel.setText(city.name);

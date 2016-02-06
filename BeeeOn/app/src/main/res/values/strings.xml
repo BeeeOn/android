@@ -40,6 +40,7 @@
 	<string name="util_timezone_gate_timezone">Gateway timezone</string>
 	<string name="utils_toast_field_must_be_email">Enter a valid e-mail address</string>
 	<string name="utils_toast_field_must_be_number">Enter a valid number</string>
+	<string name="utils_toast_field_must_be_ip_address">Enter a valid IP address. It should look like 192.168.100.100.</string>
 
 	<!-- Adapter location -->
 	<string name="adapter_location_array_new_location_spinner">New location</string>
@@ -228,7 +229,25 @@
 	<string name="device_setup_device_list_paired_label">Paired:</string>
 
 	<!-- Device add -->
-	<string name="device_add_btn_send_pair">START</string>
+	<string name="device_add_title">Add device</string>
+	<string name="device_add_guide_text">BeeeOn gateway supports devices from multiple vendors. How to connect device with your gateway, see in <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">this website</a></string>
+	<string name="device_add_btn_search">SEARCH DEVICES</string>
+	<string name="device_add_activity_opening_error">Error during opening device setup, try again.</string>
+	<string name="device_add_dialog_enter_password_checkbox">Don\'t fill password\n(you may only view information about this device)</string>
+
+	<string name="device_search_title">Search devices</string>
+	<string name="device_search_manual_button">Manual search</string>
+	<string name="device_search_no_devices_text">No devices found</string>
+	<string name="device_search_snack_bar_title_searching">Searching…</string>
+	<string name="device_search_snack_bar_title_search_end">Search finished</string>
+	<string name="device_search_snack_bar_retry">Retry</string>
+	<string name="device_search_manual_search_hint">Enter IP address</string>
+	<string name="device_search_manual_search_dialog_button">Search</string>
+	<string name="device_search_enter_password">Enter password</string>
+	<string name="device_search_enter_password_hint">Password</string>
+	<string name="device_search_enter_password_ok">OK</string>
+	<string name="device_search_enter_password_wrong">Password is not correct</string>
+
 	<string name="device_add_device_found">Device was found</string>
 	<string name="device_add_device_not_found_in_time">Device was not found, check if it\'s really switched on and try it again</string>
 	<string name="device_add_dialog_device_add_text">Click on START to begin pairing</string>

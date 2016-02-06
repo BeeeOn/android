@@ -86,8 +86,4 @@ public final class Constants {
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID";
 
-	/**
-	 * The time interval for enabled pairing mode on Gate
- 	 */
-	public static final int PAIR_TIME_SEC = 30;
 }

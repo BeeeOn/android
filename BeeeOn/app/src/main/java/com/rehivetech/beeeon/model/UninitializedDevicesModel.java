@@ -39,6 +39,14 @@ public class UninitializedDevicesModel extends BaseModel {
 	}
 
 	/**
+	 * Clears list of uninitialized devices in cache
+	 * @param gateId gate id
+	 */
+	public void clearUninitializedDevicesChaceByGate(String gateId) {
+		mUninitializedDevices.removeHolder(gateId);
+	}
+
+	/**
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param gateId
@@ -50,7 +58,10 @@ public class UninitializedDevicesModel extends BaseModel {
 			return false;
 		}
 
-		mUninitializedDevices.setObjects(gateId, mNetwork.devices_getNew(gateId));
+		List<Device> newDevices = mNetwork.devices_getNew(gateId);
+		for (Device device : newDevices) {
+			mUninitializedDevices.addObject(gateId, device);
+		}
 		mUninitializedDevices.setLastUpdate(gateId, DateTime.now());
 
 		return true;

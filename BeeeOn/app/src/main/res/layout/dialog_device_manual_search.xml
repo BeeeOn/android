@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="wrap_content"
+	android:layout_width="match_parent"
+	android:padding="@dimen/space_big">
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/dialog_edit_text_input_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		>
+
+		<EditText
+			android:id="@+id/dialog_manual_search_editText"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/device_search_manual_search_hint"
+			android:inputType="number"
+			android:digits="0123456789."/>
+
+	</android.support.design.widget.TextInputLayout>
+</LinearLayout>
