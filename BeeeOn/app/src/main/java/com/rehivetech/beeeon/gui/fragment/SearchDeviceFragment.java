@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -71,6 +72,8 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	private DeviceRecycleAdapter mAdapter;
 	@Nullable
 	private Handler mHandler;
+	@Nullable
+	private CountDownTimer mCountDownTimer;
 	private long mCountDownTimeElapsed;
 	@Nullable
 	private String mSelectedItemId;
@@ -196,12 +199,36 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	}
 
 	private void startPairing(@Nullable final String deviceIpAddress) {
+		if (mCountDownTimer != null) {
+			mCountDownTimer.cancel();
+		}
+
+		if (mHandler != null) {
+			mHandler.removeCallbacksAndMessages(null);
+		}
+
+		mCountDownTimer = new CountDownTimer(COUNTDOWN_INTERVAL - mCountDownTimeElapsed, DateUtils.SECOND_IN_MILLIS) {
+			@Override
+			public void onTick(long millisUntilFinished) {
+				mCountDownText.setText(convertMillisToText(millisUntilFinished));
+			}
+
+			@Override
+			public void onFinish() {
+				mCountDownText.setText(convertMillisToText(0));
+			}
+		}.start();
+
 		mHandler = new Handler();
-		mHandler.post(new Runnable() {
+
+		doPairRequestTask(mCountDownTimeElapsed == 0, deviceIpAddress);
+
+		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				mCountDownTimeElapsed += DateUtils.SECOND_IN_MILLIS;
-				mCountDownText.setText(convertMillisToText(COUNTDOWN_INTERVAL - mCountDownTimeElapsed));
+				mCountDownTimeElapsed += PAIR_REQUEST_REPEAT_INTERVAL;
+
+				doPairRequestTask(false, null);
 
 				if (mCountDownTimeElapsed == COUNTDOWN_INTERVAL) {
 					Snackbar.make(mRootView, R.string.device_search_snack_bar_title_search_end, Snackbar.LENGTH_INDEFINITE)
@@ -217,12 +244,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 					return;
 				}
 
-				if (mCountDownTimeElapsed < COUNTDOWN_INTERVAL && mCountDownTimeElapsed % PAIR_REQUEST_REPEAT_INTERVAL == 0) {
-					doPairRequestTask(mCountDownTimeElapsed < (DateUtils.SECOND_IN_MILLIS * 4), deviceIpAddress);
-				}
-				mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
+				mHandler.postDelayed(this, PAIR_REQUEST_REPEAT_INTERVAL);
 			}
-		});
+		}, PAIR_REQUEST_REPEAT_INTERVAL);
 
 		Snackbar.make(mRootView, R.string.device_search_snack_bar_title_searching, Snackbar.LENGTH_INDEFINITE)
 				.show();
