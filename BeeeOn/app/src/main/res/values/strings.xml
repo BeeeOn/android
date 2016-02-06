@@ -7,6 +7,8 @@
 	<!-- Common strings -->
 	<string name="empty" translatable="false"/>
 	<string name="not_specified">Not specified</string>
+	<string name="dialog_ok">OK</string>
+	<string name="dialog_cancel">Cancel</string>
 
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifications</string>
@@ -384,6 +386,7 @@
 	<string name="settings_language_listpreference_english">English</string>
 	<string name="settings_language_listpreference_czech">Czech</string>
 	<string name="settings_language_listpreference_slovak">Slovak</string>
+	<string name="settings_language_dialog_message">App restart is required to change the language.\n\n Do you want to restart application?</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s\'s gateway #%2$d</string>
