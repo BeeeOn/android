@@ -1,46 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:orientation="vertical"
 	android:background="@color/beeeon_primary">
 
 
 	<include layout="@layout/layout_beeeon_toolbar"/>
 
-	<ImageView
+	<ScrollView
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_centerHorizontal="true"
-		android:layout_below="@id/beeeon_toolbar"
-		android:layout_marginTop="@dimen/space_big"
-		android:padding="@dimen/space_big"
-		android:scaleType="centerInside"
-		android:layout_above="@+id/device_add_guide_text"
-		android:src="@drawable/beeeon_tutorial_as_first_step"/>
+		android:layout_height="match_parent">
 
-	<TextView
-		android:id="@id/device_add_guide_text"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_centerInParent="true"
-		android:layout_marginTop="@dimen/space_big"
-		android:padding="@dimen/space_big"
-		android:gravity="center_horizontal"
-		android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-		android:textColor="@color/white"
-		android:lineSpacingExtra="10dp"
-		android:text="@string/device_add_guide_text"/>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			>
 
-	<Button
-		android:id="@+id/device_add_search_button"
-		style="@style/Widget.AppCompat.Button.Borderless"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="@dimen/space_bigger"
-		android:layout_alignParentBottom="true"
-		android:layout_centerHorizontal="true"
-		android:text="@string/device_add_btn_search"
-		android:textColor="@color/beeeon_accent"/>
+			<ImageView
+				android:layout_width="wrap_content"
+				android:layout_height="150dp"
+				android:layout_margin="@dimen/space_big"
+				android:scaleType="centerInside"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/beeeon_tutorial_as_first_step"/>
 
-</RelativeLayout>
+			<TextView
+				android:id="@+id/device_add_guide_text"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="@dimen/space_big"
+				android:padding="@dimen/space_big"
+				android:gravity="center_horizontal"
+				android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+				android:textColor="@color/white"
+				android:textColorLink="@color/beeeon_accent"
+				android:lineSpacingExtra="10dp"
+				android:text="@string/device_add_guide_text"/>
+
+			<Button
+				android:id="@+id/device_add_search_button"
+				android:theme="@style/BeeeOn.Button"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:layout_marginTop="@dimen/space_bigger"
+				android:text="@string/device_add_btn_search"/>
+		</LinearLayout>
+	</ScrollView>
+
+</LinearLayout>
