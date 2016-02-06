@@ -230,7 +230,7 @@
 
 	<!-- Device add -->
 	<string name="device_add_title">Add device</string>
-	<string name="device_add_guide_text">Devices differ in the way in which it sought with your gateway. How to connect device with your gateway, see in <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">this website</a></string>
+	<string name="device_add_guide_text">BeeeOn gateway supports devices from multiple vendors. How to connect device with your gateway, see in <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">this website</a></string>
 	<string name="device_add_btn_search">SEARCH DEVICES</string>
 	<string name="device_add_activity_opening_error">Error during opening device setup, try again.</string>
 	<string name="device_add_dialog_enter_password_checkbox">Don\'t fill password\n(you may only view information about this device)</string>
