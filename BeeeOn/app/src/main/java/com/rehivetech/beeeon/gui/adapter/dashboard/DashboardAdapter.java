@@ -170,12 +170,13 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 
 		private void prepareChart(GraphItem item) {
-			ChartHelper.prepareChart(mChart, mActivity, null, null, null, false);
+			ChartHelper.prepareChart(mChart, mActivity, null, null, null, false, false);
 			ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
-			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
+			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
+
 
 			if (item.getModuleIds().size() > 1) {
-				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true);
+				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
 			} else {
 				mChart.getAxisRight().setEnabled(false);
 			}
@@ -193,7 +194,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 				final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
 				dataSet.setAxisDependency(axisDependency);
-				ChartHelper.prepareDataSet(mActivity, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+				ChartHelper.prepareDataSet(mActivity, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 
 				ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
 					@Override

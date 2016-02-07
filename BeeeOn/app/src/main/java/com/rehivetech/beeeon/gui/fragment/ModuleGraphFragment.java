@@ -224,11 +224,11 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		if (barchart) {
 			mChart = new BarChart(mActivity);
-			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false);
+			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false, false);
 		} else {
 			mChart = new LineChart(mActivity);
 			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, unit);
-			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false);
+			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false, false);
 		}
 
 		mChart.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -241,7 +241,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		// prepare axis bottom
 		ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
 		//prepare axis left
-		ChartHelper.prepareYAxis(mActivity, module.getValue(), mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false);
+		ChartHelper.prepareYAxis(mActivity, module.getValue(), mChart.getAxisLeft(), null, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false, 5);
 		//disable right axis
 		mChart.getAxisRight().setEnabled(false);
 
@@ -262,9 +262,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 //			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
-		ChartHelper.prepareDataSet(mActivity, mDataSetAvg, barchart, true, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
-		ChartHelper.prepareDataSet(mActivity, mDataSetMin, barchart, true, Utils.getGraphColor(mActivity, 1), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
-		ChartHelper.prepareDataSet(mActivity, mDataSetMax, barchart, true, Utils.getGraphColor(mActivity, 2), ContextCompat.getColor(mActivity, R.color.beeeon_accent));
+		ChartHelper.prepareDataSet(mActivity, mDataSetAvg, barchart, true, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
+		ChartHelper.prepareDataSet(mActivity, mDataSetMin, barchart, true, Utils.getGraphColor(mActivity, 1), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
+		ChartHelper.prepareDataSet(mActivity, mDataSetMax, barchart, true, Utils.getGraphColor(mActivity, 2), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
 
 	}
 
