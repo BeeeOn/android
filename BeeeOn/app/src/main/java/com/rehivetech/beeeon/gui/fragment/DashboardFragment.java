@@ -138,10 +138,15 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	public void onPause() {
+		super.onPause();
 		Controller controller = Controller.getInstance(mActivity);
 		controller.saveDashboardItems(controller.getActualUser().getId(), mAdapter.getItems());
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override
