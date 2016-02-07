@@ -1,21 +1,17 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
-import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.ChartHelper;
@@ -27,19 +23,11 @@ import java.util.List;
 /**
  * Created by martin on 13.1.16.
  */
-public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
+public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment {
 
-	private static final String ARG_GATE_ID = "gate_id";
-
-	private String mGateId;
-
-	private TextInputLayout mTextInputLayout;
-	private EditText mGraphNameEditText;
 	private Spinner mLeftAxisSpinner;
 	private Spinner mRightAxisSpinner;
 	private Spinner mGraphRangeSpinner;
-
-	private FloatingActionButton mButtonDone;
 
 	public static AddDashboardGraphItemFragment newInstance(String gateId) {
 
@@ -50,29 +38,16 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 		return fragment;
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		Bundle args = getArguments();
-
-		if (args != null) {
-			mGateId = args.getString(ARG_GATE_ID);
-		}
-	}
-
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
 
 		View view = inflater.inflate(R.layout.fragment_add_dashboard_graph_item, container, false);
 
-		mTextInputLayout = (TextInputLayout) view.findViewById(R.id.fragment_add_dashboard_item_text_input);
-		mGraphNameEditText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_graph_name_edit_text);
 		mLeftAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_left_axis_spinner);
 		mRightAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_right_axis_spinner);
 		mGraphRangeSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_graph_range_spinner);
-		mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 
 		return view;
 	}
@@ -112,7 +87,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 			@SuppressWarnings("ResourceType")
 			public void onClick(View v) {
 
-				if (mGraphNameEditText.getText().length() == 0) {
+				if (mItemNameEditText.getText().length() == 0) {
 					mTextInputLayout.setError(getString(R.string.dashboard_add_graph_name_error));
 					return;
 				}
@@ -131,7 +106,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 					moduleIds = Arrays.asList(leftItem.getModule().getId(), rightItem.getModule().getId());
 				}
 
-				GraphItem graphItem = new GraphItem(mGraphNameEditText.getText().toString(), mGateId, deviceIds, moduleIds, ChartHelper.ALL_RANGES[mGraphRangeSpinner.getSelectedItemPosition()]);
+				GraphItem graphItem = new GraphItem(mItemNameEditText.getText().toString(), mGateId, deviceIds, moduleIds, ChartHelper.ALL_RANGES[mGraphRangeSpinner.getSelectedItemPosition()]);
 
 				Intent data = new Intent();
 				data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, graphItem);

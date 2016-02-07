@@ -26,7 +26,7 @@
 				android:layout_height="wrap_content">
 
 				<EditText
-					android:id="@+id/fragment_add_dashboard_item_graph_name_edit_text"
+					android:id="@+id/fragment_add_dashboard_item_name_edit_text"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
 					android:hint="@string/dashboard_add_graph_name_hint"/>
