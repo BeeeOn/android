@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
@@ -25,8 +24,7 @@ import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
-
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
+import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 
 import java.util.List;
 

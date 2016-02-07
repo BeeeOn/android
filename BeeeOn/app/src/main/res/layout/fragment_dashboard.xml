@@ -13,26 +13,20 @@
 		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-	<net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
-		android:id="@+id/dashboard_fab"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginBottom="16dp"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		android:layout_gravity="bottom|end"
-		style="@style/BeeeOn.Fab.Menu"
-		fab:fab_labelStyle="@style/BeeeOn.Fab.Menu.Label">
+	<com.rehivetech.beeeon.gui.view.FloatingActionMenu
+		style="@style/BeeeOn.FloatingActionMenu"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_anchor="@id/dahboard_recyclerview"
+		app:layout_anchorGravity="bottom|right|end">
 
-		<net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+		<com.rehivetech.beeeon.gui.view.FloatingActionButton
 			android:id="@+id/dashboard_add_graph"
+			style="@style/BeeeOn.FloatingActionButton.MenuButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			fab:fab_title="@string/dashboard_fab_add_graph"
-			fab:fab_icon="@drawable/ic_add_white_24dp"
-			style="@style/BeeeOn.Fab.Mini"
-			/>
-
-	</net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
+			android:src="@drawable/ic_add_white_24dp"
+			fab:fab_label="@string/dashboard_fab_add_graph"/>
+	</com.rehivetech.beeeon.gui.view.FloatingActionMenu>
 
 </android.support.design.widget.CoordinatorLayout>
