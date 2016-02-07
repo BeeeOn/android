@@ -78,11 +78,11 @@ dependencies {
 	compile "com.google.android.gms:play-services-identity:${project.ext.playServicesVersion}"
 	compile "com.google.android.gms:play-services-gcm:${project.ext.playServicesVersion}"
 	// Third-party libraries
-	compile 'net.i2p.android.ext:floatingactionbutton:1.10.0'
 	compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
 	compile 'joda-time:joda-time:2.7'
 	compile 'com.avast:android-styled-dialogs:2.3.3'
 	compile 'com.facebook.android:facebook-android-sdk:4.5.0'
 	compile 'com.github.PhilJay:MPAndroidChart:v2.2.0'
 	compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.0.0@aar'
+	compile 'com.github.clans:fab:1.6.2'
 }

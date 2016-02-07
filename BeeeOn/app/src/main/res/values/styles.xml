@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
@@ -164,28 +164,34 @@
 
 
     <!-- FAB -->
-
-    <style name="BeeeOn.Fab">
-        <item name="fab_colorNormal">@color/beeeon_accent</item>
-        <item name="fab_colorPressed">@color/beeeon_accent_light</item>
-        <item name="fab_size">normal</item>
+    <style name="BeeeOn.FloatingActionMenu">
+        <item name="menu_backgroundColor">@color/beeeon_background_gray_transparent</item>
+        <item name="menu_labels_style">@style/BeeeOn.FloatinActionButton.MenuLabel</item>
+        <item name="menu_colorNormal">@color/beeeon_accent</item>
+        <item name="menu_colorPressed">@color/beeeon_accent_light</item>
+        <item name="menu_colorRipple">@color/beeeon_accent_light</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">@dimen/space_big</item>
+        <item name="android:paddingBottom">@dimen/space_big</item>
     </style>
 
-	<style name="BeeeOn.Fab.Mini">
-		<item name="fab_size">mini</item>
-	</style>
+    <style name="BeeeOn.FloatingActionButton" parent="">
+        <item name="fab_colorNormal">@color/beeeon_accent</item>
+        <item name="fab_colorPressed">@color/beeeon_accent_light</item>
+        <item name="fab_colorRipple">@color/beeeon_accent_light</item>
+    </style>
 
-	<style name="BeeeOn.Fab.Menu">
-		<item name="fab_addButtonColorNormal">@color/beeeon_accent</item>
-		<item name="fab_addButtonColorPressed">@color/beeeon_accent_light</item>
-		<item name="fab_addButtonPlusIconColor">@color/white</item>
-	</style>
+    <style name="BeeeOn.FloatingActionButton.MenuButton" parent="BeeeOn.FloatingActionButton">
+        <item name="fab_size">mini</item>
+    </style>
 
-	<style name="BeeeOn.Fab.Menu.Label" parent="">
-		<item name="android:background">@drawable/fab_background</item>
-		<item name="android:textColor">@color/white</item>
-	</style>
-
+    <style name="BeeeOn.FloatinActionButton.MenuLabel" parent="">
+        <item name="android:background">@drawable/floating_action_button_label_background</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize" tools:ignore="PrivateResource">@dimen/abc_text_size_body_2_material</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 
     <!--Tab Layout-->
     <style name="ModuleGroupTabLayout" parent="Widget.Design.TabLayout">

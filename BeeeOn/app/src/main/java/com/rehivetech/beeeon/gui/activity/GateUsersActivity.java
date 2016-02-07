@@ -20,14 +20,13 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
+import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
 import com.rehivetech.beeeon.threading.task.EditUserTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveUserTask;
-
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 

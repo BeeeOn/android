@@ -14,6 +14,7 @@
     <color name="beeeon_background">#FFFFFF</color>
     <color name="beeeon_background_gray">#EEEEEE</color>
     <color name="beeeon_background_drawer">#FFFFFF</color>
+    <color name="beeeon_background_gray_transparent">#beeeeeee</color>
 
     <color name="beeeon_placeholder_primary">#B2EBF2</color>
 

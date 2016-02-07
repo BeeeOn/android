@@ -43,38 +43,35 @@
 			/>
 	</LinearLayout>
 
-	<net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu
+	<com.rehivetech.beeeon.gui.view.FloatingActionMenu
 		android:id="@+id/devices_list_fab"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
+		style="@style/BeeeOn.FloatingActionMenu"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
 		android:layout_alignParentBottom="true"
 		android:layout_alignParentRight="true"
 		android:layout_alignParentEnd="true"
-		android:layout_marginBottom="16dp"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		style="@style/BeeeOn.Fab.Menu"
-		fab:fab_labelStyle="@style/BeeeOn.Fab.Menu.Label">
+		>
 
-		<net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+		<com.rehivetech.beeeon.gui.view.FloatingActionButton
 			android:id="@+id/devices_list_action_add_device"
+			style="@style/BeeeOn.FloatingActionButton.MenuButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			fab:fab_title="@string/manifest_title_device_add"
-			fab:fab_icon="@drawable/ic_add_white_24dp"
-			style="@style/BeeeOn.Fab.Mini"
+			android:src="@drawable/ic_add_white_24dp"
+			fab:fab_label="@string/manifest_title_device_add"
 			/>
 
-		<net.i2p.android.ext.floatingactionbutton.FloatingActionButton
+		<com.rehivetech.beeeon.gui.view.FloatingActionButton
 			android:id="@+id/devices_list_action_add_gate"
+			style="@style/BeeeOn.FloatingActionButton.MenuButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			fab:fab_title="@string/main_action_gate_add"
-			fab:fab_icon="@drawable/ic_add_white_24dp"
-			style="@style/BeeeOn.Fab.Mini"
+			android:src="@drawable/ic_add_white_24dp"
+			fab:fab_label="@string/main_action_gate_add"
 			/>
 
-	</net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu>
+	</com.rehivetech.beeeon.gui.view.FloatingActionMenu>
 
 
 </RelativeLayout>

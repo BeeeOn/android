@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,7 +16,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -52,7 +52,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 final public class Utils {
 	private static final String TAG = Utils.class.getSimpleName();
@@ -580,5 +579,14 @@ final public class Utils {
 		} catch (NumberFormatException e) {
 			return defaultValue;
 		}
+	}
+
+	public static int getToolbarHeight(Context context) {
+		final TypedArray styledAttributes = context.getTheme().obtainStyledAttributes(
+				new int[]{R.attr.actionBarSize});
+		int toolbarHeight = (int) styledAttributes.getDimension(0, 0);
+		styledAttributes.recycle();
+
+		return toolbarHeight;
 	}
 }

@@ -27,6 +27,8 @@ import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
+import com.rehivetech.beeeon.gui.view.FloatingActionButton;
+import com.rehivetech.beeeon.gui.view.FloatingActionMenu;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
@@ -35,9 +37,6 @@ import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
-
-import net.i2p.android.ext.floatingactionbutton.FloatingActionButton;
-import net.i2p.android.ext.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -167,7 +166,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		recyclerView.setAdapter(mDeviceAdapter);
 
 		// FAB menu
-		final FloatingActionsMenu fabMenu = (FloatingActionsMenu) rootView.findViewById(R.id.devices_list_fab);
+		final FloatingActionMenu fabMenu = (FloatingActionMenu) rootView.findViewById(R.id.devices_list_fab);
 
 		// FAB button add device
 		FloatingActionButton fabAddDevice = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_device);
@@ -176,7 +175,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			public void onClick(View v) {
 				Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mActiveGateId, AddDeviceActivity.ACTION_INITIAL, null);
 				mActivity.startActivityForResult(intent, Constants.ADD_DEVICE_REQUEST_CODE);
-				fabMenu.collapse();
 			}
 		});
 
@@ -187,7 +185,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), AddGateActivity.class);
 				mActivity.startActivityForResult(intent, Constants.ADD_GATE_REQUEST_CODE);
-				fabMenu.collapse();
 			}
 		});
 
