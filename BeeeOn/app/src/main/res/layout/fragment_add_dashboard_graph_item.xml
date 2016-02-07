@@ -3,7 +3,9 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:focusable="true"
+	android:focusableInTouchMode="true">
 
 	<ScrollView
 		android:layout_width="match_parent"
@@ -79,20 +81,14 @@
 		</RelativeLayout>
 	</ScrollView>
 
-	<FrameLayout
-		android:layout_width="match_parent"
-		android:layout_height="?attr/actionBarSize"
-		android:layout_gravity="bottom"
-		android:background="@color/beeeon_primary">
-
-		<Button
-			android:id="@+id/fragment_add_dashboard_item_button_done"
-			style="@style/Widget.AppCompat.Button.Borderless"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"
-			android:text="@string/button_done"
-			android:textColor="@color/white"/>
-
-	</FrameLayout>
+	<com.rehivetech.beeeon.gui.view.FloatingActionButton
+		android:id="@+id/fragment_add_dashboard_item_button_done"
+		style="@style/BeeeOn.FloatingActionButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginEnd="@dimen/space_big"
+		android:layout_marginRight="@dimen/space_big"
+		android:layout_marginBottom="@dimen/space_big"
+		android:layout_gravity="bottom|end"
+		android:src="@drawable/ic_content_save_white_24dp"/>
 </FrameLayout>

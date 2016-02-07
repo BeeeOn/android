@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
+import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.ChartHelper;
@@ -36,7 +36,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 	private Spinner mRightAxisSpinner;
 	private Spinner mGraphRangeSpinner;
 
-	private Button mButtonDone;
+	private FloatingActionButton mButtonDone;
 
 	public static AddDashboardGraphItemFragment newInstance(String gateId) {
 
@@ -68,7 +68,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 		mLeftAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_left_axis_spinner);
 		mRightAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_right_axis_spinner);
 		mGraphRangeSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_graph_range_spinner);
-		mButtonDone = (Button) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
+		mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 
 		return view;
 	}
