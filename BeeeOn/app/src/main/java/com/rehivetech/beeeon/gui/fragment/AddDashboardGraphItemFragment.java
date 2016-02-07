@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.ChartHelper;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,6 +33,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 
 	private String mGateId;
 
+	private TextInputLayout mTextInputLayout;
 	private EditText mGraphNameEditText;
 	private Spinner mLeftAxisSpinner;
 	private Spinner mRightAxisSpinner;
@@ -64,6 +67,7 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 
 		View view = inflater.inflate(R.layout.fragment_add_dashboard_graph_item, container, false);
 
+		mTextInputLayout = (TextInputLayout) view.findViewById(R.id.fragment_add_dashboard_item_text_input);
 		mGraphNameEditText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_graph_name_edit_text);
 		mLeftAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_left_axis_spinner);
 		mRightAxisSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_right_axis_spinner);
@@ -107,11 +111,26 @@ public class AddDashboardGraphItemFragment extends BaseApplicationFragment {
 			@Override
 			@SuppressWarnings("ResourceType")
 			public void onClick(View v) {
+
+				if (mGraphNameEditText.getText().length() == 0) {
+					mTextInputLayout.setError(getString(R.string.dashboard_add_graph_name_error));
+					return;
+				}
+
 				SpinnerHolder leftItem = ((SpinnerHolder) mLeftAxisSpinner.getSelectedItem());
 				SpinnerHolder rightItem = ((SpinnerHolder) mRightAxisSpinner.getSelectedItem());
 
-				List<String> deviceIds = Arrays.asList(leftItem.getDevice().getId(), rightItem.getDevice().getId());
-				List<String> moduleIds = Arrays.asList(leftItem.getModule().getId(), rightItem.getModule().getId());
+				List<String> deviceIds;
+				List<String> moduleIds;
+
+				if (rightItem.getDevice() == null) {
+					deviceIds = Collections.singletonList(leftItem.getDevice().getId());
+					moduleIds = Collections.singletonList(leftItem.getModule().getId());
+				} else {
+					deviceIds = Arrays.asList(leftItem.getDevice().getId(), rightItem.getDevice().getId());
+					moduleIds = Arrays.asList(leftItem.getModule().getId(), rightItem.getModule().getId());
+				}
+
 				GraphItem graphItem = new GraphItem(mGraphNameEditText.getText().toString(), mGateId, deviceIds, moduleIds, ChartHelper.ALL_RANGES[mGraphRangeSpinner.getSelectedItemPosition()]);
 
 				Intent data = new Intent();
