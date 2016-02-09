@@ -3,6 +3,9 @@
 
 	<!-- Common strings -->
 	<string name="not_specified">Nespecifikováno</string>
+	<string name="dialog_ok">OK</string>
+	<string name="dialog_cancel">Zrušit</string>
+
 
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifikace</string>
@@ -242,7 +245,27 @@
 	<string name="device_edit_warning_refresh">Změna se projeví při dalším probuzení zařízení (přibližně v %s). Pokud chcete probudit zařízení ručně, zatřeste zařízením nebo stiskněte jeho tlačítko pro párování.</string>
 
 	<!-- Device add -->
-	<string name="device_add_btn_send_pair">Start</string>
+
+
+	<string name="device_add_title">Přidat zařízení</string>
+	<string name="device_add_guide_text">BeeeOn brána podporuje zařízení od různých výrobců. Jak připojit vaše zařízení s bránou se dozvíte na <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">této webové stránce</a></string>
+	<string name="device_add_btn_search">HLEDAT ZAŘÍZENÍ</string>
+	<string name="device_add_activity_opening_error">Chyba pri otevření nastavení zařízení, skuste to pozdeji.</string>
+	<string name="device_add_dialog_enter_password_checkbox">Nezadávat heslo\n(můžete si pouze prohlížet informace o tomto zařízení)</string>
+
+	<string name="device_search_title">Hledat zařízení</string>
+	<string name="device_search_manual_button">Manuálni vyhledávaní</string>
+	<string name="device_search_no_devices_text">Nenašlo se žádné zařízení</string>
+	<string name="device_search_snack_bar_title_searching">Hledání…</string>
+	<string name="device_search_snack_bar_title_search_end">Hledání se skončilo</string>
+	<string name="device_search_snack_bar_retry">Opakovat</string>
+	<string name="device_search_manual_search_hint">Zadejte IP adresu</string>
+	<string name="device_search_manual_search_dialog_button">Hledat</string>
+	<string name="device_search_enter_password">Zadejte heslo</string>
+	<string name="device_search_enter_password_hint">Heslo</string>
+	<string name="device_search_enter_password_ok">OK</string>
+	<string name="device_search_enter_password_wrong">Heslo není správne</string>
+
 	<string name="device_add_device_found">Zařízení bylo nalezeno</string>
 	<string name="device_add_device_not_found_in_time">Zařízení nebylo nalezeno, ověřte, zda je skutečně zapnuto, a zkuste to znovu</string>
 	<string name="device_add_dialog_device_add_text">Klikněte na START pro zahájení párování</string>
@@ -360,6 +383,7 @@
 	<string name="settings_language_listpreference_english">Angličtina</string>
 	<string name="settings_language_listpreference_czech">Čeština</string>
 	<string name="settings_language_listpreference_slovak">Slovenština</string>
+	<string name="settings_language_dialog_message">Pro změnu jazyka je nutné restartovat aplikaci.\n\n Chcete aplikaci restartovat?</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s brána #%2$d</string>

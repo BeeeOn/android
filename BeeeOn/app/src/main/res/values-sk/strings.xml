@@ -2,7 +2,9 @@
 <resources>
 
 	<!-- Common strings -->
-	<string name="not_specified">Nešpecifikováno</string>
+	<string name="not_specified">Nešpecifikované</string>
+	<string name="dialog_ok">OK</string>
+	<string name="dialog_cancel">Zrušiť</string>
 
 	<!-- Titles in manifest-->
 	<string name="manifest_action_notification">Notifikácie</string>
@@ -35,6 +37,7 @@
 	<string name="util_timezone_gate_timezone">Časové pásmo brány</string>
 	<string name="utils_toast_field_must_be_email">Vložte platnú e-mailovú adresu</string>
 	<string name="utils_toast_field_must_be_number">Vložte platné číslo</string>
+	<string name="utils_toast_field_must_be_ip_address">Vložte platnú IP adresu. Môže vyzerat napríklad 192.168.100.100.</string>
 
 	<!-- Adapter location -->
 	<string name="adapter_location_array_new_location_spinner">Nové umiestnenie</string>
@@ -241,7 +244,27 @@
 	<string name="device_edit_warning_battery_life">Voľbou príliš nízkého intervalu prebudenia môžete znížiť životnosť batérie.</string>
 	<string name="device_edit_warning_refresh">Zmena se prejaví pri ďalšom prebudení zariadenia (približne v %s). Ak chcete prebudiť zariadenie ručne, zatraste zariadením alebo stlačte jeho tlačidlo pre párovanie.</string>
 	<!-- Device add -->
-	<string name="device_add_btn_send_pair">START</string>
+
+	<string name="device_add_title">Pridať zariadenie</string>
+	<string name="device_add_guide_text">BeeeOn brána podporuje zariadenia od rôznych výrobcov.Ako pripojiť vaše zariadenie s bránou sa dozviete na <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">tejto webovej stránke</a></string>
+	<string name="device_add_btn_search">HĽADAŤ ZARIADENIA</string>
+	<string name="device_add_activity_opening_error">Chyba pri otvorení nastavení zariadenia, skúste to neskôr.</string>
+	<string name="device_add_dialog_enter_password_checkbox">Nevýpĺňať heslo\n(môžete si iba prezerat informácie o tomto zariadení)</string>
+
+	<string name="device_search_title">Hľadať zariadenia</string>
+	<string name="device_search_manual_button">Manuálne vyhľadávanie</string>
+	<string name="device_search_no_devices_text">Nenašlo sa žiadne zariadenie</string>
+	<string name="device_search_snack_bar_title_searching">Hľadanie…</string>
+	<string name="device_search_snack_bar_title_search_end">Hľadanie skončilo</string>
+	<string name="device_search_snack_bar_retry">Opakovať</string>
+	<string name="device_search_manual_search_hint">Zadajte IP adresu</string>
+	<string name="device_search_manual_search_dialog_button">Hľadať</string>
+	<string name="device_search_enter_password">Zadajte heslo</string>
+	<string name="device_search_enter_password_hint">Heslo</string>
+	<string name="device_search_enter_password_ok">OK</string>
+	<string name="device_search_enter_password_wrong">Heslo nie je správne</string>
+
+
 	<string name="device_add_device_found">Našlo sa zariadenie</string>
 	<string name="device_add_device_not_found_in_time">Zariadenie nebolo nájdené, skontrolujte či je skutočne zapnuté a opakujte znova</string>
 	<string name="device_add_dialog_device_add_text">Stlačte START pro zahájenie párovanie</string>
@@ -360,6 +383,7 @@
 	<string name="settings_language_listpreference_english">Angličtina</string>
 	<string name="settings_language_listpreference_czech">Čeština</string>
 	<string name="settings_language_listpreference_slovak">Slovenčina</string>
+	<string name="settings_language_dialog_message">Na zmenu jazyka je potrebný reštart aplikácie.\n\n Chcete reštartovať aplikáciu?</string>
 
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s brána #%2$d</string>
