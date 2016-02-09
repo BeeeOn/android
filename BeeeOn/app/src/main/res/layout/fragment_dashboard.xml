@@ -5,7 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:background="@color/beeeon_background_gray"
-	xmlns:app="http://schemas.android.com/tools">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/dashboard_recyclerview"
@@ -17,7 +17,7 @@
 		style="@style/BeeeOn.FloatingActionMenu"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		app:layout_anchor="@id/dahboard_recyclerview"
+		app:layout_anchor="@id/dashboard_recyclerview"
 		app:layout_anchorGravity="bottom|right|end">
 
 		<com.rehivetech.beeeon.gui.view.FloatingActionButton
