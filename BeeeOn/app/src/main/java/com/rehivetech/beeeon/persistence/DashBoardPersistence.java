@@ -7,7 +7,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
@@ -52,7 +51,7 @@ public class DashBoardPersistence {
 		public BaseItem deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			Type typeClass;
 
-			if (((JsonObject) json).get("dataRange") != JsonNull.INSTANCE) {
+			if (((JsonObject) json).get("dataRange") != null) {
 				typeClass = GraphItem.class;
 			} else {
 				typeClass = ActualValueItem.class;

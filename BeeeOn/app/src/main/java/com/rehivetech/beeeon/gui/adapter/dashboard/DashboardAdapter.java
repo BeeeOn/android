@@ -111,7 +111,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				((DashboardGraphViewHolder) holder).bind(controller, (GraphItem) item, position);
 				break;
 			case VIEW_TYPE_ACT_VALUE: {
-				((ActualValueViewHolder) holder).bind(controller, (ActualValueItem) item);
+				((ActualValueViewHolder) holder).bind(controller, (ActualValueItem) item, position);
 				break;
 			}
 
@@ -128,8 +128,10 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		return mItems.get(position);
 	}
 
-	public void deleteItem(int position) {
-		mItems.remove(position);
+
+	public void deleteItem(BaseItem item) {
+		int position = mItems.indexOf(item);
+		mItems.remove(item);
 		notifyItemRemoved(position);
 	}
 
@@ -220,6 +222,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		protected void setSelectedBackground(boolean isSelected) {
 			if (isSelected) {
 				mRoot.setBackgroundResource(R.color.gray_material_400);
+			} else {
+				mRoot.setBackgroundResource(R.color.white);
 			}
 		}
 
@@ -238,24 +242,27 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class ActualValueViewHolder extends RecyclerView.ViewHolder {
+	public class ActualValueViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public final ImageView mIcon;
 		public final TextView mLabel;
 		public final TextView mValue;
 		public final TextView mLastUpdate;
+		public final View mRoot;
 
 
 		public ActualValueViewHolder(View itemView) {
 			super(itemView);
-
+			mRoot = itemView;
 			mIcon = (ImageView) itemView.findViewById(R.id.dashboard_item_act_value_icon);
 			mLabel = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_label);
 			mValue = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_value);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_last_update_value);
 
+			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
 		}
 
-		public void bind(Controller controller, ActualValueItem item) {
+		public void bind(Controller controller, ActualValueItem item, int position) {
 			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceId());
 			Module module = device.getModuleById(item.getModuleId());
 			SharedPreferences prefs = controller.getUserSettings();
@@ -265,6 +272,31 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
 			mValue.setText(String.format("%.2f %s", module.getValue().getDoubleValue(), unitsHelper.getStringUnit(module.getValue())));
 			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(item.getGateId())));
+
+			setSelected(isSelected(position));
+		}
+
+		@Override
+		public void onClick(View v) {
+
+		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			if(mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
+				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		protected void setSelectedBackground(boolean isSelected) {
+			if (isSelected) {
+				mRoot.setBackgroundResource(R.color.gray_material_400);
+			} else {
+				mRoot.setBackgroundResource(R.color.white);
+			}
 		}
 	}
 

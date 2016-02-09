@@ -1,10 +1,10 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ActionMode;
@@ -20,18 +20,19 @@ import android.view.ViewGroup;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
-import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by martin on 15.11.15.
  */
-public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener{
+public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener {
 
 	private static final String TAG = DashboardFragment.class.getSimpleName();
 
@@ -42,6 +43,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private String mGateId;
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
+	private CoordinatorLayout mRootLayout;
 
 	public static DashboardFragment newInstance(String gateId) {
 
@@ -51,11 +53,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		DashboardFragment fragment = new DashboardFragment();
 		fragment.setArguments(args);
 		return fragment;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
 	}
 
 	@Override
@@ -71,8 +68,8 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dashboard_recyclerview);
+		mRootLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_dashboard, container, false);
+		RecyclerView recyclerView = (RecyclerView) mRootLayout.findViewById(R.id.dashboard_recyclerview);
 
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
 		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
@@ -80,17 +77,24 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		mAdapter = new DashboardAdapter(mActivity, this);
 		recyclerView.setAdapter(mAdapter);
 
-		FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.dashboard_add_graph);
+		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_graph);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mActivity, AddDashboardItemActivity.class);
-				intent.putExtra(AddDashboardItemActivity.ARG_GATE_ID, mGateId);
-				intent.putExtra(AddDashboardItemActivity.ARG_ITEM_TYPE, AddDashboardItemActivity.KEY_VALUE_TYPE_GRAPH_ITEM);
+				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_GRAPH_ITEM);
 				startActivityForResult(intent, 0);
 			}
 		});
-		return view;
+
+		FloatingActionButton fabAddModule = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_module_item);
+		fabAddModule.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_MODULE_ITEM);
+				startActivityForResult(intent, 0);
+			}
+		});
+		return mRootLayout;
 	}
 
 	@Override
@@ -181,23 +185,34 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			if (item.getItemId() == R.id.action_delete) {
-				final int firstSelected = mAdapter.getFirstSelectedItem();
+				final List selectedItems = mAdapter.getSelectedItems();
 
 				if (mActionMode != null) {
 					mActionMode.finish();
 				}
-				if (mAdapter.getItemViewType(firstSelected) == DeviceRecycleAdapter.TYPE_DEVICE) {
-					final BaseItem dashboardItem = mAdapter.getItem(firstSelected);
-					mAdapter.deleteItem(firstSelected);
-					Snackbar.make(getView(), R.string.dashboard_delete_snackbar, Snackbar.LENGTH_LONG)
-							.setAction(R.string.dashboard_undo, new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									mAdapter.addItem(firstSelected, dashboardItem);
-								}
-							})
-					.show();
+
+				//save selected items to undo
+				final Map<Integer, BaseItem> tempSelectedItems = new TreeMap<>();
+				for (Object itemPosition : selectedItems) {
+					Integer position = (Integer) itemPosition;
+					tempSelectedItems.put(position, mAdapter.getItem(position));
 				}
+
+				//remove all selected items
+				for (Map.Entry<Integer, BaseItem> entry : tempSelectedItems.entrySet()) {
+					mAdapter.deleteItem(entry.getValue());
+				}
+
+				Snackbar.make(mRootLayout, R.string.dashboard_delete_snackbar, Snackbar.LENGTH_LONG)
+						.setAction(R.string.dashboard_undo, new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								for (Map.Entry<Integer, BaseItem> entry : tempSelectedItems.entrySet()) {
+									mAdapter.addItem(entry.getKey(), entry.getValue());
+								}
+							}
+						})
+						.show();
 			}
 			return true;
 		}

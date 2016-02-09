@@ -450,6 +450,7 @@
 
 	<!--Dashboard-->
 	<string name="dashboard_fab_add_graph">Add graph</string>
+	<string name="dashboard_fab_add_module">Add module value</string>
 	<string name="dashboard_add_graph_name_hint">Graph name</string>
 	<string name="dashboard_add_graph_left_axis_label">Select left axis module</string>
 	<string name="dashboard_add_graph_right_axis_label">Select right axis module</string>
