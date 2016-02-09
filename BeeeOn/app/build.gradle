@@ -21,6 +21,12 @@ android {
 		debug {
 			storeFile file('../keystores/debug.keystore')
 		}
+		release {
+			storeFile file('../keystores/release.keystore')
+			storePassword System.getenv("KEYSTORE_PASSWORD")
+			keyAlias System.getenv("KEY_ALIAS")
+			keyPassword System.getenv("KEY_PASSWORD")
+		}
 	}
 
 	buildTypes {
@@ -29,10 +35,11 @@ android {
 			signingConfig signingConfigs.debug
 			versionNameSuffix " debug"
 			applicationIdSuffix ".debug"
-            resValue "string", "app_name", "BeeeOn Debug"
+			resValue "string", "app_name", "BeeeOn Debug"
 		}
 
 		release {
+			signingConfig signingConfigs.release
 			minifyEnabled true
 			shrinkResources true
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
