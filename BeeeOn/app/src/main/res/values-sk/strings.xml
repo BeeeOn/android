@@ -444,4 +444,18 @@
 	<string name="data_type_avg">Priemer</string>
 	<string name="data_type_max">Maximum</string>
 
+	<!--Dashboard-->
+	<string name="dashboard_fab_add_graph">Pridať čiarový graf</string>
+	<string name="dashboard_fab_add_week_bar_graph">Pridať týždňový stĺpcový graf</string>
+	<string name="dashboard_fab_add_module">Pridať hodnotu modulu</string>
+	<string name="dashboard_add_graph_name_hint">Názov karty</string>
+	<string name="dashboard_add_graph_left_axis_label">Vyberte modul pre ľavú osu</string>
+	<string name="dashboard_add_graph_right_axis_label">Vyberte modul pre pravú osu</string>
+	<string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dát pre graf</string>
+	<string name="dashboard_add_graph_week_module_label">Vyberte modul pre graf</string>
+	<string name="dashboard_add_graph_week_data_type_label">vyberte typ dát pre graf</string>
+	<string name="dashboard_delete_snackbar">Karta bola zmazaná</string>
+	<string name="dashboard_undo">Späť</string>
+	<string name="dashboard_add_graph_name_error">Pomenujte novú kartu</string>
+
 </resources>

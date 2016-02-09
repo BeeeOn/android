@@ -38,28 +38,28 @@
 				android:layout_marginTop="@dimen/space_big"
 				android:layout_below="@id/fragment_add_dashboard_item_text_input"
 				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:text="@string/dashboard_add_graph_left_axis_label"/>
+				android:text="@string/dashboard_add_graph_week_module_label"/>
 
 			<Spinner
 				android:id="@+id/fragment_add_dashboard_item_module_spinner"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_left_axis_label"/>
+				android:layout_below="@id/fragment_add_dashboard_item_module_spinner_label"/>
 
 			<TextView
 				android:id="@+id/fragment_add_dashboard_item_graph_data_type"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginTop="@dimen/space_big"
-				android:text="@string/dashboard_add_graph_right_axis_label"
+				android:text="@string/dashboard_add_graph_week_data_type_label"
 				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:layout_below="@id/fragment_add_dashboard_item_left_axis_spinner"/>
+				android:layout_below="@id/fragment_add_dashboard_item_module_spinner"/>
 
 			<Spinner
 				android:id="@+id/fragment_add_dashboard_item_graph_data_type_spinner"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_right_axis_label"/>
+				android:layout_below="@id/fragment_add_dashboard_item_graph_data_type"/>
 
 		</RelativeLayout>
 	</ScrollView>
