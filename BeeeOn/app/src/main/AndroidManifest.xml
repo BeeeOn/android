@@ -156,6 +156,10 @@
 			android:name=".gui.activity.DevicesListActivity"
 			android:label="@string/nav_drawer_menu_menu_devices"/>
 
+		<activity
+			android:name=".gui.activity.AddDashboardItemActivity"
+			android:label="@string/app_name"/>
+
 		<!-- WIDGETS -->
 		<service
 			android:name=".widget.service.WidgetService"

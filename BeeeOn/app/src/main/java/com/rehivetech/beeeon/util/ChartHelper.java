@@ -86,10 +86,12 @@ final public class ChartHelper {
 	 * @param baseValue  module baseValue
 	 * @param yLabels    StringBuffer to save long x labels in bar chart
 	 * @param markerView chart markerView instance
+	 * @param drawBorders
+	 * @param setGestureListener
 	 */
 	@SuppressLint("PrivateResource")
-	public static void prepareChart(final BarLineChartBase chart, final Context context, BaseValue baseValue, StringBuffer yLabels,
-									@Nullable MarkerView markerView, boolean drawBorders) {
+	public static void prepareChart(final BarLineChartBase chart, final Context context, @Nullable BaseValue baseValue, @Nullable StringBuffer yLabels,
+									@Nullable MarkerView markerView, boolean drawBorders, boolean setGestureListener) {
 
 		chart.getLegend().setEnabled(false);
 		chart.setNoDataText(context.getString(R.string.chart_helper_chart_no_data));
@@ -111,7 +113,7 @@ final public class ChartHelper {
 
 		chart.setGridBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
 
-		if (baseValue instanceof EnumValue) {
+		if (baseValue != null && baseValue instanceof EnumValue && yLabels != null) {
 			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
 			if (labels.size() > 2) {
 				int j = 1;
@@ -132,54 +134,56 @@ final public class ChartHelper {
 		final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
 		final int chartNumOfCircles = context.getResources().getInteger(R.integer.graph_number_circles);
 
-		chart.setOnChartGestureListener(new OnChartGestureListener() {
-			@Override
-			public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+		if (setGestureListener) {
+			chart.setOnChartGestureListener(new OnChartGestureListener() {
+				@Override
+				public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
 
-			}
-
-			@Override
-			public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-
-			}
-
-			@Override
-			public void onChartLongPressed(MotionEvent me) {
-
-			}
-
-			@Override
-			public void onChartDoubleTapped(MotionEvent me) {
-
-			}
-
-			@Override
-			public void onChartSingleTapped(MotionEvent me) {
-
-			}
-
-			@Override
-			public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-
-			}
-
-			@Override
-			@SuppressWarnings("unchecked")
-			public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-				int yValuesCount = chart.getData().getYValCount();
-				List<DataSet> dataSets = (List<DataSet>)chart.getData().getDataSets();
-
-
-				for (DataSet dataSet : dataSets) {
-					setDataSetCircles(dataSet, viewPortHandler, yValuesCount, chartNumOfCircles);
 				}
-			}
 
-			@Override
-			public void onChartTranslate(MotionEvent me, float dX, float dY) {
+				@Override
+				public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
 
-			}
-		});
+				}
+
+				@Override
+				public void onChartLongPressed(MotionEvent me) {
+
+				}
+
+				@Override
+				public void onChartDoubleTapped(MotionEvent me) {
+
+				}
+
+				@Override
+				public void onChartSingleTapped(MotionEvent me) {
+
+				}
+
+				@Override
+				public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+				}
+
+				@Override
+				@SuppressWarnings("unchecked")
+				public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+					int yValuesCount = chart.getData().getYValCount();
+					List<DataSet> dataSets = (List<DataSet>) chart.getData().getDataSets();
+
+
+					for (DataSet dataSet : dataSets) {
+						setDataSetCircles(dataSet, viewPortHandler, yValuesCount, chartNumOfCircles);
+					}
+				}
+
+				@Override
+				public void onChartTranslate(MotionEvent me, float dX, float dY) {
+
+				}
+			});
+		}
 	}
 
 	/**
@@ -190,10 +194,11 @@ final public class ChartHelper {
 	 * @param filled         fill dataset flag
 	 * @param color          line color
 	 * @param highlightColor color for highlight lines
+	 * @param drawValues     in line dataSet draws values or not
 	 */
 	@SuppressLint("PrivateResource")
 	public static void prepareDataSet(Context context, DataSet dataset, boolean barChart, boolean filled,
-									  @ColorInt int color, @ColorInt int highlightColor) {
+									  @ColorInt int color, @ColorInt int highlightColor, boolean drawValues) {
 		int fillColor = Utils.setColorAlpha(color, 125);
 
 		dataset.setDrawValues(false);
@@ -201,9 +206,9 @@ final public class ChartHelper {
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
 			((LineDataSet) dataset).setCircleColor(color);
-			((LineDataSet) dataset).setCircleSize(4f);
+			((LineDataSet) dataset).setCircleRadius(2f);
 
-			dataset.setDrawValues(true);
+			dataset.setDrawValues(drawValues);
 
 			AppCompatTextView tempText = new AppCompatTextView(context);
 			tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
@@ -239,7 +244,7 @@ final public class ChartHelper {
 	}
 
 	@SuppressLint("PrivateResource")
-	public static void prepareXAxis(Context context, XAxis axis, @ColorInt Integer textColor,
+	public static void prepareXAxis(Context context, XAxis axis, @Nullable @ColorInt Integer textColor,
 									XAxis.XAxisPosition position, boolean drawGridLines) {
 
 		//TextView to get text color and typeface from textAppearance
@@ -256,8 +261,8 @@ final public class ChartHelper {
 	}
 
 	@SuppressLint("PrivateResource")
-	public static void prepareYAxis(Context context, BaseValue baseValue, YAxis axis, @ColorInt Integer textColor,
-									YAxis.YAxisLabelPosition position, boolean drawGridLines, boolean drawAxisLine) {
+	public static void prepareYAxis(Context context, @Nullable BaseValue baseValue, YAxis axis, @Nullable @ColorInt Integer textColor,
+									YAxis.YAxisLabelPosition position, boolean drawGridLines, boolean drawAxisLine, int labelCount) {
 
 		YAxisValueFormatter yAxisValueFormatter = getValueFormatterInstance(baseValue, context);
 		//TextView to get text color and typeface from textAppearance
@@ -273,6 +278,9 @@ final public class ChartHelper {
 		axis.setPosition(position);
 		axis.setDrawGridLines(drawGridLines);
 		axis.setDrawAxisLine(drawAxisLine);
+		axis.setSpaceTop(100);
+		axis.setSpaceBottom(100);
+		axis.setLabelCount(labelCount, false);
 
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
@@ -372,8 +380,8 @@ final public class ChartHelper {
 
 	/**
 	 * @param moduleLog data to be displayed
-	 * @param dataSet chart dataSet
-	 * @param xValues chart xValues
+	 * @param dataSet   chart dataSet
+	 * @param xValues   chart xValues
 	 * @param pair
 	 */
 	private static <T extends DataSet> void fillDataSet(ModuleLog moduleLog, T dataSet, List<String> xValues, ModuleLog.DataPair pair, DateTimeFormatter formatter) {
@@ -475,7 +483,7 @@ final public class ChartHelper {
 
 		@Override
 		public float getFillLinePosition(ILineDataSet dataSet, LineDataProvider dataProvider) {
-			return dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum;
+			return Math.min(dataProvider.getAxis(YAxis.AxisDependency.LEFT).mAxisMinimum, dataProvider.getAxis(YAxis.AxisDependency.RIGHT).mAxisMinimum);
 		}
 	}
 

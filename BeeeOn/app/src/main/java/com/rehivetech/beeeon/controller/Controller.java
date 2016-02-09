@@ -12,6 +12,7 @@ import android.util.Log;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmRegistrationIntentService;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
@@ -23,11 +24,12 @@ import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.model.ModuleLogsModel;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.model.UsersModel;
-import com.rehivetech.beeeon.network.demo.DemoNetwork;
 import com.rehivetech.beeeon.network.INetwork;
+import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.network.demo.DemoNetwork;
 import com.rehivetech.beeeon.network.server.Network;
 import com.rehivetech.beeeon.network.server.NetworkServer;
-import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.persistence.DashBoardPersistence;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Utils;
@@ -519,4 +521,11 @@ public final class Controller {
 		}
 	}
 
+	public List<BaseItem> getDashboardItems(String userId) {
+		return  DashBoardPersistence.load(mPersistence.getSettings(userId), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+	}
+
+	public void saveDashboardItems(String userId, List<BaseItem> items) {
+		DashBoardPersistence.save(mPersistence.getSettings(userId), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
+	}
 }

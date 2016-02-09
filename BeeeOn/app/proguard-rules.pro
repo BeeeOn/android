@@ -184,3 +184,16 @@
 -dontwarn com.viewpagerindicator.**
 
 -dontwarn io.realm.** # MP android chart now supports realm db
+
+-keepattributes Signature
+
+# For using GSON @Expose annotation
+-keepattributes *Annotation*
+
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+#-keep class com.google.gson.stream.** { *; }
+
+# Application classes that will be serialized/deserialized over Gson
+-keep class com.rehivetech.beeeon.gui.adapter.dashboard.items.**{*;}
+-keep class com.rehivetech.beeeon.household.device.**{*;} #FIXME temp for dashboard

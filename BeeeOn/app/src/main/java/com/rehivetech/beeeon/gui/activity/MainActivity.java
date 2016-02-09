@@ -25,7 +25,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
-import com.rehivetech.beeeon.gui.fragment.CustomViewFragment;
+import com.rehivetech.beeeon.gui.fragment.DashboardFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
 import com.rehivetech.beeeon.gui.fragment.EmptyFragment;
 import com.rehivetech.beeeon.household.device.Device;
@@ -42,7 +42,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final String FRAGMENT_TAG_DEVICES = "tag_devices";
-	private static final String FRAGMENT_TAG_GRAPHS = "tag_graphs";
+	private static final String FRAGMENT_TAG_DASHBOARD = "tag_dashboard";
 	private static final String FRAGMENT_TAG_INFO = "tag_info";
 
 	public static final String MENU_ITEM_DEVICES = "item_devices";
@@ -189,7 +189,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			changeFragment(DevicesListFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DEVICES);
 		} else if (mActiveMenuId.equals(MENU_ITEM_GRAPHS)) {
 			mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
-			changeFragment(new CustomViewFragment(), FRAGMENT_TAG_GRAPHS);
+			changeFragment(DashboardFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
 		} else if (mActiveMenuId.equals(MENU_ITEM_GATEWAY)) {
 			if (mActiveGateId != null) {
 				Intent intent = new Intent(this, GateDetailActivity.class);
@@ -320,7 +320,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			}
 			case R.id.nav_drawer_dashboard: {
 				if (mActiveGateId != null) {
-					changeFragment(new CustomViewFragment(), FRAGMENT_TAG_GRAPHS);
+					changeFragment(DashboardFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
 					result = true;
 				}
 				break;
@@ -373,7 +373,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	}
 
 	private void changeFragment(Fragment fragment, String tag) {
-		if (tag.equals(FRAGMENT_TAG_GRAPHS)) {
+		if (tag.equals(FRAGMENT_TAG_DASHBOARD)) {
 			mActiveMenuId = MENU_ITEM_GRAPHS;
 		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
 			mActiveMenuId = MENU_ITEM_DEVICES;
