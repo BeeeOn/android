@@ -94,6 +94,15 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 				startActivityForResult(intent, 0);
 			}
 		});
+
+		FloatingActionButton fabWeekGraph = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_week_bar_graph);
+		fabWeekGraph.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM);
+				startActivityForResult(intent, 0);
+			}
+		});
 		return mRootLayout;
 	}
 

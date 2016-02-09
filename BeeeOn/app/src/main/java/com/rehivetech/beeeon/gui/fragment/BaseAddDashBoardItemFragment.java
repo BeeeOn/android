@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.util.ChartHelper;
 
 import java.util.List;
@@ -88,6 +89,23 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		return graphRangeAdapter;
 	}
 
+
+	/**
+	 * Create adapter with graph data types
+	 * @param context app context
+	 * @param layout layout resource id for item
+	 * @return adapter
+	 */
+	public ArrayAdapter<SpinnerDataTypeHolder> createGraphDataTypeAdapter(Context context, @LayoutRes int layout) {
+
+		ArrayAdapter<SpinnerDataTypeHolder> graphDataType = new ArrayAdapter<>(context, layout);
+		graphDataType.add(new SpinnerDataTypeHolder(ModuleLog.DataType.MINIMUM));
+		graphDataType.add(new SpinnerDataTypeHolder(ModuleLog.DataType.AVERAGE));
+		graphDataType.add(new SpinnerDataTypeHolder(ModuleLog.DataType.MAXIMUM));
+
+		return graphDataType;
+	}
+
 	/**
 	 * Holder for spinner module item
 	 */
@@ -115,6 +133,39 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 				return "";
 			}
 			return String.format("%s - %s", mDevice.getName(mActivity), mModule.getName(mActivity));
+		}
+	}
+
+	/**
+	 * Holder for spinner graph data type
+	 */
+	protected final class SpinnerDataTypeHolder {
+
+		private ModuleLog.DataType mDataType;
+
+		public SpinnerDataTypeHolder(ModuleLog.DataType dataType) {
+			mDataType = dataType;
+		}
+
+		public ModuleLog.DataType getDataType() {
+			return mDataType;
+		}
+
+		@Override
+		public String toString() {
+			int stringRes = 0;
+			switch (mDataType) {
+				case MINIMUM:
+					stringRes = R.string.data_type_min;
+					break;
+				case AVERAGE:
+					stringRes = R.string.data_type_avg;
+					break;
+				case MAXIMUM:
+					stringRes = R.string.data_type_max;
+					break;
+			}
+			return getString(stringRes);
 		}
 	}
 }

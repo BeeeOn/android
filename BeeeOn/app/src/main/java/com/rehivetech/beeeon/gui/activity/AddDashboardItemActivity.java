@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddDashboardActualValueFragment;
 import com.rehivetech.beeeon.gui.fragment.AddDashboardGraphItemFragment;
+import com.rehivetech.beeeon.gui.fragment.AddDashboardOverviewGraphItemFragment;
 import com.rehivetech.beeeon.gui.fragment.BaseApplicationFragment;
 
 /**
@@ -20,6 +21,7 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 	public static final String ARG_ITEM_TYPE = "item_type";
 	public static final int KEY_VALUE_TYPE_GRAPH_ITEM = 0;
 	public static final int KEY_VALUE_TYPE_MODULE_ITEM = 1;
+	public static final int KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM = 2;
 
 
 	public static Intent getADdDashBoardActivityIntent(Context context, String gateId, int itemType) {
@@ -59,6 +61,9 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 					break;
 				case KEY_VALUE_TYPE_MODULE_ITEM:
 					fragment = AddDashboardActualValueFragment.newInstance(gateId);
+					break;
+				case KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM:
+					fragment = AddDashboardOverviewGraphItemFragment.newInstance(gateId);
 					break;
 			}
 

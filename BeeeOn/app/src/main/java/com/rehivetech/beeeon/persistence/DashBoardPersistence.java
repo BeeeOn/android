@@ -13,6 +13,7 @@ import com.google.gson.reflect.TypeToken;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -53,6 +54,8 @@ public class DashBoardPersistence {
 
 			if (((JsonObject) json).get("dataRange") != null) {
 				typeClass = GraphItem.class;
+			} else if (((JsonObject) json).get("dataType") != null) {
+				typeClass = OverviewGraphItem.class;
 			} else {
 				typeClass = ActualValueItem.class;
 			}

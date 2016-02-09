@@ -11,9 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
@@ -26,6 +30,7 @@ import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -38,6 +43,7 @@ import com.rehivetech.beeeon.util.Utils;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,6 +56,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	private static final int VIEW_TYPE_GRAPH = 0;
 	private static final int VIEW_TYPE_ACT_VALUE = 1;
+	private static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
 
 	private final TimeHelper mTimeHelper;
 
@@ -81,6 +88,11 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				return new ActualValueViewHolder(view);
 			}
 
+			case VIEW_TYPE_GRAPH_OVERVIEW: {
+				View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dashboard_item_overview_graph, parent, false);
+				return new OverviewGraphViewHolder(view);
+			}
+
 			default:
 				break;
 		}
@@ -90,12 +102,15 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	@Override
 	public int getItemViewType(int position) {
-		if (mItems.get(position) instanceof GraphItem) {
-			return VIEW_TYPE_GRAPH;
-		} else if (mItems.get(position) instanceof ActualValueItem) {
-			return VIEW_TYPE_ACT_VALUE;
-		}
+		BaseItem item = mItems.get(position);
 
+		if (item instanceof GraphItem) {
+			return VIEW_TYPE_GRAPH;
+		} else if (item instanceof ActualValueItem) {
+			return VIEW_TYPE_ACT_VALUE;
+		} else if (item instanceof OverviewGraphItem) {
+			return VIEW_TYPE_GRAPH_OVERVIEW;
+		}
 		return -1;
 	}
 
@@ -114,7 +129,10 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				((ActualValueViewHolder) holder).bind(controller, (ActualValueItem) item, position);
 				break;
 			}
-
+			case VIEW_TYPE_GRAPH_OVERVIEW: {
+				((OverviewGraphViewHolder) holder).bind(controller, (OverviewGraphItem) item, position);
+				break;
+			}
 		}
 	}
 
@@ -123,6 +141,25 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		return mItems.size();
 	}
 
+
+	public void addItem(BaseItem item) {
+		mItems.add(item);
+
+		notifyItemRangeInserted(0, mItems.size());
+	}
+
+	public void addItem(int position, BaseItem item) {
+		mItems.add(position, item);
+		notifyItemInserted(position);
+	}
+
+	public List<BaseItem> getItems() {
+		return mItems;
+	}
+
+	public void setItems(List<BaseItem> items) {
+		mItems = items;
+	}
 
 	public BaseItem getItem(int position) {
 		return mItems.get(position);
@@ -300,22 +337,101 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public void addItem(BaseItem item) {
-		mItems.add(item);
+	public class OverviewGraphViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener  {
 
-		notifyItemRangeInserted(0, mItems.size());
-	}
+		public final TextView mGraphName;
+		public final BarChart mChart;
+		public final TextView mLastUpdate;
+		public final View mRoot;
 
-	public void addItem(int position, BaseItem item) {
-		mItems.add(position, item);
-		notifyItemInserted(position);
-	}
+		public OverviewGraphViewHolder(View itemView) {
+			super(itemView);
 
-	public List<BaseItem> getItems() {
-		return mItems;
-	}
+			mRoot = itemView;
+			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_name);
+			mChart = (BarChart) itemView.findViewById(R.id.dashboard_item_overview_graph_chart);
+			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_last_update_value);
 
-	public void setItems(List<BaseItem> items) {
-		mItems = items;
+			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
+		}
+
+		public void bind(Controller controller, OverviewGraphItem item, int position) {
+			Gate gate = controller.getGatesModel().getGate(item.getGateId());
+			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceId());
+
+			mGraphName.setText(item.getName());
+			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+
+			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+				mChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+			}
+
+			mChart.clear();
+			prepareChart();
+			fillChart(controller, item, gate);
+
+			setSelected(isSelected(position));
+		}
+
+		private void prepareChart() {
+			ChartHelper.prepareChart(mChart, mActivity, null, null, null, false, false);
+			XAxis xAxis = mChart.getXAxis();
+			ChartHelper.prepareXAxis(mActivity, xAxis, null, XAxis.XAxisPosition.BOTTOM, false);
+			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
+
+			mChart.getAxisRight().setEnabled(false);
+
+			mChart.setOnTouchListener(null);
+		}
+
+		private void fillChart(Controller controller, OverviewGraphItem item, Gate gate) {
+			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
+
+
+			final BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(), item.getModuleId());
+			ChartHelper.prepareDataSet(mActivity, dataSet, true, false, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
+
+			ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
+				@Override
+				public void onChartLoaded(DataSet dataset, List<String> xValues) {
+					BarData barData = mChart.getBarData() != null ? mChart.getBarData() : new BarData(xValues);
+					barData.addDataSet(dataSet);
+
+					mChart.setData(barData);
+					List<String> xValuesCustom = new ArrayList<>(Arrays.asList("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"));
+					mChart.getXAxis().setValues(xValuesCustom);
+					mChart.invalidate();
+				}
+			};
+
+			ModuleLog.DataInterval dataInterval = ModuleLog.DataInterval.DAY;
+			ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), item.getDeviceId(), item.getModuleId(), ChartHelper.RANGE_WEEK,
+					item.getDataType(), dataInterval, chartLoadListener, dateTimeFormatter);
+
+		}
+
+		@Override
+		public void onClick(View v) {
+
+		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			if(mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
+				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+				return true;
+			}
+			return false;
+		}
+
+		@Override
+		protected void setSelectedBackground(boolean isSelected) {
+			if (isSelected) {
+				mRoot.setBackgroundResource(R.color.gray_material_400);
+			} else {
+				mRoot.setBackgroundResource(R.color.white);
+			}
+		}
 	}
 }
