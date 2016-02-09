@@ -190,9 +190,9 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, 11, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {1, 2, 3, 5, 6, 7, 11, 12, 13, 65, 73, 74, 75, 76}),
 							new Module.Rule(1, new int[] {6, 7, 74, 75}),
-							new Module.Rule(2, new int[] {6, 7, 74, 75}),
-							new Module.Rule(3, new int[] {2, 5, 6, 7, 73, 75, 76}),
-							new Module.Rule(4, new int[] {2, 5, 65, 73, 74, 76})
+							new Module.Rule(2, new int[] {2, 6, 7, 73, 74, 75}),
+							new Module.Rule(3, new int[] {2, 3, 6, 7, 73, 75, 76}),
+							new Module.Rule(4, new int[] {2, 3, 65, 73, 74, 76})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -229,9 +229,9 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "14", 0x01, 61, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {15, 16, 17, 19, 20, 21, 25, 26, 27, 66, 77, 78, 79, 80}),
 							new Module.Rule(1, new int[] {20, 21, 78, 79}),
-							new Module.Rule(2, new int[] {20, 21, 78, 79}),
-							new Module.Rule(3, new int[] {16, 19, 20, 21, 77, 79, 80}),
-							new Module.Rule(4, new int[] {16, 19, 66, 77, 78, 80})
+							new Module.Rule(2, new int[] {16, 20, 21, 77, 78, 79}),
+							new Module.Rule(3, new int[] {16, 17, 20, 21, 77, 79, 80}),
+							new Module.Rule(4, new int[] {16, 17, 66, 77, 78, 80})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -268,9 +268,9 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "28", 0x01, 111, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {29, 30, 31, 33, 34, 35, 39, 40, 41, 67, 81, 82, 83, 84}),
 							new Module.Rule(1, new int[] {34, 35, 82, 83}),
-							new Module.Rule(2, new int[] {34, 35, 82, 83}),
-							new Module.Rule(3, new int[] {30, 33, 34, 35, 81, 83, 84}),
-							new Module.Rule(4, new int[] {30, 33, 67, 81, 82, 84})
+							new Module.Rule(2, new int[] {30, 34, 35, 81, 82, 83}),
+							new Module.Rule(3, new int[] {30, 31, 34, 35, 81, 83, 84}),
+							new Module.Rule(4, new int[] {30, 31, 67, 81, 82, 84})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -307,9 +307,9 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "42", 0x01, 161, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {43, 44, 45, 47, 48, 49, 53, 54, 55, 68, 85, 86, 87, 88}),
 							new Module.Rule(1, new int[] {48, 49, 86, 87}),
-							new Module.Rule(2, new int[] {48, 49, 86, 87}),
-							new Module.Rule(3, new int[] {44, 47, 48, 49, 85, 87, 88}),
-							new Module.Rule(4, new int[] {44, 47, 68, 85, 86, 88})
+							new Module.Rule(2, new int[] {44, 48, 49, 85, 86, 87}),
+							new Module.Rule(3, new int[] {44, 45, 48, 49, 85, 87, 88}),
+							new Module.Rule(4, new int[] {44, 45, 68, 85, 86, 88})
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
@@ -425,7 +425,7 @@ public enum DeviceType implements IIdentifier {
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1454444892265l;
+	public static final long DEVICES_DATE = 1455060264358l;
 
 	/** END OF GENERATED CONTENT **/
 
