@@ -1,10 +1,13 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gui.fragment.AddDashboardActualValueFragment;
 import com.rehivetech.beeeon.gui.fragment.AddDashboardGraphItemFragment;
 import com.rehivetech.beeeon.gui.fragment.BaseApplicationFragment;
 
@@ -17,6 +20,15 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 	public static final String ARG_ITEM_TYPE = "item_type";
 	public static final int KEY_VALUE_TYPE_GRAPH_ITEM = 0;
 	public static final int KEY_VALUE_TYPE_MODULE_ITEM = 1;
+
+
+	public static Intent getADdDashBoardActivityIntent(Context context, String gateId, int itemType) {
+		Intent intent = new Intent(context, AddDashboardItemActivity.class);
+		intent.putExtra(ARG_GATE_ID, gateId);
+		intent.putExtra(ARG_ITEM_TYPE, itemType);
+
+		return intent;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +56,9 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 			switch (itemType) {
 				case KEY_VALUE_TYPE_GRAPH_ITEM:
 					fragment = AddDashboardGraphItemFragment.newInstance(gateId);
+					break;
+				case KEY_VALUE_TYPE_MODULE_ITEM:
+					fragment = AddDashboardActualValueFragment.newInstance(gateId);
 					break;
 			}
 
