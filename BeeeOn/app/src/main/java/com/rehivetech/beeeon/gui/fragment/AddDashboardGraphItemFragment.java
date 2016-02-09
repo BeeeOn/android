@@ -13,7 +13,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.ChartHelper;
 
 import java.util.Arrays;
@@ -56,26 +55,12 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		ArrayAdapter<SpinnerHolder> leftAxisAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item);
-		ArrayAdapter<SpinnerHolder> rightAxisAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item);
-		ArrayAdapter<String> graphRangeAdapter = new ArrayAdapter<>(mActivity, android.R.layout.simple_spinner_dropdown_item);
-
 		final Controller controller = Controller.getInstance(mActivity);
-
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
-
-		rightAxisAdapter.add(new SpinnerHolder(null, null));
-		for (Device device : devices) {
-			for (Module module : device.getVisibleModules()) {
-				leftAxisAdapter.add(new SpinnerHolder(device, module));
-				rightAxisAdapter.add(new SpinnerHolder(device, module));
-			}
-		}
-
-		for (int range : ChartHelper.ALL_RANGES) {
-			graphRangeAdapter.add(getString(ChartHelper.getIntervalString(range)));
-		}
+		ArrayAdapter<SpinnerHolder> leftAxisAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false);
+		ArrayAdapter<SpinnerHolder> rightAxisAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, true);
+		ArrayAdapter<String> graphRangeAdapter = createGraphRangeAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item);
 
 		mLeftAxisSpinner.setAdapter(leftAxisAdapter);
 		mRightAxisSpinner.setAdapter(rightAxisAdapter);
@@ -118,30 +103,4 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 	}
 
 
-	private final class SpinnerHolder {
-
-		private Device mDevice;
-		private Module mModule;
-
-		public SpinnerHolder(@Nullable Device device, @Nullable Module module) {
-			mDevice = device;
-			mModule = module;
-		}
-
-		public Device getDevice() {
-			return mDevice;
-		}
-
-		public Module getModule() {
-			return mModule;
-		}
-
-		@Override
-		public String toString() {
-			if (mDevice == null || mModule == null) {
-				return "";
-			}
-			return String.format("%s - %s", mDevice.getName(mActivity), mModule.getName(mActivity));
-		}
-	}
 }
