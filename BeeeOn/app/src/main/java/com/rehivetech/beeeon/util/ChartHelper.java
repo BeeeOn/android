@@ -435,7 +435,7 @@ final public class ChartHelper {
 
 			xValues.add(formatter.print(time));
 
-			if (Float.isNaN(value)) {
+			if (Float.isNaN(value) || Float.isInfinite(value)) {
 				continue;
 			}
 
