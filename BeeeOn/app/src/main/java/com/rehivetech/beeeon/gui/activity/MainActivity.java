@@ -373,10 +373,17 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	}
 
 	private void changeFragment(Fragment fragment, String tag) {
+		int actionBarTitleRes;
 		if (tag.equals(FRAGMENT_TAG_DASHBOARD)) {
 			mActiveMenuId = MENU_ITEM_GRAPHS;
+			actionBarTitleRes = R.string.nav_drawer_menu_menu_household;
 		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
 			mActiveMenuId = MENU_ITEM_DEVICES;
+			actionBarTitleRes = R.string.nav_drawer_menu_menu_devices;
+		}
+
+		if (mActionBar != null) {
+			mActionBar.setTitle(actionBarTitleRes);
 		}
 
 		Gate activeGate = Controller.getInstance(this).getActiveGate();
