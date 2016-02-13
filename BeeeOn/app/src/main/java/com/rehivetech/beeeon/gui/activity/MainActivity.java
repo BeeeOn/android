@@ -373,10 +373,17 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	}
 
 	private void changeFragment(Fragment fragment, String tag) {
+		int actionBarTitleRes;
 		if (tag.equals(FRAGMENT_TAG_DASHBOARD)) {
 			mActiveMenuId = MENU_ITEM_GRAPHS;
+			actionBarTitleRes = R.string.nav_drawer_menu_menu_household;
 		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
 			mActiveMenuId = MENU_ITEM_DEVICES;
+			actionBarTitleRes = R.string.nav_drawer_menu_menu_devices;
+		}
+
+		if (mActionBar != null) {
+			mActionBar.setTitle(actionBarTitleRes);
 		}
 
 		Gate activeGate = Controller.getInstance(this).getActiveGate();
@@ -407,6 +414,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		Bitmap bitmap = user.getPicture();
 		if (bitmap == null) {
 			picture.setImageResource(R.drawable.ic_person_white_48dp);
+			picture.setBackgroundResource(R.drawable.oval_primary);
 		} else {
 			picture.setImageBitmap(bitmap);
 		}
@@ -434,7 +442,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		mNavigationHeader.findViewById(R.id.menu_profile_gates).setVisibility(hasGates ? View.VISIBLE : View.GONE);
 
 		// Show / hide menu items based on existence of any gates
-		mNavigationMenu.findItem(R.id.item_overview).setVisible(hasGates);
+		mNavigationMenu.setGroupVisible(R.id.item_overview, hasGates);
 		mNavigationMenu.findItem(R.id.item_no_gates).setVisible(!hasGates);
 	}
 }
