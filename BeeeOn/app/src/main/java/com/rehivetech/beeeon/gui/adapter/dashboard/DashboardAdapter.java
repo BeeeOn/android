@@ -412,7 +412,14 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 					barData.addDataSet(dataSet);
 
 					mChart.setData(barData);
-					List<String> xValuesCustom = new ArrayList<>(Arrays.asList("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"));
+					List<String> xValuesCustom = new ArrayList<>(Arrays.asList(mActivity.getString(R.string.monday),
+							mActivity.getString(R.string.tuesday),
+							mActivity.getString(R.string.wednesday),
+							mActivity.getString(R.string.thursday),
+							mActivity.getString(R.string.friday),
+							mActivity.getString(R.string.saturday),
+							mActivity.getString(R.string.sunday)));
+
 					mChart.getXAxis().setValues(xValuesCustom);
 					mChart.invalidate();
 					mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
