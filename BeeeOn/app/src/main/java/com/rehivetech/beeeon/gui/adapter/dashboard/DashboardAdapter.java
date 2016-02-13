@@ -60,6 +60,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	private static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
 
 	private final TimeHelper mTimeHelper;
+	private final UnitsHelper mUnitsHelper;
 
 	private BaseApplicationActivity mActivity;
 	private IItemClickListener mItemClickListener;
@@ -72,6 +73,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 	}
 
 
@@ -194,12 +196,16 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener{
 		public final TextView mGraphName;
+		public final TextView mLeftAxisUnit;
+		public final TextView mRightAxisUnit;
 		public final LineChart mChart;
 		public final TextView mLastUpdate;
 
 		public DashboardGraphViewHolder(View itemView) {
 			super(itemView);
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_graph_name);
+			mLeftAxisUnit = (TextView) itemView.findViewById(R.id.dashboard_item_graph_left_axis_unit);
+			mRightAxisUnit = (TextView) itemView.findViewById(R.id.dashboard_item_graph_right_axis_unit);
 			mChart = (LineChart) itemView.findViewById(R.id.dashboard_item_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_graph_last_update_value);
 
@@ -240,11 +246,11 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mChart.setOnTouchListener(null);
 		}
 
-		private void fillChart(Controller controller, GraphItem item, Gate gate) {
+		private void fillChart(final Controller controller, final GraphItem item, final Gate gate) {
 			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 			YAxis.AxisDependency axisDependency = YAxis.AxisDependency.LEFT;
-			List<String> modules = item.getAbsoluteModuleIds();
+			final List<String> modules = item.getAbsoluteModuleIds();
 			for (int i = 0; i < modules.size(); i++) {
 
 				final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
@@ -259,6 +265,13 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 						mChart.setData(lineData);
 						mChart.invalidate();
+						mLeftAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(0)).getValue()));
+						mLeftAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
+
+						if (modules.size() > 1) {
+							mRightAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(1)).getValue()));
+							mRightAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 1));
+						}
 					}
 				};
 				Module module = controller.getDevicesModel().getModule(gate.getId(), modules.get(i));
@@ -340,6 +353,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener  {
 
 		public final TextView mGraphName;
+		public final TextView mGraphUnit;
 		public final BarChart mChart;
 		public final TextView mLastUpdate;
 
@@ -347,6 +361,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			super(itemView);
 
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_name);
+			mGraphUnit = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_axis_unit);
 			mChart = (BarChart) itemView.findViewById(R.id.dashboard_item_overview_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_last_update_value);
 
@@ -383,7 +398,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mChart.setOnTouchListener(null);
 		}
 
-		private void fillChart(Controller controller, OverviewGraphItem item, Gate gate, Module module) {
+		private void fillChart(Controller controller, OverviewGraphItem item, Gate gate, final Module module) {
 			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 
@@ -400,6 +415,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 					List<String> xValuesCustom = new ArrayList<>(Arrays.asList("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"));
 					mChart.getXAxis().setValues(xValuesCustom);
 					mChart.invalidate();
+					mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
+					mGraphUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
 				}
 			};
 

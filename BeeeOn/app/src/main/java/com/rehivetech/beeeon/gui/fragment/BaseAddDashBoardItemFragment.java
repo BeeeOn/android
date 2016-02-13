@@ -74,7 +74,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 				if (!withEnums && (module.getValue() instanceof EnumValue)) {
 					continue;
 				}
-				
+
 				adapter.add(new SpinnerHolder(device, module));
 			}
 		}
