@@ -117,6 +117,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			}
 
 			ChartHelper.setDataSetCircles(dataSet, mChart.getViewPortHandler(), mChart.getData().getYValCount(), getResources().getInteger(R.integer.graph_number_circles));
+			ChartHelper.setDrawDataSetValues(dataSet, mChart.getViewPortHandler(), mChart.getXValCount(), getResources().getInteger(R.integer.graph_values_count));
 
 			mChart.invalidate();
 
@@ -224,11 +225,11 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		if (barchart) {
 			mChart = new BarChart(mActivity);
-			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false, false);
+			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false, true);
 		} else {
 			mChart = new LineChart(mActivity);
 			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, unit);
-			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false, false);
+			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false, true);
 		}
 
 		mChart.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
