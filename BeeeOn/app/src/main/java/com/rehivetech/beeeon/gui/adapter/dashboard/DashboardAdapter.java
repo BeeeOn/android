@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.adapter.dashboard;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -171,16 +172,32 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		notifyItemRemoved(position);
 	}
 
+	public abstract class BaseDashboardViewHolder extends SelectableViewHolder {
+		public final CardView mCardView;
 
-	public class DashboardGraphViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener{
+		public BaseDashboardViewHolder(View itemView) {
+			super(itemView);
+			mCardView = (CardView) itemView;
+		}
+
+		@Override
+		protected void setSelectedBackground(boolean isSelected) {
+			if (isSelected) {
+				mCardView.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.gray_material_400));
+			} else {
+				mCardView.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+			}
+
+		}
+	}
+
+	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener{
 		public final TextView mGraphName;
 		public final LineChart mChart;
 		public final TextView mLastUpdate;
-		public final View mRoot;
 
 		public DashboardGraphViewHolder(View itemView) {
 			super(itemView);
-			mRoot = itemView;
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_graph_name);
 			mChart = (LineChart) itemView.findViewById(R.id.dashboard_item_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_graph_last_update_value);
@@ -253,16 +270,6 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 		}
 
-
-		@Override
-		protected void setSelectedBackground(boolean isSelected) {
-			if (isSelected) {
-				mRoot.setBackgroundResource(R.color.gray_material_400);
-			} else {
-				mRoot.setBackgroundResource(R.color.white);
-			}
-		}
-
 		@Override
 		public void onClick(View v) {
 
@@ -278,17 +285,14 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class ActualValueViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public class ActualValueViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public final ImageView mIcon;
 		public final TextView mLabel;
 		public final TextView mValue;
 		public final TextView mLastUpdate;
-		public final View mRoot;
-
 
 		public ActualValueViewHolder(View itemView) {
 			super(itemView);
-			mRoot = itemView;
 			mIcon = (ImageView) itemView.findViewById(R.id.dashboard_item_act_value_icon);
 			mLabel = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_label);
 			mValue = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_value);
@@ -324,28 +328,17 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 			return false;
 		}
-
-		@Override
-		protected void setSelectedBackground(boolean isSelected) {
-			if (isSelected) {
-				mRoot.setBackgroundResource(R.color.gray_material_400);
-			} else {
-				mRoot.setBackgroundResource(R.color.white);
-			}
-		}
 	}
 
-	public class OverviewGraphViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener  {
+	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener  {
 
 		public final TextView mGraphName;
 		public final BarChart mChart;
 		public final TextView mLastUpdate;
-		public final View mRoot;
 
 		public OverviewGraphViewHolder(View itemView) {
 			super(itemView);
 
-			mRoot = itemView;
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_name);
 			mChart = (BarChart) itemView.findViewById(R.id.dashboard_item_overview_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_last_update_value);
@@ -421,15 +414,6 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				return true;
 			}
 			return false;
-		}
-
-		@Override
-		protected void setSelectedBackground(boolean isSelected) {
-			if (isSelected) {
-				mRoot.setBackgroundResource(R.color.gray_material_400);
-			} else {
-				mRoot.setBackgroundResource(R.color.white);
-			}
 		}
 	}
 }
