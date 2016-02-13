@@ -129,7 +129,8 @@ final public class ChartHelper {
 		}
 
 		//set max visible values count by screen size
-		chart.setMaxVisibleValueCount(context.getResources().getInteger(R.integer.graph_values_count));
+		final int maxVisibleValuesCount = context.getResources().getInteger(R.integer.graph_values_count);
+		chart.setMaxVisibleValueCount(maxVisibleValuesCount);
 
 		final ViewPortHandler viewPortHandler = chart.getViewPortHandler();
 		final int chartNumOfCircles = context.getResources().getInteger(R.integer.graph_number_circles);
@@ -175,6 +176,7 @@ final public class ChartHelper {
 
 					for (DataSet dataSet : dataSets) {
 						setDataSetCircles(dataSet, viewPortHandler, yValuesCount, chartNumOfCircles);
+						setDrawDataSetValues(dataSet, viewPortHandler, chart.getXValCount(), maxVisibleValuesCount);
 					}
 				}
 
@@ -206,7 +208,7 @@ final public class ChartHelper {
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
 			((LineDataSet) dataset).setCircleColor(color);
-			((LineDataSet) dataset).setCircleRadius(2f);
+			((LineDataSet) dataset).setCircleRadius(4f);
 
 			dataset.setDrawValues(drawValues);
 
@@ -240,6 +242,14 @@ final public class ChartHelper {
 			if (dataSet instanceof LineDataSet && ((LineDataSet) dataSet).isDrawCirclesEnabled()) {
 				((LineDataSet) dataSet).setDrawCircles(false);
 			}
+		}
+	}
+
+	public static void setDrawDataSetValues(DataSet dataSet, ViewPortHandler viewPortHandler, int xValuesCount, int numOfVisibleValues) {
+		if (xValuesCount / viewPortHandler.getScaleX() < numOfVisibleValues) {
+			dataSet.setDrawValues(true);
+		} else {
+			dataSet.setDrawValues(false);
 		}
 	}
 
@@ -435,7 +445,7 @@ final public class ChartHelper {
 
 			xValues.add(formatter.print(time));
 
-			if (Float.isNaN(value)) {
+			if (Float.isNaN(value) || Float.isInfinite(value)) {
 				continue;
 			}
 

@@ -366,6 +366,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
+				callbackTaskManager.cancelAndRemoveAll();
 				finish();
 				break;
 		}
@@ -406,6 +407,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 					mRequestRedrawActiveFragmentCalled = true;
 				}
 
+				callbackTaskManager.cancelAndRemoveAll();
 				redrawActiveFragment();
 			}
 

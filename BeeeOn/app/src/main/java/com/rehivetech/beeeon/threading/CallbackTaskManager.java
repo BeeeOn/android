@@ -201,8 +201,10 @@ public class CallbackTaskManager {
 					}
 				}
 
-				// Hide progress indicator in activity
-				hideProgressIndicator(progressIndicator);
+				// Hide progress indicator in activity if all tasks were executed
+				if (mTasks.size() == 0) {
+					hideProgressIndicator(progressIndicator);
+				}
 
 				// Handle eventual exceptions
 				AppException exception = task.getException();
