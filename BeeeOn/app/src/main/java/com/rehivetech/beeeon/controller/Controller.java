@@ -521,11 +521,23 @@ public final class Controller {
 		}
 	}
 
-	public List<BaseItem> getDashboardItems(String userId) {
-		return  DashBoardPersistence.load(mPersistence.getSettings(userId), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+	public List<BaseItem> getDashboardItems(String userId, String gateId) {
+		return DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 	}
 
-	public void saveDashboardItems(String userId, List<BaseItem> items) {
-		DashBoardPersistence.save(mPersistence.getSettings(userId), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
+	public void saveDashboardItems(String userId, String gateId, List<BaseItem> items) {
+		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
+	}
+
+	public void removeDashboardView(String userId, String gateId) {
+		SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		editor.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "");
+		editor.apply();
+	}
+
+	private String getDashboardKey(String userId, String gateId) {
+		return String.format("%s-%s", userId, gateId);
 	}
 }

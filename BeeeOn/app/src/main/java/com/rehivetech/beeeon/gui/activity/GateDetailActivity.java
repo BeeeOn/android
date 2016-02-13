@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
@@ -179,6 +180,9 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(GateDetailActivity.this, R.string.gate_detail_toast_gate_removed, Toast.LENGTH_LONG).show();
+					Controller controller = Controller.getInstance(GateDetailActivity.this);
+					String userId = controller.getActualUser().getId();
+					controller.removeDashboardView(userId, mGateId);
 					finish();
 				}
 			}

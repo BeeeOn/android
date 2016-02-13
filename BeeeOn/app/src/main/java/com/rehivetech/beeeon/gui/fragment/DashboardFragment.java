@@ -113,7 +113,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		Controller controller = Controller.getInstance(mActivity);
 		String userId = controller.getActualUser().getId();
 
-		List<BaseItem> items = controller.getDashboardItems(userId);
+		List<BaseItem> items = controller.getDashboardItems(userId, mGateId);
 		if (items != null) {
 			mAdapter.setItems(items);
 		}
@@ -131,7 +131,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			Controller controller = Controller.getInstance(mActivity);
 
 			mAdapter.addItem(item);
-			controller.saveDashboardItems(controller.getActualUser().getId(), mAdapter.getItems());
+			controller.saveDashboardItems(controller.getActualUser().getId(), mGateId, mAdapter.getItems());
 		}
 	}
 
@@ -154,7 +154,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	public void onPause() {
 		super.onPause();
 		Controller controller = Controller.getInstance(mActivity);
-		controller.saveDashboardItems(controller.getActualUser().getId(), mAdapter.getItems());
+		controller.saveDashboardItems(controller.getActualUser().getId(), mGateId, mAdapter.getItems());
 	}
 
 	@Override
@@ -222,6 +222,8 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 							}
 						})
 						.show();
+
+
 			}
 			return true;
 		}
