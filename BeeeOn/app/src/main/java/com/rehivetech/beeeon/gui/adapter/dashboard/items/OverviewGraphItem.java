@@ -11,26 +11,21 @@ import com.rehivetech.beeeon.household.device.ModuleLog;
  */
 public class OverviewGraphItem extends BaseItem implements Parcelable{
 
-	@SerializedName("deviceId")
-	public String mDeviceId;
-
 	@SerializedName("moduleId")
-	public String mModuleId;
+	public String mAbsoluteModuleId;
 
 	@SerializedName("dataType")
 	public ModuleLog.DataType mDataType;
 
-	public OverviewGraphItem(String name, String gateId, String deviceId, String moduleId, ModuleLog.DataType dataType) {
+	public OverviewGraphItem(String name, String gateId, String absoluteModuleId, ModuleLog.DataType dataType) {
 		super(name, gateId);
-		mDeviceId = deviceId;
-		mModuleId = moduleId;
+		mAbsoluteModuleId = absoluteModuleId;
 		mDataType = dataType;
 	}
 
 	protected OverviewGraphItem(Parcel in) {
 		super(in);
-		mDeviceId = in.readString();
-		mModuleId = in.readString();
+		mAbsoluteModuleId = in.readString();
 		String dataType = in.readString();
 
 		for (ModuleLog.DataType logDataType : ModuleLog.DataType.values()) {
@@ -45,8 +40,7 @@ public class OverviewGraphItem extends BaseItem implements Parcelable{
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
-		dest.writeString(mDeviceId);
-		dest.writeString(mModuleId);
+		dest.writeString(mAbsoluteModuleId);
 		dest.writeString(mDataType.getId());
 	}
 
@@ -67,12 +61,8 @@ public class OverviewGraphItem extends BaseItem implements Parcelable{
 		}
 	};
 
-	public String getDeviceId() {
-		return mDeviceId;
-	}
-
-	public String getModuleId() {
-		return mModuleId;
+	public String getAbsoluteModuleId() {
+		return mAbsoluteModuleId;
 	}
 
 	public ModuleLog.DataType getDataType() {

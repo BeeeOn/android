@@ -67,10 +67,10 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 					return;
 				}
 
-				SpinnerHolder module = (SpinnerHolder) mModulesSpinner.getSelectedItem();
+				SpinnerHolder holder = (SpinnerHolder) mModulesSpinner.getSelectedItem();
 				SpinnerDataTypeHolder dataType = (SpinnerDataTypeHolder) mDataTypeSpinner.getSelectedItem();
 
-				OverviewGraphItem item = new OverviewGraphItem(mItemNameEditText.getText().toString(), mGateId, module.getDevice().getId(), module.getModule().getId(), dataType.getDataType());
+				OverviewGraphItem item = new OverviewGraphItem(mItemNameEditText.getText().toString(), mGateId, getModuleAbsoluteId(holder.getDevice().getId(), holder.getModule().getId()), dataType.getDataType());
 
 				Intent data = new Intent();
 				data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);

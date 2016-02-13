@@ -10,30 +10,24 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ActualValueItem extends BaseItem implements Parcelable {
 
-	@SerializedName("deviceId")
-	private String mDeviceId;
+	@SerializedName("absoluteModuleId")
+	private String mAbsoluteModuleId;
 
-	@SerializedName("moduleId")
-	private String mModuleId;
-
-	public ActualValueItem(String name, String gateId, String deviceId, String moduleId) {
+	public ActualValueItem(String name, String gateId, String absoluteModuleId) {
 		super(name, gateId);
 
-		mDeviceId = deviceId;
-		mModuleId = moduleId;
+		mAbsoluteModuleId = absoluteModuleId;
 	}
 
 	protected ActualValueItem(Parcel in) {
 		super(in);
-		mDeviceId = in.readString();
-		mModuleId = in.readString();
+		mAbsoluteModuleId = in.readString();
 	}
 
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
-		dest.writeString(mDeviceId);
-		dest.writeString(mModuleId);
+		dest.writeString(mAbsoluteModuleId);
 	}
 
 	@Override
@@ -53,11 +47,7 @@ public class ActualValueItem extends BaseItem implements Parcelable {
 		}
 	};
 
-	public String getDeviceId() {
-		return mDeviceId;
-	}
-
-	public String getModuleId() {
-		return mModuleId;
+	public String getAbsoluteModuleId() {
+		return mAbsoluteModuleId;
 	}
 }

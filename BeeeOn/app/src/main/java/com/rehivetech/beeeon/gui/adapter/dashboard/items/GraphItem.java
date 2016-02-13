@@ -14,27 +14,22 @@ import java.util.List;
 
 public class GraphItem extends BaseItem implements Parcelable {
 
-	@SerializedName("deviceIds")
-	private List<String> mDeviceIds;
-
-	@SerializedName("moduleIds")
-	private List<String> mModuleIds;
+	@SerializedName("absoluteModuleIds")
+	private List<String> mAbsoluteModuleIds;
 
 	@SerializedName("dataRange")
 	private int mDataRange;
 
-	public GraphItem(String name, String gateId, List<String> deviceIds, List<String> moduleIds, @ChartHelper.DataRange int range) {
+	public GraphItem(String name, String gateId, List<String> absoluteModuleIds, @ChartHelper.DataRange int range) {
 		super(name, gateId);
 
-		mDeviceIds = deviceIds;
-		mModuleIds = moduleIds;
+		mAbsoluteModuleIds = absoluteModuleIds;
 		mDataRange = range;
 	}
 
 	protected GraphItem(Parcel in) {
 		super(in);
-		mDeviceIds = in.createStringArrayList();
-		mModuleIds = in.createStringArrayList();
+		mAbsoluteModuleIds = in.createStringArrayList();
 		mDataRange = in.readInt();
 	}
 
@@ -50,12 +45,8 @@ public class GraphItem extends BaseItem implements Parcelable {
 		}
 	};
 
-	public List<String> getDeviceIds() {
-		return mDeviceIds;
-	}
-
-	public List<String> getModuleIds() {
-		return mModuleIds;
+	public List<String> getAbsoluteModuleIds() {
+		return mAbsoluteModuleIds;
 	}
 
 	@ChartHelper.DataRange
@@ -72,8 +63,7 @@ public class GraphItem extends BaseItem implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		super.writeToParcel(dest, flags);
 
-		dest.writeStringList(mDeviceIds);
-		dest.writeStringList(mModuleIds);
+		dest.writeStringList(mAbsoluteModuleIds);
 		dest.writeInt(mDataRange);
 	}
 }

@@ -107,6 +107,16 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	}
 
 	/**
+	 * Create module absolute id
+	 * @param deviceId device id
+	 * @param moduleId module id
+	 * @return created id
+	 */
+	protected String getModuleAbsoluteId(String deviceId, String moduleId) {
+		return String.format("%s---%s",deviceId, moduleId);
+	}
+
+	/**
 	 * Holder for spinner module item
 	 */
 	protected final class SpinnerHolder {

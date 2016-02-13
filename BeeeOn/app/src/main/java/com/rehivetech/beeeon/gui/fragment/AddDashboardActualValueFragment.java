@@ -61,7 +61,7 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 
 				SpinnerHolder selectedItem = (SpinnerHolder) mModuleSpinner.getSelectedItem();
 
-				ActualValueItem item = new ActualValueItem(mItemNameEditText.getText().toString(), mGateId, selectedItem.getDevice().getId(), selectedItem.getModule().getId());
+				ActualValueItem item = new ActualValueItem(mItemNameEditText.getText().toString(), mGateId,getModuleAbsoluteId(selectedItem.getDevice().getId(), selectedItem.getModule().getId()));
 
 				Intent data = new Intent();
 				data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
