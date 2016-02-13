@@ -435,7 +435,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		mNavigationHeader.findViewById(R.id.menu_profile_gates).setVisibility(hasGates ? View.VISIBLE : View.GONE);
 
 		// Show / hide menu items based on existence of any gates
-		mNavigationMenu.findItem(R.id.item_overview).setVisible(hasGates);
+		mNavigationMenu.setGroupVisible(R.id.item_overview, hasGates);
 		mNavigationMenu.findItem(R.id.item_no_gates).setVisible(!hasGates);
 	}
 }

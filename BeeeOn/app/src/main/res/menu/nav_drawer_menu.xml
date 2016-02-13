@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item
-		android:title="@string/nav_drawer_menu_menu_household"
-		android:id="@+id/item_overview">
-		<menu>
-			<group
-				android:id="@+id/group_overview"
-				android:checkableBehavior="single">
-				<item
-					android:id="@+id/nav_drawer_devices"
-					android:title="@string/nav_drawer_menu_menu_devices"
-					android:icon="@drawable/ic_menu_overview"/>
-				<item
-					android:id="@+id/nav_drawer_dashboard"
-					android:title="@string/nav_drawer_menu_menu_charts"
-					android:icon="@drawable/ic_menu_dashboard"/>
-			</group>
-			<item
-				android:id="@+id/nav_drawer_gateway"
-				android:title="@string/nav_drawer_menu_menu_gate"
-				android:icon="@drawable/ic_router_gray_24dp"/>
-		</menu>
-	</item>
+	<group
+		android:id="@+id/item_overview"
+		android:checkableBehavior="single">
+		<item
+			android:id="@+id/nav_drawer_devices"
+			android:title="@string/nav_drawer_menu_menu_devices"
+			android:icon="@drawable/ic_menu_overview"/>
+		<item
+			android:id="@+id/nav_drawer_dashboard"
+			android:title="@string/nav_drawer_menu_menu_household"
+			android:icon="@drawable/ic_menu_dashboard"/>
+		<item
+			android:id="@+id/nav_drawer_gateway"
+			android:title="@string/nav_drawer_menu_menu_gate"
+			android:icon="@drawable/ic_router_gray_24dp"/>
+	</group>
 
 	<item
 		android:title="@string/nav_drawer_menu_no_gates"
