@@ -111,7 +111,7 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_gravity="top"
-				android:drawableTop="@drawable/login_btn_google"
+				android:drawableTop="@drawable/btn_google"
 				android:drawablePadding="8dp"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				android:text="@string/login_provider_google"/>
@@ -122,7 +122,7 @@
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_gravity="top"
-				android:drawableTop="@drawable/login_btn_facebook"
+				android:drawableTop="@drawable/btn_facebook"
 				android:drawablePadding="8dp"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				android:text="@string/login_provider_facebook"/>
