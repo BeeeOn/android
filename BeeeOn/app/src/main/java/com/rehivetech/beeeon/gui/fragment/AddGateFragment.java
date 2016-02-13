@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -19,15 +19,15 @@ public class AddGateFragment extends TrackFragment {
 	private AddGateActivity mActivity;
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 
 		try {
 			// Get activity and controller
 			mCallback = (AddGateActivity) getActivity();
 			mActivity = (AddGateActivity) getActivity();
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must implement OnAddGateListener", activity.toString()));
+			throw new ClassCastException(String.format("%s must implement OnAddGateListener", context.toString()));
 		}
 
 	}

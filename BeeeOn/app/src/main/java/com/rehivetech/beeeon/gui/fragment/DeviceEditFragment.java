@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -70,12 +70,12 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 		try {
 			mActivity = (DeviceEditActivity) getActivity();
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + "must be subclass of DeviceEditActivity");
+			throw new ClassCastException(context.toString() + "must be subclass of DeviceEditActivity");
 		}
 	}
 

@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -117,13 +117,13 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 
 		try {
-			mDeviceCallback = (UpdateDevice) activity;
+			mDeviceCallback = (UpdateDevice) context;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString() + " must implement UpdateDevice");
+			throw new ClassCastException(context.toString() + " must implement UpdateDevice");
 		}
 	}
 

@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -139,13 +138,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		return fragment;
 	}
 
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-
-		mActivity = (ModuleGraphActivity) activity;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

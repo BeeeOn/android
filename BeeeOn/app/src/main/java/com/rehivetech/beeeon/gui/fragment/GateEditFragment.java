@@ -32,8 +32,6 @@ public class GateEditFragment extends BaseApplicationFragment {
 	private static final String KEY_GATE_NAME = "gate_name";
 	private static final String KEY_GATE_TIMEZONE_INDEX = "gate_timezone_index";
 
-	private GateEditActivity mActivity;
-
 	private String mGateId;
 	private List<TimezoneWrapper> mTimezones = TimezoneWrapper.getTimezones();
 
@@ -47,16 +45,6 @@ public class GateEditFragment extends BaseApplicationFragment {
 		args.putString(EXTRA_GATE_ID, gateId);
 		gateEditFragment.setArguments(args);
 		return gateEditFragment;
-	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mActivity = (GateEditActivity) getActivity();
-		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must be subclass of GateEditActivity", activity.toString()));
-		}
 	}
 
 	@Override

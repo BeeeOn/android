@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +17,6 @@ import com.avast.android.dialogs.fragment.ListDialogFragment;
 import com.avast.android.dialogs.iface.IListDialogListener;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
@@ -53,7 +52,6 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	private Device mDevice;
 	private String mModuleId;
 
-	private DeviceDetailActivity mActivity;
 	private DeviceDetailFragment.UpdateDevice mDeviceCallback;
 	private View mView;
 	private DeviceModuleAdapter mModuleAdapter;
@@ -73,10 +71,9 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		mActivity = (DeviceDetailActivity) activity;
-		mDeviceCallback = (DeviceDetailFragment.UpdateDevice) activity;
+	public void onAttach(Context context) {
+		super.onAttach(context);
+		mDeviceCallback = (DeviceDetailFragment.UpdateDevice) context;
 	}
 
 	@Override

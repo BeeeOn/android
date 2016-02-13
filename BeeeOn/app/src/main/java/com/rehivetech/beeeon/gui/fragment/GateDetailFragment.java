@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -45,12 +44,12 @@ public class GateDetailFragment extends BaseApplicationFragment {
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 		try {
 			mCallback = (OnGateDetailsButtonsClickedListener) getActivity();
 		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must implement onGateDetailsButtonsClickedListener", activity.toString()));
+			throw new ClassCastException(String.format("%s must implement onGateDetailsButtonsClickedListener", context.toString()));
 		}
 	}
 
