@@ -19,7 +19,6 @@
 		<ImageView
 			android:id="@+id/menu_profile_listview_icon"
 			android:padding="4dp"
-			android:background="@drawable/oval_primary"
 			android:src="@drawable/ic_person_white_48dp"
 			android:layout_width="60dp"
 			android:layout_height="60dp"

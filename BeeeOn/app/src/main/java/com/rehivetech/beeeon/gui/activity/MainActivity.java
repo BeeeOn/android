@@ -407,6 +407,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		Bitmap bitmap = user.getPicture();
 		if (bitmap == null) {
 			picture.setImageResource(R.drawable.ic_person_white_48dp);
+			picture.setBackgroundResource(R.drawable.oval_primary);
 		} else {
 			picture.setImageBitmap(bitmap);
 		}
