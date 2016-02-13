@@ -179,6 +179,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			public void onExecute(boolean success) {
 				if (success) {
 					Toast.makeText(GateDetailActivity.this, R.string.gate_detail_toast_gate_removed, Toast.LENGTH_LONG).show();
+					Controller.getInstance(GateDetailActivity.this).removeDashboardView(mGateId);
 					finish();
 				}
 			}

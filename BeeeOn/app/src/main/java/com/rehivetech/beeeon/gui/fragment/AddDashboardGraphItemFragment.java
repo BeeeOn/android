@@ -58,8 +58,8 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 		final Controller controller = Controller.getInstance(mActivity);
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
-		ArrayAdapter<SpinnerHolder> leftAxisAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false);
-		ArrayAdapter<SpinnerHolder> rightAxisAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, true);
+		ArrayAdapter<SpinnerHolder> leftAxisAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false, false);
+		ArrayAdapter<SpinnerHolder> rightAxisAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, true, false);
 		ArrayAdapter<String> graphRangeAdapter = createGraphRangeAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item);
 
 		mLeftAxisSpinner.setAdapter(leftAxisAdapter);
@@ -80,18 +80,16 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 				SpinnerHolder leftItem = ((SpinnerHolder) mLeftAxisSpinner.getSelectedItem());
 				SpinnerHolder rightItem = ((SpinnerHolder) mRightAxisSpinner.getSelectedItem());
 
-				List<String> deviceIds;
 				List<String> moduleIds;
 
 				if (rightItem.getDevice() == null) {
-					deviceIds = Collections.singletonList(leftItem.getDevice().getId());
-					moduleIds = Collections.singletonList(leftItem.getModule().getId());
+					moduleIds = Collections.singletonList(getModuleAbsoluteId(leftItem.getDevice().getId(), leftItem.getModule().getId()));
 				} else {
-					deviceIds = Arrays.asList(leftItem.getDevice().getId(), rightItem.getDevice().getId());
-					moduleIds = Arrays.asList(leftItem.getModule().getId(), rightItem.getModule().getId());
+					moduleIds = Arrays.asList(getModuleAbsoluteId(leftItem.getDevice().getId(), leftItem.getModule().getId()),
+							getModuleAbsoluteId(rightItem.getDevice().getId(), rightItem.getModule().getId()));
 				}
 
-				GraphItem graphItem = new GraphItem(mItemNameEditText.getText().toString(), mGateId, deviceIds, moduleIds, ChartHelper.ALL_RANGES[mGraphRangeSpinner.getSelectedItemPosition()]);
+				GraphItem graphItem = new GraphItem(mItemNameEditText.getText().toString(), mGateId, moduleIds, ChartHelper.ALL_RANGES[mGraphRangeSpinner.getSelectedItemPosition()]);
 
 				Intent data = new Intent();
 				data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, graphItem);

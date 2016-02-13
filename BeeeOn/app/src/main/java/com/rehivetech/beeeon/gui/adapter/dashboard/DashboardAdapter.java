@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.adapter.dashboard;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -31,9 +32,9 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -59,6 +60,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	private static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
 
 	private final TimeHelper mTimeHelper;
+	private final UnitsHelper mUnitsHelper;
 
 	private BaseApplicationActivity mActivity;
 	private IItemClickListener mItemClickListener;
@@ -71,6 +73,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
 	}
 
 
@@ -172,17 +175,37 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		notifyItemRemoved(position);
 	}
 
+	public abstract class BaseDashboardViewHolder extends SelectableViewHolder {
+		public final CardView mCardView;
 
-	public class DashboardGraphViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener{
+		public BaseDashboardViewHolder(View itemView) {
+			super(itemView);
+			mCardView = (CardView) itemView;
+		}
+
+		@Override
+		protected void setSelectedBackground(boolean isSelected) {
+			if (isSelected) {
+				mCardView.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.gray_material_400));
+			} else {
+				mCardView.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+			}
+
+		}
+	}
+
+	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener{
 		public final TextView mGraphName;
+		public final TextView mLeftAxisUnit;
+		public final TextView mRightAxisUnit;
 		public final LineChart mChart;
 		public final TextView mLastUpdate;
-		public final View mRoot;
 
 		public DashboardGraphViewHolder(View itemView) {
 			super(itemView);
-			mRoot = itemView;
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_graph_name);
+			mLeftAxisUnit = (TextView) itemView.findViewById(R.id.dashboard_item_graph_left_axis_unit);
+			mRightAxisUnit = (TextView) itemView.findViewById(R.id.dashboard_item_graph_right_axis_unit);
 			mChart = (LineChart) itemView.findViewById(R.id.dashboard_item_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_graph_last_update_value);
 
@@ -192,10 +215,10 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		public void bind(Controller controller, GraphItem item, int position) {
 			Gate gate = controller.getGatesModel().getGate(item.getGateId());
-			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceIds().get(0));
+			Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleIds().get(0));
 
 			mGraphName.setText(item.getName());
-			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+			mLastUpdate.setText(mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), gate));
 
 			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
 				mChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -214,7 +237,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
 
 
-			if (item.getModuleIds().size() > 1) {
+			if (item.getAbsoluteModuleIds().size() > 1) {
 				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
 			} else {
 				mChart.getAxisRight().setEnabled(false);
@@ -223,12 +246,11 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mChart.setOnTouchListener(null);
 		}
 
-		private void fillChart(Controller controller, GraphItem item, Gate gate) {
+		private void fillChart(final Controller controller, final GraphItem item, final Gate gate) {
 			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 			YAxis.AxisDependency axisDependency = YAxis.AxisDependency.LEFT;
-			List<String> devices = item.getDeviceIds();
-			List<String> modules = item.getModuleIds();
+			final List<String> modules = item.getAbsoluteModuleIds();
 			for (int i = 0; i < modules.size(); i++) {
 
 				final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
@@ -243,24 +265,22 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 						mChart.setData(lineData);
 						mChart.invalidate();
+						mLeftAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(0)).getValue()));
+						mLeftAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
+
+						if (modules.size() > 1) {
+							mRightAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(1)).getValue()));
+							mRightAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 1));
+						}
 					}
 				};
+				Module module = controller.getDevicesModel().getModule(gate.getId(), modules.get(i));
 
 				ModuleLog.DataInterval dataInterval = (item.getDataRange() > ChartHelper.RANGE_DAY) ? ModuleLog.DataInterval.HALF_HOUR : ModuleLog.DataInterval.TEN_MINUTES;
-				ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), devices.get(i), modules.get(i), item.getDataRange(),
+				ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), item.getDataRange(),
 						ModuleLog.DataType.AVERAGE, dataInterval, chartLoadListener, dateTimeFormatter);
 
 				axisDependency = YAxis.AxisDependency.RIGHT;
-			}
-		}
-
-
-		@Override
-		protected void setSelectedBackground(boolean isSelected) {
-			if (isSelected) {
-				mRoot.setBackgroundResource(R.color.gray_material_400);
-			} else {
-				mRoot.setBackgroundResource(R.color.white);
 			}
 		}
 
@@ -279,17 +299,14 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class ActualValueViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public class ActualValueViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public final ImageView mIcon;
 		public final TextView mLabel;
 		public final TextView mValue;
 		public final TextView mLastUpdate;
-		public final View mRoot;
-
 
 		public ActualValueViewHolder(View itemView) {
 			super(itemView);
-			mRoot = itemView;
 			mIcon = (ImageView) itemView.findViewById(R.id.dashboard_item_act_value_icon);
 			mLabel = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_label);
 			mValue = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_value);
@@ -300,15 +317,20 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 
 		public void bind(Controller controller, ActualValueItem item, int position) {
-			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceId());
-			Module module = device.getModuleById(item.getModuleId());
+			Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleId());
 			SharedPreferences prefs = controller.getUserSettings();
 			UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
 
 			mLabel.setText(item.getName());
 			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
-			mValue.setText(String.format("%.2f %s", module.getValue().getDoubleValue(), unitsHelper.getStringUnit(module.getValue())));
-			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), controller.getGatesModel().getGate(item.getGateId())));
+
+			if (module.getValue() instanceof EnumValue) {
+				mValue.setText(((EnumValue) module.getValue()).getStateStringResource());
+			} else {
+				mValue.setText(String.format("%s %s", unitsHelper.getStringValue(module.getValue()), unitsHelper.getStringUnit(module.getValue())));
+			}
+			
+			mLastUpdate.setText(mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), controller.getGatesModel().getGate(item.getGateId())));
 
 			setSelected(isSelected(position));
 		}
@@ -326,29 +348,20 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 			return false;
 		}
-
-		@Override
-		protected void setSelectedBackground(boolean isSelected) {
-			if (isSelected) {
-				mRoot.setBackgroundResource(R.color.gray_material_400);
-			} else {
-				mRoot.setBackgroundResource(R.color.white);
-			}
-		}
 	}
 
-	public class OverviewGraphViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener  {
+	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener  {
 
 		public final TextView mGraphName;
+		public final TextView mGraphUnit;
 		public final BarChart mChart;
 		public final TextView mLastUpdate;
-		public final View mRoot;
 
 		public OverviewGraphViewHolder(View itemView) {
 			super(itemView);
 
-			mRoot = itemView;
 			mGraphName = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_name);
+			mGraphUnit = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_axis_unit);
 			mChart = (BarChart) itemView.findViewById(R.id.dashboard_item_overview_graph_chart);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_overview_graph_last_update_value);
 
@@ -358,10 +371,10 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		public void bind(Controller controller, OverviewGraphItem item, int position) {
 			Gate gate = controller.getGatesModel().getGate(item.getGateId());
-			Device device = controller.getDevicesModel().getDevice(item.getGateId(), item.getDeviceId());
+			Module module = controller.getDevicesModel().getModule(gate.getId(), item.getAbsoluteModuleId());
 
 			mGraphName.setText(item.getName());
-			mLastUpdate.setText(mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate));
+			mLastUpdate.setText(mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), gate));
 
 			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
 				mChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -369,7 +382,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			mChart.clear();
 			prepareChart();
-			fillChart(controller, item, gate);
+			fillChart(controller, item, gate, module);
 
 			setSelected(isSelected(position));
 		}
@@ -385,11 +398,11 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mChart.setOnTouchListener(null);
 		}
 
-		private void fillChart(Controller controller, OverviewGraphItem item, Gate gate) {
+		private void fillChart(Controller controller, OverviewGraphItem item, Gate gate, final Module module) {
 			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 
-			final BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(), item.getModuleId());
+			final BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(), item.getAbsoluteModuleId());
 			ChartHelper.prepareDataSet(mActivity, dataSet, true, false, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 
 			ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
@@ -399,14 +412,23 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 					barData.addDataSet(dataSet);
 
 					mChart.setData(barData);
-					List<String> xValuesCustom = new ArrayList<>(Arrays.asList("Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"));
+					List<String> xValuesCustom = new ArrayList<>(Arrays.asList(mActivity.getString(R.string.monday),
+							mActivity.getString(R.string.tuesday),
+							mActivity.getString(R.string.wednesday),
+							mActivity.getString(R.string.thursday),
+							mActivity.getString(R.string.friday),
+							mActivity.getString(R.string.saturday),
+							mActivity.getString(R.string.sunday)));
+
 					mChart.getXAxis().setValues(xValuesCustom);
 					mChart.invalidate();
+					mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
+					mGraphUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
 				}
 			};
 
 			ModuleLog.DataInterval dataInterval = ModuleLog.DataInterval.DAY;
-			ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), item.getDeviceId(), item.getModuleId(), ChartHelper.RANGE_WEEK,
+			ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), ChartHelper.RANGE_WEEK,
 					item.getDataType(), dataInterval, chartLoadListener, dateTimeFormatter);
 
 		}
@@ -423,15 +445,6 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				return true;
 			}
 			return false;
-		}
-
-		@Override
-		protected void setSelectedBackground(boolean isSelected) {
-			if (isSelected) {
-				mRoot.setBackgroundResource(R.color.gray_material_400);
-			} else {
-				mRoot.setBackgroundResource(R.color.white);
-			}
 		}
 	}
 }

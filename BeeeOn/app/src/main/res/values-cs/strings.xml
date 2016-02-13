@@ -460,4 +460,13 @@
 	<string name="dashboard_undo">Spět</string>
 	<string name="dashboard_add_graph_name_error">Pojmenujte novú kartu</string>
 
+	<!--Days shortcuts-->
+	<string name="monday">Po</string>
+	<string name="tuesday">Ut</string>
+	<string name="wednesday">St</string>
+	<string name="thursday">Čt</string>
+	<string name="friday">Pa</string>
+	<string name="saturday">So</string>
+	<string name="sunday">Ne</string>
+
 </resources>

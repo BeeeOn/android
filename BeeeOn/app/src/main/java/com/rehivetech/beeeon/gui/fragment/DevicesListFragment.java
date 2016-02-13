@@ -324,6 +324,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 				if (success) {
 					//handleRemoveDeviceFromList(position,true);
 					handleEmptyViewVisibility(mDeviceAdapter.getItemCount() > 0);
+					Controller.getInstance(mActivity).removeDeviceFromDashboard(mActiveGateId, device.getId());
 					Toast.makeText(mActivity, R.string.activity_fragment_toast_delete_success, Toast.LENGTH_SHORT).show();
 				} else {
 					Toast.makeText(mActivity, R.string.activity_fragment_toast_delete_fail, Toast.LENGTH_SHORT).show();

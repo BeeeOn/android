@@ -23,12 +23,23 @@
 			android:textAppearance="@style/TextAppearance.AppCompat.Title"
 			tools:text="Card Name"/>
 
+		<TextView
+			android:id="@+id/dashboard_item_overview_graph_axis_unit"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/dashboard_item_overview_graph_name"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_marginLeft="@dimen/space_normal"
+			android:layout_marginStart="@dimen/space_normal"
+			android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
 		<com.github.mikephil.charting.charts.BarChart
 			android:id="@+id/dashboard_item_overview_graph_chart"
 			android:layout_width="match_parent"
 			android:layout_height="150dp"
-			android:layout_below="@id/dashboard_item_overview_graph_name"
-			android:padding="5dp"/>
+			android:layout_below="@id/dashboard_item_overview_graph_axis_unit"
+			android:layout_marginTop="-6dp"/>
 
 		<TextView
 			android:id="@+id/dashboard_item_overview_graph_last_update_label"
