@@ -34,6 +34,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -309,7 +310,13 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			mLabel.setText(item.getName());
 			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
-			mValue.setText(String.format("%.2f %s", module.getValue().getDoubleValue(), unitsHelper.getStringUnit(module.getValue())));
+
+			if (module.getValue() instanceof EnumValue) {
+				mValue.setText(((EnumValue) module.getValue()).getStateStringResource());
+			} else {
+				mValue.setText(String.format("%s %s", unitsHelper.getStringValue(module.getValue()), unitsHelper.getStringUnit(module.getValue())));
+			}
+			
 			mLastUpdate.setText(mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), controller.getGatesModel().getGate(item.getGateId())));
 
 			setSelected(isSelected(position));
