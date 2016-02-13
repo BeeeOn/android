@@ -12,7 +12,10 @@ import android.util.Log;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmRegistrationIntentService;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Role;
@@ -37,6 +40,7 @@ import com.rehivetech.beeeon.util.Utils;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -521,20 +525,59 @@ public final class Controller {
 		}
 	}
 
-	public List<BaseItem> getDashboardItems(String userId, String gateId) {
+	public List<BaseItem> getDashboardItems(String gateId) {
+		String userId = getActualUser().getId();
 		return DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 	}
 
-	public void saveDashboardItems(String userId, String gateId, List<BaseItem> items) {
+	public void saveDashboardItems(String gateId, List<BaseItem> items) {
+		String userId = getActualUser().getId();
 		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
 	}
 
-	public void removeDashboardView(String userId, String gateId) {
+	public void removeDashboardView(String gateId) {
+		String userId = getActualUser().getId();
 		SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 		editor.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "");
 		editor.apply();
+	}
+
+	public void removeDeviceFromDashboard(String gateId, String removedDeviceId) {
+		String userId = getActualUser().getId();
+		List<BaseItem> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		Iterator<BaseItem> itemsIterator = items.iterator();
+
+		while (itemsIterator.hasNext()) {
+			BaseItem item = itemsIterator.next();
+
+			if (item instanceof GraphItem) {
+
+				Iterator<String> moduleIdsIterator = ((GraphItem) item).getAbsoluteModuleIds().iterator();
+				while (moduleIdsIterator.hasNext()) {
+					String absoluteModuleId = moduleIdsIterator.next();
+					if (absoluteModuleId.startsWith(removedDeviceId)) {
+						moduleIdsIterator.remove();
+					}
+				}
+				if (((GraphItem) item).getAbsoluteModuleIds().size() == 0) {
+					itemsIterator.remove();
+
+				}
+
+			} else if (item instanceof ActualValueItem) {
+				if (((ActualValueItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
+					itemsIterator.remove();
+				}
+
+			} else if (item instanceof OverviewGraphItem) {
+				if (((OverviewGraphItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
+					itemsIterator.remove();
+				}
+			}
+		}
+ 		saveDashboardItems(gateId, items);
 	}
 
 	private String getDashboardKey(String userId, String gateId) {
