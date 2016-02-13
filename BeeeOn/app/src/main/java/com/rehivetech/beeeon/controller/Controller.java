@@ -525,16 +525,30 @@ public final class Controller {
 		}
 	}
 
+	/**
+	 * Read dashboard items from preferences
+	 * @param gateId active gate id
+	 * @return dashboard items list
+	 */
 	public List<BaseItem> getDashboardItems(String gateId) {
 		String userId = getActualUser().getId();
 		return DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 	}
 
+	/**
+	 * Save actual state of dashboard into preferences
+	 * @param gateId active gate id
+	 * @param items dashboard items
+	 */
 	public void saveDashboardItems(String gateId, List<BaseItem> items) {
 		String userId = getActualUser().getId();
 		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
 	}
 
+	/**
+	 * Remove all dashboard cards by gate
+	 * @param gateId id of gate
+	 */
 	public void removeDashboardView(String gateId) {
 		String userId = getActualUser().getId();
 		SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
@@ -544,6 +558,11 @@ public final class Controller {
 		editor.apply();
 	}
 
+	/**
+	 * Remove all device occurrences in dashboard cards
+	 * @param gateId actual gate id
+	 * @param removedDeviceId id of removed device
+	 */
 	public void removeDeviceFromDashboard(String gateId, String removedDeviceId) {
 		String userId = getActualUser().getId();
 		List<BaseItem> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
@@ -580,6 +599,12 @@ public final class Controller {
  		saveDashboardItems(gateId, items);
 	}
 
+	/**
+	 * Create dashboard key
+	 * @param userId id of actual user
+	 * @param gateId id of active gate
+	 * @return key string
+	 */
 	private String getDashboardKey(String userId, String gateId) {
 		return String.format("%s-%s", userId, gateId);
 	}
