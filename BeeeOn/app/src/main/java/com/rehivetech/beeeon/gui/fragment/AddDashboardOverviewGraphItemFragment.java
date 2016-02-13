@@ -53,7 +53,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 		Controller controller = Controller.getInstance(mActivity);
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
-		ArrayAdapter<SpinnerHolder> moduleAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false);
+		ArrayAdapter<SpinnerHolder> moduleAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false, false);
 		ArrayAdapter<SpinnerDataTypeHolder> mGraphDataTypeAdapter = createGraphDataTypeAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item);
 
 		mModulesSpinner.setAdapter(moduleAdapter);

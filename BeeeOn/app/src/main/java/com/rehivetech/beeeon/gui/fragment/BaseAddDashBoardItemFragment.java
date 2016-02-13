@@ -14,6 +14,7 @@ import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	 * @param addEmptyFirst if true, empty item will be added
 	 * @return adapter
 	 */
-	public ArrayAdapter<SpinnerHolder> createModulesAdapter(Context context, @LayoutRes int layout, List<Device> devicesList, boolean addEmptyFirst) {
+	public ArrayAdapter<SpinnerHolder> createModulesAdapter(Context context, @LayoutRes int layout, List<Device> devicesList, boolean addEmptyFirst, boolean withEnums) {
 		ArrayAdapter<SpinnerHolder> adapter = new ArrayAdapter<>(context, layout);
 
 		if (addEmptyFirst) {
@@ -69,6 +70,11 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 		for (Device device : devicesList) {
 			for (Module module : device.getAllModules(false)) {
+
+				if (!withEnums && (module.getValue() instanceof EnumValue)) {
+					continue;
+				}
+				
 				adapter.add(new SpinnerHolder(device, module));
 			}
 		}

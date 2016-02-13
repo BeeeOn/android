@@ -47,7 +47,7 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 		super.onViewCreated(view, savedInstanceState);
 
 		List<Device> devices = Controller.getInstance(mActivity).getDevicesModel().getDevicesByGate(mGateId);
-		ArrayAdapter<SpinnerHolder> modulesAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false);
+		ArrayAdapter<SpinnerHolder> modulesAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false, true);
 
 		mModuleSpinner.setAdapter(modulesAdapter);
 
