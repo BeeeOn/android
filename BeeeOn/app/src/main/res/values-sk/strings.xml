@@ -454,7 +454,10 @@
 	<string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dát pre graf</string>
 	<string name="dashboard_add_graph_week_module_label">Vyberte modul pre graf</string>
 	<string name="dashboard_add_graph_week_data_type_label">vyberte typ dát pre graf</string>
-	<string name="dashboard_delete_snackbar">Karta bola zmazaná</string>
+	<plurals name="dashboard_delete_snackbar">
+		<item quantity="one">Karta bola zmazaná</item>
+		<item quantity="few">Karty boli zmazané</item>
+	</plurals>
 	<string name="dashboard_undo">Späť</string>
 	<string name="dashboard_add_graph_name_error">Pomenujte novú kartu</string>
 

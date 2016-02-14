@@ -206,7 +206,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 					mAdapter.deleteItem(entry.getValue());
 				}
 
-				Snackbar.make(mRootLayout, R.string.dashboard_delete_snackbar, Snackbar.LENGTH_LONG)
+				Snackbar.make(mRootLayout, getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), Snackbar.LENGTH_LONG)
 						.setAction(R.string.dashboard_undo, new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {

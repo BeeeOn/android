@@ -456,16 +456,19 @@
 	<string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dat pro graf</string>
 	<string name="dashboard_add_graph_week_module_label">Vyberte modul pro graf</string>
 	<string name="dashboard_add_graph_week_data_type_label">Vyberte typ dat pro graf</string>
-	<string name="dashboard_delete_snackbar">Karta byla smazána</string>
+	<plurals name="dashboard_delete_snackbar">
+		<item quantity="one">Karta byla smazána</item>
+		<item quantity="few">Karty byly smazány</item>
+	</plurals>
 	<string name="dashboard_undo">Spět</string>
 	<string name="dashboard_add_graph_name_error">Pojmenujte novú kartu</string>
 
 	<!--Days shortcuts-->
 	<string name="monday">Po</string>
-	<string name="tuesday">Ut</string>
+	<string name="tuesday">Út</string>
 	<string name="wednesday">St</string>
 	<string name="thursday">Čt</string>
-	<string name="friday">Pa</string>
+	<string name="friday">Pá</string>
 	<string name="saturday">So</string>
 	<string name="sunday">Ne</string>
 

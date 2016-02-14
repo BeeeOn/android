@@ -458,7 +458,10 @@
 	<string name="dashboard_add_graph_graph_range_label">Select graph range</string>
 	<string name="dashboard_add_graph_week_module_label">Select graph module</string>
 	<string name="dashboard_add_graph_week_data_type_label">Select graph data type</string>
-	<string name="dashboard_delete_snackbar">Card was deleted</string>
+	<plurals name="dashboard_delete_snackbar">
+		<item quantity="one">Card was deleted</item>
+		<item quantity="other">Cards have been deleted</item>
+	</plurals>
 	<string name="dashboard_undo">Undo</string>
 	<string name="dashboard_add_graph_name_error">Add card name</string>
 
