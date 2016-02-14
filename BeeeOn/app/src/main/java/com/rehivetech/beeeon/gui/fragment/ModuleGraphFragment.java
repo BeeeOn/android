@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -138,6 +139,16 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		return fragment;
 	}
 
+	@Override
+	public void onAttach(Context context) {
+		super.onAttach(context);
+
+		try {
+			mActivity = (ModuleGraphActivity) getActivity();
+		} catch (ClassCastException e) {
+			throw new ClassCastException("Must be instance of DeviceDetailActivity");
+		}
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
