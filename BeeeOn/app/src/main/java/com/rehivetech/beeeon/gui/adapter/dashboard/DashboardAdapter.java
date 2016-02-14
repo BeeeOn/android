@@ -194,7 +194,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener{
+	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public final TextView mGraphName;
 		public final TextView mLeftAxisUnit;
 		public final TextView mRightAxisUnit;
@@ -226,6 +226,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			mChart.clear();
 			prepareChart(item);
+			mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 			fillChart(controller, item, gate);
 
 			setSelected(isSelected(position));
@@ -260,18 +261,34 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
 					@Override
 					public void onChartLoaded(DataSet dataset, List<String> xValues) {
-						LineData lineData = mChart.getLineData() != null ? mChart.getLineData() : new LineData(xValues);
-						lineData.addDataSet(dataSet);
+						if (dataset.getYVals().size() > 1) {
+							LineData lineData = mChart.getLineData() != null ? mChart.getLineData() : new LineData(xValues);
+							lineData.addDataSet(dataSet);
 
-						mChart.setData(lineData);
-						mChart.invalidate();
-						mLeftAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(0)).getValue()));
-						mLeftAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
+							mChart.setData(lineData);
 
-						if (modules.size() > 1) {
-							mRightAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(1)).getValue()));
-							mRightAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 1));
+							mLeftAxisUnit.setVisibility(View.VISIBLE);
+							mLeftAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(0)).getValue()));
+							mLeftAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
+							if (modules.size() > 1) {
+								mRightAxisUnit.setVisibility(View.VISIBLE);
+								mRightAxisUnit.setText(mUnitsHelper.getStringUnit(controller.getDevicesModel().getModule(gate.getId(), modules.get(1)).getValue()));
+								mRightAxisUnit.setTextColor(Utils.getGraphColor(mActivity, 1));
+							}
+
+						} else {
+							if (dataset.getAxisDependency() == YAxis.AxisDependency.LEFT) {
+								mLeftAxisUnit.setVisibility(View.GONE);
+								mChart.getAxisLeft().setEnabled(false);
+							} else {
+								mRightAxisUnit.setVisibility(View.GONE);
+								mChart.getAxisRight().setEnabled(false);
+							}
 						}
+						mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_no_data));
+						mChart.invalidate();
+
+
 					}
 				};
 				Module module = controller.getDevicesModel().getModule(gate.getId(), modules.get(i));
@@ -291,7 +308,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public boolean onLongClick(View v) {
-			if(mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
+			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
 				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 				return true;
 			}
@@ -329,7 +346,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			} else {
 				mValue.setText(String.format("%s %s", unitsHelper.getStringValue(module.getValue()), unitsHelper.getStringUnit(module.getValue())));
 			}
-			
+
 			mLastUpdate.setText(mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), controller.getGatesModel().getGate(item.getGateId())));
 
 			setSelected(isSelected(position));
@@ -342,7 +359,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public boolean onLongClick(View v) {
-			if(mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
+			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
 				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 				return true;
 			}
@@ -350,7 +367,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener  {
+	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
 		public final TextView mGraphName;
 		public final TextView mGraphUnit;
@@ -382,6 +399,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			mChart.clear();
 			prepareChart();
+			mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 			fillChart(controller, item, gate, module);
 
 			setSelected(isSelected(position));
@@ -408,22 +426,28 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
 				@Override
 				public void onChartLoaded(DataSet dataset, List<String> xValues) {
-					BarData barData = mChart.getBarData() != null ? mChart.getBarData() : new BarData(xValues);
-					barData.addDataSet(dataSet);
 
-					mChart.setData(barData);
-					List<String> xValuesCustom = new ArrayList<>(Arrays.asList(mActivity.getString(R.string.monday),
-							mActivity.getString(R.string.tuesday),
-							mActivity.getString(R.string.wednesday),
-							mActivity.getString(R.string.thursday),
-							mActivity.getString(R.string.friday),
-							mActivity.getString(R.string.saturday),
-							mActivity.getString(R.string.sunday)));
+					if (dataSet.getYVals().size() > 1) {
+						BarData barData = mChart.getBarData() != null ? mChart.getBarData() : new BarData(xValues);
+						barData.addDataSet(dataSet);
 
-					mChart.getXAxis().setValues(xValuesCustom);
+						mChart.setData(barData);
+
+						List<String> xValuesCustom = new ArrayList<>(Arrays.asList(mActivity.getString(R.string.monday),
+								mActivity.getString(R.string.tuesday),
+								mActivity.getString(R.string.wednesday),
+								mActivity.getString(R.string.thursday),
+								mActivity.getString(R.string.friday),
+								mActivity.getString(R.string.saturday),
+								mActivity.getString(R.string.sunday)));
+
+						mChart.getXAxis().setValues(xValuesCustom);
+						mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
+						mGraphUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
+					}
+
+					mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
-					mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
-					mGraphUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
 				}
 			};
 
@@ -440,7 +464,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public boolean onLongClick(View v) {
-			if(mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
+			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
 				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 				return true;
 			}
