@@ -15,8 +15,8 @@
 	<string name="devices__dev_regulator_vpt_lan">Regulátor VPT LAN</string>
 	<string name="devices__dev_temperature_humidity">Senzor teploty a vlhkosti</string>
 	<string name="devices__dev_tp_82n_thermostat">Bezdrôtový termostat TP-82N</string>
-	<string name="devices__dev_virtual_thn">TepVlhHluk</string>
-	<string name="devices__dev_virtual_thn_x3">TepVlhHluk x3</string>
+	<string name="devices__dev_virtual_thn">Teplota + vlhkosť + hluk</string>
+	<string name="devices__dev_virtual_thn_x3">Trojzónová teplota + vlhkosť + hluk</string>
 	<string name="devices__frost_protection">Protimrazová ochrana</string>
 	<string name="devices__frost_protection_threshold">Prah protimrazovej ochrany</string>
 	<string name="devices__frost_protection_water_temperature">Teplota topnej vody pri protimrazovej ochrane</string>

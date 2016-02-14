@@ -15,8 +15,8 @@
 	<string name="devices__dev_regulator_vpt_lan">Regulator VPT LAN</string>
 	<string name="devices__dev_temperature_humidity">Temperature and humidity sensor</string>
 	<string name="devices__dev_tp_82n_thermostat">Wireless thermostat TP-82N</string>
-	<string name="devices__dev_virtual_thn">TempHumNoise</string>
-	<string name="devices__dev_virtual_thn_x3">TempHumNoise x3</string>
+	<string name="devices__dev_virtual_thn">Temperature + humidity + noise</string>
+	<string name="devices__dev_virtual_thn_x3">3-zone temperature + humidity + noise</string>
 	<string name="devices__frost_protection">Frost protection</string>
 	<string name="devices__frost_protection_threshold">Temperature threshold to activate frost protection</string>
 	<string name="devices__frost_protection_water_temperature">Water temperature when frost protection is active</string>
