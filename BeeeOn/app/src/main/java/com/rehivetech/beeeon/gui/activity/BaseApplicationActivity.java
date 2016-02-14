@@ -3,9 +3,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -16,7 +13,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -28,9 +24,6 @@ import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
-import com.rehivetech.beeeon.util.Language;
-
-import java.util.Locale;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
@@ -44,7 +37,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	private boolean triedLoginAlready = false;
 
-	public static String activeLocale = null;
+//	public static String activeLocale = null;
 
 	@Nullable
 	private View mProgressBar;
@@ -62,29 +55,29 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setLocale();
+//		setLocale();
 
 		super.onCreate(savedInstanceState);
 
 		callbackTaskManager = new CallbackTaskManager(this);
 	}
 
-	private void setLocale() {
-		// We need to set locale only once per application lifetime
-		if (activeLocale != null) {
-			return;
-		}
-
-		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
-		Language.Item lang = (Language.Item) new Language().fromSettings(prefs);
-		activeLocale = lang.getCode();
-
-		Resources res = getResources();
-		DisplayMetrics dm = res.getDisplayMetrics();
-		Configuration conf = res.getConfiguration();
-		conf.locale = new Locale(activeLocale);
-		res.updateConfiguration(conf, dm);
-	}
+//	private void setLocale() {
+//		// We need to set locale only once per application lifetime
+//		if (activeLocale != null) {
+//			return;
+//		}
+//
+//		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
+//		Language.Item lang = (Language.Item) new Language().fromSettings(prefs);
+//		activeLocale = lang.getCode();
+//
+//		Resources res = getResources();
+//		DisplayMetrics dm = res.getDisplayMetrics();
+//		Configuration conf = res.getConfiguration();
+//		conf.locale = new Locale(activeLocale);
+//		res.updateConfiguration(conf, dm);
+//	}
 
 
 	@Override

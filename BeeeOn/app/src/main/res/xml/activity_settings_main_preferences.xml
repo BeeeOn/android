@@ -2,11 +2,11 @@
 
 	<!-- WARNING: android:key values defined here must be same as in method getPersistenceKey() of their corresponding classes (Language.java, Timezone.java, ...) -->
 
-	<ListPreference
-		android:dialogTitle="@string/settings_prefs_choose_language"
-		android:key="pref_language"
-		android:title="@string/settings_prefs_choose_language">
-	</ListPreference>
+	<!--<ListPreference-->
+		<!--android:dialogTitle="@string/settings_prefs_choose_language"-->
+		<!--android:key="pref_language"-->
+		<!--android:title="@string/settings_prefs_choose_language">-->
+	<!--</ListPreference>-->
 
 	<ListPreference
 		android:dialogTitle="@string/gate_detail_timezone"
