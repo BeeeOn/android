@@ -87,7 +87,7 @@ public class ValuesGenerator {
 		RefreshInterval refresh = module.getDevice().getRefresh();
 
 		// use refresh interval for raw data, or 1 second when has no refresh
-		int refreshMsecs = (refresh != null ? refresh.getInterval() * 1000 : 1000);
+		long refreshMsecs = (refresh != null ? refresh.getInterval() * 1000 : 1000 * 60);
 		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
 
 		// Generate vales at minimum frequency of refresh interval (as server would do, then chart helper will transform them into time axis)

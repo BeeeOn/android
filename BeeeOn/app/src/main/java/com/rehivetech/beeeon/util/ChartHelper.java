@@ -417,7 +417,7 @@ final public class ChartHelper {
 			} else if (interval == (long) RANGE_MONTH * 1000) {
 				refreshMsecs = 1000 * 60 * 60;
 			} else {
-				refreshMsecs = 1000;
+				refreshMsecs = (barChart) ? 1000 * 60 : 1000;
 			}
 		} else {
 			refreshMsecs = refresh.getInterval() * 1000;
