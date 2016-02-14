@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.gui.dialog;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,30 +16,40 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
 import com.rehivetech.beeeon.household.location.Location;
 
+import java.util.List;
+
 /**
- * Created by xkozak15 on 19.9.15.
+ * @author David Kozak
+ * @since 19.9.2015
  */
 public class AddLocationDialog extends SimpleDialogFragment {
 
 	public static final String TAG = "new_loc";
 
-	private AddLocationDialogListener mCallback;
-
-	public static <T extends FragmentActivity & AddLocationDialogListener> void show(T activity) {
-		AddLocationDialog addLocationDialog = new AddLocationDialog();
-		addLocationDialog.show(activity.getSupportFragmentManager(), TAG);
+	/**
+	 * Showing from fragment
+	 *
+	 * @param activity
+	 * @param fragment
+	 * @param requestCode
+	 */
+	public static <T extends Fragment & IAddLocationDialogListener> void show(FragmentActivity activity, @Nullable T fragment, int requestCode) {
+		AddLocationDialog dialog = new AddLocationDialog();
+		if (fragment != null) dialog.setTargetFragment(fragment, requestCode);
+		dialog.show(activity.getSupportFragmentManager(), TAG);
 	}
 
+	/**
+	 * Showing from activity
+	 *
+	 * @param activity
+	 */
+	public static <T extends FragmentActivity & IAddLocationDialogListener> void show(T activity) {
+		show(activity, null, 0);
+	}
+
+	@SuppressLint("InflateParams")
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mCallback = (AddLocationDialogListener) getActivity();
-		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must implement AddLocationDialogListener", activity.toString()));
-		}
-	}
-
 	public BaseDialogFragment.Builder build(BaseDialogFragment.Builder builder) {
 		builder.setTitle(R.string.device_edit_overlay_dialog_create_new_location);
 		LayoutInflater li = LayoutInflater.from(getActivity());
@@ -59,7 +71,10 @@ public class AddLocationDialog extends SimpleDialogFragment {
 					Toast.makeText(getActivity(), R.string.device_edit_toast_icon_or_text_is_null, Toast.LENGTH_SHORT).show();
 					return;
 				}
-				mCallback.onCreateLocation(name, icon);
+
+				for (IAddLocationDialogListener listener : getAddLocationListeners()) {
+					listener.onCreateLocation(name, icon);
+				}
 				dismiss();
 			}
 		});
@@ -74,7 +89,16 @@ public class AddLocationDialog extends SimpleDialogFragment {
 		return builder;
 	}
 
-	public interface AddLocationDialogListener {
+	protected List<IAddLocationDialogListener> getAddLocationListeners() {
+		return this.getDialogListeners(IAddLocationDialogListener.class);
+	}
+
+	public interface IAddLocationDialogListener {
+		/**
+		 * Listener when location was created (form submitted)
+		 * @param name of location
+		 * @param icon of location
+		 */
 		void onCreateLocation(String name, Location.LocationIcon icon);
 	}
 }

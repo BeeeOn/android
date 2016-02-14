@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -24,6 +25,9 @@ import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.task.AddLocationTask;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -32,11 +36,15 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 /**
- * Created by david on 15.9.15.
+ * @author David Kozak
+ * @since 15.9.2015
  */
-public class DeviceEditFragment extends BaseApplicationFragment {
+public class DeviceEditFragment extends BaseApplicationFragment implements AddLocationDialog.IAddLocationDialogListener {
 	private static final String KEY_GATE_ID = "gateId";
 	private static final String KEY_DEVICE_ID = "deviceId";
+
+	private static final int DIALOG_CODE_NEW_LOCATION = 1;
+
 
 	private DeviceEditActivity mActivity;
 
@@ -121,7 +129,7 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if (position == mLocationArrayAdapter.getCount() - 1) {
 					// the last item of the list is the new room, the callback will call saveNewDevice method which will store store it in mNewLocation
-					AddLocationDialog.show(mActivity);
+					AddLocationDialog.show(mActivity, DeviceEditFragment.this, DIALOG_CODE_NEW_LOCATION);
 				} else {
 					// set the actually selected location
 					mNewLocation = (Location) parent.getItemAtPosition(position);
@@ -139,7 +147,6 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 		fillData();
 	}
 
@@ -224,5 +231,26 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	public void selectLocation(@NonNull String locationId) {
 		List<Location> locations = mLocationArrayAdapter.getLocationsList();
 		mLocationSpinner.setSelection(Utils.getObjectIndexFromList(locationId, locations));
+	}
+
+	@Override
+	public void onCreateLocation(String name, Location.LocationIcon icon) {
+		Location location = new Location(Location.NEW_LOCATION_ID, name, mGateId, icon.getId());
+
+		final AddLocationTask addLocationTask = new AddLocationTask(mActivity);
+		addLocationTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success) return; // TODO any error?
+
+				Toast.makeText(mActivity, R.string.device_edit_toast_location_was_added, Toast.LENGTH_SHORT).show();
+				reloadLocationSpinner();
+
+				Location location = addLocationTask.getNewLocation();
+				selectLocation((location != null) ? location.getId() : "");
+			}
+		});
+
+		mActivity.callbackTaskManager.executeTask(addLocationTask, location, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
 	}
 }
