@@ -151,12 +151,6 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				startActivity(intent);
 				break;
 			}
-			case R.id.gate_detail_menu_users: {
-				Intent intent = new Intent(this, GateUsersActivity.class);
-				intent.putExtra(GateUsersActivity.EXTRA_GATE_ID, mGateId);
-				startActivity(intent);
-				break;
-			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
