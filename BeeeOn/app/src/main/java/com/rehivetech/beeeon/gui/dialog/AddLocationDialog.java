@@ -82,6 +82,9 @@ public class AddLocationDialog extends SimpleDialogFragment {
 		builder.setNegativeButton(R.string.activity_fragment_btn_cancel, new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				for (IAddLocationDialogListener listener : getAddLocationListeners()) {
+					listener.onCancelCreatingLocation();
+				}
 				dismiss();
 			}
 		});
@@ -100,5 +103,10 @@ public class AddLocationDialog extends SimpleDialogFragment {
 		 * @param icon of location
 		 */
 		void onCreateLocation(String name, Location.LocationIcon icon);
+
+		/**
+		 * Listener when location creating was canceled (form cancelled)
+		 */
+		void onCancelCreatingLocation();
 	}
 }
