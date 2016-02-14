@@ -75,6 +75,7 @@ public class UsersListAdapter extends BaseAdapter {
 			holder.UserIcon.setImageBitmap(Utils.getRoundedShape(picture));
 		} else {
 			holder.UserIcon.setImageResource(R.drawable.ic_person_white_48dp);
+			holder.UserIcon.setBackgroundResource(R.drawable.oval_primary);
 		}
 
 		return convertView;

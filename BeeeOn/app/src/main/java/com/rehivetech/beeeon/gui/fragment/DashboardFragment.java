@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -165,7 +164,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
 		if (mActionMode == null) {
 			mActionMode = mActivity.startSupportActionMode(new ActionModeDashboard());
-			mActivity.setStatusBarColor(Color.GRAY);
 		}
 		mAdapter.toggleSelection(position);
 		return true;
@@ -226,7 +224,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		public void onDestroyActionMode(ActionMode mode) {
 			mAdapter.clearSelection();
 			mActionMode = null;
-			mActivity.setStatusBarColor(ContextCompat.getColor(mActivity, R.color.beeeon_primary_dark));
 		}
 	}
 }

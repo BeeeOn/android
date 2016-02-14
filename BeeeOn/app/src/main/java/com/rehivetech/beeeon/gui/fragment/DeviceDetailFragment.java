@@ -273,6 +273,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			Log.d(TAG, "restore instance");
 		}
 		setAutoReloadDataTimer();
+		updateData();
 	}
 
 	@Override

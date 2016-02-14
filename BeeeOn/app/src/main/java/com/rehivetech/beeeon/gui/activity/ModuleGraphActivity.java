@@ -374,6 +374,12 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		callbackTaskManager.cancelAndRemoveAll();
+	}
+
+	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putBoolean(OUT_STATE_CHECK_BOX_MIN, mCheckBoxMin.isChecked());
