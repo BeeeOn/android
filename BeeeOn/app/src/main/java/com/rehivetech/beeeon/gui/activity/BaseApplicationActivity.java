@@ -12,7 +12,9 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -139,7 +141,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		Log.d(TAG, "Redirecting to login");
 		Intent intent = new Intent(context, LoginActivity.class);
 		intent.putExtra(LoginActivity.BUNDLE_REDIRECT, true);
-		intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS );
+		intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 
 		context.startActivity(intent);
 	}
@@ -298,5 +300,17 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			getWindow().setStatusBarColor(statusBarColor);
 		}
+	}
+
+	@Override
+	public void onSupportActionModeStarted(ActionMode mode) {
+		super.onSupportActionModeStarted(mode);
+		setStatusBarColor(ContextCompat.getColor(this, R.color.gray_status_bar));
+	}
+
+	@Override
+	public void onSupportActionModeFinished(ActionMode mode) {
+		super.onSupportActionModeFinished(mode);
+		setStatusBarColor(ContextCompat.getColor(this, R.color.beeeon_primary_dark));
 	}
 }
