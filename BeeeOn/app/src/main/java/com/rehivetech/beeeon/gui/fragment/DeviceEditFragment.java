@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,16 +13,19 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.DeviceEditActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.RefreshIntervalAdapter;
 import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.location.Location;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.threading.task.AddLocationTask;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -32,13 +34,16 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 /**
- * Created by david on 15.9.15.
+ * @author David Kozak
+ * @since 15.9.2015
+ * TODO should rework whole selecting because onItemSelected is firing more than once!
  */
-public class DeviceEditFragment extends BaseApplicationFragment {
+public class DeviceEditFragment extends BaseApplicationFragment implements AddLocationDialog.IAddLocationDialogListener {
 	private static final String KEY_GATE_ID = "gateId";
 	private static final String KEY_DEVICE_ID = "deviceId";
 
-	private DeviceEditActivity mActivity;
+	private static final int DIALOG_CODE_NEW_LOCATION = 1;
+	private static final String STATE_CREATING_LOCATION_DIALOG_SHOWN = "creating_location_dialog_shown";
 
 	@Nullable
 	private Location mNewLocation = null;
@@ -54,8 +59,8 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	private TextView mWarningBattery;
 	private TextView mWarningRefresh;
 
+	private boolean mIsShownDialog = false;
 	private LocationArrayAdapter mLocationArrayAdapter;
-
 	private TimeHelper mTimeHelper;
 	private boolean mFirstSelect = true;
 
@@ -67,16 +72,6 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		DeviceEditFragment fragment = new DeviceEditFragment();
 		fragment.setArguments(args);
 		return fragment;
-	}
-
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		try {
-			mActivity = (DeviceEditActivity) getActivity();
-		} catch (ClassCastException e) {
-			throw new ClassCastException(context.toString() + "must be subclass of DeviceEditActivity");
-		}
 	}
 
 	@Override
@@ -94,7 +89,17 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 		mLocationArrayAdapter = new LocationArrayAdapter(mActivity, locations);
 
 		SharedPreferences prefs = controller.getUserSettings();
-		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mTimeHelper = Utils.getTimeHelper(prefs);
+
+		if (savedInstanceState != null) {
+			mIsShownDialog = savedInstanceState.getBoolean(STATE_CREATING_LOCATION_DIALOG_SHOWN);
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(STATE_CREATING_LOCATION_DIALOG_SHOWN, mIsShownDialog);
 	}
 
 	@Nullable
@@ -120,8 +125,11 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				if (position == mLocationArrayAdapter.getCount() - 1) {
-					// the last item of the list is the new room, the callback will call saveNewDevice method which will store store it in mNewLocation
-					AddLocationDialog.show(mActivity);
+					// the last item of the list is the new room, the callback will call saveNewDevice method which will store it in mNewLocation
+					if (!mIsShownDialog) {
+						AddLocationDialog.show(mActivity, DeviceEditFragment.this, DIALOG_CODE_NEW_LOCATION);
+						mIsShownDialog = true;
+					}
 				} else {
 					// set the actually selected location
 					mNewLocation = (Location) parent.getItemAtPosition(position);
@@ -139,72 +147,80 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
-		fillData();
+		prepareGUI();
 	}
 
-	public void fillData() {
+	public void prepareGUI() {
 		Controller controller = Controller.getInstance(mActivity);
 		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
-		if (mDevice == null)
-			return;
+		if (mDevice == null) return;
 
 		mDeviceNameText.setText(mDevice.getCustomName());
 		mDeviceNameText.setHint(mDevice.getType().getNameRes());
 
 		reloadLocationSpinner();
 		selectLocation(mDevice.getLocationId());
-
-		final RefreshInterval refreshInterval = mDevice.getRefresh();
-		if (refreshInterval != null && mRefreshTimeSpinner != null) {
-			mRefreshTimeSpinner.setSelection(refreshInterval.getIntervalIndex());
-			mRefreshTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-				@Override
-				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-					if (mFirstSelect) {
-						mFirstSelect = false;
-						return;
-					}
-
-					RefreshInterval interval = (RefreshInterval) parent.getAdapter().getItem(position);
-					boolean showBatteryWarning = mDevice.getBattery() != null && interval.getInterval() <= RefreshInterval.SEC_10.getInterval();
-					boolean showRefreshWarning = mDevice.getRefresh() != null && refreshInterval.getInterval() >= RefreshInterval.MIN_5.getInterval();
-
-					mWarningBattery.setVisibility(showBatteryWarning ? View.VISIBLE : View.GONE);
-					mWarningRefresh.setVisibility(showRefreshWarning ? View.VISIBLE : View.GONE);
-
-					DateTime nextWakeUp = mDevice.getLastUpdate();
-					if (nextWakeUp != null) {
-						nextWakeUp = nextWakeUp.plusSeconds(refreshInterval.getInterval());
-					}
-					mWarningRefresh.setText(getString(R.string.device_edit_warning_refresh, mTimeHelper.formatLastUpdate(nextWakeUp, Controller.getInstance(mActivity).getGatesModel().getGate(mGateId))));
-
-					if (showBatteryWarning && showRefreshWarning) {
-						RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mWarningBattery.getLayoutParams();
-						layoutParams.addRule(RelativeLayout.BELOW, mWarningRefresh.getId());
-						mWarningBattery.setLayoutParams(layoutParams);
-					}
-				}
-
-				@Override
-				public void onNothingSelected(AdapterView<?> parent) {
-
-				}
-			});
-		}
+		setupRefreshInterval();
 	}
 
+	/**
+	 * Prepares UI for refresh interval configuration
+	 */
+	private void setupRefreshInterval() {
+		if(mDevice == null) return;
+
+		final RefreshInterval refreshInterval = mDevice.getRefresh();
+		if (refreshInterval == null || mRefreshTimeSpinner == null) {
+			return;
+		}
+
+		mRefreshTimeSpinner.setSelection(refreshInterval.getIntervalIndex());
+		mRefreshTimeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				if (mFirstSelect) {
+					mFirstSelect = false;
+					return;
+				}
+
+				RefreshInterval interval = (RefreshInterval) parent.getAdapter().getItem(position);
+				boolean showBatteryWarning = mDevice.getBattery() != null && interval.getInterval() <= RefreshInterval.SEC_10.getInterval();
+				boolean showRefreshWarning = mDevice.getRefresh() != null && refreshInterval.getInterval() >= RefreshInterval.MIN_5.getInterval();
+
+				mWarningBattery.setVisibility(showBatteryWarning ? View.VISIBLE : View.GONE);
+				mWarningRefresh.setVisibility(showRefreshWarning ? View.VISIBLE : View.GONE);
+
+				DateTime nextWakeUp = mDevice.getLastUpdate();
+				if (nextWakeUp != null) {
+					nextWakeUp = nextWakeUp.plusSeconds(refreshInterval.getInterval());
+				}
+				mWarningRefresh.setText(getString(R.string.device_edit_warning_refresh, mTimeHelper.formatLastUpdate(nextWakeUp, Controller.getInstance(mActivity).getGatesModel().getGate(mGateId))));
+
+				if (showBatteryWarning && showRefreshWarning) {
+					RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mWarningBattery.getLayoutParams();
+					layoutParams.addRule(RelativeLayout.BELOW, mWarningRefresh.getId());
+					mWarningBattery.setLayoutParams(layoutParams);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+
+			}
+		});
+	}
+
+	/**
+	 * Is called from DeviceEditActivity when saving device (clicked on menu item)
+	 *
+	 * @return device data
+	 */
 	public Device.DataPair getNewDataPair() {
 		if (mDevice == null)
 			return null;
 
 		mDevice.setCustomName(mDeviceNameText.getText().toString());
-
-		if (mNewLocation != null) {
-			mDevice.setLocationId(mNewLocation.getId());
-		} else {
-			mDevice.setLocationId(Location.NO_LOCATION_ID);
-		}
+		mDevice.setLocationId(mNewLocation != null ? mNewLocation.getId() : Location.NO_LOCATION_ID);
 
 		if (mDevice.getRefresh() != null) {
 			RefreshInterval refresh = (RefreshInterval) mRefreshTimeSpinner.getSelectedItem();
@@ -224,5 +240,44 @@ public class DeviceEditFragment extends BaseApplicationFragment {
 	public void selectLocation(@NonNull String locationId) {
 		List<Location> locations = mLocationArrayAdapter.getLocationsList();
 		mLocationSpinner.setSelection(Utils.getObjectIndexFromList(locationId, locations));
+	}
+
+	/**
+	 * Listener when location was created (form submitted)
+	 *
+	 * @param name of location
+	 * @param icon of location
+	 */
+	@Override
+	public void onCreateLocation(String name, Location.LocationIcon icon) {
+		Location location = new Location(Location.NEW_LOCATION_ID, name, mGateId, icon.getId());
+
+		final AddLocationTask addLocationTask = new AddLocationTask(mActivity);
+		addLocationTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success) return; // TODO any error?
+
+				Toast.makeText(mActivity, R.string.device_edit_toast_location_was_added, Toast.LENGTH_SHORT).show();
+				reloadLocationSpinner();
+
+				Location location = addLocationTask.getNewLocation();
+				mNewLocation = location;
+				selectLocation((location != null) ? location.getId() : "");
+			}
+		});
+
+		mIsShownDialog = false;
+		mActivity.callbackTaskManager.executeTask(addLocationTask, location, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
+	}
+
+	/**
+	 * Listener when location creating was canceled (form cancelled)
+	 */
+	@Override
+	public void onCancelCreatingLocation() {
+		mIsShownDialog = false;
+		if (mDevice == null) return;
+		selectLocation(mDevice.getLocationId());
 	}
 }

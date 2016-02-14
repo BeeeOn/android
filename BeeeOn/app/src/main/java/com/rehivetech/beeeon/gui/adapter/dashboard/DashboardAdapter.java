@@ -72,8 +72,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		mItemClickListener = itemClickListener;
 
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
-		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
-		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
+		mTimeHelper = Utils.getTimeHelper(prefs);
+		mUnitsHelper = Utils.getUnitsHelper(prefs, mActivity);
 	}
 
 
@@ -336,7 +336,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		public void bind(Controller controller, ActualValueItem item, int position) {
 			Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleId());
 			SharedPreferences prefs = controller.getUserSettings();
-			UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity);
+			UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity); // TODO call Utils.getUnitsHelper()
 
 			mLabel.setText(item.getName());
 			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));

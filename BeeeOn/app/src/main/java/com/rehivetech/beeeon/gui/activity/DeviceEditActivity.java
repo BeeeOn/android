@@ -22,9 +22,10 @@ import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 
 /**
- * Created by david on 15.9.15.
+ * @author David Kozak
+ * @since 15.9.2015
  */
-public class DeviceEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener, AddLocationDialog.AddLocationDialogListener {
+public class DeviceEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = DeviceEditActivity.class.getSimpleName();
 
 	private String mGateId;
@@ -133,26 +134,4 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 			doRemoveDeviceTask(Controller.getInstance(this).getDevicesModel().getDevice(mGateId, dataId));
 		}
 	}
-
-	@Override
-	public void onCreateLocation(String name, Location.LocationIcon icon) {
-		Location location = new Location(Location.NEW_LOCATION_ID, name, mGateId, icon.getId());
-
-		final AddLocationTask addLocationTask = new AddLocationTask(this);
-		addLocationTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (!success || mFragment == null)
-					return;
-
-				Toast.makeText(DeviceEditActivity.this, R.string.device_edit_toast_location_was_added, Toast.LENGTH_SHORT).show();
-				mFragment.reloadLocationSpinner();
-
-				Location location = addLocationTask.getNewLocation();
-				mFragment.selectLocation((location != null) ? location.getId() : "");
-			}
-		});
-		callbackTaskManager.executeTask(addLocationTask, location, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
-	}
-
 }

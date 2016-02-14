@@ -152,6 +152,7 @@ public class DemoData {
 				devicesList.add(createDevice(DeviceType.TYPE_3, gateId, Location.NO_LOCATION_ID));
 				devicesList.add(createDevice(DeviceType.TYPE_4, gateId, Location.NO_LOCATION_ID));
 				devicesList.add(createDevice(DeviceType.TYPE_5, gateId, GATE_1_LOCATION3));
+				devicesList.add(createDevice(DeviceType.TYPE_7, gateId, GATE_1_LOCATION3));
 				break;
 			}
 			case GATE_2_ID: {
