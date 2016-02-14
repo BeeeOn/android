@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -34,6 +35,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -588,5 +590,24 @@ final public class Utils {
 		styledAttributes.recycle();
 
 		return toolbarHeight;
+	}
+
+	/**
+	 * Safely gets units helper
+	 * @param prefs shared preferences of logged user
+	 * @param context existing! context of app
+	 * @return helper or null
+	 */
+	public static @Nullable UnitsHelper getUnitsHelper(@Nullable SharedPreferences prefs, Context context){
+		return (prefs == null) ? null : new UnitsHelper(prefs, context);
+	}
+
+	/**
+	 * Safely gets time helper
+	 * @param prefs shared preferences of logged user
+	 * @return helper or null
+	 */
+	public static @Nullable TimeHelper getTimeHelper(@Nullable SharedPreferences prefs){
+		return (prefs == null) ? null : new TimeHelper(prefs);
 	}
 }

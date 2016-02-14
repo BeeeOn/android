@@ -165,9 +165,10 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		// UserSettings can be null when user is not logged in!
 		Controller controller = Controller.getInstance(mActivity);
 		SharedPreferences prefs = controller.getUserSettings();
-		mUnitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mActivity);
-		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mUnitsHelper = Utils.getUnitsHelper(prefs, mActivity);
+		mTimeHelper = Utils.getTimeHelper(prefs);
 
+		// TODO do as Utils.getTimeHelper()
 		mFormatter = mTimeHelper != null
 				? mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId))
 				: DateTimeFormat.forPattern(ChartHelper.GRAPH_DATE_TIME_FORMAT).withZone(DateTimeZone.getDefault());
