@@ -244,6 +244,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				mChart.getAxisRight().setEnabled(false);
 			}
 
+			mChart.setAutoScaleMinMaxEnabled(true);
 			mChart.setOnTouchListener(null);
 		}
 
