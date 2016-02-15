@@ -33,7 +33,6 @@ import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 import com.rehivetech.beeeon.gui.dialog.EnterPasswordDialog;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
@@ -318,11 +317,12 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 			mSelectedItemId = device.getId();
 
 			// TODO should be in DeviceType as parameter "password_protected"
-			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
-				dialogEnterPasswordShow();
-			} else {
-				startDeviceSetupActivity(device);
-			}
+//			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
+//				dialogEnterPasswordShow();
+//			} else {
+//				startDeviceSetupActivity(device);
+//			}
+			startDeviceSetupActivity(device);
 		}
 	}
 
