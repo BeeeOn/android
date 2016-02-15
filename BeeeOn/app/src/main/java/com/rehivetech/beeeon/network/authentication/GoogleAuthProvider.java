@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.network.authentication;
 
+import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
+import android.support.annotation.RequiresPermission;
 import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
@@ -96,7 +98,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 	/**
 	 * Helper for invalidating Google authentication token.
 	 *
-	 * @param context
+	 * @param context app context
 	 */
 	public void invalidateToken(Context context) {
 		try {
@@ -111,6 +113,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 	 *
 	 * @return array of names to choose
 	 */
+	@RequiresPermission(Manifest.permission.GET_ACCOUNTS)
 	private String[] getAccountNames(Context context) {
 		AccountManager mAccountManager = AccountManager.get(context);
 		Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);

@@ -6,6 +6,8 @@
 	<string name="dialog_ok">OK</string>
 	<string name="dialog_cancel">Zrušiť</string>
 
+	<string name="permission_accounts_warning">Ak sa chcete prihlásiť, musíte povoliť oprávnenie prístupu k účtom</string>
+
 	<!-- Titles in manifest-->
 	<string name="manifest_action_notification">Notifikácie</string>
 	<string name="manifest_title_device_add">Pridanie zariadenia</string>

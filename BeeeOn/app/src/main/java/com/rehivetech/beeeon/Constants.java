@@ -88,4 +88,8 @@ public final class Constants {
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID";
 
+	/**
+	 * Permissions codes for requesting
+	 */
+	public static final int PERMISSION_CODE_GET_ACCOUNTS = 1;
 }

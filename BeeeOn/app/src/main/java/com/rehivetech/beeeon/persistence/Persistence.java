@@ -130,25 +130,18 @@ public class Persistence {
 
 	/**
 	 * Tries to get external cache dir and if it fails, then returns internal cache dir.
-	 *
+	 * TODO dont cache it on its own but use any library which can download picture and cache it (Picassa)
 	 * @return File representing cache dir
 	 */
 	private File getCacheDir() {
-		File dir;
-
-		try {   // sony xperia neo throw exception if external storage not available
-			dir = mContext.getExternalCacheDir();
-		} catch (ArrayIndexOutOfBoundsException e) {
-			dir = null;
-		}
-
-		if (dir == null) {
-			// If there is not present external sdcard, use internal one
-			dir = mContext.getCacheDir();
-		}
-		return dir;
+		return mContext.getCacheDir();
 	}
 
+	/**
+	 * Saves bitmap on to storage
+	 * @param picture which will be saved
+	 * @param filename of the picture
+	 */
 	private void saveBitmap(Bitmap picture, String filename) {
 		OutputStream os = null;
 		try {
@@ -164,7 +157,7 @@ public class Persistence {
 			try {
 				if (os != null)
 					os.close();
-			} catch (IOException e) {
+			} catch (IOException ignored) {
 			}
 		}
 	}

@@ -10,6 +10,8 @@
 	<string name="dialog_ok">OK</string>
 	<string name="dialog_cancel">Cancel</string>
 
+	<string name="permission_accounts_warning">If you want to login, you must enable permission to access accounts.</string>
+
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifications</string>
 	<string name="manifest_title_device_add">Add device</string>

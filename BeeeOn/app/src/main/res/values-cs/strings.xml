@@ -6,6 +6,7 @@
 	<string name="dialog_ok">OK</string>
 	<string name="dialog_cancel">Zrušit</string>
 
+	<string name="permission_accounts_warning">Pokud se chcete přihlásit, musíte povolit oprávnění přístupu k účtům.</string>
 
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifikace</string>

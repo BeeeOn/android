@@ -11,32 +11,6 @@
 		android:name="android.hardware.telephony"
 		android:required="false"/>
 
-	<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-	<uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-	<uses-permission android:name="android.permission.VIBRATE"/>
-
-	<!--
-	 The following two permissions are not required to use
-	 Google Maps Android API v2, but are recommended.
-	-->
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
-	<permission
-		android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"
-		android:protectionLevel="signature"/>
-
-	<uses-permission android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"/>
-
-	<!-- Keeps the processor from sleeping when a message is received. -->
-	<uses-permission android:name="android.permission.WAKE_LOCK"/>
-	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-
 	<!--
 	Creates a custom permission so only this app can receive its messages.
 	NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where
@@ -46,6 +20,35 @@
 		android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"
 		android:protectionLevel="signature"/>
 
+	<permission
+		android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"
+		android:protectionLevel="signature"/>
+
+	<!-- dangerous permissions -->
+	<!--<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/> -->
+	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+
+	<!--
+	 The following two permissions are not required to use
+	 Google Maps Android API v2, but are recommended.
+	-->
+	<!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>-->
+	<!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
+
+
+	<!-- normal permissions -->
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+	<uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+	<uses-permission android:name="android.permission.VIBRATE"/>
+
+	<!-- Keeps the processor from sleeping when a message is received. -->
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+	<!-- custom permissions -->
+	<uses-permission android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"/>
 	<uses-permission android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"/>
 
 	<application
@@ -246,21 +249,25 @@
 				<action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
 			</intent-filter>
 		</receiver>
-		<receiver android:name=".gcm.UpdateBroadcastReceiver$LegacyUpdateBroadcastReceiver" android:enabled="@bool/is_at_most_api_11">
+		<receiver
+			android:name=".gcm.UpdateBroadcastReceiver$LegacyUpdateBroadcastReceiver"
+			android:enabled="@bool/is_at_most_api_11">
 			<intent-filter>
 				<action android:name="android.intent.action.PACKAGE_REPLACED"/>
 				<data android:scheme="package"/>
 			</intent-filter>
 		</receiver>
-		<receiver android:name=".gcm.UpdateBroadcastReceiver" android:enabled="@bool/is_at_least_api_12">
+		<receiver
+			android:name=".gcm.UpdateBroadcastReceiver"
+			android:enabled="@bool/is_at_least_api_12">
 			<intent-filter>
-				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+				<action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
 			</intent-filter>
 		</receiver>
 		<!--<receiver android:name=".gcm.BootBroadcastReceiver">-->
-			<!--<intent-filter>-->
-				<!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-			<!--</intent-filter>-->
+		<!--<intent-filter>-->
+		<!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+		<!--</intent-filter>-->
 		<!--</receiver>-->
 		<service
 			android:name=".gcm.MyGcmListenerService"

@@ -7,7 +7,12 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +51,9 @@ public class LoginActivity extends BaseActivity {
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	private static final String TAG_DIALOG = "about_dialog";
 
-	/** Defines whether choose server spinner will be showed by default or not */
+	/**
+	 * Defines whether choose server spinner will be showed by default or not
+	 */
 	private static final boolean SERVER_ENABLED_DEFAULT = true;
 
 	private static final String TAG = LoginActivity.class.getSimpleName();
@@ -55,6 +62,7 @@ public class LoginActivity extends BaseActivity {
 	private View mSelectServer;
 
 	private boolean mLoginCancel = false;
+	private IAuthProvider mAuthProvider;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -131,29 +139,24 @@ public class LoginActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				switch (v.getId()) {
-					case R.id.login_demo_button:
-					{
+					case R.id.login_demo_button: {
 						mProgress.setMessageResource(R.string.login_progress_loading_demo);
 						prepareLogin(new DemoAuthProvider());
 						return;
 					}
-					case R.id.login_google_button:
-					{
+					case R.id.login_google_button: {
 						prepareLogin(new GoogleAuthProvider());
 						return;
 					}
-					case R.id.login_facebook_button:
-					{
+					case R.id.login_facebook_button: {
 						prepareLogin(new FacebookAuthProvider());
 						return;
 					}
-					case R.id.login_direct_button:
-					{
+					case R.id.login_direct_button: {
 						Toast.makeText(LoginActivity.this, R.string.login_toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
 						return;
 					}
-					case R.id.login_choose_button:
-					{
+					case R.id.login_choose_button: {
 						// Show choose dialog for other providers
 						AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
 						builder.setTitle(R.string.login_dialog_title_choose_provider);
@@ -323,16 +326,14 @@ public class LoginActivity extends BaseActivity {
 		super.onOptionsItemSelected(item);
 
 		switch (item.getItemId()) {
-			case R.id.login_menu_action_choose_server_manually:
-			{
+			case R.id.login_menu_action_choose_server_manually: {
 				boolean checked = !item.isChecked();
 				item.setChecked(checked);
 				Controller.getInstance(this).getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
 				setSelectServerVisibility(checked);
 				return true;
 			}
-			case R.id.login_menu_action_about:
-			{
+			case R.id.login_menu_action_about: {
 				showAboutDialog();
 				return true;
 			}
@@ -389,11 +390,58 @@ public class LoginActivity extends BaseActivity {
 			return;
 		}
 
+		mAuthProvider = authProvider; // note: need to have it as field because we use it in onRequestPermissionsResult
+		if (checkAccountsPermission()) {
+			startAuthenticating();
+		}
+	}
+
+	/**
+	 * Checks if app has permission to check user's accounts
+	 *
+	 * @return success
+	 */
+	private boolean checkAccountsPermission() {
+		if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+			// explanation shown
+			ActivityCompat.requestPermissions(this, new String[]{
+					android.Manifest.permission.GET_ACCOUNTS,
+			}, Constants.PERMISSION_CODE_GET_ACCOUNTS);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Shows dialog with login and starts authenticating by specified auth provider
+	 */
+	private void startAuthenticating() {
 		mLoginCancel = false;
 		mProgress.setMessageResource(R.string.login_progress_signing);
 		mProgress.show();
+		mAuthProvider.prepareAuth(LoginActivity.this);
+	}
 
-		authProvider.prepareAuth(LoginActivity.this);
+	/**
+	 * When request dialog was confirmed/canceled
+	 *
+	 * @param requestCode  which request was managed
+	 * @param permissions array of checking permissions
+	 * @param grantResults array of flags (granted/denied) for specified permission
+	 */
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		switch (requestCode) {
+			case Constants.PERMISSION_CODE_GET_ACCOUNTS:
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					// permission granted
+					startAuthenticating();
+				} else {
+					// permission denied
+					Snackbar.make(findViewById(android.R.id.content), R.string.permission_accounts_warning, Snackbar.LENGTH_LONG).show();
+				}
+				break;
+		}
 	}
 
 	private void doLogin(final IAuthProvider authProvider) {
