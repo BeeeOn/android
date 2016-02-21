@@ -1,255 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<com.flipboard.bottomsheet.BottomSheetLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
+	android:id="@+id/module_graph_botom_sheet_layout"
 	tools:context=".ModuleGraphActivity">
 
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="vertical">
-
-		<RelativeLayout
-			style="@style/Widget.Design.AppBarLayout"
-			android:elevation="6dp"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
-
-			<include layout="@layout/layout_beeeon_toolbar"/>
-
-			<TextView
-				android:id="@+id/module_graph_min_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:visibility="invisible"
-				tools:visibility="visible"
-				android:layout_below="@id/beeeon_toolbar"
-				android:layout_alignParentLeft="true"
-				android:layout_alignParentStart="true"
-				android:layout_marginLeft="16dp"
-				android:layout_marginStart="16dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-				android:textColor="@color/white"
-				android:text="@string/module_graph_min_label"/>
-
-			<TextView
-				android:id="@+id/module_graph_max_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:visibility="invisible"
-				tools:visibility="visible"
-				android:layout_below="@id/beeeon_toolbar"
-				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true"
-				android:layout_marginRight="16dp"
-				android:layout_marginEnd="16dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-				android:textColor="@color/white"
-				android:text="@string/module_graph_max_label"/>
-
-
-			<TextView
-				android:id="@+id/module_graph_min_value"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/module_graph_min_label"
-				android:layout_marginLeft="16dp"
-				android:layout_marginStart="16dp"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-				tools:text="25°C"
-				android:textColor="@color/white"/>
-
-			<TextView
-				android:id="@+id/module_graph_max_value"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/module_graph_max_label"
-				android:layout_marginRight="16dp"
-				android:layout_marginEnd="16dp"
-				android:layout_alignParentRight="true"
-				android:layout_alignParentEnd="true"
-				tools:text="50°C"
-				android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-				android:textColor="@color/white"/>
-
-			<TextView
-				android:id="@+id/module_graph_act_value"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/beeeon_toolbar"
-				android:layout_centerHorizontal="true"
-				android:textAppearance="@style/TextAppearance.AppCompat.Title"
-				android:textColor="@color/white"
-				tools:text="33°C"
-				/>
-
-			<android.support.design.widget.TabLayout
-				android:id="@+id/module_graph_tab_layoout"
-				style="@style/ModuleGroupTabLayout"
-				android:layout_centerHorizontal="true"
-				android:layout_below="@id/module_graph_act_value"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"/>
-
-		</RelativeLayout>
-
-		<com.rehivetech.beeeon.gui.view.NonSwipeAbleViewPager
-			android:id="@+id/module_graph_view_pager"
-			android:layout_width="match_parent"
-			android:layout_height="0dp"
-			android:layout_weight="1"
-			android:layout_marginBottom="70dp"
-			/>
-
-	</LinearLayout>
-
-	<android.support.design.widget.FloatingActionButton
-		android:id="@+id/module_graph_fab"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom|end"
-		android:src="@drawable/ic_settings_white_24dp"
-		android:layout_marginRight="16dp"
-		android:layout_marginEnd="16dp"
-		android:layout_marginBottom="16dp"
-		app:borderWidth="0dp"/>
-
-	<Button
-		android:id="@+id/module_graph_show_legend_btn"
-		style="@style/Widget.AppCompat.Button.Borderless"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom|center_horizontal"
-		android:layout_marginBottom="16dp"
-		android:textColor="@color/beeeon_accent"
-		android:text="@string/module_graph_show_y_labels_button"/>
-
 	<FrameLayout
-		android:id="@+id/module_graph_settings_background"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:visibility="gone"
-		tools:visibility="visible">
+		android:layout_height="match_parent">
 
-		<android.support.v7.widget.CardView
-			android:id="@+id/module_graph_graph_settings"
-			style="@style/GraphSettingStyle"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom|center_horizontal"
-			app:cardElevation="6dp"
-			app:cardMaxElevation="6dp"
-			app:cardCornerRadius="0dp"
-			app:cardUseCompatPadding="false"
-			app:cardPreventCornerOverlap="false"
-			>
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
 
 			<RelativeLayout
+				style="@style/Widget.Design.AppBarLayout"
+				android:elevation="6dp"
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:background="@color/white"
-				android:clickable="true"
-				android:padding="16dp">
+				android:layout_height="wrap_content">
+
+				<include layout="@layout/layout_beeeon_toolbar"/>
 
 				<TextView
-					android:id="@+id/module_graph_settings_label_title"
-					android:layout_width="match_parent"
+					android:id="@+id/module_graph_min_label"
+					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="@string/module_graph_settings_title"
-					android:paddingBottom="8dp"
-					android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-					android:textColor="@color/beeeon_accent"
+					android:visibility="invisible"
+					android:layout_below="@id/beeeon_toolbar"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentStart="true"
+					android:layout_marginLeft="16dp"
+					android:layout_marginStart="16dp"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+					android:textColor="@color/white"
+					android:text="@string/module_graph_min_label"/>
+
+				<TextView
+					android:id="@+id/module_graph_max_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:visibility="invisible"
+					android:layout_below="@id/beeeon_toolbar"
+					android:layout_alignParentRight="true"
+					android:layout_alignParentEnd="true"
+					android:layout_marginRight="16dp"
+					android:layout_marginEnd="16dp"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+					android:textColor="@color/white"
+					android:text="@string/module_graph_max_label"/>
+
+
+				<TextView
+					android:id="@+id/module_graph_min_value"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/module_graph_min_label"
+					android:layout_marginLeft="16dp"
+					android:layout_marginStart="16dp"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+					android:textColor="@color/white"/>
+
+				<TextView
+					android:id="@+id/module_graph_max_value"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/module_graph_max_label"
+					android:layout_marginRight="16dp"
+					android:layout_marginEnd="16dp"
+					android:layout_alignParentRight="true"
+					android:layout_alignParentEnd="true"
+					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+					android:textColor="@color/white"/>
+
+				<TextView
+					android:id="@+id/module_graph_act_value"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@id/beeeon_toolbar"
+					android:layout_centerHorizontal="true"
+					android:textAppearance="@style/TextAppearance.AppCompat.Title"
+					android:textColor="@color/white"
 					/>
 
-				<TextView
-					android:id="@+id/module_graph_label_type_data"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-					android:paddingBottom="5dp"
-					android:layout_below="@id/module_graph_settings_label_title"
-					android:text="@string/module_graph_type_of_data"/>
-
-				<android.support.v7.widget.AppCompatCheckBox
-					android:id="@+id/module_graph_checkbox_min"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/module_graph_label_type_data"/>
-
-				<TextView
-					android:id="@+id/module_graph_text_min"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingTop="6dp"
-					android:layout_toRightOf="@id/module_graph_checkbox_min"
-					android:layout_toEndOf="@id/module_graph_checkbox_min"
-					android:layout_below="@id/module_graph_label_type_data"
-					android:text="@string/data_type_min"/>
-
-
-				<android.support.v7.widget.AppCompatCheckBox
-					android:id="@+id/module_graph_checkbox_avg"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/module_graph_checkbox_min"/>
-
-				<TextView
-					android:id="@+id/module_graph_text_avg"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingTop="12dp"
-					android:layout_toRightOf="@id/module_graph_checkbox_avg"
-					android:layout_toEndOf="@id/module_graph_checkbox_avg"
-					android:layout_below="@id/module_graph_text_min"
-					android:text="@string/data_type_avg"/>
-
-				<android.support.v7.widget.AppCompatCheckBox
-					android:id="@+id/module_graph_checkbox_max"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/module_graph_checkbox_avg"/>
-
-				<TextView
-					android:id="@+id/module_graph_text_max"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:paddingTop="12dp"
-					android:layout_toRightOf="@id/module_graph_checkbox_max"
-					android:layout_toEndOf="@id/module_graph_checkbox_max"
-					android:layout_below="@id/module_graph_text_avg"
-					android:text="@string/data_type_max"/>
-
-
-				<TextView
-					android:id="@+id/module_graph_label_data_granularity"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-					android:paddingTop="5dp"
-					android:paddingBottom="5dp"
-					android:layout_below="@id/module_graph_checkbox_max"
-					android:text="@string/module_graph_data_granularity"/>
-
-				<com.rehivetech.beeeon.gui.view.Slider
-					android:id="@+id/module_graph_slider"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/module_graph_label_data_granularity"/>
-
-				<Button
-					android:id="@+id/module_graph_button_done"
-					style="@style/Widget.AppCompat.Button.Borderless"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:text="@string/button_done"
-					android:textColor="@color/beeeon_accent"
+				<android.support.design.widget.TabLayout
+					android:id="@+id/module_graph_tab_layoout"
+					style="@style/ModuleGroupTabLayout"
 					android:layout_centerHorizontal="true"
-					android:layout_below="@id/module_graph_slider"/>
+					android:layout_below="@id/module_graph_act_value"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"/>
 
 			</RelativeLayout>
-		</android.support.v7.widget.CardView>
+
+			<com.rehivetech.beeeon.gui.view.NonSwipeAbleViewPager
+				android:id="@+id/module_graph_view_pager"
+				android:layout_width="match_parent"
+				android:layout_height="0dp"
+				android:layout_weight="1"
+				android:layout_marginBottom="70dp"
+				/>
+
+		</LinearLayout>
+
+		<android.support.design.widget.FloatingActionButton
+			android:id="@+id/module_graph_fab"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|end"
+			android:src="@drawable/ic_settings_white_24dp"
+			android:layout_marginRight="16dp"
+			android:layout_marginEnd="16dp"
+			android:layout_marginBottom="16dp"
+			app:rippleColor="@color/beeeon_accent_light"
+			app:borderWidth="0dp"/>
+
+		<Button
+			android:id="@+id/module_graph_show_legend_btn"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="bottom|center_horizontal"
+			android:layout_marginBottom="16dp"
+			android:textColor="@color/beeeon_accent"
+			android:text="@string/module_graph_show_y_labels_button"/>
+
 	</FrameLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+</com.flipboard.bottomsheet.BottomSheetLayout>

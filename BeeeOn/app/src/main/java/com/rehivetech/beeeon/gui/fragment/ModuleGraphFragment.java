@@ -27,12 +27,14 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
+import com.rehivetech.beeeon.gui.view.GraphSettings;
 import com.rehivetech.beeeon.gui.view.ModuleGraphMarkerView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.persistence.GraphSettingsPersistence;
 import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
@@ -77,6 +79,11 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private DataSet mDataSetMax;
 
 	private StringBuffer mYlabels = new StringBuffer();
+
+	private boolean mCheckboxMin;
+	private boolean mCheckboxAvg;
+	private boolean mCheckboxMax;
+	private int mSliderProgress;
 
 	private ChartHelper.ChartLoadListener mChartLoadCallback = new ChartHelper.ChartLoadListener() {
 
@@ -146,7 +153,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		try {
 			mActivity = (ModuleGraphActivity) getActivity();
 		} catch (ClassCastException e) {
-			throw new ClassCastException("Must be instance of DeviceDetailActivity");
+			throw new ClassCastException("Must be instance of ModuleGraphActivity");
 		}
 	}
 
@@ -172,6 +179,13 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mFormatter = mTimeHelper != null
 				? mTimeHelper.getFormatter(ChartHelper.GRAPH_DATE_TIME_FORMAT, controller.getGatesModel().getGate(mGateId))
 				: DateTimeFormat.forPattern(ChartHelper.GRAPH_DATE_TIME_FORMAT).withZone(DateTimeZone.getDefault());
+
+		GraphSettingsPersistence persistence = controller.getGraphSettingsPersistence(mGateId, Utils.getAbsoluteModuleId(mDeviceId, mModuleId), mRange);
+		mCheckboxMin = persistence.restoreCheckboxValue(GraphSettingsPersistence.CHECKBOX_MIN, false);
+		mCheckboxAvg = persistence.restoreCheckboxValue(GraphSettingsPersistence.CHECKBOX_AVG, true);
+		mCheckboxMax = persistence.restoreCheckboxValue(GraphSettingsPersistence.CHECKBOX_MAX, false);
+		mSliderProgress = persistence.restoreSliderValue(0);
+
 	}
 
 	@Nullable
@@ -211,6 +225,15 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		addGraphView();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+
+		GraphSettingsPersistence persistence = Controller.getInstance(mActivity).getGraphSettingsPersistence(mGateId, Utils.getAbsoluteModuleId(mDeviceId, mModuleId), mRange);
+		persistence.saveCheckBoxesStates(mCheckboxMin, mCheckboxAvg, mCheckboxMax);
+		persistence.saveSliderValue(mSliderProgress);
 	}
 
 	private void addGraphView() {
@@ -274,7 +297,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	}
 
 	@Override
-	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity) {
+	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity,  int sliderProgress) {
+		mCheckboxMin = drawMin;
+		mCheckboxAvg = drawAvg;
+		mCheckboxMax = drawMax;
+		mSliderProgress = sliderProgress;
+
 		mChart.clear();
 		mChart.setNoDataText(getString(R.string.chart_helper_chart_loading));
 
@@ -295,6 +323,14 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback, mFormatter);
 		}
+	}
+
+	@Override
+	public GraphSettings onFragmentChange(GraphSettings settings) {
+		initGraphSetting(settings);
+		ModuleLog.DataInterval interval = settings.getIntervalByProgress();
+		onChartSettingChanged(mCheckboxMin, mCheckboxAvg, mCheckboxMax, interval, mSliderProgress);
+		return settings;
 	}
 
 	private void updateMinMaxTexts() {
@@ -319,5 +355,29 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		mActivity.setMinValue(String.format("%.2f", minValue));
 		mActivity.setMaxValue(String.format("%.2f", maxValue));
+	}
+
+	private void initGraphSetting(GraphSettings settings) {
+		int sliderMin = 0;
+		int sliderMax = 8;
+
+		switch (mRange) {
+			case ChartHelper.RANGE_HOUR:
+				sliderMax = 5;
+				break;
+			case ChartHelper.RANGE_DAY:
+				sliderMax = 6;
+				break;
+			case ChartHelper.RANGE_WEEK:
+				sliderMin = 2;
+				sliderMax = 7;
+				break;
+			case ChartHelper.RANGE_MONTH:
+				sliderMin = 5;
+				sliderMax = 8;
+				break;
+		}
+
+		settings.initGraphSettings(mCheckboxMin, mCheckboxAvg, mCheckboxMax, sliderMin, sliderMax, mSliderProgress);
 	}
 }
