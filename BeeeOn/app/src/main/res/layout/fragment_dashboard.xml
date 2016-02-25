@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:fab="http://schemas.android.com/apk/res-auto"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/beeeon_background_gray"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	android:background="@color/beeeon_background_gray">
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/dashboard_recyclerview"
@@ -13,36 +12,16 @@
 		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-	<com.rehivetech.beeeon.gui.view.FloatingActionMenu
-		style="@style/BeeeOn.FloatingActionMenu"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+	<com.rehivetech.beeeon.gui.view.FloatingActionButton
+		android:id="@+id/dashboard_fab"
+		style="@style/BeeeOn.FloatingActionButton"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_add_white_24dp"
 		app:layout_anchor="@id/dashboard_recyclerview"
-		app:layout_anchorGravity="bottom|right|end">
-
-		<com.rehivetech.beeeon.gui.view.FloatingActionButton
-			android:id="@+id/dashboard_add_module_item"
-			style="@style/BeeeOn.FloatingActionButton.MenuButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/ic_add_white_24dp"
-			fab:fab_label="@string/dashboard_fab_add_module"/>
-
-		<com.rehivetech.beeeon.gui.view.FloatingActionButton
-			android:id="@+id/dashboard_add_graph"
-			style="@style/BeeeOn.FloatingActionButton.MenuButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/ic_add_white_24dp"
-			fab:fab_label="@string/dashboard_fab_add_graph"/>
-
-		<com.rehivetech.beeeon.gui.view.FloatingActionButton
-			android:id="@+id/dashboard_add_week_bar_graph"
-			style="@style/BeeeOn.FloatingActionButton.MenuButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/ic_add_white_24dp"
-			fab:fab_label="@string/dashboard_fab_add_week_bar_graph"/>
-	</com.rehivetech.beeeon.gui.view.FloatingActionMenu>
+		android:layout_marginRight="@dimen/space_big"
+		android:layout_marginEnd="@dimen/space_big"
+		android:layout_marginBottom="@dimen/space_big"
+		app:layout_anchorGravity="bottom|right|end"/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -7,9 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.fragment.AddDashboardActualValueFragment;
-import com.rehivetech.beeeon.gui.fragment.AddDashboardGraphItemFragment;
-import com.rehivetech.beeeon.gui.fragment.AddDashboardOverviewGraphItemFragment;
+import com.rehivetech.beeeon.gui.fragment.AddDashboardItemFragment;
 import com.rehivetech.beeeon.gui.fragment.BaseApplicationFragment;
 
 /**
@@ -55,17 +53,19 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 
 		if (savedInstanceState == null) {
 
-			switch (itemType) {
-				case KEY_VALUE_TYPE_GRAPH_ITEM:
-					fragment = AddDashboardGraphItemFragment.newInstance(gateId);
-					break;
-				case KEY_VALUE_TYPE_MODULE_ITEM:
-					fragment = AddDashboardActualValueFragment.newInstance(gateId);
-					break;
-				case KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM:
-					fragment = AddDashboardOverviewGraphItemFragment.newInstance(gateId);
-					break;
-			}
+//			switch (itemType) {
+//				case KEY_VALUE_TYPE_GRAPH_ITEM:
+//					fragment = AddDashboardGraphItemFragment.newInstance(gateId);
+//					break;
+//				case KEY_VALUE_TYPE_MODULE_ITEM:
+//					fragment = AddDashboardActualValueFragment.newInstance(gateId);
+//					break;
+//				case KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM:
+//					fragment = AddDashboardOverviewGraphItemFragment.newInstance(gateId);
+//					break;
+//			}
+
+			fragment = AddDashboardItemFragment.newInstance(gateId);
 
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_add_dashboard_container, fragment).commit();
 		}

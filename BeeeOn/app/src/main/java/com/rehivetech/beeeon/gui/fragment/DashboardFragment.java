@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -76,7 +75,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		mAdapter = new DashboardAdapter(mActivity, this);
 		recyclerView.setAdapter(mAdapter);
 
-		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_graph);
+		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_fab);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -84,24 +83,24 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 				startActivityForResult(intent, 0);
 			}
 		});
-
-		FloatingActionButton fabAddModule = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_module_item);
-		fabAddModule.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_MODULE_ITEM);
-				startActivityForResult(intent, 0);
-			}
-		});
-
-		FloatingActionButton fabWeekGraph = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_week_bar_graph);
-		fabWeekGraph.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM);
-				startActivityForResult(intent, 0);
-			}
-		});
+//
+//		FloatingActionButton fabAddModule = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_module_item);
+//		fabAddModule.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_MODULE_ITEM);
+//				startActivityForResult(intent, 0);
+//			}
+//		});
+//
+//		FloatingActionButton fabWeekGraph = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_week_bar_graph);
+//		fabWeekGraph.setOnClickListener(new View.OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM);
+//				startActivityForResult(intent, 0);
+//			}
+//		});
 		return mRootLayout;
 	}
 
