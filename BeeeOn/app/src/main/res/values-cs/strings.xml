@@ -449,7 +449,7 @@
 
 	<!--Dashboard-->
 	<string name="dashboard_fab_add_graph">Přidat čárový graf</string>
-	<string name="dashboard_fab_add_week_bar_graph">Přidat týdnový sloupcový graf</string>
+	<string name="dashboard_fab_add_week_bar_graph">Přidat týdenní sloupcový graf</string>
 	<string name="dashboard_fab_add_module">Přidat hodnotu modulu</string>
 	<string name="dashboard_add_graph_name_hint">Název karty</string>
 	<string name="dashboard_add_graph_left_axis_label">Vyberte modul pro levou osu</string>
@@ -461,8 +461,8 @@
 		<item quantity="one">Karta byla smazána</item>
 		<item quantity="few">Karty byly smazány</item>
 	</plurals>
-	<string name="dashboard_undo">Spět</string>
-	<string name="dashboard_add_graph_name_error">Pojmenujte novú kartu</string>
+	<string name="dashboard_undo">Zpět</string>
+	<string name="dashboard_add_graph_name_error">Pojmenujte novou kartu</string>
 
 	<!--Days shortcuts-->
 	<string name="monday">Po</string>
