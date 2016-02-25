@@ -92,5 +92,5 @@ dependencies {
 	compile 'com.github.PhilJay:MPAndroidChart:v2.2.2'
 	compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.0.0@aar'
 	compile 'com.github.clans:fab:1.6.2'
-	compile 'com.google.code.gson:gson:2.5'
+	compile 'com.google.code.gson:gson:2.6.1'
 }
