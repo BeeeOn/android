@@ -1,476 +1,480 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<!-- Common strings -->
-	<string name="not_specified">Nespecifikováno</string>
-	<string name="dialog_ok">OK</string>
-	<string name="dialog_cancel">Zrušit</string>
+    <!-- Common strings -->
+    <string name="not_specified">Nespecifikováno</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Zrušit</string>
 
-	<string name="permission_accounts_warning">Pokud se chcete přihlásit, musíte povolit oprávnění přístupu k účtům.</string>
+    <string name="permission_accounts_warning">Pokud se chcete přihlásit, musíte povolit oprávnění přístupu k účtům.</string>
 
-	<!-- Titles in manifest -->
-	<string name="manifest_action_notification">Notifikace</string>
-	<string name="manifest_title_device_add">Přidat zařízení</string>
-	<string name="manifest_title_device_detail">Detail zařízení</string>
-	<string name="manifest_title_device_edit">Úprava zařízení</string>
-	<string name="manifest_title_gate_add">Přidat bránu</string>
-	<string name="manifest_title_gate_add_user">Přidat uživatele</string>
-	<string name="manifest_title_gate_detail">Detaily brány</string>
-	<string name="manifest_title_gate_edit">Úprava brány</string>
-	<string name="manifest_title_main">BeeeOn</string>
-	<string name="manifest_title_settings">Nastavení</string>
-	<string name="manifest_title_widget_clock">BeeeOn-Time</string>
-	<string name="manifest_title_widget_location_list">BeeeOn umístění</string>
-	<string name="manifest_title_widget_module_small">BeeeOn zařízení malý</string>
-	<string name="manifest_title_widget_module_large">BeeeOn zařízení velký</string>
-	<string name="manifest_title_widget_module_medium">BeeeOn zařízení střední</string>
+    <!-- Titles in manifest -->
+    <string name="manifest_action_notification">Notifikace</string>
+    <string name="manifest_title_device_add">Přidat zařízení</string>
+    <string name="manifest_title_device_detail">Detail zařízení</string>
+    <string name="manifest_title_device_edit">Úprava zařízení</string>
+    <string name="manifest_title_gate_add">Přidat bránu</string>
+    <string name="manifest_title_gate_add_user">Přidat uživatele</string>
+    <string name="manifest_title_gate_detail">Detaily brány</string>
+    <string name="manifest_title_gate_edit">Úprava brány</string>
+    <string name="manifest_title_main">BeeeOn</string>
+    <string name="manifest_title_settings">Nastavení</string>
+    <string name="manifest_title_widget_clock">BeeeOn-Time</string>
+    <string name="manifest_title_widget_location_list">BeeeOn umístění</string>
+    <string name="manifest_title_widget_module_small">BeeeOn zařízení malý</string>
+    <string name="manifest_title_widget_module_large">BeeeOn zařízení velký</string>
+    <string name="manifest_title_widget_module_medium">BeeeOn zařízení střední</string>
 
-	<!-- Demo network -->
-	<string name="demo_network_demo_mode">DEMO REŽIM</string>
+    <!-- Demo network -->
+    <string name="demo_network_demo_mode">DEMO REŽIM</string>
 
-	<!-- Network server -->
-	<string name="network_server_sufix_default"> (výchozí)</string>
+    <!-- Network server -->
+    <string name="network_server_sufix_default"> (výchozí)</string>
 
-	<!-- Base application -->
-	<string name="base_application_progress_saving_data">Ukládám data&#8230;</string>
+    <!-- Base application -->
+    <string name="base_application_progress_saving_data">Ukládám data&#8230;</string>
 
-	<!-- Util -->
-	<string name="util_timezone_actual_timezone">Aktuální časové pásmo</string>
-	<string name="util_timezone_gate_timezone">Časové pásmo brány</string>
-	<string name="utils_toast_field_must_be_email">Vložte platnou e-mailovou adresu</string>
-	<string name="utils_toast_field_must_be_number">Vložte platné číslo</string>
+    <!-- Util -->
+    <string name="util_timezone_actual_timezone">Aktuální časové pásmo</string>
+    <string name="util_timezone_gate_timezone">Časové pásmo brány</string>
+    <string name="utils_toast_field_must_be_email">Vložte platnou e-mailovou adresu</string>
+    <string name="utils_toast_field_must_be_number">Vložte platné číslo</string>
 
-	<!-- Adapter location -->
-	<string name="adapter_location_array_new_location_spinner">Nové umístění</string>
+    <!-- Adapter location -->
+    <string name="adapter_location_array_new_location_spinner">Nové umístění</string>
 
-	<!-- Adapter view pager -->
-	<string-array name="adapter_view_pager_title_of_main_fragments">
-		<item>Seznam</item>
-		<item>Vlastní</item>
-	</string-array>
+    <!-- Adapter view pager -->
+    <string-array name="adapter_view_pager_title_of_main_fragments">
+        <item>Seznam</item>
+        <item>Vlastní</item>
+    </string-array>
 
-	<!-- Refresh intervals -->
-	<plurals name="refresh_interval_interval_seconds">
-		<item quantity="one">1 sekunda</item>
-		<item quantity="few">%d sekundy</item>
-		<item quantity="other">%d sekund</item>
-	</plurals>
-	<plurals name="refresh_interval_interval_minutes">
-		<item quantity="one">1 minuta</item>
-		<item quantity="few">%d minuty</item>
-		<item quantity="other">%d minut</item>
-	</plurals>
-	<plurals name="refresh_interval_interval_hours">
-		<item quantity="one">1 hodina</item>
-		<item quantity="few">%d hodiny</item>
-		<item quantity="other">%d hodin</item>
-	</plurals>
+    <!-- Refresh intervals -->
+    <plurals name="refresh_interval_interval_seconds">
+        <item quantity="one">1 sekunda</item>
+        <item quantity="few">%d sekundy</item>
+        <item quantity="other">%d sekund</item>
+    </plurals>
+    <plurals name="refresh_interval_interval_minutes">
+        <item quantity="one">1 minuta</item>
+        <item quantity="few">%d minuty</item>
+        <item quantity="other">%d minut</item>
+    </plurals>
+    <plurals name="refresh_interval_interval_hours">
+        <item quantity="one">1 hodina</item>
+        <item quantity="few">%d hodiny</item>
+        <item quantity="other">%d hodin</item>
+    </plurals>
 
-	<!-- User role -->
-	<string name="user_role_admin">Administrátor</string>
-	<string name="user_role_guest">Host</string>
-	<string name="user_role_owner">Vlastník</string>
-	<string name="user_role_user">Uživatel</string>
+    <!-- User role -->
+    <string name="user_role_admin">Administrátor</string>
+    <string name="user_role_guest">Host</string>
+    <string name="user_role_owner">Vlastník</string>
+    <string name="user_role_user">Uživatel</string>
 
-	<!-- Main -->
-	<string name="main_action_gate_add">Přidání brány</string>
-	<string name="main_btn_add">Přidat</string>
-	<string name="main_dialog_title_action_add">Co chcete přidat?</string>
-	<string name="main_toast_tap_again_exit">Pro ukončení stiskněte zpět ještě jednou</string>
-	<string name="main_tut_open_menu">Otevřete nabídku</string>
-	<string name="main_tut_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
+    <!-- Main -->
+    <string name="main_action_gate_add">Přidání brány</string>
+    <string name="main_btn_add">Přidat</string>
+    <string name="main_dialog_title_action_add">Co chcete přidat?</string>
+    <string name="main_toast_tap_again_exit">Pro ukončení stiskněte zpět ještě jednou</string>
+    <string name="main_tut_open_menu">Otevřete nabídku</string>
+    <string name="main_tut_open_menu_text">Klepnutím na ikonu zobrazíte nabídku umístění</string>
 
-	<!-- Notification -->
-	<string name="notification_device_low_battery_low_signal_name_new_module">Přidáno nové zařízení</string>
-	<string name="notification_gate_added_name_new_gate">Přidána nová brána</string>
-	<string name="notification_no_notifications_cap">ŽÁDNÁ NOTIFIKACE</string>
-	<string name="notification_title_notification">Notifikace</string>
-	<string name="notification_uri_name_link">Spoj</string>
+    <!-- Notification -->
+    <string name="notification_device_low_battery_low_signal_name_new_module">Přidáno nové zařízení</string>
+    <string name="notification_gate_added_name_new_gate">Přidána nová brána</string>
+    <string name="notification_no_notifications_cap">ŽÁDNÁ NOTIFIKACE</string>
+    <string name="notification_title_notification">Notifikace</string>
+    <string name="notification_uri_name_link">Spoj</string>
 
-	<!-- Common Button, texts, titles, toast -->
-	<string name="activity_configuration_toast_something_wrong">Nastala neznámá chyba, opakujte akci později</string>
-	<string name="activity_fragment_btn_cancel">Zrušit</string>
-	<string name="activity_fragment_btn_set">Nastavit</string>
-	<string name="activity_fragment_menu_btn_remove">Odstranit</string>
-	<string name="activity_fragment_menu_dialog_title_remove">Odstranit \"%1$s\"</string>
-	<string name="activity_fragment_toast_delete_fail">Nepodařilo se odstranit</string>
-	<string name="activity_fragment_toast_delete_success">Smazáno</string>
-	<string name="activity_gate_user_setup_device_btn_save">Uložit</string>
-	<string name="activity_menu_dialog_message_remove_gate">Nebudete mít přístup k této bráně a jejím zařízením.\n\nPokud jste vlastníkem, brána bude odstraněna ze serveru a všechna nastavení (uživatelé, zařízení, historická data) budou ztraceny.</string>
-	<string name="activity_menu_dialog_title_remove_gate_default">Odstranit bránu</string>
-	<string name="activity_module_edit_setup_device_toast_location_icon">Vyberte ikonu nového umístění</string>
-	<string name="activity_toast_success_save_data">Údaje byly úspěšně uloženy</string>
-	<string name="activity_utils_toast_field_must_be_filled">Je třeba vyplnit</string>
-	<string name="fragment_configuration_widget_dialog_btn_ok">OK</string>
-	<string name="fragment_module_detail_custom_view_chart_legend">Legenda</string>
-	<string name="layout_gate_edit">Upravit bránu</string>
-	<string name="layout_device_list_refresh_list">Obnovit seznam</string>
-	<string name="layout_widget_household">Domácnost</string>
-	<string name="toolbar_refresh_title">Obnovit</string>
-	<string name="toast_not_implemented">Bude implementováno v příští verzi</string>
+    <!-- Common Button, texts, titles, toast -->
+    <string name="activity_configuration_toast_something_wrong">Nastala neznámá chyba, opakujte akci později</string>
+    <string name="activity_fragment_btn_cancel">Zrušit</string>
+    <string name="activity_fragment_btn_set">Nastavit</string>
+    <string name="activity_fragment_menu_btn_remove">Odstranit</string>
+    <string name="activity_fragment_menu_dialog_title_remove">Odstranit \"%1$s\"</string>
+    <string name="activity_fragment_toast_delete_fail">Nepodařilo se odstranit</string>
+    <string name="activity_fragment_toast_delete_success">Smazáno</string>
+    <string name="activity_gate_user_setup_device_btn_save">Uložit</string>
+    <string name="activity_menu_dialog_message_remove_gate">Nebudete mít přístup k této bráně a jejím zařízením.\n\nPokud jste vlastníkem, brána bude odstraněna ze serveru a všechna nastavení (uživatelé, zařízení, historická data) budou ztraceny.</string>
+    <string name="activity_menu_dialog_title_remove_gate_default">Odstranit bránu</string>
+    <string name="activity_module_edit_setup_device_toast_location_icon">Vyberte ikonu nového umístění</string>
+    <string name="activity_toast_success_save_data">Údaje byly úspěšně uloženy</string>
+    <string name="activity_utils_toast_field_must_be_filled">Je třeba vyplnit</string>
+    <string name="fragment_configuration_widget_dialog_btn_ok">OK</string>
+    <string name="fragment_module_detail_custom_view_chart_legend">Legenda</string>
+    <string name="layout_gate_edit">Upravit bránu</string>
+    <string name="layout_device_list_refresh_list">Obnovit seznam</string>
+    <string name="layout_widget_household">Domácnost</string>
+    <string name="toolbar_refresh_title">Obnovit</string>
+    <string name="toast_not_implemented">Bude implementováno v příští verzi</string>
 
-	<!-- Placeholders -->
-	<string name="layout_activity_fragment_widget_placeholder_icon">Ikona</string>
-	<string name="layout_widget_placeholder_none">Nahrávám</string>
-	<string name="persistence_widget_placeholder_not_exists">NEEXISTUJE</string>
+    <!-- Placeholders -->
+    <string name="layout_activity_fragment_widget_placeholder_icon">Ikona</string>
+    <string name="layout_widget_placeholder_none">Nahrávám</string>
+    <string name="persistence_widget_placeholder_not_exists">NEEXISTUJE</string>
 
-	<!-- Login -->
-	<string name="login_app_name">BeeeOn</string>
-	<string name="login_app_slogan">Dům pod vaší kontrolou.</string>
-	<string name="login_btn_demo_mode">Spustit v demo režimu</string>
-	<string name="login_btn_direct_connect">Přímé připojení k bráně</string>
-	<string name="login_dialog_message_register_new_account">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
-	<string name="login_dialog_title_choose_provider">Výběr poskytovatele účtu</string>
-	<string name="login_dialog_title_register_new_account">Nemáte účet</string>
-	<string name="login_image_description_logo">Logo aplikace</string>
-	<string name="login_label_login">Přihlaste se pomocí:</string>
-	<string name="login_label_server">Zvolte server:</string>
-	<string name="login_label_work_offline">Nebo můžete pracovat offline:</string>
-	<string name="login_menu_action_choose_server_manually">Zvolit BeeeOn server ručně</string>
-	<string name="login_progress_loading_demo">Nahrávám demo data&#8230;</string>
-	<string name="login_progress_loading_gate">Nahrávám data bran&#8230;</string>
-	<string name="login_progress_loading_gates">Nahrávám brány&#8230;</string>
-	<string name="login_progress_signing">Přihlašuji&#8230;</string>
-	<string name="login_progress_signup">Registruji nového uživatele&#8230;</string>
-	<string name="login_provider_choose_other">Použít jinou službu</string>
-	<string name="login_provider_google">Google</string>
-	<string name="login_provider_facebook">Facebook</string>
-	<string name="login_toast_auth_provider_error">Nastala chyba během procesu autorizace</string>
-	<string name="login_toast_error_not_supported_yet">Tato funkce ještě není podporována.</string>
-	<string name="login_toast_internet_connection">Aktivujte připojení k Internetu</string>
-	<string name="login_toast_login_failed">Přihlášení selhalo</string>
-	<string name="login_toast_registration_failed">Registrace selhala</string>
-	<string name="login_toast_ssl_error">Chyba SSL certifikátu</string>
+    <!-- Login -->
+    <string name="login_app_name">BeeeOn</string>
+    <string name="login_app_slogan">Dům pod vaší kontrolou.</string>
+    <string name="login_btn_demo_mode">Spustit v demo režimu</string>
+    <string name="login_btn_direct_connect">Přímé připojení k bráně</string>
+    <string name="login_dialog_message_register_new_account">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
+    <string name="login_dialog_title_choose_provider">Výběr poskytovatele účtu</string>
+    <string name="login_dialog_title_register_new_account">Nemáte účet</string>
+    <string name="login_image_description_logo">Logo aplikace</string>
+    <string name="login_label_login">Přihlaste se pomocí:</string>
+    <string name="login_label_server">Zvolte server:</string>
+    <string name="login_label_work_offline">Nebo můžete pracovat offline:</string>
+    <string name="login_menu_action_choose_server_manually">Zvolit BeeeOn server ručně</string>
+    <string name="login_progress_loading_demo">Nahrávám demo data&#8230;</string>
+    <string name="login_progress_loading_gate">Nahrávám data bran&#8230;</string>
+    <string name="login_progress_loading_gates">Nahrávám brány&#8230;</string>
+    <string name="login_progress_signing">Přihlašuji&#8230;</string>
+    <string name="login_progress_signup">Registruji nového uživatele&#8230;</string>
+    <string name="login_provider_choose_other">Použít jinou službu</string>
+    <string name="login_provider_google">Google</string>
+    <string name="login_provider_facebook">Facebook</string>
+    <string name="login_toast_auth_provider_error">Nastala chyba během procesu autorizace</string>
+    <string name="login_toast_error_not_supported_yet">Tato funkce ještě není podporována.</string>
+    <string name="login_toast_internet_connection">Aktivujte připojení k Internetu</string>
+    <string name="login_toast_login_failed">Přihlášení selhalo</string>
+    <string name="login_toast_registration_failed">Registrace selhala</string>
+    <string name="login_toast_ssl_error">Chyba SSL certifikátu</string>
 
-	<!-- NavDrawerMenu -->
-	<string name="nav_drawer_menu_action_about">O aplikaci</string>
-	<string name="nav_drawer_menu_action_logout">Odhlásit se</string>
-	<string name="nav_drawer_menu_action_settings">Nastavení</string>
-	<string name="nav_drawer_menu_drawer_close">ZAVŘÍT</string>
-	<string name="nav_drawer_menu_drawer_open">OTEVŘÍT</string>
-	<string name="nav_drawer_menu_gate">Brány</string>
-	<string name="nav_drawer_menu_gate_menu_gate_detail">Detaily</string>
-	<string name="nav_drawer_menu_menu_charts">Grafy</string>
-	<string name="nav_drawer_menu_menu_devices">Zařízení</string>
-	<string name="nav_drawer_menu_menu_modules">Moduly</string>
-	<string name="nav_drawer_menu_menu_gate">Brána</string>
-	<string name="nav_drawer_menu_menu_household">Přehled</string>
-	<string name="nav_drawer_menu_menu_management">Správa domácnosti</string>
-	<string name="nav_drawer_menu_no_gates">Nemáte žádné brány</string>
-	<string name="nav_drawer_menu_action_gate_add">Přidat bránu</string>
+    <!-- NavDrawerMenu -->
+    <string name="nav_drawer_menu_action_about">O aplikaci</string>
+    <string name="nav_drawer_menu_action_logout">Odhlásit se</string>
+    <string name="nav_drawer_menu_action_settings">Nastavení</string>
+    <string name="nav_drawer_menu_drawer_close">ZAVŘÍT</string>
+    <string name="nav_drawer_menu_drawer_open">OTEVŘÍT</string>
+    <string name="nav_drawer_menu_gate">Brány</string>
+    <string name="nav_drawer_menu_gate_menu_gate_detail">Detaily</string>
+    <string name="nav_drawer_menu_menu_charts">Grafy</string>
+    <string name="nav_drawer_menu_menu_devices">Zařízení</string>
+    <string name="nav_drawer_menu_menu_modules">Moduly</string>
+    <string name="nav_drawer_menu_menu_gate">Brána</string>
+    <string name="nav_drawer_menu_menu_household">Přehled</string>
+    <string name="nav_drawer_menu_menu_management">Správa domácnosti</string>
+    <string name="nav_drawer_menu_no_gates">Nemáte žádné brány</string>
+    <string name="nav_drawer_menu_action_gate_add">Přidat bránu</string>
 
-	<string name="nav_drawer_profile_active_gate">Aktivní brána</string>
+    <string name="nav_drawer_profile_active_gate">Aktivní brána</string>
 
-	<!-- Gate menu -->
-	<string name="gate_menu_layout_menu_del">Odstranit bránu</string>
-	<string name="gate_menu_layout_menu_users">Uživatelé brány</string>
-	<string name="gate_menu_user_menu_edit">Upravit uživatele</string>
-	<string name="gate_menu_user_menu_del">Odstranit uživatele</string>
+    <!-- Gate menu -->
+    <string name="gate_menu_layout_menu_del">Odstranit bránu</string>
+    <string name="gate_menu_layout_menu_users">Uživatelé brány</string>
+    <string name="gate_menu_user_menu_edit">Upravit uživatele</string>
+    <string name="gate_menu_user_menu_del">Odstranit uživatele</string>
 
-	<!-- Gate add -->
-	<string name="gate_add_btn_add">PŘIDAT</string>
-	<string name="gate_add_btn_qr">Skenovat QR kód</string>
-	<string name="gate_add_btn_qr_loading">Načítání…</string>
-	<string name="gate_add_dialog_title_enter_text">Zadejte kód brány</string>
-	<string name="gate_add_last_fragment_text">Naskenujte QR kód brány nebo zadejte kód</string>
-	<string name="gate_add_last_fragment_title">Zadejte kód brány</string>
-	<string name="gate_add_manual_edit">Zadat ručně</string>
-	<string name="gate_add_toast_error_invalid_qr_code">Toto není platný BeeeOn QR kód</string>
-	<string name="gate_add_toast_error_no_google_play">Nepodařilo se otevřít Google Play</string>
-	<string name="gate_add_toast_error_no_qr_reader">Nemáte nainstalovanou čtečku QR kódů</string>
-	<string name="gate_add_toast_gate_activated">Brána byla aktivována</string>
-	<string name="gate_add_toast_gate_activate_failed">Selhalo přidání brány</string>
-	<string name="gate_add_tut_add_gate_text_1">Připojte bránu k internetu</string>
-	<string name="gate_add_tut_add_gate_text_2">Zapojte bránu do elektrické sítě</string>
-	<string name="gate_add_tut_add_gate_title_1">Připojte bránu k internetu</string>
-	<string name="gate_add_tut_add_gate_title_2">Připojte brány ke zdroji napájení</string>
+    <!-- Gate add -->
+    <string name="gate_add_btn_add">PŘIDAT</string>
+    <string name="gate_add_btn_qr">Skenovat QR kód</string>
+    <string name="gate_add_btn_qr_loading">Načítání…</string>
+    <string name="gate_add_dialog_title_enter_text">Zadejte kód brány</string>
+    <string name="gate_add_last_fragment_text">Naskenujte QR kód brány nebo zadejte kód</string>
+    <string name="gate_add_last_fragment_title">Zadejte kód brány</string>
+    <string name="gate_add_manual_edit">Zadat ručně</string>
+    <string name="gate_add_toast_error_invalid_qr_code">Toto není platný BeeeOn QR kód</string>
+    <string name="gate_add_toast_error_no_google_play">Nepodařilo se otevřít Google Play</string>
+    <string name="gate_add_toast_error_no_qr_reader">Nemáte nainstalovanou čtečku QR kódů</string>
+    <string name="gate_add_toast_gate_activated">Brána byla aktivována</string>
+    <string name="gate_add_toast_gate_activate_failed">Selhalo přidání brány</string>
+    <string name="gate_add_tut_add_gate_text_1">Připojte bránu k internetu</string>
+    <string name="gate_add_tut_add_gate_text_2">Zapojte bránu do elektrické sítě</string>
+    <string name="gate_add_tut_add_gate_title_1">Připojte bránu k internetu</string>
+    <string name="gate_add_tut_add_gate_title_2">Připojte brány ke zdroji napájení</string>
 
-	<!-- Gate detail -->
-	<string name="gate_detail_gate_id">ID brány</string>
-	<string name="gate_detail_gate_owner">Vlastník</string>
-	<string name="gate_detail_ip">IP adresa</string>
-	<string name="gate_detail_list_btn_details">Detaily</string>
-	<string name="gate_detail_loading_data">Nahrávám data&#8230;</string>
-	<string name="gate_detail_num_of_devices">Počet zařízení</string>
-	<string name="gate_detail_num_of_users">Počet uživatelů</string>
-	<string name="gate_detail_text_gate_no_name">Bez názvu</string>
-	<string name="gate_detail_timezone">Časové pásmo</string>
-	<string name="gate_detail_toast_gate_removed">Brána byla odstraněna</string>
-	<string name="gate_detail_toast_not_specified_gate">Nespecifikována brána</string>
-	<string name="gate_detail_version">Komunikační verze</string>
-	<string name="gate_detail_your_role">Vaše role</string>
-	<string name="gate_detail_altitude">Nadmořská výška</string>
+    <!-- Gate detail -->
+    <string name="gate_detail_gate_id">ID brány</string>
+    <string name="gate_detail_gate_owner">Vlastník</string>
+    <string name="gate_detail_ip">IP adresa</string>
+    <string name="gate_detail_list_btn_details">Detaily</string>
+    <string name="gate_detail_loading_data">Nahrávám data&#8230;</string>
+    <string name="gate_detail_num_of_devices">Počet zařízení</string>
+    <string name="gate_detail_num_of_users">Počet uživatelů</string>
+    <string name="gate_detail_text_gate_no_name">Bez názvu</string>
+    <string name="gate_detail_timezone">Časové pásmo</string>
+    <string name="gate_detail_toast_gate_removed">Brána byla odstraněna</string>
+    <string name="gate_detail_toast_not_specified_gate">Nespecifikována brána</string>
+    <string name="gate_detail_version">Komunikační verze</string>
+    <string name="gate_detail_your_role">Vaše role</string>
+    <string name="gate_detail_altitude">Nadmořská výška</string>
 
-	<!-- Gate edit -->
-	<string name="gate_edit_gate_id_read_only">ID brány (pouze ke čtení)</string>
-	<string name="gate_edit_gate_name">Název brány</string>
-	<string name="gate_edit_toast_success">Brána byla úspěšně upravena</string>
+    <!-- Gate edit -->
+    <string name="gate_edit_gate_id_read_only">ID brány (pouze ke čtení)</string>
+    <string name="gate_edit_gate_name">Název brány</string>
+    <string name="gate_edit_toast_success">Brána byla úspěšně upravena</string>
 
-	<!-- Gate user add -->
-	<string name="gate_user_add_add_user_gate">Přidat uživatele</string>
-	<string name="gate_user_add_add_user_email_header">E-mail</string>
-	<string name="gate_user_add_add_user_role_header">Role</string>
-	<string name="gate_user_add_btn_add_user">Přidat uživatele</string>
-	<string name="gate_user_add_dialog_message_add_owner">Chystáte se přidat práva vlastníka novému uživateli. \"%1$s\" bude mít plný přístup k bráně a správě.</string>
-	<string name="gate_user_add_dialog_title_add_owner">Nový uživatel jako Vlastník</string>
+    <!-- Gate user add -->
+    <string name="gate_user_add_add_user_gate">Přidat uživatele</string>
+    <string name="gate_user_add_add_user_email_header">E-mail</string>
+    <string name="gate_user_add_add_user_role_header">Role</string>
+    <string name="gate_user_add_btn_add_user">Přidat uživatele</string>
+    <string name="gate_user_add_dialog_message_add_owner">Chystáte se přidat práva vlastníka novému uživateli. \"%1$s\" bude mít plný přístup k bráně a správě.</string>
+    <string name="gate_user_add_dialog_title_add_owner">Nový uživatel jako Vlastník</string>
 
-	<!-- Gate users -->
-	<string name="gate_users_btn_change_ownership">Změnit vlastnictví</string>
-	<string name="gate_users_dialog_message_change_ownership">Přenesete vlastnictví brány. Nebudete nadále moct spravovat uživatele, zařízení a jiná nastavení této brány.</string>
-	<string name="gate_users_dialog_message_remove_user">Uživatel ztratí přístup k této bráně a nebude moci přistupovat k datům a měnit je.</string>
-	<string name="gate_users_dialog_title_change_ownership">Změnit vlastnictví brány</string>
-	<string name="gate_users_title_change_role">Změnit roli uživatele</string>
-	<string name="gate_users_title_gate_users">Uživatelé brány</string>
+    <!-- Gate users -->
+    <string name="gate_users_btn_change_ownership">Změnit vlastnictví</string>
+    <string name="gate_users_dialog_message_change_ownership">Přenesete vlastnictví brány. Nebudete nadále moct spravovat uživatele, zařízení a jiná nastavení této brány.</string>
+    <string name="gate_users_dialog_message_remove_user">Uživatel ztratí přístup k této bráně a nebude moci přistupovat k datům a měnit je.</string>
+    <string name="gate_users_dialog_title_change_ownership">Změnit vlastnictví brány</string>
+    <string name="gate_users_title_change_role">Změnit roli uživatele</string>
+    <string name="gate_users_title_gate_users">Uživatelé brány</string>
 
-	<!-- Device setup -->
-	<string name="device_setup_title_setup_device">Přidání zařízení</string>
-	<string name="device_setup_toast_empty_module_name">Vyplňte názvy všech zařízení</string>
-	<string name="device_setup_toast_need_module_location_name">Zadejte název umístění</string>
-	<string name="device_setup_toast_new_module_added">Nové zařízení bylo přidáno</string>
-	<string name="device_setup_device_list_paired_label">Napárováno:</string>
+    <!-- Device setup -->
+    <string name="device_setup_title_setup_device">Přidání zařízení</string>
+    <string name="device_setup_toast_empty_module_name">Vyplňte názvy všech zařízení</string>
+    <string name="device_setup_toast_need_module_location_name">Zadejte název umístění</string>
+    <string name="device_setup_toast_new_module_added">Nové zařízení bylo přidáno</string>
+    <string name="device_setup_device_list_paired_label">Napárováno:</string>
 
-	<!-- Device edit -->
-	<string name="device_edit_device_name">Název zařízení</string>
-	<string name="device_edit_location_title">Umístění</string>
-	<string name="device_edit_refresh_title">Interval probuzení</string>
-	<string name="device_edit_delete_device_confirm_dialog_title">Odstraňování zařízení</string>
-	<string name="device_edit_delete_device_confirm_dialog_text">Opravdu chcete odstranit zařízení?</string>
-	<string name="device_edit_toast_not_specified_gate_or_device">Brána nebo zařízení neexistuje</string>
-	<string name="device_edit_toast_editing_was_successful">Úprava zařízení proběhla úspěšně</string>
-	<string name="device_edit_toast_removing_was_successful">Zařízení bylo úspěšně odstraněno</string>
-	<string name="device_edit_toast_location_was_added">Umístění bylo úspěšně vytvořeno</string>
-	<string name="device_edit_overlay_dialog_create_new_location">Vytváření nového umístění</string>
-	<string name="device_edit_overlay_dialog_edit_text_hint">Zadejte název</string>
-	<string name="device_edit_toast_icon_or_text_is_null">Prosím zvolte ikonku a zadejte název</string>
-	<string name="device_edit_warning_battery_life">Volbou příliš nízkého intervalu probuzení můžete snížit životnost baterie.</string>
-	<string name="device_edit_warning_refresh">Změna se projeví při dalším probuzení zařízení (přibližně v %s). Pokud chcete probudit zařízení ručně, zatřeste zařízením nebo stiskněte jeho tlačítko pro párování.</string>
+    <!-- Device edit -->
+    <string name="device_edit_device_name">Název zařízení</string>
+    <string name="device_edit_location_title">Umístění</string>
+    <string name="device_edit_refresh_title">Interval probuzení</string>
+    <string name="device_edit_delete_device_confirm_dialog_title">Odstraňování zařízení</string>
+    <string name="device_edit_delete_device_confirm_dialog_text">Opravdu chcete odstranit zařízení?</string>
+    <string name="device_edit_toast_not_specified_gate_or_device">Brána nebo zařízení neexistuje</string>
+    <string name="device_edit_toast_editing_was_successful">Úprava zařízení proběhla úspěšně</string>
+    <string name="device_edit_toast_removing_was_successful">Zařízení bylo úspěšně odstraněno</string>
+    <string name="device_edit_toast_location_was_added">Umístění bylo úspěšně vytvořeno</string>
+    <string name="device_edit_overlay_dialog_create_new_location">Vytváření nového umístění</string>
+    <string name="device_edit_overlay_dialog_edit_text_hint">Zadejte název</string>
+    <string name="device_edit_toast_icon_or_text_is_null">Prosím zvolte ikonku a zadejte název</string>
+    <string name="device_edit_warning_battery_life">Volbou příliš nízkého intervalu probuzení můžete snížit životnost baterie.</string>
+    <string name="device_edit_warning_refresh">Změna se projeví při dalším probuzení zařízení (přibližně v %s). Pokud chcete probudit zařízení ručně, zatřeste zařízením nebo stiskněte jeho tlačítko pro párování.</string>
 
-	<!-- Device add -->
-
-
-	<string name="device_add_title">Přidat zařízení</string>
-	<string name="device_add_guide_text">BeeeOn brána podporuje zařízení od různých výrobců. Jak připojit vaše zařízení s bránou se dozvíte na <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">této webové stránce</a></string>
-	<string name="device_add_btn_search">HLEDAT ZAŘÍZENÍ</string>
-	<string name="device_add_activity_opening_error">Chyba pri otevření nastavení zařízení, skuste to pozdeji.</string>
-	<string name="device_add_dialog_enter_password_checkbox">Nezadávat heslo\n(můžete si pouze prohlížet informace o tomto zařízení)</string>
-
-	<string name="device_search_title">Hledat zařízení</string>
-	<string name="device_search_manual_button">Manuálni vyhledávaní</string>
-	<string name="device_search_no_devices_text">Nenašlo se žádné zařízení</string>
-	<string name="device_search_snack_bar_title_searching">Hledání…</string>
-	<string name="device_search_snack_bar_title_search_end">Hledání se skončilo</string>
-	<string name="device_search_snack_bar_retry">Opakovat</string>
-	<string name="device_search_manual_search_hint">Zadejte IP adresu</string>
-	<string name="device_search_manual_search_dialog_button">Hledat</string>
-	<string name="device_search_enter_password">Zadejte heslo</string>
-	<string name="device_search_enter_password_hint">Heslo</string>
-	<string name="device_search_enter_password_ok">OK</string>
-	<string name="device_search_enter_password_wrong">Heslo není správne</string>
-
-	<string name="device_add_device_found">Zařízení bylo nalezeno</string>
-	<string name="device_add_device_not_found_in_time">Zařízení nebylo nalezeno, ověřte, zda je skutečně zapnuto, a zkuste to znovu</string>
-	<string name="device_add_dialog_device_add_text">Klikněte na START pro zahájení párování</string>
-	<string name="device_add_shake_it_text">Zatřeste se zařízením či zmáčkněte tlačítko pro párování na zařízení</string>
-	<string name="device_add_time_left_unit">sekundy</string>
-	<string name="device_add_toast_no_gate">Nemáte žádnou registrovanou bránu</string>
-	<string name="device_add_tut_text_add_module">Vytáhněte izolační proužek baterií ze zařízení nebo zapojte aktor do elektrické sítě</string>
-	<string name="device_add_tut_title_add_device">Vytáhněte izolační proužek baterií</string>
-	<string name="device_add_waiting">Čekám na start</string>
-
-	<!-- Devie setup -->
-	<string name="device_setup_device_header_location">Umístění</string>
-	<string name="device_setup_device_info_text">Zařízení bylo připojeno v</string>
-	<string name="device_setup_or">nebo</string>
-	<string name="device_setup_setup_device">Nastavte zařízení</string>
-
-	<!-- Module list -->
-	<string name="module_list_action_mode_module_menu_del">Odstranit zařízení</string>
-	<string name="module_list_action_module_add">Přidání zařízení</string>
-	<string name="module_list_btn_unregister">Odregistrovat</string>
-	<string name="module_list_dialog_message_unregister_device">Zařízení bude odregistrováno ze serveru a jeho historická data budou ztracena.</string>
-	<string name="module_list_dialog_title_unregister_device">Odregistrovat \"%1$s\"</string>
-	<string name="module_list_no_device_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
-	<string name="module_list_no_gate_cap">ŽÁDNÁ BRÁNA</string>
-
-	<!-- Module detail -->
-	<string name="module_detail_label_battery">Stav baterie</string>
-	<string name="module_detail_label_graph_data">Historické hodnoty</string>
-	<string name="module_detail_label_last_update">Poslední aktualizace</string>
-	<string name="module_detail_label_signal">Stav signálu</string>
-	<string name="module_detail_refresh_time">Interval probuzení</string>
-	<string name="module_detail_toast_not_specified_gate_or_module">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
-
-	<!--Device detail -->
-	<string name="device_detail_menu_edit_title">Editovat zařízení</string>
-	<string name="device_detail_list_modules_no_item_title">ŽÁDNE MODULY</string>
-	<string name="device_detail_label_led">LED status</string>
-	<string name="device_detail_default_group">Výchozí</string>
-	<string name="device_detail_device_online">Připojeno</string>
-	<string name="device_detail_device_offline">Odpojeno</string>
-
-	<!-- Module edit -->
-	<string name="module_edit_label_detail_location">Umístění</string>
-	<string name="module_edit_label_module_name">Název zařízení</string>
-	<string name="module_edit_refresh_time">Interval probuzení:</string>
-	<string name="module_edit_setup_new_location_hint">Název nového umístění</string>
-	<string name="module_edit_title_module_edit">Úprava zařízení</string>
-
-	<!--Module graph-->
-	<string name="module_graph_show_y_labels_button">Zobrazit Y hodnoty</string>
-	<string name="module_graph_type_of_data">Typ dat</string>
-	<string name="module_graph_data_granularity">Frekvence obnovy dat</string>
-	<string name="module_graph_min_label">MIN</string>
-	<string name="module_graph_max_label">MAX</string>
-
-	<!-- Module get detail intent -->
-	<string name="module_get_detail_intent_toast_device_not_available">Zařízení není dostupné</string>
-
-	<!-- Widget configuration -->
-	<string name="widget_configuration_title_widget_config">Konfigurace widgetu</string>
-
-	<!-- Widget clock, data, location, module -->
-	<string name="widget_clock_color_scheme">Barevné schéma</string>
-	<string name="widget_clock_dialog_location_country">Město, stát</string>
-	<string name="widget_clock_dialog_location_select">Vyberte místo</string>
-	<string name="widget_clock_location_module_widget_gate">Brána</string>
-	<string name="widget_clock_location_module_widget_interval_update">Interval aktualizace widgetu</string>
-	<string name="widget_clock_location_module_widget_toast_select_gate">Vyberte bránu ze seznamu</string>
-	<string name="widget_clock_module_widget_module">Zařízení pro zobrazení</string>
-	<string name="widget_clock_module_widget_toast_select_device">Vyberte zařízení ze seznamu</string>
-	<string name="widget_clock_progress_checking_location">Ověřuji polohu&#8230;</string>
-	<string name="widget_clock_weather">Počasí</string>
-	<string name="widget_clock_weather_place">Poloha</string>
-	<string name="widget_clock_weather_place_not_found">Místo nenalezeno</string>
-	<string name="widget_clock_widget_configuration_clock">Nastavení widgetu hodin</string>
-	<string name="widget_location_no_locations_cap">ŽÁDNÉ UMÍSTĚNÍ</string>
-	<string name="widget_location_widget_configuration_location">Nastavení widgetu umístění</string>
-	<string name="widget_location_widget_location">Poloha</string>
-	<string name="widget_location_widget_toast_select_location">Vyberte umístění ze seznamu</string>
-	<string name="widget_module_widget_configuration_device">Nastavení widgetu zařízení</string>
-
-	<!-- Widget list -->
-	<string name="widget_location_list_update_over_wifi_only">Aktualizovat pouze přes Wi-Fi</string>
-	<string name="widget_location_list_widget_location_list_empty">Prázdné umístění</string>
-
-	<!-- Dialog info -->
-	<string name="dialog_info_btn_rate">Hodnocení</string>
-	<string name="dialog_info_copyright">\u00A9 2014–15 BeeeOn Team. Všechna práva vyhrazena.</string>
-	<string name="dialog_info_version">Verze</string>
-
-	<!-- Settings -->
-	<string name="settings_main_settings">Nastavení</string>
-	<string name="settings_main_toast_no_google_play_services">Nejsou dostupné Služby Google Play.</string>
-	<string name="settings_unit_preferences_noise">Hluk</string>
-	<string name="settings_unit_preferences_temperature">Teplota</string>
-	<string name="settings_unit_unit">Jednotky</string>
-	<string name="settings_language_default">Výchozí(Jazyk systému)</string>
-	<string name="settings_actualization_category_title">Nastavení aktualizací</string>
-	<string name="settings_actualization_screen_title">Interval automatické aktualizace</string>
-	<string name="settings_cache_reload_title">Doba uchovávání cache</string>
-	<plurals name="settings_actualization_time_listpreference_seconds">
-		<item quantity="one">1 sekunda</item>
-		<item quantity="few">%d sekundy</item>
-		<item quantity="other">%d sekund</item>
-	</plurals>
-	<string name="settings_actualizationtime_listpreference_dont_actualize">Neaktualizovat</string>
-	<plurals name="settings_cache_listpreference_minutes">
-		<item quantity="one">1 minuta</item>
-		<item quantity="few">%d minuty</item>
-		<item quantity="other">%d minut</item>
-	</plurals>
-	<string name="settings_cache_listpreference_no_cache">Neuchovávat cache</string>
-	<string name="settings_prefs_choose_language">Jazyk</string>
-	<string name="settings_language_listpreference_default">Použít jazyk systému</string>
-	<string name="settings_language_listpreference_english">Angličtina</string>
-	<string name="settings_language_listpreference_czech">Čeština</string>
-	<string name="settings_language_listpreference_slovak">Slovenština</string>
-	<string name="settings_language_dialog_message">Pro změnu jazyka je nutné restartovat aplikaci.\n\n Chcete aplikaci restartovat?</string>
-
-	<!-- Task register gate -->
-	<string name="task_register_gate_gate_default_name">%1$s brána #%2$d</string>
-
-	<!-- Tutorial helper-->
-	<string name="tutorial_helper_tut_gate_add_header">PŘIDAT BRÁNU</string>
-	<string name="tutorial_helper_tut_gate_add_text">Pro přidání brány klepněte na plus (+)</string>
-	<string name="tutorial_helper_tut_module_add_header">PŘIDAT ZAŘÍZENÍ</string>
-	<string name="tutorial_helper_tut_module_add_text">Pro přidání zařízení klepněte na plus (+)</string>
-
-	<!-- Chart helper -->
-	<string name="chart_helper_chart_no_data">Pro vybraný interval nejsou dostupná žádná data</string>
-	<string name="chart_helper_chart_loading">Načítání dat pro graf…</string>
-	<string name="chart_helper_chart_y_axis">Popis osy Y</string>
-
-	<!-- Intro, baseGuide -->
-	<string name="base_guide_btn_skip">PŘESKOČIT</string>
-	<string name="intro_base_guide_btn_next">DALŠÍ</string>
-	<string name="intro_tut_btn_start_app">START</string>
-	<string name="intro_tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. V následujícím průvodci Vám bude představen systém inteligentní domácnosti a jeho části.</string>
-	<string name="intro_tut_intro_text_2">BeeeOn domácnost se skládá z jednotlivých bezdrátových zařízení a brány do této domácnosti.</string>
-	<string name="intro_tut_intro_text_3">Bezdrátová zařízení jsou dvojího typu - senzory a aktory. Senzory slouží ke snímání okolních veličin, aktory k nastavení jejich požadovaných hodnot.</string>
-	<string name="intro_tut_intro_text_4">Brána inteligentní domácnosti přijímá a vysílá data směrem k bezdrátovým zařízením.</string>
-	<string name="intro_tut_intro_text_5">Mobilní aplikace zobrazuje informace o domácnosti a umožňuje její ovládání odkudkoliv a kdykoliv.</string>
-	<string name="intro_tut_intro_title">Úvodní průvodce BeeeOn</string>
-
-	<!-- Device type -->
-	<string name="device_type_unknown_device">Neznámé zařízení</string>
-	<string name="device_type_unknown_manufacturer">Neznámý výrobce</string>
-
-	<!-- Various strings -->
-	<string name="unit_meters_short">m</string>
-	<string name="button_done">POTVRDIT</string>
-
-	<!-- Server names -->
-	<string name="server_production">Produkční</string>
-	<string name="server_development">Vývojový</string>
-
-	<!--GRAPH RANGE-->
-	<string name="graph_range_hour">Hodina</string>
-	<string name="graph_range_day">Den</string>
-	<string name="graph_range_week">Týden</string>
-	<string name="graph_range_month">Měsíc</string>
-
-	<!--DATA INTERVAL-->
-	<string name="data_interval_raw">Podle nastavení zařízení</string>
-	<string name="data_interval_minute">Minuta</string>
-	<string name="data_interval_five_minutes">5 minut</string>
-	<string name="data_interval_ten_minutes">10 minut</string>
-	<string name="data_interval_half_hour">Půl hodiny</string>
-	<string name="data_interval_hour">Hodina</string>
-	<string name="data_interval_day">Den</string>
-	<string name="data_interval_week">Týden</string>
-	<string name="data_interval_month">Měsíc</string>
-
-	<!--DATA TYPE-->
-	<string name="data_type_min">Minimum</string>
-	<string name="data_type_avg">Průměr</string>
-	<string name="data_type_max">Maximum</string>
-	<string name="utils_toast_field_must_be_ip_address">Vložte platnou IP adresu ve tvaru podobném do 192.168.100.100.</string>
+    <!-- Device add -->
 
 
-	<!--Dashboard-->
-	<string name="dashboard_fab_add_graph">Přidat čárový graf</string>
-	<string name="dashboard_fab_add_week_bar_graph">Přidat týdenní sloupcový graf</string>
-	<string name="dashboard_fab_add_module">Přidat hodnotu modulu</string>
-	<string name="dashboard_add_graph_name_hint">Název karty</string>
-	<string name="dashboard_add_graph_left_axis_label">Vyberte modul pro levou osu</string>
-	<string name="dashboard_add_graph_right_axis_label">Vyberte modul pro pravou osu</string>
-	<string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dat pro graf</string>
-	<string name="dashboard_add_graph_week_module_label">Vyberte modul pro graf</string>
-	<string name="dashboard_add_graph_week_data_type_label">Vyberte typ dat pro graf</string>
-	<plurals name="dashboard_delete_snackbar">
-		<item quantity="one">Karta byla smazána</item>
-		<item quantity="few">Karty byly smazány</item>
-	</plurals>
-	<string name="dashboard_undo">Zpět</string>
-	<string name="dashboard_add_graph_name_error">Pojmenujte novou kartu</string>
+    <string name="device_add_title">Přidat zařízení</string>
+    <string name="device_add_guide_text">BeeeOn brána podporuje zařízení od různých výrobců. Jak připojit vaše zařízení s bránou se dozvíte na <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">této webové stránce</a></string>
+    <string name="device_add_btn_search">HLEDAT ZAŘÍZENÍ</string>
+    <string name="device_add_activity_opening_error">Chyba pri otevření nastavení zařízení, skuste to pozdeji.</string>
+    <string name="device_add_dialog_enter_password_checkbox">Nezadávat heslo\n(můžete si pouze prohlížet informace o tomto zařízení)</string>
 
-	<!--Days shortcuts-->
-	<string name="monday">Po</string>
-	<string name="tuesday">Út</string>
-	<string name="wednesday">St</string>
-	<string name="thursday">Čt</string>
-	<string name="friday">Pá</string>
-	<string name="saturday">So</string>
-	<string name="sunday">Ne</string>
+    <string name="device_search_title">Hledat zařízení</string>
+    <string name="device_search_manual_button">Manuálni vyhledávaní</string>
+    <string name="device_search_no_devices_text">Nenašlo se žádné zařízení</string>
+    <string name="device_search_snack_bar_title_searching">Hledání…</string>
+    <string name="device_search_snack_bar_title_search_end">Hledání se skončilo</string>
+    <string name="device_search_snack_bar_retry">Opakovat</string>
+    <string name="device_search_manual_search_hint">Zadejte IP adresu</string>
+    <string name="device_search_manual_search_dialog_button">Hledat</string>
+    <string name="device_search_enter_password">Zadejte heslo</string>
+    <string name="device_search_enter_password_hint">Heslo</string>
+    <string name="device_search_enter_password_ok">OK</string>
+    <string name="device_search_enter_password_wrong">Heslo není správne</string>
+
+    <string name="device_add_device_found">Zařízení bylo nalezeno</string>
+    <string name="device_add_device_not_found_in_time">Zařízení nebylo nalezeno, ověřte, zda je skutečně zapnuto, a zkuste to znovu</string>
+    <string name="device_add_dialog_device_add_text">Klikněte na START pro zahájení párování</string>
+    <string name="device_add_shake_it_text">Zatřeste se zařízením či zmáčkněte tlačítko pro párování na zařízení</string>
+    <string name="device_add_time_left_unit">sekundy</string>
+    <string name="device_add_toast_no_gate">Nemáte žádnou registrovanou bránu</string>
+    <string name="device_add_tut_text_add_module">Vytáhněte izolační proužek baterií ze zařízení nebo zapojte aktor do elektrické sítě</string>
+    <string name="device_add_tut_title_add_device">Vytáhněte izolační proužek baterií</string>
+    <string name="device_add_waiting">Čekám na start</string>
+
+    <!-- Devie setup -->
+    <string name="device_setup_device_header_location">Umístění</string>
+    <string name="device_setup_device_info_text">Zařízení bylo připojeno v</string>
+    <string name="device_setup_or">nebo</string>
+    <string name="device_setup_setup_device">Nastavte zařízení</string>
+
+    <!-- Module list -->
+    <string name="module_list_action_mode_module_menu_del">Odstranit zařízení</string>
+    <string name="module_list_action_module_add">Přidání zařízení</string>
+    <string name="module_list_btn_unregister">Odregistrovat</string>
+    <string name="module_list_dialog_message_unregister_device">Zařízení bude odregistrováno ze serveru a jeho historická data budou ztracena.</string>
+    <string name="module_list_dialog_title_unregister_device">Odregistrovat \"%1$s\"</string>
+    <string name="module_list_no_device_cap">ŽÁDNÉ ZAŘÍZENÍ</string>
+    <string name="module_list_no_gate_cap">ŽÁDNÁ BRÁNA</string>
+
+    <!-- Module detail -->
+    <string name="module_detail_label_battery">Stav baterie</string>
+    <string name="module_detail_label_graph_data">Historické hodnoty</string>
+    <string name="module_detail_label_last_update">Poslední aktualizace</string>
+    <string name="module_detail_label_signal">Stav signálu</string>
+    <string name="module_detail_refresh_time">Interval probuzení</string>
+    <string name="module_detail_toast_not_specified_gate_or_module">Nebylo zadáno žádné zařízení nebo je zvolené zařízení nesprávné</string>
+
+    <!--Device detail -->
+    <string name="device_detail_menu_edit_title">Editovat zařízení</string>
+    <string name="device_detail_list_modules_no_item_title">ŽÁDNE MODULY</string>
+    <string name="device_detail_label_led">LED status</string>
+    <string name="device_detail_default_group">Výchozí</string>
+    <string name="device_detail_device_online">Připojeno</string>
+    <string name="device_detail_device_offline">Odpojeno</string>
+
+    <!-- Module edit -->
+    <string name="module_edit_label_detail_location">Umístění</string>
+    <string name="module_edit_label_module_name">Název zařízení</string>
+    <string name="module_edit_refresh_time">Interval probuzení:</string>
+    <string name="module_edit_setup_new_location_hint">Název nového umístění</string>
+    <string name="module_edit_title_module_edit">Úprava zařízení</string>
+
+    <!--Module graph-->
+    <string name="module_graph_show_y_labels_button">Zobrazit Y hodnoty</string>
+    <string name="module_graph_type_of_data">Typ dat</string>
+    <string name="module_graph_data_granularity">Frekvence obnovy dat</string>
+    <string name="module_graph_min_label">MIN</string>
+    <string name="module_graph_max_label">MAX</string>
+
+    <!-- Module get detail intent -->
+    <string name="module_get_detail_intent_toast_device_not_available">Zařízení není dostupné</string>
+
+    <!-- Widget configuration -->
+    <string name="widget_configuration_title_widget_config">Konfigurace widgetu</string>
+
+    <!-- Widget clock, data, location, module -->
+    <string name="widget_clock_color_scheme">Barevné schéma</string>
+    <string name="widget_clock_dialog_location_country">Město, stát</string>
+    <string name="widget_clock_dialog_location_select">Vyberte místo</string>
+    <string name="widget_clock_location_module_widget_gate">Brána</string>
+    <string name="widget_clock_location_module_widget_interval_update">Interval aktualizace widgetu</string>
+    <string name="widget_clock_location_module_widget_toast_select_gate">Vyberte bránu ze seznamu</string>
+    <string name="widget_clock_module_widget_module">Zařízení pro zobrazení</string>
+    <string name="widget_clock_module_widget_toast_select_device">Vyberte zařízení ze seznamu</string>
+    <string name="widget_clock_progress_checking_location">Ověřuji polohu&#8230;</string>
+    <string name="widget_clock_weather">Počasí</string>
+    <string name="widget_clock_weather_place">Poloha</string>
+    <string name="widget_clock_weather_place_not_found">Místo nenalezeno</string>
+    <string name="widget_clock_widget_configuration_clock">Nastavení widgetu hodin</string>
+    <string name="widget_location_no_locations_cap">ŽÁDNÉ UMÍSTĚNÍ</string>
+    <string name="widget_location_widget_configuration_location">Nastavení widgetu umístění</string>
+    <string name="widget_location_widget_location">Poloha</string>
+    <string name="widget_location_widget_toast_select_location">Vyberte umístění ze seznamu</string>
+    <string name="widget_module_widget_configuration_device">Nastavení widgetu zařízení</string>
+
+    <!-- Widget list -->
+    <string name="widget_location_list_update_over_wifi_only">Aktualizovat pouze přes Wi-Fi</string>
+    <string name="widget_location_list_widget_location_list_empty">Prázdné umístění</string>
+
+    <!-- Dialog info -->
+    <string name="dialog_info_btn_rate">Hodnocení</string>
+    <string name="dialog_info_copyright">\u00A9 2014–15 BeeeOn Team. Všechna práva vyhrazena.</string>
+    <string name="dialog_info_version">Verze</string>
+
+    <!-- Settings -->
+    <string name="settings_main_settings">Nastavení</string>
+    <string name="settings_main_toast_no_google_play_services">Nejsou dostupné Služby Google Play.</string>
+    <string name="settings_unit_preferences_noise">Hluk</string>
+    <string name="settings_unit_preferences_temperature">Teplota</string>
+    <string name="settings_unit_unit">Jednotky</string>
+    <string name="settings_language_default">Výchozí(Jazyk systému)</string>
+    <string name="settings_actualization_category_title">Nastavení aktualizací</string>
+    <string name="settings_actualization_screen_title">Interval automatické aktualizace</string>
+    <string name="settings_cache_reload_title">Doba uchovávání cache</string>
+    <plurals name="settings_actualization_time_listpreference_seconds">
+        <item quantity="one">1 sekunda</item>
+        <item quantity="few">%d sekundy</item>
+        <item quantity="other">%d sekund</item>
+    </plurals>
+    <string name="settings_actualizationtime_listpreference_dont_actualize">Neaktualizovat</string>
+    <plurals name="settings_cache_listpreference_minutes">
+        <item quantity="one">1 minuta</item>
+        <item quantity="few">%d minuty</item>
+        <item quantity="other">%d minut</item>
+    </plurals>
+    <string name="settings_cache_listpreference_no_cache">Neuchovávat cache</string>
+    <string name="settings_prefs_choose_language">Jazyk</string>
+    <string name="settings_language_listpreference_default">Použít jazyk systému</string>
+    <string name="settings_language_listpreference_english">Angličtina</string>
+    <string name="settings_language_listpreference_czech">Čeština</string>
+    <string name="settings_language_listpreference_slovak">Slovenština</string>
+    <string name="settings_language_dialog_message">Pro změnu jazyka je nutné restartovat aplikaci.\n\n Chcete aplikaci restartovat?</string>
+
+    <!-- Task register gate -->
+    <string name="task_register_gate_gate_default_name">%1$s brána #%2$d</string>
+
+    <!-- Tutorial helper-->
+    <string name="tutorial_helper_tut_gate_add_header">PŘIDAT BRÁNU</string>
+    <string name="tutorial_helper_tut_gate_add_text">Pro přidání brány klepněte na plus (+)</string>
+    <string name="tutorial_helper_tut_module_add_header">PŘIDAT ZAŘÍZENÍ</string>
+    <string name="tutorial_helper_tut_module_add_text">Pro přidání zařízení klepněte na plus (+)</string>
+
+    <!-- Chart helper -->
+    <string name="chart_helper_chart_no_data">Pro vybraný interval nejsou dostupná žádná data</string>
+    <string name="chart_helper_chart_loading">Načítání dat pro graf…</string>
+    <string name="chart_helper_chart_y_axis">Popis osy Y</string>
+
+    <!-- Intro, baseGuide -->
+    <string name="base_guide_btn_skip">PŘESKOČIT</string>
+    <string name="intro_base_guide_btn_next">DALŠÍ</string>
+    <string name="intro_tut_btn_start_app">START</string>
+    <string name="intro_tut_intro_text_1">Vítejte v BeeeOn inteligentní domácnosti. V následujícím průvodci Vám bude představen systém inteligentní domácnosti a jeho části.</string>
+    <string name="intro_tut_intro_text_2">BeeeOn domácnost se skládá z jednotlivých bezdrátových zařízení a brány do této domácnosti.</string>
+    <string name="intro_tut_intro_text_3">Bezdrátová zařízení jsou dvojího typu - senzory a aktory. Senzory slouží ke snímání okolních veličin, aktory k nastavení jejich požadovaných hodnot.</string>
+    <string name="intro_tut_intro_text_4">Brána inteligentní domácnosti přijímá a vysílá data směrem k bezdrátovým zařízením.</string>
+    <string name="intro_tut_intro_text_5">Mobilní aplikace zobrazuje informace o domácnosti a umožňuje její ovládání odkudkoliv a kdykoliv.</string>
+    <string name="intro_tut_intro_title_1">Úvodní průvodce BeeeOn</string>
+    <string name="intro_tut_intro_title_2">BeeeOn komponenty</string>
+    <string name="intro_tut_intro_title_3">Bezdrátová zařízení BeeeOn</string>
+    <string name="intro_tut_intro_title_4">BeeeOn brána</string>
+    <string name="intro_tut_intro_title_5">BeeeOn Aplikace</string>
+
+    <!-- Device type -->
+    <string name="device_type_unknown_device">Neznámé zařízení</string>
+    <string name="device_type_unknown_manufacturer">Neznámý výrobce</string>
+
+    <!-- Various strings -->
+    <string name="unit_meters_short">m</string>
+    <string name="button_done">POTVRDIT</string>
+
+    <!-- Server names -->
+    <string name="server_production">Produkční</string>
+    <string name="server_development">Vývojový</string>
+
+    <!--GRAPH RANGE-->
+    <string name="graph_range_hour">Hodina</string>
+    <string name="graph_range_day">Den</string>
+    <string name="graph_range_week">Týden</string>
+    <string name="graph_range_month">Měsíc</string>
+
+    <!--DATA INTERVAL-->
+    <string name="data_interval_raw">Podle nastavení zařízení</string>
+    <string name="data_interval_minute">Minuta</string>
+    <string name="data_interval_five_minutes">5 minut</string>
+    <string name="data_interval_ten_minutes">10 minut</string>
+    <string name="data_interval_half_hour">Půl hodiny</string>
+    <string name="data_interval_hour">Hodina</string>
+    <string name="data_interval_day">Den</string>
+    <string name="data_interval_week">Týden</string>
+    <string name="data_interval_month">Měsíc</string>
+
+    <!--DATA TYPE-->
+    <string name="data_type_min">Minimum</string>
+    <string name="data_type_avg">Průměr</string>
+    <string name="data_type_max">Maximum</string>
+    <string name="utils_toast_field_must_be_ip_address">Vložte platnou IP adresu ve tvaru podobném do 192.168.100.100.</string>
+
+
+    <!--Dashboard-->
+    <string name="dashboard_fab_add_graph">Přidat čárový graf</string>
+    <string name="dashboard_fab_add_week_bar_graph">Přidat týdenní sloupcový graf</string>
+    <string name="dashboard_fab_add_module">Přidat hodnotu modulu</string>
+    <string name="dashboard_add_graph_name_hint">Název karty</string>
+    <string name="dashboard_add_graph_left_axis_label">Vyberte modul pro levou osu</string>
+    <string name="dashboard_add_graph_right_axis_label">Vyberte modul pro pravou osu</string>
+    <string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dat pro graf</string>
+    <string name="dashboard_add_graph_week_module_label">Vyberte modul pro graf</string>
+    <string name="dashboard_add_graph_week_data_type_label">Vyberte typ dat pro graf</string>
+    <plurals name="dashboard_delete_snackbar">
+        <item quantity="one">Karta byla smazána</item>
+        <item quantity="few">Karty byly smazány</item>
+    </plurals>
+    <string name="dashboard_undo">Zpět</string>
+    <string name="dashboard_add_graph_name_error">Pojmenujte novou kartu</string>
+
+    <!--Days shortcuts-->
+    <string name="monday">Po</string>
+    <string name="tuesday">Út</string>
+    <string name="wednesday">St</string>
+    <string name="thursday">Čt</string>
+    <string name="friday">Pá</string>
+    <string name="saturday">So</string>
+    <string name="sunday">Ne</string>
 
 </resources>
