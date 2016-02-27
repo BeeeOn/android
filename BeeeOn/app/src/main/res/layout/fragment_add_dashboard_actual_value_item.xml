@@ -4,46 +4,15 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:focusable="true"
+	android:background="@color/beeeon_background_gray"
 	android:focusableInTouchMode="true">
 
-	<ScrollView
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/fragment_add_dashboard_item_recyclerview"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
-
-		<RelativeLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content">
-
-			<android.support.design.widget.TextInputLayout
-				android:id="@+id/fragment_add_dashboard_item_text_input"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-
-				<EditText
-					android:id="@+id/fragment_add_dashboard_item_name_edit_text"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:hint="@string/dashboard_add_graph_name_hint"/>
-			</android.support.design.widget.TextInputLayout>
-
-			<TextView
-				android:id="@+id/fragment_add_dashboard_item_spinner_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/space_big"
-				android:layout_below="@id/fragment_add_dashboard_item_text_input"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:text="Select module"/>
-
-			<Spinner
-				android:id="@+id/fragment_add_dashboard_item_module_spinner"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_spinner_label"/>
-
-
-		</RelativeLayout>
-	</ScrollView>
+		android:layout_height="match_parent"
+		android:paddingLeft="@dimen/space_big"
+		android:paddingRight="@dimen/space_big"/>
 
 	<com.rehivetech.beeeon.gui.view.FloatingActionButton
 		android:id="@+id/fragment_add_dashboard_item_button_done"

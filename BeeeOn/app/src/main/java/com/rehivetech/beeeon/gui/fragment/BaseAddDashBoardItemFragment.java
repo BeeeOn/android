@@ -48,8 +48,8 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		mTextInputLayout = (TextInputLayout) view.findViewById(R.id.fragment_add_dashboard_item_text_input);
-		mItemNameEditText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_name_edit_text);
+//		mTextInputLayout = (TextInputLayout) view.findViewById(R.id.fragment_add_dashboard_item_text_input);
+//		mItemNameEditText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_name_edit_text);
 		mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 	}
 
