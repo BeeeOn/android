@@ -415,6 +415,24 @@ public final class Device implements IIdentifier {
 	}
 
 	/**
+	 * Get all modules by group name
+	 * @param context context to get string resource
+	 * @param groupName group name
+	 * @return list of modules
+	 */
+	public List<Module> getModulesByGroupName(Context context, String groupName) {
+		List<Module> modules = getVisibleModules();
+		Iterator<Module> iterator = modules.iterator();
+		while (iterator.hasNext()) {
+			Module module = iterator.next();
+			if (!module.getGroupName(context).equals(groupName)) {
+				iterator.remove();
+			}
+		}
+		return modules;
+	}
+
+	/**
 	 * Data holder used for saving device data to server.
 	 */
 	public static class DataPair {
