@@ -22,11 +22,11 @@ public class IntroActivity extends BaseActivity {
 		setContentView(R.layout.activity_base_guide);
 
 		List<IntroImageFragment.ImageTextPair> pairs = new ArrayList<>();
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_border,R.string.intro_tut_intro_text_1, R.string.intro_tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.intro_tut_intro_text_2, R.string.intro_tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.intro_tut_intro_text_3, R.string.intro_tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.intro_tut_intro_text_4, R.string.intro_tut_intro_title));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5, R.string.intro_tut_intro_text_5, R.string.intro_tut_intro_title));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_border,R.string.intro_tut_intro_text_1, R.string.intro_tut_intro_title_1));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.intro_tut_intro_text_2, R.string.intro_tut_intro_title_2));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.intro_tut_intro_text_3, R.string.intro_tut_intro_title_3));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.intro_tut_intro_text_4, R.string.intro_tut_intro_title_4));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5, R.string.intro_tut_intro_text_5, R.string.intro_tut_intro_title_5));
 
 		IntroFragmentPagerAdapter adapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,null);
 
