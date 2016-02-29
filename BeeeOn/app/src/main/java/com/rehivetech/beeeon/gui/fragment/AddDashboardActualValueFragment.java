@@ -36,6 +36,7 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
+		fillAdapter(true);
 		mButtonDone.setVisibility(View.GONE);
 	}
 

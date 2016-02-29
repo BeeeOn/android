@@ -45,6 +45,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		fillAdapter(false);
 
 		mAdapter.selectFirstModuleItem();
 

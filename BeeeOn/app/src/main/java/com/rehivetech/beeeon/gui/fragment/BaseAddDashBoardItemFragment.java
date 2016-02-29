@@ -70,12 +70,10 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		recyclerView.setLayoutManager(layoutManager);
 		recyclerView.setAdapter(mAdapter);
 
-		fillAdapter(mAdapter);
-
 		mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 	}
 
-	protected void fillAdapter(DashboardModuleSelectAdapter adapter) {
+	protected void fillAdapter(boolean withEnumTypes) {
 		Controller controller = Controller.getInstance(mActivity);
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
@@ -92,6 +90,11 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 					List<Module> modules = device.getModulesByGroupName(mActivity, group);
 
 					for (Module module : modules) {
+
+						if (module.getValue() instanceof EnumValue && !withEnumTypes) {
+							continue;
+						}
+
 						String moduleAbsoluteId = Utils.getAbsoluteModuleId(device.getId(), module.getId());
 						items.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
 					}
@@ -101,13 +104,17 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 				for (Module module : modules) {
 
+					if (module.getValue() instanceof EnumValue && !withEnumTypes) {
+						continue;
+					}
+
 					String moduleAbsoluteId = Utils.getAbsoluteModuleId(device.getId(), module.getId());
 					items.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
 				}
 			}
 		}
 
-		adapter.setItems(items);
+		mAdapter.setItems(items);
 	}
 
 	/**
