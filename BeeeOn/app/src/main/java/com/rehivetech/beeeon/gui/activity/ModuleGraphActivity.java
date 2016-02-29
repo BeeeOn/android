@@ -106,10 +106,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 		Controller controller = Controller.getInstance(this);
 		Module module = controller.getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
 
-		SharedPreferences prefs = controller.getUserSettings();
-		UnitsHelper unitsHelper = new UnitsHelper(prefs, this);
-
-		mModuleUnit = unitsHelper.getStringUnit(module.getValue());
+		UnitsHelper unitsHelper = Utils.getUnitsHelper(this);
+		if (unitsHelper != null) {
+			mModuleUnit = unitsHelper.getStringUnit(module.getValue());
+		}
 
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		toolbar.setTitle(module.getName(this));

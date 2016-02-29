@@ -62,7 +62,7 @@ public final class Module implements IOrderIdentifier {
 		mModuleId = new ModuleId(device.getGateId(), device.getAddress(), id);
 	}
 
-	public Module(@NonNull  Device device, @NonNull String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
+	public Module(@NonNull Device device, @NonNull String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
 				  @Nullable List<EnumValue.Item> enumValues, @Nullable String defaultValue) throws IllegalArgumentException {
 		mDevice = device;
 		mId = id;
@@ -106,11 +106,11 @@ public final class Module implements IOrderIdentifier {
 		return mType.getStringResource();
 	}
 
-	public int getIconResource(){
+	public int getIconResource() {
 		return getIconResource(IconResourceType.DARK);
 	}
 
-	public int getIconResource(IconResourceType type){
+	public int getIconResource(IconResourceType type) {
 		return mIsActuator ? mValue.getActorIconResource(type) : mValue.getIconResource(type);
 	}
 
@@ -139,19 +139,24 @@ public final class Module implements IOrderIdentifier {
 	}
 
 	/**
-	 * @param context
-	 * @param withGroup
+	 * Returns name of module if is specified, if not gets name of module type
+	 *
+	 * @param context   for getting string
+	 * @param withGroup display bound module group
 	 * @return name of module, optionally prefixed with name of group
 	 */
 	public String getName(Context context, boolean withGroup) {
 		String group = mGroupRes > 0 ? context.getString(mGroupRes) : "";
 		String name = mNameRes > 0 ? context.getString(mNameRes) : "";
+		if (name.isEmpty()) name = context.getString(mType.getStringResource());
 
 		return withGroup ? String.format("%s %s", group, name).trim() : name;
 	}
 
 	/**
-	 * @param context
+	 * Returns name of module if is specified, if not gets name of module type
+	 *
+	 * @param context for getting string
 	 * @return name of module
 	 */
 	public String getName(Context context) {
@@ -207,16 +212,24 @@ public final class Module implements IOrderIdentifier {
 	public static class ModuleId {
 		private static final String ID_SEPARATOR = "---";
 
-		/** Identifier of gate this device belongs to. */
+		/**
+		 * Identifier of gate this device belongs to.
+		 */
 		public final String gateId;
 
-		/** Unique identifier (address) of device that holds this module. */
+		/**
+		 * Unique identifier (address) of device that holds this module.
+		 */
 		public final String deviceId;
 
-		/** Identifier of this module inside the parent device (regarding specification). */
+		/**
+		 * Identifier of this module inside the parent device (regarding specification).
+		 */
 		public final String moduleId;
 
-		/** Unique identifier of module (device address + module id). */
+		/**
+		 * Unique identifier of module (device address + module id).
+		 */
 		public final String absoluteId;
 
 		public ModuleId(String gateId, String deviceId, String moduleId) {
