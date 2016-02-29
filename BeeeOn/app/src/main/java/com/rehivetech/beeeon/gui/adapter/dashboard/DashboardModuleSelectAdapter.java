@@ -2,8 +2,9 @@ package com.rehivetech.beeeon.gui.adapter.dashboard;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.IntDef;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.household.device.Module;
 
 import java.lang.annotation.Retention;
@@ -24,7 +26,7 @@ import java.util.List;
 /**
  * Created by martin on 27.2.16.
  */
-public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
+public class DashboardModuleSelectAdapter extends RecyclerViewSelectableAdapter {
 
 	public static final int LAYOUT_TYPE_MODULE = 0;
 	public static final int LAYOUT_TYPE_DEVICE_NAME = 1;
@@ -35,9 +37,8 @@ public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
 	private Context mContext;
 	private ItemClickListener mClickListener;
 
-	private int mSelectedIndex = -1;
-
 	public DashboardModuleSelectAdapter(Context context, ItemClickListener clickListener) {
+		super(context);
 		mContext = context;
 		mClickListener = clickListener;
 	}
@@ -45,6 +46,22 @@ public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
 	public void setItems(List<Object> items) {
 		mItems.addAll(items);
 		notifyDataSetChanged();
+	}
+
+
+	public void selectFirstModuleItem() {
+		int i = 0;
+
+		for (Object o : mItems) {
+			if (o instanceof ModuleItem) {
+				toggleSelection(i);
+				break;
+			}
+			i++;
+		}
+	}
+	public Object getItem(int index) {
+		return mItems.get(index);
 	}
 
 	@Override
@@ -69,7 +86,7 @@ public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
 		if (item instanceof HeaderItem) {
 			((HeaderViewHolder) holder).bind((HeaderItem) item);
 		} else {
-			((ModuleViewHolder) holder).bind((ModuleItem) item);
+			((ModuleViewHolder) holder).bind((ModuleItem) item, position);
 		}
 	}
 
@@ -89,20 +106,20 @@ public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
 		}
 	}
 
-	public class ModuleViewHolder extends RecyclerView.ViewHolder {
+	public class ModuleViewHolder extends SelectableViewHolder {
 		public final ImageView mIcon;
 		public final TextView mName;
-		public final View mRoot;
+		public final CardView mRoot;
 
 		public ModuleViewHolder(View itemView) {
 			super(itemView);
 
-			mRoot = itemView;
+			mRoot = (CardView) itemView;
 			mIcon = (ImageView) itemView.findViewById(R.id.item_add_dashboard_module_icon);
 			mName = (TextView) itemView.findViewById(R.id.item_add_dashboard_module_name);
 		}
 
-		public void bind(final ModuleItem item) {
+		public void bind(final ModuleItem item, final int position) {
 
 			Controller controller = Controller.getInstance(mContext);
 
@@ -112,17 +129,32 @@ public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
 				return;
 			}
 
-			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
+			mIcon.setImageResource(module.getIconResource(isSelected(position) ? IconResourceType.WHITE : IconResourceType.DARK));
 			mName.setText(module.getName(mContext));
 
 			mRoot.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
+					clearSelection();
+					toggleSelection(position);
 					if (mClickListener != null) {
 						mClickListener.onItemClick(item.mAbsoluteId);
 					}
 				}
 			});
+
+			setSelected(isSelected(position));
+		}
+
+		@Override
+		protected void setSelectedBackground(boolean isSelected) {
+			mRoot.setSelected(isSelected);
+
+			if (isSelected) {
+				mRoot.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.beeeon_primary));
+			} else {
+				mRoot.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.cardview_light_background));
+			}
 		}
 	}
 
@@ -139,14 +171,10 @@ public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
 		@SuppressLint("PrivateResource")
 		public void bind(HeaderItem item) {
 			mLabel.setText(item.mName);
-			 int styleResId = (item.mHeaderType == HeaderItem.ITEM_TYPE_DEVICE_NAME) ?
-					R.style.TextAppearance_AppCompat_Title : R.style.TextAppearance_AppCompat_Subhead;
 
-			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.M) {
-				mLabel.setTextAppearance(styleResId);
-			} else {
-				mLabel.setTextAppearance(itemView.getContext(), styleResId);
-			}
+			int textColor = item.mHeaderType == HeaderItem.ITEM_TYPE_DEVICE_NAME ? R.color.black : R.color.beeeon_accent;
+
+			mLabel.setTextColor(ContextCompat.getColor(mContext, textColor));
 		}
 	}
 
@@ -158,6 +186,10 @@ public class DashboardModuleSelectAdapter extends RecyclerView.Adapter {
 		public ModuleItem(String absoluteId, String gateId) {
 			mAbsoluteId = absoluteId;
 			mGateId = gateId;
+		}
+
+		public String getAbsoluteId() {
+			return mAbsoluteId;
 		}
 	}
 

@@ -1,77 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:focusable="true"
-	android:focusableInTouchMode="true">
+	android:background="@color/beeeon_background_gray">
 
-	<ScrollView
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="match_parent"
+		android:paddingBottom="100dp"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/fragment_add_dashboard_item_module_spinner_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/space_big"
+			android:layout_marginLeft="@dimen/space_big"
+			android:layout_marginRight="@dimen/space_big"
+			android:textAppearance="@style/TextAppearance.AppCompat.Title"
+			android:text="@string/dashboard_add_graph_week_module_label"/>
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/fragment_add_dashboard_item_recyclerview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingLeft="@dimen/space_big"
+			android:paddingRight="@dimen/space_big"/>
+
+
+	</LinearLayout>
+
+	<android.support.v7.widget.CardView
+		android:layout_width="match_parent"
+		android:layout_height="100dp"
+		android:layout_gravity="bottom"
+		>
 
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:layout_marginLeft="@dimen/space_big"
-			android:layout_marginRight="@dimen/space_big"
-			android:layout_marginTop="@dimen/space_big"
-			android:paddingBottom="?attr/actionBarSize">
-
-			<android.support.design.widget.TextInputLayout
-				android:id="@+id/fragment_add_dashboard_item_text_input"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-
-				<EditText
-					android:id="@+id/fragment_add_dashboard_item_name_edit_text"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:hint="@string/dashboard_add_graph_name_hint"/>
-			</android.support.design.widget.TextInputLayout>
-
-			<TextView
-				android:id="@+id/fragment_add_dashboard_item_module_spinner_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/space_big"
-				android:layout_below="@id/fragment_add_dashboard_item_text_input"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:text="@string/dashboard_add_graph_week_module_label"/>
-
-			<Spinner
-				android:id="@+id/fragment_add_dashboard_item_module_spinner"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_module_spinner_label"/>
+			>
 
 			<TextView
 				android:id="@+id/fragment_add_dashboard_item_graph_data_type"
-				android:layout_width="wrap_content"
+				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/space_big"
+				android:layout_marginLeft="@dimen/space_big"
+				android:layout_marginStart="@dimen/space_big"
+				android:layout_marginBottom="@dimen/space_normal"
 				android:text="@string/dashboard_add_graph_week_data_type_label"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:layout_below="@id/fragment_add_dashboard_item_module_spinner"/>
+				android:textAppearance="@style/TextAppearance.AppCompat.Title"
+				android:layout_above="@+id/fragment_add_dashboard_item_data_type_layout"/>
 
-			<Spinner
-				android:id="@+id/fragment_add_dashboard_item_graph_data_type_spinner"
+			<LinearLayout
+				android:id="@+id/fragment_add_dashboard_item_data_type_layout"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:orientation="horizontal"
+				android:paddingBottom="@dimen/space_big"
+				android:layout_alignParentBottom="true"
+				android:layout_toLeftOf="@+id/fragment_add_dashboard_item_button_done"
+				android:layout_toStartOf="@id/fragment_add_dashboard_item_button_done"
+				>
+
+				<com.rehivetech.beeeon.gui.view.GraphTypeCardView
+					android:id="@+id/fragment_add_dashboard_item_graph_type_min"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					app:contentPadding="@dimen/space_mini"
+					android:foreground="?attr/selectableItemBackground"
+					android:layout_margin="@dimen/space_mini">
+
+					<TextView
+						android:id="@+id/fragment_add_dashboard_item_min"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/data_type_min"
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+						android:textColor="@color/card_text_color_selector"/>
+				</com.rehivetech.beeeon.gui.view.GraphTypeCardView>
+
+				<com.rehivetech.beeeon.gui.view.GraphTypeCardView
+					android:id="@+id/fragment_add_dashboard_item_graph_type_avg"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					app:contentPadding="@dimen/space_mini"
+					android:foreground="?attr/selectableItemBackground"
+					android:layout_margin="@dimen/space_mini">
+
+					<TextView
+						android:id="@+id/fragment_add_dashboard_item_avg"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+						android:textColor="@color/card_text_color_selector"
+						android:text="@string/data_type_avg"/>
+				</com.rehivetech.beeeon.gui.view.GraphTypeCardView>
+
+				<com.rehivetech.beeeon.gui.view.GraphTypeCardView
+					android:id="@+id/fragment_add_dashboard_item_graph_type_max"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					app:contentPadding="@dimen/space_mini"
+					android:clickable="true"
+					android:layout_margin="@dimen/space_mini">
+
+					<TextView
+						android:id="@+id/fragment_add_dashboard_item_max"
+						android:layout_width="match_parent"
+						android:layout_height="wrap_content"
+						android:text="@string/data_type_max"
+						android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+						android:textColor="@color/card_text_color_selector"/>
+				</com.rehivetech.beeeon.gui.view.GraphTypeCardView>
+
+			</LinearLayout>
+
+			<com.rehivetech.beeeon.gui.view.FloatingActionButton
+				android:id="@id/fragment_add_dashboard_item_button_done"
+				style="@style/BeeeOn.FloatingActionButton"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_graph_data_type"/>
+				android:layout_marginRight="@dimen/space_big"
+				android:layout_marginEnd="@dimen/space_big"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"
+				android:layout_centerVertical="true"
+				android:src="@drawable/ic_content_save_white_24dp"/>
 
 		</RelativeLayout>
-	</ScrollView>
-
-	<com.rehivetech.beeeon.gui.view.FloatingActionButton
-		android:id="@+id/fragment_add_dashboard_item_button_done"
-		style="@style/BeeeOn.FloatingActionButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/space_big"
-		android:layout_marginRight="@dimen/space_big"
-		android:layout_marginBottom="@dimen/space_big"
-		android:layout_gravity="bottom|end"
-		android:src="@drawable/ic_content_save_white_24dp"/>
+	</android.support.v7.widget.CardView>
 </FrameLayout>

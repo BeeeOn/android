@@ -86,6 +86,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 			case AddDashboardCardAdapter.CardItem.CARD_LINE_GRAPH:
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH:
+				fragment = AddDashboardOverviewGraphItemFragment.newInstance(mGateId);
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_PIE_GRAPH:
 				break;

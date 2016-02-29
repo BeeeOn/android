@@ -3,26 +3,26 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
-import com.rehivetech.beeeon.household.device.Device;
-
-import java.util.List;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleLog;
 
 /**
  * Created by martin on 9.2.16.
  */
 public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemFragment {
 
-	private Spinner mModulesSpinner;
-	private Spinner mDataTypeSpinner;
+	private CardView mMinimum;
+	private CardView mAverage;
+	private CardView mMaximum;
 
 	public static AddDashboardOverviewGraphItemFragment newInstance(String gateId) {
 
@@ -38,11 +38,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		View view = inflater.inflate(R.layout.fragment_add_overview_dashboard_graph_item, container, false);
-
-		mModulesSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_module_spinner);
-		mDataTypeSpinner = (Spinner) view.findViewById(R.id.fragment_add_dashboard_item_graph_data_type_spinner);
-		return view;
+		return inflater.inflate(R.layout.fragment_add_overview_dashboard_graph_item, container, false);
 	}
 
 
@@ -50,27 +46,42 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-		Controller controller = Controller.getInstance(mActivity);
-		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
+		mAdapter.selectFirstModuleItem();
 
-		ArrayAdapter<SpinnerHolder> moduleAdapter = createModulesAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item, devices, false, false);
-		ArrayAdapter<SpinnerDataTypeHolder> mGraphDataTypeAdapter = createGraphDataTypeAdapter(mActivity, android.R.layout.simple_spinner_dropdown_item);
+		mMinimum = (CardView) view.findViewById(R.id.fragment_add_dashboard_item_graph_type_min);
+		mAverage = (CardView) view.findViewById(R.id.fragment_add_dashboard_item_graph_type_avg);
+		mMaximum = (CardView) view.findViewById(R.id.fragment_add_dashboard_item_graph_type_max);
 
-		mModulesSpinner.setAdapter(moduleAdapter);
-		mDataTypeSpinner.setAdapter(mGraphDataTypeAdapter);
+		mAverage.setSelected(true);
+
+		CardView.OnClickListener cardClickListener = new CardView.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mMinimum.setSelected(false);
+				mAverage.setSelected(false);
+				mMaximum.setSelected(false);
+				v.setSelected(true);
+			}
+		};
+
+		mMinimum.setOnClickListener(cardClickListener);
+		mMaximum.setOnClickListener(cardClickListener);
+		mAverage.setOnClickListener(cardClickListener);
+
 
 		mButtonDone.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (mItemNameEditText.getText().length() == 0) {
-					mTextInputLayout.setError(getString(R.string.dashboard_add_graph_name_error));
-					return;
-				}
 
-				SpinnerHolder holder = (SpinnerHolder) mModulesSpinner.getSelectedItem();
-				SpinnerDataTypeHolder dataType = (SpinnerDataTypeHolder) mDataTypeSpinner.getSelectedItem();
+				int selectedItem = mAdapter.getFirstSelectedItem();
+				DashboardModuleSelectAdapter.ModuleItem moduleItem = (DashboardModuleSelectAdapter.ModuleItem) mAdapter.getItem(selectedItem);
 
-				OverviewGraphItem item = new OverviewGraphItem(mItemNameEditText.getText().toString(), mGateId, getModuleAbsoluteId(holder.getDevice().getId(), holder.getModule().getId()), dataType.getDataType());
+				Controller controller = Controller.getInstance(mActivity);
+
+				Module module = controller.getDevicesModel().getModule(mGateId, moduleItem.getAbsoluteId());
+				ModuleLog.DataType dataType = getDataTypeBySelectedItem();
+
+				OverviewGraphItem item = new OverviewGraphItem(module.getName(mActivity, true), mGateId, moduleItem.getAbsoluteId(), dataType);
 
 				Intent data = new Intent();
 				data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
@@ -79,5 +90,18 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 			}
 		});
 
+	}
+
+	private ModuleLog.DataType getDataTypeBySelectedItem() {
+
+		if (mMinimum.isSelected()) {
+			return ModuleLog.DataType.MINIMUM;
+
+		} else if (mAverage.isSelected()) {
+			return ModuleLog.DataType.AVERAGE;
+
+		} else {
+			return ModuleLog.DataType.MAXIMUM;
+		}
 	}
 }

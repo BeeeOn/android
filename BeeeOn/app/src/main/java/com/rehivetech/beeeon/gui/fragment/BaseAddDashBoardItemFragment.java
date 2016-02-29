@@ -2,27 +2,34 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
+import com.rehivetech.beeeon.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *  Created by martin on 7.2.16.
  */
-public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragment{
+public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragment implements DashboardModuleSelectAdapter.ItemClickListener {
 
 	protected static final String ARG_GATE_ID = "gate_id";
 
@@ -33,8 +40,10 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 	protected FloatingActionButton mButtonDone;
 
+	protected DashboardModuleSelectAdapter mAdapter;
 
 	@Override
+	@CallSuper
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
@@ -45,12 +54,60 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	}
 
 	@Override
+	@CallSuper
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 
-//		mTextInputLayout = (TextInputLayout) view.findViewById(R.id.fragment_add_dashboard_item_text_input);
-//		mItemNameEditText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_name_edit_text);
+		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_add_dashboard_item_recyclerview);
+		mAdapter = new DashboardModuleSelectAdapter(mActivity, this);
+		GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);
+		layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+			@Override
+			public int getSpanSize(int position) {
+				return mAdapter.getItemViewType(position) == DashboardModuleSelectAdapter.LAYOUT_TYPE_MODULE ? 1 : 2;
+			}
+		});
+		recyclerView.setLayoutManager(layoutManager);
+		recyclerView.setAdapter(mAdapter);
+
+		fillAdapter(mAdapter);
+
 		mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
+	}
+
+	protected void fillAdapter(DashboardModuleSelectAdapter adapter) {
+		Controller controller = Controller.getInstance(mActivity);
+		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
+
+		List<Object> items = new ArrayList<>();
+
+		for (Device device : devices) {
+			items.add(new DashboardModuleSelectAdapter.HeaderItem(device.getName(mActivity), DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_NAME));
+			List<String> groups = device.getModulesGroups(mActivity);
+
+			if (groups.size() > 1) {
+
+				for (String group : groups) {
+					items.add(new DashboardModuleSelectAdapter.HeaderItem(group, DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_GROUP));
+					List<Module> modules = device.getModulesByGroupName(mActivity, group);
+
+					for (Module module : modules) {
+						String moduleAbsoluteId = Utils.getAbsoluteModuleId(device.getId(), module.getId());
+						items.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
+					}
+				}
+			} else {
+				List<Module> modules = device.getVisibleModules();
+
+				for (Module module : modules) {
+
+					String moduleAbsoluteId = Utils.getAbsoluteModuleId(device.getId(), module.getId());
+					items.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
+				}
+			}
+		}
+
+		adapter.setItems(items);
 	}
 
 	/**
@@ -120,6 +177,11 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	 */
 	protected String getModuleAbsoluteId(String deviceId, String moduleId) {
 		return String.format("%s---%s",deviceId, moduleId);
+	}
+
+	@Override
+	public void onItemClick(String absoluteModuleId) {
+
 	}
 
 	/**

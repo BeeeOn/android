@@ -27,7 +27,8 @@
 			android:maxLines="2"
 			android:ellipsize="end"
 			android:gravity="center"
-			android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			android:textColor="@color/card_text_color_selector"/>
 
 	</LinearLayout>
 
