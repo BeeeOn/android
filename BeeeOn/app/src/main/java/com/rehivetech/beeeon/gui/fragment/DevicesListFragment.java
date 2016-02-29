@@ -167,6 +167,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 		// FAB menu
 		final FloatingActionMenu fabMenu = (FloatingActionMenu) rootView.findViewById(R.id.devices_list_fab);
+		fabMenu.setClosedOnTouchOutside(true);
 
 		// FAB button add device
 		FloatingActionButton fabAddDevice = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_device);

@@ -316,6 +316,7 @@
     <string name="module_edit_title_module_edit">Úprava zariadenia</string>
 
     <!--Module graph-->
+    <string name="module_graph_settings_title">Parametre grafu</string>
     <string name="module_graph_show_y_labels_button">Zobraziť Y hodnoty</string>
     <string name="module_graph_type_of_data">Typ dát</string>
     <string name="module_graph_data_granularity">Frekvencia obnovy dát</string>
