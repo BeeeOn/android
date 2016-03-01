@@ -13,6 +13,7 @@
 		android:layout_height="match_parent"
 		android:paddingBottom="88dp"
 		android:clipToPadding="false"
+		tools:listitem="@layout/item_list_device"
 		/>
 
 	<LinearLayout
