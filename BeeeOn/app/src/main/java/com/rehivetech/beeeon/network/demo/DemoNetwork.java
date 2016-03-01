@@ -101,7 +101,6 @@ public class DemoNetwork implements INetwork {
 		module.setValue(newValue);
 
 		// Set error status randomly (but rarely)
-		module.getDevice().setStatus(rand.nextInt() % 10 != 0 ? Status.AVAILABLE : Status.UNAVAILABLE);
 		module.setStatus(rand.nextInt() % 10 != 0 ? Status.AVAILABLE : Status.UNAVAILABLE);
 	}
 
@@ -250,6 +249,7 @@ public class DemoNetwork implements INetwork {
 				}
 				device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 				device.setNetworkQuality(rand.nextInt(101));
+				device.setStatus(rand.nextInt() % 10 != 0 ? Status.AVAILABLE : Status.UNAVAILABLE);
 
 				for (Module module : device.getAllModules(true)) {
 					setNewValue(module);
@@ -353,6 +353,7 @@ public class DemoNetwork implements INetwork {
 			}
 			newDevice.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 			newDevice.setNetworkQuality(rand.nextInt(101));
+			newDevice.setStatus(rand.nextInt() % 10 != 0 ? Status.AVAILABLE : Status.UNAVAILABLE);
 
 			for (Module module : newDevice.getAllModules(true)) {
 				setNewValue(module);
@@ -405,7 +406,7 @@ public class DemoNetwork implements INetwork {
 		device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 		// device.setLocationId(locationId); // uninitialized device has no location
 		device.setNetworkQuality(rand.nextInt(101));
-		device.setStatus(Status.AVAILABLE);
+		device.setStatus(rand.nextInt() % 10 != 0 ? Status.AVAILABLE : Status.UNAVAILABLE);
 
 		// Set random values for device modules
 		for (Module module : device.getAllModules(true)) {

@@ -249,7 +249,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		if (moduleGroups.size() == 1) {
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-			mEmptyTextView = (TextView) view.findViewById(R.id.device_detrail_module_list_empty_view);
+			mEmptyTextView = (TextView) view.findViewById(R.id.device_detail_module_list_empty_view);
 			mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
 			mRecyclerView.setAdapter(mModuleAdapter);
 			mRootLayout.removeView(mViewPager);

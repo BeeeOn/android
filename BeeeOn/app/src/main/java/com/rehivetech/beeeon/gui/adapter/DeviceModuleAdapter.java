@@ -15,6 +15,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.Status;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -61,6 +62,8 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 					unitsHelper.getStringUnit(module.getValue())));
 		}
 		holder.mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
+		// shows unavailable icon if status is unavailable
+		holder.mStatusIcon.setVisibility(module.getStatus().equals(Status.UNAVAILABLE) ? View.GONE : View.VISIBLE);
 
 		if (module.isActuator()) {
 			BaseValue value = module.getValue();
@@ -134,6 +137,7 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 		public String mModuleId;
 
 		public final ImageView mIcon;
+		public final ImageView mStatusIcon;
 		public final TextView mTitle;
 		public final TextView mValue;
 		public final ImageButton mButton;
@@ -143,6 +147,7 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 		public DeviceModuleAdapterViewHolder(View itemView) {
 			super(itemView);
 			mIcon = (ImageView) itemView.findViewById(R.id.list_module_item_icon);
+			mStatusIcon = (ImageView) itemView.findViewById(R.id.list_module_item_status);
 			mTitle = (TextView) itemView.findViewById(R.id.list_module_item_title);
 			mValue = (TextView) itemView.findViewById(R.id.list_module_item_value);
 			mButton = (ImageButton) itemView.findViewById(R.id.list_device_module_item_set_button);

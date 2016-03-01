@@ -2,16 +2,18 @@
 <FrameLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	xmlns:tools="http://schemas.android.com/tools">
 
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/device_detail_modules_list"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		tools:listitem="@layout/item_list_device_module"
 		android:scrollbars="vertical"/>
 
 	<TextView
-		android:id="@+id/device_detrail_module_list_empty_view"
+		android:id="@+id/device_detail_group_module_list_empty_view"
 		android:layout_width="wrap_content"
 		android:layout_height="100dp"
 		android:visibility="gone"

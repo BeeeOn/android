@@ -96,7 +96,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mView = inflater.inflate(R.layout.fragment_device_detail_group_module, container, false);
 
-		mEmptyListView = (TextView) mView.findViewById(R.id.device_detrail_module_list_empty_view);
+		mEmptyListView = (TextView) mView.findViewById(R.id.device_detail_group_module_list_empty_view);
 		initLayout();
 		return mView;
 	}
