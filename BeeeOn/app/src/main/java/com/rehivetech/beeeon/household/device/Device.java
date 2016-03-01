@@ -227,10 +227,6 @@ public final class Device implements IIdentifier {
 		return modules;
 	}
 
-	public List<Module> getVisibleModules() {
-		return getVisibleModules(false);
-	}
-
 	/**
 	 * @return List of actually visible modules this device contains (without features modules).
 	 */

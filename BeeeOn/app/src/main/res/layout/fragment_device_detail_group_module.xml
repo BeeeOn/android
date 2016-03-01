@@ -16,8 +16,10 @@
 		android:id="@+id/device_detail_group_module_list_empty_view"
 		android:layout_width="wrap_content"
 		android:layout_height="100dp"
-		android:visibility="gone"
 		android:gravity="center_vertical"
+		android:visibility="gone"
+		android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+		android:textColor="@color/gray_dark"
 		android:layout_gravity="center_horizontal"
 		android:text="@string/device_detail_list_modules_no_item_title"/>
 

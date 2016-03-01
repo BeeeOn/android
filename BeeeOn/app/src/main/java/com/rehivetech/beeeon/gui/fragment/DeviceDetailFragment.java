@@ -85,6 +85,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	private CoordinatorLayout mRootLayout;
 	private ImageView mIcon;
+	private ImageView mStatusIcon;
 	private TextView mDeviceName;
 
 	private DeviceFeatureView mDeviceLocation;
@@ -180,6 +181,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		mIcon = (ImageView) view.findViewById(R.id.device_detail_icon);
 		setParallaxMultiplier(mIcon, 0.9f);
+		mStatusIcon = (ImageView) view.findViewById(R.id.device_detail_status_icon);
+		setParallaxMultiplier(mStatusIcon, 0.9f);
 		mDeviceName = (TextView) view.findViewById(R.id.device_detail_device_name);
 		setParallaxMultiplier(mDeviceName, 0.9f);
 
@@ -247,7 +250,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
 		mViewPager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
 
-		if (moduleGroups.size() == 1) {
+		if (moduleGroups.size() <= 1) {
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 			mEmptyTextView = (TextView) view.findViewById(R.id.device_detail_module_list_empty_view);
 			mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
@@ -350,16 +353,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mDeviceLastUpdate.setValue(mTimeHelper.formatLastUpdate(mDevice.getLastUpdate(), controller.getGatesModel().getGate(mGateId)));
 		}
 
+		mIcon.setImageResource(R.drawable.ic_status_online);
 		// available/unavailable icon
 		boolean statusOk = mDevice.getStatus().equals(Status.AVAILABLE);
-		int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
-		int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
-
-		mIcon.setImageResource(iconRes);
-		mIcon.setBackgroundResource(backRes);
+		mStatusIcon.setVisibility(statusOk ? View.GONE : View.VISIBLE);
 
 		// signal
-
 		Integer rssi = mDevice.getRssi();
 		if (rssi != null && mDeviceSignal != null) {
 			mDeviceSignal.setValue(String.format("%d%%", rssi));

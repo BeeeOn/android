@@ -63,7 +63,7 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 		}
 		holder.mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
 		// shows unavailable icon if status is unavailable
-		holder.mStatusIcon.setVisibility(module.getStatus().equals(Status.UNAVAILABLE) ? View.GONE : View.VISIBLE);
+		holder.mStatusIcon.setVisibility(module.getStatus().equals(Status.AVAILABLE) ? View.GONE : View.VISIBLE);
 
 		if (module.isActuator()) {
 			BaseValue value = module.getValue();
