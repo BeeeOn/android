@@ -28,15 +28,6 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	private Spinner mModuleSpinner;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		mGeneralWidgetdata = new WidgetModuleData(mActivity.getWidgetId(), mActivity, null, null);
-		mWidgetData = (WidgetModuleData) mGeneralWidgetdata;
-		mWidgetModule = mWidgetData.widgetModules.get(0);
-	}
-
-	@Override
 	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_module;
 	}
@@ -49,6 +40,10 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		mGeneralWidgetdata = new WidgetModuleData(mActivity.getWidgetId(), mActivity, null, null);
+		mWidgetData = (WidgetModuleData) mGeneralWidgetdata;
+		mWidgetModule = mWidgetData.widgetModules.get(0);
 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
@@ -75,7 +70,7 @@ public class WidgetModuleFragment extends WidgetConfigurationFragment {
 		dataAdapter.setDropDownViewResource(R.layout.item_spinner_module_icon_twoline_dropdown);
 
 		mModuleSpinner.setAdapter(dataAdapter);
-		int foundIndex = Utils.getObjectIndexFromList(mWidgetModule.getId(), mModules);
+		int foundIndex = getModuleIndexFromList(mWidgetModule.getId(), mModules);
 		if (foundIndex != -1) mModuleSpinner.setSelection(foundIndex);
 	}
 

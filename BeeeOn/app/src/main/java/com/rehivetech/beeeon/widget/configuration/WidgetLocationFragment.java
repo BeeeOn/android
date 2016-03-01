@@ -28,15 +28,6 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	private Spinner mLocationSpinner;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
-		mGeneralWidgetdata = new WidgetLocationData(mActivity.getWidgetId(), mActivity, null, null);
-		mWidgetData = (WidgetLocationData) mGeneralWidgetdata;
-		mWidgetLocation = mWidgetData.widgetLocation;
-	}
-
-	@Override
 	protected int getFragmentLayoutResource() {
 		return R.layout.fragment_widget_location;
 	}
@@ -49,6 +40,10 @@ public class WidgetLocationFragment extends WidgetConfigurationFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+
+		mGeneralWidgetdata = new WidgetLocationData(mActivity.getWidgetId(), mActivity, null, null);
+		mWidgetData = (WidgetLocationData) mGeneralWidgetdata;
+		mWidgetLocation = mWidgetData.widgetLocation;
 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);

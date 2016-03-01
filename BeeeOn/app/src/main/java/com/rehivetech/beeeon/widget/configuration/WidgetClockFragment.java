@@ -1,9 +1,11 @@
 package com.rehivetech.beeeon.widget.configuration;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -66,8 +68,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
     }
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
 
 		mGeneralWidgetdata = new WidgetClockData(mActivity.getWidgetId(), mActivity, null, null);
 		mWidgetData = (WidgetClockData) mGeneralWidgetdata;
@@ -78,11 +80,6 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		setRefreshBounds(WidgetService.UPDATE_INTERVAL_WEATHER_MIN);
 
 		mWeatherProvider = new WeatherProvider(mActivity);
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
 
 		mWidgetUpdateSeekBar = (SeekBar) mActivity.findViewById(R.id.widget_config_interval);
 		initWidgetUpdateIntervalLayout(mWidgetUpdateSeekBar);
@@ -251,7 +248,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 			Spinner spinner = mModuleSpinners.get(index);
 			spinner.setAdapter(dataAdapter);
 
-			int foundIndex = Utils.getObjectIndexFromList(wDev.getId(), mModules);
+			int foundIndex = getModuleIndexFromList(wDev.getId(), mModules);
 			if (foundIndex != -1) spinner.setSelection(foundIndex);
 
 			index++;
