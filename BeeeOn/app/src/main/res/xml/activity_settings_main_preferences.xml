@@ -3,21 +3,29 @@
 	<!-- WARNING: android:key values defined here must be same as in method getPersistenceKey() of their corresponding classes (Language.java, Timezone.java, ...) -->
 
 	<!--<ListPreference-->
-		<!--android:dialogTitle="@string/settings_prefs_choose_language"-->
-		<!--android:key="pref_language"-->
-		<!--android:title="@string/settings_prefs_choose_language">-->
+	<!--android:dialogTitle="@string/settings_prefs_choose_language"-->
+	<!--android:key="pref_language"-->
+	<!--android:title="@string/settings_prefs_choose_language">-->
 	<!--</ListPreference>-->
 
-	<ListPreference
-		android:dialogTitle="@string/gate_detail_timezone"
-		android:key="pref_timezone"
-		android:title="@string/gate_detail_timezone">
-	</ListPreference>
+	<PreferenceCategory
+		android:title="@string/settings_general_category_title">
+		<ListPreference
+			android:dialogTitle="@string/gate_detail_timezone"
+			android:key="pref_timezone"
+			android:title="@string/gate_detail_timezone">
+		</ListPreference>
 
-	<PreferenceScreen
-		android:key="key_units"
-		android:persistent="false"
-		android:title="@string/settings_unit_unit"/>
+		<PreferenceScreen
+			android:key="key_units"
+			android:persistent="false"
+			android:title="@string/settings_unit_unit"/>
+
+		<CheckBoxPreference
+			android:key="pref_hide_unavailable_modules"
+			android:title="@string/settings_hide_unavailable_modules"/>
+
+	</PreferenceCategory>
 
 	<PreferenceCategory
 		android:title="@string/settings_actualization_category_title">

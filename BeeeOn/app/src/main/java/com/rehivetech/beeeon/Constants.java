@@ -18,6 +18,7 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_ACTIVE_GATE = "active_adapter";
 	public static final String PERSISTENCE_PREF_IGNORE_NO_GATE = "ignore_no_adapter";
 	public static final String PERSISTENCE_PREF_TIMEZONE = "pref_timezone";
+	public static final String PERSISTENCE_PREF_UNAVAILABLE_MODULES = "pref_hide_unavailable_modules";
 
 	public static final String PERSISTENCE_PREF_TEMPERATURE = "pref_temperature";
 	public static final String PERSISTENCE_PREF_NOISE = "pref_noise";

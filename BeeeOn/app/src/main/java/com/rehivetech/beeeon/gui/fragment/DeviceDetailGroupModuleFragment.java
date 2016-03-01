@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
+import com.rehivetech.beeeon.util.UnavailableModules;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -58,6 +60,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 
 	private RecyclerView mRecyclerView;
 	private TextView mEmptyListView;
+	private boolean mHideUnavailableModules;
 
 	public static DeviceDetailGroupModuleFragment newInstance(String gateId, String deviceId, String groupName) {
 		Bundle args = new Bundle();
@@ -83,6 +86,9 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		mDeviceId = getArguments().getString(KEY_DEVICE_ID);
 		mGroupName = getArguments().getString(KEY_GROUP_NAME);
 		mModuleId = "-1";
+
+		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
+		mHideUnavailableModules = UnavailableModules.fromSettings(prefs);
 	}
 
 	@Nullable
@@ -171,7 +177,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	}
 
 	private List<Module> getModulesByGroup() {
-		List<Module> modules = mDevice.getVisibleModules();
+		List<Module> modules = mDevice.getVisibleModules(mHideUnavailableModules);
 		Iterator<Module> iterator = modules.iterator();
 		while (iterator.hasNext()) {
 			Module module = iterator.next();

@@ -52,12 +52,15 @@ import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.TimeHelper;
+import com.rehivetech.beeeon.util.UnavailableModules;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author martin on 4.8.2015.
+ * @author martin
+ * @since 04.08.2015
  */
 public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener,
 		AppBarLayout.OnOffsetChangedListener, IListDialogListener {
@@ -78,6 +81,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private String mGateId;
 	private String mDeviceId;
 	private String mModuleId;
+	private boolean mHideUnavailableModules;
 
 	private CoordinatorLayout mRootLayout;
 	private ImageView mIcon;
@@ -140,7 +144,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
 
 		SharedPreferences prefs = controller.getUserSettings();
-		mTimeHelper = (prefs == null) ? null : new TimeHelper(prefs);
+		mTimeHelper = Utils.getTimeHelper(prefs);
+
+		mHideUnavailableModules = UnavailableModules.fromSettings(prefs);
 
 		setHasOptionsMenu(true);
 		mModuleId = "-1";
@@ -236,7 +242,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		featuresLayout.addView(mDeviceLocation);
 
 
-		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
+		List<String> moduleGroups = mDevice.getModulesGroups(mActivity, mHideUnavailableModules);
 
 		mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
 		mViewPager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
@@ -252,7 +258,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mTabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
 			mTabLayout.setVisibility(View.VISIBLE);
 			mRootLayout.removeView(mRecyclerView);
-			setupViewPager(mViewPager, mTabLayout, mDevice.getModulesGroups(mActivity));
+			setupViewPager(mViewPager, mTabLayout, mDevice.getModulesGroups(mActivity, mHideUnavailableModules));
 		}
 
 		return view;
@@ -333,7 +339,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 
 		Location location = controller.getLocationsModel().getLocation(mGateId, mDevice.getLocationId());
-		List<String> moduleGroups = mDevice.getModulesGroups(mActivity);
+		List<String> moduleGroups = mDevice.getModulesGroups(mActivity, mHideUnavailableModules);
 
 		if (location != null && mDeviceLocation != null) {
 			mDeviceLocation.setValue(location.getName());
@@ -373,7 +379,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		// TODO device LED initialize
 
 		if (mModuleAdapter != null) {
-			mModuleAdapter.swapModules(mDevice.getVisibleModules());
+			mModuleAdapter.swapModules(mDevice.getVisibleModules(mHideUnavailableModules));
 
 			if (mModuleAdapter.getItemCount() == 0) {
 				mRecyclerView.setVisibility(View.GONE);
@@ -532,6 +538,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	public interface UpdateDevice {
 		CallbackTask createReloadDevicesTask(boolean forceReload);
+
 		Device getDevice();
 	}
 
@@ -562,7 +569,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		public Fragment getActiveFragment(ViewPager container, int position) {
 			String name = makeFragmentName(container.getId(), position);
-			return  mFragmentManager.findFragmentByTag(name);
+			return mFragmentManager.findFragmentByTag(name);
 		}
 
 		private static String makeFragmentName(int viewId, int index) {

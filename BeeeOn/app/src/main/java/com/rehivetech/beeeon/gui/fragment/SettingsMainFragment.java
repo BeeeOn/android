@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.DisplayMetrics;
@@ -20,18 +21,20 @@ import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Language;
 import com.rehivetech.beeeon.util.Timezone;
+import com.rehivetech.beeeon.util.UnavailableModules;
 
 import java.util.Locale;
 
 /**
- * Created by david on 26.8.15.
+ * @author David Kozak
+ * @since 26.8.2015
  */
 public class SettingsMainFragment extends BaseSettingsFragment implements SharedPreferences.OnSharedPreferenceChangeListener, IPositiveButtonDialogListener, INegativeButtonDialogListener {
 
 	private final int REQUEST_CODE_LANGUAGE_WARNING = 50;
 
 	private Timezone mTimezone;
-//	private Language mLanguage;
+	//	private Language mLanguage;
 //	private ListPreference mLanguagePref;
 	private ListPreference mTimeZonePref;
 	private ListPreference mActualizationPreference;

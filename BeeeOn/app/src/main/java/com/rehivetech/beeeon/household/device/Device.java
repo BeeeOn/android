@@ -38,7 +38,9 @@ public final class Device implements IIdentifier {
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
 	private String mCustomName = "";
-	private @Status String mStatus = Status.AVAILABLE;
+	private
+	@Status
+	String mStatus = Status.AVAILABLE;
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -170,7 +172,9 @@ public final class Device implements IIdentifier {
 		mCustomName = name;
 	}
 
-	public @Status String getStatus() {
+	public
+	@Status
+	String getStatus() {
 		return mStatus;
 	}
 
@@ -223,10 +227,14 @@ public final class Device implements IIdentifier {
 		return modules;
 	}
 
+	public List<Module> getVisibleModules() {
+		return getVisibleModules(false);
+	}
+
 	/**
 	 * @return List of actually visible modules this device contains (without features modules).
 	 */
-	public List<Module> getVisibleModules() {
+	public List<Module> getVisibleModules(boolean withoutUnavailable) {
 		// This will give us correctly sorted modules
 		List<Module> modules = getAllModules(false);
 
@@ -241,8 +249,8 @@ public final class Device implements IIdentifier {
 		Iterator<Module> it = modules.iterator();
 		while (it.hasNext()) {
 			Module module = it.next();
-			// Remove modules to be hidden based on rules
-			if (hideModuleIds.contains(module.getId())) {
+			// Remove modules to be hidden based on rules or if module is unavailable
+			if (hideModuleIds.contains(module.getId()) || (withoutUnavailable && module.getStatus().equals(Status.UNAVAILABLE))) {
 				it.remove();
 			}
 		}
@@ -384,15 +392,21 @@ public final class Device implements IIdentifier {
 			module.setValue(String.valueOf(quality));
 	}
 
+
+	public ArrayList<String> getModulesGroups(Context context) {
+		return getModulesGroups(context, false);
+	}
+
 	/**
 	 * Get all modules groups
 	 *
-	 * @param context context to get string resource
+	 * @param context              context to get string resource
+	 * @param withoutHiddenModules if true, unavailable module will NOT be shown
 	 * @return list of group names
 	 */
-	public ArrayList<String> getModulesGroups(Context context) {
+	public ArrayList<String> getModulesGroups(Context context, boolean withoutHiddenModules) {
 		ArrayList<String> moduleGroups = new ArrayList<>();
-		List<Module> modules = getVisibleModules();
+		List<Module> modules = getVisibleModules(withoutHiddenModules);
 
 		for (Module module : modules) {
 			String groupName = module.getGroupName(context);
