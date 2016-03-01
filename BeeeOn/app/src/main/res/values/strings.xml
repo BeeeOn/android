@@ -317,6 +317,7 @@
     <string name="module_edit_title_module_edit">Edit device</string>
 
     <!--Module graph-->
+    <string name="module_graph_settings_title">Graph parameters</string>
     <string name="module_graph_show_y_labels_button">Show Y labels</string>
     <string name="module_graph_type_of_data">Type of data</string>
     <string name="module_graph_data_granularity">Refresh frequency of data</string>

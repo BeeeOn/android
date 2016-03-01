@@ -42,6 +42,8 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
 
+import java.util.Random;
+
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
  *
@@ -378,7 +380,7 @@ public class LoginActivity extends BaseActivity {
 	}
 
 	/**
-	 * Last logging method that call controller to proceed access to server
+	 * Last loggingAction method that call controller to proceed access to server
 	 *
 	 * @param authProvider to login with
 	 */
@@ -426,7 +428,7 @@ public class LoginActivity extends BaseActivity {
 	 * When request dialog was confirmed/canceled
 	 *
 	 * @param requestCode  which request was managed
-	 * @param permissions array of checking permissions
+	 * @param permissions  array of checking permissions
 	 * @param grantResults array of flags (granted/denied) for specified permission
 	 */
 	@Override
@@ -451,160 +453,133 @@ public class LoginActivity extends BaseActivity {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				setDemoMode(authProvider instanceof DemoAuthProvider);
-
-				String errMessage = getString(R.string.login_toast_login_failed);
-				boolean errFlag = true;
-
-				try {
-					Controller controller = Controller.getInstance(LoginActivity.this);
-
-					// Here is authProvider already filled with needed parameters so we can send them to the server
-					if (controller.login(authProvider)) {
-						errFlag = false;
-
-						// Load all gates and data for active one on login
-						mProgress.setMessageResource(R.string.login_progress_loading_gates);
-						controller.getGatesModel().reloadGates(true);
-
-						Gate active = controller.getActiveGate();
-						if (active != null) {
-							// Load data for active gate
-							mProgress.setMessageResource(R.string.login_progress_loading_gate);
-							controller.getLocationsModel().reloadLocationsByGate(active.getId(), true);
-							controller.getDevicesModel().reloadDevicesByGate(active.getId(), true);
-						}
-
-						if (mLoginCancel) {
-							// User cancelled login so do logout() to be sure it won't try to login automatically next time
-							controller.logout(false);
-						} else {
-							// Open MainActivity or just this LoginActivity and let it redirect back
-							onLoggedIn(); // finishes this activity
-							return;
-						}
-					}
-
-					Log.i(TAG, "Login finished");
-				} catch (AppException e) {
-					IErrorCode errorCode = e.getErrorCode();
-
-					if (errorCode instanceof NetworkError) {
-						switch ((NetworkError) errorCode) {
-							case USER_NOT_EXISTS: {
-								// User is not registered on server yet, show registration question dialog
-								runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										showRegisterDialog(authProvider);
-									}
-								});
-								return;
-							}
-							case NOT_VALID_USER: {
-								// Server denied our credentials (e.g. Google token, or email+password)
-								if (authProvider instanceof GoogleAuthProvider) {
-									// Probably wrong Google token so invalidate the token and then try it again
-									if (Utils.isGooglePlayServicesAvailable(LoginActivity.this)) {
-										((GoogleAuthProvider) authProvider).invalidateToken(LoginActivity.this);
-
-										// FIXME: try it again somehow (if we haven't tried it yet)
-									}
-								}
-
-								break;
-							}
-						}
-					}
-
-					e.printStackTrace();
-					errMessage = e.getTranslatedErrorMessage(LoginActivity.this);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-				if (errFlag) {
-					Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
-				}
-
-				mProgress.dismiss();
+				loggingAction(authProvider);
 			}
 		}).start();
 	}
 
-	private void doRegister(final IAuthProvider authProvider) {
+	/**
+	 * MUST BE CALLED IN BACKGROUND THREAD
+	 *
+	 * @param authProvider which will be set to login
+	 */
+	private void loggingAction(final IAuthProvider authProvider) {
+		setDemoMode(authProvider instanceof DemoAuthProvider);
+
+		String errMessage = getString(R.string.login_toast_login_failed);
+		boolean errFlag = true;
+		Controller controller = Controller.getInstance(LoginActivity.this);
+
+		try {
+			// Here is authProvider already filled with needed parameters so we can send them to the server
+			if (controller.login(authProvider)) {
+				errFlag = false;
+
+				// Load all gates and data for active one on login
+				mProgress.setMessageResource(R.string.login_progress_loading_gates);
+				controller.getGatesModel().reloadGates(true);
+
+				Gate active = controller.getActiveGate();
+				if (active != null) {
+					// Load data for active gate
+					mProgress.setMessageResource(R.string.login_progress_loading_gate);
+					controller.getLocationsModel().reloadLocationsByGate(active.getId(), true);
+					controller.getDevicesModel().reloadDevicesByGate(active.getId(), true);
+				}
+
+				if (mLoginCancel) {
+					// User cancelled login so do logout() to be sure it won't try to login automatically next time
+					controller.logout(false);
+				} else {
+					// Open MainActivity or just this LoginActivity and let it redirect back
+					onLoggedIn(); // finishes this activity
+					return;
+				}
+			}
+
+			Log.i(TAG, "Login finished");
+		} catch (AppException e) {
+			IErrorCode errorCode = e.getErrorCode();
+
+			if (errorCode instanceof NetworkError) {
+				switch ((NetworkError) errorCode) {
+					case USER_NOT_EXISTS: {
+						registeringAction(authProvider);
+					}
+					case NOT_VALID_USER: {
+						// Server denied our credentials (e.g. Google token, or email+password)
+						if (authProvider instanceof GoogleAuthProvider) {
+							// Probably wrong Google token so invalidate the token and then try it again
+							if (Utils.isGooglePlayServicesAvailable(LoginActivity.this)) {
+								((GoogleAuthProvider) authProvider).invalidateToken(LoginActivity.this);
+
+								// FIXME: try it again somehow (if we haven't tried it yet)
+							}
+						}
+
+						break;
+					}
+				}
+			}
+
+			e.printStackTrace();
+			errMessage = e.getTranslatedErrorMessage(LoginActivity.this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (errFlag) {
+			Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+		}
+
+		mProgress.dismiss();
+	}
+
+	/**
+	 * MUST BE CALLED IN BACKGROUND THREAD
+	 *
+	 * @param authProvider which will be set to login
+	 */
+	private void registeringAction(final IAuthProvider authProvider) {
 		mProgress.setMessageResource(R.string.login_progress_signup);
-		mProgress.show();
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				setDemoMode(authProvider instanceof DemoAuthProvider);
+		setDemoMode(authProvider instanceof DemoAuthProvider);
 
-				String errMessage = getString(R.string.login_toast_registration_failed);
-				boolean errFlag = true;
+		String errMessage = getString(R.string.login_toast_registration_failed);
+		boolean errFlag = true;
 
-				try {
-					Controller controller = Controller.getInstance(LoginActivity.this);
+		try {
+			Controller controller = Controller.getInstance(LoginActivity.this);
 
-					// Here is authProvider already filled with needed parameters so we can send them to the server
-					if (controller.register(authProvider)) {
-						Log.d(TAG, "Register successful");
-						errFlag = false;
+			// Here is authProvider already filled with needed parameters so we can send them to the server
+			if (controller.register(authProvider)) {
+				Log.d(TAG, "Register successful");
+				errFlag = false;
 
-						// Finish registration by start logging in
-						if (!mLoginCancel) {
-							doLogin(authProvider);
-						}
-
-						return;
-					}
-				} catch (AppException e) {
-					IErrorCode errorCode = e.getErrorCode();
-
-					// TODO: handle some known exceptions
-
-					e.printStackTrace();
-					errMessage = e.getTranslatedErrorMessage(LoginActivity.this);
-				} catch (Exception e) {
-					e.printStackTrace();
+				// Finish registration by start loggingAction in
+				if (!mLoginCancel) {
+					loggingAction(authProvider);
 				}
 
-				if (errFlag) {
-					Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
-				}
-
-				mProgress.dismiss();
+				return;
 			}
-		}).start();
+		} catch (AppException e) {
+			IErrorCode errorCode = e.getErrorCode();
+
+			// TODO: handle some known exceptions
+
+			e.printStackTrace();
+			errMessage = e.getTranslatedErrorMessage(LoginActivity.this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (errFlag) {
+			Utils.showToastOnUiThread(LoginActivity.this, errMessage, Toast.LENGTH_LONG);
+			mProgress.dismiss();
+		}
 	}
-
-	private void showRegisterDialog(final IAuthProvider authProvider) {
-		DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				switch (which) {
-					case DialogInterface.BUTTON_POSITIVE:
-						doRegister(authProvider);
-						break;
-
-					case DialogInterface.BUTTON_NEGATIVE:
-						mLoginCancel = true;
-						mProgress.dismiss();
-						break;
-				}
-			}
-		};
-
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder
-				.setTitle(R.string.login_dialog_title_register_new_account)
-				.setMessage(R.string.login_dialog_message_register_new_account)
-				.setPositiveButton(android.R.string.yes, dialogClickListener)
-				.setNegativeButton(android.R.string.no, dialogClickListener)
-				.show();
-	}
-
+	
 	/**
 	 * Finish this activity, dismiss progressDialog and if it's not redirect (set in Intent as BUNDLE_REDIRECT) then also start MainActivity
 	 */

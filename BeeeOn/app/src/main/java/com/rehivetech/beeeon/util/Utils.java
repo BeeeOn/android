@@ -32,6 +32,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 
@@ -598,6 +599,12 @@ final public class Utils {
 	 */
 	public static @Nullable UnitsHelper getUnitsHelper(@Nullable SharedPreferences prefs, Context context){
 		return (prefs == null) ? null : new UnitsHelper(prefs, context);
+	}
+
+	public static @Nullable UnitsHelper getUnitsHelper(Context context){
+		Controller controller = Controller.getInstance(context);
+		SharedPreferences prefs = controller.getUserSettings();
+		return getUnitsHelper(prefs, context);
 	}
 
 	/**

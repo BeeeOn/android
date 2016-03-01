@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.widget.configuration;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
@@ -57,8 +58,8 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	protected Gate mActiveGate;
 	protected boolean mGateNeedsToReload;
 
-    protected SeekBar mWidgetUpdateSeekBar;
-    protected Spinner mGateSpinner;
+	protected SeekBar mWidgetUpdateSeekBar;
+	protected Spinner mGateSpinner;
 	protected RelativeLayout mWidgetWifiLayoutWrapper;
 	protected CheckBox mWidgetUpdateWiFiCheckBox;
 
@@ -77,13 +78,13 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	}
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
+	public void onAttach(Context context) {
+		super.onAttach(context);
 
 		try {
-			mActivity = (WidgetConfigurationActivity) activity;
+			mActivity = (WidgetConfigurationActivity) context;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
+			throw new ClassCastException(context.toString()
 					+ " must be subclass of WidgetConfigurationActivity");
 		}
 	}
@@ -94,16 +95,16 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		setHasOptionsMenu(true);
 	}
 
-    /**
-     * Cancels shown dialog
-     */
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
-    }
+	/**
+	 * Cancels shown dialog
+	 */
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mActivity.getDialog() != null) mActivity.getDialog().dismiss();
+	}
 
-    /**
+	/**
 	 * Every fragment configuration should have its own layout
 	 *
 	 * @return layout resource
@@ -126,25 +127,25 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		super.onActivityCreated(savedInstanceState);
 		mGateSpinner = (Spinner) mActivity.findViewById(R.id.widget_config_gateway_spinner);
 
-        TextView gateEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_gateway_emptyview);
-        if(gateEmptyView != null){
-            mGateSpinner.setEmptyView(gateEmptyView);
-        }
-        else{
-            Log.e(TAG, "EmptyView for GateWay spinner MISSING!");
-        }
+		TextView gateEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_gateway_emptyview);
+		if (gateEmptyView != null) {
+			mGateSpinner.setEmptyView(gateEmptyView);
+		} else {
+			Log.e(TAG, "EmptyView for GateWay spinner MISSING!");
+		}
 
 		mGateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				Gate gate = mGates.get(position);
 				if (gate == null) return;
-                onBeforeGateChanged();
+				onBeforeGateChanged();
 				doChangeGate(gate.getId());
 			}
 
 			@Override
-			public void onNothingSelected(AdapterView<?> parent) {}
+			public void onNothingSelected(AdapterView<?> parent) {
+			}
 		});
 
 		mWidgetWifiLayoutWrapper = (RelativeLayout) mActivity.findViewById(R.id.widget_config_wifi_wrapper_layout);
@@ -160,29 +161,29 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		}
 	}
 
-    /**
-     * Called when spinner selected before actual change of gate
-     */
-    protected void onBeforeGateChanged() {}
+	/**
+	 * Called when spinner selected before actual change of gate
+	 */
+	protected void onBeforeGateChanged() {
+	}
 
-    /**
+	/**
 	 * Always get new controller when resumes, cause it can change after login/logout
 	 */
 	@Override
 	public void onResume() {
 		super.onResume();
-        mGeneralWidgetdata.load();
+		mGeneralWidgetdata.load();
 
 		String gateId = mGeneralWidgetdata.widgetGateId;
 		EnumSet<ReloadGateDataTask.ReloadWhat> whatToReload;
-		if(gateId.isEmpty()){
+		if (gateId.isEmpty()) {
 			gateId = null;
 			whatToReload = EnumSet.of(
 					ReloadGateDataTask.ReloadWhat.ACTIVE_GATE,
 					ReloadGateDataTask.ReloadWhat.DEVICES
 			);
-		}
-		else{
+		} else {
 			whatToReload = EnumSet.of(
 					ReloadGateDataTask.ReloadWhat.GATES,
 					ReloadGateDataTask.ReloadWhat.DEVICES
@@ -190,7 +191,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		}
 
 
-        mReloadTask = new ReloadGateDataTask(mActivity, false, whatToReload);
+		mReloadTask = new ReloadGateDataTask(mActivity, false, whatToReload);
 		mReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -202,16 +203,16 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 			}
 		});
 
-        // async reload task
+		// async reload task
 		mActivity.callbackTaskManager.executeTask(mReloadTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 
-        updateIntervalLayout();
+		updateIntervalLayout();
 
-        // we have to check it cause not every widget settings have it
-        if (mWidgetUpdateWiFiCheckBox != null) {
-            mWidgetUpdateWiFiCheckBox.setChecked(mGeneralWidgetdata.widgetWifiOnly);
-        }
-    }
+		// we have to check it cause not every widget settings have it
+		if (mWidgetUpdateWiFiCheckBox != null) {
+			mWidgetUpdateWiFiCheckBox.setChecked(mGeneralWidgetdata.widgetWifiOnly);
+		}
+	}
 
 	/**
 	 * When fragment is shown for the first time
@@ -231,12 +232,12 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	 */
 	protected void onReloadTaskFinished() {
 		int selectedGateIndex = selectGate(mGeneralWidgetdata.widgetGateId);
-        if (selectedGateIndex == mGateSpinner.getSelectedItemPosition()) {
+		if (selectedGateIndex == mGateSpinner.getSelectedItemPosition()) {
 			doChangeGate(mActiveGate.getId());
 		} else {
 			mGateSpinner.setSelection(selectedGateIndex);
 		}
-    }
+	}
 
 	protected abstract void updateLayout();
 
@@ -266,8 +267,8 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	 * Happens when change gate in spinner, this reloads data to be from new selected gate
 	 * !! NOTE: if mGateNeedsToReload == false Then it skips whole reload task
 	 *
-     * @param gateId
-     */
+	 * @param gateId
+	 */
 	protected void doChangeGate(final String gateId) {
 		if (!mGateNeedsToReload) {
 			getGateData(gateId);
@@ -286,7 +287,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 			}
 		});
 
-        mActivity.callbackTaskManager.executeTask(mReloadTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+		mActivity.callbackTaskManager.executeTask(mReloadTask, gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
 	}
 
 	/**
@@ -321,20 +322,20 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == android.R.id.home) {
-            if (mGeneralWidgetdata == null) {
-                Log.e(TAG, "There should be widgetData !");
-                Toast.makeText(mActivity, R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
-                finishConfiguration();
-            }
+		if (item.getItemId() == android.R.id.home) {
+			if (mGeneralWidgetdata == null) {
+				Log.e(TAG, "There should be widgetData !");
+				Toast.makeText(mActivity, R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
+				finishConfiguration();
+			}
 
-            if(saveSettings()){
-                mActivity.returnIntent(true);
-                finishConfiguration();
-            } else {
-                Log.e(TAG, "Could not save widget!");
-                // NOTE: need to show Toast or something in saveSettings() !!
-            }
+			if (saveSettings()) {
+				mActivity.returnIntent(true);
+				finishConfiguration();
+			} else {
+				Log.e(TAG, "Could not save widget!");
+				// NOTE: need to show Toast or something in saveSettings() !!
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -406,14 +407,13 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 
 	/**
 	 * Updates the seekbar and text
-	 *
-     */
+	 */
 	protected void updateIntervalLayout() {
-        if(mWidgetUpdateSeekBar == null) return;
+		if (mWidgetUpdateSeekBar == null) return;
 
 		int interval = Math.max(mGeneralWidgetdata.widgetInterval, mRefreshIntervalMin.getInterval());
 		int intervalIndex = RefreshInterval.fromInterval(interval).getIntervalIndex();
-        mWidgetUpdateSeekBar.setProgress(intervalIndex - mRefreshIntervalMin.getIntervalIndex());
+		mWidgetUpdateSeekBar.setProgress(intervalIndex - mRefreshIntervalMin.getIntervalIndex());
 		// set text of seekbar
 		setIntervalWidgetText(intervalIndex);
 	}
@@ -440,5 +440,20 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	protected int getRefreshSeconds(int progressIndex) {
 		RefreshInterval refreshInterval = RefreshInterval.values()[progressIndex + mRefreshIntervalMin.getIntervalIndex()];
 		return Math.max(refreshInterval.getInterval(), mRefreshIntervalMin.getInterval());
+	}
+
+	/**
+	 * Finds module index from list by specified id
+	 * @param moduleId needle
+	 * @param modules haystack
+	 * @return index
+	 */
+	protected static int getModuleIndexFromList(String moduleId, List<Module> modules){
+		int index = 0;
+		for (Module mod : modules) {
+			if (mod.getModuleId().absoluteId.equals(moduleId)) return index;
+			index++;
+		}
+		return -1;
 	}
 }

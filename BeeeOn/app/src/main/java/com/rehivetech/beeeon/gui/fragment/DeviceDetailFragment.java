@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -313,6 +314,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		tabLayout.setupWithViewPager(viewPager);
 	}
 
+	@SuppressLint("DefaultLocale")
 	public void updateData() {
 		Controller controller = Controller.getInstance(mActivity);
 
@@ -353,7 +355,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		Integer rssi = mDevice.getRssi();
 		if (rssi != null && mDeviceSignal != null) {
-			mDeviceSignal.setValue(String.valueOf(rssi));
+			mDeviceSignal.setValue(String.format("%d%%", rssi));
 			mDeviceSignal.setIcon(rssi == 0 ? R.drawable.ic_signal_wifi_off_white_24dp : R.drawable.ic_signal_wifi_4_bar_white_24dp);
 		}
 
