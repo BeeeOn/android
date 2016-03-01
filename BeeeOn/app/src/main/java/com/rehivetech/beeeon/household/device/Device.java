@@ -22,9 +22,6 @@ import java.util.List;
 public final class Device implements IIdentifier {
 	public static final String TAG = Device.class.getSimpleName();
 
-	public static final String STATUS_AVAILABLE = "available";
-	public static final String STATUS_UNAVAILABLE = "unavailable";
-
 	/**
 	 * Properties inherited from device's specification table.
 	 */
@@ -41,7 +38,7 @@ public final class Device implements IIdentifier {
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
 	private String mCustomName = "";
-	private String mStatus = STATUS_AVAILABLE;
+	private @Status String mStatus = Status.AVAILABLE;
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -173,11 +170,11 @@ public final class Device implements IIdentifier {
 		mCustomName = name;
 	}
 
-	public String getStatus() {
+	public @Status String getStatus() {
 		return mStatus;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(@Status String status) {
 		mStatus = status;
 	}
 
@@ -244,8 +241,8 @@ public final class Device implements IIdentifier {
 		Iterator<Module> it = modules.iterator();
 		while (it.hasNext()) {
 			Module module = it.next();
-			// Remove modules to be hidden based on rules or if module is unavailable
-			if (hideModuleIds.contains(module.getId()) || module.getStatus().equals(Module.STATUS_UNAVAILABLE)) {
+			// Remove modules to be hidden based on rules
+			if (hideModuleIds.contains(module.getId())) {
 				it.remove();
 			}
 		}
@@ -302,8 +299,7 @@ public final class Device implements IIdentifier {
 			// At this moment module will surely exist in data holder
 			Module module = mModules.getObject(id);
 			module.setValue(value);
-			// TODO change status not to have as string but as Enum
-			module.setStatus(moduleStatus.isEmpty() ? STATUS_AVAILABLE : moduleStatus);
+			module.setStatus(moduleStatus.isEmpty() ? Status.AVAILABLE : moduleStatus);
 		}
 	}
 

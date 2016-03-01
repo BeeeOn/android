@@ -43,6 +43,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.device.Status;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.location.Location;
@@ -344,7 +345,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 
 		// available/unavailable icon
-		boolean statusOk = mDevice.getStatus().equals(Device.STATUS_AVAILABLE);
+		boolean statusOk = mDevice.getStatus().equals(Status.AVAILABLE);
 		int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
 		int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
 

@@ -11,6 +11,7 @@ import com.rehivetech.beeeon.household.device.DeviceType;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
+import com.rehivetech.beeeon.household.device.Status;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
@@ -100,8 +101,8 @@ public class DemoNetwork implements INetwork {
 		module.setValue(newValue);
 
 		// Set error status randomly (but rarely)
-		module.getDevice().setStatus(rand.nextInt() % 10 != 0 ? Device.STATUS_AVAILABLE : Device.STATUS_UNAVAILABLE);
-		module.setStatus(rand.nextInt() % 10 != 0 ? Module.STATUS_AVAILABLE : Module.STATUS_UNAVAILABLE);
+		module.getDevice().setStatus(rand.nextInt() % 10 != 0 ? Status.AVAILABLE : Status.UNAVAILABLE);
+		module.setStatus(rand.nextInt() % 10 != 0 ? Status.AVAILABLE : Status.UNAVAILABLE);
 	}
 
 	public void initDemoData() throws AppException {
@@ -404,7 +405,7 @@ public class DemoNetwork implements INetwork {
 		device.setLastUpdate(DateTime.now(DateTimeZone.UTC));
 		// device.setLocationId(locationId); // uninitialized device has no location
 		device.setNetworkQuality(rand.nextInt(101));
-		device.setStatus(Device.STATUS_AVAILABLE);
+		device.setStatus(Status.AVAILABLE);
 
 		// Set random values for device modules
 		for (Module module : device.getAllModules(true)) {

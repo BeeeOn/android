@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Status;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -144,7 +145,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 				if (deviceHolder.mIcon != null) {
 					// sets selected background && icon
-					boolean statusOk = device.getStatus().equals(Device.STATUS_AVAILABLE);
+					boolean statusOk = device.getStatus().equals(Status.AVAILABLE);
 					int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
 					int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
 
