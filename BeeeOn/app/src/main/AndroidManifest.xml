@@ -15,25 +15,25 @@
 	Creates a custom permission so only this app can receive its messages.
 	NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where
 	PACKAGE is the application's package name.
-	-->
+    -->
 	<permission
 		android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"
 		android:protectionLevel="signature"/>
-
 	<permission
 		android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"
 		android:protectionLevel="signature"/>
 
 	<!-- dangerous permissions -->
-	<!--<uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/> -->
+	<!-- <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/> -->
 	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+	<uses-permission android:name="android.permission.CAMERA"/>
 
 	<!--
 	 The following two permissions are not required to use
 	 Google Maps Android API v2, but are recommended.
-	-->
-	<!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>-->
-	<!--<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
+    -->
+	<!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/> -->
+	<!-- <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> -->
 
 
 	<!-- normal permissions -->
@@ -90,8 +90,7 @@
 			android:name=".gui.activity.AddDeviceActivity"
 			android:label="@string/manifest_title_device_add">
 		</activity>
-		<activity
-			android:name=".gui.activity.DeviceDetailActivity">
+		<activity android:name=".gui.activity.DeviceDetailActivity">
 			android:label="@string/manifest_title_device_detail">
 		</activity>
 		<activity
@@ -103,28 +102,31 @@
 			android:label="@string/manifest_title_gate_add">
 		</activity>
 		<activity
+			android:name=".gui.activity.ScanQrActivity"
+			android:label="@string/manifest_title_gate_add">
+		</activity>
+		<activity
 			android:name=".gui.activity.GateEditActivity"
 			android:label="@string/manifest_title_gate_edit">
 		</activity>
 		<activity
 			android:name=".widget.configuration.WidgetConfigurationActivity"
-			android:noHistory="true"
 			android:excludeFromRecents="true"
-			android:label="@string/widget_configuration_title_widget_config">
+			android:label="@string/widget_configuration_title_widget_config"
+			android:noHistory="true">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
 			</intent-filter>
 		</activity>
-
 		<activity
 			android:name=".gui.activity.SettingsMainActivity"
-			android:label="@string/manifest_title_settings"
-			android:configChanges="locale|orientation">
+			android:configChanges="locale|orientation"
+			android:label="@string/manifest_title_settings">
 		</activity>
 		<activity
 			android:name=".gui.activity.SettingsUnitActivity"
-			android:theme="@style/SettingsActivity"
-			android:label="@string/settings_unit_unit">
+			android:label="@string/settings_unit_unit"
+			android:theme="@style/SettingsActivity">
 		</activity>
 		<activity
 			android:name=".gui.activity.GateUsersActivity"
@@ -144,21 +146,17 @@
 		<activity
 			android:name=".gui.activity.IntroActivity"
 			android:label="@string/app_name"/>
-		<activity
-			android:name=".gui.activity.ModuleGraphActivity"/>
+		<activity android:name=".gui.activity.ModuleGraphActivity"/>
 		<!-- Facebook login screen -->
 		<activity
 			android:name="com.facebook.FacebookActivity"
-			android:configChanges=
-				"keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar"
-			android:label="@string/app_name">
+			android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+			android:label="@string/app_name"
+			android:theme="@android:style/Theme.Translucent.NoTitleBar">
 		</activity>
-
 		<activity
 			android:name=".gui.activity.DevicesListActivity"
 			android:label="@string/nav_drawer_menu_menu_devices"/>
-
 		<activity
 			android:name=".gui.activity.AddDashboardItemActivity"
 			android:label="@string/app_name"/>
@@ -166,15 +164,12 @@
 		<!-- WIDGETS -->
 		<service
 			android:name=".widget.service.WidgetService"
-			android:exported="false"
-			/>
-
+			android:exported="false"/>
 		<service
 			android:name=".widget.service.WidgetListService"
 			android:enabled="@bool/is_api_11"
 			android:exported="false"
-			android:permission="android.permission.BIND_REMOTEVIEWS"
-			/>
+			android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
 		<!-- list widget -->
 		<receiver
@@ -193,8 +188,7 @@
 		<!-- clock widget -->
 		<receiver
 			android:name=".widget.receivers.WidgetClockProvider"
-			android:label="@string/manifest_title_widget_clock"
-			>
+			android:label="@string/manifest_title_widget_clock">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
 			</intent-filter>
@@ -254,6 +248,7 @@
 			android:enabled="@bool/is_at_most_api_11">
 			<intent-filter>
 				<action android:name="android.intent.action.PACKAGE_REPLACED"/>
+
 				<data android:scheme="package"/>
 			</intent-filter>
 		</receiver>
@@ -264,16 +259,17 @@
 				<action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
 			</intent-filter>
 		</receiver>
-		<!--<receiver android:name=".gcm.BootBroadcastReceiver">-->
-		<!--<intent-filter>-->
-		<!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
-		<!--</intent-filter>-->
-		<!--</receiver>-->
+		<!-- <receiver android:name=".gcm.BootBroadcastReceiver"> -->
+		<!-- <intent-filter> -->
+		<!-- <action android:name="android.intent.action.BOOT_COMPLETED"/> -->
+		<!-- </intent-filter> -->
+		<!-- </receiver> -->
 		<service
 			android:name=".gcm.MyGcmListenerService"
 			android:exported="false">
 			<intent-filter>
 				<action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+
 				<category android:name="com.rehivetech.beeeon"/>
 			</intent-filter>
 		</service>
@@ -288,7 +284,6 @@
 			android:name=".gcm.GcmRegistrationIntentService"
 			android:exported="false">
 		</service>
-
 	</application>
 
 </manifest>
