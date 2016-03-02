@@ -43,6 +43,7 @@
 				android:textSize="15sp"
 				android:padding="10dp"
 				android:layout_marginRight="10dp"
+				android:layout_marginEnd="10dp"
 				android:drawablePadding="10dp"
 				style="@style/Widget.AppCompat.Button.Borderless"
 				android:drawableTop="@drawable/qrcode"/>

@@ -4,24 +4,19 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.design.widget.TextInputLayout;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
-import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
-import com.rehivetech.beeeon.util.TimezoneWrapper;
 import com.rehivetech.beeeon.util.Utils;
 
 import org.joda.time.DateTimeZone;
@@ -31,7 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener, EditTextDialog.IPositiveButtonDialogListener {
+public class AddGateActivity extends BaseGuideActivity implements AddGateFragment.OnAddGateListener{
 	private static final String TAG = AddGateActivity.class.getSimpleName();
 	private static final int SCAN_REQUEST = 0;
 	public static final String TAG_FRAGMENT_CODE_DIALOG = "Code_dialog";
@@ -74,6 +69,7 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 		return R.string.gate_add_btn_add;
 	}
 
+	@Override
 	public void doRegisterGateTask(String id, final boolean scanned) {
 		Gate gate = new Gate(id, null);
 
@@ -150,19 +146,6 @@ public class AddGateActivity extends BaseGuideActivity implements AddGateFragmen
 		AddGateFragment fragment = (AddGateFragment) mPagerAdapter.getFinalFragment();
 		if (fragment != null) {
 			fragment.setScanQrButtonEnabled(enabled);
-		}
-	}
-
-	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment fragment) {
-		TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
-		if(!Utils.validateInput(this, textInputLayout)){
-			return;
-		}
-
-		EditText editText = textInputLayout.getEditText();
-		if (editText != null) {
-			doRegisterGateTask(editText.getText().toString(), false);
 		}
 	}
 }
