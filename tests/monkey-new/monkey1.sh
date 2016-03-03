@@ -1,7 +1,21 @@
 #!/bin/bash
+#Script Starts simple monkey stress test, 
+#Author: David Kozak xkozak15
+#If you have any question or encountered any problem, feel free to contact me : xkozak15@stud.fit.vutbr.cz
 
 device=$1
 
+if [ -z "${device}" ] ; then
+	echo "No device was specified, exiting..." >&2
+	exit 1
+elif [ -z "$(adb devices | grep "${device}")" ] ; then
+	echo "Device ${device} was not found, exiting..."
+	exit 1
+fi
+
+echo "
+---------------------------------------------------------------------------------------------------
+"
 echo "Executing basic monkey test:"
 
 
@@ -13,7 +27,7 @@ sleep 3
 
 
 for i in $(seq 1 ${ITER}) ; do
-	adb shell monkey -p ${PACKAGE_NAME} ${EVENT}
+	adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT}
 	sleep 1
 done 
 
@@ -23,6 +37,9 @@ done
 #adb -s ${device} shell kill ${PID}
 
 
-adb shell am force-stop ${PACKAGE_NAME}
+adb -s ${device} shell am force-stop ${PACKAGE_NAME}
 
 echo "Test finished"
+echo "
+---------------------------------------------------------------------------------------------------
+"
