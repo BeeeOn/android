@@ -1,0 +1,27 @@
+android update sdk -a -u -e -t sys-img-x86-android-19
+
+./emulator -avd JMENO -no-skin -no-audio -no-window
+emulator -list-avds
+
+abd devices
+
+adb -s emulator-5556 emu kill
+
+adb -s emulator-5556 logcat
+
+adb -s emulator-5556 shell monkey 100
+
+adb shell logcat -d | grep 'START u0' | tail -n 1 | sed 's/.*cmp=\(.*\)} .*/\1/g'
+
+adb shell pm list packages | grep "beeeon"
+package_name=com.rehivetech.beeeon.debug
+adb shell monkey -p ${package_name} -c android.intent.category.LAUNCHER 1;
+
+adb shell input keyevent 26
+
+adb shell monkey -p ${package_name} 100
+
+adb -s JMENO emu kill
+
+#export PACKAGE_NAME=$(adb -s ${devices} shell pm list packages | grep "${APP_NAME}" | cut -d':' -f2 | head -1)
+
