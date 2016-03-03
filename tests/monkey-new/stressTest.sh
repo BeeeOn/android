@@ -5,6 +5,8 @@
 #If you have any question or encountered any problem, feel free to contact me : xkozak15@stud.fit.vutbr.cz
 
 export APP_NAME="beeeon"
+export LOG_FILE="log.out"
+export ERR_FILE="log.err"
 export PACKAGE_NAME="com.rehivetech.beeeon.debug"
 export DIR=$(pwd)   #"/home/xkozak15/"
 export EVENT=100
@@ -17,6 +19,15 @@ function start_emulator(){
 	echo "Please start at least one emulator in different process" >&2
 	exit;
 }
+
+#prepare output files
+if [ ! -f ${DIR}/${LOG_FILE} ] ; then
+	touch ${LOG_FILE}
+fi
+
+if [ ! -f ${DIR}/${ERR_FILE} ] ; then
+	touch ${ERR_FILE}
+fi
 
 
 #downloads the .apk file if neccessary
@@ -52,13 +63,15 @@ fi
 echo "Device chosen for testing is $devices"
 
 #reinstalls the app
+echo "Uninstalling old version of the app"
 adb -s ${devices} uninstall $PACKAGE_NAME
+echo "Installing the new version"
 adb -s ${devices} install ${DIR}/${APK}
 
 #executes the tests
 for i in $(seq 1 ${ITER}) ; do
 	echo "									Iteration no ${i}"
-	./monkey1.sh ${devices}
+	./monkey1.sh ${devices} 2>>${ERR_FILE}
 	
 done
 

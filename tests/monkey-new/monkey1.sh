@@ -18,16 +18,13 @@ echo "
 "
 echo "Executing basic monkey test:"
 
-
-echo $device
-echo $PACKAGE_NAME
-
+#launch main activity
 adb -s ${device} shell monkey -p ${PACKAGE_NAME} -c android.intent.category.LAUNCHER 1;
 sleep 3
 
-
+#put some random monkey "clicks"
 for i in $(seq 1 ${ITER}) ; do
-	adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT}
+	adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT} >>${LOG_FILE} 2>>${ERR_FILE}
 	sleep 1
 done 
 
@@ -36,7 +33,7 @@ done
 #echo "PID of the beeon app process is : ${PID}, killing..."
 #adb -s ${device} shell kill ${PID}
 
-
+#shut down the application
 adb -s ${device} shell am force-stop ${PACKAGE_NAME}
 
 echo "Test finished"
