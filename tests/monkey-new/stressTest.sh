@@ -1,4 +1,8 @@
 #!/bin/bash
+#Main script for stress testing of BeeeOn, reinstalls the app on the phone and execute the tests $ITER times with $EVENT strength
+#The device for test execution can be either passed into the script as the first param or it will be chosen automatically
+#Author: David Kozak xkozak15
+#If you have any question or encountered any problem, feel free to contact me : xkozak15@stud.fit.vutbr.cz
 
 export APP_NAME="beeeon"
 export PACKAGE_NAME="com.rehivetech.beeeon.debug"
@@ -9,7 +13,9 @@ export APK="app-debug.apk"
 export APK_NET_PATH="https://ant-2.fit.vutbr.cz:8443/jenkins/job/android-app/lastSuccessfulBuild/artifact/BeeeOn/app/build/outputs/apk/app-debug.apk"
 
 function start_emulator(){
-	echo "HERE"
+	#NAME=$(emulator -list-avds | head -1)
+	echo "Please start at least one emulator in different process" >&2
+	exit;
 }
 
 
@@ -20,11 +26,21 @@ else
 	echo "Apk file was found, no need to download new one"
 fi
 
-devices=$(adb devices | grep "device$" |sed -e 's/\(.*\)\t.*/\1/g')
+if [ ! -z "$1" ] ; then
+	if [ -z "$(adb devices | grep "${1}")" ] ; then
+		echo "Device ${1} was not found, exiting..."
+		exit 1
+	fi
+	devices=$1 
+else 
+	devices=$(adb devices | grep "device$" |sed -e 's/\(.*\)\t.*/\1/g')
+fi
 
-if [ -z "$devices"   ] ; then 
+if [ -z "$devices" ] ; then 
 	echo "No running devices found, starting a new emulator" >&2
 	start_emulator
+	devices=$(adb devices | grep "device$" |sed -e 's/\(.*\)\t.*/\1/g')
+
 elif (( $(grep -c . <<<"$devices") > 1 )) ; then
 	echo "Two or more devices are running, the first one will be chosen for testing" >&2
 	devices=$(adb devices | grep "device$" | head -1 |sed -e 's/\(.*\)\t.*/\1/g')
@@ -36,7 +52,16 @@ adb -s ${devices} uninstall $PACKAGE_NAME
 adb -s ${devices} install ${DIR}/${APK}
 
 for i in $(seq 1 ${ITER}) ; do
-	echo "Iteration no ${i}"
+	echo "									Iteration no ${i}"
 	./monkey1.sh ${devices}
 	
 done
+
+
+#kill all emulators to clean the server
+devices=$(adb devices | tail -n+2 | sed -e 's/\(.*\)\t.*/\1/g')
+echo "Testing was finished devices ${devices} will be killed now"
+for device in ${devices} ; do
+	adb -s ${device} emu kill
+done
+
