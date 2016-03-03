@@ -19,6 +19,7 @@ function start_emulator(){
 }
 
 
+#downloads the .apk file if neccessary
 if [ ! -f ${DIR}/${APK}  ] ; then
 	echo "Apk was not found, started downloading of new one" >&2
 	wget ${APK_NET_PATH} --no-check-certificate	
@@ -26,6 +27,7 @@ else
 	echo "Apk file was found, no need to download new one"
 fi
 
+#checks if the device was specified as argument
 if [ ! -z "$1" ] ; then
 	if [ -z "$(adb devices | grep "${1}")" ] ; then
 		echo "Device ${1} was not found, exiting..."
@@ -36,6 +38,7 @@ else
 	devices=$(adb devices | grep "device$" |sed -e 's/\(.*\)\t.*/\1/g')
 fi
 
+#checks if the device is set correctly
 if [ -z "$devices" ] ; then 
 	echo "No running devices found, starting a new emulator" >&2
 	start_emulator
@@ -48,9 +51,11 @@ fi
 
 echo "Device chosen for testing is $devices"
 
+#reinstalls the app
 adb -s ${devices} uninstall $PACKAGE_NAME
 adb -s ${devices} install ${DIR}/${APK}
 
+#executes the tests
 for i in $(seq 1 ${ITER}) ; do
 	echo "									Iteration no ${i}"
 	./monkey1.sh ${devices}
