@@ -4,91 +4,74 @@
 	android:orientation="vertical"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:focusable="true"
-	android:focusableInTouchMode="true">
+	android:background="@color/beeeon_background_gray"
+	>
 
-	<ScrollView
+	<LinearLayout
 		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:paddingBottom="80dp">
 
-		<RelativeLayout
-			android:orientation="vertical"
+		<TextView
+			android:id="@+id/fragment_add_dashboard_item_title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/space_big"
+			android:layout_marginLeft="@dimen/space_big"
+			android:layout_marginRight="@dimen/space_big"
+			android:textAppearance="@style/TextAppearance.AppCompat.Title"
+			/>
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/fragment_add_dashboard_item_recyclerview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:paddingLeft="@dimen/space_normal"
+			android:paddingRight="@dimen/space_normal"/>
+
+	</LinearLayout>
+
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/white"
+		android:layout_gravity="bottom"
+		android:id="@+id/fragment_add_dashboard_item_slider_card">
+
+		<TextView
+			android:id="@+id/fragment_add_dashboard_item_graph_range_label"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="@dimen/space_big"
-			android:layout_marginRight="@dimen/space_big"
-			android:layout_marginTop="@dimen/space_big"
-			android:paddingBottom="?attr/actionBarSize">
+			android:layout_marginStart="@dimen/space_big"
+			android:layout_marginBottom="@dimen/space_normal"
+			android:text="@string/dashboard_add_graph_graph_range_label"
+			android:textAppearance="@style/TextAppearance.AppCompat.Title"
+			/>
 
-			<android.support.design.widget.TextInputLayout
-				android:id="@+id/fragment_add_dashboard_item_text_input"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+		<com.rehivetech.beeeon.gui.view.Slider
+			android:id="@+id/fragment_add_dashboard_item_graph_range"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/fragment_add_dashboard_item_graph_range_label"
+			android:paddingLeft="@dimen/space_mini"
+			android:paddingRight="@dimen/space_mini"
+			android:layout_marginRight="72dp"
+			android:layout_marginEnd="72dp"
+			/>
 
-				<EditText
-					android:id="@+id/fragment_add_dashboard_item_name_edit_text"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:hint="@string/dashboard_add_graph_name_hint"/>
-			</android.support.design.widget.TextInputLayout>
-
-			<TextView
-				android:id="@+id/fragment_add_dashboard_item_left_axis_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/space_big"
-				android:layout_below="@id/fragment_add_dashboard_item_text_input"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:text="@string/dashboard_add_graph_left_axis_label"/>
-
-			<Spinner
-				android:id="@+id/fragment_add_dashboard_item_left_axis_spinner"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_left_axis_label"/>
-
-			<TextView
-				android:id="@+id/fragment_add_dashboard_item_right_axis_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/space_big"
-				android:text="@string/dashboard_add_graph_right_axis_label"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:layout_below="@id/fragment_add_dashboard_item_left_axis_spinner"/>
-
-			<Spinner
-				android:id="@+id/fragment_add_dashboard_item_right_axis_spinner"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_right_axis_label"/>
-
-
-			<TextView
-				android:id="@+id/fragment_add_dashboard_item_graph_range_label"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginTop="@dimen/space_big"
-				android:text="@string/dashboard_add_graph_graph_range_label"
-				android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-				android:layout_below="@id/fragment_add_dashboard_item_right_axis_spinner"/>
-
-			<Spinner
-				android:id="@+id/fragment_add_dashboard_item_graph_range_spinner"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_below="@id/fragment_add_dashboard_item_graph_range_label"/>
-
-		</RelativeLayout>
-	</ScrollView>
+	</RelativeLayout>
 
 	<com.rehivetech.beeeon.gui.view.FloatingActionButton
-		android:id="@+id/fragment_add_dashboard_item_button_done"
+		android:id="@id/fragment_add_dashboard_item_button_done"
 		style="@style/BeeeOn.FloatingActionButton"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginEnd="@dimen/space_big"
 		android:layout_marginRight="@dimen/space_big"
+		android:layout_marginEnd="@dimen/space_big"
 		android:layout_marginBottom="@dimen/space_big"
 		android:layout_gravity="bottom|end"
 		android:src="@drawable/ic_content_save_white_24dp"/>
+
 </FrameLayout>

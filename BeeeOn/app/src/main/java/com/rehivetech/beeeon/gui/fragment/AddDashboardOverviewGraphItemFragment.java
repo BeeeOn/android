@@ -93,16 +93,5 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 
 	}
 
-	private ModuleLog.DataType getDataTypeBySelectedItem() {
 
-		if (mMinimum.isSelected()) {
-			return ModuleLog.DataType.MINIMUM;
-
-		} else if (mAverage.isSelected()) {
-			return ModuleLog.DataType.AVERAGE;
-
-		} else {
-			return ModuleLog.DataType.MAXIMUM;
-		}
-	}
 }

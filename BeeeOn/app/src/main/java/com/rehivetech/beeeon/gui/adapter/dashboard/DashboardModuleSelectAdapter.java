@@ -2,6 +2,8 @@ package com.rehivetech.beeeon.gui.adapter.dashboard;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -179,7 +181,7 @@ public class DashboardModuleSelectAdapter extends RecyclerViewSelectableAdapter 
 	}
 
 
-	public static class ModuleItem {
+	public static class ModuleItem implements Parcelable{
 		private String mGateId;
 		private String mAbsoluteId;
 
@@ -188,9 +190,35 @@ public class DashboardModuleSelectAdapter extends RecyclerViewSelectableAdapter 
 			mGateId = gateId;
 		}
 
+		protected ModuleItem(Parcel in) {
+			mGateId = in.readString();
+			mAbsoluteId = in.readString();
+		}
+
 		public String getAbsoluteId() {
 			return mAbsoluteId;
 		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(mGateId);
+			dest.writeString(mAbsoluteId);
+		}
+
+		public static final Creator<ModuleItem> CREATOR = new Creator<ModuleItem>() {
+			public ModuleItem createFromParcel(Parcel source) {
+				return new ModuleItem(source);
+			}
+
+			public ModuleItem[] newArray(int size) {
+				return new ModuleItem[size];
+			}
+		};
 	}
 
 	public static class HeaderItem {

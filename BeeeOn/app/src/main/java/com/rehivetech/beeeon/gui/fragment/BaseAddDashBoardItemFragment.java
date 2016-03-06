@@ -6,6 +6,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -34,6 +35,10 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	protected static final String ARG_GATE_ID = "gate_id";
 
 	protected String mGateId;
+
+	protected CardView mMinimum;
+	protected CardView mAverage;
+	protected CardView mMaximum;
 
 	protected TextInputLayout mTextInputLayout;
 	protected EditText mItemNameEditText;
@@ -115,6 +120,19 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		}
 
 		mAdapter.setItems(items);
+	}
+
+	protected ModuleLog.DataType getDataTypeBySelectedItem() {
+
+		if (mMinimum.isSelected()) {
+			return ModuleLog.DataType.MINIMUM;
+
+		} else if (mAverage.isSelected()) {
+			return ModuleLog.DataType.AVERAGE;
+
+		} else {
+			return ModuleLog.DataType.MAXIMUM;
+		}
 	}
 
 	/**
