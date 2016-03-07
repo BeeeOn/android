@@ -5,11 +5,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.rehivetech.beeeon.Constants;
@@ -26,17 +26,25 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 
 	private boolean mIsRequestDialogShown = false;
 	private ZXingScannerView mScannerView;
+	private String mScannerFormat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan_qr);
 		setupToolbar(R.string.gate_add_scan_qr_title, true);
+
 		mScannerView = (ZXingScannerView) findViewById(R.id.scanner_view);
+
+		mScannerFormat = getIntent().getStringExtra(EXTRA_SCAN_FORMAT);
+		if (mScannerFormat == null) {
+			mScannerFormat = "QR_CODE";
+		}
 	}
 
 	/**
 	 * Is called only when any instance was saved (likewise in onCreate())
+	 *
 	 * @param savedInstanceState
 	 */
 	@Override
@@ -84,9 +92,12 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 		mIsRequestDialogShown = false;
 		switch (requestCode) {
 			case Constants.PERMISSION_CODE_CAMERA:
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					// permission granted
-					mScannerView.startCamera();
+				// permission(s) granted
+				if (grantResults.length > 0) {
+					boolean isCameraGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+					if (isCameraGranted) {
+						mScannerView.startCamera();
+					}
 				} else {
 					// permission denied
 					Intent resultIntent = new Intent();
@@ -116,9 +127,19 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 
 	@Override
 	public void handleResult(Result result) {
+		String scannedText = result.getText();
+		String scannedFormat = result.getBarcodeFormat().toString();
+		if (!mScannerFormat.equals(scannedFormat)) {
+			Toast.makeText(this, R.string.gate_add_toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
+			// resume scanning
+			mScannerView.resumeCameraPreview(this);
+			return;
+		}
+
+		// send good result
 		Intent resultIntent = new Intent();
-		resultIntent.putExtra(EXTRA_SCAN_RESULT, result.getText());
-		resultIntent.putExtra(EXTRA_SCAN_FORMAT, result.getBarcodeFormat().toString());
+		resultIntent.putExtra(EXTRA_SCAN_RESULT, scannedText);
+		resultIntent.putExtra(EXTRA_SCAN_FORMAT, scannedFormat);
 		setResult(Activity.RESULT_OK, resultIntent);
 		finish();
 	}

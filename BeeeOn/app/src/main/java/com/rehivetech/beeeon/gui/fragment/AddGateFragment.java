@@ -53,6 +53,7 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 				setScanQrButtonEnabled(false);
 				// show QR scanner
 				Intent intent = new Intent(mActivity, ScanQRActivity.class);
+				intent.putExtra(ScanQRActivity.EXTRA_SCAN_FORMAT, "QR_CODE");
 				startActivityForResult(intent, REQUEST_SCAN);
 			}
 		});
@@ -98,9 +99,10 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 
 	/**
 	 * When dialog's positive button clicked (dialog was confirmed)
+	 *
 	 * @param requestCode dialog's request code
-	 * @param view dialog's view (so that we can check any inputs)
-	 * @param fragment which fragment called it
+	 * @param view        dialog's view (so that we can check any inputs)
+	 * @param fragment    which fragment called it
 	 */
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment fragment) {
@@ -115,6 +117,13 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 		doRegisterGateTask(editText.getText().toString());
 	}
 
+	/**
+	 * Result from scanning activity
+	 *
+	 * @param requestCode specified request Code {@link #REQUEST_SCAN}
+	 * @param resultCode  usually {@link Activity#RESULT_OK} or {@link Activity#RESULT_CANCELED}
+	 * @param data        EXTRA_SCAN_FORMAT, EXTRA_SCAN_RESULT, EXTRA_CAMERA_PERMISSION_DENIED
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -126,7 +135,7 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 				Log.d(TAG, data.getStringExtra(ScanQRActivity.EXTRA_SCAN_FORMAT));
 				onScanQRCode(data.getStringExtra(ScanQRActivity.EXTRA_SCAN_RESULT));
 			}
-		} else if(resultCode == Activity.RESULT_CANCELED && data != null) {
+		} else if (resultCode == Activity.RESULT_CANCELED && data != null) {
 			boolean isPermissionDenied = data.getBooleanExtra(ScanQRActivity.EXTRA_CAMERA_PERMISSION_DENIED, true);
 			if (isPermissionDenied) {
 				Snackbar.make(mActivity.findViewById(android.R.id.content), R.string.permission_camera_warning, Snackbar.LENGTH_LONG).show();
@@ -134,6 +143,10 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 		}
 	}
 
+	/**
+	 * When QR code is scanned
+	 * @param data should be URL with gateway ID
+	 */
 	private void onScanQRCode(String data) {
 		Pattern pattern = Pattern.compile("id=(\\d+)");
 		Matcher matcher = pattern.matcher(data);
@@ -145,6 +158,10 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 		}
 	}
 
+	/**
+	 * Register gateway task
+	 * @param id of gateway
+	 */
 	public void doRegisterGateTask(String id) {
 		Gate gate = new Gate(id, null);
 
