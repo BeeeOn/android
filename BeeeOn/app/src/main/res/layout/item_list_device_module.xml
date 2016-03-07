@@ -5,16 +5,33 @@
 	android:layout_width="match_parent"
 	android:layout_height="72dp"
 	android:orientation="vertical"
+	tools:showIn="@layout/fragment_device_detail"
 	android:background="?attr/selectableItemBackground">
 
 	<ImageView
 		android:id="@+id/list_module_item_icon"
-		android:layout_width="wrap_content"
+		android:layout_width="40dp"
+		android:padding="4dp"
 		android:layout_height="wrap_content"
 		android:layout_centerVertical="true"
 		android:layout_marginLeft="16dp"
 		android:layout_marginStart="16dp"
 		tools:src="@drawable/ic_val_unknown_gray"/>
+
+	<ImageView
+		android:id="@+id/list_module_item_status"
+		android:layout_alignBottom="@+id/list_module_item_icon"
+		android:layout_toEndOf="@+id/list_module_item_icon"
+		android:layout_toRightOf="@+id/list_module_item_icon"
+		android:layout_width="20dp"
+		android:layout_height="20dp"
+		android:src="@drawable/ic_status_error"
+		android:background="@drawable/oval_red"
+		android:layout_marginTop="-20dp"
+		android:layout_marginStart="-16dp"
+		android:layout_marginLeft="-16dp"
+		android:visibility="gone"
+		/>
 
 	<FrameLayout
 		android:id="@+id/list_module_item_buttons_wrapper"

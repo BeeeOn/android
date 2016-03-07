@@ -372,6 +372,8 @@
     <string name="settings_unit_preferences_temperature">Temperature</string>
     <string name="settings_unit_unit">Units</string>
     <string name="settings_language_default">Default(from system)</string>
+    <string name="settings_general_category_title">General settings</string>
+    <string name="settings_hide_unavailable_modules">Hide unavailable modules</string>
     <string name="settings_actualization_category_title">Actualization settings</string>
     <string name="settings_actualization_screen_title">Automatic data actualization interval</string>
     <string name="settings_cache_reload_title">Cache reload time</string>

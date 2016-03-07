@@ -257,7 +257,8 @@ public class XmlParser {
 					// go through modules
 					String moduleId = getSecureAttributeString("id");
 					String moduleValue = getSecureAttributeString("value");
-					device.setModuleValue(moduleId, moduleValue);
+					String moduleStatus = getSecureAttributeString("status");
+					device.setModuleValue(moduleId, moduleValue, moduleStatus);
 
 					mParser.nextTag(); // module endtag
 				}

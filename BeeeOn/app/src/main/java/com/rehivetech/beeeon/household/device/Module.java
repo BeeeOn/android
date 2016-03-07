@@ -30,6 +30,7 @@ public final class Module implements IOrderIdentifier {
 	private final Device mDevice; // parent device
 	private final BaseValue mValue;
 	private final ModuleId mModuleId;
+	private @Status String mStatus = Status.AVAILABLE;
 
 	public static Module createUnknownModule(@NonNull Device device, @NonNull String id) {
 		return new Module(device, id, ModuleType.TYPE_UNKNOWN.getTypeId(), null, null, null, false, null, null);
@@ -197,6 +198,14 @@ public final class Module implements IOrderIdentifier {
 	@Override
 	public Integer getSort() {
 		return mSort;
+	}
+
+	public @Status String getStatus() {
+		return mStatus;
+	}
+
+	public void setStatus(@Status String status) {
+		mStatus = status;
 	}
 
 	public static class Rule {

@@ -22,9 +22,6 @@ import java.util.List;
 public final class Device implements IIdentifier {
 	public static final String TAG = Device.class.getSimpleName();
 
-	public static final String STATUS_AVAILABLE = "available";
-	public static final String STATUS_UNAVAILABLE = "unavailable";
-
 	/**
 	 * Properties inherited from device's specification table.
 	 */
@@ -41,7 +38,9 @@ public final class Device implements IIdentifier {
 	private DateTime mPairedTime;
 	private DateTime mLastUpdate;
 	private String mCustomName = "";
-	private String mStatus = STATUS_AVAILABLE;
+	private
+	@Status
+	String mStatus = Status.AVAILABLE;
 
 	/**
 	 * Private constructor, Device objects are created by static factory method {@link Device#createDeviceByType(String, String, String)}}.
@@ -173,11 +172,13 @@ public final class Device implements IIdentifier {
 		mCustomName = name;
 	}
 
-	public String getStatus() {
+	public
+	@Status
+	String getStatus() {
 		return mStatus;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(@Status String status) {
 		mStatus = status;
 	}
 
@@ -229,7 +230,7 @@ public final class Device implements IIdentifier {
 	/**
 	 * @return List of actually visible modules this device contains (without features modules).
 	 */
-	public List<Module> getVisibleModules() {
+	public List<Module> getVisibleModules(boolean withoutUnavailable) {
 		// This will give us correctly sorted modules
 		List<Module> modules = getAllModules(false);
 
@@ -244,8 +245,8 @@ public final class Device implements IIdentifier {
 		Iterator<Module> it = modules.iterator();
 		while (it.hasNext()) {
 			Module module = it.next();
-			// Remove modules to be hidden based on rules
-			if (hideModuleIds.contains(module.getId())) {
+			// Remove modules to be hidden based on rules or if module is unavailable
+			if (hideModuleIds.contains(module.getId()) || (withoutUnavailable && module.getStatus().equals(Status.UNAVAILABLE))) {
 				it.remove();
 			}
 		}
@@ -284,8 +285,9 @@ public final class Device implements IIdentifier {
 	 *
 	 * @param id
 	 * @param value
+	 * @param moduleStatus
 	 */
-	public void setModuleValue(String id, String value) throws IllegalStateException {
+	public void setModuleValue(String id, String value, String moduleStatus) throws IllegalStateException {
 		synchronized (mModules) {
 			if (!mModules.hasObject(id)) {
 				if (!isUnknownType()) {
@@ -301,6 +303,7 @@ public final class Device implements IIdentifier {
 			// At this moment module will surely exist in data holder
 			Module module = mModules.getObject(id);
 			module.setValue(value);
+			module.setStatus(moduleStatus.isEmpty() ? Status.AVAILABLE : moduleStatus);
 		}
 	}
 
@@ -315,6 +318,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -331,6 +335,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -341,6 +346,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @return
 	 */
 	@Nullable
@@ -351,6 +357,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @param refresh
 	 */
 	public void setRefresh(RefreshInterval refresh) {
@@ -361,6 +368,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @param battery
 	 */
 	public void setBattery(int battery) {
@@ -371,6 +379,7 @@ public final class Device implements IIdentifier {
 
 	/**
 	 * TODO: Only temporary method. Should be rewrited better (and more efficiently).
+	 *
 	 * @param quality
 	 */
 	public void setNetworkQuality(int quality) {
@@ -379,16 +388,23 @@ public final class Device implements IIdentifier {
 			module.setValue(String.valueOf(quality));
 	}
 
+
+	public ArrayList<String> getModulesGroups(Context context) {
+		return getModulesGroups(context, false);
+	}
+
 	/**
 	 * Get all modules groups
-	 * @param context context to get string resource
+	 *
+	 * @param context              context to get string resource
+	 * @param withoutHiddenModules if true, unavailable module will NOT be shown
 	 * @return list of group names
 	 */
-	public ArrayList<String> getModulesGroups(Context context) {
+	public ArrayList<String> getModulesGroups(Context context, boolean withoutHiddenModules) {
 		ArrayList<String> moduleGroups = new ArrayList<>();
-		List<Module> modules = getVisibleModules();
+		List<Module> modules = getVisibleModules(withoutHiddenModules);
 
-		for(Module module: modules) {
+		for (Module module : modules) {
 			String groupName = module.getGroupName(context);
 			if (!moduleGroups.contains(groupName)) {
 				moduleGroups.add(groupName);

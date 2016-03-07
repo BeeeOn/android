@@ -5,7 +5,8 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 
 /**
- * Created by david on 3.9.15.
+ * @author David Kozak
+ * @since 03.09.2015
  */
 public class CacheHoldTime extends SettingsItem {
 	public static final String PERSISTENCE_CACHE_KEY = "pref_cache";

@@ -366,7 +366,9 @@
     <string name="settings_unit_preferences_temperature">Teplota</string>
     <string name="settings_unit_unit">Jednotky</string>
     <string name="settings_language_default">Východzí(Jazyk systému)</string>
-    <string name="settings_actualization_category_title">Nastavenie aktualizácií</string>
+    <string name="settings_general_category_title">Obecné nastavenia</string>
+	<string name="settings_hide_unavailable_modules">Skryť nedostupné moduly</string>
+	<string name="settings_actualization_category_title">Nastavenie aktualizácií</string>
     <string name="settings_actualization_screen_title">Interval automatickej aktualizácie</string>
     <string name="settings_cache_reload_title">Doba uchovávania cache</string>
     <plurals name="settings_actualization_time_listpreference_seconds">

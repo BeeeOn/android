@@ -5,7 +5,8 @@ import android.content.Context;
 import com.rehivetech.beeeon.R;
 
 /**
- * Created by david on 3.9.15.
+ * @author David Kozak
+ * @since 01.03.2016
  */
 public class ActualizationTime extends SettingsItem {
 	public static final String PERSISTENCE_ACTUALIZATON_KEY = "pref_actualization";

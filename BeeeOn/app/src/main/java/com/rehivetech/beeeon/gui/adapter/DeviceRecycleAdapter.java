@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.Status;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -20,9 +22,14 @@ import com.rehivetech.beeeon.util.TimeHelper;
 import java.util.ArrayList;
 
 /**
- * Created by mlyko on 28. 7. 2015.
+ * @author Tomas Mlynaric
+ * @since 28.07.2015
  */
 public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<RecyclerView.ViewHolder> {
+
+	@IntDef({TYPE_UNKNOWN, TYPE_DEVICE, TYPE_LOCATION, TYPE_UNPAIRED_DEVICE, TYPE_HEADER})
+	public @interface ItemViewType {
+	}
 
 	public static final int TYPE_UNKNOWN = -1;
 	public static final int TYPE_DEVICE = 0;
@@ -51,35 +58,37 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 	/**
 	 * Returns type based on object's on position class
+	 *
 	 * @param position
 	 * @return TYPE_XXX
 	 */
 	@Override
-	public int getItemViewType(int position) {
-		if(mObjects.get(position) instanceof Device){
+	public
+	@ItemViewType
+	int getItemViewType(int position) {
+		if (mObjects.get(position) instanceof Device) {
 			return (mUnpairedDevices) ? TYPE_UNPAIRED_DEVICE : TYPE_DEVICE;
-		}
-		else if(mObjects.get(position) instanceof Location){
+		} else if (mObjects.get(position) instanceof Location) {
 			return TYPE_LOCATION;
 		} else if (mObjects.get(position) instanceof String) {
 			return TYPE_HEADER;
-		}
-		else{
+		} else {
 			throw new ClassCastException(String.format("%s must be Device or String!", mObjects.get(position).toString()));
 		}
 	}
 
 	/**
 	 * Creates ViewHolder base on if viewType is Device or Location
+	 *
 	 * @param parent
 	 * @param viewType
 	 * @return
 	 */
 	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, @ItemViewType int viewType) {
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		View v;
-		switch (viewType){
+		switch (viewType) {
 			case TYPE_DEVICE:
 				v = inflater.inflate(R.layout.item_list_device, parent, false);
 				return new DeviceViewHolder(v, mClickListener);
@@ -93,6 +102,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				v = inflater.inflate(R.layout.item_list_unpaired_device, parent, false);
 				return new DeviceViewHolder(v, mClickListener);
 
+			case TYPE_UNKNOWN:
 			default:
 				// TODO should we use some kind of error viewHolder ?
 				v = inflater.inflate(R.layout.item_list_header, parent, false);
@@ -102,16 +112,17 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 	/**
 	 * Binds view base on type of object
+	 *
 	 * @param viewHolder
 	 * @param position
 	 */
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-		switch(viewHolder.getItemViewType()){
+		switch (viewHolder.getItemViewType()) {
 			case TYPE_DEVICE:
 			case TYPE_UNPAIRED_DEVICE:
 				Device device = (Device) mObjects.get(position);
-				if(device == null) return; // TODO should show error view or loading or sth
+				if (device == null) return; // TODO should show error view or loading or sth
 				Gate gate = Controller.getInstance(mContext).getGatesModel().getGate(device.getGateId());
 
 				DeviceViewHolder deviceHolder = (DeviceViewHolder) viewHolder;
@@ -119,19 +130,18 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 				deviceHolder.mTitle.setText(device.getName(mContext));
 				if (!mUnpairedDevices) {
 					deviceHolder.mSubTitle.setText(device.getType().getManufacturerRes());
-					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "" );
+					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "");
 				} else {
-					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getPairedTime(), gate) : "" );
+					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getPairedTime(), gate) : "");
 					deviceHolder.mSubTitle.setText(mContext.getString(R.string.device_setup_device_list_paired_label));
 				}
-
 
 
 				Integer battery = device.getBattery();
 				// no battery, hide info
 				if (!mUnpairedDevices) {
 
-					if (battery == null || battery < 0){
+					if (battery == null || battery < 0) {
 						deviceHolder.mAdditional.setVisibility(View.INVISIBLE);
 					}
 					// otherwise set text and show
@@ -144,10 +154,13 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 				if (deviceHolder.mIcon != null) {
 					// sets selected background && icon
-					boolean statusOk = device.getStatus().equals(Device.STATUS_AVAILABLE);
-					int iconRes = statusOk ? R.drawable.ic_status_online : R.drawable.ic_status_error;
-					int backRes = statusOk ? R.drawable.oval_primary : R.drawable.oval_red;
+					boolean statusOk = device.getStatus().equals(Status.AVAILABLE);
 
+					// showing status icon
+					deviceHolder.mStatusIcon.setVisibility(statusOk ? View.GONE : View.VISIBLE);
+
+					int iconRes = R.drawable.ic_status_online;
+					int backRes = R.drawable.oval_primary;
 					deviceHolder.setSelected(isSelected(position), deviceHolder.mIcon, iconRes);
 					deviceHolder.mIcon.setBackgroundResource(backRes);
 				}
@@ -164,7 +177,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 					header = ((Location) mObjects.get(position)).getName();
 				}
 
-				if(header == null) return; // TODO should show error view or loading or sth
+				if (header == null) return; // TODO should show error view or loading or sth
 				HeaderViewHolder locationHolder = (HeaderViewHolder) viewHolder;
 
 				//locationHolder.mDivider.setVisibility(position == 0 ? View.INVISIBLE : View.VISIBLE);
@@ -178,21 +191,23 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 		return mObjects.size();
 	}
 
-	public Object getItem(int position){
+	public Object getItem(int position) {
 		return mObjects.get(position);
 	}
 
 	/**
 	 * Adds item & animate it if animator set
+	 *
 	 * @param position
 	 */
-	public void addItem(int position, Object data){
+	public void addItem(int position, Object data) {
 		mObjects.add(position, data);
 		notifyItemInserted(position);
 	}
 
 	/**
 	 * Adds item to the end
+	 *
 	 * @param data item
 	 */
 	public void addItem(Object data) {
@@ -202,9 +217,10 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 	/**
 	 * Removes item & animate it if animator set
+	 *
 	 * @param position
 	 */
-	public void removeItem(int position){
+	public void removeItem(int position) {
 		mObjects.remove(position);
 		notifyItemRemoved(position);
 	}
@@ -219,6 +235,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 	/**
 	 * Updates data with new & tries to animate
+	 *
 	 * @param objs
 	 */
 	public void updateData(ArrayList<Object> objs) {
@@ -236,6 +253,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	public class DeviceViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener {
 		public TextView mTitle;
 		public ImageView mIcon;
+		public ImageView mStatusIcon;
 		public TextView mSubTitle;
 		public TextView mSubText;
 		public TextView mAdditional;
@@ -245,6 +263,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 			super(itemView);
 			mTitle = (TextView) itemView.findViewById(R.id.list_item_title);
 			mIcon = (ImageView) itemView.findViewById(R.id.list_item_icon);
+			mStatusIcon = (ImageView) itemView.findViewById(R.id.list_item_status);
 			mSubTitle = (TextView) itemView.findViewById(R.id.list_item_subtitle);
 			mSubText = (TextView) itemView.findViewById(R.id.list_item_subtext);
 			mAdditional = (TextView) itemView.findViewById(R.id.list_item_additional);
@@ -256,14 +275,14 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 		@Override
 		public void onClick(View v) {
-			if(mListener != null){
+			if (mListener != null) {
 				mListener.onRecyclerViewItemClick(getAdapterPosition(), getItemViewType());
 			}
 		}
 
 		@Override
 		public boolean onLongClick(View v) {
-			if(mListener != null && mListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())){
+			if (mListener != null && mListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
 				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
 				return true;
 			}
@@ -274,7 +293,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	/**
 	 * ViewHolder for Header
 	 */
-	public static class HeaderViewHolder extends RecyclerView.ViewHolder{
+	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
 		public TextView mHeader;
 		//public View mDivider;
 
