@@ -89,7 +89,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 			public void onClick(View v) {
 				EditText email = emailInput.getEditText();
 				// check if email is set && valid
-				if (email == null || !Utils.validateInput(AddGateUserActivity.this, emailInput, Utils.ValidationType.EMAIL)) {
+				if (email == null || !Utils.validateInput(AddGateUserActivity.this, emailInput, Utils.EMAIL)) {
 					return;
 				}
 

@@ -485,12 +485,12 @@ final public class Utils {
 	/**
 	 * Enum for validation types
 	 */
-	public enum ValidationType {
-		INTEGER,
-		DOUBLE,
-		EMAIL,
-		IP_ADDRESS
-	}
+	@IntDef({INTEGER, DOUBLE, EMAIL, IP_ADDRESS})
+	public @interface ValidationType {}
+	public static final int INTEGER = 0;
+	public static final int DOUBLE = 1;
+	public static final int EMAIL = 2;
+	public static final int IP_ADDRESS = 3;
 
 	/**
 	 * Helper function for validating TextInputLayout (EditText) input
@@ -498,9 +498,9 @@ final public class Utils {
 	 * @param context of application (so that strings can be accessed)
 	 * @param textInputLayout input layout for validation
 	 * @param additional any additional information which can be checked
-	 * @return success
+	 * @return success if input was validated correctly
 	 */
-	public static boolean validateInput(Context context, TextInputLayout textInputLayout, ValidationType... additional) {
+	public static boolean validateInput(Context context, TextInputLayout textInputLayout, @ValidationType int... additional) {
 		EditText editText = textInputLayout.getEditText();
 		if (editText == null) return false;
 
@@ -511,7 +511,7 @@ final public class Utils {
 			return false;
 		}
 
-		for (ValidationType type : additional) {
+		for (@ValidationType int type : additional) {
 			switch (type) {
 				case INTEGER:
 					try {

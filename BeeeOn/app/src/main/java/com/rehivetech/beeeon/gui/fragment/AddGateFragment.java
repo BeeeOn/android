@@ -110,9 +110,9 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 		}
 
 		EditText editText = textInputLayout.getEditText();
-		if (editText != null) {
-			doRegisterGateTask(editText.getText().toString());
-		}
+		// we know that Utils.validateInput checks if EditText exists
+		assert editText != null;
+		doRegisterGateTask(editText.getText().toString());
 	}
 
 	@Override

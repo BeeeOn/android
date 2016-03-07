@@ -382,7 +382,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		EditText editText = textInputLayout.getEditText();
 
 		// validate input if is in specified format
-		if (editText == null || !Utils.validateInput(mActivity, textInputLayout, Utils.ValidationType.IP_ADDRESS)) return;
+		if (editText == null || !Utils.validateInput(mActivity, textInputLayout, Utils.IP_ADDRESS)) return;
 
 		if (mHandler != null) {
 			mHandler.removeCallbacksAndMessages(null);
