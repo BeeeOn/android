@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.ScanQrActivity;
+import com.rehivetech.beeeon.gui.activity.ScanQRActivity;
 import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -31,9 +32,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AddGateFragment extends BaseApplicationFragment implements EditTextDialog.IPositiveButtonDialogListener {
+	private static final String TAG = AddGateFragment.class.getSimpleName();
+
 	private static final int REQUEST_SCAN = 0;
 	private static final int REQUEST_DIALOG_GATE_CODE = 1;
-	private static final String TAG = AddGateFragment.class.getSimpleName();
 
 	@Override
 	public void onResume() {
@@ -49,7 +51,9 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 			@Override
 			public void onClick(View v) {
 				setScanQrButtonEnabled(false);
-				showQrScanner();
+				// show QR scanner
+				Intent intent = new Intent(mActivity, ScanQRActivity.class);
+				startActivityForResult(intent, REQUEST_SCAN);
 			}
 		});
 
@@ -92,6 +96,12 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 		}
 	}
 
+	/**
+	 * When dialog's positive button clicked (dialog was confirmed)
+	 * @param requestCode dialog's request code
+	 * @param view dialog's view (so that we can check any inputs)
+	 * @param fragment which fragment called it
+	 */
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment fragment) {
 		TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
@@ -101,7 +111,7 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 
 		EditText editText = textInputLayout.getEditText();
 		if (editText != null) {
-			doRegisterGateTask(editText.getText().toString(), false);
+			doRegisterGateTask(editText.getText().toString());
 		}
 	}
 
@@ -109,11 +119,18 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (requestCode == REQUEST_SCAN && resultCode == Activity.RESULT_OK) {
-			// Enable the Scan QR button again
-			setScanQrButtonEnabled(true);
-			Log.d(TAG, data.getStringExtra("SCAN_FORMAT"));
-			onScanQRCode(data.getStringExtra("SCAN_RESULT"));
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == REQUEST_SCAN) {
+				// Enable the Scan QR button again
+				setScanQrButtonEnabled(true);
+				Log.d(TAG, data.getStringExtra(ScanQRActivity.EXTRA_SCAN_FORMAT));
+				onScanQRCode(data.getStringExtra(ScanQRActivity.EXTRA_SCAN_RESULT));
+			}
+		} else if(resultCode == Activity.RESULT_CANCELED && data != null) {
+			boolean isPermissionDenied = data.getBooleanExtra(ScanQRActivity.EXTRA_CAMERA_PERMISSION_DENIED, true);
+			if (isPermissionDenied) {
+				Snackbar.make(mActivity.findViewById(android.R.id.content), R.string.permission_camera_warning, Snackbar.LENGTH_LONG).show();
+			}
 		}
 	}
 
@@ -122,13 +139,13 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 		Matcher matcher = pattern.matcher(data);
 
 		if (matcher.find()) {
-			doRegisterGateTask(matcher.group(1), true);
+			doRegisterGateTask(matcher.group(1));
 		} else {
 			Toast.makeText(mActivity, R.string.gate_add_toast_error_invalid_qr_code, Toast.LENGTH_LONG).show();
 		}
 	}
 
-	public void doRegisterGateTask(String id, final boolean scanned) {
+	public void doRegisterGateTask(String id) {
 		Gate gate = new Gate(id, null);
 
 		// Set default timezone as the gate timezone
@@ -144,20 +161,10 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 					mActivity.finish();
 				} else {
 					Toast.makeText(mActivity, R.string.gate_add_toast_gate_activate_failed, Toast.LENGTH_SHORT).show();
-					if (scanned) {
-						// QR scanning again
-//						showQrScanner();
-					}
-					// the code dialog is still opened, nothing to do here
 				}
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
 		mActivity.callbackTaskManager.executeTask(registerGateTask, gate, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
-	}
-
-	private void showQrScanner() {
-		Intent intent = new Intent(mActivity, ScanQrActivity.class);
-		startActivityForResult(intent, REQUEST_SCAN);
 	}
 }

@@ -10,7 +10,9 @@
 	<string name="dialog_ok">OK</string>
 	<string name="dialog_cancel">Cancel</string>
 
+	<!-- Permissions -->
 	<string name="permission_accounts_warning">If you want to login, you must enable permission to access accounts.</string>
+	<string name="permission_camera_warning">If you want to use camera, you must enable permission so that we can access it.</string>
 
 	<!-- Titles in manifest -->
 	<string name="manifest_action_notification">Notifications</string>
@@ -175,6 +177,7 @@
 	<string name="gate_add_btn_qr"> Scan QR code </string>
 	<string name="gate_add_btn_qr_loading">Loading…</string>
 	<string name="gate_add_dialog_title_enter_text">Enter the code of the gate</string>
+	<string name="gate_add_scan_qr_title">Scan the QR code on the gate</string>
 	<string name="gate_add_last_fragment_text">Scan the QR code on the gate or write the code manually</string>
 	<string name="gate_add_last_fragment_title">Enter the code of the gate</string>
 	<string name="gate_add_manual_edit">Enter manually</string>

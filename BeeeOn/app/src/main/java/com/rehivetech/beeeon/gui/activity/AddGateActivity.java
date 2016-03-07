@@ -11,13 +11,14 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.IntroFragmentPagerAdapter;
+import com.rehivetech.beeeon.gui.fragment.AddGateFragment;
 import com.rehivetech.beeeon.gui.fragment.IntroImageFragment;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class AddGateActivity extends BaseGuideActivity {
-	GateScannerFragment mFragment;
+	AddGateFragment mFragment;
 
 	@Override
 	protected void onLastFragmentActionNext() {
@@ -32,30 +33,8 @@ public class AddGateActivity extends BaseGuideActivity {
 				new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_aa_second_step, R.string.gate_add_tut_add_gate_text_2, R.string.gate_add_tut_add_gate_title_2)
 		);
 
-		mFragment = new GateScannerFragment();
+		mFragment = new AddGateFragment();
 		return new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, mFragment);
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceData) {
-		super.onCreate(savedInstanceData);
-
-		mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-			@Override
-			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-			}
-
-			@Override
-			public void onPageSelected(int position) {
-				if(position == (mPagerAdapter.getCount() - 1)){
-					mFragment.startCamera();
-				}
-			}
-
-			@Override
-			public void onPageScrollStateChanged(int state) {
-			}
-		});
 	}
 
 	@Override
@@ -72,13 +51,6 @@ public class AddGateActivity extends BaseGuideActivity {
 		mNext.setVisibility(View.INVISIBLE);
 		return R.string.gate_add_btn_add;
 	}
-
-//	@Override
-//	protected void onPageActionNext(int pagePosition) {
-//		super.onPageActionNext(pagePosition);
-//
-//		Log.d("XXXXXXX", String.valueOf(pagePosition));
-//	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {

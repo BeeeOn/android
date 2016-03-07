@@ -17,6 +17,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
@@ -494,9 +495,9 @@ final public class Utils {
 	/**
 	 * Helper function for validating TextInputLayout (EditText) input
 	 *
-	 * @param context
-	 * @param textInputLayout
-	 * @param additional
+	 * @param context of application (so that strings can be accessed)
+	 * @param textInputLayout input layout for validation
+	 * @param additional any additional information which can be checked
 	 * @return success
 	 */
 	public static boolean validateInput(Context context, TextInputLayout textInputLayout, ValidationType... additional) {

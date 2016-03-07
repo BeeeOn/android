@@ -102,7 +102,7 @@
 			android:label="@string/manifest_title_gate_add">
 		</activity>
 		<activity
-			android:name=".gui.activity.ScanQrActivity"
+			android:name=".gui.activity.ScanQRActivity"
 			android:label="@string/manifest_title_gate_add">
 		</activity>
 		<activity
