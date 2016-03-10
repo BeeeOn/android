@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 
 /**
@@ -37,7 +38,26 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 		super.onViewCreated(view, savedInstanceState);
 
 		fillAdapter(true);
-		mButtonDone.setVisibility(View.GONE);
+		mAdapter.selectFirstModuleItem();
+
+		mButtonDone.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				int selectedItem = mAdapter.getFirstSelectedItem();
+				DashboardModuleSelectAdapter.ModuleItem moduleItem = (DashboardModuleSelectAdapter.ModuleItem) mAdapter.getItem(selectedItem);
+
+				Controller controller = Controller.getInstance(mActivity);
+
+				String name = controller.getDevicesModel().getModule(mGateId, moduleItem.getAbsoluteId()).getName(mActivity, true);
+
+				ActualValueItem item = new ActualValueItem(name, mGateId, moduleItem.getAbsoluteId());
+				Intent data = new Intent();
+				data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
+				mActivity.setResult(10, data);
+				mActivity.finish();
+			}
+		});
 	}
 
 
@@ -45,14 +65,6 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 	@Override
 	public void onItemClick(String absoluteModuleId) {
 
-		Controller controller = Controller.getInstance(mActivity);
 
-		String name = controller.getDevicesModel().getModule(mGateId, absoluteModuleId).getName(mActivity, true);
-
-		ActualValueItem item = new ActualValueItem(name, mGateId, absoluteModuleId);
-		Intent data = new Intent();
-		data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
-		mActivity.setResult(10, data);
-		mActivity.finish();
 	}
 }

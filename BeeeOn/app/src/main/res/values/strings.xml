@@ -458,22 +458,23 @@
 	<string name="data_type_avg">Average</string>
 	<string name="data_type_max">Maximum</string>
 
-	<!--Dashboard-->
-	<string name="dashboard_fab_add_graph">Add graph</string>
-	<string name="dashboard_fab_add_week_bar_graph">Add week bar graph</string>
-	<string name="dashboard_fab_add_module">Add module value</string>
-	<string name="dashboard_add_graph_name_hint">Card name</string>
-	<string name="dashboard_add_graph_left_axis_label">Select left axis module</string>
-	<string name="dashboard_add_graph_right_axis_label">Select right axis module</string>
-	<string name="dashboard_add_graph_graph_range_label">Select graph range</string>
-	<string name="dashboard_add_graph_week_module_label">Select graph module</string>
-	<string name="dashboard_add_graph_week_data_type_label">Select graph data type</string>
-	<plurals name="dashboard_delete_snackbar">
-		<item quantity="one">Card was deleted</item>
-		<item quantity="other">Cards have been deleted</item>
-	</plurals>
-	<string name="dashboard_undo">Undo</string>
-	<string name="dashboard_add_graph_name_error">Add card name</string>
+    <!--Dashboard-->
+    <string name="dashboard_fab_add_graph">Add graph</string>
+    <string name="dashboard_fab_add_week_bar_graph">Add week bar graph</string>
+    <string name="dashboard_fab_add_module">Add module value</string>
+    <string name="dashboard_add_actual_value_label">Select module</string>
+    <string name="dashboard_add_graph_name_hint">Card name</string>
+    <string name="dashboard_add_graph_left_axis_label">Select left axis module</string>
+    <string name="dashboard_add_graph_right_axis_label">Select right axis module</string>
+    <string name="dashboard_add_graph_graph_range_label">Select graph range</string>
+    <string name="dashboard_add_graph_week_module_label">Select graph module</string>
+    <string name="dashboard_add_graph_week_data_type_label">Select graph data type</string>
+    <plurals name="dashboard_delete_snackbar">
+        <item quantity="one">Card was deleted</item>
+        <item quantity="other">Cards have been deleted</item>
+    </plurals>
+    <string name="dashboard_undo">Undo</string>
+    <string name="dashboard_add_graph_name_error">Add card name</string>
 
 	<!--Days shortcuts-->
 	<string name="monday">Mo</string>
