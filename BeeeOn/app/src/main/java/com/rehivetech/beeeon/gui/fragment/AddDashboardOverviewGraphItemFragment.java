@@ -20,10 +20,6 @@ import com.rehivetech.beeeon.household.device.ModuleLog;
  */
 public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemFragment {
 
-	private CardView mMinimum;
-	private CardView mAverage;
-	private CardView mMaximum;
-
 	public static AddDashboardOverviewGraphItemFragment newInstance(String gateId) {
 
 		Bundle args = new Bundle();
