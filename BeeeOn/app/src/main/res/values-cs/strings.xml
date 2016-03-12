@@ -458,6 +458,7 @@
 
 
 	<!--Dashboard-->
+    <string name="dashboard_add_select_card">Vyberte typ karty</string>
 	<string name="dashboard_fab_add_graph">Přidat čárový graf</string>
 	<string name="dashboard_fab_add_week_bar_graph">Přidat týdenní sloupcový graf</string>
 	<string name="dashboard_fab_add_module">Přidat hodnotu modulu</string>
