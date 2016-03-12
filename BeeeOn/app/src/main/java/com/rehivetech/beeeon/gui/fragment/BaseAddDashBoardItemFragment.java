@@ -22,6 +22,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.ChartHelper;
+import com.rehivetech.beeeon.util.UnavailableModules;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
@@ -80,6 +81,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 	protected void fillAdapter(boolean withEnumTypes) {
 		Controller controller = Controller.getInstance(mActivity);
+		boolean withoutUnavailable = UnavailableModules.fromSettings(controller.getUserSettings());
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
 		List<Object> items = new ArrayList<>();
@@ -91,7 +93,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 			if (groups.size() > 1) {
 
 				for (String group : groups) {
-					List<Module> modules = device.getModulesByGroupName(mActivity, group);
+					List<Module> modules = device.getModulesByGroupName(mActivity, group, withoutUnavailable);
 					List<Object> subList = new ArrayList<>();
 
 					for (Module module : modules) {
@@ -110,7 +112,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 					}
 				}
 			} else {
-				List<Module> modules = device.getVisibleModules();
+				List<Module> modules = device.getVisibleModules(withoutUnavailable);
 
 				for (Module module : modules) {
 

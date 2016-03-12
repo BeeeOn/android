@@ -420,8 +420,8 @@ public final class Device implements IIdentifier {
 	 * @param groupName group name
 	 * @return list of modules
 	 */
-	public List<Module> getModulesByGroupName(Context context, String groupName) {
-		List<Module> modules = getVisibleModules();
+	public List<Module> getModulesByGroupName(Context context, String groupName, boolean withoutHiddenModules) {
+		List<Module> modules = getVisibleModules(withoutHiddenModules);
 		Iterator<Module> iterator = modules.iterator();
 		while (iterator.hasNext()) {
 			Module module = iterator.next();
