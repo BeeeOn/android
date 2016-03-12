@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 
 		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_add_dashboard_item_cards_recyclerview);
 		recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
+		recyclerView.setHasFixedSize(true);
 		AddDashboardCardAdapter adapter = new AddDashboardCardAdapter(this);
 		recyclerView.setAdapter(adapter);
 		fillAdapter(adapter);
@@ -66,11 +68,11 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		List<AddDashboardCardAdapter.CardItem> items = new ArrayList<>();
 
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_ACTUAL_VALUE,
-				0, R.string.dashboard_fab_add_module));
+				R.drawable.dashboard_act_value_preview, R.string.dashboard_fab_add_module));
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_LINE_GRAPH,
-				0, R.string.dashboard_fab_add_graph));
+				R.drawable.dashboard_line_graph_preview, R.string.dashboard_fab_add_graph));
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH,
-				0, R.string.dashboard_fab_add_week_bar_graph));
+				R.drawable.dashboard_week_bar_graph_preview, R.string.dashboard_fab_add_week_bar_graph));
 
 		addDashboardCardAdapter.setItems(items);
 	}
