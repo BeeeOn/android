@@ -91,8 +91,8 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 			if (groups.size() > 1) {
 
 				for (String group : groups) {
-					items.add(new DashboardModuleSelectAdapter.HeaderItem(group, DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_GROUP));
 					List<Module> modules = device.getModulesByGroupName(mActivity, group);
+					List<Object> subList = new ArrayList<>();
 
 					for (Module module : modules) {
 
@@ -101,7 +101,12 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 						}
 
 						String moduleAbsoluteId = Utils.getAbsoluteModuleId(device.getId(), module.getId());
-						items.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
+						subList.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
+					}
+
+					if (subList.size() > 0) {
+						items.add(new DashboardModuleSelectAdapter.HeaderItem(group, DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_GROUP));
+						items.addAll(subList);
 					}
 				}
 			} else {
