@@ -461,6 +461,7 @@
 	<string name="dashboard_fab_add_graph">Pridať čiarový graf</string>
 	<string name="dashboard_fab_add_week_bar_graph">Pridať týždňový stĺpcový graf</string>
 	<string name="dashboard_fab_add_module">Pridať hodnotu modulu</string>
+    <string name="dashboard_add_actual_value_label">Vyberte modul</string>
 	<string name="dashboard_add_graph_name_hint">Názov karty</string>
 	<string name="dashboard_add_graph_left_axis_label">Vyberte modul pre ľavú osu</string>
 	<string name="dashboard_add_graph_right_axis_label">Vyberte modul pre pravú osu</string>
