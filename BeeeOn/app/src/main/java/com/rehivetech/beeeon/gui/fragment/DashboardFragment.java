@@ -79,28 +79,10 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_GRAPH_ITEM);
+				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId);
 				startActivityForResult(intent, 0);
 			}
 		});
-//
-//		FloatingActionButton fabAddModule = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_module_item);
-//		fabAddModule.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_MODULE_ITEM);
-//				startActivityForResult(intent, 0);
-//			}
-//		});
-//
-//		FloatingActionButton fabWeekGraph = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_week_bar_graph);
-//		fabWeekGraph.setOnClickListener(new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM);
-//				startActivityForResult(intent, 0);
-//			}
-//		});
 		return mRootLayout;
 	}
 

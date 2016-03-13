@@ -16,16 +16,10 @@ import com.rehivetech.beeeon.gui.fragment.BaseApplicationFragment;
 public class AddDashboardItemActivity extends BaseApplicationActivity {
 
 	public static final String ARG_GATE_ID = "gate_id";
-	public static final String ARG_ITEM_TYPE = "item_type";
-	public static final int KEY_VALUE_TYPE_GRAPH_ITEM = 0;
-	public static final int KEY_VALUE_TYPE_MODULE_ITEM = 1;
-	public static final int KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM = 2;
 
-
-	public static Intent getADdDashBoardActivityIntent(Context context, String gateId, int itemType) {
+	public static Intent getADdDashBoardActivityIntent(Context context, String gateId) {
 		Intent intent = new Intent(context, AddDashboardItemActivity.class);
 		intent.putExtra(ARG_GATE_ID, gateId);
-		intent.putExtra(ARG_ITEM_TYPE, itemType);
 
 		return intent;
 	}
@@ -43,30 +37,14 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 			actionBar.setDisplayHomeAsUpEnabled(true);
 		}
 
-
 		Bundle args = getIntent().getExtras();
 
-		BaseApplicationFragment fragment = null;
+		BaseApplicationFragment fragment;
 
 		String gateId = args.getString(ARG_GATE_ID);
-		int itemType = args.getInt(ARG_ITEM_TYPE);
 
 		if (savedInstanceState == null) {
-
-//			switch (itemType) {
-//				case KEY_VALUE_TYPE_GRAPH_ITEM:
-//					fragment = AddDashboardGraphItemFragment.newInstance(gateId);
-//					break;
-//				case KEY_VALUE_TYPE_MODULE_ITEM:
-//					fragment = AddDashboardActualValueFragment.newInstance(gateId);
-//					break;
-//				case KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM:
-//					fragment = AddDashboardOverviewGraphItemFragment.newInstance(gateId);
-//					break;
-//			}
-
 			fragment = AddDashboardItemFragment.newInstance(gateId);
-
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_add_dashboard_container, fragment).commit();
 		}
 	}
