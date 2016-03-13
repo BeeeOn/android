@@ -30,7 +30,7 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 		setContentView(R.layout.activity_add_dashboard_item);
 
 
-		setupToolbar(R.string.app_name);
+		setupToolbar(R.string.dashboard_add_new_card);
 
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {

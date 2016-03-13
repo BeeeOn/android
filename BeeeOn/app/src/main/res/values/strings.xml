@@ -459,6 +459,7 @@
 	<string name="data_type_max">Maximum</string>
 
     <!--Dashboard-->
+    <string name="dashboard_add_new_card">Add new dashboard card</string>
     <string name="dashboard_add_select_card">Select a card type</string>
     <string name="dashboard_fab_add_graph">Add graph</string>
     <string name="dashboard_fab_add_week_bar_graph">Add week bar graph</string>
