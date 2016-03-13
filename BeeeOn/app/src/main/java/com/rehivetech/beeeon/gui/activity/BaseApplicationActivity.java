@@ -216,12 +216,12 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	/**
 	 * Helper for initializing toolbar and actionbar
-	 *
-	 * @param titleResId
+	 * @param titleResId string resource of title
+	 * @param backButton if set to true adds "<-" arrow to title
 	 * @return toolbar or null, if no R.id.beeeon_toolbar was found in layout
 	 */
 	@Nullable
-	public Toolbar setupToolbar(@StringRes int titleResId) {
+	public Toolbar setupToolbar(@StringRes int titleResId, boolean backButton) {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			setSupportActionBar(toolbar);
@@ -231,11 +231,22 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			}
 		}
 		mActionBar = getSupportActionBar();
-		if (mActionBar != null && titleResId > 0) {
-			mActionBar.setTitle(titleResId);
+		if (mActionBar != null) {
+			if (titleResId > 0) {
+				mActionBar.setTitle(titleResId);
+			}
+
+			if (backButton) {
+				mActionBar.setHomeButtonEnabled(true);
+				mActionBar.setDisplayHomeAsUpEnabled(true);
+			}
 		}
 
 		return toolbar;
+	}
+
+	public Toolbar setupToolbar(@StringRes int titleResId) {
+		return setupToolbar(titleResId, false);
 	}
 
 	/**
@@ -287,6 +298,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	/**
 	 * Set's status bar color programmatically
+	 *
 	 * @param statusBarColor
 	 */
 	public void setStatusBarColor(@ColorInt int statusBarColor) {

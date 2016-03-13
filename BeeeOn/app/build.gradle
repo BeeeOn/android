@@ -93,4 +93,5 @@ dependencies {
 	compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.0.0@aar'
 	compile 'com.github.clans:fab:1.6.2'
 	compile 'com.google.code.gson:gson:2.6.1'
+	compile 'me.dm7.barcodescanner:zxing:1.8.4'
 }

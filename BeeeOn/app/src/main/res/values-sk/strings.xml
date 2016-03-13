@@ -6,7 +6,9 @@
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Zrušiť</string>
 
+    <!-- Permission -->
     <string name="permission_accounts_warning">Ak sa chcete prihlásiť, musíte povoliť oprávnenie prístupu k účtom</string>
+    <string name="permission_camera_warning">Ak chcete použiť fotoaparát, musíte povoliť oprávnenie</string>
 
     <!-- Titles in manifest-->
     <string name="manifest_action_notification">Notifikácie</string>
@@ -173,6 +175,7 @@
     <string name="gate_add_btn_qr">Skenovať QR kód</string>
     <string name="gate_add_btn_qr_loading">Načítanie…</string>
     <string name="gate_add_dialog_title_enter_text">Zadajte kód brány</string>
+    <string name="gate_add_scan_qr_title">Naskenujte QR kód od brány</string>
     <string name="gate_add_last_fragment_text">Naskenujte QR kód od brány alebo napíšte kód</string>
     <string name="gate_add_last_fragment_title">Zadajte kód brány</string>
     <string name="gate_add_manual_edit">Zadať ručne</string>
