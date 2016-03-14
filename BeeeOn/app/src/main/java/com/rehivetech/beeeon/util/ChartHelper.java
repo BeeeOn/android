@@ -486,6 +486,46 @@ final public class ChartHelper {
 		return -1;
 	}
 
+	public static List<String> getWeekDays(Context context) {
+		List<String> days = new ArrayList<>();
+		DateTime dateTime = new DateTime();
+		int dayOfWeek = dateTime.getDayOfWeek();
+
+		for (int i = dayOfWeek + 1; i < 8; i++) {
+			days.add(context.getString(getDayString(i)));
+		}
+
+		if (days.size() != 7) {
+			for (int i = 1; i < dayOfWeek + 1; i++) {
+				days.add(context.getString(getDayString(i)));
+			}
+		}
+
+		return days;
+	}
+
+	@StringRes
+	private static int getDayString(int day) {
+		switch (day) {
+			case 1:
+				return R.string.monday;
+			case 2:
+				return R.string.tuesday;
+			case 3:
+				return R.string.wednesday;
+			case 4:
+				return R.string.thursday;
+			case 5:
+				return R.string.friday;
+			case 6:
+				return R.string.saturday;
+			case 7:
+				return R.string.sunday;
+		}
+
+		return -1;
+	}
+
 	/**
 	 * Custom fill formatter which allow fill chart from bottom
 	 */

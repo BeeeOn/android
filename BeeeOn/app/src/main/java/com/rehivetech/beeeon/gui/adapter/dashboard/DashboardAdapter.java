@@ -44,7 +44,6 @@ import com.rehivetech.beeeon.util.Utils;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -434,13 +433,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 						mChart.setData(barData);
 
-						List<String> xValuesCustom = new ArrayList<>(Arrays.asList(mActivity.getString(R.string.monday),
-								mActivity.getString(R.string.tuesday),
-								mActivity.getString(R.string.wednesday),
-								mActivity.getString(R.string.thursday),
-								mActivity.getString(R.string.friday),
-								mActivity.getString(R.string.saturday),
-								mActivity.getString(R.string.sunday)));
+						List<String> xValuesCustom = ChartHelper.getWeekDays(mContext);
 
 						mChart.getXAxis().setValues(xValuesCustom);
 						mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
