@@ -81,7 +81,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		Fragment fragment = null;
 		switch (type) {
 			case AddDashboardCardAdapter.CardItem.CARD_ACTUAL_VALUE:
-				fragment = AddDashboardActualValueFragment.newInstance(mGateId);
+				fragment = AddDashboardActualValueFragment.newInstance(mGateId, null);
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_LINE_GRAPH:
 				fragment = AddDashboardGraphItemFragment.newInstance(mGateId, null);
