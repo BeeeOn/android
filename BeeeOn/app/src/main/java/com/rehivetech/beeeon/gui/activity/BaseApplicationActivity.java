@@ -9,6 +9,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.view.ActionMode;
@@ -317,5 +318,17 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	public void onSupportActionModeFinished(ActionMode mode) {
 		super.onSupportActionModeFinished(mode);
 		setStatusBarColor(ContextCompat.getColor(this, R.color.beeeon_primary_dark));
+	}
+
+	/**
+	 * Replace fragment in activity and add current to backStack
+	 * @param currentFragmentTag
+	 * @param fragment
+	 */
+	public void replaceFragment(String currentFragmentTag, Fragment fragment) {
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.addToBackStack(currentFragmentTag);
+		transaction.replace(R.id.activity_add_dashboard_container, fragment);
+		transaction.commit();
 	}
 }

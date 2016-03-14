@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,10 +95,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 
 				if (mLeftAxisModule == null && moduleItem != null) {
 					AddDashboardGraphItemFragment fragment = AddDashboardGraphItemFragment.newInstance(mGateId, moduleItem);
-					FragmentTransaction transaction = mActivity.getSupportFragmentManager().beginTransaction();
-					transaction.addToBackStack(getTag());
-					transaction.replace(R.id.activity_add_dashboard_container, fragment);
-					transaction.commit();
+					mActivity.replaceFragment(getTag(), fragment);
 
 				} else {
 					Controller controller = Controller.getInstance(mActivity);

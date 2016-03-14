@@ -3,9 +3,7 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -95,10 +93,6 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 				break;
 		}
 
-		FragmentTransaction fragmentTransaction = mActivity.getSupportFragmentManager().beginTransaction();
-
-		fragmentTransaction.addToBackStack(getTag());
-		fragmentTransaction.replace(R.id.activity_add_dashboard_container, fragment);
-		fragmentTransaction.commit();
+		mActivity.replaceFragment(getTag(), fragment);
 	}
 }
