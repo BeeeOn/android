@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/space_big"
+	>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/dashboard_add_graph_name_hint"
+		android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+	<android.support.design.widget.TextInputLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		>
+
+		<EditText
+			android:id="@+id/fragment_add_dashboard_item_name_edit"
+			android:layout_width="match_parent"
+			android:inputType="text"
+			android:layout_height="wrap_content"/>
+
+	</android.support.design.widget.TextInputLayout>
+
+	<TextView
+		android:id="@+id/fragment_add_dashboard_item_graph_range_label"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/space_big"
+		android:layout_marginBottom="@dimen/space_normal"
+		android:text="@string/dashboard_add_graph_graph_range_label"
+		android:textAppearance="@style/TextAppearance.AppCompat.Title"
+		/>
+
+	<com.rehivetech.beeeon.gui.view.Slider
+		android:id="@+id/fragment_add_dashboard_item_graph_range"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		/>
+
+</LinearLayout>

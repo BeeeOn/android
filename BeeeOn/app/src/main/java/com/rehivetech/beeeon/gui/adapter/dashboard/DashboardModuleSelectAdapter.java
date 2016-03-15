@@ -219,6 +219,14 @@ public class DashboardModuleSelectAdapter extends RecyclerViewSelectableAdapter 
 				return new ModuleItem[size];
 			}
 		};
+
+		public static ModuleItem getEmpty() {
+			return new ModuleItem("", "");
+		}
+
+		public boolean isEmpty() {
+			return mGateId.isEmpty() || mAbsoluteId.isEmpty();
+		}
 	}
 
 	public static class HeaderItem {
