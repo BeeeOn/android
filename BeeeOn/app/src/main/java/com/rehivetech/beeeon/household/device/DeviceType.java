@@ -419,13 +419,94 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "1", 0x08, null, null, null, false, null, null)
 			);
 		}
+	},
+	TYPE_12("12", "HomeMatic wireless switch with power meter HM-ES-PMSw1-PI", R.string.devices__dev_hm_switch, R.string.devices__manufacturer_eq3) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__hm_switch, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hm_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__hm_switch_state_on)
+					), null),
+					new Module(device, "1", 0x0E, null, null, R.string.devices__type_voltage, false, null, null),
+					new Module(device, "2", 0x0F, null, null, R.string.devices__type_current, false, null, null),
+					new Module(device, "3", 0x10, null, null, R.string.devices__type_frequency, false, null, null),
+					new Module(device, "4", 0x11, null, null, R.string.devices__type_power, false, null, null),
+					new Module(device, "5", 0x12, null, null, R.string.devices__type_powermeter, false, null, null),
+					new Module(device, "6", 0x09, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_13("13", "HomeMatic wireless magnetic door contact HM-SEC-SC-2", R.string.devices__dev_hm_magnetic_door_contact, R.string.devices__manufacturer_eq3) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__hm_magnetic_door_contact, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hm_magnetic_door_contact_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__hm_magnetic_door_contact_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__hm_magnetic_door_contact_state_closed)
+					), null),
+					new Module(device, "1", 0x09, null, null, null, false, null, null),
+					new Module(device, "2", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_14("14", "HomeMatic wireless radiator thermostat HM-CC-RT-DN", R.string.devices__dev_hm_radiator_thermostat, R.string.devices__manufacturer_eq3) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x02, null, null, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(5.0, 30.0, 1.0), null),
+					new Module(device, "1", 0x02, null, null, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
+					new Module(device, "2", 0x13, null, null, R.string.devices__hm_valve_position, false, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
+					new Module(device, "3", 0x09, null, null, null, false, null, null),
+					new Module(device, "4", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_15("15", "Wireless radiator thermostat eQ-3 MAX!", R.string.devices__dev_max_radiator_thermostat, R.string.devices__manufacturer_eq3) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x02, null, null, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(5.0, 30.0, 1.0), null),
+					new Module(device, "1", 0x02, null, null, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
+					new Module(device, "2", 0x13, null, null, R.string.devices__max_valve_position, false, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
+					new Module(device, "3", 0x09, null, null, null, false, null, null),
+					new Module(device, "4", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_16("16", "Z-Wave Philio wireless 3in1 sensor PST02-C", R.string.devices__dev_zw_pst02c, R.string.devices__manufacturer_philio) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__hm_magnetic_door_contact, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hm_magnetic_door_contact_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__hm_magnetic_door_contact_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__hm_magnetic_door_contact_state_closed)
+					), null),
+					new Module(device, "1", 0x02, null, null, R.string.devices__type_temperature, false, null, null),
+					new Module(device, "2", 0x05, null, null, R.string.devices__type_light, false, null, null),
+					new Module(device, "3", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_17("17", "Z-Wave Popp Wireless switch", R.string.devices__dev_popp_switch, R.string.devices__manufacturer_popp) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__fs20_switch, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__fs20_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__fs20_switch_state_on)
+					), null)
+			);
+		}
 	};
 
 	/** Version from specification of this devices list */
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1455060264358l;
+	public static final long DEVICES_DATE = 1458250488039l;
 
 	/** END OF GENERATED CONTENT **/
 
