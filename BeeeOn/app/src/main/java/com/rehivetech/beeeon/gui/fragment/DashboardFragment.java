@@ -30,7 +30,7 @@ import java.util.TreeMap;
 /**
  * Created by martin on 15.11.15.
  */
-public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener {
+public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener, DashboardAdapter.ActionModeCallback {
 
 	private static final String TAG = DashboardFragment.class.getSimpleName();
 
@@ -72,7 +72,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
 		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 
-		mAdapter = new DashboardAdapter(mActivity, this);
+		mAdapter = new DashboardAdapter(mActivity, this, this);
 		recyclerView.setAdapter(mAdapter);
 
 		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_fab);
@@ -146,8 +146,16 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		if (mActionMode == null) {
 			mActionMode = mActivity.startSupportActionMode(new ActionModeDashboard());
 		}
+		mAdapter.clearSelection();
 		mAdapter.toggleSelection(position);
 		return true;
+	}
+
+	@Override
+	public void finishActionMode() {
+		if (mActionMode != null) {
+			mActionMode.finish();
+		}
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {

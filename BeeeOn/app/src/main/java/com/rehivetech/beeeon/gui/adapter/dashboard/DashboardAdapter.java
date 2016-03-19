@@ -63,12 +63,14 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	private BaseApplicationActivity mActivity;
 	private IItemClickListener mItemClickListener;
+	private ActionModeCallback mActionModeCallback;
 	private List<BaseItem> mItems = new ArrayList<>();
 
-	public DashboardAdapter(BaseApplicationActivity activity, IItemClickListener itemClickListener) {
+	public DashboardAdapter(BaseApplicationActivity activity, IItemClickListener itemClickListener, ActionModeCallback actionModeCallback) {
 		super(activity);
 		mActivity = activity;
 		mItemClickListener = itemClickListener;
+		mActionModeCallback = actionModeCallback;
 
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 		mTimeHelper = Utils.getTimeHelper(prefs);
@@ -191,6 +193,16 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 
 		}
+
+		protected void handleSelection() {
+			if (getSelectedItemCount() > 0) {
+				toggleSelection(getAdapterPosition());
+
+				if (getSelectedItemCount() == 0) {
+					mActionModeCallback.finishActionMode();
+				}
+			}
+		}
 	}
 
 	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
@@ -306,7 +318,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-
+			handleSelection();
 		}
 
 		@Override
@@ -361,7 +373,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-
+			handleSelection();
 		}
 
 		@Override
@@ -460,7 +472,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-
+			handleSelection();
 		}
 
 		@Override
@@ -471,5 +483,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 			return false;
 		}
+	}
+
+	public interface ActionModeCallback {
+		void finishActionMode();
 	}
 }
