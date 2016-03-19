@@ -14,7 +14,6 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.UnavailableModules;
 import com.rehivetech.beeeon.util.Utils;
@@ -119,18 +118,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		mAdapter.setItems(items);
 	}
 
-	protected ModuleLog.DataType getDataTypeBySelectedItem() {
 
-		if (mMinimum.isSelected()) {
-			return ModuleLog.DataType.MINIMUM;
-
-		} else if (mAverage.isSelected()) {
-			return ModuleLog.DataType.AVERAGE;
-
-		} else {
-			return ModuleLog.DataType.MAXIMUM;
-		}
-	}
 
 	@Override
 	public void onItemClick(String absoluteModuleId) {
