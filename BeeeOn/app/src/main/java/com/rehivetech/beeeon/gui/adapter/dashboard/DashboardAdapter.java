@@ -337,8 +337,12 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		public void bind(Controller controller, ActualValueItem item, int position) {
 			Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleId());
-			SharedPreferences prefs = controller.getUserSettings();
-			UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity); // TODO call Utils.getUnitsHelper()
+
+			UnitsHelper unitsHelper = Utils.getUnitsHelper(mActivity);
+
+			if (unitsHelper == null) {
+				return;
+			}
 
 			mLabel.setText(item.getName());
 			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
