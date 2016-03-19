@@ -224,6 +224,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 
 			mChart.clear();
+			mLeftAxisUnit.setVisibility(View.INVISIBLE);
+			mRightAxisUnit.setVisibility(View.INVISIBLE);
 			prepareChart(item);
 			mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 			fillChart(controller, item, gate);
