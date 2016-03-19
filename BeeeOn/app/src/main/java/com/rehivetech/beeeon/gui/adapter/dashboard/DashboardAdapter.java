@@ -241,6 +241,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			if (item.getAbsoluteModuleIds().size() > 1) {
 				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
+				mChart.getAxisRight().setEnabled(true);
 			} else {
 				mChart.getAxisRight().setEnabled(false);
 			}
