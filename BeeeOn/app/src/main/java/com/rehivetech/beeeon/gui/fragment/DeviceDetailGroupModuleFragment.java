@@ -132,12 +132,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	@Override
 	public void onItemClick(String moduleId) {
 		Log.d(TAG, "onItemClick:" + moduleId);
-		Bundle args = new Bundle();
-		args.putString(ModuleGraphActivity.EXTRA_GATE_ID, mGateId);
-		args.putString(ModuleGraphActivity.EXTRA_DEVICE_ID, mDeviceId);
-		args.putString(ModuleGraphActivity.EXTRA_MODULE_ID, moduleId);
-		Intent intent = new Intent(mActivity, ModuleGraphActivity.class);
-		intent.putExtras(args);
+		Intent intent = ModuleGraphActivity.getActivityIntent(mActivity, mGateId, mDeviceId, moduleId);
 		startActivity(intent);
 	}
 

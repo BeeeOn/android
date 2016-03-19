@@ -5,7 +5,8 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -48,9 +49,9 @@ import java.util.Map;
 public class ModuleGraphActivity extends BaseApplicationActivity {
 	private final static String TAG = ModuleGraphActivity.class.getSimpleName();
 
-	public static final String EXTRA_GATE_ID = "gate_id";
-	public static final String EXTRA_DEVICE_ID = "device_id";
-	public static final String EXTRA_MODULE_ID = "module_id";
+	private static final String EXTRA_GATE_ID = "gate_id";
+	private static final String EXTRA_DEVICE_ID = "device_id";
+	private static final String EXTRA_MODULE_ID = "module_id";
 
 	private static final String OUT_STATE_CHECK_BOX_MIN = "check_box_min";
 	private static final String OUT_STATE_CHECK_BOX_MAX = "check_box_max";
@@ -82,6 +83,15 @@ public class ModuleGraphActivity extends BaseApplicationActivity {
 	private Button mShowLegendButton;
 
 	private String mModuleUnit;
+
+	public static Intent getActivityIntent(Context context, String gateId, String deviceId, String moduleId) {
+		Intent intent = new Intent(context, ModuleGraphActivity.class);
+		intent.putExtra(EXTRA_GATE_ID, gateId);
+		intent.putExtra(EXTRA_DEVICE_ID, deviceId);
+		intent.putExtra(EXTRA_MODULE_ID, moduleId);
+
+		return intent;
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

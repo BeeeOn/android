@@ -55,9 +55,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
-	private static final int VIEW_TYPE_GRAPH = 0;
-	private static final int VIEW_TYPE_ACT_VALUE = 1;
-	private static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
+	public static final int VIEW_TYPE_GRAPH = 0;
+	public static final int VIEW_TYPE_ACT_VALUE = 1;
+	public static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
 
 	private final TimeHelper mTimeHelper;
 	private final UnitsHelper mUnitsHelper;
@@ -201,13 +201,16 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		}
 
-		protected void handleSelection() {
+		protected boolean handleSelection() {
 			if (getSelectedItemCount() > 0) {
 				toggleSelection(getAdapterPosition());
 
 				if (getSelectedItemCount() == 0) {
 					mActionModeCallback.finishActionMode();
 				}
+				return true;
+			} else {
+				return false;
 			}
 		}
 	}
@@ -380,7 +383,10 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-			handleSelection();
+
+			if (!handleSelection()) {
+				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_ACT_VALUE);
+			}
 		}
 
 		@Override
