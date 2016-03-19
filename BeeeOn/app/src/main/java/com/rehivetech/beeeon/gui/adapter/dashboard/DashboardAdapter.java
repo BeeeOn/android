@@ -44,6 +44,7 @@ import com.rehivetech.beeeon.util.Utils;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -169,6 +170,12 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		return mItems.get(position);
 	}
 
+
+	public void moveItem(int fromPosition, int toPosition) {
+		Collections.swap(mItems, fromPosition, toPosition);
+		swapSelectedPosition(fromPosition, toPosition);
+		notifyItemMoved(fromPosition, toPosition);
+	}
 
 	public void deleteItem(BaseItem item) {
 		int position = mItems.indexOf(item);

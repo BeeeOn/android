@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +44,9 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private ActionMode mActionMode;
 	private CoordinatorLayout mRootLayout;
 
+	private ItemTouchHelper mItemTouchHelper;
+	private boolean mItemMoved = false;
+
 	public static DashboardFragment newInstance(String gateId) {
 
 		Bundle args = new Bundle();
@@ -74,6 +78,37 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 
 		mAdapter = new DashboardAdapter(mActivity, this, this);
 		recyclerView.setAdapter(mAdapter);
+
+		mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+				ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
+
+			@Override
+			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+				mAdapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+				mItemMoved = true;
+				return true;
+			}
+
+			@Override
+			public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+			}
+
+			@Override
+			public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+				super.onSelectedChanged(viewHolder, actionState);
+
+				if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+
+					if (mActionMode != null && mItemMoved) {
+						mItemMoved = false;
+						mAdapter.clearSelection();
+						mActionMode.finish();
+					}
+				}
+			}
+		});
+
+		mItemTouchHelper.attachToRecyclerView(recyclerView);
 
 		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_fab);
 		fab.setOnClickListener(new View.OnClickListener() {
