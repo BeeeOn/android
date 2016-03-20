@@ -11,4 +11,4 @@ NAME=$(emulator -list-avds | tail -1)
 echo "Chosen last : ${NAME}"
 
 echo "Starting the emulator"
-emulator -avd ${NAME} -no-skin -no-audio -no-window
+emulator -avd ${NAME} -no-skin -no-audio -no-window &
