@@ -164,6 +164,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	public void setItems(List<BaseItem> items) {
 		mItems = items;
+		notifyDataSetChanged();
 	}
 
 	public BaseItem getItem(int position) {
