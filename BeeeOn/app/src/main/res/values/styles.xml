@@ -215,8 +215,6 @@
 
     <style name="GraphSettingStyle" parent="">
         <item name="android:layout_width">match_parent</item>
-        <item name="contentPaddingLeft">-8dp</item>
-        <item name="contentPaddingRight">-8dp</item>
-        <item name="contentPaddingBottom">-10dp</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 </resources>

@@ -33,8 +33,10 @@ import com.rehivetech.beeeon.network.demo.DemoNetwork;
 import com.rehivetech.beeeon.network.server.Network;
 import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.persistence.DashBoardPersistence;
+import com.rehivetech.beeeon.persistence.GraphSettingsPersistence;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.CacheHoldTime;
+import com.rehivetech.beeeon.util.ChartHelper;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.lang.reflect.Constructor;
@@ -597,6 +599,31 @@ public final class Controller {
 			}
 		}
  		saveDashboardItems(gateId, items);
+	}
+
+	/**
+	 * Create helper instance of graph settings
+	 * @param gateId id of actual gate
+	 * @param absoluteModuleId absolute module id
+	 * @param graphRange data range of graph
+	 * @return graphSettings instance
+	 */
+	public GraphSettingsPersistence getGraphSettingsPersistence(String gateId, String absoluteModuleId, @ChartHelper.DataRange int graphRange) {
+		String key = getGraphSettingsKey(gateId, absoluteModuleId, graphRange);
+		SharedPreferences preferences = mPersistence.getSettings(key);
+
+		return new GraphSettingsPersistence(preferences);
+	}
+
+	/**
+	 * Create graphSettings key
+	 * @param gateId id of actual gate
+	 * @param absoluteModuleId absolute module id
+	 * @param graphRange data range of graph
+	 * @return key string
+	 */
+	private String getGraphSettingsKey(String gateId, String absoluteModuleId, int graphRange) {
+		return String.format("%s-%s-%d", gateId, absoluteModuleId, graphRange);
 	}
 
 	/**

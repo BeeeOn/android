@@ -128,7 +128,6 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 
 			List<String> values = getGraphRangeStrings();
 			slider.setValues(values);
-			slider.setMaxValue(values.size() - 1);
 
 			Controller controller = Controller.getInstance(mActivity);
 			Module leftModule = controller.getDevicesModel().getModule(mGateId, mLeftAxisModule.getAbsoluteId());

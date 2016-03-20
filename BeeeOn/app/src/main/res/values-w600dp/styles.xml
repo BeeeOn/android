@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<style name="GraphSettingStyle" parent="">
+		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_width">450dp</item>
 	</style>
 </resources>

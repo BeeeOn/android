@@ -73,6 +73,12 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 		mSeekbar.setMax(values.size() - 1);
 		mValues = values;
 		mValue.setText(mValues.get(mSeekbar.getProgress()));
+
+		ProgressDrawable progressDrawable = new ProgressDrawable(mSeekbar.getThumbOffset(), ContextCompat.getColor(mContext, R.color.beeeon_accent), values.size());
+		mSeekbar.setProgressDrawable(progressDrawable);
+		if (mProgressChangeLister != null) {
+			mProgressChangeLister.onProgressChanged(mValue.getText().toString());
+		}
 	}
 
 	@Override
@@ -80,7 +86,7 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 		if (mValues != null) {
 			mValue.setText(mValues.get(progress));
 			if (mProgressChangeLister != null) {
-				mProgressChangeLister.onProgressChanged(progress);
+				mProgressChangeLister.onProgressChanged(mValue.getText().toString());
 			}
 		}
 	}
@@ -99,18 +105,16 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 		return mSeekbar.getProgress();
 	}
 
+	public String getProgressString() {
+		return mValue.getText().toString();
+	}
+
 	public void setProgress(int progress) {
 		mSeekbar.setProgress(progress);
 	}
 
 	public void setProgressChangeLister(OnProgressChangeLister progressChangeLister) {
 		mProgressChangeLister = progressChangeLister;
-	}
-
-	public void setMaxValue(int value) {
-		mSeekbar.setMax(value);
-		ProgressDrawable progressDrawable = new ProgressDrawable(mSeekbar.getThumbOffset(), ContextCompat.getColor(mContext, R.color.beeeon_accent), value + 1);
-		mSeekbar.setProgressDrawable(progressDrawable);
 	}
 
 	private class ProgressDrawable extends Drawable {
@@ -175,6 +179,6 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 	}
 
 	public interface OnProgressChangeLister {
-		void onProgressChanged(int progress);
+		void onProgressChanged(String progressString);
 	}
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<RelativeLayout
+		android:id="@+id/graph_settings_layout"
+		style="@style/GraphSettingStyle"
+		android:padding="@dimen/space_normal"
+		android:background="@color/white"
+		android:layout_gravity="center">
+
+		<TextView
+			android:id="@+id/graph_settings_label_title"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/module_graph_settings_title"
+			android:paddingBottom="8dp"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+			android:textColor="@color/beeeon_accent"
+			/>
+
+		<TextView
+			android:id="@+id/graph_settings_label_type_data"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			android:paddingBottom="@dimen/space_mini"
+			android:text="@string/graph_settings_type_of_data"
+			android:layout_below="@id/graph_settings_label_title"/>
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:id="@+id/graph_settings_checkbox_min"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/data_type_min"
+			android:layout_below="@id/graph_settings_label_type_data"/>
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:id="@+id/graph_settings_checkbox_avg"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/data_type_avg"
+			android:layout_below="@id/graph_settings_checkbox_min"/>
+
+		<android.support.v7.widget.AppCompatCheckBox
+			android:id="@+id/graph_settings_checkbox_max"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/data_type_max"
+			android:layout_below="@id/graph_settings_checkbox_avg"/>
+
+		<TextView
+			android:id="@+id/graph_settings_label_data_granularity"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			android:paddingTop="@dimen/space_mini"
+			android:paddingBottom="@dimen/space_mini"
+			android:layout_below="@id/graph_settings_checkbox_max"
+			android:text="@string/graph_settings_data_granularity"/>
+
+		<com.rehivetech.beeeon.gui.view.Slider
+			android:id="@+id/graph_settings_slider"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/space_mini"
+			android:layout_below="@id/graph_settings_label_data_granularity"/>
+
+		<android.support.v7.widget.AppCompatButton
+			android:id="@+id/graph_settings_button_done"
+			style="@style/Widget.AppCompat.Button.Borderless"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/button_done"
+			android:textColor="@color/beeeon_accent"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@id/graph_settings_slider"/>
+
+	</RelativeLayout>
+</merge>

@@ -2,6 +2,6 @@
 <resources>
 	<style name="GraphSettingStyle" parent="">
 		<item name="android:layout_width">450dp</item>
-		<item name="contentPaddingBottom">-10dp</item>
+		<item name="android:layout_height">wrap_content</item>
 	</style>
 </resources>
