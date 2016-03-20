@@ -6,7 +6,9 @@ import android.preference.ListPreference;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.NoiseUnit;
+import com.rehivetech.beeeon.household.device.units.PressureUnit;
 import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
+import com.rehivetech.beeeon.household.device.values.PressureValue;
 
 /**
  * Created by david on 14.9.15.
@@ -14,9 +16,11 @@ import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
 public class SettingsUnitFragment extends BaseSettingsFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 	private ListPreference mTemperaturePref;
 	private ListPreference mNoisePref;
+	private ListPreference mPressurePref;
 
 	private TemperatureUnit mTemperatureUnit;
 	private NoiseUnit mNoiseUnit;
+	private PressureUnit mPressureUnit;
 
 
 	protected void initSettings() {
@@ -28,10 +32,12 @@ public class SettingsUnitFragment extends BaseSettingsFragment implements Shared
 		mNoiseUnit = new NoiseUnit();
 		mNoisePref = (ListPreference) findPreference(mNoiseUnit.getPersistenceKey());
 
-
+		mPressureUnit = new PressureUnit();
+		mPressurePref = (ListPreference) findPreference(mPressureUnit.getPersistenceKey());
 		Context context = getActivity();
 		initListPrefFromItem(mTemperaturePref, mTemperatureUnit, context);
 		initListPrefFromItem(mNoisePref, mNoiseUnit, context);
+		initListPrefFromItem(mPressurePref, mPressureUnit,  context);
 	}
 
 	@Override
@@ -40,6 +46,8 @@ public class SettingsUnitFragment extends BaseSettingsFragment implements Shared
 			setSummary(mTemperaturePref, mTemperatureUnit);
 		} else if (key.equals(mNoiseUnit.getPersistenceKey())) {
 			setSummary(mNoisePref, mNoiseUnit);
+		} else if (key.equals(mPressureUnit.getPersistenceKey())) {
+			setSummary(mPressurePref, mPressureUnit);
 		}
 	}
 }
