@@ -25,6 +25,7 @@ import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.util.Utils;
@@ -175,6 +176,13 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 				OverviewGraphItem item = (OverviewGraphItem) mAdapter.getItem(position);
 				Intent intent = DashboardDetailActivity.getActivityIntent(mActivity, item);
 				mActivity.startActivity(intent);
+				break;
+			}
+			case DashboardAdapter.VIEW_TYPE_GRAPH: {
+				GraphItem item = (GraphItem) mAdapter.getItem(position);
+				Intent intent = DashboardDetailActivity.getActivityIntent(mActivity, item);
+				mActivity.startActivity(intent);
+				break;
 			}
 		}
 	}

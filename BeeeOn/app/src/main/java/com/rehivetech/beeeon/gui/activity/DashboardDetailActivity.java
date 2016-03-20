@@ -8,7 +8,9 @@ import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
+import com.rehivetech.beeeon.gui.fragment.DashboardGraphDetailFragment;
 import com.rehivetech.beeeon.gui.fragment.DashboardOverviewGraphDetailFragment;
 
 /**
@@ -41,6 +43,8 @@ public class DashboardDetailActivity extends BaseApplicationActivity {
 
 			if (item instanceof OverviewGraphItem) {
 				fragment = DashboardOverviewGraphDetailFragment.newInstance((OverviewGraphItem) item);
+			} else if (item instanceof GraphItem) {
+				fragment = DashboardGraphDetailFragment.newInstance((GraphItem) item);
 			}
 
 			getSupportFragmentManager().beginTransaction().replace(R.id.module_detail_container, fragment).commit();

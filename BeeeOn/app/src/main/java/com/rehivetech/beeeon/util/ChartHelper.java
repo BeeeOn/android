@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -11,9 +12,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.Chart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -305,6 +308,26 @@ final public class ChartHelper {
 		}
 	}
 
+	@SuppressLint("PrivateResource")
+	@SuppressWarnings("deprecation")
+	public static void prepareLegend(Context context, Legend legend) {
+		legend.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
+		legend.setForm(Legend.LegendForm.CIRCLE);
+		legend.setWordWrapEnabled(true);
+
+
+		TextView tempText = new TextView(context);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			tempText.setTextAppearance(R.style.TextAppearance_AppCompat_Body1);
+		} else {
+			tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Body1);
+		}
+
+		legend.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		legend.setFormSize(Utils.convertPixelsToDp(tempText.getTextSize()));
+		legend.setTypeface(tempText.getTypeface());
+		legend.setTextColor(tempText.getCurrentTextColor());
+	}
 
 	/**
 	 * Prepare ValueFormatter for bar and line chart

@@ -328,7 +328,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-			handleSelection();
+			if (!handleSelection() && mItemClickListener != null) {
+				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH);
+			}
 		}
 
 		@Override
