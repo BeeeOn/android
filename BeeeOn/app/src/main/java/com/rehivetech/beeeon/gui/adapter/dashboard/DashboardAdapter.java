@@ -384,7 +384,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		@Override
 		public void onClick(View v) {
 
-			if (!handleSelection()) {
+			if (!handleSelection() && mItemClickListener != null) {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_ACT_VALUE);
 			}
 		}
@@ -468,6 +468,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 						List<String> xValuesCustom = ChartHelper.getWeekDays(mContext);
 
 						mChart.getXAxis().setValues(xValuesCustom);
+						mChart.getXAxis().setLabelsToSkip(0);
 						mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
 						mGraphUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
 					}
@@ -485,7 +486,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-			handleSelection();
+			if (!handleSelection() && mItemClickListener != null) {
+				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW);
+			}
 		}
 
 		@Override

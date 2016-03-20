@@ -250,6 +250,14 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		return setupToolbar(titleResId, false);
 	}
 
+	public void setToolbarTitle(String title) {
+		ActionBar actionBar = getSupportActionBar();
+
+		if (actionBar != null) {
+			actionBar.setTitle(title);
+		}
+	}
+
 	/**
 	 * When set, refresh icon will be shown in Toolbar and when async task, icon will be hidden/visible
 	 * {@link #setBeeeOnProgressBarVisibility(boolean)} changes visibility of icon

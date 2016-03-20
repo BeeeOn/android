@@ -19,11 +19,13 @@ import android.view.ViewGroup;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
+import com.rehivetech.beeeon.gui.activity.DashboardDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -162,12 +164,18 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
 		switch (viewType) {
-			case DashboardAdapter.VIEW_TYPE_ACT_VALUE:
+			case DashboardAdapter.VIEW_TYPE_ACT_VALUE: {
 				ActualValueItem item = (ActualValueItem) mAdapter.getItem(position);
 				String[] ids = Utils.parseAbsoluteModuleId(item.getAbsoluteModuleId());
 				Intent intent = ModuleGraphActivity.getActivityIntent(mActivity, item.getGateId(), ids[0], ids[1]);
 				mActivity.startActivity(intent);
 				break;
+			}
+			case DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW: {
+				OverviewGraphItem item = (OverviewGraphItem) mAdapter.getItem(position);
+				Intent intent = DashboardDetailActivity.getActivityIntent(mActivity, item);
+				mActivity.startActivity(intent);
+			}
 		}
 	}
 
