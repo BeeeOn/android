@@ -76,7 +76,9 @@ public class Slider extends LinearLayout implements SeekBar.OnSeekBarChangeListe
 
 		ProgressDrawable progressDrawable = new ProgressDrawable(mSeekbar.getThumbOffset(), ContextCompat.getColor(mContext, R.color.beeeon_accent), values.size());
 		mSeekbar.setProgressDrawable(progressDrawable);
-		mProgressChangeLister.onProgressChanged(mValue.getText().toString());
+		if (mProgressChangeLister != null) {
+			mProgressChangeLister.onProgressChanged(mValue.getText().toString());
+		}
 	}
 
 	@Override
