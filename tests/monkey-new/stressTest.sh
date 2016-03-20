@@ -52,7 +52,8 @@ fi
 #checks if the device is set correctly
 if [ -z "$devices" ] ; then 
 	echo "No running devices found, starting a new emulator" >&2
-	start_emulator
+	./start_emulator.sh
+	sleep 60
 	devices=$(adb devices | grep "device$" |sed -e 's/\(.*\)\t.*/\1/g')
 
 elif (( $(grep -c . <<<"$devices") > 1 )) ; then
@@ -71,7 +72,7 @@ adb -s ${devices} install ${DIR}/${APK}
 #executes the tests
 for i in $(seq 1 ${ITER}) ; do
 	echo "									Iteration no ${i}"
-	./monkey1.sh ${devices} 2>>${ERR_FILE}
+	./monkey1.sh ${devices} 2>>${ERR_FILE} >> ${LOG_FILE}
 	
 done
 

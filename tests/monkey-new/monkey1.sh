@@ -24,7 +24,7 @@ sleep 3
 
 #put some random monkey "clicks"
 for i in $(seq 1 ${ITER}) ; do
-	adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT} >>${LOG_FILE} 2>>${ERR_FILE}
+	adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT}  2>>${ERR_FILE}
 	sleep 1
 done 
 
