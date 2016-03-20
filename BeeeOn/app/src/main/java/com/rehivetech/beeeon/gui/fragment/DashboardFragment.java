@@ -5,10 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,11 +19,20 @@ import android.view.ViewGroup;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
+import com.rehivetech.beeeon.gui.activity.DashboardDetailActivity;
+import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardAdapter;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
+import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.util.Utils;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,7 +40,7 @@ import java.util.TreeMap;
 /**
  * Created by martin on 15.11.15.
  */
-public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener {
+public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener, DashboardAdapter.ActionModeCallback {
 
 	private static final String TAG = DashboardFragment.class.getSimpleName();
 
@@ -43,6 +52,9 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
 	private CoordinatorLayout mRootLayout;
+
+	private ItemTouchHelper mItemTouchHelper;
+	private boolean mItemMoved = false;
 
 	public static DashboardFragment newInstance(String gateId) {
 
@@ -73,32 +85,45 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
 		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 
-		mAdapter = new DashboardAdapter(mActivity, this);
+		mAdapter = new DashboardAdapter(mActivity, this, this);
 		recyclerView.setAdapter(mAdapter);
 
-		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_graph);
+		mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+				ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
+
+			@Override
+			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+				mAdapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+				mItemMoved = true;
+				return true;
+			}
+
+			@Override
+			public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+			}
+
+			@Override
+			public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+				super.onSelectedChanged(viewHolder, actionState);
+
+				if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+
+					if (mActionMode != null && mItemMoved) {
+						mItemMoved = false;
+						mAdapter.clearSelection();
+						mActionMode.finish();
+					}
+				}
+			}
+		});
+
+		mItemTouchHelper.attachToRecyclerView(recyclerView);
+
+		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_fab);
 		fab.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_GRAPH_ITEM);
-				startActivityForResult(intent, 0);
-			}
-		});
-
-		FloatingActionButton fabAddModule = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_module_item);
-		fabAddModule.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_MODULE_ITEM);
-				startActivityForResult(intent, 0);
-			}
-		});
-
-		FloatingActionButton fabWeekGraph = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_add_week_bar_graph);
-		fabWeekGraph.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId, AddDashboardItemActivity.KEY_VALUE_TYPE_WEEK_BARH_GRAPH_ITEM);
+				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId);
 				startActivityForResult(intent, 0);
 			}
 		});
@@ -106,14 +131,14 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	}
 
 	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		List<BaseItem> items  = Controller.getInstance(mActivity).getDashboardItems(mGateId);
-		if (items != null) {
-			mAdapter.setItems(items);
-		}
-
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				doReloadDevicesTask(mGateId, true);
+			}
+		});
 	}
 
 	@Override
@@ -130,34 +155,34 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	}
 
 	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
-
-	@Override
-	public void onStart() {
-		super.onStart();
-	}
-
-	@Override
 	public void onResume() {
 		super.onResume();
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		Controller.getInstance(mActivity).saveDashboardItems(mGateId, mAdapter.getItems());
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+		doReloadDevicesTask(mGateId, false);
 	}
 
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
-
+		switch (viewType) {
+			case DashboardAdapter.VIEW_TYPE_ACT_VALUE: {
+				ActualValueItem item = (ActualValueItem) mAdapter.getItem(position);
+				String[] ids = Utils.parseAbsoluteModuleId(item.getAbsoluteModuleId());
+				Intent intent = ModuleGraphActivity.getActivityIntent(mActivity, item.getGateId(), ids[0], ids[1]);
+				mActivity.startActivity(intent);
+				break;
+			}
+			case DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW: {
+				OverviewGraphItem item = (OverviewGraphItem) mAdapter.getItem(position);
+				Intent intent = DashboardDetailActivity.getActivityIntent(mActivity, item);
+				mActivity.startActivity(intent);
+				break;
+			}
+			case DashboardAdapter.VIEW_TYPE_GRAPH: {
+				GraphItem item = (GraphItem) mAdapter.getItem(position);
+				Intent intent = DashboardDetailActivity.getActivityIntent(mActivity, item);
+				mActivity.startActivity(intent);
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -165,8 +190,58 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		if (mActionMode == null) {
 			mActionMode = mActivity.startSupportActionMode(new ActionModeDashboard());
 		}
+		mAdapter.clearSelection();
 		mAdapter.toggleSelection(position);
 		return true;
+	}
+
+	@Override
+	public void finishActionMode() {
+		if (mActionMode != null) {
+			mActionMode.finish();
+		}
+	}
+
+	private void fillDashboard() {
+		List<BaseItem> items  = Controller.getInstance(mActivity).getDashboardItems(mGateId);
+		if (items != null) {
+			mAdapter.setItems(items);
+		}
+	}
+
+	/**
+	 * Async task for refreshing data
+	 *
+	 * @param gateId
+	 * @param forceReload
+	 */
+	private void doReloadDevicesTask(String gateId, boolean forceReload) {
+		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), gateId);
+	}
+
+
+	private CallbackTask createReloadDevicesTask(boolean forceReload) {
+		if (getActivity() == null)
+			return null;
+
+		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(
+				getActivity(),
+				forceReload,
+				mGateId == null
+						? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
+						: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
+
+		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success)
+					return;
+
+				// stop refreshing
+				fillDashboard();
+			}
+		});
+		return reloadGateDataTask;
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {
@@ -215,7 +290,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 						})
 						.show();
 
-
+				Controller.getInstance(mActivity).saveDashboardItems(mGateId, mAdapter.getItems());
 			}
 			return true;
 		}

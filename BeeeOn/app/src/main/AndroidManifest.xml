@@ -160,6 +160,9 @@
 		<activity
 			android:name=".gui.activity.AddDashboardItemActivity"
 			android:label="@string/app_name"/>
+		<activity
+			android:name=".gui.activity.DashboardDetailActivity"
+			android:label="@string/app_name"/>
 
 		<!-- WIDGETS -->
 		<service

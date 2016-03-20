@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/space_big">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/dashboard_add_graph_name_hint"
+		android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+	<android.support.design.widget.TextInputLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		>
+
+		<EditText
+			android:id="@+id/fragment_add_dashboard_item_name_edit"
+			android:layout_width="match_parent"
+			android:inputType="text"
+			android:layout_height="wrap_content"/>
+
+	</android.support.design.widget.TextInputLayout>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/space_big"
+		android:text="@string/dashboard_add_graph_week_data_type_label"
+		android:textAppearance="@style/TextAppearance.AppCompat.Title"
+		/>
+
+	<RadioGroup
+		android:id="@+id/fragment_add_dashboard_item_graph_types"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/space_big"
+		android:checkedButton="@+id/fragment_add_dashboard_radio_btn_avg"
+		>
+
+		<android.support.v7.widget.AppCompatRadioButton
+			android:id="@+id/fragment_add_dashboard_radio_btn_min"
+			android:text="@string/data_type_min"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<android.support.v7.widget.AppCompatRadioButton
+			android:id="@id/fragment_add_dashboard_radio_btn_avg"
+			android:text="@string/data_type_avg"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+		<android.support.v7.widget.AppCompatRadioButton
+			android:id="@+id/fragment_add_dashboard_radio_btn_max"
+			android:text="@string/data_type_max"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+
+	</RadioGroup>
+
+</LinearLayout>

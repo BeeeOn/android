@@ -15,6 +15,11 @@ android {
 		versionName project.versionName
 		signingConfig signingConfigs.debug
 		resConfigs "en", "cs", "sk"
+		generatedDensities = []
+	}
+
+	aaptOptions {
+		additionalParameters "--no-version-vectors"
 	}
 
 	signingConfigs {

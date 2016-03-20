@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<TextView
+		android:id="@+id/fragment_dashboard_detail_left_axis_unit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/space_normal"
+		android:layout_marginStart="@dimen/space_normal"
+		android:layout_marginTop="@dimen/space_big"
+		android:visibility="invisible"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+	<TextView
+		android:id="@+id/fragment_dashboard_detail_right_axis_unit"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="@dimen/space_normal"
+		android:layout_marginEnd="@dimen/space_normal"
+		android:layout_marginTop="@dimen/space_big"
+		android:layout_gravity="end"
+		android:visibility="invisible"
+		android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
+
+	<com.github.mikephil.charting.charts.LineChart
+		android:id="@+id/fragment_dashboard_detail_graph"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_marginTop="@dimen/space_big"
+		android:layout_marginBottom="@dimen/space_big"/>
+
+</FrameLayout>

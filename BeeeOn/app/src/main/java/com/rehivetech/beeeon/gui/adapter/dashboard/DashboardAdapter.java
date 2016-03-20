@@ -44,7 +44,7 @@ import com.rehivetech.beeeon.util.Utils;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -55,21 +55,23 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
-	private static final int VIEW_TYPE_GRAPH = 0;
-	private static final int VIEW_TYPE_ACT_VALUE = 1;
-	private static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
+	public static final int VIEW_TYPE_GRAPH = 0;
+	public static final int VIEW_TYPE_ACT_VALUE = 1;
+	public static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
 
 	private final TimeHelper mTimeHelper;
 	private final UnitsHelper mUnitsHelper;
 
 	private BaseApplicationActivity mActivity;
 	private IItemClickListener mItemClickListener;
+	private ActionModeCallback mActionModeCallback;
 	private List<BaseItem> mItems = new ArrayList<>();
 
-	public DashboardAdapter(BaseApplicationActivity activity, IItemClickListener itemClickListener) {
+	public DashboardAdapter(BaseApplicationActivity activity, IItemClickListener itemClickListener, ActionModeCallback actionModeCallback) {
 		super(activity);
 		mActivity = activity;
 		mItemClickListener = itemClickListener;
+		mActionModeCallback = actionModeCallback;
 
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
 		mTimeHelper = Utils.getTimeHelper(prefs);
@@ -162,12 +164,19 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	public void setItems(List<BaseItem> items) {
 		mItems = items;
+		notifyDataSetChanged();
 	}
 
 	public BaseItem getItem(int position) {
 		return mItems.get(position);
 	}
 
+
+	public void moveItem(int fromPosition, int toPosition) {
+		Collections.swap(mItems, fromPosition, toPosition);
+		swapSelectedPosition(fromPosition, toPosition);
+		notifyItemMoved(fromPosition, toPosition);
+	}
 
 	public void deleteItem(BaseItem item) {
 		int position = mItems.indexOf(item);
@@ -191,6 +200,19 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				mCardView.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
 			}
 
+		}
+
+		protected boolean handleSelection() {
+			if (getSelectedItemCount() > 0) {
+				toggleSelection(getAdapterPosition());
+
+				if (getSelectedItemCount() == 0) {
+					mActionModeCallback.finishActionMode();
+				}
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
@@ -225,6 +247,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 
 			mChart.clear();
+			mLeftAxisUnit.setVisibility(View.INVISIBLE);
+			mRightAxisUnit.setVisibility(View.INVISIBLE);
 			prepareChart(item);
 			mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 			fillChart(controller, item, gate);
@@ -240,6 +264,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			if (item.getAbsoluteModuleIds().size() > 1) {
 				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
+				mChart.getAxisRight().setEnabled(true);
 			} else {
 				mChart.getAxisRight().setEnabled(false);
 			}
@@ -304,7 +329,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-
+			if (!handleSelection() && mItemClickListener != null) {
+				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH);
+			}
 		}
 
 		@Override
@@ -336,8 +363,12 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		public void bind(Controller controller, ActualValueItem item, int position) {
 			Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleId());
-			SharedPreferences prefs = controller.getUserSettings();
-			UnitsHelper unitsHelper = new UnitsHelper(prefs, mActivity); // TODO call Utils.getUnitsHelper()
+
+			UnitsHelper unitsHelper = Utils.getUnitsHelper(mActivity);
+
+			if (unitsHelper == null) {
+				return;
+			}
 
 			mLabel.setText(item.getName());
 			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
@@ -356,6 +387,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		@Override
 		public void onClick(View v) {
 
+			if (!handleSelection() && mItemClickListener != null) {
+				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_ACT_VALUE);
+			}
 		}
 
 		@Override
@@ -434,15 +468,10 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 						mChart.setData(barData);
 
-						List<String> xValuesCustom = new ArrayList<>(Arrays.asList(mActivity.getString(R.string.monday),
-								mActivity.getString(R.string.tuesday),
-								mActivity.getString(R.string.wednesday),
-								mActivity.getString(R.string.thursday),
-								mActivity.getString(R.string.friday),
-								mActivity.getString(R.string.saturday),
-								mActivity.getString(R.string.sunday)));
+						List<String> xValuesCustom = ChartHelper.getWeekDays(mContext);
 
 						mChart.getXAxis().setValues(xValuesCustom);
+						mChart.getXAxis().setLabelsToSkip(0);
 						mGraphUnit.setText(mUnitsHelper.getStringUnit(module.getValue()));
 						mGraphUnit.setTextColor(Utils.getGraphColor(mActivity, 0));
 					}
@@ -460,7 +489,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-
+			if (!handleSelection() && mItemClickListener != null) {
+				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW);
+			}
 		}
 
 		@Override
@@ -471,5 +502,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 			return false;
 		}
+	}
+
+	public interface ActionModeCallback {
+		void finishActionMode();
 	}
 }

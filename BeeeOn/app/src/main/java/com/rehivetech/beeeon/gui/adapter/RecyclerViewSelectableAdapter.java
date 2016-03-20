@@ -64,6 +64,18 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 	}
 
 	/**
+	 * Swap selected item position while dragging item
+	 * @param fromPosition
+	 * @param toPosition
+	 */
+	public void swapSelectedPosition(int fromPosition, int toPosition) {
+		boolean selection = mSelectedItems.get(fromPosition);
+
+		mSelectedItems.put(fromPosition, !selection);
+		mSelectedItems.put(toPosition, selection);
+	}
+
+	/**
 	 * Selects only one item at a time
 	 * @param position
 	 */

@@ -616,4 +616,23 @@ final public class Utils {
 	public static @Nullable TimeHelper getTimeHelper(@Nullable SharedPreferences prefs){
 		return (prefs == null) ? null : new TimeHelper(prefs);
 	}
+
+	/**
+	 * Create absolute module id string
+	 * @param deviceId
+	 * @param moduleId
+	 * @return
+	 */
+	public static String getAbsoluteModuleId(String deviceId, String moduleId) {
+		return String.format("%s---%s", deviceId, moduleId);
+	}
+
+	/**
+	 * Parse absolute module id to device and module id
+	 * @param absoluteModuleId
+	 * @return array with device and module ids
+	 */
+	public static String[] parseAbsoluteModuleId(String absoluteModuleId) {
+		return absoluteModuleId.split("---");
+	}
 }
