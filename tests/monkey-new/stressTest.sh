@@ -30,14 +30,6 @@ if [ ! -f ${DIR}/${ERR_FILE} ] ; then
 fi
 
 
-#downloads the .apk file if neccessary
-if [ ! -f ${DIR}/${APK}  ] ; then
-	echo "Apk was not found, started downloading of new one" >&2
-	wget ${APK_NET_PATH} --no-check-certificate	
-else
-	echo "Apk file was found, no need to download new one"
-fi
-
 #checks if the device was specified as argument
 if [ ! -z "$1" ] ; then
 	if [ -z "$(adb devices | grep "${1}")" ] ; then
@@ -53,9 +45,7 @@ fi
 if [ -z "$devices" ] ; then 
 	echo "No running devices found, starting a new emulator" >&2
 	./start_emulator.sh
-	sleep 60
 	devices=$(adb devices | grep "device$" |sed -e 's/\(.*\)\t.*/\1/g')
-
 elif (( $(grep -c . <<<"$devices") > 1 )) ; then
 	echo "Two or more devices are running, the first one will be chosen for testing" >&2
 	devices=$(adb devices | grep "device$" | head -1 |sed -e 's/\(.*\)\t.*/\1/g')
@@ -63,11 +53,8 @@ fi
 
 echo "Device chosen for testing is $devices"
 
-#reinstalls the app
-echo "Uninstalling old version of the app"
-adb -s ${devices} uninstall $PACKAGE_NAME
-echo "Installing the new version"
-adb -s ${devices} install ${DIR}/${APK}
+export devices
+./install_app.sh --download-new
 
 #executes the tests
 for i in $(seq 1 ${ITER}) ; do
@@ -84,3 +71,5 @@ for device in ${devices} ; do
 	adb -s ${device} emu kill
 done
 
+#parse seeds that probably made the app crash
+./parse_seed_codes.sh
