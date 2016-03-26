@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
@@ -634,5 +636,17 @@ final public class Utils {
 	 */
 	public static String[] parseAbsoluteModuleId(String absoluteModuleId) {
 		return absoluteModuleId.split("---");
+	}
+
+	/**
+	 * Change drawable color
+	 * @param drawable drawable to be changed
+	 * @param color color
+	 * @return tinted drawable
+	 */
+	public static Drawable setDrawableTint(Drawable drawable, @ColorInt int color) {
+		Drawable wrapedDrawable = DrawableCompat.wrap(drawable);
+		DrawableCompat.setTint(wrapedDrawable, color);
+		return wrapedDrawable;
 	}
 }
