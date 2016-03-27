@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 
+import com.rehivetech.beeeon.R;
+
 /**
  * Improved version of ProgressDialog which supports calling show/dismiss on UI thread and disables screen orientation during showing.
  */
@@ -12,7 +14,7 @@ public class BetterProgressDialog extends ProgressDialog {
 	private final Activity mActivity;
 
 	public BetterProgressDialog(final Activity activity) {
-		super(activity);
+		super(activity, R.style.BeeeOn_ProgressDialog);
 		mActivity = activity;
 	}
 

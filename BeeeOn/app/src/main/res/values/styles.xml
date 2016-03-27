@@ -213,6 +213,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="BeeeOn.ProgressDialog" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/beeeon_accent</item>
+    </style>
+
     <style name="GraphSettingStyle" parent="">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
