@@ -216,7 +216,7 @@ public class DemoNetwork implements INetwork {
 
 		List<Gate> gates = new ArrayList<>();
 		for (GateInfo gateInfo : mGates.getObjects()) {
-			gates.add(new Gate(gateInfo.getId(), gateInfo.getName()));
+			gates.add(gateInfo);
 		}
 		return gates;
 	}

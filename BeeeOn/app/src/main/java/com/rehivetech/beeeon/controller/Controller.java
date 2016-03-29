@@ -82,7 +82,7 @@ public final class Controller {
 	/**
 	 * Return singleton instance of this Controller. This is thread-safe.
 	 *
-	 * @param context
+	 * @param context any context, will be used application context
 	 * @return singleton instance of controller
 	 */
 	@NonNull
@@ -507,13 +507,10 @@ public final class Controller {
 	}
 
 	/**
-	 * UCA
+	 * UAC
 	 */
 	public boolean isUserAllowed(@NonNull Role role) {
-		if (role.equals(Role.User) || role.equals(Role.Guest)) {
-			return false;
-		}
-		return true;
+		return !(role.equals(Role.User) || role.equals(Role.Guest));
 	}
 
 	/**
@@ -568,6 +565,7 @@ public final class Controller {
 	public void removeDeviceFromDashboard(String gateId, String removedDeviceId) {
 		String userId = getActualUser().getId();
 		List<BaseItem> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		if(items == null) return; // we don't have any dashboard preferences
 		Iterator<BaseItem> itemsIterator = items.iterator();
 
 		while (itemsIterator.hasNext()) {

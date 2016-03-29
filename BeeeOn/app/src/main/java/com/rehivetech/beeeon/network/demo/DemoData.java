@@ -95,16 +95,14 @@ public class DemoData {
 	 * @return
 	 */
 	private User.Role getMyRole(String gateId) {
-		User.Role role = User.Role.Guest;
-
 		List<User> users = getUsers(gateId);
 		for (User user : users) {
 			if (user.getId().equals(mUser.getId())) {
-				role = user.getRole();
+				return user.getRole();
 			}
 		}
 
-		return role;
+		return User.Role.Guest;
 	}
 
 	public List<Location> getLocation(Context context, String gateId) {
