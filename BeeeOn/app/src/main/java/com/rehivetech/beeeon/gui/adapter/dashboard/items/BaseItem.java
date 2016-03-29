@@ -37,18 +37,6 @@ public abstract class BaseItem implements Parcelable {
 		return 0;
 	}
 
-	public static final Creator<BaseItem> CREATOR = new Creator<BaseItem>() {
-		@Override
-		public BaseItem createFromParcel(Parcel in) {
-			throw new UnsupportedOperationException("Could not instantiate abstract class");
-		}
-
-		@Override
-		public BaseItem[] newArray(int size) {
-			return new BaseItem[size];
-		}
-	};
-
 	public String getGateId() {
 		return mGateId;
 	}

@@ -84,7 +84,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 		if (mLeftAxisModule == null || mRightAxisModule == null) {
 			super.onViewCreated(view, savedInstanceState);
 			mTitle = (TextView) view.findViewById(R.id.fragment_add_dashboard_item_title);
-			fillAdapter(false);
+			fillAdapter(false, null);
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 		}
 

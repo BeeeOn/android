@@ -215,6 +215,16 @@
 
     <style name="BeeeOn.ProgressDialog" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/beeeon_accent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="BeeeOn.CardView.NoPadding" parent="">
+        <item name="cardPreventCornerOverlap">false</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="android:layout_marginLeft">-8dp</item>
+        <item name="android:layout_marginTop">-10dp</item>
+        <item name="android:layout_marginBottom">-8dp</item>
+        <item name="android:layout_marginRight">-8dp</item>
     </style>
 
     <style name="GraphSettingStyle" parent="">

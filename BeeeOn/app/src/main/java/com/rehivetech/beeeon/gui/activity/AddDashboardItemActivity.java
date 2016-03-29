@@ -3,12 +3,16 @@ package com.rehivetech.beeeon.gui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddDashboardItemFragment;
 import com.rehivetech.beeeon.gui.fragment.BaseApplicationFragment;
+
+import java.util.List;
 
 /**
  * Created by martin on 13.1.16.
@@ -30,11 +34,12 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 		setContentView(R.layout.activity_add_dashboard_item);
 
 
-		setupToolbar(R.string.dashboard_add_new_card);
+		setupToolbar(0);
 
 		ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
+			actionBar.setTitle("");
 		}
 
 		Bundle args = getIntent().getExtras();
@@ -57,5 +62,16 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 				break;
 		}
 		return false;
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		List<Fragment> fragments = getSupportFragmentManager().getFragments();
+		if (fragments != null) {
+			for (Fragment fragment : fragments) {
+				fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+			}
+		}
 	}
 }

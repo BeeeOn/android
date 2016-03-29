@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:focusable="true"
+	android:focusableInTouchMode="true"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<FrameLayout
+		android:id="@+id/map"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:focusableInTouchMode="true"
+		/>
+
+	<android.support.v7.widget.CardView
+		style="@style/BeeeOn.CardView.NoPadding"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		app:cardBackgroundColor="@color/beeeon_primary"
+		app:cardCornerRadius="0dp"
+		app:cardElevation="6dp">
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_margin="@dimen/space_big">
+
+			<android.support.v7.widget.CardView
+				android:id="@+id/fragment_add_dashboard_item_location_search_card"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				app:cardBackgroundColor="@color/beeeon_primary_darker"
+
+				app:cardCornerRadius="4dp">
+
+				<LinearLayout
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:orientation="horizontal">
+
+				<AutoCompleteTextView
+					android:id="@+id/fragment_add_dashboard_item_ventilation_location_textview"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_weight="1"
+					android:completionThreshold="4"
+					android:layout_gravity="center_vertical"
+					android:layout_marginLeft="@dimen/space_mini"
+					android:layout_marginStart="@dimen/space_mini"
+					android:hint="@string/select_location"
+					android:textColorHint="@color/gray"
+					android:background="@null"
+					android:singleLine="true"/>
+
+					<ImageButton
+						android:id="@+id/fragment_add_dashboard_item_ventilation_location_gps_icon"
+						style="@style/Widget.AppCompat.Button.Borderless"
+						android:layout_width="50dp"
+						android:layout_height="50dp"/>
+
+				</LinearLayout>
+			</android.support.v7.widget.CardView>
+
+
+
+		</RelativeLayout>
+
+	</android.support.v7.widget.CardView>
+
+
+</FrameLayout>

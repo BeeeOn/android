@@ -32,6 +32,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -58,6 +59,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	public static final int VIEW_TYPE_GRAPH = 0;
 	public static final int VIEW_TYPE_ACT_VALUE = 1;
 	public static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
+	public static final int VIEW_TYPE_VENTILATION = 3;
 
 	private final TimeHelper mTimeHelper;
 	private final UnitsHelper mUnitsHelper;
@@ -98,6 +100,11 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				return new OverviewGraphViewHolder(view);
 			}
 
+			case VIEW_TYPE_VENTILATION: {
+				View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dashboard_item_type_ventilation, parent, false);
+				return new VentilationViewHolder(view);
+			}
+
 			default:
 				break;
 		}
@@ -115,6 +122,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			return VIEW_TYPE_ACT_VALUE;
 		} else if (item instanceof OverviewGraphItem) {
 			return VIEW_TYPE_GRAPH_OVERVIEW;
+		} else if (item instanceof VentilationItem) {
+			return VIEW_TYPE_VENTILATION;
 		}
 		return -1;
 	}
@@ -492,6 +501,29 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			if (!handleSelection() && mItemClickListener != null) {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW);
 			}
+		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
+				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+				return true;
+			}
+			return false;
+		}
+	}
+
+	public class VentilationViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener  {
+
+		public VentilationViewHolder(View itemView) {
+			super(itemView);
+			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
+		}
+
+		@Override
+		public void onClick(View v) {
+
 		}
 
 		@Override

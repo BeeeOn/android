@@ -77,7 +77,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 			TextView textView = (TextView) view.findViewById(R.id.fragment_add_dashboard_item_title);
 			textView.setText(R.string.dashboard_add_graph_week_module_label);
 
-			fillAdapter(false);
+			fillAdapter(false, null);
 			mAdapter.selectFirstModuleItem();
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 			mButtonDone.setOnClickListener(new View.OnClickListener() {

@@ -15,6 +15,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public class DashBoardPersistence {
 				typeClass = GraphItem.class;
 			} else if (((JsonObject) json).get("dataType") != null) {
 				typeClass = OverviewGraphItem.class;
+			} else if (((JsonObject)json).get("insideAbsoluteModuleId") != null) {
+				typeClass = VentilationItem.class;
 			} else {
 				typeClass = ActualValueItem.class;
 			}

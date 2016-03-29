@@ -69,7 +69,7 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 
 		if (mModuleItem == null) {
 			super.onViewCreated(view, savedInstanceState);
-			fillAdapter(true);
+			fillAdapter(true, null);
 			mAdapter.selectFirstModuleItem();
 
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
