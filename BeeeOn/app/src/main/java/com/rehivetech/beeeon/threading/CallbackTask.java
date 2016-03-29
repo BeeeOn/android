@@ -64,16 +64,20 @@ public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boole
 	}
 
 	@Override
-	protected final Boolean doInBackground(Params... params) {
-		if (params.length > 1) {
-			Log.w(TAG, "Given %d parameters, but CallbackTask can use only one.");
-		}
+	public Boolean doInBackground(Params... params) {
+//		if (params.length > 1) {
+//			Log.w(TAG, "Given %d parameters, but CallbackTask can use only one.");
+//		}
 
 		mIsWorking = true;
 
 		Boolean success = false;
 		try {
-			success = doInBackground(params.length > 0 ? params[0] : null);
+			if (params.length > 1) {
+				doInBackground(params);
+			} else {
+				success = doInBackground(params.length > 0 ? params[0] : null);
+			}
 		} catch (AppException e) {
 			// Remember exception so caller can get it via calling getException()
 			mException = e;
