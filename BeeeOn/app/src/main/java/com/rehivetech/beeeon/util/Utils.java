@@ -28,6 +28,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.util.Patterns;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -645,8 +646,17 @@ final public class Utils {
 	 * @return tinted drawable
 	 */
 	public static Drawable setDrawableTint(Drawable drawable, @ColorInt int color) {
-		Drawable wrapedDrawable = DrawableCompat.wrap(drawable);
+		Drawable wrapedDrawable = DrawableCompat.wrap(drawable.mutate());
 		DrawableCompat.setTint(wrapedDrawable, color);
 		return wrapedDrawable;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void setBackgroundImageDrawable(ImageView imageView, Drawable drawable) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+			imageView.setBackground(drawable);
+		} else {
+			imageView.setBackgroundDrawable(drawable);
+		}
 	}
 }
