@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.dashboard.AddDashboardCardAdapter;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +74,21 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 				R.drawable.dashboard_line_graph_preview, R.string.dashboard_fab_add_graph));
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH,
 				R.drawable.dashboard_week_bar_graph_preview, R.string.dashboard_fab_add_week_bar_graph));
-		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_VENTILATION, 0, R.string.dashboard_add_ventilation_card));
+
+		List<BaseItem> dashboardItems = Controller.getInstance(mActivity).getDashboardItems(mGateId);
+		VentilationItem ventilationItem = null;
+		if (dashboardItems != null) {
+
+			for (BaseItem item : dashboardItems) {
+				if (item instanceof VentilationItem) {
+					ventilationItem = (VentilationItem) item;
+					break;
+				}
+			}
+		}
+		if (ventilationItem == null) {
+			items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_VENTILATION, 0, R.string.dashboard_add_ventilation_card));
+		}
 		addDashboardCardAdapter.setItems(items);
 	}
 
