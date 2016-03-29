@@ -12,10 +12,15 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
 /**
- * Created by martin on 8.12.15.
+ * @author Martin Matejcik
+ * @author Tomas Mlynaric
+ * @since 8.12.2015
  */
 @SuppressLint("ViewConstructor")
 public class ModuleGraphMarkerView extends MarkerView {
@@ -25,9 +30,10 @@ public class ModuleGraphMarkerView extends MarkerView {
 	private TextView mTextMin;
 	private TextView mTextAvg;
 	private TextView mTextMax;
-	private TextView mTextXval;
+	private TextView mTextXVal;
 
-	private String mUnit;
+	private BaseValue mValueUnion;
+	private UnitsHelper mUnitsHelper;
 
 	/**
 	 * Constructor. Sets up the MarkerView with a custom layout resource.
@@ -35,15 +41,17 @@ public class ModuleGraphMarkerView extends MarkerView {
 	 * @param context
 	 * @param layoutResource
 	 */
-	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, String unit) {
+	public ModuleGraphMarkerView(Context context, int layoutResource, LineChart chart, Module module) {
 		super(context, layoutResource);
 		mChart = chart;
-		mUnit = unit;
+
+		mValueUnion = BaseValue.createFromModule(module);
+		mUnitsHelper = Utils.getUnitsHelper(context);
 
 		mTextMin = (TextView) findViewById(R.id.util_chart_markerview_text_min);
 		mTextAvg = (TextView) findViewById(R.id.util_chart_markerview_text_avg);
 		mTextMax = (TextView) findViewById(R.id.util_chart_markerview_text_max);
-		mTextXval = (TextView) findViewById(R.id.util_chart_markerview_text_xval);
+		mTextXVal = (TextView) findViewById(R.id.util_chart_markerview_text_xval);
 
 		int shapeSize = Utils.convertDpToPixel(10);
 
@@ -63,22 +71,29 @@ public class ModuleGraphMarkerView extends MarkerView {
 		mTextMax.setCompoundDrawables(shapeMax, null, null, null);
 	}
 
+	/**
+	 * When changed position of marker
+	 * @param e chart entry
+	 * @param highlight
+	 */
 	@Override
 	public void refreshContent(Entry e, Highlight highlight) {
 		clearTexts();
 
 		for (ILineDataSet dataSet : mChart.getData().getDataSets()) {
 			if (dataSet.getLabel().contains("min")) {
-				mTextMin.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
-
+				mValueUnion.setValue(String.valueOf(dataSet.getYValForXIndex(e.getXIndex())));
+				mTextMin.setText(UnitsHelper.format(mUnitsHelper, mValueUnion));
 			} else if (dataSet.getLabel().contains("avg")) {
-				mTextAvg.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
-
+				mValueUnion.setValue(String.valueOf(dataSet.getYValForXIndex(e.getXIndex())));
+				mTextAvg.setText(UnitsHelper.format(mUnitsHelper, mValueUnion));
 			} else if (dataSet.getLabel().contains("max")) {
-				mTextMax.setText(String.format("%s %s", dataSet.getYValForXIndex(e.getXIndex()), mUnit));
+				mValueUnion.setValue(String.valueOf(dataSet.getYValForXIndex(e.getXIndex())));
+				mTextMax.setText(UnitsHelper.format(mUnitsHelper, mValueUnion));
 			}
 		}
-		mTextXval.setText(mChart.getXValue(e.getXIndex()));
+		// sets x value (index)
+		mTextXVal.setText(mChart.getXValue(e.getXIndex()));
 
 		mTextMin.setVisibility(mTextMin.getText().length() > 0 ? VISIBLE : GONE);
 		mTextAvg.setVisibility(mTextAvg.getText().length() > 0 ? VISIBLE : GONE);

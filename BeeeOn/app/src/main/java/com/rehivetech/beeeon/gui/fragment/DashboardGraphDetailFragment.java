@@ -199,12 +199,12 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 		mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 		String[] ids = Utils.parseAbsoluteModuleId(mGraphItem.getAbsoluteModuleIds().get(0));
 
-		ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mLineDataSetLeft, mGraphItem.getGateId(), ids[0], ids[1],
+		ChartHelper.loadChartData(mActivity, mLineDataSetLeft, mGraphItem.getGateId(), ids[0], ids[1],
 				mGraphItem.getDataRange(), ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.FIVE_MINUTES, mChartLoadListener, mFormatter);
 
 		if (mLineDataSetRight != null) {
 			String[] ids2 = Utils.parseAbsoluteModuleId(mGraphItem.getAbsoluteModuleIds().get(1));
-			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mLineDataSetRight, mGraphItem.getGateId(), ids2[0], ids2[1],
+			ChartHelper.loadChartData(mActivity, mLineDataSetRight, mGraphItem.getGateId(), ids2[0], ids2[1],
 					mGraphItem.getDataRange(), ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.FIVE_MINUTES, mChartLoadListener, mFormatter);
 		}
 	}

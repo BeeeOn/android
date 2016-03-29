@@ -252,7 +252,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false, true);
 		} else {
 			mChart = new LineChart(mActivity);
-			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, unit);
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, module);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false, true);
 		}
 
@@ -308,16 +308,16 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mDataSetMax.clear();
 
 		if (drawMax) {
-			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,
+			ChartHelper.loadChartData(mActivity, mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.MAXIMUM, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 		if (drawAvg) {
-			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
+			ChartHelper.loadChartData(mActivity, mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.AVERAGE, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 
 		if (drawMin) {
-			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
+			ChartHelper.loadChartData(mActivity, mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 	}

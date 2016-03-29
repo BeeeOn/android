@@ -334,7 +334,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				Module module = controller.getDevicesModel().getModule(gate.getId(), modules.get(i));
 
 				ModuleLog.DataInterval dataInterval = (item.getDataRange() > ChartHelper.RANGE_DAY) ? ModuleLog.DataInterval.HALF_HOUR : ModuleLog.DataInterval.TEN_MINUTES;
-				ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), item.getDataRange(),
+				ChartHelper.loadChartData(mActivity, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), item.getDataRange(),
 						ModuleLog.DataType.AVERAGE, dataInterval, chartLoadListener, dateTimeFormatter);
 
 				axisDependency = YAxis.AxisDependency.RIGHT;
@@ -496,7 +496,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			};
 
 			ModuleLog.DataInterval dataInterval = ModuleLog.DataInterval.DAY;
-			ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), ChartHelper.RANGE_WEEK,
+			ChartHelper.loadChartData(mActivity, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), ChartHelper.RANGE_WEEK,
 					item.getDataType(), dataInterval, chartLoadListener, dateTimeFormatter);
 
 		}

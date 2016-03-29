@@ -163,7 +163,7 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 		mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 		String[] ids = Utils.parseAbsoluteModuleId(mItem.getAbsoluteModuleId());
 
-		ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSet, mItem.getGateId(), ids[0], ids[1],
+		ChartHelper.loadChartData(mActivity, mDataSet, mItem.getGateId(), ids[0], ids[1],
 				ChartHelper.RANGE_WEEK, mItem.getDataType(), ModuleLog.DataInterval.DAY, mChartLoadListener, mFormatter);
 	}
 }

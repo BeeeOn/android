@@ -84,11 +84,11 @@ final public class ChartHelper {
 	/**
 	 * Set chart params, legend and value formatter
 	 *
-	 * @param chart      chart instance
-	 * @param context    context
-	 * @param baseValue  module baseValue
-	 * @param yLabels    StringBuffer to save long x labels in bar chart
-	 * @param markerView chart markerView instance
+	 * @param chart              chart instance
+	 * @param context            context
+	 * @param baseValue          module baseValue
+	 * @param yLabels            StringBuffer to save long x labels in bar chart
+	 * @param markerView         chart markerView instance
 	 * @param drawBorders
 	 * @param setGestureListener
 	 */
@@ -341,6 +341,7 @@ final public class ChartHelper {
 			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
 				return new YAxisValueFormatter() {
+					@SuppressLint("DefaultLocale")
 					@Override
 					public String getFormattedValue(float value, YAxis yAxis) {
 						return String.format("%.0f.", yLabels.size() - value);
@@ -354,11 +355,21 @@ final public class ChartHelper {
 				}
 			};
 		}
+
+		final UnitsHelper unitsHelper = Utils.getUnitsHelper(context);
 		return new YAxisValueFormatter() {
+			@SuppressLint("DefaultLocale")
 			@Override
 			public String getFormattedValue(float value, YAxis yAxis) {
-				if (value == 0)
-					value = 0;
+				if (unitsHelper != null) {
+					try {
+						value = (float) unitsHelper.getDoubleValue(baseValue, value);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+
+				if (value == 0) value = 0; // IMPORTANT: this code actually works, prevents having -0 in graph
 
 				if (value % 1 == 0) {
 					return String.format("%.0f", value);
@@ -370,7 +381,6 @@ final public class ChartHelper {
 
 	/**
 	 * @param activity     instance of activity
-	 * @param controller   instance of controller
 	 * @param dataSet      instance of chart dataSet
 	 * @param gateId       ID of gate
 	 * @param deviceId     ID of device
@@ -380,12 +390,12 @@ final public class ChartHelper {
 	 * @param dataInterval interval of values
 	 */
 	public static <T extends DataSet>
-	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, final String gateId, String deviceId,
+	void loadChartData(final BaseApplicationActivity activity, final T dataSet, final String gateId, String deviceId,
 					   String moduleId, @DataRange int range, final ModuleLog.DataType dataType,
 					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback, final DateTimeFormatter formatter) {
 
 		final List<String> xValues = new ArrayList<>();
-		final Module module = controller.getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
+		final Module module = Controller.getInstance(activity).getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
 
 		if (module == null) {
 			return;
@@ -402,7 +412,6 @@ final public class ChartHelper {
 			@Override
 			public void onExecute(boolean success) {
 				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
-
 				fillDataSet(moduleLog, dataSet, xValues, dataPair, formatter);
 				callback.onChartLoaded(dataSet, xValues);
 			}
