@@ -217,25 +217,20 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	/**
 	 * Helper for initializing toolbar and actionbar
-	 * @param titleResId string resource of title
+	 * @param title string of title
 	 * @param backButton if set to true adds "<-" arrow to title
 	 * @return toolbar or null, if no R.id.beeeon_toolbar was found in layout
 	 */
 	@Nullable
-	public Toolbar setupToolbar(@StringRes int titleResId, boolean backButton) {
+	public Toolbar setupToolbar(String title, boolean backButton) {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			setSupportActionBar(toolbar);
-
-			if (titleResId > 0) {
-				toolbar.setTitle(titleResId);
-			}
+			toolbar.setTitle(title);
 		}
 		mActionBar = getSupportActionBar();
 		if (mActionBar != null) {
-			if (titleResId > 0) {
-				mActionBar.setTitle(titleResId);
-			}
+			mActionBar.setTitle(title);
 
 			if (backButton) {
 				mActionBar.setHomeButtonEnabled(true);
@@ -244,6 +239,15 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		}
 
 		return toolbar;
+	}
+
+	public Toolbar setupToolbar(String title){
+		return setupToolbar(title, false);
+	}
+
+	public Toolbar setupToolbar(@StringRes int titleResId, boolean backButton){
+		String title = getString(titleResId);
+		return setupToolbar(title, backButton);
 	}
 
 	public Toolbar setupToolbar(@StringRes int titleResId) {

@@ -54,4 +54,18 @@ public class UnitsHelper {
 		return String.format("%s %s", value, unit);
 	}
 
+	/**
+	 * Tries to format value by formatter in UnitsHelper, if is null, formats by default format
+	 * @param helper UnitsHelper (might be null)
+	 * @param value to show
+	 * @return formatted string
+	 */
+	public static String format(UnitsHelper helper, BaseValue value){
+		if (helper != null) {
+			return helper.getStringValueUnit(value);
+		}
+		else{
+			return String.format("%.2f %s", value.getDoubleValue(), value.getUnit());
+		}
+	}
 }

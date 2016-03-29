@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * @author martin on 18.8.2015.
  */
-public class ModuleGraphFragment extends BaseApplicationFragment implements ModuleGraphActivity.ChartSettingListener{
+public class ModuleGraphFragment extends BaseApplicationFragment implements ModuleGraphActivity.ChartSettingListener {
 	private static final String TAG = ModuleGraphFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
@@ -97,8 +97,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinValue("");
-					mActivity.setMaxValue("");
+					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
@@ -112,8 +111,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinValue("");
-					mActivity.setMaxValue("");
+					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
@@ -194,7 +192,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
 
 		mRootLayout = (RelativeLayout) view.findViewById(R.id.module_graph_layout);
-
 
 
 		mActivity.setShowLegendButtonOnClickListener(new View.OnClickListener() {
@@ -297,7 +294,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	}
 
 	@Override
-	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity,  int sliderProgress) {
+	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity, int sliderProgress) {
 		mCheckboxMin = drawMin;
 		mCheckboxAvg = drawAvg;
 		mCheckboxMax = drawMax;
@@ -353,8 +350,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			maxValue = mDataSetMin.getYMax();
 		}
 
-		mActivity.setMinValue(String.format("%.2f", minValue));
-		mActivity.setMaxValue(String.format("%.2f", maxValue));
+		mActivity.setMinMaxValue(String.valueOf(minValue), String.valueOf(maxValue));
 	}
 
 	private void initGraphSetting(GraphSettings settings) {

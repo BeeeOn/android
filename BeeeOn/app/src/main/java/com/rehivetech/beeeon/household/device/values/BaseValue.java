@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.IconResourceType;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
 
@@ -98,6 +99,17 @@ public abstract class BaseValue {
 
 		// If creation failed, create UnknownValue object
 		return new UnknownValue();
+	}
+
+	/**
+	 * Copies (clones) module's value so that it can be than shown without modifying module's value
+	 * @param module which will be copied from
+	 * @return new value object or UnknownValue
+	 */
+	@NonNull
+	public static BaseValue createFromModule(@NonNull Module module) {
+		BaseValue moduleValue = module.getValue();
+		return createFromModuleType(module.getType(), moduleValue.getConstraints(), moduleValue.getDefaultValue());
 	}
 
 	public static class Constraints {
