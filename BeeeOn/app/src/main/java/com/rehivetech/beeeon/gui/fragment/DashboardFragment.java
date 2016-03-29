@@ -97,6 +97,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 				mAdapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
 				mItemMoved = true;
+				Controller.getInstance(mActivity).saveDashboardItems(mGateId, mAdapter.getItems());
 				return true;
 			}
 
