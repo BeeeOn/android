@@ -12,7 +12,7 @@ public class PressureUnit extends BaseUnit {
 		super();
 
 		mItems.add(this.new Item(HPA, R.string.unit_pressure, R.string.unit_pressure));
-		mItems.add(this.new Item(BAR, R.string.unit_pressure_bar, R.string.unit_pressure_bar));
+		mItems.add(this.new Item(BAR, R.string.unit_pressure_bar_full, R.string.unit_pressure_bar));
 	}
 
 	@Override
