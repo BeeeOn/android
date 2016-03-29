@@ -89,6 +89,7 @@ dependencies {
 	compile "com.google.android.gms:play-services-analytics:${project.ext.playServicesVersion}"
 	compile "com.google.android.gms:play-services-identity:${project.ext.playServicesVersion}"
 	compile "com.google.android.gms:play-services-gcm:${project.ext.playServicesVersion}"
+	compile "com.google.android.gms:play-services-maps:${project.ext.playServicesVersion}"
 	// Third-party libraries
 	compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
 	compile 'joda-time:joda-time:2.7'

@@ -94,4 +94,5 @@ public final class Constants {
 	 */
 	public static final int PERMISSION_CODE_GET_ACCOUNTS = 1;
 	public static final int PERMISSION_CODE_CAMERA = 2;
+	public static final int PERMISSION_CODE_LOCATION = 3;
 }

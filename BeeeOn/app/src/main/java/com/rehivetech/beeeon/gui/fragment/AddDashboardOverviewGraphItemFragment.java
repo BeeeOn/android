@@ -59,12 +59,12 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 
 		View view;
 		if (mModuleItem == null) {
-			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_graph_item_layout1, null);
+			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_recyclerview_item_layout1, null);
 		} else {
 			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_graph_overview_item_layout2, null);
 		}
 
-		rootView.addView(view);
+		rootView.addView(view, 0);
 
 		return rootView;
 	}
@@ -77,7 +77,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 			TextView textView = (TextView) view.findViewById(R.id.fragment_add_dashboard_item_title);
 			textView.setText(R.string.dashboard_add_graph_week_module_label);
 
-			fillAdapter(false);
+			fillAdapter(false, null);
 			mAdapter.selectFirstModuleItem();
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 			mButtonDone.setOnClickListener(new View.OnClickListener() {

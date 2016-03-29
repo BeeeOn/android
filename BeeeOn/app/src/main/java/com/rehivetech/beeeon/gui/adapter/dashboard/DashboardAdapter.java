@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.adapter.dashboard;
 
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -32,6 +33,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
@@ -58,6 +60,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	public static final int VIEW_TYPE_GRAPH = 0;
 	public static final int VIEW_TYPE_ACT_VALUE = 1;
 	public static final int VIEW_TYPE_GRAPH_OVERVIEW = 2;
+	public static final int VIEW_TYPE_VENTILATION = 3;
 
 	private final TimeHelper mTimeHelper;
 	private final UnitsHelper mUnitsHelper;
@@ -98,6 +101,11 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				return new OverviewGraphViewHolder(view);
 			}
 
+			case VIEW_TYPE_VENTILATION: {
+				View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.dashboard_item_type_ventilation, parent, false);
+				return new VentilationViewHolder(view);
+			}
+
 			default:
 				break;
 		}
@@ -115,6 +123,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			return VIEW_TYPE_ACT_VALUE;
 		} else if (item instanceof OverviewGraphItem) {
 			return VIEW_TYPE_GRAPH_OVERVIEW;
+		} else if (item instanceof VentilationItem) {
+			return VIEW_TYPE_VENTILATION;
 		}
 		return -1;
 	}
@@ -136,6 +146,10 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 			case VIEW_TYPE_GRAPH_OVERVIEW: {
 				((OverviewGraphViewHolder) holder).bind(controller, (OverviewGraphItem) item, position);
+				break;
+			}
+			case VIEW_TYPE_VENTILATION: {
+				((VentilationViewHolder) holder).bind(controller, (VentilationItem) item, position);
 				break;
 			}
 		}
@@ -492,6 +506,79 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			if (!handleSelection() && mItemClickListener != null) {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW);
 			}
+		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
+				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+				return true;
+			}
+			return false;
+		}
+	}
+
+	public class VentilationViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener  {
+
+		final TextView mOutSideTemp;
+		final TextView mInsideTemp;
+		final ImageView mIcon;
+
+		public VentilationViewHolder(View itemView) {
+			super(itemView);
+
+			mOutSideTemp = (TextView) itemView.findViewById(R.id.dashboard_item_ventilation_outside_value);
+			mInsideTemp = (TextView) itemView.findViewById(R.id.dashboard_item_ventilation_inside_value);
+			mIcon = (ImageView) itemView.findViewById(R.id.dashboard_item_ventilation_icon);
+
+			itemView.setOnClickListener(this);
+			itemView.setOnLongClickListener(this);
+		}
+
+		public void bind(Controller controller, VentilationItem item, int position) {
+			float outSideTemp = 0;
+			float insideTemp = 0;
+
+			if (item.getOutsideAbsoluteModuleId() == null) {
+				outSideTemp = controller.getWeatherModel().getWeather(item.getGateId()).getTemp();
+
+			} else {
+				Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getOutsideAbsoluteModuleId());
+
+				if (module != null) {
+					outSideTemp = (float) module.getValue().getDoubleValue();
+				}
+			}
+
+			Module insideModule = controller.getDevicesModel().getModule(item.getGateId(), item.getInSideAbsoluteModuleId());
+
+			if (insideModule != null) {
+				insideTemp = (float) insideModule.getValue().getDoubleValue();
+				mOutSideTemp.setText(String.format("%s %s", mUnitsHelper.getStringValue(insideModule.getValue(), outSideTemp), mUnitsHelper.getStringUnit(insideModule.getValue())));
+				mInsideTemp.setText(mUnitsHelper.getStringValueUnit(insideModule.getValue()));
+			}
+
+
+			Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.oval_primary);
+
+			if (outSideTemp <= insideTemp) {
+				mIcon.setImageResource(R.drawable.ic_action_accept);
+				drawable = Utils.setDrawableTint(drawable, ContextCompat.getColor(mContext, R.color.green));
+
+			} else {
+				drawable = Utils.setDrawableTint(drawable, ContextCompat.getColor(mContext, R.color.red));
+
+				mIcon.setImageResource(R.drawable.ic_action_cancel);
+			}
+
+			Utils.setBackgroundImageDrawable(mIcon, drawable);
+
+			setSelected(isSelected(position));
+		}
+
+		@Override
+		public void onClick(View v) {
+
 		}
 
 		@Override

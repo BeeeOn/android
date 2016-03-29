@@ -27,6 +27,7 @@ import com.rehivetech.beeeon.model.LocationsModel;
 import com.rehivetech.beeeon.model.ModuleLogsModel;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.model.UsersModel;
+import com.rehivetech.beeeon.model.WeatherModel;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.demo.DemoNetwork;
@@ -249,6 +250,10 @@ public final class Controller {
 
 	public UsersModel getUsersModel() {
 		return (UsersModel) getModelInstance(UsersModel.class);
+	}
+
+	public WeatherModel getWeatherModel() {
+		return (WeatherModel) getModelInstance(WeatherModel.class);
 	}
 
 	/**

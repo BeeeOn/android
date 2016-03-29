@@ -461,13 +461,14 @@
     <string name="dashboard_add_select_card">Vyberte typ karty</string>
 	<string name="dashboard_fab_add_graph">Pridať čiarový graf</string>
 	<string name="dashboard_fab_add_week_bar_graph">Pridať týždňový stĺpcový graf</string>
-	<string name="dashboard_fab_add_module">Pridať hodnotu modulu</string>
-    <string name="dashboard_add_actual_value_label">Vyberte modul</string>
+	<string name="dashboard_fab_add_module">Pridať hodnotu senzoru</string>
+    <string name="dashboard_add_ventilation_card">Pridať asistenta pre vetranie</string>
+    <string name="dashboard_add_actual_value_label">Vyberte senzor</string>
 	<string name="dashboard_add_graph_name_hint">Názov karty</string>
-	<string name="dashboard_add_graph_left_axis_label">Vyberte modul pre ľavú osu</string>
-	<string name="dashboard_add_graph_right_axis_label">Vyberte modul pre pravú osu</string>
+	<string name="dashboard_add_graph_left_axis_label">Vyberte senzor pre ľavú osu</string>
+	<string name="dashboard_add_graph_right_axis_label">Vyberte senzor pre pravú osu</string>
 	<string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dát pre graf</string>
-	<string name="dashboard_add_graph_week_module_label">Vyberte modul pre graf</string>
+	<string name="dashboard_add_graph_week_module_label">Vyberte senzor pre graf</string>
 	<string name="dashboard_add_graph_week_data_type_label">vyberte typ dát pre graf</string>
 	<plurals name="dashboard_delete_snackbar">
 		<item quantity="one">Karta bola zmazaná</item>
@@ -476,7 +477,16 @@
 	</plurals>
 	<string name="dashboard_undo">Späť</string>
 	<string name="dashboard_add_graph_name_error">Pomenujte novú kartu</string>
+    <string name="dashboard_add_item_additional_settings">Ďalšie nastavenia</string>
+    <string name="dashboard_add_ventilation_select_provider">Vyberte zdroj vonkajšej teploty</string>
+    <string name="dashboard_add_ventilation_provider_weather">Teplota z poskytovateľa počasia</string>
+    <string name="dashboard_add_ventilation_provider_module">Teplota zo senzoru</string>
+    <string name="dashboard_add_ventilation_outside_module_select_title">Vyberte vonkajší teplotný senzor</string>
+    <string name="dashboard_add_ventilation_inside_module_select_title">Vyberte vnútorný teplotný senzor</string>
 
+    <string name="dashboard_ventilation_card_label">Asistent pri vetraní</string>
+    <string name="dashboard_ventilation_card_outside_label">Von</string>
+    <string name="dashboard_ventilation_card_inside_label">Dnu</string>
 
     <!--Days shortcuts-->
     <string name="monday">Po</string>
@@ -486,5 +496,13 @@
     <string name="friday">Pi</string>
     <string name="saturday">So</string>
     <string name="sunday">Ne</string>
+
+    <!--Location-->
+    <string name="select_location">Vyberte polohu</string>
+    <string name="unable_to_get_location">Poloha sa nedá získať</string>
+    <string name="obtain_location">Získavanie polohy…</string>
+    <string name="my_location">Moja poloha</string>
+    <string name="location_not_available">Poloha nie je k dispozícií</string>
+    <string name="open_location_settings">Otvoriť nastavenie polohy</string>
 
 </resources>

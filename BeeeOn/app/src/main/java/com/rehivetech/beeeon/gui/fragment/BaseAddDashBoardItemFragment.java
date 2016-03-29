@@ -14,6 +14,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.UnavailableModules;
 import com.rehivetech.beeeon.util.Utils;
@@ -68,7 +69,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 	}
 
-	protected void fillAdapter(boolean withEnumTypes) {
+	protected void fillAdapter(boolean withEnumTypes, @Nullable ModuleType filterBy) {
 		Controller controller = Controller.getInstance(mActivity);
 		boolean withoutUnavailable = UnavailableModules.fromSettings(controller.getUserSettings());
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
@@ -76,8 +77,9 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		List<Object> items = new ArrayList<>();
 
 		for (Device device : devices) {
-			items.add(new DashboardModuleSelectAdapter.HeaderItem(device.getName(mActivity), DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_NAME));
+
 			List<String> groups = device.getModulesGroups(mActivity);
+			List<Object> subItems = new ArrayList<>();
 
 			if (groups.size() > 1) {
 
@@ -91,13 +93,17 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 							continue;
 						}
 
+						if (filterBy != null && module.getType() != filterBy) {
+							continue;
+						}
+
 						String moduleAbsoluteId = Utils.getAbsoluteModuleId(device.getId(), module.getId());
 						subList.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
 					}
 
 					if (subList.size() > 0) {
-						items.add(new DashboardModuleSelectAdapter.HeaderItem(group, DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_GROUP));
-						items.addAll(subList);
+						subItems.add(new DashboardModuleSelectAdapter.HeaderItem(group, DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_GROUP));
+						subItems.addAll(subList);
 					}
 				}
 			} else {
@@ -109,9 +115,18 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 						continue;
 					}
 
+					if (filterBy != null && module.getType() != filterBy) {
+						continue;
+					}
+
 					String moduleAbsoluteId = Utils.getAbsoluteModuleId(device.getId(), module.getId());
-					items.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
+					subItems.add(new DashboardModuleSelectAdapter.ModuleItem(moduleAbsoluteId, mGateId));
 				}
+			}
+
+			if (subItems.size() > 0) {
+				items.add(new DashboardModuleSelectAdapter.HeaderItem(device.getName(mActivity), DashboardModuleSelectAdapter.HeaderItem.ITEM_TYPE_DEVICE_NAME));
+				items.addAll(subItems);
 			}
 		}
 

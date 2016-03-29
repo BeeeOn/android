@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="beeeon_primary">#0097A7</color>
-    <color name="beeeon_primary_medium">#00ACC1</color> <!-- darker is #00838F -->
+    <color name="beeeon_primary_medium">#00ACC1</color>
+    <color name="beeeon_primary_darker">#00838F</color>
     <color name="beeeon_primary_dark">#006064</color>
     <color name="beeeon_primary_light">#4DD0E1</color> <!-- #B2EBF2 -->
     <color name="beeeon_accent">#FF4081</color>
@@ -27,6 +28,7 @@
     <color name="gray_light">#E7E9EA</color>
     <color name="black_semi_transparent">#B2000000</color>
     <color name="red">#FF0000</color>
+    <color name="green">#388e3c</color>
     <color name="background_dim_overlay">#44000000</color>
 
     <color name="graph1">#00ACC1</color>

@@ -16,4 +16,7 @@
 	<!-- preference activity has support of material styles -->
 	<style name="SettingsActivity" parent="AppTheme" />
 
+	<style name="BeeeOn.ProgressDialog" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+		<item name="colorAccent">@color/beeeon_accent</item>
+	</style>
 </resources>

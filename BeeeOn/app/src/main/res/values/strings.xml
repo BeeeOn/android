@@ -464,6 +464,7 @@
     <string name="dashboard_fab_add_graph">Add graph</string>
     <string name="dashboard_fab_add_week_bar_graph">Add week bar graph</string>
     <string name="dashboard_fab_add_module">Add module value</string>
+	<string name="dashboard_add_ventilation_card">Add ventilation card</string>
     <string name="dashboard_add_actual_value_label">Select module</string>
     <string name="dashboard_add_graph_name_hint">Card name</string>
     <string name="dashboard_add_graph_left_axis_label">Select left axis module</string>
@@ -477,6 +478,18 @@
     </plurals>
     <string name="dashboard_undo">Undo</string>
     <string name="dashboard_add_graph_name_error">Add card name</string>
+	<string name="dashboard_add_item_additional_settings">Additional settings</string>
+	<string name="dashboard_add_ventilation_select_provider">Select outside temperature type</string>
+	<string name="dashboard_add_ventilation_provider_weather">outside temperature from weather server</string>
+	<string name="dashboard_add_ventilation_provider_module">outside temperature from module</string>
+	<string name="dashboard_add_ventilation_outside_module_select_title">Select outside temperature sensor</string>
+	<string name="dashboard_add_ventilation_inside_module_select_title">Select inside temperature sensor</string>
+
+	<string name="dashboard_ventilation_card_label">Ventilation helper</string>
+	<string name="dashboard_ventilation_card_outside_label">Outside</string>
+	<string name="dashboard_ventilation_card_inside_label">Inside</string>
+
+
 
 	<!--Days shortcuts-->
 	<string name="monday">Mo</string>
@@ -486,5 +499,13 @@
 	<string name="friday">Fr</string>
 	<string name="saturday">Sa</string>
 	<string name="sunday">Su</string>
+
+	<!--Location-->
+	<string name="select_location">Select location</string>
+	<string name="unable_to_get_location">Unable to get location</string>
+	<string name="obtain_location">Obtaining location…</string>
+	<string name="my_location">My location</string>
+	<string name="location_not_available">Location is not available</string>
+	<string name="open_location_settings">Open location settings</string>
 </resources>
 

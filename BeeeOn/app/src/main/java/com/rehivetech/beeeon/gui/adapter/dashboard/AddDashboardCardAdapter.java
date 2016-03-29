@@ -93,9 +93,10 @@ public class AddDashboardCardAdapter extends RecyclerView.Adapter<AddDashboardCa
 		public static final int CARD_LINE_GRAPH = 1;
 		public static final int CARD_BAR_GRAPH = 2;
 		public static final int CARD_PIE_GRAPH = 3;
+		public static final int CARD_VENTILATION = 4;
 
 		@Retention(RetentionPolicy.CLASS)
-		@IntDef({CARD_ACTUAL_VALUE, CARD_LINE_GRAPH, CARD_BAR_GRAPH, CARD_PIE_GRAPH})
+		@IntDef({CARD_ACTUAL_VALUE, CARD_LINE_GRAPH, CARD_BAR_GRAPH, CARD_PIE_GRAPH, CARD_VENTILATION})
 
 		public @interface CardType {}
 

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -53,12 +54,12 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 		FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.fragment_add_dashboard_actual_value_item, container, false);
 		View childView;
 		if (mModuleItem == null) {
-			childView = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_actual_value_layout1, null);
+			childView = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_recyclerview_item_layout1, null);
 		} else {
 			childView = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_actual_value_layout2, null);
 		}
 
-		rootView.addView(childView);
+		rootView.addView(childView, 0);
 
 		return rootView;
 
@@ -69,8 +70,11 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 
 		if (mModuleItem == null) {
 			super.onViewCreated(view, savedInstanceState);
-			fillAdapter(true);
+			fillAdapter(true, null);
 			mAdapter.selectFirstModuleItem();
+
+			TextView textView = (TextView) view.findViewById(R.id.fragment_add_dashboard_item_title);
+			textView.setText(R.string.dashboard_add_actual_value_label);
 
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 			mButtonDone.setOnClickListener(new View.OnClickListener() {

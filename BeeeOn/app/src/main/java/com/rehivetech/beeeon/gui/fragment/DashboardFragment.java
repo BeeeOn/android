@@ -27,8 +27,10 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.threading.CallbackTask;
+import com.rehivetech.beeeon.threading.task.ReloadDashboardDataTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -95,6 +97,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 				mAdapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
 				mItemMoved = true;
+				Controller.getInstance(mActivity).saveDashboardItems(mGateId, mAdapter.getItems());
 				return true;
 			}
 
@@ -136,7 +139,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				doReloadDevicesTask(mGateId, true);
+				doReloadDevicesTask(true);
 			}
 		});
 	}
@@ -157,7 +160,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public void onResume() {
 		super.onResume();
-		doReloadDevicesTask(mGateId, false);
+		doReloadDevicesTask(false);
 	}
 
 	@Override
@@ -203,7 +206,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	}
 
 	private void fillDashboard() {
-		List<BaseItem> items  = Controller.getInstance(mActivity).getDashboardItems(mGateId);
+		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mGateId);
 		if (items != null) {
 			mAdapter.setItems(items);
 		}
@@ -212,11 +215,26 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	/**
 	 * Async task for refreshing data
 	 *
-	 * @param gateId
 	 * @param forceReload
 	 */
-	private void doReloadDevicesTask(String gateId, boolean forceReload) {
-		mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), gateId);
+	private void doReloadDevicesTask(boolean forceReload) {
+		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mGateId);
+		VentilationItem ventilationItem = null;
+		if (items != null) {
+
+			for (BaseItem item : items) {
+				if (item instanceof VentilationItem) {
+					ventilationItem = (VentilationItem) item;
+					break;
+				}
+			}
+		}
+
+		if (ventilationItem != null && ventilationItem.getOutsideAbsoluteModuleId() == null) {
+			mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mGateId, ventilationItem.getLatitiude(), ventilationItem.getLongitiude());
+		} else {
+			mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mGateId);
+		}
 	}
 
 
@@ -224,14 +242,14 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		if (getActivity() == null)
 			return null;
 
-		ReloadGateDataTask reloadGateDataTask = new ReloadGateDataTask(
+		ReloadDashboardDataTask reloadDashboardDataTask = new ReloadDashboardDataTask(
 				getActivity(),
 				forceReload,
 				mGateId == null
 						? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
 						: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
 
-		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+		reloadDashboardDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 				if (!success)
@@ -241,7 +259,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 				fillDashboard();
 			}
 		});
-		return reloadGateDataTask;
+		return reloadDashboardDataTask;
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {

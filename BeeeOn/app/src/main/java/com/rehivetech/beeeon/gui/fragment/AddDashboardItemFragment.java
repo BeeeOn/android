@@ -71,7 +71,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 				R.drawable.dashboard_line_graph_preview, R.string.dashboard_fab_add_graph));
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH,
 				R.drawable.dashboard_week_bar_graph_preview, R.string.dashboard_fab_add_week_bar_graph));
-
+		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_VENTILATION, 0, R.string.dashboard_add_ventilation_card));
 		addDashboardCardAdapter.setItems(items);
 	}
 
@@ -91,6 +91,8 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_PIE_GRAPH:
 				break;
+			case AddDashboardCardAdapter.CardItem.CARD_VENTILATION:
+				fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, null, null, null);
 		}
 
 		mActivity.replaceFragment(getTag(), fragment);
