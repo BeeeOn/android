@@ -9,8 +9,69 @@
 	android:foreground="?android:attr/selectableItemBackground"
 	app:contentPadding="8dp">
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="ventilation"/>
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:id="@+id/dashboard_item_ventilation_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerHorizontal="true"
+			android:gravity="center"
+			android:layout_marginBottom="@dimen/space_normal"
+			android:text="@string/dashboard_ventilation_card_label"
+			android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+		<TextView
+			android:id="@+id/dashboard_item_ventilation_outside_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			android:layout_below="@id/dashboard_item_ventilation_name"
+			android:text="@string/dashboard_ventilation_card_outside_label"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"/>
+
+		<TextView
+			android:id="@+id/dashboard_item_ventilation_inside_label"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_below="@id/dashboard_item_ventilation_name"
+			android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+			android:text="@string/dashboard_ventilation_card_inside_label"
+			/>
+
+		<TextView
+			android:id="@+id/dashboard_item_ventilation_outside_value"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/dashboard_item_ventilation_outside_label"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentStart="true"
+			/>
+
+		<TextView
+			android:id="@+id/dashboard_item_ventilation_inside_value"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/dashboard_item_ventilation_inside_label"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+			/>
+
+		<ImageView
+			android:id="@+id/dashboard_item_ventilation_icon"
+			android:layout_width="40dp"
+			android:layout_height="40dp"
+			android:layout_centerHorizontal="true"
+			android:scaleType="centerInside"
+			android:layout_below="@id/dashboard_item_ventilation_name"
+			/>
+
+	</RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -39,6 +39,13 @@ public class VentilationItem extends BaseItem {
 		return mLocation;
 	}
 
+	public String getLatitiude() {
+		return Double.toString(mLocation[0]);
+	}
+
+	public String getLongitiude() {
+		return Double.toString(mLocation[1]);
+	}
 	@Override
 	public int describeContents() {
 		return 0;

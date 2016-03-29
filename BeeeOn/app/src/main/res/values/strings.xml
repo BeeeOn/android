@@ -485,6 +485,12 @@
 	<string name="dashboard_add_ventilation_outside_module_select_title">Select outside temperature sensor</string>
 	<string name="dashboard_add_ventilation_inside_module_select_title">Select inside temperature sensor</string>
 
+	<string name="dashboard_ventilation_card_label">Ventilation helper</string>
+	<string name="dashboard_ventilation_card_outside_label">Outside</string>
+	<string name="dashboard_ventilation_card_inside_label">Inside</string>
+
+
+
 	<!--Days shortcuts-->
 	<string name="monday">Mo</string>
 	<string name="tuesday">Tu</string>
