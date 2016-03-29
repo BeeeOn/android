@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.threading.task;
 import android.content.Context;
 
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.exception.AppException;
 
 import java.util.EnumSet;
 
@@ -23,11 +24,15 @@ public class ReloadDashboardDataTask extends ReloadGateDataTask{
 
 	@Override
 	public Boolean doInBackground(String... params) {
-		if (!super.doInBackground(params[0])) {
+		try {
+			if (!super.doInBackground(params[0])) {
+				return false;
+			}
+		} catch (AppException e) {
 			return false;
 		}
 
-		if (params.length ==  1) {
+		if (params.length == 1) {
 			return true;
 		}
 
