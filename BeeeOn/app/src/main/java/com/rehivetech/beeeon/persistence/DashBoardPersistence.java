@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.persistence;
 
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,7 +40,7 @@ public class DashBoardPersistence {
 		preferences.edit().putString(key, jsonString).apply();
 	}
 
-	public static List<BaseItem> load(SharedPreferences preferences, String key) {
+	@Nullable public static List<BaseItem> load(SharedPreferences preferences, String key) {
 		String jsonString = preferences.getString(key, "");
 
 		Gson gson = DashBoardPersistence.sGsonBuilder.create();
