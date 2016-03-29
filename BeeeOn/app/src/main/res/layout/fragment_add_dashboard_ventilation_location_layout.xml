@@ -27,47 +27,37 @@
 			android:layout_height="wrap_content"
 			android:layout_margin="@dimen/space_big">
 
-			<android.support.v7.widget.CardView
-				android:id="@+id/fragment_add_dashboard_item_location_search_card"
+			<android.support.design.widget.TextInputLayout
+				android:id="@+id/fragment_add_dashboard_item_ventilation_location_textinput"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				app:cardBackgroundColor="@color/beeeon_primary_darker"
-
-				app:cardCornerRadius="4dp">
-
-				<LinearLayout
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:orientation="horizontal">
+				android:layout_toLeftOf="@+id/fragment_add_dashboard_item_ventilation_location_gps_icon"
+				android:layout_toStartOf="@+id/fragment_add_dashboard_item_ventilation_location_gps_icon"
+				android:hint="@string/select_location">
 
 				<AutoCompleteTextView
 					android:id="@+id/fragment_add_dashboard_item_ventilation_location_textview"
-					android:layout_width="0dp"
+					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:layout_weight="1"
 					android:completionThreshold="4"
-					android:layout_gravity="center_vertical"
-					android:layout_marginLeft="@dimen/space_mini"
-					android:layout_marginStart="@dimen/space_mini"
-					android:hint="@string/select_location"
-					android:textColorHint="@color/gray"
-					android:background="@null"
+					android:textColor="@color/white"
 					android:singleLine="true"/>
 
-					<ImageButton
-						android:id="@+id/fragment_add_dashboard_item_ventilation_location_gps_icon"
-						style="@style/Widget.AppCompat.Button.Borderless"
-						android:layout_width="50dp"
-						android:layout_height="50dp"/>
+			</android.support.design.widget.TextInputLayout>
 
-				</LinearLayout>
-			</android.support.v7.widget.CardView>
-
-
+			<ImageButton
+				android:id="@+id/fragment_add_dashboard_item_ventilation_location_gps_icon"
+				style="@style/Widget.AppCompat.Button.Borderless"
+				android:layout_width="50dp"
+				android:layout_height="50dp"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentEnd="true"
+				android:src="@drawable/ic_gps"
+				android:tint="@color/white"
+				android:layout_alignBottom="@id/fragment_add_dashboard_item_ventilation_location_textinput"/>
 
 		</RelativeLayout>
 
 	</android.support.v7.widget.CardView>
-
 
 </FrameLayout>

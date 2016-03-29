@@ -1,14 +1,11 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.Manifest;
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -22,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,7 +192,6 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			});
 			mAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.fragment_add_dashboard_item_ventilation_location_textview);
 			final ImageButton gpsButton = (ImageButton) view.findViewById(R.id.fragment_add_dashboard_item_ventilation_location_gps_icon);
-			final Drawable drawable = ContextCompat.getDrawable(mActivity, R.drawable.ic_gps);
 
 			SupportMapFragment mapFragment = SupportMapFragment.newInstance();
 			getFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
@@ -206,10 +201,6 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			mAutoCompleteTextView.setAdapter(mPlaceAdapter);
 			mAutoCompleteTextView.setOnItemClickListener(this);
 
-			final int primaryDark = ContextCompat.getColor(mActivity, R.color.beeeon_primary_darker);
-			final int white = ContextCompat.getColor(mActivity, R.color.white);
-
-			gpsButton.setImageDrawable(Utils.setDrawableTint(drawable, white));
 			gpsButton.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -221,37 +212,6 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 				}
 			});
 
-			final CardView locationBackground = (CardView) view.findViewById(R.id.fragment_add_dashboard_item_location_search_card);
-			if (mBackgroundAnimationCalled) {
-				locationBackground.setCardBackgroundColor(white);
-				gpsButton.setImageDrawable(Utils.setDrawableTint(drawable, primaryDark));
-			}
-			mAutoCompleteTextView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-				@Override
-				public void onFocusChange(View v, boolean hasFocus) {
-					if (!mBackgroundAnimationCalled && hasFocus) {
-						gpsButton.setImageDrawable(Utils.setDrawableTint(drawable, primaryDark));
-
-						ArgbEvaluator evaluator = new ArgbEvaluator();
-						ValueAnimator animator = new ValueAnimator();
-						animator.setIntValues(primaryDark, white);
-						animator.setEvaluator(evaluator);
-						animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-							@Override
-							public void onAnimationUpdate(ValueAnimator animation) {
-								int color = (int) animation.getAnimatedValue();
-								locationBackground.setCardBackgroundColor(color);
-							}
-						});
-						animator.start();
-						mBackgroundAnimationCalled = true;
-					} else {
-						gpsButton.setImageDrawable(Utils.setDrawableTint(drawable, white));
-						locationBackground.setCardBackgroundColor(primaryDark);
-						mBackgroundAnimationCalled = false;
-					}
-				}
-			});
 		} else if (mOutSideModuleItem != null && mOutSideProviderType == OutSideProviderType.NONE || mLocation != null) {
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(false, ModuleType.TYPE_TEMPERATURE);
@@ -358,6 +318,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 
 				if (location != null) {
 					mAutoCompleteTextView.setHint(R.string.my_location);
+					mAutoCompleteTextView.setText("");
 					try {
 						locationManager.removeUpdates(this);
 						dialog.dismiss();
