@@ -91,6 +91,7 @@
           </indentOptions>
         </codeStyleSettings>
         <codeStyleSettings language="JAVA">
+          <option name="FIELD_ANNOTATION_WRAP" value="1" />
           <indentOptions>
             <option name="USE_TAB_CHARACTER" value="true" />
           </indentOptions>
@@ -108,6 +109,5 @@
       </value>
     </option>
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
-    <option name="PREFERRED_PROJECT_CODE_STYLE" value="Default (1)" />
   </component>
 </project>
