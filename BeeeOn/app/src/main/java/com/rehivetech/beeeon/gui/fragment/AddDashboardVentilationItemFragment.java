@@ -131,7 +131,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		if (mInsideModuleItem == null && mLocation == null && mOutSideModuleItem == null && mOutSideProviderType == OutSideProviderType.NONE) {
 			view = LayoutInflater.from(mActivity).inflate(R.layout.fragment_add_dashboard_ventilation_layout_1, null);
 		} else if (mOutSideProviderType == OutSideProviderType.OUTSIDE_TYPE_MODULE || mLocation != null || mOutSideModuleItem != null) {
-			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_graph_item_layout1, null);
+			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_recyclerview_item_layout1, null);
 		} else if (mOutSideProviderType == OutSideProviderType.OUTSIDE_TYPE_WEATHER) {
 			view = LayoutInflater.from(mActivity).inflate(R.layout.fragment_add_dashboard_ventilation_location_layout, null);
 		}

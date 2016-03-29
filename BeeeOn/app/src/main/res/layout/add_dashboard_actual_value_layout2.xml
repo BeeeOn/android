@@ -1,20 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:padding="@dimen/space_big">
+	android:layout_height="match_parent">
 
-	<TextView
-		android:layout_width="wrap_content"
+	<android.support.v7.widget.CardView
+		style="@style/BeeeOn.CardView.NoPadding"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="@string/dashboard_add_graph_name_hint"
-		android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+		app:cardBackgroundColor="@color/beeeon_primary"
+		app:cardElevation="6dp">
+
+		<TextView
+			android:id="@+id/fragment_add_dashboard_item_title"
+			style="@style/BeeeOn.AddDashboard.Title"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/dashboard_add_graph_name_hint"
+			/>
+
+	</android.support.v7.widget.CardView>
 
 	<android.support.design.widget.TextInputLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
+		android:layout_margin="@dimen/space_big"
 		>
 
 		<EditText
@@ -22,6 +34,8 @@
 			android:layout_width="match_parent"
 			android:inputType="text"
 			android:layout_height="wrap_content"/>
+
+		<requestFocus/>
 
 	</android.support.design.widget.TextInputLayout>
 </LinearLayout>

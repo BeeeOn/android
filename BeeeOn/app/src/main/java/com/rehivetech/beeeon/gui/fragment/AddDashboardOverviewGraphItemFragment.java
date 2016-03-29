@@ -59,12 +59,12 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 
 		View view;
 		if (mModuleItem == null) {
-			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_graph_item_layout1, null);
+			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_recyclerview_item_layout1, null);
 		} else {
 			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_graph_overview_item_layout2, null);
 		}
 
-		rootView.addView(view);
+		rootView.addView(view, 0);
 
 		return rootView;
 	}
