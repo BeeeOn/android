@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -200,7 +199,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		notifyItemRemoved(position);
 	}
 
-	public abstract class BaseDashboardViewHolder extends SelectableViewHolder {
+	public abstract class BaseDashboardViewHolder extends SelectableViewHolder implements View.OnLongClickListener {
 		public final CardView mCardView;
 
 		public BaseDashboardViewHolder(View itemView) {
@@ -230,9 +229,14 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				return false;
 			}
 		}
+
+		@Override
+		public boolean onLongClick(View v) {
+			return mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType());
+		}
 	}
 
-	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
 		public final TextView mGraphName;
 		public final TextView mLeftAxisUnit;
 		public final TextView mRightAxisUnit;
@@ -351,17 +355,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 		}
 
-		@Override
-		public boolean onLongClick(View v) {
-			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
-				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-				return true;
-			}
-			return false;
-		}
 	}
 
-	public class ActualValueViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public class ActualValueViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
 		public final ImageView mIcon;
 		public final TextView mLabel;
 		public final TextView mValue;
@@ -408,18 +404,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_ACT_VALUE);
 			}
 		}
-
-		@Override
-		public boolean onLongClick(View v) {
-			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
-				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-				return true;
-			}
-			return false;
-		}
 	}
 
-	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener {
+	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
 
 		public final TextView mGraphName;
 		public final TextView mGraphUnit;
@@ -510,18 +497,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW);
 			}
 		}
-
-		@Override
-		public boolean onLongClick(View v) {
-			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
-				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-				return true;
-			}
-			return false;
-		}
 	}
 
-	public class VentilationViewHolder extends BaseDashboardViewHolder implements View.OnClickListener, View.OnLongClickListener  {
+	public class VentilationViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
 
 		final TextView mOutSideTemp;
 		final TextView mInsideTemp;
@@ -581,16 +559,9 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		@Override
 		public void onClick(View v) {
-
-		}
-
-		@Override
-		public boolean onLongClick(View v) {
-			if (mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType())) {
-				v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-				return true;
+			if (!handleSelection() && mItemClickListener != null) {
+				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_VENTILATION);
 			}
-			return false;
 		}
 	}
 
