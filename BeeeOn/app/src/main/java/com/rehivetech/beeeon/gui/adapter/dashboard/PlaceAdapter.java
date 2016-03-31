@@ -36,7 +36,7 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
 
 	@Override
 	public Place getItem(int position) {
-		return mPlaces.get(position);
+		return (mPlaces != null && mPlaces.size() > 0) ? mPlaces.get(position) : null;
 	}
 
 	@Override
