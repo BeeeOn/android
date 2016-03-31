@@ -172,6 +172,8 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 		//disable right axis
 		mChart.getAxisRight().setEnabled(false);
 
+		mChart.setAutoScaleMinMaxEnabled(true);
+
 		if (rightModule != null) {
 			int rightAxisColor = Utils.getGraphColor(mActivity, 1);
 			ChartHelper.prepareYAxis(mActivity, rightModule.getValue(), mChart.getAxisRight(), rightAxisColor, YAxis.YAxisLabelPosition.OUTSIDE_CHART, true, false, 5);
