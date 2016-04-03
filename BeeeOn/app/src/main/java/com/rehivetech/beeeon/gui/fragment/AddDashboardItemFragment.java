@@ -87,7 +87,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 			}
 		}
 		if (ventilationItem == null) {
-			items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_VENTILATION, 0, R.string.dashboard_add_ventilation_card));
+			items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_VENTILATION, R.drawable.dashboard_ventilation_preview, R.string.dashboard_add_ventilation_card));
 		}
 		addDashboardCardAdapter.setItems(items);
 	}
