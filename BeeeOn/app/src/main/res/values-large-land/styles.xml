@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="AddDashboardItemActivity" parent="Theme.AppCompat.Light.Dialog">
+
+		<item name="android:windowNoTitle">true</item>
+		<item name="android:windowFrame">@null</item>
+		<item name="android:windowIsFloating">true</item>
+		<item name="android:windowIsTranslucent">true</item>
+		   <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/beeeon_primary</item>
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/beeeon_primary_dark</item>
+        <!-- colorAccent is used as the default value for colorControlActivated, which is used to tint widgets -->
+        <item name="colorAccent">@color/beeeon_accent</item>
+
+        <item name="android:textColorPrimary">@color/beeeon_primary_text</item>
+        <item name="android:textColorSecondary">@color/beeeon_secondary_text</item>
+
+        <!-- there can also be set colorControlNormal, colorControlActivated colorControlHighlight, and colorSwitchThumbNormal. -->
+        <item name="colorControlNormal">@color/beeeon_primary_text</item>
+        <item name="colorControlActivated">@color/beeeon_accent</item>
+        <item name="colorControlHighlight">@color/beeeon_primary_light</item>
+
+		<item name="android:windowBackground">@color/beeeon_background</item>
+		<item name="android:colorBackground">@color/beeeon_background</item>
+
+	</style>
+</resources>

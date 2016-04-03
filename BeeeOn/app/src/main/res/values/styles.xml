@@ -65,6 +65,10 @@
 		<item name="colorControlNormal">@color/white</item>
 	</style>
 
+    <style name="AddDashboardItemActivity" parent="AppTheme">
+
+    </style>
+
 	<!-- widget configuration activity -->
 
     <style name="LinearRow" />
