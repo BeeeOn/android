@@ -435,7 +435,7 @@
     <string name="dashboard_fab_add_graph">Add graph</string>
     <string name="dashboard_fab_add_week_bar_graph">Add week bar graph</string>
     <string name="dashboard_fab_add_module">Add module value</string>
-	<string name="dashboard_add_ventilation_card">Add ventilation card</string>
+	<string name="dashboard_add_ventilation_card">Add ventilation helper</string>
     <string name="dashboard_add_actual_value_label">Select module</string>
     <string name="dashboard_add_graph_name_hint">Card name</string>
     <string name="dashboard_add_graph_left_axis_label">Select left axis module</string>
