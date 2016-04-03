@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,10 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_add_dashboard_item);
+
+		if(!getResources().getBoolean(R.bool.is_tablet)){
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
 
 		setupToolbar("", true);
 
