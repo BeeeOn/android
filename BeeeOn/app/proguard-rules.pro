@@ -138,12 +138,9 @@
 
 
 #Keep 3th part libraries
--keep class net.i2p.android.**{*;}
 -keep class fr.avianey.**{*;}
--keep class com.sonyericsson.**{*;}
 -keep class org.joda.convert.**{*;}
 -keep class com.github.**{*;}
--keep class net.simonvt.**{*;}
 -keep class com.avast.**{*;}
 -keep class com.facebook.**{*;}
 
