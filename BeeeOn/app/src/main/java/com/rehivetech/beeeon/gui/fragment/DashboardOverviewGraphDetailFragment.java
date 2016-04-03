@@ -152,7 +152,7 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 		mChart.getAxisRight().setEnabled(false);
 
 		mChart.setMaxVisibleValueCount(0);
-		ChartHelper.prepareDataSet(mActivity, mDataSet, true, true,
+		ChartHelper.prepareDataSet(mActivity, module.getValue(), mDataSet, true, true,
 				ContextCompat.getColor(mActivity, R.color.beeeon_primary), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 		mDataSet.setDrawValues(false);
 	}

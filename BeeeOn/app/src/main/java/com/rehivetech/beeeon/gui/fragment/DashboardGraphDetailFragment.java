@@ -178,14 +178,14 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 			mUnitRight.setTextColor(rightAxisColor);
 		}
 
-		ChartHelper.prepareDataSet(mActivity, mLineDataSetLeft, false, true,
+		ChartHelper.prepareDataSet(mActivity, leftModule.getValue(), mLineDataSetLeft, false, true,
 				Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 		mLineDataSetLeft.setAxisDependency(YAxis.AxisDependency.LEFT);
 
 		if (rightModule != null) {
 			mLineDataSetRight = new LineDataSet(new ArrayList<Entry>(), rightModule.getName(mActivity, true));
 
-			ChartHelper.prepareDataSet(mActivity, mLineDataSetRight, false, true,
+			ChartHelper.prepareDataSet(mActivity, rightModule.getValue(), mLineDataSetRight, false, true,
 					Utils.getGraphColor(mActivity, 1), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 
 			mLineDataSetRight.setAxisDependency(YAxis.AxisDependency.RIGHT);

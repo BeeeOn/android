@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -202,11 +203,19 @@ final public class ChartHelper {
 	 * @param drawValues     in line dataSet draws values or not
 	 */
 	@SuppressLint("PrivateResource")
-	public static void prepareDataSet(Context context, DataSet dataset, boolean barChart, boolean filled,
+	public static void prepareDataSet(Context context, @Nullable final BaseValue baseValue, DataSet dataset, boolean barChart, boolean filled,
 									  @ColorInt int color, @ColorInt int highlightColor, boolean drawValues) {
 		int fillColor = Utils.setColorAlpha(color, 125);
 
 		dataset.setDrawValues(false);
+
+		final UnitsHelper unitsHelper = Utils.getUnitsHelper(context);
+		dataset.setValueFormatter(new ValueFormatter() {
+			@Override
+			public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+				return formatValue(unitsHelper, baseValue, value);
+			}
+		});
 
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
@@ -361,22 +370,24 @@ final public class ChartHelper {
 			@SuppressLint("DefaultLocale")
 			@Override
 			public String getFormattedValue(float value, YAxis yAxis) {
-				if (unitsHelper != null) {
-					try {
-						value = (float) unitsHelper.getDoubleValue(baseValue, value);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-
-				if (value == 0) value = 0; // IMPORTANT: this code actually works, prevents having -0 in graph
-
-				if (value % 1 == 0) {
-					return String.format("%.0f", value);
-				}
-				return String.format("%.1f", value);
+				return formatValue(unitsHelper, baseValue, value);
 			}
 		};
+	}
+
+	/**
+	 * Formats float value to correct unit
+	 * @param unitsHelper
+	 * @param baseValue
+	 * @param value
+	 * @return formatted value
+	 */
+	private static String formatValue(@Nullable UnitsHelper unitsHelper, @Nullable BaseValue baseValue, float value) {
+		if (unitsHelper != null) {
+			return unitsHelper.getStringValue(baseValue, value);
+		} else {
+			return String.valueOf(value);
+		}
 	}
 
 	/**
