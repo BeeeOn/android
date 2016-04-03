@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.adapter.dashboard;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.ChartHelper;
@@ -251,10 +253,11 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 		public void bind(Controller controller, GraphItem item, int position) {
 			Gate gate = controller.getGatesModel().getGate(item.getGateId());
-			Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleIds().get(0));
+			Module leftModule = controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleIds().get(0));
+			Module rightModule = (item.getAbsoluteModuleIds().size() > 1) ? controller.getDevicesModel().getModule(item.getGateId(), item.getAbsoluteModuleIds().get(1)) : null;
 
 			mGraphName.setText(item.getName());
-			mLastUpdate.setText(mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), gate));
+			mLastUpdate.setText(mTimeHelper.formatLastUpdate(leftModule.getDevice().getLastUpdate(), gate));
 
 			if (Build.VERSION.SDK_INT == Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
 				mChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -263,21 +266,21 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mChart.clear();
 			mLeftAxisUnit.setVisibility(View.INVISIBLE);
 			mRightAxisUnit.setVisibility(View.INVISIBLE);
-			prepareChart(item);
+			prepareChart(item, leftModule.getValue(), rightModule != null ? rightModule.getValue() : null);
 			mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 			fillChart(controller, item, gate);
 
 			setSelected(isSelected(position));
 		}
 
-		private void prepareChart(GraphItem item) {
+		private void prepareChart(GraphItem item, BaseValue leftBaseValue, @Nullable BaseValue rightBaseValue) {
 			ChartHelper.prepareChart(mChart, mActivity, null, null, null, false, false);
 			ChartHelper.prepareXAxis(mActivity, mChart.getXAxis(), null, XAxis.XAxisPosition.BOTTOM, false);
-			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
+			ChartHelper.prepareYAxis(mActivity, leftBaseValue, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
 
 
 			if (item.getAbsoluteModuleIds().size() > 1) {
-				ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
+				ChartHelper.prepareYAxis(mActivity, rightBaseValue, mChart.getAxisRight(), Utils.getGraphColor(mActivity, 1), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
 				mChart.getAxisRight().setEnabled(true);
 			} else {
 				mChart.getAxisRight().setEnabled(false);
@@ -296,7 +299,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 				final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
 				dataSet.setAxisDependency(axisDependency);
-				ChartHelper.prepareDataSet(mActivity, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
+				ChartHelper.prepareDataSet(mActivity,null, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 
 				ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
 					@Override
@@ -334,7 +337,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				Module module = controller.getDevicesModel().getModule(gate.getId(), modules.get(i));
 
 				ModuleLog.DataInterval dataInterval = (item.getDataRange() > ChartHelper.RANGE_DAY) ? ModuleLog.DataInterval.HALF_HOUR : ModuleLog.DataInterval.TEN_MINUTES;
-				ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), item.getDataRange(),
+				ChartHelper.loadChartData(mActivity, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), item.getDataRange(),
 						ModuleLog.DataType.AVERAGE, dataInterval, chartLoadListener, dateTimeFormatter);
 
 				axisDependency = YAxis.AxisDependency.RIGHT;
@@ -447,18 +450,18 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 
 			mChart.clear();
-			prepareChart();
+			prepareChart(module.getValue());
 			mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 			fillChart(controller, item, gate, module);
 
 			setSelected(isSelected(position));
 		}
 
-		private void prepareChart() {
+		private void prepareChart(BaseValue baseValue) {
 			ChartHelper.prepareChart(mChart, mActivity, null, null, null, false, false);
 			XAxis xAxis = mChart.getXAxis();
 			ChartHelper.prepareXAxis(mActivity, xAxis, null, XAxis.XAxisPosition.BOTTOM, false);
-			ChartHelper.prepareYAxis(mActivity, null, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
+			ChartHelper.prepareYAxis(mActivity, baseValue, mChart.getAxisLeft(), Utils.getGraphColor(mActivity, 0), YAxis.YAxisLabelPosition.OUTSIDE_CHART, false, true, 3);
 
 			mChart.getAxisRight().setEnabled(false);
 
@@ -470,7 +473,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 
 			final BarDataSet dataSet = new BarDataSet(new ArrayList<BarEntry>(), item.getAbsoluteModuleId());
-			ChartHelper.prepareDataSet(mActivity, dataSet, true, false, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
+			ChartHelper.prepareDataSet(mActivity, null, dataSet, true, false, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 
 			ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
 				@Override
@@ -496,7 +499,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			};
 
 			ModuleLog.DataInterval dataInterval = ModuleLog.DataInterval.DAY;
-			ChartHelper.loadChartData(mActivity, controller, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), ChartHelper.RANGE_WEEK,
+			ChartHelper.loadChartData(mActivity, dataSet, item.getGateId(), module.getDevice().getId(), module.getId(), ChartHelper.RANGE_WEEK,
 					item.getDataType(), dataInterval, chartLoadListener, dateTimeFormatter);
 
 		}

@@ -50,7 +50,7 @@ import java.util.List;
 /**
  * @author martin on 18.8.2015.
  */
-public class ModuleGraphFragment extends BaseApplicationFragment implements ModuleGraphActivity.ChartSettingListener{
+public class ModuleGraphFragment extends BaseApplicationFragment implements ModuleGraphActivity.ChartSettingListener {
 	private static final String TAG = ModuleGraphFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
@@ -97,8 +97,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinValue("");
-					mActivity.setMaxValue("");
+					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
@@ -112,8 +111,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinValue("");
-					mActivity.setMaxValue("");
+					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
@@ -196,7 +194,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mRootLayout = (RelativeLayout) view.findViewById(R.id.module_graph_layout);
 
 
-
 		mActivity.setShowLegendButtonOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -255,7 +252,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, null, false, true);
 		} else {
 			mChart = new LineChart(mActivity);
-			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, unit);
+			ModuleGraphMarkerView markerView = new ModuleGraphMarkerView(mActivity, R.layout.util_chart_module_markerview, (LineChart) mChart, module);
 			ChartHelper.prepareChart(mChart, mActivity, baseValue, mYlabels, markerView, false, true);
 		}
 
@@ -290,14 +287,14 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 //			mShowLegendButton.setVisibility(View.GONE);
 		}
 		//set dataset style
-		ChartHelper.prepareDataSet(mActivity, mDataSetAvg, barchart, true, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
-		ChartHelper.prepareDataSet(mActivity, mDataSetMin, barchart, true, Utils.getGraphColor(mActivity, 1), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
-		ChartHelper.prepareDataSet(mActivity, mDataSetMax, barchart, true, Utils.getGraphColor(mActivity, 2), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
+		ChartHelper.prepareDataSet(mActivity, baseValue, mDataSetAvg, barchart, true, Utils.getGraphColor(mActivity, 0), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
+		ChartHelper.prepareDataSet(mActivity, baseValue, mDataSetMin, barchart, true, Utils.getGraphColor(mActivity, 1), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
+		ChartHelper.prepareDataSet(mActivity, baseValue, mDataSetMax, barchart, true, Utils.getGraphColor(mActivity, 2), ContextCompat.getColor(mActivity, R.color.beeeon_accent), true);
 
 	}
 
 	@Override
-	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity,  int sliderProgress) {
+	public void onChartSettingChanged(boolean drawMin, boolean drawAvg, boolean drawMax, ModuleLog.DataInterval dataGranularity, int sliderProgress) {
 		mCheckboxMin = drawMin;
 		mCheckboxAvg = drawAvg;
 		mCheckboxMax = drawMax;
@@ -311,16 +308,16 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		mDataSetMax.clear();
 
 		if (drawMax) {
-			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,
+			ChartHelper.loadChartData(mActivity, mDataSetMax, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.MAXIMUM, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 		if (drawAvg) {
-			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
+			ChartHelper.loadChartData(mActivity, mDataSetAvg, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.AVERAGE, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 
 		if (drawMin) {
-			ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
+			ChartHelper.loadChartData(mActivity, mDataSetMin, mGateId, mDeviceId, mModuleId, mRange,
 					ModuleLog.DataType.MINIMUM, dataGranularity, mChartLoadCallback, mFormatter);
 		}
 	}
@@ -353,8 +350,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			maxValue = mDataSetMin.getYMax();
 		}
 
-		mActivity.setMinValue(String.format("%.2f", minValue));
-		mActivity.setMaxValue(String.format("%.2f", maxValue));
+		mActivity.setMinMaxValue(String.valueOf(minValue), String.valueOf(maxValue));
 	}
 
 	private void initGraphSetting(GraphSettings settings) {

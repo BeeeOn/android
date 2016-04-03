@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.FillFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.formatter.YAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -84,11 +85,11 @@ final public class ChartHelper {
 	/**
 	 * Set chart params, legend and value formatter
 	 *
-	 * @param chart      chart instance
-	 * @param context    context
-	 * @param baseValue  module baseValue
-	 * @param yLabels    StringBuffer to save long x labels in bar chart
-	 * @param markerView chart markerView instance
+	 * @param chart              chart instance
+	 * @param context            context
+	 * @param baseValue          module baseValue
+	 * @param yLabels            StringBuffer to save long x labels in bar chart
+	 * @param markerView         chart markerView instance
 	 * @param drawBorders
 	 * @param setGestureListener
 	 */
@@ -202,11 +203,19 @@ final public class ChartHelper {
 	 * @param drawValues     in line dataSet draws values or not
 	 */
 	@SuppressLint("PrivateResource")
-	public static void prepareDataSet(Context context, DataSet dataset, boolean barChart, boolean filled,
+	public static void prepareDataSet(Context context, @Nullable final BaseValue baseValue, DataSet dataset, boolean barChart, boolean filled,
 									  @ColorInt int color, @ColorInt int highlightColor, boolean drawValues) {
 		int fillColor = Utils.setColorAlpha(color, 125);
 
 		dataset.setDrawValues(false);
+
+		final UnitsHelper unitsHelper = Utils.getUnitsHelper(context);
+		dataset.setValueFormatter(new ValueFormatter() {
+			@Override
+			public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+				return formatValue(unitsHelper, baseValue, value);
+			}
+		});
 
 		if (!barChart) {
 			((LineDataSet) dataset).setDrawCircles(false);
@@ -341,6 +350,7 @@ final public class ChartHelper {
 			final List<EnumValue.Item> yLabels = ((EnumValue) baseValue).getEnumItems();
 			if (yLabels.size() > 2) {
 				return new YAxisValueFormatter() {
+					@SuppressLint("DefaultLocale")
 					@Override
 					public String getFormattedValue(float value, YAxis yAxis) {
 						return String.format("%.0f.", yLabels.size() - value);
@@ -354,23 +364,34 @@ final public class ChartHelper {
 				}
 			};
 		}
+
+		final UnitsHelper unitsHelper = Utils.getUnitsHelper(context);
 		return new YAxisValueFormatter() {
+			@SuppressLint("DefaultLocale")
 			@Override
 			public String getFormattedValue(float value, YAxis yAxis) {
-				if (value == 0)
-					value = 0;
-
-				if (value % 1 == 0) {
-					return String.format("%.0f", value);
-				}
-				return String.format("%.1f", value);
+				return formatValue(unitsHelper, baseValue, value);
 			}
 		};
 	}
 
 	/**
+	 * Formats float value to correct unit
+	 * @param unitsHelper
+	 * @param baseValue
+	 * @param value
+	 * @return formatted value
+	 */
+	private static String formatValue(@Nullable UnitsHelper unitsHelper, @Nullable BaseValue baseValue, float value) {
+		if (unitsHelper != null) {
+			return unitsHelper.getStringValue(baseValue, value);
+		} else {
+			return String.valueOf(value);
+		}
+	}
+
+	/**
 	 * @param activity     instance of activity
-	 * @param controller   instance of controller
 	 * @param dataSet      instance of chart dataSet
 	 * @param gateId       ID of gate
 	 * @param deviceId     ID of device
@@ -380,12 +401,12 @@ final public class ChartHelper {
 	 * @param dataInterval interval of values
 	 */
 	public static <T extends DataSet>
-	void loadChartData(final BaseApplicationActivity activity, final Controller controller, final T dataSet, final String gateId, String deviceId,
+	void loadChartData(final BaseApplicationActivity activity, final T dataSet, final String gateId, String deviceId,
 					   String moduleId, @DataRange int range, final ModuleLog.DataType dataType,
 					   final ModuleLog.DataInterval dataInterval, final ChartLoadListener callback, final DateTimeFormatter formatter) {
 
 		final List<String> xValues = new ArrayList<>();
-		final Module module = controller.getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
+		final Module module = Controller.getInstance(activity).getDevicesModel().getDevice(gateId, deviceId).getModuleById(moduleId);
 
 		if (module == null) {
 			return;
@@ -402,7 +423,6 @@ final public class ChartHelper {
 			@Override
 			public void onExecute(boolean success) {
 				ModuleLog moduleLog = Controller.getInstance(activity).getModuleLogsModel().getModuleLog(dataPair);
-
 				fillDataSet(moduleLog, dataSet, xValues, dataPair, formatter);
 				callback.onChartLoaded(dataSet, xValues);
 			}

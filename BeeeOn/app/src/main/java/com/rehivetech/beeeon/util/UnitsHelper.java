@@ -40,6 +40,23 @@ public class UnitsHelper {
 		return getStringValue(item, item.getDoubleValue());
 	}
 
+	/**
+	 * Converts value specified by units conversion method
+	 *
+	 * @param item determines which units should be used
+	 * @param value from which will be converted
+	 * @return converted double value
+	 * @throws Exception
+	 */
+	public double getDoubleValue(BaseValue item, double value) throws Exception {
+		if (item instanceof EnumValue) {
+			throw new Exception("Put EnumValue to getDoubleValue() which accepts only numeric values");
+		}
+
+		BaseUnit.Item to = (BaseUnit.Item) item.getUnit().fromSettings(mPrefs);
+		return item.getUnit().convertValue(to, value);
+	}
+
 	public String getStringUnit(BaseValue item) {
 		return ((BaseUnit.Item) item.getUnit().fromSettings(mPrefs)).getStringUnit(mContext);
 	}
@@ -54,4 +71,18 @@ public class UnitsHelper {
 		return String.format("%s %s", value, unit);
 	}
 
+	/**
+	 * Tries to format value by formatter in UnitsHelper, if is null, formats by default format
+	 *
+	 * @param helper UnitsHelper (might be null)
+	 * @param value  to show
+	 * @return formatted string
+	 */
+	public static String format(UnitsHelper helper, BaseValue value) {
+		if (helper != null) {
+			return helper.getStringValueUnit(value);
+		} else {
+			return String.format("%.2f %s", value.getDoubleValue(), value.getUnit());
+		}
+	}
 }

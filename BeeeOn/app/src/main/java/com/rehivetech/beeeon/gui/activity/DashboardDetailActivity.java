@@ -32,7 +32,7 @@ public class DashboardDetailActivity extends BaseApplicationActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_detail);
 
-		setupToolbar(0, true);
+		setupToolbar("", true);
 
 		Bundle args = getIntent().getExtras();
 		BaseItem item = args.getParcelable(ARG_BASE_DASHBOARD_ITEM);

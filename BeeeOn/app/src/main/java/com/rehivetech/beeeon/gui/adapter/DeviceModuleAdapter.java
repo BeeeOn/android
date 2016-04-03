@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.util.UnitsHelper;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +35,13 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 	private Context mContext;
 	private List<Module> mModuleList;
 	private ItemClickListener mItemClickListener;
+	private UnitsHelper mUnitsHelper;
 
 	public DeviceModuleAdapter(Context context, ItemClickListener itemClickListener) {
 		mContext = context;
 		mModuleList = new ArrayList<>();
 		mItemClickListener = itemClickListener;
+		mUnitsHelper = Utils.getUnitsHelper(context);
 	}
 
 	@Override
@@ -52,14 +55,11 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 		final Module module = mModuleList.get(position);
 		holder.mModuleId = module.getId();
 
-		SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
-		UnitsHelper unitsHelper = (prefs == null) ? null : new UnitsHelper(prefs, mContext);
-
 		holder.mTitle.setText(module.getName(mContext));
-		if (unitsHelper != null) {
+		if (mUnitsHelper != null) {
 			holder.mValue.setText(String.format("%s %s",
-					unitsHelper.getStringValue(module.getValue()),
-					unitsHelper.getStringUnit(module.getValue())));
+					mUnitsHelper.getStringValue(module.getValue()),
+					mUnitsHelper.getStringUnit(module.getValue())));
 		}
 		holder.mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
 		// shows unavailable icon if status is unavailable

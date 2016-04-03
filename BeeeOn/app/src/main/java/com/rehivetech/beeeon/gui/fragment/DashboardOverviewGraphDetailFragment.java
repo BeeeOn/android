@@ -152,7 +152,7 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 		mChart.getAxisRight().setEnabled(false);
 
 		mChart.setMaxVisibleValueCount(0);
-		ChartHelper.prepareDataSet(mActivity, mDataSet, true, true,
+		ChartHelper.prepareDataSet(mActivity, module.getValue(), mDataSet, true, true,
 				ContextCompat.getColor(mActivity, R.color.beeeon_primary), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 		mDataSet.setDrawValues(false);
 	}
@@ -163,7 +163,7 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 		mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
 		String[] ids = Utils.parseAbsoluteModuleId(mItem.getAbsoluteModuleId());
 
-		ChartHelper.loadChartData(mActivity, Controller.getInstance(mActivity), mDataSet, mItem.getGateId(), ids[0], ids[1],
+		ChartHelper.loadChartData(mActivity, mDataSet, mItem.getGateId(), ids[0], ids[1],
 				ChartHelper.RANGE_WEEK, mItem.getDataType(), ModuleLog.DataInterval.DAY, mChartLoadListener, mFormatter);
 	}
 }

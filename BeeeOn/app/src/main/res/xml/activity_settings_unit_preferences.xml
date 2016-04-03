@@ -11,5 +11,10 @@
         android:key="pref_noise"
         android:title="@string/settings_unit_preferences_noise" >
     </ListPreference>
-    
+
+    <ListPreference
+        android:dialogTitle="@string/settings_unit_preferences_pressure"
+        android:key="pref_pressure"
+        android:title="@string/settings_unit_preferences_pressure" >
+    </ListPreference>
 </PreferenceScreen>

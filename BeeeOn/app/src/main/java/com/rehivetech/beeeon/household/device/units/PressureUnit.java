@@ -5,17 +5,19 @@ import com.rehivetech.beeeon.R;
 
 public class PressureUnit extends BaseUnit {
 
-	public static final int DEFAULT = 0;
+	public static final int HPA = 0;
+	public static final int BAR = 1;
 
 	public PressureUnit() {
 		super();
 
-		mItems.add(this.new Item(DEFAULT, R.string.unit_pressure, R.string.unit_pressure));
+		mItems.add(this.new Item(HPA, R.string.unit_pressure, R.string.unit_pressure));
+		mItems.add(this.new Item(BAR, R.string.unit_pressure_bar_full, R.string.unit_pressure_bar));
 	}
 
 	@Override
 	public int getDefaultId() {
-		return DEFAULT;
+		return HPA;
 	}
 
 	@Override
@@ -25,7 +27,14 @@ public class PressureUnit extends BaseUnit {
 
 	@Override
 	public double convertValue(Item to, double value) {
-		return value;
+		switch (to.getId()) {
+			case BAR:
+				return value * 0.001;
+			default:
+				return value;
+		}
+
+
 	}
 
 }

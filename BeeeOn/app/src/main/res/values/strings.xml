@@ -373,6 +373,8 @@
 	<string name="settings_main_toast_no_google_play_services">Google Play Services not available.</string>
 	<string name="settings_unit_preferences_noise">Noise</string>
 	<string name="settings_unit_preferences_temperature">Temperature</string>
+	<string name="settings_unit_preferences_pressure">Pressure</string>
+
 	<string name="settings_unit_unit">Units</string>
 	<string name="settings_language_default">Default(from system)</string>
 	<string name="settings_actualization_category_title">Actualization settings</string>

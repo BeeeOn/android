@@ -17,6 +17,8 @@
 
 	<string name="unit_humidity" translatable="false">%</string>
 	<string name="unit_pressure" translatable="false">hPa</string>
+	<string name="unit_pressure_bar_full" translatable="false">Bar</string>
+	<string name="unit_pressure_bar" translatable="false">bar</string>
 	<string name="unit_illumination" translatable="false">lux</string>
 	<string name="unit_noise" translatable="false">dB</string>
 	<string name="unit_emission" translatable="false">ppm</string>

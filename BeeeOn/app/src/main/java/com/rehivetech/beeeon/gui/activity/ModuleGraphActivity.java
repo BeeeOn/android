@@ -3,14 +3,13 @@ package com.rehivetech.beeeon.gui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ import java.util.List;
 /**
  * @author martin on 18.8.2015.
  */
-public class ModuleGraphActivity extends BaseApplicationActivity implements OnSheetDismissedListener, GraphSettings.GraphSettingsListener{
+public class ModuleGraphActivity extends BaseApplicationActivity implements OnSheetDismissedListener, GraphSettings.GraphSettingsListener {
 	private final static String TAG = ModuleGraphActivity.class.getSimpleName();
 
 	private static final String EXTRA_GATE_ID = "gate_id";
@@ -68,7 +67,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	FloatingActionButton.OnVisibilityChangedListener mOnVisibilityChangedListener;
 	private Button mShowLegendButton;
 
-	private String mModuleUnit;
+	private Module mModule;
+	private @Nullable UnitsHelper mUnitsHelper;
 
 	public static Intent getActivityIntent(Context context, String gateId, String deviceId, String moduleId) {
 		Intent intent = new Intent(context, ModuleGraphActivity.class);
@@ -100,22 +100,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		}
 
 		Controller controller = Controller.getInstance(this);
-		Module module = controller.getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
+		mModule = controller.getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
+		mUnitsHelper = Utils.getUnitsHelper(this);
 
-		UnitsHelper unitsHelper = Utils.getUnitsHelper(this);
-		if (unitsHelper != null) {
-			mModuleUnit = unitsHelper.getStringUnit(module.getValue());
-		}
-
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		toolbar.setTitle(module.getName(this));
-		setSupportActionBar(toolbar);
-
-		ActionBar actionBar = getSupportActionBar();
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setDisplayShowTitleEnabled(true);
-		}
+		setupToolbar(mModule.getName(this), true);
 
 		mMinValue = (TextView) findViewById(R.id.module_graph_min_value);
 		mMaxValue = (TextView) findViewById(R.id.module_graph_max_value);
@@ -127,7 +115,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
 		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
 
-		mBottomSheetLayout  = (BottomSheetLayout) findViewById(R.id.module_graph_botom_sheet_layout);
+		mBottomSheetLayout = (BottomSheetLayout) findViewById(R.id.module_graph_botom_sheet_layout);
 		mBottomSheetLayout.setPeekOnDismiss(true);
 		mBottomSheetLayout.addOnSheetDismissedListener(this);
 
@@ -142,7 +130,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 
 		setupViewPager();
 
-		if (module.getValue() instanceof EnumValue) {
+		if (mModule.getValue() instanceof EnumValue) {
 			mFab.setVisibility(View.GONE);
 		}
 
@@ -168,7 +156,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 			}
 		});
 
-		updateActValue();
+		updateActualValue();
 	}
 
 	@Override
@@ -238,7 +226,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		});
 	}
 
-	private void updateActValue() {
+	/**
+	 * Updates actual value in toolbar and hides min/max values if enum value
+	 */
+	private void updateActualValue() {
 		BaseValue value = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId).getValue();
 		if (value instanceof EnumValue) {
 			mActValue.setText(((EnumValue) value).getStateStringResource());
@@ -248,9 +239,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 
 			mMaxValue.setVisibility(View.GONE);
 			mMaxValuelabel.setVisibility(View.GONE);
-
 		} else {
-			mActValue.setText(String.format("%.2f %s", value.getDoubleValue(), mModuleUnit));
+			mActValue.setText(UnitsHelper.format(mUnitsHelper, value));
 			mShowLegendButton.setVisibility(View.GONE);
 		}
 	}
@@ -266,24 +256,34 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		currentFragment.onChartSettingChanged(checkBoxMinChecked, checkboxAvgChecked, checkboxMaxChecked, dataGranularity, sliderProgress);
 	}
 
-	public void setMinValue(String minValue) {
-		if (minValue.length() == 0) {
-			mMinValueLabel.setVisibility(View.INVISIBLE);
-			mMinValue.setText("");
+	/**
+	 * Set textview's value with proper format
+	 *
+	 * @param value          (minValue / maxValue /...)
+	 * @param valueView      into this will be value set
+	 * @param valueLabelView valueLabel will be hidden if specified @value is empty
+	 */
+	private void setValue(String value, TextView valueView, TextView valueLabelView) {
+		if (value == null || value.length() == 0) {
+			valueLabelView.setVisibility(View.INVISIBLE);
+			valueView.setText("");
 		} else {
-			mMinValueLabel.setVisibility(View.VISIBLE);
-			mMinValue.setText(String.format("%s %s", minValue, mModuleUnit));
+			BaseValue val = BaseValue.createFromModule(mModule);
+			val.setValue(value);
+			valueLabelView.setVisibility(View.VISIBLE);
+			valueView.setText(UnitsHelper.format(mUnitsHelper, val));
 		}
 	}
 
-	public void setMaxValue(String maxValue) {
-		if (maxValue.length() == 0) {
-			mMaxValuelabel.setVisibility(View.INVISIBLE);
-			mMaxValue.setText("");
-		} else {
-			mMaxValuelabel.setVisibility(View.VISIBLE);
-			mMaxValue.setText(String.format("%s %s", maxValue, mModuleUnit));
-		}
+	/**
+	 * Updates GUI min and max value in toolbar
+	 *
+	 * @param valueMin min data value
+	 * @param valueMax max data value
+	 */
+	public void setMinMaxValue(String valueMin, String valueMax) {
+		setValue(valueMin, mMinValue, mMinValueLabel);
+		setValue(valueMax, mMaxValue, mMaxValuelabel);
 	}
 
 	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {

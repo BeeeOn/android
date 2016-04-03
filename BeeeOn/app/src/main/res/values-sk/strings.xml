@@ -367,6 +367,7 @@
     <string name="settings_main_toast_no_google_play_services">Nie sú dostupné Služby Google Play.</string>
     <string name="settings_unit_preferences_noise">Hluk</string>
     <string name="settings_unit_preferences_temperature">Teplota</string>
+    <string name="settings_unit_preferences_pressure">Tlak</string>
     <string name="settings_unit_unit">Jednotky</string>
     <string name="settings_language_default">Východzí(Jazyk systému)</string>
     <string name="settings_general_category_title">Obecné nastavenia</string>
