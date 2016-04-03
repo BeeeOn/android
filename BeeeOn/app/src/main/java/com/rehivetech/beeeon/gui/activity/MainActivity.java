@@ -86,7 +86,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.nav_drawer_menu_drawer_open, R.string.nav_drawer_menu_drawer_close);
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
+		mDrawerLayout.addDrawerListener(mDrawerToggle);
 
 		mGatesSpinner = (Spinner) mNavigationHeader.findViewById(R.id.menu_profile_gates_spinner);
 		mGatesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

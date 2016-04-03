@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,11 +204,11 @@ public class GateDetailFragment extends BaseApplicationFragment {
 			if (detailsItem.text.isEmpty()) {
 				text.setText(String.format("<%s>", getString(R.string.not_specified)));
 				text.setTypeface(null, Typeface.ITALIC);
-				text.setTextColor(getResources().getColor(R.color.beeeon_secondary_text));
+				text.setTextColor(ContextCompat.getColor(mActivity, R.color.beeeon_secondary_text));
 			} else {
 				text.setText(detailsItem.text);
 				text.setTypeface(null, Typeface.NORMAL);
-				text.setTextColor(getResources().getColor(R.color.beeeon_primary_text));
+				text.setTextColor(ContextCompat.getColor(mActivity, R.color.beeeon_primary_text));
 			}
 			title.setText(detailsItem.titleRes);
 

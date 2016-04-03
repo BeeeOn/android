@@ -148,8 +148,8 @@ public class CallbackTaskManager {
 	 *
 	 * @param task task to be executed
 	 */
-	public void executeTask(@Nullable CallbackTask task) {
-		executeTask(task, null);
+	public <T> void executeTask(@Nullable CallbackTask task) {
+		executeTask(task, (T)null);
 	}
 
 	/**

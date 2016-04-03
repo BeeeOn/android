@@ -72,6 +72,7 @@ public class AddDeviceActivity extends BaseApplicationActivity{
 					mToolbarTitleRes = R.string.device_search_title;
 					break;
 				case ACTION_SETUP:
+					mToolbarTitleRes = R.string.device_add_title;
 					mFragment = SetupDeviceFragment.newInstance(gateId, newDeviceId);
 					break;
 				default:
@@ -88,10 +89,7 @@ public class AddDeviceActivity extends BaseApplicationActivity{
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 
-		setupToolbar(mToolbarTitleRes);
-		if (mActionBar != null) {
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		setupToolbar(mToolbarTitleRes > 0 ? getString(mToolbarTitleRes): "", true);
 	}
 
 	@Override

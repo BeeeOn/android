@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -28,11 +29,12 @@ public class InfoDialogFragment extends TrackDialogFragment {
 
 	// ///////////////////////////////////////////////
 
+	@NonNull
 	@Override
 	public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
 
 		LayoutInflater factory = LayoutInflater.from(getActivity());
-		final View view = factory.inflate(R.layout.fragment_dialog_info, null);
+		@SuppressLint("InflateParams") final View view = factory.inflate(R.layout.fragment_dialog_info, null);
 
 		version = (TextView) view.findViewById(R.id.dialog_info_version_text);
 		try {
