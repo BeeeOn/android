@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -112,11 +113,11 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 
 	private void setUserSelected() {
-		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(getResources().getColor(R.color.gray_light));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(ContextCompat.getColor(this, R.color.gray_light));
 	}
 
 	private void setUserUnselected() {
-		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(getResources().getColor(R.color.white));
+		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(ContextCompat.getColor(this, R.color.white));
 	}
 
 

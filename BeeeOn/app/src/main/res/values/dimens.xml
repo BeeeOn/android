@@ -39,18 +39,11 @@
 	<dimen name="custom_spinner_icon_size">35dp</dimen>
 	<dimen name="custom_spinner_icon_size_smaller">30dp</dimen>
 	
-	<dimen name="nav_drawer_width">280dp</dimen>
-
 	<!-- Size of fragment_device_add -->
 	<dimen name="content_view_size">175dp</dimen>
-	<dimen name="addgate_image_size">125dp</dimen>
 	<dimen name="addgate_button_width">150dp</dimen>
 	<dimen name="addgate_button_height">65dp</dimen>
-	<dimen name="donut_stroke_width">10dp</dimen>
-	<dimen name="donut_inside_text_size">40sp</dimen>
-	<dimen name="donut_inside_bottom_text_size">15sp</dimen>
 	<dimen name="donut_inside_bottom_text_size_land">13sp</dimen>
-	<dimen name="donut_inside_text_size_land">30sp</dimen>
 	<dimen name="adddevice_title_size">26sp</dimen>
 	<dimen name="adddevice_text_size">20sp</dimen>
 	<dimen name="content_view_size_land">150dp</dimen>
@@ -68,10 +61,6 @@
 	<dimen name="activity_login_app_slogan_size">18sp</dimen>
 
 	<dimen name="divider_size">1dp</dimen>
-
-	<dimen name="graph_height">200dp</dimen>
-	<dimen name="customview_text_padding">8dp</dimen>
-	<dimen name="module_detail_list_padding">16dp</dimen>
 
 	<integer name="graph_values_count">7</integer>
 	<integer name="graph_number_circles">20</integer>

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.rehivetech.beeeon.IIdentifier;
@@ -197,7 +198,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 			// makes text size little bit smaller then size of the canvas
 			paint.setTextSize(size - ((float) 0.17 * size));
 			paint.setTextAlign(Paint.Align.CENTER);
-			paint.setColor(mResources.getColor(mWidgetSettings.colorPrimary));
+			paint.setColor(ContextCompat.getColor(mContext, mWidgetSettings.colorPrimary));
 
 			String iconText = mContext.getString(iconResource);
 			paint.getTextBounds(iconText, 0, iconText.length(), mIconBounds);

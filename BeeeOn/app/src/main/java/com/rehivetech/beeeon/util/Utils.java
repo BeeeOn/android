@@ -32,7 +32,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
@@ -258,7 +258,7 @@ final public class Utils {
 			return false;
 
 		try {
-			int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(context);
+			int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
 			return resultCode == ConnectionResult.SUCCESS;
 		} catch (Exception e) {
 			// NOTE: Ignore exception (probably only class not found one), because we just want the true/false result

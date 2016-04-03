@@ -317,6 +317,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			public void onLocationChanged(Location location) {
 
 				if (location != null) {
+					mAutoCompleteTextView.requestFocus();
 					mAutoCompleteTextView.setHint(R.string.my_location);
 					mAutoCompleteTextView.setText("");
 					try {

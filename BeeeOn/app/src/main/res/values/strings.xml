@@ -51,12 +51,6 @@
 	<!-- Adapter location -->
 	<string name="adapter_location_array_new_location_spinner">New location</string>
 
-	<!-- Adapter view pager -->
-	<string-array name="adapter_view_pager_title_of_main_fragments">
-		<item>List</item>
-		<item>Custom</item>
-	</string-array>
-
 	<!-- Refresh intervals -->
 	<plurals name="refresh_interval_interval_seconds">
 		<item quantity="one">1 second</item>
@@ -155,12 +149,9 @@
 	<string name="nav_drawer_menu_drawer_open">OPEN</string>
 	<string name="nav_drawer_menu_gate">Gateways</string>
 	<string name="nav_drawer_menu_gate_menu_gate_detail">Details</string>
-	<string name="nav_drawer_menu_menu_charts">Charts</string>
 	<string name="nav_drawer_menu_menu_devices">Devices</string>
-	<string name="nav_drawer_menu_menu_modules">Modules</string>
 	<string name="nav_drawer_menu_menu_gate">Gateway</string>
 	<string name="nav_drawer_menu_menu_household">Overview</string>
-	<string name="nav_drawer_menu_menu_management">Management</string>
 	<string name="nav_drawer_menu_no_gates">You have no gateways</string>
 	<string name="nav_drawer_menu_action_gate_add">Add gateway</string>
 
@@ -229,8 +220,6 @@
 	<string name="gate_users_title_gate_users">Manage users</string>
 
 	<!-- Device  setup -->
-	<string name="device_setup_title_setup_device">Device add</string>
-	<string name="device_setup_toast_empty_module_name">Please fill names of all modules</string>
 	<string name="device_setup_toast_need_module_location_name">Write name of new location please</string>
 	<string name="device_setup_toast_new_module_added">New module was added</string>
 	<string name="device_setup_device_list_paired_label">Paired:</string>
@@ -255,21 +244,10 @@
 	<string name="device_search_enter_password_ok">OK</string>
 	<string name="device_search_enter_password_wrong">Password is not correct</string>
 
-	<string name="device_add_device_found">Device was found</string>
-	<string name="device_add_device_not_found_in_time">Device was not found, check if it\'s really switched on and try it again</string>
-	<string name="device_add_dialog_device_add_text">Click on START to begin pairing</string>
-	<string name="device_add_shake_it_text">Shake the device or press the button on it.</string>
-	<string name="device_add_time_left_unit">seconds</string>
-	<string name="device_add_toast_no_gate">You have no registered gateway</string>
-	<string name="device_add_tut_title_add_device">Pull out the battery stripe</string>
-	<string name="device_add_tut_text_add_module">Pull out battery stripe</string>
-	<string name="device_add_waiting">Waiting for start</string>
 
 	<!-- Device setup -->
 	<string name="device_setup_device_header_location">Location</string>
 	<string name="device_setup_device_info_text">Device was connected at</string>
-	<string name="device_setup_or">or</string>
-	<string name="device_setup_setup_device">Setup device</string>
 
 	<!-- Device edit -->
 	<string name="device_edit_device_name">Name</string>
@@ -289,7 +267,6 @@
 
 	<!-- Module list -->
 	<string name="module_list_action_mode_module_menu_del">Remove module</string>
-	<string name="module_list_action_module_add">Add module</string>
 	<string name="module_list_btn_unregister">Unregister</string>
 	<string name="module_list_dialog_message_unregister_device">Device will be unregistered from server and all its historical data will be lost.</string>
 	<string name="module_list_dialog_title_unregister_device">Unregister \"%1$s\"</string>
@@ -297,27 +274,18 @@
 	<string name="module_list_no_gate_cap">NO GATEWAY</string>
 
 	<!-- Module detail -->
-	<string name="module_detail_label_battery">Battery state</string>
-	<string name="module_detail_label_graph_data">Historical data</string>
 	<string name="module_detail_label_last_update">Last update</string>
 	<string name="module_detail_label_signal">Signal state</string>
-	<string name="module_detail_refresh_time">Refresh interval </string>
 	<string name="module_detail_toast_not_specified_gate_or_module">Not specified gateway or module</string>
 
 	<!--Device detail -->
 	<string name="device_detail_menu_edit_title">Edit device</string>
 	<string name="device_detail_list_modules_no_item_title">NO MODULES</string>
-	<string name="device_detail_label_led">LED status</string>
 	<string name="device_detail_default_group">Default</string>
-	<string name="device_detail_device_online">Online</string>
-	<string name="device_detail_device_offline">Offline</string>
 
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Location</string>
-	<string name="module_edit_label_module_name">Name of module</string>
-	<string name="module_edit_refresh_time">Refresh time </string>
 	<string name="module_edit_setup_new_location_hint">New location name</string>
-	<string name="module_edit_title_module_edit">Edit device</string>
 
 	<!--Module graph-->
 	<string name="module_graph_settings_title">Graph parameters</string>
@@ -377,6 +345,8 @@
 
 	<string name="settings_unit_unit">Units</string>
 	<string name="settings_language_default">Default(from system)</string>
+	<string name="settings_general_category_title">General settings</string>
+	<string name="settings_hide_unavailable_modules">Hide unavailable modules</string>
 	<string name="settings_actualization_category_title">Actualization settings</string>
 	<string name="settings_actualization_screen_title">Automatic data actualization interval</string>
 	<string name="settings_cache_reload_title">Cache reload time</string>
@@ -461,7 +431,6 @@
 	<string name="data_type_max">Maximum</string>
 
     <!--Dashboard-->
-    <string name="dashboard_add_new_card">Add new dashboard card</string>
     <string name="dashboard_add_select_card">Select a card type</string>
     <string name="dashboard_fab_add_graph">Add graph</string>
     <string name="dashboard_fab_add_week_bar_graph">Add week bar graph</string>

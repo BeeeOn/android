@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.widget.RemoteViews;
 
@@ -55,7 +56,7 @@ public class ViewsBuilder {
 	}
 
 	public void setTextViewColor(int viewId, int colorResource) {
-		mRemoteViews.setTextColor(viewId, mContext.getResources().getColor(colorResource));
+		mRemoteViews.setTextColor(viewId, ContextCompat.getColor(mContext, colorResource));
 	}
 
 	public void setTextViewTextSize(int viewId, int unit, float size) {
