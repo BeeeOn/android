@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.view.Window;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddDashboardItemFragment;
@@ -31,6 +32,7 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_add_dashboard_item);
 
 
