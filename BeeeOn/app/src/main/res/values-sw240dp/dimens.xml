@@ -7,11 +7,7 @@
 	<dimen name="content_view_size">175dp</dimen>
 	<dimen name="addgate_button_width">150dp</dimen>
 	<dimen name="addgate_button_height">65dp</dimen>
-	<dimen name="donut_stroke_width">10dp</dimen>
 	<dimen name="donut_inside_text_size">40sp</dimen>
-	<dimen name="donut_inside_bottom_text_size">15sp</dimen>
-	<dimen name="donut_inside_bottom_text_size_land">13sp</dimen>
-	<dimen name="donut_inside_text_size_land">30sp</dimen>
 	<dimen name="adddevice_title_size">26sp</dimen>
 	<dimen name="adddevice_text_size">20sp</dimen>
 	<dimen name="content_view_size_land">150dp</dimen>

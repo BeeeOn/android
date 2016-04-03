@@ -46,12 +46,6 @@
     <!-- Adapter location -->
     <string name="adapter_location_array_new_location_spinner">Nové umiestnenie</string>
 
-    <!-- Adapter view pager -->
-    <string-array name="adapter_view_pager_title_of_main_fragments">
-        <item>Zoznam</item>
-        <item>Vlastný</item>
-    </string-array>
-
     <!-- Refresh intervals -->
     <plurals name="refresh_interval_interval_seconds">
         <item quantity="one">1 sekunda</item>
@@ -153,12 +147,9 @@
     <string name="nav_drawer_menu_drawer_open">OTVORIŤ</string>
     <string name="nav_drawer_menu_gate">Brány</string>
     <string name="nav_drawer_menu_gate_menu_gate_detail">Detaily</string>
-    <string name="nav_drawer_menu_menu_charts">Grafy</string>
     <string name="nav_drawer_menu_menu_devices">Zariadenia</string>
-    <string name="nav_drawer_menu_menu_modules">Moduly</string>
     <string name="nav_drawer_menu_menu_gate">Brána</string>
     <string name="nav_drawer_menu_menu_household">Prehľad</string>
-    <string name="nav_drawer_menu_menu_management">Správa domácnosti</string>
     <string name="nav_drawer_menu_no_gates">Nemáte žiadne brány</string>
     <string name="nav_drawer_menu_action_gate_add">Pridať bránu</string>
 
@@ -227,8 +218,6 @@
     <string name="gate_users_title_gate_users">Používatelia brány</string>
 
     <!-- Device setup -->
-    <string name="device_setup_title_setup_device">Pridanie zariadenia</string>
-    <string name="device_setup_toast_empty_module_name">Vyplňte názvy všetkých zariadení</string>
     <string name="device_setup_toast_need_module_location_name">Napíšte názov umiestnenia</string>
     <string name="device_setup_toast_new_module_added">Nové zariadenie bolo pridané</string>
     <string name="device_setup_device_list_paired_label">Napárované:</string>
@@ -270,25 +259,12 @@
     <string name="device_search_enter_password_wrong">Heslo nie je správne</string>
 
 
-    <string name="device_add_device_found">Našlo sa zariadenie</string>
-    <string name="device_add_device_not_found_in_time">Zariadenie nebolo nájdené, skontrolujte či je skutočne zapnuté a opakujte znova</string>
-    <string name="device_add_dialog_device_add_text">Stlačte START pro zahájenie párovanie</string>
-    <string name="device_add_shake_it_text">Zatraste zariadením alebo stlačte tlačidlo pre párovanie na zariadení.</string>
-    <string name="device_add_time_left_unit">sekúnd</string>
-    <string name="device_add_toast_no_gate">Nemáte žiadnu registrovanú bránu</string>
-    <string name="device_add_tut_text_add_module">Vytiahnite izolačný prúžok batérií zo senzoru alebo zapojte aktor do el. siete</string>
-    <string name="device_add_tut_title_add_device">Vytiahnite izolačný prúžok batérii</string>
-    <string name="device_add_waiting">Čakám na štart</string>
-
     <!-- Devie setup -->
     <string name="device_setup_device_header_location">Umiestnenie</string>
     <string name="device_setup_device_info_text">Zaradenie bolo pripojeno v</string>
-    <string name="device_setup_or">alebo</string>
-    <string name="device_setup_setup_device">Nastavte zaradenie</string>
 
     <!-- Module list -->
     <string name="module_list_action_mode_module_menu_del">Odstrániť zariadenie</string>
-    <string name="module_list_action_module_add">Pridanie zaradenia</string>
     <string name="module_list_btn_unregister">Odregistrovať</string>
     <string name="module_list_no_device_cap">ŽIADNE ZARIADENIE</string>
     <string name="module_list_no_gate_cap">ŽIADNA BRÁNA</string>
@@ -296,27 +272,18 @@
     <string name="module_list_dialog_title_unregister_device">Odregistrovať \"%1$s\"</string>
 
     <!-- Module detail -->
-    <string name="module_detail_label_battery">Stav batérie</string>
-    <string name="module_detail_label_graph_data">Historické hodnoty</string>
     <string name="module_detail_label_last_update">Posledná aktualizácia</string>
     <string name="module_detail_label_signal">Stav signálu</string>
-    <string name="module_detail_refresh_time">Interval obnovy</string>
     <string name="module_detail_toast_not_specified_gate_or_module">Nebolo zadané žiadne zariadenie alebo je zvolené zariadenie nesprávne</string>
 
     <!--Device detail -->
     <string name="device_detail_menu_edit_title">Editovať zariadenie</string>
     <string name="device_detail_list_modules_no_item_title">ŽIADNE MODULY</string>
-    <string name="device_detail_label_led">LED status</string>
     <string name="device_detail_default_group">Východzia</string>
-    <string name="device_detail_device_online">Pripojené</string>
-    <string name="device_detail_device_offline">Odpojené</string>
 
     <!-- Module edit -->
     <string name="module_edit_label_detail_location">Umiestnenie</string>
-    <string name="module_edit_label_module_name">Názov zariadenia</string>
-    <string name="module_edit_refresh_time">Interval obnovy: </string>
     <string name="module_edit_setup_new_location_hint">Názov nového umiestnenia</string>
-    <string name="module_edit_title_module_edit">Úprava zariadenia</string>
 
     <!--Module graph-->
     <string name="module_graph_settings_title">Parametre grafu</string>
@@ -458,7 +425,6 @@
     <string name="data_type_max">Maximum</string>
 
 	<!--Dashboard-->
-    <string name="dashboard_add_new_card">Pridanie novej karty</string>
     <string name="dashboard_add_select_card">Vyberte typ karty</string>
 	<string name="dashboard_fab_add_graph">Pridať čiarový graf</string>
 	<string name="dashboard_fab_add_week_bar_graph">Pridať týždňový stĺpcový graf</string>
