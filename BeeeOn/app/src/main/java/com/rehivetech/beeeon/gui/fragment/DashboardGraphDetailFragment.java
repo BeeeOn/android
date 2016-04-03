@@ -51,16 +51,16 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 	private ChartHelper.ChartLoadListener mChartLoadListener = new ChartHelper.ChartLoadListener() {
 		@Override
 		public void onChartLoaded(DataSet dataset, List<String> xValues) {
-			LineData data = mChart.getLineData() == null ? new LineData(xValues) : mChart.getLineData();
+			List<ILineDataSet> dataSets = (mChart.getLineData() != null) ? mChart.getLineData().getDataSets() : new ArrayList<ILineDataSet>();
 
 			if (dataset.getYVals().size() < 2 && mChart.getLineData() == null) {
 				mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 				mChart.invalidate();
 				return;
 			}
-			data.addDataSet((ILineDataSet) dataset);
+			dataSets.add((ILineDataSet) dataset);
+			LineData data = new LineData(xValues, dataSets);
 			mChart.setData(data);
-			mChart.invalidate();
 
 			if (dataset.getAxisDependency() == YAxis.AxisDependency.LEFT) {
 				mUnitLeft.setVisibility(View.VISIBLE);
@@ -68,6 +68,7 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 				mUnitRight.setVisibility(View.VISIBLE);
 				mChart.getAxisRight().setEnabled(true);
 			}
+			mChart.invalidate();
 		}
 	};
 
@@ -172,7 +173,7 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 		//disable right axis
 		mChart.getAxisRight().setEnabled(false);
 
-		mChart.setAutoScaleMinMaxEnabled(true);
+//		mChart.setAutoScaleMinMaxEnabled(true);
 
 		if (rightModule != null) {
 			int rightAxisColor = Utils.getGraphColor(mActivity, 1);
