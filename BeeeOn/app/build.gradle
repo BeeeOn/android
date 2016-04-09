@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 project.ext.set("versionName", "1.6.3")
-project.ext.set("supportLibVersion", "23.2.1")
+project.ext.set("supportLibVersion", "23.3.0")
 project.ext.set("playServicesVersion", "8.4.0")
 
 android {
