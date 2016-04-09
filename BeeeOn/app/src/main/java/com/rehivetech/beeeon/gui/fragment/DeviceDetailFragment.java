@@ -63,7 +63,7 @@ import java.util.List;
  * @since 04.08.2015
  */
 public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener,
-		AppBarLayout.OnOffsetChangedListener, IListDialogListener {
+		AppBarLayout.OnOffsetChangedListener, IListDialogListener, NumberPickerDialogFragment.SetNewValueListener {
 
 	private static final String TAG = DeviceDetailFragment.class.getSimpleName();
 
@@ -527,6 +527,18 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) view.getLayoutParams();
 		layoutParams.setParallaxMultiplier(multiplier);
 		view.setLayoutParams(layoutParams);
+	}
+
+	@Override
+	public void onSetNewValue(String moduleId, String actualValue) {
+		Module module = mDevice.getModuleById(moduleId);
+		if (module == null) {
+			Log.e(TAG, "Can't load module for changing its value");
+			return;
+		}
+
+		module.setValue(actualValue);
+		doChangeStateModuleTask(module);
 	}
 
 
