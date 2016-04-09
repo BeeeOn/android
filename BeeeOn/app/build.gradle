@@ -6,7 +6,7 @@ project.ext.set("playServicesVersion", "8.4.0")
 
 android {
 	compileSdkVersion 23
-	buildToolsVersion "23.0.2"
+	buildToolsVersion "23.0.3"
 	defaultConfig {
 		applicationId "com.rehivetech.beeeon"
 		minSdkVersion 15
@@ -15,12 +15,8 @@ android {
 		versionName project.versionName
 		signingConfig signingConfigs.debug
 		resConfigs "en", "cs", "sk"
-		generatedDensities = []
 	}
 
-	aaptOptions {
-		additionalParameters "--no-version-vectors"
-	}
 
 	signingConfigs {
 		debug {
