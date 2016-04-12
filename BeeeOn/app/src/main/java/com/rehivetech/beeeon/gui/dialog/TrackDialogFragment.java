@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 import com.google.android.gms.analytics.Tracker;
-import com.rehivetech.beeeon.BeeeOnApplication;
 
 
 public abstract class TrackDialogFragment extends DialogFragment {
@@ -15,7 +14,7 @@ public abstract class TrackDialogFragment extends DialogFragment {
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		this.tracker = ((BeeeOnApplication)getActivity().getApplication()).getDefaultTracker();
+//		this.tracker = ((BeeeOnApplication)getActivity().getApplication()).getDefaultTracker();
 	}
 
 }

@@ -26,6 +26,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.view.GraphSettings;
 import com.rehivetech.beeeon.gui.view.ModuleGraphMarkerView;
@@ -210,6 +211,8 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.MODULE_GRAPH_DETAIL_SCREEN);
 
 		Device device = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
 		if (device == null) {

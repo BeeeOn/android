@@ -23,6 +23,7 @@ import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
@@ -242,6 +243,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DEVICE_LIST_SCREEN);
 
 		// FIXME: Is this correct or needed at all here?
 		Controller controller = Controller.getInstance(getActivity());

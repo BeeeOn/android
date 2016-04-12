@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.ScanQRActivity;
 import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -40,6 +41,7 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 	@Override
 	public void onResume() {
 		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_GATE_SCREEN);
 		setScanQrButtonEnabled(true);
 	}
 

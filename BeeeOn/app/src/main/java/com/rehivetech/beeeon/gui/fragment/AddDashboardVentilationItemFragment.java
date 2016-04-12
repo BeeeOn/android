@@ -40,6 +40,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.PlaceAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
@@ -237,6 +238,12 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 				}
 			});
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DASHBOARD_VENTILATION_HELPER_SCREEN);
 	}
 
 	@Override

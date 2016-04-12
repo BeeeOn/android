@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.GateEditActivity;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.util.GpsData;
@@ -74,6 +73,12 @@ public class GateEditFragment extends BaseApplicationFragment {
 		super.onActivityCreated(savedInstanceState);
 
 		fillData(savedInstanceState);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.GATE_EDIT_SCREEN);
 	}
 
 	public void fillData(Bundle savedInstanceState) {

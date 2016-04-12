@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,22 +35,20 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
-import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
-
-import java.util.Random;
 
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
  *
  * @author Robyer
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends AppCompatActivity {
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	private static final String TAG_DIALOG = "about_dialog";
 

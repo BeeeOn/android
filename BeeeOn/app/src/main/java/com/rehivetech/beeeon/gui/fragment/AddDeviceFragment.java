@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 
 
@@ -52,6 +53,12 @@ public class AddDeviceFragment extends BaseApplicationFragment {
 			}
 		});
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DEVICE_SCREEN);
 	}
 
 	@Override

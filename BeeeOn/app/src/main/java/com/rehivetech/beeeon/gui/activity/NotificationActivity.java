@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.fragment.NotificationFragment;
 
 public class NotificationActivity extends BaseApplicationActivity {

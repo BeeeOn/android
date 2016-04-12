@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.RefreshIntervalAdapter;
 import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
@@ -148,6 +149,12 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		prepareGUI();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DEVICE_EDIT_SCREEN);
 	}
 
 	public void prepareGUI() {

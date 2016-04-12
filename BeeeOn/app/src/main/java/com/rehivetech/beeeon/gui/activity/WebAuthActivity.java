@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebView;
@@ -11,7 +12,7 @@ import android.widget.ProgressBar;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 
-public class WebAuthActivity extends BaseActivity {
+public class WebAuthActivity extends AppCompatActivity {
 
 	public static final String EXTRA_PROVIDER_ID = "provider_id";
 

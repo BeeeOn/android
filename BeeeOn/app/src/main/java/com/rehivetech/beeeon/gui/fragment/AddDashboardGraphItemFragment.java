@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.AddDashboardCardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
@@ -179,6 +180,12 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 				}
 			});
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DASHBOARD_GRAPH_ITEM_SCREEN);
 	}
 
 	private List<String> getGraphRangeStrings() {

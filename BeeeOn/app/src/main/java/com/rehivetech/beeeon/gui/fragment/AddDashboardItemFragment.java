@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.AddDashboardCardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
@@ -64,6 +65,11 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		fillAdapter(adapter);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DASHBOARD_ITEM_SCREEN);
+	}
 
 	private void fillAdapter(AddDashboardCardAdapter addDashboardCardAdapter) {
 		List<AddDashboardCardAdapter.CardItem> items = new ArrayList<>();
