@@ -38,10 +38,14 @@ public class GoogleAnalyticsManager {
 
 	//----- EVENT CATEGORIES -------
 	public static final String EVENT_CATEGORY_DASHBOARD = "Dashboard";
+		public static final String EVENT_CATEGORY_MODULE_GRAPH_DETAIL = "ModuleGraphDetail";
 
 	//----- EVENT ACTIONS ----------
 	public static final String EVENT_ACTION_ADD_ITEM = "addItem";
 	public static final String EVENT_ACTION_DETAIL_CLICK = "detailClick";
+
+	public static final String EVENT_ACTION_SELECT_TAB = "selectTab";
+	public static final String EVENT_ACTION_OPEN_GRAPH_SETTINGS = "openGraphSettings";
 
 	//----- EVENT LABELS -----------
 	public static final String DASHBOARD_ADD_ACTUAL_VALUE_ITEM = "ActualValueItem";
@@ -79,6 +83,7 @@ public class GoogleAnalyticsManager {
 
 		// Report uncaught exceptions
 		mTracker.enableExceptionReporting(true);
+		mTracker.enableAutoActivityTracking(false);
 	}
 
 	public void logScreen(String screenName) {
