@@ -36,6 +36,24 @@ public class GoogleAnalyticsManager {
 	public static final String DEVICE_LIST_SCREEN = "DeviceListScreen";
 	public static final String DEVICE_DETAIL_SCREEN = "DeviceDetailScreen";
 
+	//----- EVENT CATEGORIES -------
+	public static final String EVENT_CATEGORY_DASHBOARD = "Dashboard";
+
+	//----- EVENT ACTIONS ----------
+	public static final String EVENT_ACTION_ADD_ITEM = "addItem";
+	public static final String EVENT_ACTION_DETAIL_CLICK = "detailClick";
+
+	//----- EVENT LABELS -----------
+	public static final String DASHBOARD_ADD_ACTUAL_VALUE_ITEM = "ActualValueItem";
+	public static final String DASHBOARD_ADD_GRAPH_ITEM = "GraphItem";
+	public static final String DASHBOARD_ADD_GRAPH_OVERVIEW_ITEM = "GraphOverViewItem";
+	public static final String DASHBOARD_ADD_VENTILATION_ITEM = "VentilationItem";
+
+	public static final String DASHBOARD_DETAIL_CLICK_ACTUAL_VALUE_ITEM = "ActualValueItemDetailClick";
+	public static final String DASHBOARD_DETAIL_CLICK_GRAPH_ITEM = "GraphItemDetailClick";
+	public static final String DASHBOARD_DETAIL_CLICK_GRAPH_OVERVIEW_ITEM = "GraphOverviewItemDetailClick";
+
+
 	private static GoogleAnalyticsManager sInstance;
 	private Tracker mTracker;
 

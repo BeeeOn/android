@@ -27,6 +27,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
@@ -230,6 +231,23 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			}
 		}
 
+		protected void handleGoogleAnalytics() {
+			String analyticsItemName = null;
+			switch (getItemViewType()) {
+				case VIEW_TYPE_ACT_VALUE:
+					analyticsItemName = GoogleAnalyticsManager.DASHBOARD_DETAIL_CLICK_ACTUAL_VALUE_ITEM;
+					break;
+				case VIEW_TYPE_GRAPH_OVERVIEW:
+					analyticsItemName = GoogleAnalyticsManager.DASHBOARD_DETAIL_CLICK_GRAPH_OVERVIEW_ITEM;
+					break;
+				case VIEW_TYPE_GRAPH:
+					analyticsItemName = GoogleAnalyticsManager.DASHBOARD_DETAIL_CLICK_GRAPH_ITEM;
+					break;
+			}
+
+			GoogleAnalyticsManager.getInstance().logEvent(GoogleAnalyticsManager.EVENT_CATEGORY_DASHBOARD, GoogleAnalyticsManager.EVENT_ACTION_DETAIL_CLICK, analyticsItemName);
+		}
+
 		@Override
 		public boolean onLongClick(View v) {
 			return mItemClickListener != null && mItemClickListener.onRecyclerViewItemLongClick(getAdapterPosition(), getItemViewType());
@@ -352,6 +370,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		public void onClick(View v) {
 			if (!handleSelection() && mItemClickListener != null) {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH);
+				handleGoogleAnalytics();
 			}
 		}
 
@@ -402,6 +421,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			if (!handleSelection() && mItemClickListener != null) {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_ACT_VALUE);
+				handleGoogleAnalytics();
 			}
 		}
 	}
@@ -495,6 +515,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		public void onClick(View v) {
 			if (!handleSelection() && mItemClickListener != null) {
 				mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), DashboardAdapter.VIEW_TYPE_GRAPH_OVERVIEW);
+				handleGoogleAnalytics();
 			}
 		}
 	}
