@@ -5,6 +5,7 @@
 
 	<!-- API key for using Google Maps API -->
 	<!-- <string name="api_keys_google_maps" translatable="false">YOUR_GOOGLE_MAPS_KEY</string> -->
+	<!-- <string name="api_keys_google_places_server" translatable="false">YOUR_GOOGLE_PLACES_SERVER</string> -->
 
 	<!-- Project number from the Google Console -->
 	<!-- <string name="api_keys_google_console_project_id" translatable="false">YOUR_GOOGLE_CONSOLE_ID</string> -->
