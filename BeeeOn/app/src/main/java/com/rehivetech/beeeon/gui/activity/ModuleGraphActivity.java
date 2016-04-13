@@ -104,7 +104,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		mModule = controller.getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId);
 		mUnitsHelper = Utils.getUnitsHelper(this);
 
-		setupToolbar(mModule.getName(this), true);
+		setupToolbar(mModule.getName(this), INDICATOR_BACK);
 
 		mMinValue = (TextView) findViewById(R.id.module_graph_min_value);
 		mMaxValue = (TextView) findViewById(R.id.module_graph_max_value);

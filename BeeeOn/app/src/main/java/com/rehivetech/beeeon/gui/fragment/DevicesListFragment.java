@@ -63,6 +63,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 			return mActiveGateId;
 		}
 	};
+	private FloatingActionButton mFabAddDevice;
+	private FloatingActionButton mFabAddGate;
 
 	private CallbackTask createReloadDevicesTask(boolean forceReload) {
 		if (getActivity() == null)
@@ -72,8 +74,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 				getActivity(),
 				forceReload,
 				mActiveGateId == null
-					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
-					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
+						? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
+						: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
 
 		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
@@ -94,6 +96,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	private TextView mNoItemsTextView;
 	private Button mRefreshButton;
 
+	private Gate mActiveGate;
 	private DeviceRecycleAdapter mDeviceAdapter;
 
 	@Nullable
@@ -124,6 +127,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mActiveGateId = getArguments().getString(KEY_GATE_ID);
+		mActiveGate = Controller.getInstance(getActivity()).getGatesModel().getGate(mActiveGateId);
 	}
 
 	private void setAutoReloadDataTimer() {
@@ -171,8 +175,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		fabMenu.setClosedOnTouchOutside(true);
 
 		// FAB button add device
-		FloatingActionButton fabAddDevice = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_device);
-		fabAddDevice.setOnClickListener(new View.OnClickListener() {
+		mFabAddDevice = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_device);
+		mFabAddDevice.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mActiveGateId, AddDeviceActivity.ACTION_INITIAL, null);
@@ -181,8 +185,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		});
 
 		// FAB button add gate
-		FloatingActionButton fabAddGate = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_gate);
-		fabAddGate.setOnClickListener(new View.OnClickListener() {
+		mFabAddGate = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_gate);
+		mFabAddGate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(getActivity(), AddGateActivity.class);
@@ -252,6 +256,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		if (activeGate == null) {
 			return;
 		}
+
+		// prevent for showing based on user's role
+		mFabAddDevice.setVisibility(controller.isUserAllowed(activeGate.getRole()) ? View.VISIBLE : View.GONE);
 
 		mActiveGateId = activeGate.getId();
 		doReloadDevicesTask(mActiveGateId, false);

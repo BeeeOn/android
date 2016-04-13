@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,15 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 public abstract class BaseApplicationActivity extends AppCompatActivity implements INotificationReceiver {
 
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
+
+	@IntDef({INDICATOR_NONE, INDICATOR_BACK, INDICATOR_DISCARD, INDICATOR_ACCEPT})
+	@interface IndicatorType {
+	}
+
+	public static final int INDICATOR_NONE = 0;
+	public static final int INDICATOR_BACK = 1;
+	public static final int INDICATOR_DISCARD = R.drawable.ic_action_cancel;
+	public static final int INDICATOR_ACCEPT = R.drawable.ic_action_accept;
 
 	private boolean triedLoginAlready = false;
 
@@ -218,12 +228,13 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 
 	/**
 	 * Helper for initializing toolbar and actionbar
-	 * @param title string of title
-	 * @param backButton if set to true adds "<-" arrow to title
+	 *
+	 * @param title         string of title
+	 * @param indicatorType if set to true adds "<-" arrow to title
 	 * @return toolbar or null, if no R.id.beeeon_toolbar was found in layout
 	 */
 	@Nullable
-	public Toolbar setupToolbar(String title, boolean backButton) {
+	public Toolbar setupToolbar(String title, @IndicatorType int indicatorType) {
 		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (toolbar != null) {
 			setSupportActionBar(toolbar);
@@ -233,26 +244,29 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		if (mActionBar != null) {
 			mActionBar.setTitle(title);
 
-			if (backButton) {
+			if (indicatorType != INDICATOR_NONE) {
 				mActionBar.setHomeButtonEnabled(true);
 				mActionBar.setDisplayHomeAsUpEnabled(true);
+				if (indicatorType > INDICATOR_BACK) {
+					mActionBar.setHomeAsUpIndicator(indicatorType);
+				}
 			}
 		}
 
 		return toolbar;
 	}
 
-	public Toolbar setupToolbar(String title){
-		return setupToolbar(title, false);
+	public Toolbar setupToolbar(String title) {
+		return setupToolbar(title, INDICATOR_NONE);
 	}
 
-	public Toolbar setupToolbar(@StringRes int titleResId, boolean backButton){
+	public Toolbar setupToolbar(@StringRes int titleResId, @IndicatorType int indicatorType) {
 		String title = getString(titleResId);
-		return setupToolbar(title, backButton);
+		return setupToolbar(title, indicatorType);
 	}
 
 	public Toolbar setupToolbar(@StringRes int titleResId) {
-		return setupToolbar(titleResId, false);
+		return setupToolbar(titleResId, INDICATOR_NONE);
 	}
 
 	public void setToolbarTitle(String title) {
@@ -335,6 +349,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 
 	/**
 	 * Replace fragment in activity and add current to backStack
+	 *
 	 * @param currentFragmentTag
 	 * @param fragment
 	 */

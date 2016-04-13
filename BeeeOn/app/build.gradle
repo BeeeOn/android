@@ -53,7 +53,7 @@ android {
 	applicationVariants.all { variant ->
 		variant.outputs.each { output ->
 			if (variant.getBuildType().isMinifyEnabled()) {
-				variant.assemble.doLast{
+				variant.assemble.doLast {
 					copy {
 						from variant.mappingFile
 						into "${rootDir}/mapping"
@@ -75,6 +75,9 @@ repositories {
 
 dependencies {
 	compile fileTree(include: ['*.jar'], dir: 'libs')
+	// Compile-time libraries
+	compile 'com.jakewharton:butterknife:7.0.1'
+
 	// Support libraries
 	compile "com.android.support:support-v4:${project.ext.supportLibVersion}"
 	compile "com.android.support:appcompat-v7:${project.ext.supportLibVersion}"

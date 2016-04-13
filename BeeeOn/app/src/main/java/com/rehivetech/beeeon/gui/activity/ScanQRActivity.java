@@ -32,7 +32,7 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_scan_qr);
-		setupToolbar(R.string.gate_add_scan_qr_title, true);
+		setupToolbar(R.string.gate_add_scan_qr_title, INDICATOR_BACK);
 
 		mScannerView = (ZXingScannerView) findViewById(R.id.scanner_view);
 
