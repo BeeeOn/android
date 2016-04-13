@@ -6,33 +6,19 @@ package com.rehivetech.beeeon;
 
 import android.app.Application;
 
-import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app, such as
  * the {@link Tracker}.
  */
 public class BeeeOnApplication extends Application {
-	private Tracker mTracker;
 
-	/**
-	 * Gets the default {@link Tracker} for this {@link Application}.
-	 * @return tracker
-	 */
-	synchronized public Tracker getDefaultTracker() {
-		if (mTracker == null) {
-			GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-			// To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-			mTracker = analytics.newTracker(getString(R.string.api_keys_google_analytics_tracking_id));
-			// End current session if app sleeps for a period of time
-			mTracker.setSessionTimeout(300);
-			// Enable automatic Activity measurement
-			mTracker.enableAutoActivityTracking(true);
-			// Report uncaught exceptions
-			mTracker.enableExceptionReporting(true);
-		}
-		return mTracker;
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		GoogleAnalyticsManager.getInstance().init(getApplicationContext(), getString(R.string.api_keys_google_analytics_tracking_id));
 	}
 }
 

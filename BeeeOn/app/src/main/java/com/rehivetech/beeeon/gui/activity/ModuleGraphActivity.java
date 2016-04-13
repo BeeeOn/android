@@ -22,6 +22,7 @@ import com.flipboard.bottomsheet.BottomSheetLayout;
 import com.flipboard.bottomsheet.OnSheetDismissedListener;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.fragment.ModuleGraphFragment;
 import com.rehivetech.beeeon.gui.view.GraphSettings;
 import com.rehivetech.beeeon.household.device.Module;
@@ -153,6 +154,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 			@Override
 			public void onClick(View v) {
 				mFab.hide(mOnVisibilityChangedListener);
+				GoogleAnalyticsManager.getInstance().logEvent(GoogleAnalyticsManager.EVENT_CATEGORY_MODULE_GRAPH_DETAIL, GoogleAnalyticsManager.EVENT_ACTION_OPEN_GRAPH_SETTINGS, String.valueOf(mViewPager.getCurrentItem()));
 			}
 		});
 
@@ -217,6 +219,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 
 				callbackTaskManager.cancelAndRemoveAll();
 				initActiveFragment();
+
+				GoogleAnalyticsManager.getInstance().logEvent(GoogleAnalyticsManager.EVENT_CATEGORY_MODULE_GRAPH_DETAIL, GoogleAnalyticsManager.EVENT_ACTION_SELECT_TAB, String.valueOf(position));
 			}
 
 			@Override

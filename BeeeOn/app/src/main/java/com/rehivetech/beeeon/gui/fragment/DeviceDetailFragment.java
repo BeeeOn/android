@@ -35,6 +35,7 @@ import com.avast.android.dialogs.iface.IListDialogListener;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
@@ -290,6 +291,9 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DEVICE_DETAIL_SCREEN);
+
 		doReloadDevicesTask(mGateId, false);
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override

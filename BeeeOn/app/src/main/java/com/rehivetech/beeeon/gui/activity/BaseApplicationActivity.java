@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,7 +33,7 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
  * When user is not logged in, it will switch to LoginActivity automatically.
  * Provides useful methods for using CallbackTasks.
  */
-public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver {
+public abstract class BaseApplicationActivity extends AppCompatActivity implements INotificationReceiver {
 
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 

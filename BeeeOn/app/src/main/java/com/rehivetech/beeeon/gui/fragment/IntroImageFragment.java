@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.IntroActivity;
 
 public final class IntroImageFragment extends Fragment {
@@ -52,6 +53,12 @@ public final class IntroImageFragment extends Fragment {
 		((ImageView) view.findViewById(R.id.intro_image_image)).setImageResource(mImageRes);
 
 		return view;
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.INTRO_SCREEN);
 	}
 
 	@Override

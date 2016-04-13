@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
-public abstract class BaseApplicationFragment extends TrackFragment {
+public abstract class BaseApplicationFragment extends android.support.v4.app.Fragment{
 
 	protected BaseApplicationActivity mActivity;
 

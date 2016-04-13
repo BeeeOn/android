@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.AddDashboardCardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
@@ -64,6 +65,11 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		fillAdapter(adapter);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DASHBOARD_ITEM_SCREEN);
+	}
 
 	private void fillAdapter(AddDashboardCardAdapter addDashboardCardAdapter) {
 		List<AddDashboardCardAdapter.CardItem> items = new ArrayList<>();
@@ -95,23 +101,29 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	@Override
 	public void onItemClick(@AddDashboardCardAdapter.CardItem.CardType int type) {
 
+		String analyticsItemName = null;
 		Fragment fragment = null;
 		switch (type) {
 			case AddDashboardCardAdapter.CardItem.CARD_ACTUAL_VALUE:
 				fragment = AddDashboardActualValueFragment.newInstance(mGateId, null);
+				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_ACTUAL_VALUE_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_LINE_GRAPH:
 				fragment = AddDashboardGraphItemFragment.newInstance(mGateId, null, null);
+				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_GRAPH_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH:
 				fragment = AddDashboardOverviewGraphItemFragment.newInstance(mGateId, null);
+				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_GRAPH_OVERVIEW_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_PIE_GRAPH:
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_VENTILATION:
 				fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, null, null, null);
+				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_VENTILATION_ITEM;
 		}
 
+		GoogleAnalyticsManager.getInstance().logEvent(GoogleAnalyticsManager.EVENT_CATEGORY_DASHBOARD, GoogleAnalyticsManager.EVENT_ACTION_ADD_ITEM, analyticsItemName);
 		mActivity.replaceFragment(getTag(), fragment);
 	}
 }

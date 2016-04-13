@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.dialog.EditTextDialog;
@@ -147,6 +148,8 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onResume() {
 		super.onResume();
+
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.SEARCH_DEVICE_SCREEN);
 
 		if (mCountDownTimeElapsed != COUNTDOWN_INTERVAL) {
 			startAutomaticPairing();

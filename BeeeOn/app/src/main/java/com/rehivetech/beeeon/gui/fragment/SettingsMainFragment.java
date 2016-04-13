@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.util.DisplayMetrics;
@@ -15,13 +14,13 @@ import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.activity.SettingsUnitActivity;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.Language;
 import com.rehivetech.beeeon.util.Timezone;
-import com.rehivetech.beeeon.util.UnavailableModules;
 
 import java.util.Locale;
 
@@ -43,6 +42,13 @@ public class SettingsMainFragment extends BaseSettingsFragment implements Shared
 	private CacheHoldTime mCacheHoldTime;
 
 //	private String mPreviousLanguage;
+
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.SETTINGS_SCREEN);
+	}
 
 	protected void initSettings() {
 		addPreferencesFromResource(R.xml.activity_settings_main_preferences);

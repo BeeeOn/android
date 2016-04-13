@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Module;
@@ -125,6 +126,11 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 		}
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DASHBOARD_OVERVIEW_GRAPH_ITEM_SCREEN);
+	}
 
 	private ModuleLog.DataType getDataTypeBySelectedItem(RadioGroup radioGroup) {
 

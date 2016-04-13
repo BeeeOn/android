@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
 import com.rehivetech.beeeon.gui.activity.DashboardDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
@@ -160,6 +161,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public void onResume() {
 		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_SCREEN);
 		doReloadDevicesTask(false);
 	}
 

@@ -18,6 +18,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
@@ -136,6 +137,7 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 	@Override
 	public void onResume() {
 		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_OVERVIEW_GRAPH_DETAIL_SCREEN);
 		loadCharData();
 	}
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,6 @@ import android.widget.TextView;
 import com.avast.android.dialogs.core.BaseDialogBuilder;
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.BaseActivity;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -43,7 +43,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 	private static final String ARG_MODULE_ID = "module_id";
 
 
-	public static void showNumberPickerDialog(BaseActivity context, Module module, Fragment targetFragment) {
+	public static void showNumberPickerDialog(AppCompatActivity context, Module module, Fragment targetFragment) {
 		NumberPickerDialogFragment.createBuilder(context, context.getSupportFragmentManager())
 				.setTitle(module.getName(context))
 				.setConstraints(module.getValue().getConstraints())
