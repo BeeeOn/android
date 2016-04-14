@@ -78,6 +78,10 @@
 			</intent-filter>
 		</activity>
 		<activity
+			android:name=".gui.activity.WebViewActivity"
+			android:label="@string/manifest_title_main">
+		</activity>
+		<activity
 			android:name=".gui.activity.WebAuthActivity"
 			android:label="@string/manifest_title_main">
 		</activity>

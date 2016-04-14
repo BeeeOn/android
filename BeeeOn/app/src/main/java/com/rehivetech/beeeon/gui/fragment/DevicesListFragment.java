@@ -43,6 +43,10 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class DevicesListFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, IPositiveButtonDialogListener {
 	@SuppressWarnings("unused")
 	private static final String TAG = DevicesListFragment.class.getSimpleName();
@@ -64,6 +68,24 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 	};
 
+	@Bind(R.id.devices_list_fab)
+	FloatingActionMenu mFloatingActionMenu;
+	@Bind(R.id.devices_list_action_add_device)
+	public FloatingActionButton mFabAddDevice;
+	@Bind(R.id.devices_list_action_add_gate)
+	public FloatingActionButton mFabAddGate;
+	@Bind(R.id.devices_list_no_items_text)
+	public TextView mNoItemsTextView;
+	@Bind(R.id.devices_list_refresh_button)
+	public Button mRefreshButton;
+	@Bind(R.id.devices_list_recyclerview)
+	RecyclerView mDevicesListRecyclerview;
+
+	public @Nullable ActionMode mActionMode;
+	private Gate mActiveGate;
+	private DeviceRecycleAdapter mDeviceAdapter;
+	private @Nullable String mActiveGateId;
+
 	private CallbackTask createReloadDevicesTask(boolean forceReload) {
 		if (getActivity() == null)
 			return null;
@@ -72,8 +94,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 				getActivity(),
 				forceReload,
 				mActiveGateId == null
-					? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
-					: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
+						? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
+						: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
 
 		reloadGateDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
@@ -87,17 +109,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		});
 		return reloadGateDataTask;
 	}
-
-
-	@Nullable
-	private ActionMode mActionMode;
-	private TextView mNoItemsTextView;
-	private Button mRefreshButton;
-
-	private DeviceRecycleAdapter mDeviceAdapter;
-
-	@Nullable
-	private String mActiveGateId;
 
 	/**
 	 * This way instead of constructor so data is passed properly
@@ -124,6 +135,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		mActiveGateId = getArguments().getString(KEY_GATE_ID);
+		mActiveGate = Controller.getInstance(getActivity()).getGatesModel().getGate(mActiveGateId);
 	}
 
 	private void setAutoReloadDataTimer() {
@@ -146,51 +158,35 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_devices_list, container, false);
-
-		// refresh button when no items shown
-		mRefreshButton = (Button) rootView.findViewById(R.id.devices_list_refresh_button);
-		mRefreshButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				doReloadDevicesTask(mActiveGateId, true);
-			}
-		});
-
-		// no items textview
-		mNoItemsTextView = (TextView) rootView.findViewById(R.id.devices_list_no_items_text);
+		ButterKnife.bind(this, rootView);
 
 		// recyclerview
 		mDeviceAdapter = new DeviceRecycleAdapter(getActivity(), this, false);
-		RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.devices_list_recyclerview);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-		recyclerView.setItemAnimator(new DefaultItemAnimator());
-		recyclerView.setAdapter(mDeviceAdapter);
+		mDevicesListRecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+		mDevicesListRecyclerview.setItemAnimator(new DefaultItemAnimator());
+		mDevicesListRecyclerview.setAdapter(mDeviceAdapter);
 
 		// FAB menu
-		final FloatingActionMenu fabMenu = (FloatingActionMenu) rootView.findViewById(R.id.devices_list_fab);
-		fabMenu.setClosedOnTouchOutside(true);
-
-		// FAB button add device
-		FloatingActionButton fabAddDevice = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_device);
-		fabAddDevice.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mActiveGateId, AddDeviceActivity.ACTION_INITIAL, null);
-				mActivity.startActivityForResult(intent, Constants.ADD_DEVICE_REQUEST_CODE);
-			}
-		});
-
-		// FAB button add gate
-		FloatingActionButton fabAddGate = (FloatingActionButton) rootView.findViewById(R.id.devices_list_action_add_gate);
-		fabAddGate.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(), AddGateActivity.class);
-				mActivity.startActivityForResult(intent, Constants.ADD_GATE_REQUEST_CODE);
-			}
-		});
+		mFloatingActionMenu.setClosedOnTouchOutside(true);
 
 		return rootView;
+	}
+
+	@OnClick(R.id.devices_list_refresh_button)
+	public void onRefreshButtonClick() {
+		doReloadDevicesTask(mActiveGateId, true);
+	}
+
+	@OnClick(R.id.devices_list_action_add_device)
+	public void onClickAddDevice() {
+		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mActiveGateId, AddDeviceActivity.ACTION_INITIAL, null);
+		mActivity.startActivityForResult(intent, Constants.ADD_DEVICE_REQUEST_CODE);
+	}
+
+	@OnClick(R.id.devices_list_action_add_gate)
+	public void onClickAddGate() {
+		Intent intent = new Intent(getActivity(), AddGateActivity.class);
+		mActivity.startActivityForResult(intent, Constants.ADD_GATE_REQUEST_CODE);
 	}
 
 	/**
@@ -252,6 +248,9 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		if (activeGate == null) {
 			return;
 		}
+
+		// prevent for showing based on user's role
+		mFabAddDevice.setVisibility(controller.isUserAllowed(activeGate.getRole()) ? View.VISIBLE : View.GONE);
 
 		mActiveGateId = activeGate.getId();
 		doReloadDevicesTask(mActiveGateId, false);
@@ -454,6 +453,12 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		if (mActionMode != null) {
 			mActionMode.finish();
 		}
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
 	}
 
 	/**

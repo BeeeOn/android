@@ -39,7 +39,7 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 
-		setupToolbar("", true);
+		setupToolbar("", INDICATOR_BACK);
 
 		Bundle args = getIntent().getExtras();
 

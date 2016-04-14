@@ -240,8 +240,9 @@
     <!-- Device add -->
 
     <string name="device_add_title">Pridať zariadenie</string>
-    <string name="device_add_guide_text">BeeeOn brána podporuje zariadenia od rôznych výrobcov.Ako pripojiť vaše zariadenie s bránou sa dozviete na <a href="http://beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29">tejto webovej stránke</a></string>
-    <string name="device_add_btn_search">HĽADAŤ ZARIADENIA</string>
+    <string name="device_add_guide_text">BeeeOn brána podporuje zariadenia od rôznych výrobcov. Viacej informácií ako pripojiť vaše zariadenie k bráne, nájdete v zozname podporovaných zariadení.</string>
+	<string name="device_add_btn_search">Hľadať nové zariadenia</string>
+    <string name="device_add_btn_list">Zoznam dustopných zariadení</string>
     <string name="device_add_activity_opening_error">Chyba pri otvorení nastavení zariadenia, skúste to neskôr.</string>
     <string name="device_add_dialog_enter_password_checkbox">Nevýpĺňať heslo\n(môžete si iba prezerat informácie o tomto zariadení)</string>
 
