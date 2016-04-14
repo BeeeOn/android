@@ -416,7 +416,12 @@ public enum DeviceType implements IIdentifier {
 							new EnumValue.Item(1, "1", R.string.devices__ja_83m_magnetic_door_contact_state_opened),
 							new EnumValue.Item(2, "2", R.string.devices__ja_83m_magnetic_door_contact_state_closed)
 					), null),
-					new Module(device, "1", 0x08, null, null, null, false, null, null)
+					new Module(device, "1", 0x01, null, null, R.string.devices__ja_83m_magnetic_door_contact_alarm, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_83m_magnetic_door_contact_alarm_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_83m_magnetic_door_contact_alarm_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_83m_magnetic_door_contact_alarm_state_closed)
+					), null),
+					new Module(device, "2", 0x08, null, null, null, false, null, null)
 			);
 		}
 	},
@@ -500,13 +505,124 @@ public enum DeviceType implements IIdentifier {
 					), null)
 			);
 		}
+	},
+	TYPE_18("18", "Jablotron JA-81M Wireless magnetic door contact", R.string.devices__dev_ja_81m_magnetic_door_contact, R.string.devices__manufacturer_jablotron) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__ja_81m_magnetic_door_contact, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_81m_magnetic_door_contact_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_81m_magnetic_door_contact_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_81m_magnetic_door_contact_state_closed)
+					), null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__ja_83m_magnetic_door_contact_alarm, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_81m_magnetic_door_contact_alarm_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_81m_magnetic_door_contact_alarm_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_81m_magnetic_door_contact_alarm_state_closed)
+					), null),
+					new Module(device, "2", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_19("19", "Jablotron JA-82SH Wireless shake sensor", R.string.devices__dev_ja_82sh_shake_sensor, R.string.devices__manufacturer_jablotron) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__ja_82sh_shake_sensor, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_82sh_shake_sensor_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_82sh_shake_sensor_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_82sh_shake_sensor_state_closed)
+					), null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__ja_82sh_shake_sensor_alarm, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_82sh_shake_sensor_alarm_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_82sh_shake_sensor_alarm_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_82sh_shake_sensor_alarm_state_closed)
+					), null),
+					new Module(device, "2", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_20("20", "Jablotron JA-83P Wireless PIR sensor", R.string.devices__dev_ja_83p_pir_sensor, R.string.devices__manufacturer_jablotron) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__ja_83p_pir_sensor, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_83p_pir_sensor_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_83p_pir_sensor_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_83p_pir_sensor_state_closed)
+					), null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__ja_83p_pir_sensor_alarm, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_83p_pir_sensor_alarm_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_83p_pir_sensor_alarm_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_83p_pir_sensor_alarm_state_closed)
+					), null),
+					new Module(device, "2", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_21("21", "Jablotron JA-85ST Wireless fire sensor", R.string.devices__dev_ja_85st_fire_sensor, R.string.devices__manufacturer_jablotron) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__ja_85st_fire_sensor, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_85st_fire_sensor_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__ja_85st_fire_sensor_state_on)
+					), null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__ja_85st_fire_sensor_alarm, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_85st_fire_sensor_alarm_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_85st_fire_sensor_alarm_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_85st_fire_sensor_alarm_state_closed)
+					), null),
+					new Module(device, "2", 0x01, null, null, R.string.devices__ja_85st_fire_sensor_error, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__ja_85st_fire_sensor_error_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__ja_85st_fire_sensor_error_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__ja_85st_fire_sensor_error_state_closed)
+					), null),
+					new Module(device, "3", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_22("22", "Jablotron RC-86K Wireless remote control", R.string.devices__dev_rc_86k_remote_control, R.string.devices__manufacturer_jablotron) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__rc_86k_remote_control, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__rc_86k_remote_control_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__rc_86k_remote_control_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__rc_86k_remote_control_state_closed)
+					), null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__rc_86k_remote_control_alarm, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__rc_86k_remote_control_alarm_state_unknown),
+							new EnumValue.Item(1, "1", R.string.devices__rc_86k_remote_control_alarm_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__rc_86k_remote_control_alarm_state_closed)
+					), null),
+					new Module(device, "2", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_23("23", "IQRF demo temperature sensor with LEDs", R.string.devices__dev_iqrf_temp_demo, R.string.devices__manufacturer_iqrf) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x02, null, null, R.string.devices__type_temperature, false, null, null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__iqrf_led1, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__iqrf_led1_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__iqrf_led1_state_on)
+					), null),
+					new Module(device, "2", 0x01, null, null, R.string.devices__iqrf_led2, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
+					), null),
+					new Module(device, "2", 0x08, null, null, null, false, null, null)
+			);
+		}
 	};
 
 	/** Version from specification of this devices list */
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1458250488039l;
+	public static final long DEVICES_DATE = 1460649015664l;
 
 	/** END OF GENERATED CONTENT **/
 
