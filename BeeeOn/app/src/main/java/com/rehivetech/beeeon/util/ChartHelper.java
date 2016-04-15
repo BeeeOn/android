@@ -292,7 +292,6 @@ final public class ChartHelper {
 		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Caption);
 
 		axis.setAxisLineColor(ContextCompat.getColor(context, R.color.beeeon_secondary_text));
-		axis.setStartAtZero(false);
 		axis.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
 		axis.setTypeface(tempText.getTypeface());
 		axis.setTextColor((textColor != null) ? textColor : tempText.getCurrentTextColor());
@@ -302,7 +301,7 @@ final public class ChartHelper {
 		axis.setDrawAxisLine(drawAxisLine);
 		axis.setSpaceTop(100);
 		axis.setSpaceBottom(100);
-		axis.setLabelCount(labelCount, false);
+		axis.setLabelCount(labelCount, true);
 
 		if (baseValue instanceof EnumValue) {
 			final List<EnumValue.Item> labels = ((EnumValue) baseValue).getEnumItems();
