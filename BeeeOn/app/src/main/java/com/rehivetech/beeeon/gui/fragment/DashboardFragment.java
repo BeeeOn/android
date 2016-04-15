@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by martin on 15.11.15.
  */
@@ -83,7 +85,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mRootLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_dashboard, container, false);
-		RecyclerView recyclerView = (RecyclerView) mRootLayout.findViewById(R.id.dashboard_recyclerview);
+		RecyclerView recyclerView = ButterKnife.findById(mRootLayout, R.id.dashboard_recyclerview);
 
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
 		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));

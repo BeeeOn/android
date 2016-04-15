@@ -35,6 +35,9 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by martin on 20.3.16.
  */
@@ -42,9 +45,13 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 
 	private GraphItem mGraphItem;
 
-	private TextView mUnitLeft;
-	private TextView mUnitRight;
-	private LineChart mChart;
+	@Bind(R.id.fragment_dashboard_detail_left_axis_unit)
+	TextView mUnitLeft;
+	@Bind(R.id.fragment_dashboard_detail_right_axis_unit)
+	TextView mUnitRight;
+	@Bind(R.id.fragment_dashboard_detail_graph)
+	LineChart mChart;
+
 	private LineDataSet mLineDataSetLeft;
 	private LineDataSet mLineDataSetRight;
 	private DateTimeFormatter mFormatter;
@@ -94,17 +101,9 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_dashboard_detail_graph, container, false);
-	}
-
-
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-
-		mChart = (LineChart) view.findViewById(R.id.fragment_dashboard_detail_graph);
-		mUnitLeft = (TextView) view.findViewById(R.id.fragment_dashboard_detail_left_axis_unit);
-		mUnitRight = (TextView) view.findViewById(R.id.fragment_dashboard_detail_right_axis_unit);
+		View view = inflater.inflate(R.layout.fragment_dashboard_detail_graph, container, false);
+		ButterKnife.bind(view);
+		return view;
 	}
 
 	@Override
@@ -156,6 +155,12 @@ public class DashboardGraphDetailFragment extends BaseDashboardDetailFragment {
 		super.onResume();
 		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_GRAPH_DETAIL_SCREEN);
 		loadCharData();
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
 	}
 
 	private void prepareChart(Module leftModule, @Nullable Module rightModule) {

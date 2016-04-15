@@ -17,9 +17,10 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
-import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
+
+import butterknife.ButterKnife;
 
 import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
 
@@ -77,7 +78,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 	public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
 		if (mModuleItem == null) {
 			super.onViewCreated(view, savedInstanceState);
-			TextView textView = (TextView) view.findViewById(R.id.fragment_add_dashboard_item_title);
+			TextView textView = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_title);
 			textView.setText(R.string.dashboard_add_graph_week_module_label);
 
 			fillAdapter(false, null);
@@ -93,8 +94,8 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 				}
 			});
 		} else {
-			mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
-			final EditText editText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_name_edit);
+			mButtonDone = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_button_done);
+			final EditText editText = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_name_edit);
 
 			Controller controller = Controller.getInstance(mActivity);
 
@@ -110,7 +111,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 				@Override
 				public void onClick(View v) {
 
-					RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.fragment_add_dashboard_item_graph_types);
+					RadioGroup radioGroup = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_graph_types);
 
 					ModuleLog.DataType dataType = getDataTypeBySelectedItem(radioGroup);
 

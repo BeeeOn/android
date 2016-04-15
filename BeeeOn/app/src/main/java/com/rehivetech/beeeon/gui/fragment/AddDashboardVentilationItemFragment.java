@@ -25,7 +25,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,14 +40,16 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
-import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.PlaceAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
-import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.model.place.Place;
 import com.rehivetech.beeeon.util.Utils;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
 
@@ -79,7 +80,11 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	@OutSideProviderType
 	private int mOutSideProviderType;
 
-	private AutoCompleteTextView mAutoCompleteTextView;
+	@Bind(R.id.fragment_add_dashboard_item_title)
+	TextView mTitle;
+	@Bind(R.id.fragment_add_dashboard_item_ventilation_location_textview)
+	AutoCompleteTextView mAutoCompleteTextView;
+
 	private PlaceAdapter mPlaceAdapter;
 	private GoogleMap mMap;
 	private boolean mBackgroundAnimationCalled = false;
@@ -134,22 +139,22 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		}
 		rootView.addView(view, 0);
 
+		ButterKnife.bind(rootView);
 		return rootView;
 	}
 
 	@Override
 	public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
-		TextView title = (TextView) view.findViewById(R.id.fragment_add_dashboard_item_title);
+		mButtonDone = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_button_done);
 
 		if (mInsideModuleItem == null && mOutSideModuleItem == null && mOutSideProviderType == OutSideProviderType.NONE && mLocation == null) {
-			mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					AddDashboardVentilationItemFragment fragment;
-					RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.fragment_add_dashboard_ventilation_radiogroup);
+					RadioGroup radioGroup = ButterKnife.findById(view, R.id.fragment_add_dashboard_ventilation_radiogroup);
 					int selectedId = radioGroup.getCheckedRadioButtonId();
 					if (selectedId == R.id.fragment_add_dashboard_radio_btn_select_module) {
 						fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, null, null, OutSideProviderType.OUTSIDE_TYPE_MODULE);
@@ -166,19 +171,18 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(false, ModuleType.TYPE_TEMPERATURE);
 			mAdapter.selectFirstModuleItem();
-			title.setText(R.string.dashboard_add_ventilation_outside_module_select_title);
+			mTitle.setText(R.string.dashboard_add_ventilation_outside_module_select_title);
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					int selectedItem = mAdapter.getFirstSelectedItem();
-					mOutSideModuleItem = (DashboardModuleSelectAdapter.ModuleItem) mAdapter.getItem(selectedItem);
+					mOutSideModuleItem = (ModuleItem) mAdapter.getItem(selectedItem);
 					Fragment fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, mOutSideModuleItem, null, OutSideProviderType.NONE);
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
 		} else if (mOutSideProviderType == OutSideProviderType.OUTSIDE_TYPE_WEATHER) {
-			mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -191,8 +195,6 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
-			mAutoCompleteTextView = (AutoCompleteTextView) view.findViewById(R.id.fragment_add_dashboard_item_ventilation_location_textview);
-			final ImageButton gpsButton = (ImageButton) view.findViewById(R.id.fragment_add_dashboard_item_ventilation_location_gps_icon);
 
 			SupportMapFragment mapFragment = SupportMapFragment.newInstance();
 			getFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
@@ -202,28 +204,17 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			mAutoCompleteTextView.setAdapter(mPlaceAdapter);
 			mAutoCompleteTextView.setOnItemClickListener(this);
 
-			gpsButton.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (!checkLocationPermissions()) {
-						return;
-					}
-					requestLocation();
-
-				}
-			});
-
 		} else if (mOutSideModuleItem != null && mOutSideProviderType == OutSideProviderType.NONE || mLocation != null) {
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(false, ModuleType.TYPE_TEMPERATURE);
 			mAdapter.selectFirstModuleItem();
-			title.setText(R.string.dashboard_add_ventilation_inside_module_select_title);
+			mTitle.setText(R.string.dashboard_add_ventilation_inside_module_select_title);
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					VentilationItem item;
 					int selectedItem = mAdapter.getFirstSelectedItem();
-					mInsideModuleItem = (DashboardModuleSelectAdapter.ModuleItem) mAdapter.getItem(selectedItem);
+					mInsideModuleItem = (ModuleItem) mAdapter.getItem(selectedItem);
 					if (mLocation != null) {
 						item = new VentilationItem(mLocation.getName(), mGateId, mLocation.getCoordinates(), null, mInsideModuleItem.getAbsoluteId());
 					} else {
@@ -249,6 +240,20 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(OUT_STATE_ANIMATION_CALLED, mBackgroundAnimationCalled);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
+	}
+
+	@OnClick(R.id.fragment_add_dashboard_item_ventilation_location_gps_icon)
+	public void onGpsButtonClicked() {
+		if (!checkLocationPermissions()) {
+			return;
+		}
+		requestLocation();
 	}
 
 	@Override

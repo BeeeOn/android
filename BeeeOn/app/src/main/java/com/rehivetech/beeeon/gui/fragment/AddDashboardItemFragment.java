@@ -19,6 +19,9 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by martin on 25.2.16.
  */
@@ -29,6 +32,11 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	private static final String ARG_GATE_ID = "gate_id";
 
 	private String mGateId;
+
+	@Bind(R.id.fragment_add_dashboard_item_cards_recyclerview)
+	RecyclerView mRecyclerView;
+
+	private AddDashboardCardAdapter mAdapter;
 
 	public static AddDashboardItemFragment newInstance(String gateId) {
 
@@ -50,28 +58,31 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_add_dashboard_item, container, false);
-	}
+		View view = inflater.inflate(R.layout.fragment_add_dashboard_item, container, false);
+		ButterKnife.bind(view);
 
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+		mRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
+		mRecyclerView.setHasFixedSize(true);
+		mAdapter = new AddDashboardCardAdapter(this);
+		mRecyclerView.setAdapter(mAdapter);
 
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_add_dashboard_item_cards_recyclerview);
-		recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
-		recyclerView.setHasFixedSize(true);
-		AddDashboardCardAdapter adapter = new AddDashboardCardAdapter(this);
-		recyclerView.setAdapter(adapter);
-		fillAdapter(adapter);
+		return view;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		fillAdapter();
 		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DASHBOARD_ITEM_SCREEN);
 	}
 
-	private void fillAdapter(AddDashboardCardAdapter addDashboardCardAdapter) {
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
+	}
+
+	private void fillAdapter() {
 		List<AddDashboardCardAdapter.CardItem> items = new ArrayList<>();
 
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_ACTUAL_VALUE,
@@ -95,7 +106,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		if (ventilationItem == null) {
 			items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_VENTILATION, R.drawable.dashboard_ventilation_preview, R.string.dashboard_add_ventilation_card));
 		}
-		addDashboardCardAdapter.setItems(items);
+		mAdapter.setItems(items);
 	}
 
 	@Override

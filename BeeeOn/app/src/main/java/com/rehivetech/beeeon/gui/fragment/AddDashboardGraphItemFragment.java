@@ -16,7 +16,6 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.AddDashboardCardAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
-import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.gui.view.Slider;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.ChartHelper;
@@ -25,6 +24,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
 
@@ -38,7 +40,8 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 
 	private ModuleItem mLeftAxisModule;
 	private ModuleItem mRightAxisModule;
-	private TextView mTitle;
+	@Bind(R.id.fragment_add_dashboard_item_title)
+	TextView mTitle;
 
 	public static AddDashboardGraphItemFragment newInstance(String gateId, ModuleItem leftAxisModule, ModuleItem rightAxisModule) {
 
@@ -76,6 +79,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 		}
 
 		rootView.addView(view, 0);
+		ButterKnife.bind(rootView);
 		return rootView;
 	}
 
@@ -84,7 +88,6 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 
 		if (mLeftAxisModule == null || mRightAxisModule == null) {
 			super.onViewCreated(view, savedInstanceState);
-			mTitle = (TextView) view.findViewById(R.id.fragment_add_dashboard_item_title);
 			fillAdapter(false, null);
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 		}
@@ -123,9 +126,9 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 
 		} else {
 
-			final Slider slider = (Slider) view.findViewById(R.id.fragment_add_dashboard_item_graph_range);
-			final EditText editText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_name_edit);
-			mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
+			final Slider slider = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_graph_range);
+			final EditText editText = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_name_edit);
+			mButtonDone = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_button_done);
 
 			List<String> values = getGraphRangeStrings();
 			slider.setValues(values);
@@ -161,8 +164,6 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 				@Override
 				@SuppressWarnings("ResourceType")
 				public void onClick(View v) {
-
-
 					List<String> moduleIds;
 					if (mRightAxisModule != null && !mRightAxisModule.isEmpty()) {
 						moduleIds = Arrays.asList(mLeftAxisModule.getAbsoluteId(), mRightAxisModule.getAbsoluteId());
@@ -196,6 +197,12 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 		}
 
 		return ranges;
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
 	}
 
 	@Override

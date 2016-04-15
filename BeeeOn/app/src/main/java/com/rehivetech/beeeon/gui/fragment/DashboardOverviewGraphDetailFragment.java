@@ -34,13 +34,19 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by martin on 19.3.16.
  */
 public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFragment {
 
-	private TextView mUnit;
-	private BarChart mChart;
+	@Bind(R.id.fragment_dashboard_detail_axis_unit)
+	TextView mUnit;
+	@Bind(R.id.fragment_dashboard_detail_graph)
+	BarChart mChart;
+
 	private BarDataSet mDataSet;
 
 	private OverviewGraphItem mItem;
@@ -89,14 +95,9 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_dashboard_detail_overview_week_graph, container, false);
-	}
-
-	@Override
-	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
-		mChart = (BarChart) view.findViewById(R.id.fragment_dashboard_detail_graph);
-		mUnit = (TextView) view.findViewById(R.id.fragment_dashboard_detail_axis_unit);
+		View view = inflater.inflate(R.layout.fragment_dashboard_detail_overview_week_graph, container, false);
+		ButterKnife.bind(view);
+		return view;
 	}
 
 	@Override

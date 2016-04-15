@@ -17,8 +17,9 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
-import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Module;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by martin on 7.2.16.
@@ -92,8 +93,8 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 				}
 			});
 		} else {
-			final EditText editText = (EditText) view.findViewById(R.id.fragment_add_dashboard_item_name_edit);
-			mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
+			final EditText editText = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_name_edit);
+			mButtonDone = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_button_done);
 
 			Controller controller = Controller.getInstance(mActivity);
 			Module module = controller.getDevicesModel().getModule(mGateId, mModuleItem.getAbsoluteId());

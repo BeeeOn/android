@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -22,6 +21,9 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  *  Created by martin on 7.2.16.
  */
@@ -31,10 +33,10 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 	protected String mGateId;
 
-	protected CardView mMinimum;
-	protected CardView mAverage;
-	protected CardView mMaximum;
-	protected FloatingActionButton mButtonDone;
+	@Bind(R.id.fragment_add_dashboard_item_button_done)
+	FloatingActionButton mButtonDone;
+	@Bind(R.id.fragment_add_dashboard_item_recyclerview)
+	RecyclerView mRecyclerView;
 
 	protected DashboardModuleSelectAdapter mAdapter;
 
@@ -53,8 +55,8 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	@CallSuper
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		ButterKnife.bind(view);
 
-		RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.fragment_add_dashboard_item_recyclerview);
 		mAdapter = new DashboardModuleSelectAdapter(mActivity, this);
 		GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);
 		layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -63,10 +65,8 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 				return mAdapter.getItemViewType(position) == DashboardModuleSelectAdapter.LAYOUT_TYPE_MODULE ? 1 : 2;
 			}
 		});
-		recyclerView.setLayoutManager(layoutManager);
-		recyclerView.setAdapter(mAdapter);
-
-		mButtonDone = (FloatingActionButton) view.findViewById(R.id.fragment_add_dashboard_item_button_done);
+		mRecyclerView.setLayoutManager(layoutManager);
+		mRecyclerView.setAdapter(mAdapter);
 	}
 
 	protected void fillAdapter(boolean withEnumTypes, @Nullable ModuleType filterBy) {
@@ -133,7 +133,11 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		mAdapter.setItems(items);
 	}
 
-
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
+	}
 
 	@Override
 	public void onItemClick(String absoluteModuleId) {
