@@ -148,6 +148,13 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 			}
 		};
 
+		setupRefreshIcon(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				initActiveFragment();
+			}
+		});
+
 		updateActualValue();
 	}
 
