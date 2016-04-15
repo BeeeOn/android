@@ -35,6 +35,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 	@Bind(R.id.fragment_add_dashboard_item_button_done)
 	FloatingActionButton mButtonDone;
+	@Nullable
 	@Bind(R.id.fragment_add_dashboard_item_recyclerview)
 	RecyclerView mRecyclerView;
 
@@ -55,7 +56,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	@CallSuper
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		ButterKnife.bind(view);
+		ButterKnife.bind(this, view);
 
 		mAdapter = new DashboardModuleSelectAdapter(mActivity, this);
 		GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);

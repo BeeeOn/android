@@ -29,7 +29,6 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
-import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadDashboardDataTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
@@ -41,6 +40,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by martin on 15.11.15.
@@ -85,6 +85,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mRootLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_dashboard, container, false);
+		ButterKnife.bind(this, mRootLayout);
 		RecyclerView recyclerView = ButterKnife.findById(mRootLayout, R.id.dashboard_recyclerview);
 
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
@@ -125,15 +126,14 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 
 		mItemTouchHelper.attachToRecyclerView(recyclerView);
 
-		FloatingActionButton fab = (FloatingActionButton) mRootLayout.findViewById(R.id.dashboard_fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId);
-				startActivityForResult(intent, 0);
-			}
-		});
 		return mRootLayout;
+	}
+
+	@OnClick(R.id.dashboard_fab)
+	@SuppressWarnings("unused")
+	public void onFloatingActionButtonClicked() {
+		Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId);
+		startActivityForResult(intent, 0);
 	}
 
 	@Override

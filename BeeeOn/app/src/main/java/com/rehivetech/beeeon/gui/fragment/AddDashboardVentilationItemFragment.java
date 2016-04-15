@@ -80,8 +80,10 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	@OutSideProviderType
 	private int mOutSideProviderType;
 
+	@Nullable
 	@Bind(R.id.fragment_add_dashboard_item_title)
 	TextView mTitle;
+	@Nullable
 	@Bind(R.id.fragment_add_dashboard_item_ventilation_location_textview)
 	AutoCompleteTextView mAutoCompleteTextView;
 
@@ -139,7 +141,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		}
 		rootView.addView(view, 0);
 
-		ButterKnife.bind(rootView);
+		ButterKnife.bind(this, rootView);
 		return rootView;
 	}
 
@@ -248,6 +250,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		ButterKnife.unbind(this);
 	}
 
+	@Nullable
 	@OnClick(R.id.fragment_add_dashboard_item_ventilation_location_gps_icon)
 	public void onGpsButtonClicked() {
 		if (!checkLocationPermissions()) {

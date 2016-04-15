@@ -59,7 +59,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_add_dashboard_item, container, false);
-		ButterKnife.bind(view);
+		ButterKnife.bind(this, view);
 
 		mRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
 		mRecyclerView.setHasFixedSize(true);

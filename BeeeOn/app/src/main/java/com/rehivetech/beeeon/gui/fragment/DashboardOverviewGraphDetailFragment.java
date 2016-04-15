@@ -96,7 +96,7 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard_detail_overview_week_graph, container, false);
-		ButterKnife.bind(view);
+		ButterKnife.bind(this, view);
 		return view;
 	}
 
