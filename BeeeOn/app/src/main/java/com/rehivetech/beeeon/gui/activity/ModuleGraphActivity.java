@@ -56,16 +56,8 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	private String mDeviceId;
 	private String mModuleId;
 
-	@Bind(R.id.module_graph_min_value)
-	TextView mMinValue;
-	@Bind(R.id.module_graph_max_value)
-	TextView mMaxValue;
 	@Bind(R.id.module_graph_act_value)
 	TextView mActValue;
-	@Bind(R.id.module_graph_min_label)
-	TextView mMinValueLabel;
-	@Bind(R.id.module_graph_max_label)
-	TextView mMaxValueLabel;
 	@Bind(R.id.module_graph_tab_layoout)
 	TabLayout mTabLayout;
 	@Bind(R.id.module_graph_view_pager)
@@ -248,11 +240,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		if (value instanceof EnumValue) {
 			mActValue.setText(((EnumValue) value).getStateStringResource());
 
-			mMinValue.setVisibility(View.GONE);
-			mMinValueLabel.setVisibility(View.GONE);
-
-			mMaxValue.setVisibility(View.GONE);
-			mMaxValueLabel.setVisibility(View.GONE);
 		} else {
 			mActValue.setText(UnitsHelper.format(mUnitsHelper, value));
 			mShowLegendButton.setVisibility(View.GONE);
@@ -268,36 +255,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		ModuleGraphFragment currentFragment = (ModuleGraphFragment) ((GraphPagerAdapter) mViewPager.getAdapter()).getActiveFragment(mViewPager, mViewPager.getCurrentItem());
 
 		currentFragment.onChartSettingChanged(checkBoxMinChecked, checkboxAvgChecked, checkboxMaxChecked, dataGranularity, sliderProgress);
-	}
-
-	/**
-	 * Set textview's value with proper format
-	 *
-	 * @param value          (minValue / maxValue /...)
-	 * @param valueView      into this will be value set
-	 * @param valueLabelView valueLabel will be hidden if specified @value is empty
-	 */
-	private void setValue(String value, TextView valueView, TextView valueLabelView) {
-		if (value == null || value.length() == 0) {
-			valueLabelView.setVisibility(View.INVISIBLE);
-			valueView.setText("");
-		} else {
-			BaseValue val = BaseValue.createFromModule(mModule);
-			val.setValue(value);
-			valueLabelView.setVisibility(View.VISIBLE);
-			valueView.setText(UnitsHelper.format(mUnitsHelper, val));
-		}
-	}
-
-	/**
-	 * Updates GUI min and max value in toolbar
-	 *
-	 * @param valueMin min data value
-	 * @param valueMax max data value
-	 */
-	public void setMinMaxValue(String valueMin, String valueMax) {
-		setValue(valueMin, mMinValue, mMinValueLabel);
-		setValue(valueMax, mMaxValue, mMaxValueLabel);
 	}
 
 	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {

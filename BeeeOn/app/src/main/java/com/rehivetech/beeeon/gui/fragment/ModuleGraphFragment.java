@@ -100,7 +100,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
@@ -114,14 +113,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
 				data.addDataSet((LineDataSet) dataSet);
 				((LineChart) mChart).setData(data);
 
-				updateMinMaxTexts();
 			}
 
 			ChartHelper.setDataSetCircles(dataSet, mChart.getViewPortHandler(), mChart.getData().getYValCount(), getResources().getInteger(R.integer.graph_number_circles));
@@ -337,29 +334,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		ModuleLog.DataInterval interval = settings.getIntervalByProgress();
 		onChartSettingChanged(mCheckboxMin, mCheckboxAvg, mCheckboxMax, interval, mSliderProgress);
 		return settings;
-	}
-
-	private void updateMinMaxTexts() {
-		float minValue;
-		float maxValue;
-
-		if (mDataSetMin.getYVals().size() > 0) {
-			minValue = mDataSetMin.getYMin();
-		} else if (mDataSetAvg.getYVals().size() > 0) {
-			minValue = mDataSetAvg.getYMin();
-		} else {
-			minValue = mDataSetMax.getYMin();
-		}
-
-		if (mDataSetMax.getYVals().size() > 0) {
-			maxValue = mDataSetMax.getYMax();
-		} else if (mDataSetAvg.getYVals().size() > 0) {
-			maxValue = mDataSetAvg.getYMax();
-		} else {
-			maxValue = mDataSetMin.getYMax();
-		}
-
-		mActivity.setMinMaxValue(String.valueOf(minValue), String.valueOf(maxValue));
 	}
 
 	private void initGraphSetting(GraphSettings settings) {

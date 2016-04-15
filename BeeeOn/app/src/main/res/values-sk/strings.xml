@@ -291,8 +291,6 @@
     <string name="module_graph_show_y_labels_button">Zobraziť Y hodnoty</string>
     <string name="graph_settings_type_of_data">Typ dát</string>
     <string name="graph_settings_data_granularity">Frekvencia obnovy dát</string>
-    <string name="module_graph_min_label">MIN</string>
-    <string name="module_graph_max_label">MAX</string>
 
 
     <!-- Module get detail intent -->
