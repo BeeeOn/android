@@ -48,6 +48,9 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * @author martin on 18.8.2015.
  */
@@ -64,11 +67,10 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private String mModuleId;
 	private @ChartHelper.DataRange int mRange;
 
-	private int mRefreshInterval = 1; // in seconds
-
 	private ModuleGraphActivity mActivity;
 
-	private RelativeLayout mRootLayout;
+	@Bind(R.id.module_graph_layout)
+	RelativeLayout mRootLayout;
 
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
@@ -191,9 +193,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
-
-		mRootLayout = (RelativeLayout) view.findViewById(R.id.module_graph_layout);
-
+		ButterKnife.bind(this, view);
 
 		mActivity.setShowLegendButtonOnClickListener(new View.OnClickListener() {
 			@Override
@@ -234,6 +234,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		GraphSettingsPersistence persistence = Controller.getInstance(mActivity).getGraphSettingsPersistence(mGateId, Utils.getAbsoluteModuleId(mDeviceId, mModuleId), mRange);
 		persistence.saveCheckBoxesStates(mCheckboxMin, mCheckboxAvg, mCheckboxMax);
 		persistence.saveSliderValue(mSliderProgress);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
 	}
 
 	private void addGraphView() {
