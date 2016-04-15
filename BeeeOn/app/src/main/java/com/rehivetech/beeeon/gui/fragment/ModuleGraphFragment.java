@@ -286,6 +286,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			mDataSetMin = new BarDataSet(new ArrayList<BarEntry>(), dataSetMinName);
 			mDataSetAvg = new BarDataSet(new ArrayList<BarEntry>(), dataSetAvgName);
 			mDataSetMax = new BarDataSet(new ArrayList<BarEntry>(), dataSetMaxName);
+			((BarDataSet)mDataSetMin).setBarSpacePercent(0);
+			((BarDataSet)mDataSetAvg).setBarSpacePercent(0);
+			((BarDataSet)mDataSetMax).setBarSpacePercent(0);
 		} else {
 			mDataSetMin = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetMinName);
 			mDataSetAvg = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetAvgName);
