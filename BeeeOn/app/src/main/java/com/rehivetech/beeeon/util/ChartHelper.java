@@ -482,10 +482,6 @@ final public class ChartHelper {
 				i++;
 			}
 
-			if (start >= end) {
-				break;
-			}
-
 			xValues.add(formatter.print(time));
 
 			if (Float.isNaN(value) || Float.isInfinite(value)) {
@@ -493,9 +489,9 @@ final public class ChartHelper {
 			}
 
 			if (barChart) {
-				dataSet.addEntry(new BarEntry(value, i++));
+				((BarDataSet)dataSet).addEntry(new BarEntry(value, i++));
 			} else {
-				dataSet.addEntry(new Entry(value, i++));
+				((LineDataSet)dataSet).addEntry(new Entry(value, i++));
 			}
 
 			start += everyMsecs;
