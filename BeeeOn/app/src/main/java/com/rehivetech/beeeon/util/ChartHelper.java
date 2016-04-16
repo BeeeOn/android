@@ -481,6 +481,10 @@ final public class ChartHelper {
 				i++;
 			}
 
+			if (start >= end) {
+				break;
+			}
+
 			xValues.add(formatter.print(time));
 
 			if (Float.isNaN(value) || Float.isInfinite(value)) {
