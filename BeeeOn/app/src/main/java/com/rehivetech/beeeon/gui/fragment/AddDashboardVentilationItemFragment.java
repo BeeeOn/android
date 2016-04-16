@@ -173,7 +173,11 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(false, ModuleType.TYPE_TEMPERATURE);
 			mAdapter.selectFirstModuleItem();
-			mTitle.setText(R.string.dashboard_add_ventilation_outside_module_select_title);
+
+			if (mTitle != null) {
+				mTitle.setText(R.string.dashboard_add_ventilation_outside_module_select_title);
+			}
+
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -203,14 +207,22 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			mapFragment.getMapAsync(this);
 
 			mPlaceAdapter = new PlaceAdapter(mActivity);
-			mAutoCompleteTextView.setAdapter(mPlaceAdapter);
-			mAutoCompleteTextView.setOnItemClickListener(this);
+
+			if (mAutoCompleteTextView != null) {
+				mAutoCompleteTextView.setAdapter(mPlaceAdapter);
+				mAutoCompleteTextView.setOnItemClickListener(this);
+			}
+
 
 		} else if (mOutSideModuleItem != null && mOutSideProviderType == OutSideProviderType.NONE || mLocation != null) {
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(false, ModuleType.TYPE_TEMPERATURE);
 			mAdapter.selectFirstModuleItem();
-			mTitle.setText(R.string.dashboard_add_ventilation_inside_module_select_title);
+
+			if (mTitle != null) {
+				mTitle.setText(R.string.dashboard_add_ventilation_inside_module_select_title);
+			}
+
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -252,6 +264,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 
 	@Nullable
 	@OnClick(R.id.fragment_add_dashboard_item_ventilation_location_gps_icon)
+	@SuppressWarnings("unused")
 	public void onGpsButtonClicked() {
 		if (!checkLocationPermissions()) {
 			return;
@@ -332,9 +345,13 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			public void onLocationChanged(Location location) {
 
 				if (location != null) {
-					mAutoCompleteTextView.requestFocus();
-					mAutoCompleteTextView.setHint(R.string.my_location);
-					mAutoCompleteTextView.setText("");
+
+					if (mAutoCompleteTextView != null) {
+						mAutoCompleteTextView.requestFocus();
+						mAutoCompleteTextView.setHint(R.string.my_location);
+						mAutoCompleteTextView.setText("");
+					}
+
 					try {
 						locationManager.removeUpdates(this);
 						dialog.dismiss();

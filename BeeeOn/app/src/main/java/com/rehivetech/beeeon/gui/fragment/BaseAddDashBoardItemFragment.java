@@ -66,8 +66,11 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 				return mAdapter.getItemViewType(position) == DashboardModuleSelectAdapter.LAYOUT_TYPE_MODULE ? 1 : 2;
 			}
 		});
-		mRecyclerView.setLayoutManager(layoutManager);
-		mRecyclerView.setAdapter(mAdapter);
+
+		if (mRecyclerView != null) {
+			mRecyclerView.setLayoutManager(layoutManager);
+			mRecyclerView.setAdapter(mAdapter);
+		}
 	}
 
 	protected void fillAdapter(boolean withEnumTypes, @Nullable ModuleType filterBy) {
