@@ -1,6 +1,8 @@
 package com.rehivetech.beeeon.gui.adapter.dashboard;
 
 import android.app.Activity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Toast;
@@ -37,6 +39,14 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
 	@Override
 	public Place getItem(int position) {
 		return (mPlaces != null && mPlaces.size() > 0) ? mPlaces.get(position) : null;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		if (mPlaces != null && mPlaces.size() > 0) {
+			return super.getView(position, convertView, parent);
+		}
+		return null;
 	}
 
 	@Override
@@ -80,7 +90,10 @@ public class PlaceAdapter extends ArrayAdapter<Place> {
 
 			@Override
 			public CharSequence convertResultToString(Object resultValue) {
-				return ((Place) resultValue).getAddress();
+				if (resultValue != null) {
+					return ((Place) resultValue).getAddress();
+				}
+				return null;
 			}
 		};
 	}
