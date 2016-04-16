@@ -134,7 +134,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		View view = null;
 		if (mInsideModuleItem == null && mLocation == null && mOutSideModuleItem == null && mOutSideProviderType == OutSideProviderType.NONE) {
 			view = LayoutInflater.from(mActivity).inflate(R.layout.fragment_add_dashboard_ventilation_layout_1, null);
-		} else if (mOutSideProviderType == OutSideProviderType.OUTSIDE_TYPE_MODULE || mLocation != null || mOutSideModuleItem != null) {
+		} else if (mOutSideProviderType != OutSideProviderType.OUTSIDE_TYPE_WEATHER && (mOutSideProviderType == OutSideProviderType.OUTSIDE_TYPE_MODULE || (mLocation != null || mOutSideModuleItem != null))) {
 			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_recyclerview_item_layout1, null);
 		} else if (mOutSideProviderType == OutSideProviderType.OUTSIDE_TYPE_WEATHER) {
 			view = LayoutInflater.from(mActivity).inflate(R.layout.fragment_add_dashboard_ventilation_location_layout, null);
@@ -203,7 +203,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			});
 
 			SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-			getFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
+			getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
 			mapFragment.getMapAsync(this);
 
 			mPlaceAdapter = new PlaceAdapter(mActivity);
@@ -291,23 +291,26 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			mMap = googleMap;
 			mMap.getUiSettings().setMyLocationButtonEnabled(false);
 			MapsInitializer.initialize(mActivity);
+			if (mLocation != null) {
+				updateMapCamera(mLocation);
+			}
 		}
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Place place = mPlaceAdapter.getItem(position);
-		double[] coordinates = place.getCoordinates();
 
 		if (Utils.isGooglePlayServicesAvailable(mActivity)) {
-			LatLng latLng = new LatLng(coordinates[0], coordinates[1]);
-			updateMapCamera(latLng);
+			updateMapCamera(place);
 		}
 
 		mLocation = place;
 	}
 
-	private void updateMapCamera(LatLng latLng) {
+	private void updateMapCamera(Place place) {
+		double[] coordinates = place.getCoordinates();
+		LatLng latLng = new LatLng(coordinates[0], coordinates[1]);
 		CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 10);
 		mMap.animateCamera(cameraUpdate);
 		MarkerOptions marker = new MarkerOptions();
@@ -359,13 +362,13 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 					} catch (SecurityException ignored) {
 					}
 
-					if (Utils.isGooglePlayServicesAvailable(mActivity)) {
-						LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-						updateMapCamera(latLng);
-					}
 					mLocation = new Place();
 					mLocation.setName(mActivity.getString(R.string.my_location));
 					mLocation.setCoordinates(location.getLatitude(), location.getLongitude());
+
+					if (Utils.isGooglePlayServicesAvailable(mActivity)) {
+						updateMapCamera(mLocation);
+					}
 				}
 			}
 
