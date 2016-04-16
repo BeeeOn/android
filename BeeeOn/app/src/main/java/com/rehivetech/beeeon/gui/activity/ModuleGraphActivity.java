@@ -36,6 +36,10 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * @author martin on 18.8.2015.
  */
@@ -52,21 +56,21 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	private String mDeviceId;
 	private String mModuleId;
 
-	private TextView mMinValue;
-	private TextView mMaxValue;
-	private TextView mActValue;
-
-	private TextView mMinValueLabel;
-	private TextView mMaxValuelabel;
-
-	private TabLayout mTabLayout;
-	private ViewPager mViewPager;
+	@Bind(R.id.module_graph_act_value)
+	TextView mActValue;
+	@Bind(R.id.module_graph_tab_layoout)
+	TabLayout mTabLayout;
+	@Bind(R.id.module_graph_view_pager)
+	ViewPager mViewPager;
+	@Bind(R.id.module_graph_botom_sheet_layout)
+	BottomSheetLayout mBottomSheetLayout;
+	@Bind(R.id.module_graph_fab)
+	FloatingActionButton mFab;
+	@Bind(R.id.module_graph_show_legend_btn)
+	Button mShowLegendButton;
 
 	private GraphSettings mGraphSettings;
-	BottomSheetLayout mBottomSheetLayout;
-	private FloatingActionButton mFab;
 	FloatingActionButton.OnVisibilityChangedListener mOnVisibilityChangedListener;
-	private Button mShowLegendButton;
 
 	private Module mModule;
 	private @Nullable UnitsHelper mUnitsHelper;
@@ -84,6 +88,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_module_graph);
+		ButterKnife.bind(this);
 
 		Bundle bundle = getIntent().getExtras();
 
@@ -106,17 +111,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 
 		setupToolbar(mModule.getName(this), INDICATOR_BACK);
 
-		mMinValue = (TextView) findViewById(R.id.module_graph_min_value);
-		mMaxValue = (TextView) findViewById(R.id.module_graph_max_value);
-		mActValue = (TextView) findViewById(R.id.module_graph_act_value);
-
-		mMinValueLabel = (TextView) findViewById(R.id.module_graph_min_label);
-		mMaxValuelabel = (TextView) findViewById(R.id.module_graph_max_label);
-
-		mTabLayout = (TabLayout) findViewById(R.id.module_graph_tab_layoout);
-		mViewPager = (ViewPager) findViewById(R.id.module_graph_view_pager);
-
-		mBottomSheetLayout = (BottomSheetLayout) findViewById(R.id.module_graph_botom_sheet_layout);
 		mBottomSheetLayout.setPeekOnDismiss(true);
 		mBottomSheetLayout.addOnSheetDismissedListener(this);
 
@@ -124,10 +118,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		mGraphSettings.setGraphSettingsListener(this);
 		mGraphSettings.setBottomSheetLayout(mBottomSheetLayout);
 		mGraphSettings.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-		mFab = (FloatingActionButton) findViewById(R.id.module_graph_fab);
-
-		mShowLegendButton = (Button) findViewById(R.id.module_graph_show_legend_btn);
 
 		setupViewPager();
 
@@ -150,11 +140,10 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 			}
 		};
 
-		mFab.setOnClickListener(new View.OnClickListener() {
+		setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mFab.hide(mOnVisibilityChangedListener);
-				GoogleAnalyticsManager.getInstance().logEvent(GoogleAnalyticsManager.EVENT_CATEGORY_MODULE_GRAPH_DETAIL, GoogleAnalyticsManager.EVENT_ACTION_OPEN_GRAPH_SETTINGS, String.valueOf(mViewPager.getCurrentItem()));
+				initActiveFragment();
 			}
 		});
 
@@ -191,6 +180,19 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	public void onBackPressed() {
 		super.onBackPressed();
 		callbackTaskManager.cancelAndRemoveAll();
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ButterKnife.unbind(this);
+	}
+
+	@OnClick(R.id.module_graph_fab)
+	@SuppressWarnings("unused")
+	public void onFloatingActionButtonClicked() {
+		mFab.hide(mOnVisibilityChangedListener);
+		GoogleAnalyticsManager.getInstance().logEvent(GoogleAnalyticsManager.EVENT_CATEGORY_MODULE_GRAPH_DETAIL, GoogleAnalyticsManager.EVENT_ACTION_OPEN_GRAPH_SETTINGS, String.valueOf(mViewPager.getCurrentItem()));
 	}
 
 	private void setupViewPager() {
@@ -238,11 +240,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		if (value instanceof EnumValue) {
 			mActValue.setText(((EnumValue) value).getStateStringResource());
 
-			mMinValue.setVisibility(View.GONE);
-			mMinValueLabel.setVisibility(View.GONE);
-
-			mMaxValue.setVisibility(View.GONE);
-			mMaxValuelabel.setVisibility(View.GONE);
 		} else {
 			mActValue.setText(UnitsHelper.format(mUnitsHelper, value));
 			mShowLegendButton.setVisibility(View.GONE);
@@ -258,36 +255,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		ModuleGraphFragment currentFragment = (ModuleGraphFragment) ((GraphPagerAdapter) mViewPager.getAdapter()).getActiveFragment(mViewPager, mViewPager.getCurrentItem());
 
 		currentFragment.onChartSettingChanged(checkBoxMinChecked, checkboxAvgChecked, checkboxMaxChecked, dataGranularity, sliderProgress);
-	}
-
-	/**
-	 * Set textview's value with proper format
-	 *
-	 * @param value          (minValue / maxValue /...)
-	 * @param valueView      into this will be value set
-	 * @param valueLabelView valueLabel will be hidden if specified @value is empty
-	 */
-	private void setValue(String value, TextView valueView, TextView valueLabelView) {
-		if (value == null || value.length() == 0) {
-			valueLabelView.setVisibility(View.INVISIBLE);
-			valueView.setText("");
-		} else {
-			BaseValue val = BaseValue.createFromModule(mModule);
-			val.setValue(value);
-			valueLabelView.setVisibility(View.VISIBLE);
-			valueView.setText(UnitsHelper.format(mUnitsHelper, val));
-		}
-	}
-
-	/**
-	 * Updates GUI min and max value in toolbar
-	 *
-	 * @param valueMin min data value
-	 * @param valueMax max data value
-	 */
-	public void setMinMaxValue(String valueMin, String valueMax) {
-		setValue(valueMin, mMinValue, mMinValueLabel);
-		setValue(valueMax, mMaxValue, mMaxValuelabel);
 	}
 
 	public void setShowLegendButtonOnClickListener(View.OnClickListener onClickListener) {

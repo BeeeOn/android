@@ -459,7 +459,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mChart.clear();
 			prepareChart(module.getValue());
 			mChart.setNoDataText(mActivity.getString(R.string.chart_helper_chart_loading));
-			fillChart(controller, item, gate, module);
+			fillChart(item, gate, module);
 
 			setSelected(isSelected(position));
 		}
@@ -475,7 +475,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mChart.setOnTouchListener(null);
 		}
 
-		private void fillChart(Controller controller, OverviewGraphItem item, Gate gate, final Module module) {
+		private void fillChart(OverviewGraphItem item, Gate gate, final Module module) {
 			final DateTimeFormatter dateTimeFormatter = mTimeHelper.getFormatter(GRAPH_DATE_TIME_FORMAT, gate);
 
 
@@ -487,7 +487,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 				public void onChartLoaded(DataSet dataset, List<String> xValues) {
 
 					if (dataSet.getYVals().size() > 1) {
-						BarData barData = mChart.getBarData() != null ? mChart.getBarData() : new BarData(xValues);
+						BarData barData = new BarData(xValues);
 						barData.addDataSet(dataSet);
 
 						mChart.setData(barData);

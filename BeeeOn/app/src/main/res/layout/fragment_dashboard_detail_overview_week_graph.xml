@@ -18,7 +18,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:layerType="software"
-		android:layout_marginTop="@dimen/space_big"
+		android:layout_marginTop="@dimen/space_bigger"
 		android:layout_marginBottom="@dimen/space_big"/>
 
 </FrameLayout>

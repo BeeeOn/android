@@ -291,8 +291,6 @@
     <string name="module_graph_show_y_labels_button">Zobrazit Y hodnoty</string>
     <string name="graph_settings_type_of_data">Typ dat</string>
     <string name="graph_settings_data_granularity">Frekvence obnovy dat</string>
-    <string name="module_graph_min_label">MIN</string>
-    <string name="module_graph_max_label">MAX</string>
 
     <!-- Module get detail intent -->
     <string name="module_get_detail_intent_toast_device_not_available">Zařízení není dostupné</string>

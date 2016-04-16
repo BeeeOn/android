@@ -94,7 +94,7 @@ dependencies {
 	compile 'joda-time:joda-time:2.7'
 	compile 'com.avast:android-styled-dialogs:2.3.3'
 	compile 'com.facebook.android:facebook-android-sdk:4.5.0'
-	compile 'com.github.PhilJay:MPAndroidChart:v2.2.2'
+	compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 	compile 'com.github.shkschneider:android_PreferenceFragmentCompat:1.0.0@aar'
 	compile 'com.github.clans:fab:1.6.2'
 	compile 'com.google.code.gson:gson:2.6.1'

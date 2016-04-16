@@ -48,6 +48,9 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * @author martin on 18.8.2015.
  */
@@ -64,11 +67,10 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	private String mModuleId;
 	private @ChartHelper.DataRange int mRange;
 
-	private int mRefreshInterval = 1; // in seconds
-
 	private ModuleGraphActivity mActivity;
 
-	private RelativeLayout mRootLayout;
+	@Bind(R.id.module_graph_layout)
+	RelativeLayout mRootLayout;
 
 	private UnitsHelper mUnitsHelper;
 	private TimeHelper mTimeHelper;
@@ -98,7 +100,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
@@ -112,14 +113,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 					mChart.setNoDataText(getString(R.string.chart_helper_chart_no_data));
 					mChart.invalidate();
 
-					mActivity.setMinMaxValue(null, null);
 					return;
 				}
 
 				data.addDataSet((LineDataSet) dataSet);
 				((LineChart) mChart).setData(data);
 
-				updateMinMaxTexts();
 			}
 
 			ChartHelper.setDataSetCircles(dataSet, mChart.getViewPortHandler(), mChart.getData().getYValCount(), getResources().getInteger(R.integer.graph_number_circles));
@@ -191,9 +190,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
-
-		mRootLayout = (RelativeLayout) view.findViewById(R.id.module_graph_layout);
-
+		ButterKnife.bind(this, view);
 
 		mActivity.setShowLegendButtonOnClickListener(new View.OnClickListener() {
 			@Override
@@ -234,6 +231,12 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		GraphSettingsPersistence persistence = Controller.getInstance(mActivity).getGraphSettingsPersistence(mGateId, Utils.getAbsoluteModuleId(mDeviceId, mModuleId), mRange);
 		persistence.saveCheckBoxesStates(mCheckboxMin, mCheckboxAvg, mCheckboxMax);
 		persistence.saveSliderValue(mSliderProgress);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
 	}
 
 	private void addGraphView() {
@@ -283,6 +286,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			mDataSetMin = new BarDataSet(new ArrayList<BarEntry>(), dataSetMinName);
 			mDataSetAvg = new BarDataSet(new ArrayList<BarEntry>(), dataSetAvgName);
 			mDataSetMax = new BarDataSet(new ArrayList<BarEntry>(), dataSetMaxName);
+			((BarDataSet)mDataSetMin).setBarSpacePercent(0);
+			((BarDataSet)mDataSetAvg).setBarSpacePercent(0);
+			((BarDataSet)mDataSetMax).setBarSpacePercent(0);
 		} else {
 			mDataSetMin = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetMinName);
 			mDataSetAvg = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetAvgName);
@@ -331,29 +337,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		ModuleLog.DataInterval interval = settings.getIntervalByProgress();
 		onChartSettingChanged(mCheckboxMin, mCheckboxAvg, mCheckboxMax, interval, mSliderProgress);
 		return settings;
-	}
-
-	private void updateMinMaxTexts() {
-		float minValue;
-		float maxValue;
-
-		if (mDataSetMin.getYVals().size() > 0) {
-			minValue = mDataSetMin.getYMin();
-		} else if (mDataSetAvg.getYVals().size() > 0) {
-			minValue = mDataSetAvg.getYMin();
-		} else {
-			minValue = mDataSetMax.getYMin();
-		}
-
-		if (mDataSetMax.getYVals().size() > 0) {
-			maxValue = mDataSetMax.getYMax();
-		} else if (mDataSetAvg.getYVals().size() > 0) {
-			maxValue = mDataSetAvg.getYMax();
-		} else {
-			maxValue = mDataSetMin.getYMax();
-		}
-
-		mActivity.setMinMaxValue(String.valueOf(minValue), String.valueOf(maxValue));
 	}
 
 	private void initGraphSetting(GraphSettings settings) {

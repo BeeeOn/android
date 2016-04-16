@@ -295,8 +295,6 @@
 	<string name="module_graph_show_y_labels_button">Show Y labels</string>
 	<string name="graph_settings_type_of_data">Type of data</string>
 	<string name="graph_settings_data_granularity">Refresh frequency of data</string>
-	<string name="module_graph_min_label">MIN</string>
-	<string name="module_graph_max_label">MAX</string>
 
 	<!-- Module get detail intent -->
 	<string name="module_get_detail_intent_toast_device_not_available">Device is not available</string>
