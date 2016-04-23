@@ -6,6 +6,16 @@
 	android:layout_height="match_parent"
 	android:background="@color/beeeon_background_gray">
 
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/main_app_bar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		>
+
+		<include layout="@layout/layout_beeeon_toolbar"/>
+
+	</android.support.design.widget.AppBarLayout>
+
 	<android.support.v7.widget.RecyclerView
 		android:id="@+id/dashboard_recyclerview"
 		android:layout_width="match_parent"

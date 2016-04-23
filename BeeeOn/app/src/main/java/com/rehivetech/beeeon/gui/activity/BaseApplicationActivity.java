@@ -38,12 +38,13 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 
-	@IntDef({INDICATOR_NONE, INDICATOR_BACK, INDICATOR_DISCARD, INDICATOR_ACCEPT})
+	@IntDef({INDICATOR_NONE, INDICATOR_BACK, INDICATOR_DISCARD, INDICATOR_ACCEPT, INDICATOR_MENU})
 	@interface IndicatorType {
 	}
 
 	public static final int INDICATOR_NONE = 0;
 	public static final int INDICATOR_BACK = 1;
+	public static final int INDICATOR_MENU = R.drawable.ic_menu_white_24dp;
 	public static final int INDICATOR_DISCARD = R.drawable.ic_action_cancel;
 	public static final int INDICATOR_ACCEPT = R.drawable.ic_action_accept;
 

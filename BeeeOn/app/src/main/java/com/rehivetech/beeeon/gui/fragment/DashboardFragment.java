@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.DashboardDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
@@ -139,6 +140,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		mActivity.setupToolbar(R.string.nav_drawer_menu_menu_household, BaseApplicationActivity.INDICATOR_MENU);
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

@@ -7,8 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,6 +36,9 @@ import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener, NavigationView.OnNavigationItemSelectedListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -62,12 +63,13 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	private String mActiveGateId;
 
 	/* Navigation drawer items */
-	private DrawerLayout mDrawerLayout;
-	private NavigationView mNavigationView;
+	@Bind(R.id.main_drawer_layout)
+	DrawerLayout mDrawerLayout;
+	@Bind(R.id.navigationview_layout_drawer)
+	NavigationView mNavigationView;
+
 	private View mNavigationHeader;
 	private Menu mNavigationMenu;
-	private ActionBarDrawerToggle mDrawerToggle;
-
 	private Spinner mGatesSpinner;
 	private ArrayAdapter<Gate> mGatesAdapter;
 
@@ -75,20 +77,15 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		ButterKnife.bind(this);
 
-		Toolbar toolbar = setupToolbar(R.string.manifest_title_main);
-
-		mNavigationView = (NavigationView) findViewById(R.id.navigationview_layout_drawer);
 		mNavigationView.setNavigationItemSelectedListener(this);
 
-		mNavigationHeader = mNavigationView.inflateHeaderView(R.layout.item_menu_profile);
 		mNavigationMenu = mNavigationView.getMenu();
 
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.nav_drawer_menu_drawer_open, R.string.nav_drawer_menu_drawer_close);
-		mDrawerLayout.addDrawerListener(mDrawerToggle);
+		mNavigationHeader = mNavigationView.getHeaderView(0);
 
-		mGatesSpinner = (Spinner) mNavigationHeader.findViewById(R.id.menu_profile_gates_spinner);
+		mGatesSpinner = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_gates_spinner);
 		mGatesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			private boolean firstSelect = true;
 
@@ -126,12 +123,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 		redrawNavigation();
 		reloadFragment();
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		mDrawerToggle.syncState();
 	}
 
 	public void onAppResume() {
@@ -242,6 +233,9 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case android.R.id.home:
+				openNavDrawer();
+				break;
 			case R.id.main_menu_action_notification:
 				// Notification
 				Intent intent = new Intent(this, NotificationActivity.class);
@@ -249,6 +243,12 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		ButterKnife.unbind(this);
 	}
 
 	public void logout() {
@@ -373,17 +373,10 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	}
 
 	private void changeFragment(Fragment fragment, String tag) {
-		int actionBarTitleRes;
 		if (tag.equals(FRAGMENT_TAG_DASHBOARD)) {
 			mActiveMenuId = MENU_ITEM_GRAPHS;
-			actionBarTitleRes = R.string.nav_drawer_menu_menu_household;
 		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
 			mActiveMenuId = MENU_ITEM_DEVICES;
-			actionBarTitleRes = R.string.nav_drawer_menu_menu_devices;
-		}
-
-		if (mActionBar != null) {
-			mActionBar.setTitle(actionBarTitleRes);
 		}
 
 		Gate activeGate = Controller.getInstance(this).getActiveGate();
@@ -403,9 +396,9 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		final Controller controller = Controller.getInstance(this);
 
 		// Fill user info in the header of navigation drawer
-		TextView name = (TextView) mNavigationHeader.findViewById(R.id.menu_profile_listview_name);
-		TextView email = (TextView) mNavigationHeader.findViewById(R.id.menu_profile_listview_email);
-		ImageView picture = (ImageView) mNavigationHeader.findViewById(R.id.menu_profile_listview_icon);
+		TextView name = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_listview_name);
+		TextView email = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_listview_email);
+		ImageView picture = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_listview_icon);
 
 		User user = controller.getActualUser();
 		name.setText(user.getFullName());
