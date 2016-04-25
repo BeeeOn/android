@@ -176,9 +176,9 @@ public enum DeviceType implements IIdentifier {
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
 					new Module(device, "0", 0x01, null, null, R.string.devices__mod_presence_status, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_presence_status_undefined),
-							new EnumValue.Item(1, "1", R.string.devices__val_presence_status_present),
-							new EnumValue.Item(2, "2", R.string.devices__val_presence_status_not_present)
+							new EnumValue.Item(-1, "-1", R.string.devices__val_presence_status_undefined),
+							new EnumValue.Item(0, "0", R.string.devices__val_presence_status_not_present),
+							new EnumValue.Item(1, "1", R.string.devices__val_presence_status_present)
 					), null)
 			);
 		}
@@ -622,7 +622,7 @@ public enum DeviceType implements IIdentifier {
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1460649015664l;
+	public static final long DEVICES_DATE = 1461618529586l;
 
 	/** END OF GENERATED CONTENT **/
 
