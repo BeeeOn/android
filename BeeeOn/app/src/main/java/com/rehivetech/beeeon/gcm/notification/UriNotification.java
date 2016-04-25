@@ -34,7 +34,7 @@ public class UriNotification extends VisibleNotification {
 	protected static UriNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
 		try {
 			String message = bundle.getString("msg");
-			String uri = bundle.getString("url");
+			String uri = bundle.getString("uri");
 
 			if (message == null || uri == null) {
 				Log.d(TAG, "Watdog: some compulsory value is missing.");
@@ -71,7 +71,7 @@ public class UriNotification extends VisibleNotification {
 				case XmlPullParser.END_TAG:
 					if (tagname.equalsIgnoreCase("msg")) {
 						message = text;
-					} else if (tagname.equalsIgnoreCase("url")) {
+					} else if (tagname.equalsIgnoreCase("uri")) {
 						uri = text;
 					}
 					break;
