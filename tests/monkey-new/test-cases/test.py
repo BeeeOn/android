@@ -6,8 +6,26 @@ def main():
 	device = initDevice()
 	easyDevice = EasyMonkeyDevice(device)
 	easyDevice.touch(By.id('id/login_demo_button'),MonkeyDevice.DOWN_AND_UP)
-	time.sleep(1)
-	easyDevice.touch(By.id('id/devices_list_fab'),MonkeyDevice.DOWN_AND_UP)
+	time.sleep(3)
+	device.touch(420,736,MonkeyDevice.DOWN_AND_UP)
+	time.sleep(3)
+	device.touch(420,620,MonkeyDevice.DOWN_AND_UP)
+
+	time.sleep(3)
+	easyDevice.touch(By.id('id/base_guide_add_gate_next_button'),MonkeyDevice.DOWN_AND_UP)
+	easyDevice.touch(By.id('id/base_guide_add_gate_next_button'),MonkeyDevice.DOWN_AND_UP)
+	easyDevice.touch(By.id('id/gate_add_write_it_button'),MonkeyDevice.DOWN_AND_UP)
+
+	easyDevice.touch(By.id('id/dialog_edit_text_input_layout'), MonkeyDevice.DOWN_AND_UP)
+	MonkeyRunner.sleep(1)
+	device.type('12345')
+
+	MonkeyRunner.sleep(1)
+	device.touch(390,365,MonkeyDevice.DOWN_AND_UP)
+	MonkeyRunner.sleep(1)
+	device.touch(390,365,MonkeyDevice.DOWN_AND_UP)
+	MonkeyRunner.sleep(1)
+	device.touch(390,365,MonkeyDevice.DOWN_AND_UP)
 
 	print("Test finished")
 	time.sleep(1)
@@ -48,7 +66,7 @@ def initDevice():
 	# Runs the component
 	device.startActivity(component=runComponent)
 
-	time.sleep(1)
+	time.sleep(5)
 	return device
 
 if __name__ == '__main__':
