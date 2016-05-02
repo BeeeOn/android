@@ -9,7 +9,7 @@ export LOG_FILE="log.out"
 export ERR_FILE="log.err"
 export PACKAGE_NAME="com.rehivetech.beeeon.debug"
 export DIR=$(pwd)   #"/home/xkozak15/"
-export EVENT=100
+export EVENT=1000
 export ITER=5
 export APK="app-debug.apk"
 export APK_NET_PATH="https://ant-2.fit.vutbr.cz:8443/jenkins/job/android-app/lastSuccessfulBuild/artifact/BeeeOn/app/build/outputs/apk/app-debug.apk"
@@ -59,7 +59,7 @@ export devices
 #executes the tests
 for i in $(seq 1 ${ITER}) ; do
 	echo "									Iteration no ${i}"
-	./monkey1.sh ${devices} 2>>${ERR_FILE} >> ${LOG_FILE}
+	./monkey1.sh ${devices} ${i} 2>>${ERR_FILE} >> ${LOG_FILE}
 	
 done
 
