@@ -16,6 +16,8 @@ def main():
 	easyDevice.touch(By.id('id/base_guide_add_gate_next_button'),MonkeyDevice.DOWN_AND_UP)
 	easyDevice.touch(By.id('id/gate_add_write_it_button'),MonkeyDevice.DOWN_AND_UP)
 
+	MonkeyRunner.sleep(3)
+
 	easyDevice.touch(By.id('id/dialog_edit_text_input_layout'), MonkeyDevice.DOWN_AND_UP)
 	MonkeyRunner.sleep(1)
 	device.type('12345')
