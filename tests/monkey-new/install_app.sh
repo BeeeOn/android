@@ -19,6 +19,10 @@ if [ ! -z ${1} ] ; then
 	fi
 fi
 
+if [[ -z ${devices} ]]; then
+	devices=$2
+fi
+
 #reinstalls the app
 echo "Uninstalling old version of the app"
 adb -s ${devices} uninstall $PACKAGE_NAME
