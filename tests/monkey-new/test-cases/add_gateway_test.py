@@ -1,6 +1,8 @@
 
 from deviceHandler import DeviceHandler
 
+
+
 handler = DeviceHandler()
 
 handler.press_button('login_demo_button')
@@ -15,3 +17,4 @@ handler.touch_the_screen(390,365)
 handler.touch_the_screen(390,365)
 handler.touch_the_screen(390,365)
 
+handler.compare_snapshots('ref-out/add_gateway_result.png')
