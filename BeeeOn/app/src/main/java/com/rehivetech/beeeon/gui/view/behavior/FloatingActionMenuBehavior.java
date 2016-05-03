@@ -42,22 +42,8 @@ public class FloatingActionMenuBehavior extends CoordinatorLayout.Behavior<Float
 		float translationY;
 		if (dependency instanceof Snackbar.SnackbarLayout) {
 			translationY = Math.min(0, dependency.getTranslationY() - dependency.getHeight());
-		} else {
-			CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) fam
-					.getLayoutParams();
-			int famBottomMargin = lp.bottomMargin;
-			int height;
-			if (!fam.isOpened()) {
-				height = fam.getChildAt(0).getHeight();
-			} else {
-				height = fam.getHeight();
-			}
-			int distanceToScroll = height + famBottomMargin;
-			float ratio = (float) dependency.getY() / (float) mToolbarHeight;
-			translationY = - distanceToScroll * ratio;
+			fam.setTranslationY(translationY);
 		}
-		fam.setTranslationY(translationY);
-
 		return true;
 	}
 
