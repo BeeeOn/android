@@ -1,4 +1,4 @@
-from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice,MonkeyImage
+from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice
 from com.android.monkeyrunner.easy import EasyMonkeyDevice, By 
 
 class DeviceHandler():
@@ -51,11 +51,17 @@ class DeviceHandler():
 	def take_snapshot(self):
 		return self.device.takeSnapshot()
 
+	def save_snapshot(self,filename,extension):
+		snapshot = self.take_snapshot()
+		snapshot.writeToFile(filename + '.' + extension,extension)
+
 	def compare_snapshots(self,file_name):
 		snapshot = self.take_snapshot()
 		other = MonkeyRunner.loadImageFromFile(file_name)
 		if not snapshot.sameAs(other,0.9):
 			self.error("Snaphots are not equal")
+		else:
+			print("OK")
 
 	def error(self,msg):
 		print(msg)
