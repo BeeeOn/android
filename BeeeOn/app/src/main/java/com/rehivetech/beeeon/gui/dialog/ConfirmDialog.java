@@ -1,8 +1,8 @@
 package com.rehivetech.beeeon.gui.dialog;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 
@@ -17,10 +17,9 @@ public class ConfirmDialog extends BaseDialogFragment {
 
 	public static int TYPE_DELETE_GATE = 10;
 	public static int TYPE_DELETE_USER = 11;
+	public static int TYPE_DELETE_DASHBOARD_VIEW  = 12;
 	public static int TYPE_DELETE_DEVICE = 13;
 	public static int TYPE_CHANGE_OWNERSHIP = 20;
-
-	private ConfirmDialogListener mCallback;
 
 	private static final String EXTRA_TITLE = "extra_title";
 	private static final String EXTRA_MESSAGE = "extra_message";
@@ -43,14 +42,19 @@ public class ConfirmDialog extends BaseDialogFragment {
 		confirmDialog.show(activity.getSupportFragmentManager(), TAG);
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mCallback = (ConfirmDialogListener) getActivity();
-		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must implement ConfirmDialogListener", activity.toString()));
-		}
+	public static <T extends Fragment & ConfirmDialogListener> void confirm(T fragment, String title, String message, @StringRes int buttonTextRes, int confirmType, String dataId) {
+		ConfirmDialog confirmDialog = new ConfirmDialog();
+
+		Bundle args = new Bundle();
+		args.putString(EXTRA_TITLE, title);
+		args.putString(EXTRA_MESSAGE, message);
+		args.putInt(EXTRA_BUTTON_TEXT_RES, buttonTextRes);
+		args.putInt(EXTRA_CONFIRM_TYPE, confirmType);
+		args.putString(EXTRA_DATA_ID, dataId);
+		confirmDialog.setArguments(args);
+		confirmDialog.setTargetFragment(fragment, confirmType);
+
+		confirmDialog.show(fragment.getFragmentManager(), TAG);
 	}
 
 	@Override
@@ -62,7 +66,11 @@ public class ConfirmDialog extends BaseDialogFragment {
 		builder.setPositiveButton(args.getInt(EXTRA_BUTTON_TEXT_RES), new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mCallback.onConfirm(args.getInt(EXTRA_CONFIRM_TYPE), args.getString(EXTRA_DATA_ID));
+
+				for (ConfirmDialogListener listener : ConfirmDialog.this.getDialogListeners(ConfirmDialogListener.class)) {
+					listener.onConfirm(args.getInt(EXTRA_CONFIRM_TYPE), args.getString(EXTRA_DATA_ID));
+				}
+
 				dismiss();
 			}
 		});
