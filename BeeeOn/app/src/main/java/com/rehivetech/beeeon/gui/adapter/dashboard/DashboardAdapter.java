@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +46,9 @@ import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Interval;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
@@ -378,6 +382,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	public class ActualValueViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
 		public final ImageView mIcon;
+		public final AppCompatImageView mTrend;
 		public final TextView mLabel;
 		public final TextView mValue;
 		public final TextView mLastUpdate;
@@ -385,6 +390,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		public ActualValueViewHolder(View itemView) {
 			super(itemView);
 			mIcon = (ImageView) itemView.findViewById(R.id.dashboard_item_act_value_icon);
+			mTrend = (AppCompatImageView) itemView.findViewById(R.id.dashboard_item_act_value_trend);
 			mLabel = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_label);
 			mValue = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_value);
 			mLastUpdate = (TextView) itemView.findViewById(R.id.dashboard_item_act_value_last_update_value);
@@ -407,8 +413,33 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 			if (module.getValue() instanceof EnumValue) {
 				mValue.setText(((EnumValue) module.getValue()).getStateStringResource());
+				mTrend.setVisibility(View.GONE);
 			} else {
 				mValue.setText(String.format("%s %s", unitsHelper.getStringValue(module.getValue()), unitsHelper.getStringUnit(module.getValue())));
+				mTrend.setVisibility(View.VISIBLE);
+				DateTime end = DateTime.now(DateTimeZone.UTC);
+				DateTime start = end.minusHours(1);
+				ModuleLog.DataPair pair = new ModuleLog.DataPair(module, new Interval(start, end), ModuleLog.DataType.AVERAGE, ModuleLog.DataInterval.RAW);
+				ModuleLog log = Controller.getInstance(mContext).getModuleLogsModel().getModuleLog(pair);
+
+				List<Float> values = new ArrayList<>(log.getValues().values());
+				if (!values.isEmpty() && values.size() > 2) {
+					float last = values.get(values.size() - 1);
+					float prevLast = values.get(values.size() - 2);
+
+					float avg = (last + prevLast) / 2;
+
+					double actValue = module.getValue().getDoubleValue();
+
+					if (avg < actValue) {
+						mTrend.setImageResource(R.drawable.ic_trending_up_black_24dp);
+					} else if (avg == actValue) {
+						mTrend.setImageResource(R.drawable.ic_trending_flat_black_24dp);
+					} else {
+						mTrend.setImageResource(R.drawable.ic_trending_down_black_24dp);
+					}
+
+				}
 			}
 
 			mLastUpdate.setText(mTimeHelper.formatLastUpdate(module.getDevice().getLastUpdate(), controller.getGatesModel().getGate(item.getGateId())));
