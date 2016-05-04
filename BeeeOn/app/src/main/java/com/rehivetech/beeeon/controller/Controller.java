@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -534,74 +535,126 @@ public final class Controller {
 	 * @param gateId active gate id
 	 * @return dashboard items list
 	 */
-	public List<BaseItem> getDashboardItems(String gateId) {
+	public List<BaseItem> getDashboardItems(int index, String gateId) {
 		String userId = getActualUser().getId();
-		return DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		List<List<BaseItem>> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+		return items != null && items.size() > index ? items.get(index) : null;
+	}
+
+	public int getNumberOfDashboardTabs(String userId, String gateId) {
+		return mPersistence.getSettings(getDashboardKey(userId, gateId)).getInt("items", 0);
+	}
+
+	public void saveNumberOfDashboardTabs(String userId, String gateId, int numOfItems) {
+		mPersistence.getSettings(getDashboardKey(userId, gateId)).edit().putInt("items", numOfItems).apply();
 	}
 
 	/**
 	 * Save actual state of dashboard into preferences
 	 * @param gateId active gate id
-	 * @param items dashboard items
+	 * @param items  dashboard items
 	 */
-	public void saveDashboardItems(String gateId, List<BaseItem> items) {
+	public void saveDashboardItems(int index, String gateId, List<BaseItem> items) {
 		String userId = getActualUser().getId();
-		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
+		List<List<BaseItem>> itemsList = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+		if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
+			itemsList.get(index).clear();
+			itemsList.get(index).addAll(items);
+
+		} else if (itemsList != null) {
+			itemsList.add(items);
+		} else {
+			itemsList = new ArrayList<>();
+			itemsList.add(items);
+		}
+
+		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
 	}
 
 	/**
 	 * Remove all dashboard cards by gate
 	 * @param gateId id of gate
 	 */
-	public void removeDashboardView(String gateId) {
+	public void removeDashboardView(int index, String gateId) {
 		String userId = getActualUser().getId();
-		SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
-		SharedPreferences.Editor editor = preferences.edit();
-		editor.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
-		editor.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "");
-		editor.apply();
+		if (index > -1) {
+
+			List<List<BaseItem>> itemsList = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+			if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
+				itemsList.remove(index);
+			}
+
+			DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
+		} else {
+
+			SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
+			SharedPreferences.Editor editor = preferences.edit();
+			editor.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+			editor.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "");
+			editor.apply();
+
+			saveNumberOfDashboardTabs(userId, gateId, 0);
+		}
 	}
 
 	/**
 	 * Remove all device occurrences in dashboard cards
-	 * @param gateId actual gate id
+	 *
+	 * @param gateId          actual gate id
 	 * @param removedDeviceId id of removed device
 	 */
 	public void removeDeviceFromDashboard(String gateId, String removedDeviceId) {
 		String userId = getActualUser().getId();
-		List<BaseItem> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
-		if(items == null) return; // we don't have any dashboard preferences
-		Iterator<BaseItem> itemsIterator = items.iterator();
+		List<List<BaseItem>> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
-		while (itemsIterator.hasNext()) {
-			BaseItem item = itemsIterator.next();
+		if (items == null) return; // we don't have any dashboard preferences
 
-			if (item instanceof GraphItem) {
+		ListIterator<List<BaseItem>> listIterator = items.listIterator();
 
-				Iterator<String> moduleIdsIterator = ((GraphItem) item).getAbsoluteModuleIds().iterator();
-				while (moduleIdsIterator.hasNext()) {
-					String absoluteModuleId = moduleIdsIterator.next();
-					if (absoluteModuleId.startsWith(removedDeviceId)) {
-						moduleIdsIterator.remove();
+		while (listIterator.hasNext()) {
+
+			List<BaseItem> listItem = listIterator.next();
+			Iterator<BaseItem> itemsIterator = listItem.iterator();
+
+			while (itemsIterator.hasNext()) {
+				BaseItem item = itemsIterator.next();
+
+				if (item instanceof GraphItem) {
+
+					Iterator<String> moduleIdsIterator = ((GraphItem) item).getAbsoluteModuleIds().iterator();
+					while (moduleIdsIterator.hasNext()) {
+						String absoluteModuleId = moduleIdsIterator.next();
+						if (absoluteModuleId.startsWith(removedDeviceId)) {
+							moduleIdsIterator.remove();
+						}
+					}
+					if (((GraphItem) item).getAbsoluteModuleIds().size() == 0) {
+						itemsIterator.remove();
+
+					}
+
+				} else if (item instanceof ActualValueItem) {
+					if (((ActualValueItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
+						itemsIterator.remove();
+					}
+
+				} else if (item instanceof OverviewGraphItem) {
+					if (((OverviewGraphItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
+						itemsIterator.remove();
 					}
 				}
-				if (((GraphItem) item).getAbsoluteModuleIds().size() == 0) {
-					itemsIterator.remove();
-
-				}
-
-			} else if (item instanceof ActualValueItem) {
-				if (((ActualValueItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
-					itemsIterator.remove();
-				}
-
-			} else if (item instanceof OverviewGraphItem) {
-				if (((OverviewGraphItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
-					itemsIterator.remove();
-				}
 			}
+
+			if (listItem.isEmpty()) {
+				listIterator.remove();
+			}
+
 		}
- 		saveDashboardItems(gateId, items);
+
+		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
 	}
 
 	/**

@@ -23,7 +23,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
-import com.rehivetech.beeeon.gui.fragment.DashboardFragment;
+import com.rehivetech.beeeon.gui.fragment.DashboardPagerFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
 import com.rehivetech.beeeon.gui.fragment.EmptyFragment;
 import com.rehivetech.beeeon.household.device.Device;
@@ -180,7 +180,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			changeFragment(DevicesListFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DEVICES);
 		} else if (mActiveMenuId.equals(MENU_ITEM_GRAPHS)) {
 			mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
-			changeFragment(DashboardFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
+			changeFragment(DashboardPagerFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
 		} else if (mActiveMenuId.equals(MENU_ITEM_GATEWAY)) {
 			if (mActiveGateId != null) {
 				Intent intent = new Intent(this, GateDetailActivity.class);
@@ -320,7 +320,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			}
 			case R.id.nav_drawer_dashboard: {
 				if (mActiveGateId != null) {
-					changeFragment(DashboardFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
+					changeFragment(DashboardPagerFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
 					result = true;
 				}
 				break;

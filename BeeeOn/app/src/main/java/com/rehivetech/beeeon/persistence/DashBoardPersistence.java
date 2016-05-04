@@ -26,13 +26,13 @@ import java.util.List;
  */
 public class DashBoardPersistence {
 	private static GsonBuilder sGsonBuilder = new GsonBuilder();
-	private static Type sListType = new TypeToken<ArrayList<BaseItem>>() {}.getType();
+	private static Type sListType = new TypeToken<ArrayList<ArrayList<BaseItem>>>() {}.getType();
 
 	static {
 		sGsonBuilder.registerTypeAdapter(BaseItem.class, new CustomDeserializer());
 	}
 
-	public static void save(SharedPreferences preferences, String key, List<BaseItem> items) {
+	public static void save(SharedPreferences preferences, String key, List<List<BaseItem>> items) {
 		Gson gson = DashBoardPersistence.sGsonBuilder.create();
 
 		String jsonString = gson.toJson(items);
@@ -41,7 +41,7 @@ public class DashBoardPersistence {
 		preferences.edit().putString(key, jsonString).apply();
 	}
 
-	@Nullable public static List<BaseItem> load(SharedPreferences preferences, String key) {
+	@Nullable public static List<List<BaseItem>> load(SharedPreferences preferences, String key) {
 		String jsonString = preferences.getString(key, "");
 
 		Gson gson = DashBoardPersistence.sGsonBuilder.create();

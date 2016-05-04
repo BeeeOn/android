@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.View;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
@@ -30,7 +32,9 @@ import butterknife.ButterKnife;
 public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragment implements DashboardModuleSelectAdapter.ItemClickListener {
 
 	protected static final String ARG_GATE_ID = "gate_id";
+	protected static final String ARG_INDEX = "index";
 
+	protected int mIndex;
 	protected String mGateId;
 
 	@Bind(R.id.fragment_add_dashboard_item_button_done)
@@ -41,6 +45,10 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 	protected DashboardModuleSelectAdapter mAdapter;
 
+	protected static void fillBaseArgs(Bundle args, int index, String gateId) {
+		args.putInt(ARG_INDEX, index);
+		args.putString(ARG_GATE_ID, gateId);
+	}
 	@Override
 	@CallSuper
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 		if (args != null) {
 			mGateId = args.getString(ARG_GATE_ID);
+			mIndex = args.getInt(ARG_INDEX);
 		}
 	}
 
@@ -135,6 +144,14 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		}
 
 		mAdapter.setItems(items);
+	}
+
+	protected void finishActivity(BaseItem item) {
+		Intent data = new Intent();
+		data.putExtra(DashboardPagerFragment.EXTRA_ADD_ITEM, item);
+		data.putExtra(DashboardPagerFragment.EXTRA_INDEX, mIndex);
+		mActivity.setResult(10, data);
+		mActivity.finish();
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
 public class EmptyFragment extends BaseApplicationFragment {
 	private static final String TAG = EmptyFragment.class.getSimpleName();
@@ -41,18 +42,13 @@ public class EmptyFragment extends BaseApplicationFragment {
 		TextView message = (TextView) view.findViewById(R.id.empty_message);
 		message.setText(mMessage);
 
-		/*mShowLegendButton = (Button) mView.findViewById(R.id.module_graph_show_legend_btn);
-		mShowLegendButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				SimpleDialogFragment.createBuilder(mActivity, getFragmentManager())
-						.setTitle(getString(R.string.chart_helper_chart_y_axis))
-						.setMessage(mYlabels.toString())
-						.setNeutralButtonText("close")
-						.show();
-			}
-		});*/
 		return view;
 	}
 
+
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mActivity.setupToolbar(R.string.app_name, BaseApplicationActivity.INDICATOR_MENU);
+	}
 }

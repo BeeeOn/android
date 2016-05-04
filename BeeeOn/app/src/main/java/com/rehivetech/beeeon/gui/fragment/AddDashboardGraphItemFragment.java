@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -43,10 +42,10 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 	@Bind(R.id.fragment_add_dashboard_item_title)
 	TextView mTitle;
 
-	public static AddDashboardGraphItemFragment newInstance(String gateId, ModuleItem leftAxisModule, ModuleItem rightAxisModule) {
+	public static AddDashboardGraphItemFragment newInstance(int index, String gateId, ModuleItem leftAxisModule, ModuleItem rightAxisModule) {
 
 		Bundle args = new Bundle();
-		args.putString(ARG_GATE_ID, gateId);
+		fillBaseArgs(args, index, gateId);
 		args.putParcelable(ARG_LEFT_AXIS_MODULE, leftAxisModule);
 		args.putParcelable(ARG_RIGHT_AXIS_MODULE, rightAxisModule);
 		AddDashboardGraphItemFragment fragment = new AddDashboardGraphItemFragment();
@@ -102,7 +101,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 					int selectedItem = mAdapter.getFirstSelectedItem();
 					ModuleItem moduleItem = (ModuleItem) mAdapter.getItem(selectedItem);
 
-					AddDashboardGraphItemFragment fragment = AddDashboardGraphItemFragment.newInstance(mGateId, moduleItem, null);
+					AddDashboardGraphItemFragment fragment = AddDashboardGraphItemFragment.newInstance(mIndex, mGateId, moduleItem, null);
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
@@ -119,7 +118,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 						moduleItem = (ModuleItem) mAdapter.getItem(selectedItem);
 					}
 
-					AddDashboardGraphItemFragment fragment = AddDashboardGraphItemFragment.newInstance(mGateId, mLeftAxisModule, moduleItem);
+					AddDashboardGraphItemFragment fragment = AddDashboardGraphItemFragment.newInstance(mIndex, mGateId, mLeftAxisModule, moduleItem);
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
@@ -173,11 +172,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 					}
 
 					GraphItem item = new GraphItem(editText.getText().toString(), mGateId, moduleIds, ChartHelper.ALL_RANGES[slider.getProgress()]);
-
-					Intent data = new Intent();
-					data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
-					mActivity.setResult(10, data);
-					mActivity.finish();
+					finishActivity(item);
 				}
 			});
 		}

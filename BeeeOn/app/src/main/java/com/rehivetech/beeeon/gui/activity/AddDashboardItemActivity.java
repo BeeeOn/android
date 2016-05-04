@@ -20,10 +20,12 @@ import java.util.List;
  */
 public class AddDashboardItemActivity extends BaseApplicationActivity {
 
-	public static final String ARG_GATE_ID = "gate_id";
+	private static final String ARG_GATE_ID = "gate_id";
+	private static final String ARG_INDEX = "index";
 
-	public static Intent getADdDashBoardActivityIntent(Context context, String gateId) {
+	public static Intent getADdDashBoardActivityIntent(Context context, int index, String gateId) {
 		Intent intent = new Intent(context, AddDashboardItemActivity.class);
+		intent.putExtra(ARG_INDEX, index);
 		intent.putExtra(ARG_GATE_ID, gateId);
 
 		return intent;
@@ -46,9 +48,10 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 		BaseApplicationFragment fragment;
 
 		String gateId = args.getString(ARG_GATE_ID);
+		int index = args.getInt(ARG_INDEX);
 
 		if (savedInstanceState == null) {
-			fragment = AddDashboardItemFragment.newInstance(gateId);
+			fragment = AddDashboardItemFragment.newInstance(index, gateId);
 			getSupportFragmentManager().beginTransaction().replace(R.id.activity_add_dashboard_container, fragment).commit();
 		}
 	}

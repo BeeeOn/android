@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,10 +32,10 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 
 	ModuleItem mModuleItem;
 
-	public static AddDashboardOverviewGraphItemFragment newInstance(String gateId, ModuleItem moduleItem) {
+	public static AddDashboardOverviewGraphItemFragment newInstance(int index, String gateId, ModuleItem moduleItem) {
 
 		Bundle args = new Bundle();
-		args.putString(ARG_GATE_ID, gateId);
+		fillBaseArgs(args, index, gateId);
 		args.putParcelable(ARG_SELECTED_MODULE, moduleItem);
 		AddDashboardOverviewGraphItemFragment fragment = new AddDashboardOverviewGraphItemFragment();
 		fragment.setArguments(args);
@@ -89,7 +88,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 				public void onClick(View v) {
 					int selectedItem = mAdapter.getFirstSelectedItem();
 					ModuleItem moduleItem = (ModuleItem) mAdapter.getItem(selectedItem);
-					Fragment fragment = AddDashboardOverviewGraphItemFragment.newInstance(mGateId, moduleItem);
+					Fragment fragment = AddDashboardOverviewGraphItemFragment.newInstance(mIndex, mGateId, moduleItem);
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
@@ -117,10 +116,7 @@ public class AddDashboardOverviewGraphItemFragment extends BaseAddDashBoardItemF
 
 					OverviewGraphItem item = new OverviewGraphItem(editText.getText().toString(), mGateId, mModuleItem.getAbsoluteId(), dataType);
 
-					Intent data = new Intent();
-					data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
-					mActivity.setResult(10, data);
-					mActivity.finish();
+					finishActivity(item);
 				}
 			});
 

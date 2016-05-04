@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:fab="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/dashboard_pager_root_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="@color/beeeon_background_gray">
+
+	<android.support.design.widget.AppBarLayout
+		android:id="@+id/main_app_bar_layout"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		>
+
+		<include layout="@layout/layout_beeeon_toolbar"/>
+
+		<android.support.design.widget.TabLayout
+			android:id="@+id/dashboard_tab_layout"
+			android:layout_width="wrap_content"
+			android:layout_height="48dp"
+			android:layout_gravity="center_horizontal"
+			style="@style/ModuleGroupTabLayout"
+			/>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<android.support.v4.view.ViewPager
+		android:id="@+id/dashboard_viewpager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
+		/>
+
+	<com.rehivetech.beeeon.gui.view.FloatingActionMenu
+		android:id="@+id/dashboard_fab_menu"
+		style="@style/BeeeOn.FloatingActionMenu"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+
+		<com.rehivetech.beeeon.gui.view.FloatingActionButton
+			android:id="@+id/dashboard_add_view_fab"
+			style="@style/BeeeOn.FloatingActionButton.MenuButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_add_white_24dp"
+			fab:fab_label="@string/dashboard_add_view"
+			/>
+
+		<com.rehivetech.beeeon.gui.view.FloatingActionButton
+			android:id="@+id/dashboard_add_item_fab"
+			style="@style/BeeeOn.FloatingActionButton.MenuButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_add_white_24dp"
+			fab:fab_label="@string/dashboard_add_item"
+			/>
+
+	</com.rehivetech.beeeon.gui.view.FloatingActionMenu>
+
+</android.support.design.widget.CoordinatorLayout>

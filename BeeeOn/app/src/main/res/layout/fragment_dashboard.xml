@@ -1,39 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<android.support.v7.widget.RecyclerView
 	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/dashboard_recyclerview"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-	android:background="@color/beeeon_background_gray">
-
-	<android.support.design.widget.AppBarLayout
-		android:id="@+id/main_app_bar_layout"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		>
-
-		<include layout="@layout/layout_beeeon_toolbar"/>
-
-	</android.support.design.widget.AppBarLayout>
-
-	<android.support.v7.widget.RecyclerView
-		android:id="@+id/dashboard_recyclerview"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:clipToPadding="false"
-		android:paddingBottom="80dp"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-	<com.rehivetech.beeeon.gui.view.FloatingActionButton
-		android:id="@+id/dashboard_fab"
-		style="@style/BeeeOn.FloatingActionButton"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:src="@drawable/ic_add_white_24dp"
-		app:layout_anchor="@id/dashboard_recyclerview"
-		android:layout_marginRight="@dimen/space_big"
-		android:layout_marginEnd="@dimen/space_big"
-		android:layout_marginBottom="@dimen/space_big"
-		app:layout_anchorGravity="bottom|right|end"/>
-
-</android.support.design.widget.CoordinatorLayout>
+	android:paddingBottom="80dp"
+	android:clipToPadding="false"
+	/>
