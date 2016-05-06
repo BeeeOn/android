@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -19,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
@@ -123,6 +125,8 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 		redrawNavigation();
 		reloadFragment();
+
+//		migrateDashboard();
 	}
 
 	public void onAppResume() {
@@ -141,6 +145,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 					setActiveGateAndMenu();
 					redrawNavigation();
 					reloadFragment(); // FIXME: do better (only when needed)
+					migrateDashboard();
 				}
 			}
 		});
@@ -437,5 +442,20 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		// Show / hide menu items based on existence of any gates
 		mNavigationMenu.setGroupVisible(R.id.item_overview, hasGates);
 		mNavigationMenu.findItem(R.id.item_no_gates).setVisible(!hasGates);
+	}
+
+
+	private void migrateDashboard() {
+		Controller controller = Controller.getInstance(this);
+		SharedPreferences preferences = controller.getUserSettings();
+		if (preferences != null) {
+			boolean isDashboardMigrated = preferences.getBoolean(Constants.PERSISTENCE_KEY_DASHBOARD_MIGRATE, false);
+
+			if (!isDashboardMigrated) {
+				controller.migrateDashboard();
+				preferences.edit().putBoolean(Constants.PERSISTENCE_KEY_DASHBOARD_MIGRATE, true).apply();
+			}
+
+		}
 	}
 }

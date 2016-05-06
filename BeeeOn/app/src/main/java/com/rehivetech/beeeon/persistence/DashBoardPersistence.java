@@ -27,6 +27,7 @@ import java.util.List;
 public class DashBoardPersistence {
 	private static GsonBuilder sGsonBuilder = new GsonBuilder();
 	private static Type sListType = new TypeToken<ArrayList<ArrayList<BaseItem>>>() {}.getType();
+	private static Type sListTypeOld = new TypeToken<ArrayList<BaseItem>>() {}.getType();
 
 	static {
 		sGsonBuilder.registerTypeAdapter(BaseItem.class, new CustomDeserializer());
@@ -46,6 +47,13 @@ public class DashBoardPersistence {
 
 		Gson gson = DashBoardPersistence.sGsonBuilder.create();
 		return gson.fromJson(jsonString, sListType);
+	}
+
+	@Nullable public static List<BaseItem> loadOld(SharedPreferences preferences, String key) {
+		String jsonString = preferences.getString(key, "");
+
+		Gson gson = DashBoardPersistence.sGsonBuilder.create();
+		return gson.fromJson(jsonString, sListTypeOld);
 	}
 
 	private static class CustomDeserializer implements JsonDeserializer<BaseItem> {

@@ -57,28 +57,44 @@ public final class Controller {
 
 	public static final String TAG = Controller.class.getSimpleName();
 
-	/** This singleton instance. */
+	/**
+	 * This singleton instance.
+	 */
 	private static Controller sController;
 
-	/** Switch for using demo mode (with example gate, without server) */
+	/**
+	 * Switch for using demo mode (with example gate, without server)
+	 */
 	private final boolean mDemoMode;
 
-	/** Application context */
+	/**
+	 * Application context
+	 */
 	private final Context mContext;
 
-	/** Persistence service for caching purposes */
+	/**
+	 * Persistence service for caching purposes
+	 */
 	private final Persistence mPersistence;
 
-	/** Network service for communication with server */
+	/**
+	 * Network service for communication with server
+	 */
 	private final INetwork mNetwork;
 
-	/** Active user object */
+	/**
+	 * Active user object
+	 */
 	private final User mUser;
 
-	/** Active gate */
+	/**
+	 * Active gate
+	 */
 	private Gate mActiveGate;
 
-	/** Models for keeping and handling data */
+	/**
+	 * Models for keeping and handling data
+	 */
 	private final Map<String, BaseModel> mModels = new HashMap<>();
 
 	/**
@@ -144,7 +160,7 @@ public final class Controller {
 
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
-	 *
+	 * <p>
 	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
 	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
 	 *
@@ -475,7 +491,7 @@ public final class Controller {
 
 	/**
 	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -521,7 +537,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
@@ -532,6 +548,7 @@ public final class Controller {
 
 	/**
 	 * Read dashboard items from preferences
+	 *
 	 * @param gateId active gate id
 	 * @return dashboard items list
 	 */
@@ -552,6 +569,7 @@ public final class Controller {
 
 	/**
 	 * Save actual state of dashboard into preferences
+	 *
 	 * @param gateId active gate id
 	 * @param items  dashboard items
 	 */
@@ -575,6 +593,7 @@ public final class Controller {
 
 	/**
 	 * Remove all dashboard cards by gate
+	 *
 	 * @param gateId id of gate
 	 */
 	public void removeDashboardView(int index, String gateId) {
@@ -657,11 +676,28 @@ public final class Controller {
 		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
 	}
 
+	public void migrateDashboard() {
+		String userId = getActualUser().getId();
+		List<Gate> gates = getGatesModel().getGates();
+
+		for (Gate gate : gates) {
+			String gateId  = gate.getId();
+			List<BaseItem> dashboardOld = DashBoardPersistence.loadOld(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+			if (dashboardOld != null) {
+				List<List<BaseItem>> dashboardNew = new ArrayList<>();
+				dashboardNew.add(dashboardOld);
+				DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, dashboardNew);
+			}
+		}
+	}
+
 	/**
 	 * Create helper instance of graph settings
-	 * @param gateId id of actual gate
+	 *
+	 * @param gateId           id of actual gate
 	 * @param absoluteModuleId absolute module id
-	 * @param graphRange data range of graph
+	 * @param graphRange       data range of graph
 	 * @return graphSettings instance
 	 */
 	public GraphSettingsPersistence getGraphSettingsPersistence(String gateId, String absoluteModuleId, @ChartHelper.DataRange int graphRange) {
@@ -673,9 +709,10 @@ public final class Controller {
 
 	/**
 	 * Create graphSettings key
-	 * @param gateId id of actual gate
+	 *
+	 * @param gateId           id of actual gate
 	 * @param absoluteModuleId absolute module id
-	 * @param graphRange data range of graph
+	 * @param graphRange       data range of graph
 	 * @return key string
 	 */
 	private String getGraphSettingsKey(String gateId, String absoluteModuleId, int graphRange) {
@@ -684,6 +721,7 @@ public final class Controller {
 
 	/**
 	 * Create dashboard key
+	 *
 	 * @param userId id of actual user
 	 * @param gateId id of active gate
 	 * @return key string
