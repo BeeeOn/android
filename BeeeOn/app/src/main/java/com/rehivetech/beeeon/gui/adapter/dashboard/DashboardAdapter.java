@@ -183,7 +183,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	}
 
 	public void setItems(List<BaseItem> items) {
-		mItems = items;
+		mItems.clear();
+		mItems.addAll(items);
 		notifyDataSetChanged();
 	}
 

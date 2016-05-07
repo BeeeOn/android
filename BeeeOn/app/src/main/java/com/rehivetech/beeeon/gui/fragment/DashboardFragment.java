@@ -42,12 +42,14 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 
 
 	private String mGateId;
-	private int mIdex;
+	private int mPageIndex;
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
 
 	private ItemTouchHelper mItemTouchHelper;
 	private boolean mItemMoved = false;
+
+	private boolean mItemsUpdated = false;
 
 	public static DashboardFragment newInstance(int index, String gateId) {
 
@@ -60,13 +62,14 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		return fragment;
 	}
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Bundle args = getArguments();
 		if (args != null) {
-			mIdex = args.getInt(KEY_INDEX);
+			mPageIndex = args.getInt(KEY_INDEX);
 			mGateId = args.getString(KEY_GATE_ID);
 		}
 	}
@@ -89,7 +92,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 				mAdapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
 				mItemMoved = true;
-				Controller.getInstance(mActivity).saveDashboardItems(mIdex, mGateId, mAdapter.getItems());
+				Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 				return true;
 			}
 
@@ -166,7 +169,11 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	}
 
 	public void updateDashboard() {
-		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mIdex, mGateId);
+		if (mGateId == null) {
+			return;
+		}
+
+		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mPageIndex, mGateId);
 		if (items != null) {
 			mAdapter.setItems(items);
 		}
@@ -175,7 +182,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 
 	public void addItem(BaseItem item) {
 		mAdapter.addItem(item);
-		Controller.getInstance(mActivity).saveDashboardItems(mIdex, mGateId, mAdapter.getItems());
+		Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {
@@ -226,7 +233,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 
 				fragment.showSnackbar(getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), listener);
 
-				Controller.getInstance(mActivity).saveDashboardItems(mIdex, mGateId, mAdapter.getItems());
+				Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 			}
 			return true;
 		}

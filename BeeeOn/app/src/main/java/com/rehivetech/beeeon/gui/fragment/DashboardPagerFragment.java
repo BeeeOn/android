@@ -153,7 +153,10 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	}
 
 	private void setupViewpager() {
-		mAdapter = new DashboardPagerAdapter(getChildFragmentManager());
+		if (mAdapter == null) {
+			mAdapter = new DashboardPagerAdapter(getChildFragmentManager());
+		}
+
 		Controller controller = Controller.getInstance(mActivity);
 		String userId = controller.getActualUser().getId();
 		int numOfItems = controller.getNumberOfDashboardTabs(userId, mGateId);
@@ -236,7 +239,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	}
 
 
-	private CallbackTask createReloadDevicesTask(boolean forceReload) {
+	private CallbackTask createReloadDevicesTask(final boolean forceReload) {
 		if (getActivity() == null)
 			return null;
 
@@ -250,10 +253,9 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		reloadDashboardDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (!success)
+				if (!success || !forceReload)
 					return;
 
-				// stop refreshing
 				updateViewPager();
 			}
 		});
@@ -272,7 +274,10 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 			mAdapter.removeFragment(mAdapter.getCount() - 1);
 			controller.saveNumberOfDashboardTabs(userId, mGateId, mAdapter.getCount());
 
+			mAdapter.removeAll();
+			mAdapter.notifyDataSetChanged();
 			setupViewpager();
+			mAdapter.notifyDataSetChanged();
 			Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
 		}
 	}
@@ -320,6 +325,12 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		public void removeFragment(int index) {
 			mFragments.remove(index);
 			mFragmentTitles.remove(index);
+		}
+
+		public void removeAll() {
+			mFragments.clear();
+			mFragmentTitles.clear();
+			notifyDataSetChanged();
 		}
 	}
 
