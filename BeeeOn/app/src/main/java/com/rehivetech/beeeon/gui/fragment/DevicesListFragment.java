@@ -28,6 +28,7 @@ import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
+import com.rehivetech.beeeon.gui.activity.DevicesListActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.gui.view.FloatingActionMenu;
@@ -199,8 +200,11 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		updateData();
-
-		mActivity.setupToolbar(R.string.nav_drawer_menu_menu_devices, BaseApplicationActivity.INDICATOR_MENU);
+		int indicatorType = BaseApplicationActivity.INDICATOR_MENU;
+		if (mActivity instanceof DevicesListActivity) {
+			indicatorType = BaseApplicationActivity.INDICATOR_BACK;
+		}
+		mActivity.setupToolbar(R.string.nav_drawer_menu_menu_devices, indicatorType);
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
