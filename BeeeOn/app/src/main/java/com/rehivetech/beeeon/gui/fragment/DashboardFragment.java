@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -30,6 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by martin on 15.11.15.
  */
@@ -45,6 +49,12 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private int mPageIndex;
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
+
+	@Bind(R.id.dashboard_recyclerview)
+	RecyclerView mRecyclerView;
+
+	@Bind(R.id.dashboard_empty_text)
+	TextView mEmptyText;
 
 	private ItemTouchHelper mItemTouchHelper;
 	private boolean mItemMoved = false;
@@ -77,13 +87,15 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_dashboard, container, false);
+		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+		ButterKnife.bind(this, view);
 
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
-		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 
 		mAdapter = new DashboardAdapter(mActivity, this, this);
-		recyclerView.setAdapter(mAdapter);
+		mRecyclerView.setAdapter(mAdapter);
 
 		mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
 				ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
@@ -115,9 +127,9 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			}
 		});
 
-		mItemTouchHelper.attachToRecyclerView(recyclerView);
+		mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
-		return recyclerView;
+		return view;
 	}
 
 	@Override
@@ -177,12 +189,22 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		if (items != null) {
 			mAdapter.setItems(items);
 		}
+		handleEmptyViewVisibility();
 	}
 
 
 	public void addItem(BaseItem item) {
 		mAdapter.addItem(item);
+		handleEmptyViewVisibility();
 		Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
+	}
+
+	private void handleEmptyViewVisibility() {
+		if (mAdapter.getItems().size() == 0) {
+			mEmptyText.setVisibility(View.VISIBLE);
+		} else {
+			mEmptyText.setVisibility(View.GONE);
+		}
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {

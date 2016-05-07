@@ -426,6 +426,7 @@
 
 
 	<!--Dashboard-->
+    <string name="dashboard_no_items">Pohled je prázdný</string>
     <string name="dashboard_view">Pohled %s</string>
     <string name="dashboard_add_item">Přidat novú položku</string>
     <string name="dashboard_add_view">Přidat nový pohled</string>

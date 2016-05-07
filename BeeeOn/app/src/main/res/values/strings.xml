@@ -432,6 +432,7 @@
 	<string name="data_type_max">Maximum</string>
 
     <!--Dashboard-->
+	<string name="dashboard_no_items">View is empty</string>
 	<string name="dashboard_view">View %s</string>
 	<string name="dashboard_add_item">Add new item</string>
 	<string name="dashboard_add_view">Add new view</string>

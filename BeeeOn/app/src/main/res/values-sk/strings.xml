@@ -426,6 +426,7 @@
     <string name="data_type_max">Maximum</string>
 
 	<!--Dashboard-->
+    <string name="dashboard_no_items">Pohľad je prázdny</string>
     <string name="dashboard_view">Pohľad %s</string>
     <string name="dashboard_add_item">Pridať novú položku</string>
     <string name="dashboard_add_view">Pridať nový pohľad</string>
