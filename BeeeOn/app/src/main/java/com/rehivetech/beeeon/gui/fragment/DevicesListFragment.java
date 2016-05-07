@@ -457,11 +457,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
-	}
 
 	/**
 	 * ActionMode when longclicked item (showing delete button)
