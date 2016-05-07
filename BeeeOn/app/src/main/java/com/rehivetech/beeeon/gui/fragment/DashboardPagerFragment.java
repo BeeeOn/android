@@ -148,7 +148,10 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 			int index = data.getIntExtra(EXTRA_INDEX, 0);
 
 			DashboardFragment fragment = (DashboardFragment) mAdapter.getItem(index);
-			fragment.addItem(item);
+
+			if (fragment != null) {
+				fragment.addItem(item);
+			}
 		}
 	}
 
