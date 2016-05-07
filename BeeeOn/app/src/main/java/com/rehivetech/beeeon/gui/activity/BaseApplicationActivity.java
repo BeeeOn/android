@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -53,7 +54,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 //	public static String activeLocale = null;
 
 	@Nullable
-	private View mProgressBar;
+	private ProgressBar mProgressBar;
 	@Nullable
 	private View mRefreshIcon;
 	@Nullable
@@ -61,6 +62,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 
 	@Nullable
 	protected ActionBar mActionBar;
+	private Toolbar mToolbar;
 
 	protected boolean isPaused = false;
 
@@ -176,22 +178,28 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	 * @param visible whether progressbar will be shown/hidden && refresh icon vice versa
 	 */
 	public synchronized void setBeeeOnProgressBarVisibility(boolean visible) {
-		if (mProgressBar == null) {
-			mProgressBar = findViewById(R.id.beeeon_toolbar_progress);
-
-			if (mProgressBar == null) {
-				// This activity probably doesn't have progressbar in layout
-				Log.w(TAG, String.format("Can't set visibility of progressbar in '%s', it wasn't found in layout.", getClass().getSimpleName()));
-				return;
-			}
+		if (mToolbar == null) {
+			return;
 		}
+
+//		if (mProgressBar == null) {
+//			mProgressBar = (ProgressBar) mToolbar.findViewById(R.id.beeeon_toolbar_progress);
+//
+//			if (mProgressBar == null) {
+//				// This activity probably doesn't have progressbar in layout
+//				Log.w(TAG, String.format("Can't set visibility of progressbar in '%s', it wasn't found in layout.", getClass().getSimpleName()));
+//				return;
+//			}
+//		}
 
 		// if refresh icon was setup we either show progress or refresh icon
 		if (mRefreshIcon != null) {
 			mRefreshIcon.setVisibility(visible ? View.INVISIBLE : View.VISIBLE);
 		}
 
-		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+		if (mProgressBar != null) {
+			mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+		}
 	}
 
 	public synchronized void showProgressDialog(/*@StringRes int progressMessageRes*/) {
@@ -236,10 +244,10 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	 */
 	@Nullable
 	public Toolbar setupToolbar(String title, @IndicatorType int indicatorType) {
-		Toolbar toolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (toolbar != null) {
-			setSupportActionBar(toolbar);
-			toolbar.setTitle(title);
+		mToolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
+		if (mToolbar != null) {
+			setSupportActionBar(mToolbar);
+			mToolbar.setTitle(title);
 		}
 		mActionBar = getSupportActionBar();
 		if (mActionBar != null) {
@@ -254,7 +262,10 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 			}
 		}
 
-		return toolbar;
+		mProgressBar = (ProgressBar) mToolbar.findViewById(R.id.beeeon_toolbar_progress);
+		mRefreshIcon = mToolbar.findViewById(R.id.beeeon_toolbar_refresh);
+
+		return mToolbar;
 	}
 
 	public Toolbar setupToolbar(String title) {
@@ -299,7 +310,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		}
 
 		if (mRefreshIcon == null) {
-			mRefreshIcon = findViewById(R.id.beeeon_toolbar_refresh);
+			mRefreshIcon = mToolbar.findViewById(R.id.beeeon_toolbar_refresh);
 
 			if (mRefreshIcon == null) {
 				// This activity probably doesn't have refreshIcon (or toolbar) in layout

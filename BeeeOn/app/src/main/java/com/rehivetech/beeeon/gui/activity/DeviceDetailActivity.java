@@ -37,14 +37,6 @@ public class DeviceDetailActivity extends BaseApplicationActivity implements Dev
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_device_detail);
 
-		/* // FIXME: Why this must be in DeviceDetailFragment and it doesn't work when it's here?
-		setupToolbar(R.string.empty);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setDisplayShowTitleEnabled(false);
-		}*/
-
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			mGateId = bundle.getString(EXTRA_GATE_ID);
