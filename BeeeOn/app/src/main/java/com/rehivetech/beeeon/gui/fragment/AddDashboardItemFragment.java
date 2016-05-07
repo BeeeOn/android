@@ -30,6 +30,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	private static final String TAG = AddDashboardItemFragment.class.getSimpleName();
 
 	private static final String ARG_GATE_ID = "gate_id";
+	private static final String ARG_INDEX = "index";
 
 	private String mGateId;
 
@@ -37,10 +38,12 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	RecyclerView mRecyclerView;
 
 	private AddDashboardCardAdapter mAdapter;
+	private int mIndex;
 
-	public static AddDashboardItemFragment newInstance(String gateId) {
+	public static AddDashboardItemFragment newInstance(int index, String gateId) {
 
 		Bundle args = new Bundle();
+		args.putInt(ARG_INDEX, index);
 		args.putString(ARG_GATE_ID, gateId);
 		AddDashboardItemFragment fragment = new AddDashboardItemFragment();
 		fragment.setArguments(args);
@@ -52,6 +55,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
+		mIndex = args.getInt(ARG_INDEX);
 		mGateId = args.getString(ARG_GATE_ID);
 	}
 
@@ -92,7 +96,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH,
 				R.drawable.dashboard_week_bar_graph_preview, R.string.dashboard_fab_add_week_bar_graph));
 
-		List<BaseItem> dashboardItems = Controller.getInstance(mActivity).getDashboardItems(mGateId);
+		List<BaseItem> dashboardItems = Controller.getInstance(mActivity).getDashboardItems(0, mGateId);
 		VentilationItem ventilationItem = null;
 		if (dashboardItems != null) {
 
@@ -116,21 +120,21 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		Fragment fragment = null;
 		switch (type) {
 			case AddDashboardCardAdapter.CardItem.CARD_ACTUAL_VALUE:
-				fragment = AddDashboardActualValueFragment.newInstance(mGateId, null);
+				fragment = AddDashboardActualValueFragment.newInstance(mIndex, mGateId, null);
 				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_ACTUAL_VALUE_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_LINE_GRAPH:
-				fragment = AddDashboardGraphItemFragment.newInstance(mGateId, null, null);
+				fragment = AddDashboardGraphItemFragment.newInstance(mIndex, mGateId, null, null);
 				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_GRAPH_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH:
-				fragment = AddDashboardOverviewGraphItemFragment.newInstance(mGateId, null);
+				fragment = AddDashboardOverviewGraphItemFragment.newInstance(mIndex,mGateId, null);
 				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_GRAPH_OVERVIEW_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_PIE_GRAPH:
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_VENTILATION:
-				fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, null, null, null);
+				fragment = AddDashboardVentilationItemFragment.newInstance(mIndex, mGateId, null, null, null, null);
 				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_VENTILATION_ITEM;
 		}
 

@@ -47,6 +47,7 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LOGIN_SERVER = "login_server";
 
 	public static final String PERSISTENCE_PREF_DASHBOARD_ITEMS = "dashboard_items";
+	public static final String PERSISTENCE_KEY_DASHBOARD_MIGRATE = "dashboard_migrate";
 
 	public static final String KEY_UNITS = "key_units";
 

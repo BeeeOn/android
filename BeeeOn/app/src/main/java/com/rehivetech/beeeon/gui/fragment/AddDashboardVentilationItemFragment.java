@@ -91,10 +91,10 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	private GoogleMap mMap;
 	private boolean mBackgroundAnimationCalled = false;
 
-	public static AddDashboardVentilationItemFragment newInstance(String gateId, @Nullable Place location, @Nullable ModuleItem outSideModuleItem, @Nullable ModuleItem insideModuleItem, @Nullable @OutSideProviderType Integer outSideType) {
+	public static AddDashboardVentilationItemFragment newInstance(int index, String gateId, @Nullable Place location, @Nullable ModuleItem outSideModuleItem, @Nullable ModuleItem insideModuleItem, @Nullable @OutSideProviderType Integer outSideType) {
 
 		Bundle args = new Bundle();
-		args.putString(ARG_GATE_ID, gateId);
+		fillBaseArgs(args, index, gateId);
 		args.putParcelable(ARG_LOCATION, location);
 		args.putParcelable(ARG_OUTSIDE_MODULE_ITEM, outSideModuleItem);
 		args.putParcelable(ARG_INSIDE_MODULE_ITEM, insideModuleItem);
@@ -159,9 +159,9 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 					RadioGroup radioGroup = ButterKnife.findById(view, R.id.fragment_add_dashboard_ventilation_radiogroup);
 					int selectedId = radioGroup.getCheckedRadioButtonId();
 					if (selectedId == R.id.fragment_add_dashboard_radio_btn_select_module) {
-						fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, null, null, OutSideProviderType.OUTSIDE_TYPE_MODULE);
+						fragment = AddDashboardVentilationItemFragment.newInstance(mIndex, mGateId, null, null, null, OutSideProviderType.OUTSIDE_TYPE_MODULE);
 					} else {
-						fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, null, null, OutSideProviderType.OUTSIDE_TYPE_WEATHER);
+						fragment = AddDashboardVentilationItemFragment.newInstance(mIndex, mGateId, null, null, null, OutSideProviderType.OUTSIDE_TYPE_WEATHER);
 					}
 
 					mActivity.replaceFragment(getTag(), fragment);
@@ -184,7 +184,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 				public void onClick(View v) {
 					int selectedItem = mAdapter.getFirstSelectedItem();
 					mOutSideModuleItem = (ModuleItem) mAdapter.getItem(selectedItem);
-					Fragment fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, null, mOutSideModuleItem, null, OutSideProviderType.NONE);
+					Fragment fragment = AddDashboardVentilationItemFragment.newInstance(mIndex, mGateId, null, mOutSideModuleItem, null, OutSideProviderType.NONE);
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
@@ -197,7 +197,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 						Toast.makeText(mActivity, R.string.select_location, Toast.LENGTH_SHORT).show();
 						return;
 					}
-					Fragment fragment = AddDashboardVentilationItemFragment.newInstance(mGateId, mLocation, null, null, OutSideProviderType.NONE);
+					Fragment fragment = AddDashboardVentilationItemFragment.newInstance(mIndex, mGateId, mLocation, null, null, OutSideProviderType.NONE);
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
@@ -236,10 +236,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 
 					}
 
-					Intent data = new Intent();
-					data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
-					mActivity.setResult(10, data);
-					mActivity.finish();
+					finishActivity(item);
 				}
 			});
 		}

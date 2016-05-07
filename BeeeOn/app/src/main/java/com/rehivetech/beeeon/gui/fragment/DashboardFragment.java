@@ -3,8 +3,6 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -15,11 +13,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
-import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
 import com.rehivetech.beeeon.gui.activity.DashboardDetailActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
@@ -28,19 +25,14 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
-import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
-import com.rehivetech.beeeon.threading.CallbackTask;
-import com.rehivetech.beeeon.threading.task.ReloadDashboardDataTask;
-import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Utils;
 
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Created by martin on 15.11.15.
@@ -50,20 +42,29 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private static final String TAG = DashboardFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
+	private static final String KEY_INDEX = "index";
 
-	public static final String EXTRA_ADD_ITEM = "add_item";
 
 	private String mGateId;
+	private int mPageIndex;
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
-	private CoordinatorLayout mRootLayout;
+
+	@Bind(R.id.dashboard_recyclerview)
+	RecyclerView mRecyclerView;
+
+	@Bind(R.id.dashboard_empty_text)
+	TextView mEmptyText;
 
 	private ItemTouchHelper mItemTouchHelper;
 	private boolean mItemMoved = false;
 
-	public static DashboardFragment newInstance(String gateId) {
+	private boolean mItemsUpdated = false;
+
+	public static DashboardFragment newInstance(int index, String gateId) {
 
 		Bundle args = new Bundle();
+		args.putInt(KEY_INDEX, index);
 		args.putString(KEY_GATE_ID, gateId);
 
 		DashboardFragment fragment = new DashboardFragment();
@@ -71,12 +72,14 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		return fragment;
 	}
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Bundle args = getArguments();
 		if (args != null) {
+			mPageIndex = args.getInt(KEY_INDEX);
 			mGateId = args.getString(KEY_GATE_ID);
 		}
 	}
@@ -84,15 +87,15 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mRootLayout = (CoordinatorLayout) inflater.inflate(R.layout.fragment_dashboard, container, false);
-		ButterKnife.bind(this, mRootLayout);
-		RecyclerView recyclerView = ButterKnife.findById(mRootLayout, R.id.dashboard_recyclerview);
+		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+		ButterKnife.bind(this, view);
 
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
-		recyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
 
 		mAdapter = new DashboardAdapter(mActivity, this, this);
-		recyclerView.setAdapter(mAdapter);
+		mRecyclerView.setAdapter(mAdapter);
 
 		mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
 				ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
@@ -101,7 +104,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
 				mAdapter.moveItem(viewHolder.getAdapterPosition(), target.getAdapterPosition());
 				mItemMoved = true;
-				Controller.getInstance(mActivity).saveDashboardItems(mGateId, mAdapter.getItems());
+				Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 				return true;
 			}
 
@@ -124,47 +127,15 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			}
 		});
 
-		mItemTouchHelper.attachToRecyclerView(recyclerView);
+		mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
-		return mRootLayout;
-	}
-
-	@OnClick(R.id.dashboard_fab)
-	@SuppressWarnings("unused")
-	public void onFloatingActionButtonClicked() {
-		Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mGateId);
-		startActivityForResult(intent, 0);
-	}
-
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		mActivity.setupRefreshIcon(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				doReloadDevicesTask(true);
-			}
-		});
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		if (resultCode == 10) {
-
-			BaseItem item = data.getParcelableExtra(EXTRA_ADD_ITEM);
-
-			mAdapter.addItem(item);
-			Controller.getInstance(mActivity).saveDashboardItems(mGateId, mAdapter.getItems());
-		}
+		return view;
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_SCREEN);
-		doReloadDevicesTask(false);
+		updateDashboard();
 	}
 
 	@Override
@@ -209,61 +180,31 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 	}
 
-	private void fillDashboard() {
-		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mGateId);
+	public void updateDashboard() {
+		if (mGateId == null) {
+			return;
+		}
+
+		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mPageIndex, mGateId);
 		if (items != null) {
 			mAdapter.setItems(items);
 		}
+		handleEmptyViewVisibility();
 	}
 
-	/**
-	 * Async task for refreshing data
-	 *
-	 * @param forceReload
-	 */
-	private void doReloadDevicesTask(boolean forceReload) {
-		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mGateId);
-		VentilationItem ventilationItem = null;
-		if (items != null) {
 
-			for (BaseItem item : items) {
-				if (item instanceof VentilationItem) {
-					ventilationItem = (VentilationItem) item;
-					break;
-				}
-			}
-		}
+	public void addItem(BaseItem item) {
+		mAdapter.addItem(item);
+		handleEmptyViewVisibility();
+		Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
+	}
 
-		if (ventilationItem != null && ventilationItem.getOutsideAbsoluteModuleId() == null) {
-			mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mGateId, ventilationItem.getLatitiude(), ventilationItem.getLongitiude());
+	private void handleEmptyViewVisibility() {
+		if (mAdapter.getItems().size() == 0) {
+			mEmptyText.setVisibility(View.VISIBLE);
 		} else {
-			mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mGateId);
+			mEmptyText.setVisibility(View.GONE);
 		}
-	}
-
-
-	private CallbackTask createReloadDevicesTask(boolean forceReload) {
-		if (getActivity() == null)
-			return null;
-
-		ReloadDashboardDataTask reloadDashboardDataTask = new ReloadDashboardDataTask(
-				getActivity(),
-				forceReload,
-				mGateId == null
-						? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
-						: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
-
-		reloadDashboardDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (!success)
-					return;
-
-				// stop refreshing
-				fillDashboard();
-			}
-		});
-		return reloadDashboardDataTask;
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {
@@ -301,18 +242,20 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 					mAdapter.deleteItem(entry.getValue());
 				}
 
-				Snackbar.make(mRootLayout, getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), Snackbar.LENGTH_LONG)
-						.setAction(R.string.dashboard_undo, new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								for (Map.Entry<Integer, BaseItem> entry : tempSelectedItems.entrySet()) {
-									mAdapter.addItem(entry.getKey(), entry.getValue());
-								}
-							}
-						})
-						.show();
+				DashboardPagerFragment fragment = (DashboardPagerFragment) getParentFragment();
 
-				Controller.getInstance(mActivity).saveDashboardItems(mGateId, mAdapter.getItems());
+				View.OnClickListener listener = new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						for (Map.Entry<Integer, BaseItem> entry : tempSelectedItems.entrySet()) {
+							mAdapter.addItem(entry.getKey(), entry.getValue());
+						}
+					}
+				};
+
+				fragment.showSnackbar(getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), listener);
+
+				Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 			}
 			return true;
 		}

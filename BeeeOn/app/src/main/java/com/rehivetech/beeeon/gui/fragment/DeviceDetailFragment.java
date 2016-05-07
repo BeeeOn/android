@@ -15,7 +15,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,6 +35,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
 import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
@@ -160,20 +160,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
 
 		// FIXME: Why this doesn't work when it's in DeviceDetailActivity?
-		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
+//		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
 
-		CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
-		layoutParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
-		toolbar.setLayoutParams(layoutParams);
-
-		AppCompatActivity activity = (AppCompatActivity) getActivity();
-		activity.setSupportActionBar(toolbar);
-		ActionBar actionBar = activity.getSupportActionBar();
-
-		if (actionBar != null) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-			actionBar.setDisplayShowTitleEnabled(false);
-		}
+//		AppCompatActivity activity = (AppCompatActivity) getActivity();
+//		activity.setSupportActionBar(toolbar);
+//		ActionBar actionBar = activity.getSupportActionBar();
+//
+//		if (actionBar != null) {
+//			actionBar.setDisplayHomeAsUpEnabled(true);
+//			actionBar.setDisplayShowTitleEnabled(false);
+//		}
 
 		mRootLayout = (CoordinatorLayout) view.findViewById(R.id.device_detail_root_layout);
 
@@ -284,6 +280,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			mViewPager.setCurrentItem(savedInstanceState.getInt(KEY_VIEW_PAGER_SELECTED_ITEM));
 			Log.d(TAG, "restore instance");
 		}
+
+		Toolbar toolbar = mActivity.setupToolbar("", BaseApplicationActivity.INDICATOR_BACK);
+
+		if (toolbar != null) {
+			CollapsingToolbarLayout.LayoutParams layoutParams;
+			layoutParams = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+			layoutParams.setCollapseMode(CollapsingToolbarLayout.LayoutParams.COLLAPSE_MODE_PIN);
+			toolbar.setLayoutParams(layoutParams);
+		}
+
 		setAutoReloadDataTimer();
 		updateData();
 	}

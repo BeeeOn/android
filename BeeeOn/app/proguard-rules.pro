@@ -194,3 +194,17 @@
 # Application classes that will be serialized/deserialized over Gson
 -keep class com.rehivetech.beeeon.gui.adapter.dashboard.items.**{*;}
 -keep class com.rehivetech.beeeon.household.device.**{*;} #FIXME temp for dashboard
+
+# ButterKnife 7
+
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}

@@ -40,12 +40,28 @@
 			android:layout_below="@id/dashboard_item_act_value_label"
 			android:layout_centerHorizontal="true"
 			android:layout_toRightOf="@id/dashboard_item_act_value_icon"
+			android:layout_toLeftOf="@+id/dashboard_item_act_value_trend"
+			android:layout_toStartOf="@+id/dashboard_item_act_value_trend"
 			android:layout_toEndOf="@id/dashboard_item_act_value_icon"
 			android:gravity="center"
 			android:textColor="@color/beeeon_primary_medium"
 			android:textAppearance="@style/TextAppearance.AppCompat.Headline"
 			tools:text="26 °C"
 			/>
+
+		<android.support.v7.widget.AppCompatImageView
+			android:id="@id/dashboard_item_act_value_trend"
+			android:layout_width="48dp"
+			android:layout_height="48dp"
+			android:layout_below="@id/dashboard_item_act_value_label"
+			android:layout_alignParentRight="true"
+			android:layout_alignParentEnd="true"
+			android:layout_marginRight="@dimen/space_big"
+			android:layout_marginEnd="@dimen/space_big"
+			app:srcCompat="@drawable/ic_trending_flat_black_24dp"
+			android:tint="@color/beeeon_primary_medium"
+			/>
+
 
 		<TextView
 			android:id="@+id/dashboard_item_act_value_last_update_label"

@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -56,28 +57,44 @@ public final class Controller {
 
 	public static final String TAG = Controller.class.getSimpleName();
 
-	/** This singleton instance. */
+	/**
+	 * This singleton instance.
+	 */
 	private static Controller sController;
 
-	/** Switch for using demo mode (with example gate, without server) */
+	/**
+	 * Switch for using demo mode (with example gate, without server)
+	 */
 	private final boolean mDemoMode;
 
-	/** Application context */
+	/**
+	 * Application context
+	 */
 	private final Context mContext;
 
-	/** Persistence service for caching purposes */
+	/**
+	 * Persistence service for caching purposes
+	 */
 	private final Persistence mPersistence;
 
-	/** Network service for communication with server */
+	/**
+	 * Network service for communication with server
+	 */
 	private final INetwork mNetwork;
 
-	/** Active user object */
+	/**
+	 * Active user object
+	 */
 	private final User mUser;
 
-	/** Active gate */
+	/**
+	 * Active gate
+	 */
 	private Gate mActiveGate;
 
-	/** Models for keeping and handling data */
+	/**
+	 * Models for keeping and handling data
+	 */
 	private final Map<String, BaseModel> mModels = new HashMap<>();
 
 	/**
@@ -143,7 +160,7 @@ public final class Controller {
 
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
-	 *
+	 * <p>
 	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
 	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
 	 *
@@ -474,7 +491,7 @@ public final class Controller {
 
 	/**
 	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -520,7 +537,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
@@ -531,84 +548,156 @@ public final class Controller {
 
 	/**
 	 * Read dashboard items from preferences
+	 *
 	 * @param gateId active gate id
 	 * @return dashboard items list
 	 */
-	public List<BaseItem> getDashboardItems(String gateId) {
+	public List<BaseItem> getDashboardItems(int index, String gateId) {
 		String userId = getActualUser().getId();
-		return DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		List<List<BaseItem>> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+		return items != null && items.size() > index ? items.get(index) : null;
+	}
+
+	public int getNumberOfDashboardTabs(String userId, String gateId) {
+		return mPersistence.getSettings(getDashboardKey(userId, gateId)).getInt("items", 0);
+	}
+
+	public void saveNumberOfDashboardTabs(String userId, String gateId, int numOfItems) {
+		mPersistence.getSettings(getDashboardKey(userId, gateId)).edit().putInt("items", numOfItems).apply();
 	}
 
 	/**
 	 * Save actual state of dashboard into preferences
+	 *
 	 * @param gateId active gate id
-	 * @param items dashboard items
+	 * @param items  dashboard items
 	 */
-	public void saveDashboardItems(String gateId, List<BaseItem> items) {
+	public void saveDashboardItems(int index, String gateId, List<BaseItem> items) {
 		String userId = getActualUser().getId();
-		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
+		List<List<BaseItem>> itemsList = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+		if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
+			itemsList.get(index).clear();
+			itemsList.get(index).addAll(items);
+
+		} else if (itemsList != null) {
+			itemsList.add(items);
+		} else {
+			itemsList = new ArrayList<>();
+			itemsList.add(items);
+		}
+
+		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
 	}
 
 	/**
 	 * Remove all dashboard cards by gate
+	 *
 	 * @param gateId id of gate
 	 */
-	public void removeDashboardView(String gateId) {
+	public void removeDashboardView(int index, String gateId) {
 		String userId = getActualUser().getId();
-		SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
-		SharedPreferences.Editor editor = preferences.edit();
-		editor.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
-		editor.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "");
-		editor.apply();
+		if (index > -1) {
+
+			List<List<BaseItem>> itemsList = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+			if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
+				itemsList.remove(index);
+			}
+
+			DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
+		} else {
+
+			SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
+			SharedPreferences.Editor editor = preferences.edit();
+			editor.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+			editor.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "");
+			editor.apply();
+
+			saveNumberOfDashboardTabs(userId, gateId, 0);
+		}
 	}
 
 	/**
 	 * Remove all device occurrences in dashboard cards
-	 * @param gateId actual gate id
+	 *
+	 * @param gateId          actual gate id
 	 * @param removedDeviceId id of removed device
 	 */
 	public void removeDeviceFromDashboard(String gateId, String removedDeviceId) {
 		String userId = getActualUser().getId();
-		List<BaseItem> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
-		if(items == null) return; // we don't have any dashboard preferences
-		Iterator<BaseItem> itemsIterator = items.iterator();
+		List<List<BaseItem>> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
-		while (itemsIterator.hasNext()) {
-			BaseItem item = itemsIterator.next();
+		if (items == null) return; // we don't have any dashboard preferences
 
-			if (item instanceof GraphItem) {
+		ListIterator<List<BaseItem>> listIterator = items.listIterator();
 
-				Iterator<String> moduleIdsIterator = ((GraphItem) item).getAbsoluteModuleIds().iterator();
-				while (moduleIdsIterator.hasNext()) {
-					String absoluteModuleId = moduleIdsIterator.next();
-					if (absoluteModuleId.startsWith(removedDeviceId)) {
-						moduleIdsIterator.remove();
+		while (listIterator.hasNext()) {
+
+			List<BaseItem> listItem = listIterator.next();
+			Iterator<BaseItem> itemsIterator = listItem.iterator();
+
+			while (itemsIterator.hasNext()) {
+				BaseItem item = itemsIterator.next();
+
+				if (item instanceof GraphItem) {
+
+					Iterator<String> moduleIdsIterator = ((GraphItem) item).getAbsoluteModuleIds().iterator();
+					while (moduleIdsIterator.hasNext()) {
+						String absoluteModuleId = moduleIdsIterator.next();
+						if (absoluteModuleId.startsWith(removedDeviceId)) {
+							moduleIdsIterator.remove();
+						}
+					}
+					if (((GraphItem) item).getAbsoluteModuleIds().size() == 0) {
+						itemsIterator.remove();
+
+					}
+
+				} else if (item instanceof ActualValueItem) {
+					if (((ActualValueItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
+						itemsIterator.remove();
+					}
+
+				} else if (item instanceof OverviewGraphItem) {
+					if (((OverviewGraphItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
+						itemsIterator.remove();
 					}
 				}
-				if (((GraphItem) item).getAbsoluteModuleIds().size() == 0) {
-					itemsIterator.remove();
+			}
 
-				}
+			if (listItem.isEmpty()) {
+				listIterator.remove();
+			}
 
-			} else if (item instanceof ActualValueItem) {
-				if (((ActualValueItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
-					itemsIterator.remove();
-				}
+		}
 
-			} else if (item instanceof OverviewGraphItem) {
-				if (((OverviewGraphItem) item).getAbsoluteModuleId().startsWith(removedDeviceId)) {
-					itemsIterator.remove();
-				}
+		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
+	}
+
+	public void migrateDashboard() {
+		String userId = getActualUser().getId();
+		List<Gate> gates = getGatesModel().getGates();
+
+		for (Gate gate : gates) {
+			String gateId  = gate.getId();
+			List<BaseItem> dashboardOld = DashBoardPersistence.loadOld(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+
+			if (dashboardOld != null) {
+				List<List<BaseItem>> dashboardNew = new ArrayList<>();
+				dashboardNew.add(dashboardOld);
+				DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, dashboardNew);
 			}
 		}
- 		saveDashboardItems(gateId, items);
 	}
 
 	/**
 	 * Create helper instance of graph settings
-	 * @param gateId id of actual gate
+	 *
+	 * @param gateId           id of actual gate
 	 * @param absoluteModuleId absolute module id
-	 * @param graphRange data range of graph
+	 * @param graphRange       data range of graph
 	 * @return graphSettings instance
 	 */
 	public GraphSettingsPersistence getGraphSettingsPersistence(String gateId, String absoluteModuleId, @ChartHelper.DataRange int graphRange) {
@@ -620,9 +709,10 @@ public final class Controller {
 
 	/**
 	 * Create graphSettings key
-	 * @param gateId id of actual gate
+	 *
+	 * @param gateId           id of actual gate
 	 * @param absoluteModuleId absolute module id
-	 * @param graphRange data range of graph
+	 * @param graphRange       data range of graph
 	 * @return key string
 	 */
 	private String getGraphSettingsKey(String gateId, String absoluteModuleId, int graphRange) {
@@ -631,6 +721,7 @@ public final class Controller {
 
 	/**
 	 * Create dashboard key
+	 *
 	 * @param userId id of actual user
 	 * @param gateId id of active gate
 	 * @return key string

@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
 import com.rehivetech.beeeon.gui.activity.AddGateActivity;
+import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
@@ -199,6 +200,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		super.onActivityCreated(savedInstanceState);
 		updateData();
 
+		mActivity.setupToolbar(R.string.nav_drawer_menu_menu_devices, BaseApplicationActivity.INDICATOR_MENU);
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -455,11 +457,6 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
-	}
 
 	/**
 	 * ActionMode when longclicked item (showing delete button)

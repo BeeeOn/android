@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,9 +29,9 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 
 	private DashboardModuleSelectAdapter.ModuleItem mModuleItem;
 
-	public static AddDashboardActualValueFragment newInstance(String gateId, DashboardModuleSelectAdapter.ModuleItem moduleItem) {
+	public static AddDashboardActualValueFragment newInstance(int index, String gateId, DashboardModuleSelectAdapter.ModuleItem moduleItem) {
 		Bundle args = new Bundle();
-		args.putString(ARG_GATE_ID, gateId);
+		fillBaseArgs(args, index, gateId);
 		args.putParcelable(ARG_MODULE_ITEM, moduleItem);
 		AddDashboardActualValueFragment fragment = new AddDashboardActualValueFragment();
 		fragment.setArguments(args);
@@ -88,7 +87,7 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 					int selectedItem = mAdapter.getFirstSelectedItem();
 					DashboardModuleSelectAdapter.ModuleItem moduleItem = (DashboardModuleSelectAdapter.ModuleItem) mAdapter.getItem(selectedItem);
 
-					Fragment fragment = AddDashboardActualValueFragment.newInstance(mGateId, moduleItem);
+					Fragment fragment = AddDashboardActualValueFragment.newInstance(mIndex, mGateId, moduleItem);
 					mActivity.replaceFragment(getTag(), fragment);
 				}
 			});
@@ -110,10 +109,7 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 				@Override
 				public void onClick(View v) {
 					ActualValueItem item = new ActualValueItem(editText.getText().toString(), mGateId, mModuleItem.getAbsoluteId());
-					Intent data = new Intent();
-					data.putExtra(DashboardFragment.EXTRA_ADD_ITEM, item);
-					mActivity.setResult(10, data);
-					mActivity.finish();
+					finishActivity(item);
 				}
 			});
 		}

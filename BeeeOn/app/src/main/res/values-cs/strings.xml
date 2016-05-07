@@ -239,6 +239,7 @@
 
     <!-- Device add -->
 
+    <string name="device_supported_list_url" formatted="false">http://www.beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29</string>
 
     <string name="device_add_title">Přidat zařízení</string>
     <string name="device_add_guide_text">BeeeOn brána podporuje zařízení od různých výrobců. Více informací, jak připojit vaše zařízení k bráně, najdete v seznamu podporovaných zařízení.</string>
@@ -425,6 +426,13 @@
 
 
 	<!--Dashboard-->
+    <string name="dashboard_no_items">Pohled je prázdný</string>
+    <string name="dashboard_view">Pohled %s</string>
+    <string name="dashboard_add_item">Přidat novú položku</string>
+    <string name="dashboard_add_view">Přidat nový pohled</string>
+    <string name="dashboard_delete_view">Odstranit pohled</string>
+    <string name="dashboard_delete_view_x">Odstranit pohled %s</string>
+    <string name="dashboard_delete_view_message">Všechny položky z pohledu budou vymazány</string>
     <string name="dashboard_add_select_card">Vyberte typ karty</string>
 	<string name="dashboard_fab_add_graph">Přidat čárový graf</string>
 	<string name="dashboard_fab_add_week_bar_graph">Přidat týdenní sloupcový graf</string>
