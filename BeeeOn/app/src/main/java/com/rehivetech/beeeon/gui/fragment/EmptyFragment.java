@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
 
 public class EmptyFragment extends BaseApplicationFragment {
 	private static final String TAG = EmptyFragment.class.getSimpleName();
@@ -50,5 +51,11 @@ public class EmptyFragment extends BaseApplicationFragment {
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mActivity.setupToolbar(R.string.app_name, BaseApplicationActivity.INDICATOR_MENU);
+		mActivity.setupRefreshIcon(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				((MainActivity) mActivity).reloadData();
+			}
+		});
 	}
 }

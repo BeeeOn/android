@@ -134,24 +134,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		redrawNavigation();
 		reloadFragment(); // FIXME: do better (only when needed)
 
-		// Reload all data, if wasn't downloaded in login activity
-		final ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(this, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
-		fullReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					// Redraw Activity - probably list of modules
-					Log.d(TAG, "After reload task - go to redraw mainActivity");
-					setActiveGateAndMenu();
-					redrawNavigation();
-					reloadFragment(); // FIXME: do better (only when needed)
-					migrateDashboard();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(fullReloadTask);
+		reloadData();
 	}
 
 	@Override
@@ -365,6 +348,27 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		}
 
 		return result;
+	}
+
+	public void reloadData() {
+		// Reload all data, if wasn't downloaded in login activity
+		final ReloadGateDataTask fullReloadTask = new ReloadGateDataTask(this, false, ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES);
+		fullReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) {
+					// Redraw Activity - probably list of modules
+					Log.d(TAG, "After reload task - go to redraw mainActivity");
+					setActiveGateAndMenu();
+					redrawNavigation();
+					reloadFragment(); // FIXME: do better (only when needed)
+					migrateDashboard();
+				}
+			}
+		});
+
+		// Execute and remember task so it can be stopped automatically
+		callbackTaskManager.executeTask(fullReloadTask);
 	}
 
 	private void openNavDrawer() {
