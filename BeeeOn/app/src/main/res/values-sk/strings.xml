@@ -239,7 +239,7 @@
     <string name="device_edit_warning_refresh">Zmena se prejaví pri ďalšom prebudení zariadenia (približne v %s). Ak chcete prebudiť zariadenie ručne, zatraste zariadením alebo stlačte jeho tlačidlo pre párovanie.</string>
     <!-- Device add -->
 
-    <string name="device_supported_list_url" formatted="false">http://www.beeeon.org/index.php?title=List_of_supported_devices_%28sensors_and_actuators%29</string>
+    <string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?lang=sk</string>
 
     <string name="device_add_title">Pridať zariadenie</string>
     <string name="device_add_guide_text">BeeeOn brána podporuje zariadenia od rôznych výrobcov. Viacej informácií ako pripojiť vaše zariadenie k bráne, nájdete v zozname podporovaných zariadení.</string>
