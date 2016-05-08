@@ -89,6 +89,7 @@ public class AddDeviceActivity extends BaseApplicationActivity{
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		setupToolbar(mToolbarTitleRes > 0 ? getString(mToolbarTitleRes): "", INDICATOR_BACK);
+		setupRefreshIcon(null);
 	}
 
 	@Override
