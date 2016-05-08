@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.view.ActionMode;
@@ -25,6 +26,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
+import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
@@ -59,7 +61,21 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private ItemTouchHelper mItemTouchHelper;
 	private boolean mItemMoved = false;
 
-	private boolean mItemsUpdated = false;
+	private AsyncTask<VentilationItem, Void, Boolean> mReloadWeatherTask = new AsyncTask<VentilationItem, Void, Boolean>() {
+		@Override
+		protected Boolean doInBackground(VentilationItem... params) {
+			VentilationItem item = params[0];
+			return Controller.getInstance(mActivity).getWeatherModel().reloadWeather(mActivity, item.getGateId(), item.getLatitiude(), item.getLongitiude());
+		}
+
+		@Override
+		protected void onPostExecute(Boolean success) {
+			if (success) {
+				updateDashboard();
+			}
+		}
+	};
+
 
 	public static DashboardFragment newInstance(int index, String gateId) {
 
@@ -185,11 +201,22 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			return;
 		}
 
-		List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(mPageIndex, mGateId);
+		Controller controller = Controller.getInstance(mActivity);
+		List<BaseItem> items = controller.getDashboardItems(mPageIndex, mGateId);
+
 		if (items != null) {
+
+			for (BaseItem item : items) {
+
+				if (item instanceof VentilationItem && controller.getWeatherModel().getWeather(mGateId) == null) {
+					mReloadWeatherTask.execute((VentilationItem) item);
+					return;
+				}
+			}
+
 			mAdapter.setItems(items);
+			handleEmptyViewVisibility();
 		}
-		handleEmptyViewVisibility();
 	}
 
 

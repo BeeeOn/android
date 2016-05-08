@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.model;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.annotation.WorkerThread;
 
 import com.rehivetech.beeeon.model.weather.Weather;
@@ -37,8 +38,9 @@ public class WeatherModel extends BaseModel {
 		return true;
 	}
 
+	@Nullable
 	public Weather getWeather(String gateId) {
-		return mWeather.getObjects(gateId).get(0);
+		return (mWeather.getObjects(gateId).size() == 0) ? null : mWeather.getObjects(gateId).get(0);
 	}
 }
 
