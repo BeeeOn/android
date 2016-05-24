@@ -18,6 +18,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -141,6 +142,29 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		hideProgressDialog();
 	}
 
+
+	/**
+	 * Handling "home" action
+	 *
+	 * @param item clicked menu item
+	 * @return if was consumed
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				finish();
+				return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	/**
+	 * Redirects to login activity
+	 *
+	 * @param context
+	 * @param logout
+	 */
 	public static void redirectToLogin(Context context, boolean logout) {
 		if (logout) {
 			Controller.getInstance(context).logout(false);

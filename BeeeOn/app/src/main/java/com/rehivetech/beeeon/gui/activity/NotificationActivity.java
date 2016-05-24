@@ -14,12 +14,7 @@ public class NotificationActivity extends BaseApplicationActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notification);
-
-		setupToolbar(R.string.notification_title_notification);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		setupToolbar(R.string.notification_title_notification, INDICATOR_BACK);
 
 		Fragment fragment = new NotificationFragment();
 		fragment.setArguments(getIntent().getExtras());
@@ -29,29 +24,5 @@ public class NotificationActivity extends BaseApplicationActivity {
 					.add(R.id.container, fragment)
 					.commit();
 		}
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-//				Intent upIntent = NavUtils.getParentActivityIntent(this);
-//				if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
-//					// This activity is NOT part of this app's task, so create a new task
-//					// when navigating up, with a synthesized back stack.
-//					TaskStackBuilder.create(this)
-//							// Add all of this activity's parents to the back stack
-//							.addNextIntentWithParentStack(upIntent)
-//									// Navigate up to the closest parent
-//							.startActivities();
-//				} else {
-//					// This activity is part of this app's task, so simply
-//					// navigate up to the logical parent activity.
-//					NavUtils.navigateUpTo(this, upIntent);
-//				}
-				return true;
-		}
-		return false;
 	}
 }

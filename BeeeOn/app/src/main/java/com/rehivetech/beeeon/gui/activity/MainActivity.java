@@ -218,6 +218,12 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	/**
+	 * Shows/hides navDrawer or notifications
+	 *
+	 * @param item clicked menu item
+	 * @return if consumed
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
@@ -230,7 +236,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 				startActivity(intent);
 				break;
 		}
-		return super.onOptionsItemSelected(item);
+		return true;
 	}
 
 	@Override

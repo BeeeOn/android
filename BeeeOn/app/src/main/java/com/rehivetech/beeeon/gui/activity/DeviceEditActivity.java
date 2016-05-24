@@ -10,14 +10,11 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.dialog.AddLocationDialog;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.DeviceEditFragment;
 import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
-import com.rehivetech.beeeon.threading.task.AddLocationTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 
@@ -75,22 +72,20 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
 			case R.id.device_edit_action_delete:
 				String title = getString(R.string.device_edit_delete_device_confirm_dialog_title);
 				String message = getString(R.string.device_edit_delete_device_confirm_dialog_text);
 				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_DEVICE, mDeviceId);
-				break;
+				return true;
 			case R.id.device_edit_action_save:
 				if (mFragment != null) {
 					Device.DataPair pair = mFragment.getNewDataPair();
 					doEditDeviceTask(pair);
 				}
-				break;
+				return true;
 		}
-		return false;
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void doEditDeviceTask(Device.DataPair pair) {

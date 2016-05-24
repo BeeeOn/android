@@ -107,10 +107,6 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home: {
-				finish();
-				break;
-			}
 			case R.id.gate_edit_action_delete: {
 				String title = getString(R.string.activity_menu_dialog_title_remove_gate_default);
 				String message = getString(R.string.activity_menu_dialog_message_remove_gate);
@@ -121,14 +117,14 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				}
 
 				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
-				break;
+				return true;
 			}
 			case R.id.gate_edit_action_save: {
 				if (mFragment != null) {
 					Pair<Gate, GpsData> pair = mFragment.getNewGate();
 					doEditGateTask(pair);
 				}
-				break;
+				return true;
 			}
 		}
 		return super.onOptionsItemSelected(item);

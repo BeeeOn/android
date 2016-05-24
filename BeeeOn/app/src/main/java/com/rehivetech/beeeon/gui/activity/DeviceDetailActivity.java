@@ -61,20 +61,15 @@ public class DeviceDetailActivity extends BaseApplicationActivity implements Dev
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
-
-			case R.id.device_detail_menu_action_edit:
-				Intent intent = new Intent(this, DeviceEditActivity.class);
-				intent.putExtra(EXTRA_GATE_ID, mGateId);
-				intent.putExtra(EXTRA_DEVICE_ID, mDeviceId);
-				startActivity(intent);
-				break;
-
+		if(item.getItemId() == R.id.device_detail_menu_action_edit){
+			Intent intent = new Intent(this, DeviceEditActivity.class);
+			intent.putExtra(EXTRA_GATE_ID, mGateId);
+			intent.putExtra(EXTRA_DEVICE_ID, mDeviceId);
+			startActivity(intent);
+			return true;
 		}
-		return false;
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override

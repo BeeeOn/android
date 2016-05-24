@@ -116,16 +116,6 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
-		}
-		return false;
-	}
-
-	@Override
 	public void handleResult(Result result) {
 		String scannedText = result.getText();
 		String scannedFormat = result.getBarcodeFormat().toString();

@@ -124,10 +124,6 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home: {
-				finish();
-				break;
-			}
 			case R.id.gate_detail_menu_delete: {
 				String title = getString(R.string.activity_menu_dialog_title_remove_gate_default);
 				String message = getString(R.string.activity_menu_dialog_message_remove_gate);
@@ -138,13 +134,13 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 				}
 
 				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
-				break;
+				return true;
 			}
 			case R.id.gate_detail_menu_edit: {
 				Intent intent = new Intent(this, GateEditActivity.class);
 				intent.putExtra(GateEditActivity.EXTRA_GATE_ID, mGateId);
 				startActivity(intent);
-				break;
+				return true;
 			}
 		}
 		return super.onOptionsItemSelected(item);

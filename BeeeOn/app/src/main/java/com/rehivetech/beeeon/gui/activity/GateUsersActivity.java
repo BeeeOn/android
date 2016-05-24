@@ -101,17 +101,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 			doReloadGateUsersTask(mGate.getId(), true);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-
 	private void setUserSelected() {
 		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(ContextCompat.getColor(this, R.color.gray_light));
 	}

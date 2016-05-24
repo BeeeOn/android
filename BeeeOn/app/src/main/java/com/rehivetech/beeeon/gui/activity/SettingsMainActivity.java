@@ -29,16 +29,4 @@ public class SettingsMainActivity extends BaseApplicationActivity{
 
 		getSupportFragmentManager().beginTransaction().replace(R.id.settings_activity_fragment_holder, new SettingsMainFragment()).commit();
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
-
 }

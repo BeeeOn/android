@@ -37,13 +37,4 @@ public class DevicesListActivity extends BaseApplicationActivity {
 					.commit();
 		}
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// because throught AndroidManifest it's not working on old devices
-		if(item.getItemId() == android.R.id.home) {
-			finish();
-		}
-		return super.onOptionsItemSelected(item);
-	}
 }

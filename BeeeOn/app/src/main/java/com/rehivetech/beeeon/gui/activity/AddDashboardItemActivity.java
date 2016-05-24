@@ -57,16 +57,6 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
-		}
-		return false;
-	}
-
-	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		List<Fragment> fragments = getSupportFragmentManager().getFragments();
