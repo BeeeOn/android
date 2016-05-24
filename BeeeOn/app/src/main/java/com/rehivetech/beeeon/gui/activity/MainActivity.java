@@ -137,22 +137,16 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		reloadData();
 	}
 
+	/**
+	 * Back pressing will close navDrawer if opened, otherwise usual functionality
+	 */
 	@Override
 	public void onBackPressed() {
-		if (mBackPressed + BACK_TIME_INTERVAL > System.currentTimeMillis()) {
-			if (mExitToast != null)
-				mExitToast.cancel();
-
-			super.onBackPressed();
+		if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+			closeNavDrawer();
 			return;
-		} else {
-			mExitToast = Toast.makeText(getBaseContext(), R.string.main_toast_tap_again_exit, Toast.LENGTH_SHORT);
-			mExitToast.show();
-
-			openNavDrawer();
 		}
-
-		mBackPressed = System.currentTimeMillis();
+		super.onBackPressed();
 	}
 
 	@Override
