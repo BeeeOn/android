@@ -1,6 +1,5 @@
 package com.rehivetech.beeeon.widget.configuration;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -336,6 +335,8 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 				Log.e(TAG, "Could not save widget!");
 				// NOTE: need to show Toast or something in saveSettings() !!
 			}
+
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -444,11 +445,12 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 
 	/**
 	 * Finds module index from list by specified id
+	 *
 	 * @param moduleId needle
-	 * @param modules haystack
+	 * @param modules  haystack
 	 * @return index
 	 */
-	protected static int getModuleIndexFromList(String moduleId, List<Module> modules){
+	protected static int getModuleIndexFromList(String moduleId, List<Module> modules) {
 		int index = 0;
 		for (Module mod : modules) {
 			if (mod.getModuleId().absoluteId.equals(moduleId)) return index;

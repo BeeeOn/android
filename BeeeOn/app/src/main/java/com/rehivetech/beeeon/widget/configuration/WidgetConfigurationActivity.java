@@ -8,6 +8,7 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
@@ -49,6 +50,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 
 		// prepare toolbar with button instead of "HOME" arrow
 		setupToolbar(R.string.widget_configuration_title_widget_config, INDICATOR_ACCEPT);
+		setupRefreshIcon(null);
 
 		// do we edit or create widget
 		mAppWidgetEditing = extras.getBoolean(EXTRA_WIDGET_EDITING, false);
@@ -142,5 +144,17 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		if (mActionBar != null) {
 			mActionBar.setTitle(titleRes);
 		}
+	}
+
+
+	/**
+	 * Sets that this activity does not handle option click (fragment does that)
+	 *
+	 * @param item clicked menu item
+	 * @return if consumed
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return false;
 	}
 }
