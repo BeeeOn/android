@@ -35,13 +35,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_device_edit);
-
-		setupToolbar(R.string.empty);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
-		}
+		setupToolbar(R.string.empty, INDICATOR_DISCARD);
 
 		Intent intent = getIntent();
 		mGateId = intent.getStringExtra(DeviceDetailActivity.EXTRA_GATE_ID);

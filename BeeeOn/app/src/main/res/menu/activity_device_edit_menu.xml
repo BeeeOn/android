@@ -12,7 +12,7 @@
 	<item
 		android:id="@+id/device_edit_action_save"
 		android:title="@string/activity_gate_user_setup_device_btn_save"
-		android:icon="@drawable/ic_action_accept"
+		android:icon="@drawable/ic_done_white_24dp"
 		android:orderInCategory="100"
 		app:showAsAction="always|collapseActionView"/>
 </menu>

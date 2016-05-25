@@ -49,8 +49,8 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	public static final int INDICATOR_NONE = 0;
 	public static final int INDICATOR_BACK = 1;
 	public static final int INDICATOR_MENU = R.drawable.ic_menu_white_24dp;
-	public static final int INDICATOR_DISCARD = R.drawable.ic_action_cancel;
-	public static final int INDICATOR_ACCEPT = R.drawable.ic_action_accept;
+	public static final int INDICATOR_DISCARD = R.drawable.ic_clear_white_24dp;
+	public static final int INDICATOR_ACCEPT = R.drawable.ic_done_white_24dp;
 
 	private boolean triedLoginAlready = false;
 

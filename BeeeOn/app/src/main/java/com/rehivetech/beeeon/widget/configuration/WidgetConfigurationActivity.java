@@ -48,11 +48,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		mDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
 		// prepare toolbar with button instead of "HOME" arrow
-		setupToolbar(R.string.widget_configuration_title_widget_config);
-		if (mActionBar != null) {
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_accept);
-		}
+		setupToolbar(R.string.widget_configuration_title_widget_config, INDICATOR_ACCEPT);
 
 		// do we edit or create widget
 		mAppWidgetEditing = extras.getBoolean(EXTRA_WIDGET_EDITING, false);
@@ -92,7 +88,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		}
 
 		// create fragment only first time (it will persist)
-		if(savedInstanceState == null) {
+		if (savedInstanceState == null) {
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			ft.replace(R.id.widget_configuration_fragment, mConfigFragment);
 			ft.commit();

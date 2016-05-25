@@ -596,13 +596,13 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.oval_primary);
 
 			if (outSideTemp <= insideTemp) {
-				mIcon.setImageResource(R.drawable.ic_action_accept);
+				mIcon.setImageResource(R.drawable.ic_done_white_24dp);
 				drawable = Utils.setDrawableTint(drawable, ContextCompat.getColor(mContext, R.color.green));
 
 			} else {
 				drawable = Utils.setDrawableTint(drawable, ContextCompat.getColor(mContext, R.color.red));
 
-				mIcon.setImageResource(R.drawable.ic_action_cancel);
+				mIcon.setImageResource(R.drawable.ic_clear_white_24dp);
 			}
 
 			Utils.setBackgroundImageDrawable(mIcon, drawable);

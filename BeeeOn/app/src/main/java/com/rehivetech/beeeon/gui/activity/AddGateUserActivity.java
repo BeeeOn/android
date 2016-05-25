@@ -39,13 +39,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_user_add);
-
-		setupToolbar(R.string.app_name);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
-		}
+		setupToolbar(R.string.app_name, INDICATOR_DISCARD);
 
 		// Get selected gate
 		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(EXTRA_GATE_ID));
