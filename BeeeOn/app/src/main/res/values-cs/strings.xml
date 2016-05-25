@@ -252,7 +252,7 @@
     <string name="device_search_manual_button">Manuálni vyhledávaní</string>
     <string name="device_search_no_devices_text">Nenašlo se žádné zařízení</string>
     <string name="device_search_snack_bar_title_searching">Hledání…</string>
-    <string name="device_search_snack_bar_title_search_end">Hledání se skončilo</string>
+    <string name="device_search_snack_bar_title_search_end">Hledání skončilo</string>
     <string name="device_search_snack_bar_retry">Opakovat</string>
     <string name="device_search_manual_search_hint">Zadejte IP adresu</string>
     <string name="device_search_manual_search_dialog_button">Hledat</string>
@@ -425,7 +425,7 @@
     <string name="utils_toast_field_must_be_ip_address">Vložte platnou IP adresu ve tvaru podobném do 192.168.100.100.</string>
 
 
-	<!--Dashboard-->
+    <!--Dashboard-->
     <string name="dashboard_no_items">Pohled je prázdný</string>
     <string name="dashboard_view">Pohled %s</string>
     <string name="dashboard_add_item">Přidat novú položku</string>
@@ -434,24 +434,24 @@
     <string name="dashboard_delete_view_x">Odstranit pohled %s</string>
     <string name="dashboard_delete_view_message">Všechny položky z pohledu budou vymazány</string>
     <string name="dashboard_add_select_card">Vyberte typ karty</string>
-	<string name="dashboard_fab_add_graph">Přidat čárový graf</string>
-	<string name="dashboard_fab_add_week_bar_graph">Přidat týdenní sloupcový graf</string>
-	<string name="dashboard_fab_add_module">Přidat hodnotu senzoru</string>
+    <string name="dashboard_fab_add_graph">Přidat čárový graf</string>
+    <string name="dashboard_fab_add_week_bar_graph">Přidat týdenní sloupcový graf</string>
+    <string name="dashboard_fab_add_module">Přidat hodnotu senzoru</string>
     <string name="dashboard_add_ventilation_card">Přidat asistenta pro větrání</string>
     <string name="dashboard_add_actual_value_label">Vyberte senzor</string>
-	<string name="dashboard_add_graph_name_hint">Název karty</string>
-	<string name="dashboard_add_graph_left_axis_label">Vyberte senzor pro levou osu</string>
-	<string name="dashboard_add_graph_right_axis_label">Vyberte senzor pro pravou osu</string>
-	<string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dat pro graf</string>
-	<string name="dashboard_add_graph_week_module_label">Vyberte senzor pro graf</string>
-	<string name="dashboard_add_graph_week_data_type_label">Vyberte typ dat pro graf</string>
-	<plurals name="dashboard_delete_snackbar">
-		<item quantity="one">Karta byla smazána</item>
-		<item quantity="few">Karty byly smazány</item>
-		<item quantity="other">Karty byly smazány</item>
-	</plurals>
-	<string name="dashboard_undo">Zpět</string>
-	<string name="dashboard_add_graph_name_error">Pojmenujte novou kartu</string>
+    <string name="dashboard_add_graph_name_hint">Název karty</string>
+    <string name="dashboard_add_graph_left_axis_label">Vyberte senzor pro levou osu</string>
+    <string name="dashboard_add_graph_right_axis_label">Vyberte senzor pro pravou osu</string>
+    <string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dat pro graf</string>
+    <string name="dashboard_add_graph_week_module_label">Vyberte senzor pro graf</string>
+    <string name="dashboard_add_graph_week_data_type_label">Vyberte typ dat pro graf</string>
+    <plurals name="dashboard_delete_snackbar">
+        <item quantity="one">Karta byla smazána</item>
+        <item quantity="few">Karty byly smazány</item>
+        <item quantity="other">Karty byly smazány</item>
+    </plurals>
+    <string name="dashboard_undo">Zpět</string>
+    <string name="dashboard_add_graph_name_error">Pojmenujte novou kartu</string>
     <string name="dashboard_add_item_additional_settings">Další nastavení</string>
     <string name="dashboard_add_ventilation_select_provider">Vyberte zdroj venkovní teploty</string>
     <string name="dashboard_add_ventilation_provider_weather">Teplota z poskytovalete počasí</string>

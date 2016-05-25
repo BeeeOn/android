@@ -30,6 +30,8 @@ import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 
+import icepick.Icepick;
+
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
  * <p/>
@@ -72,9 +74,8 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 //		setLocale();
-
 		super.onCreate(savedInstanceState);
-
+		Icepick.restoreInstanceState(this, savedInstanceState);
 		callbackTaskManager = new CallbackTaskManager(this);
 	}
 
@@ -142,6 +143,11 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		hideProgressDialog();
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Icepick.saveInstanceState(this, outState);
+	}
 
 	/**
 	 * Handling "home" action

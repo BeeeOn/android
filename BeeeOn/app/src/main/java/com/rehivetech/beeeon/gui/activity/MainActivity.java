@@ -40,6 +40,7 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import icepick.State;
 
 public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener, NavigationView.OnNavigationItemSelectedListener {
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -52,17 +53,12 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public static final String MENU_ITEM_GRAPHS = "item_graphs";
 	public static final String MENU_ITEM_GATEWAY = "item_gateway";
 
-	/* Support for "Press back again to exit" */
-	private static final int BACK_TIME_INTERVAL = 2100;
-	private Toast mExitToast;
-	private long mBackPressed;
-
 	public static final String GATE_ID = "lastGateId";
 	private static final String LAST_MENU_ID = "lastMenuId";
 
 	/* Holds active menu and gate ids */
-	private String mActiveMenuId;
-	private String mActiveGateId;
+	@State public String mActiveMenuId;
+	@State public String mActiveGateId;
 
 	/* Navigation drawer items */
 	@Bind(R.id.main_drawer_layout)
@@ -116,10 +112,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		mGatesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mGatesSpinner.setAdapter(mGatesAdapter);
 
-		if (savedInstanceState != null) {
-			mActiveMenuId = savedInstanceState.getString(LAST_MENU_ID);
-			mActiveGateId = savedInstanceState.getString(GATE_ID);
-		} else {
+		if (savedInstanceState == null) {
 			setActiveGateAndMenu();
 		}
 
@@ -147,13 +140,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			return;
 		}
 		super.onBackPressed();
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putString(GATE_ID, mActiveGateId);
-		savedInstanceState.putString(LAST_MENU_ID, mActiveMenuId);
-		super.onSaveInstanceState(savedInstanceState);
 	}
 
 	private void reloadFragment() {
