@@ -18,8 +18,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.avast.android.dialogs.fragment.SimpleDialogFragment;
-import com.avast.android.dialogs.iface.IPositiveButtonDialogListener;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -30,6 +28,7 @@ import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
 import com.rehivetech.beeeon.gui.activity.DevicesListActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceRecycleAdapter;
+import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.gui.view.FloatingActionMenu;
 import com.rehivetech.beeeon.household.device.Device;
@@ -49,7 +48,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DevicesListFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, IPositiveButtonDialogListener {
+public class DevicesListFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ConfirmDialog.ConfirmDialogListener {
 	@SuppressWarnings("unused")
 	private static final String TAG = DevicesListFragment.class.getSimpleName();
 
@@ -446,18 +445,21 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	/**
 	 * When confirmed dialog -> Deleting device from list
 	 *
-	 * @param i requestCode (which dialog)
+	 * @param confirmType
+	 * @param dataId
 	 */
 	@Override
-	public void onPositiveButtonClicked(int i) {
-		Integer selectedFirst = mDeviceAdapter.getFirstSelectedItem();
-		if (mDeviceAdapter.getItemViewType(selectedFirst) == DeviceRecycleAdapter.TYPE_DEVICE) {
-			Device dev = (Device) mDeviceAdapter.getItem(selectedFirst);
-			doRemoveDeviceTask(dev);
-		}
+	public void onConfirm(int confirmType, String dataId) {
+		if (confirmType == ConfirmDialog.TYPE_DELETE_DEVICE) {
+			Integer selectedFirst = mDeviceAdapter.getFirstSelectedItem();
+			if (mDeviceAdapter.getItemViewType(selectedFirst) == DeviceRecycleAdapter.TYPE_DEVICE) {
+				Device dev = (Device) mDeviceAdapter.getItem(selectedFirst);
+				doRemoveDeviceTask(dev);
+			}
 
-		if (mActionMode != null) {
-			mActionMode.finish();
+			if (mActionMode != null) {
+				mActionMode.finish();
+			}
 		}
 	}
 
@@ -484,15 +486,15 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 				int firstSelected = mDeviceAdapter.getFirstSelectedItem();
 				if (mDeviceAdapter.getItemViewType(firstSelected) == DeviceRecycleAdapter.TYPE_DEVICE) {
 					Device device = (Device) mDeviceAdapter.getItem(firstSelected);
-					// TODO: Use ConfirmDialog util instead of this builder?
 					// shows confirmation dialog
-					SimpleDialogFragment.createBuilder(mActivity, mActivity.getSupportFragmentManager())
-							.setTitle(getString(R.string.module_list_dialog_title_unregister_device, device.getName(mActivity)))
-							.setMessage(R.string.module_list_dialog_message_unregister_device)
-							.setNegativeButtonText(R.string.activity_fragment_btn_cancel)
-							.setPositiveButtonText(R.string.module_list_btn_unregister)
-							.setTargetFragment(DevicesListFragment.this, 1)        // needs to be here so that we can catch button listeners
-							.show();
+					ConfirmDialog.confirm(
+							DevicesListFragment.this,
+							getString(R.string.module_list_dialog_title_unregister_device, device.getName(mActivity)),
+							getString(R.string.module_list_dialog_message_unregister_device),
+							R.string.module_list_btn_unregister,
+							ConfirmDialog.TYPE_DELETE_DEVICE,
+							device.getId()
+					);
 				}
 			}
 			return true;

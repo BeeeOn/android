@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -67,9 +68,16 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.device_edit_action_delete:
-				String title = getString(R.string.device_edit_delete_device_confirm_dialog_title);
-				String message = getString(R.string.device_edit_delete_device_confirm_dialog_text);
-				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_DEVICE, mDeviceId);
+				Controller controller = Controller.getInstance(this);
+				Device device = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
+				if (device == null) {
+					Log.e(TAG, "No device found!");
+					return true;
+				}
+
+				String title = getString(R.string.module_list_dialog_title_unregister_device, device.getName(this));
+				String message = getString(R.string.module_list_dialog_message_unregister_device);
+				ConfirmDialog.confirm(this, title, message, R.string.module_list_btn_unregister, ConfirmDialog.TYPE_DELETE_DEVICE, mDeviceId);
 				return true;
 			case R.id.device_edit_action_save:
 				if (mFragment != null) {
