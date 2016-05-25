@@ -41,6 +41,7 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
 import com.rehivetech.beeeon.threading.task.SendParameterTask;
 import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -401,7 +402,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		EditText editText = textInputLayout.getEditText();
 
 		// validate input if is in specified format
-		if (editText == null || !Utils.validateInput(mActivity, textInputLayout, Utils.IP_ADDRESS))
+		if (editText == null || !Validator.validate(textInputLayout, Validator.IP_ADDRESS))
 			return;
 
 		if (mHandler != null) {

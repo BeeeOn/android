@@ -480,4 +480,10 @@
     <string name="location_not_available">Poloha není k dispozici</string>
     <string name="open_location_settings">Otevřít nastavení polohy</string>
 
+    <!-- validation -->
+    <string name="validation_empty">Je třeba vyplnit.</string>
+    <string name="validation_number">Vložte platné číslo.</string>
+    <string name="validation_email">Vložte platnou e-mailovou adresu.</string>
+    <string name="validation_ip_address">Vložte platnou IP adresu ve tvaru podobném do 192.168.100.100.</string>
+
 </resources>

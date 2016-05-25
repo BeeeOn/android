@@ -243,7 +243,7 @@
 
     <string name="device_add_title">Pridať zariadenie</string>
     <string name="device_add_guide_text">BeeeOn brána podporuje zariadenia od rôznych výrobcov. Viacej informácií ako pripojiť vaše zariadenie k bráne, nájdete v zozname podporovaných zariadení.</string>
-	<string name="device_add_btn_search">Hľadať nové zariadenia</string>
+    <string name="device_add_btn_search">Hľadať nové zariadenia</string>
     <string name="device_add_btn_list">Zoznam dustopných zariadení</string>
     <string name="device_add_activity_opening_error">Chyba pri otvorení nastavení zariadenia, skúste to neskôr.</string>
     <string name="device_add_dialog_enter_password_checkbox">Nevýpĺňať heslo\n(môžete si iba prezerat informácie o tomto zariadení)</string>
@@ -339,8 +339,8 @@
     <string name="settings_unit_unit">Jednotky</string>
     <string name="settings_language_default">Východzí(Jazyk systému)</string>
     <string name="settings_general_category_title">Obecné nastavenia</string>
-	<string name="settings_hide_unavailable_modules">Skryť nedostupné moduly</string>
-	<string name="settings_actualization_category_title">Nastavenie aktualizácií</string>
+    <string name="settings_hide_unavailable_modules">Skryť nedostupné moduly</string>
+    <string name="settings_actualization_category_title">Nastavenie aktualizácií</string>
     <string name="settings_actualization_screen_title">Interval automatickej aktualizácie</string>
     <string name="settings_cache_reload_title">Doba uchovávania cache</string>
     <plurals name="settings_actualization_time_listpreference_seconds">
@@ -425,7 +425,7 @@
     <string name="data_type_avg">Priemer</string>
     <string name="data_type_max">Maximum</string>
 
-	<!--Dashboard-->
+    <!--Dashboard-->
     <string name="dashboard_no_items">Pohľad je prázdny</string>
     <string name="dashboard_view">Pohľad %s</string>
     <string name="dashboard_add_item">Pridať novú položku</string>
@@ -434,24 +434,24 @@
     <string name="dashboard_delete_view_x">Odstrániť pohľad %s</string>
     <string name="dashboard_delete_view_message">Všetky položky z pohľadu budu vymazané</string>
     <string name="dashboard_add_select_card">Vyberte typ karty</string>
-	<string name="dashboard_fab_add_graph">Pridať čiarový graf</string>
-	<string name="dashboard_fab_add_week_bar_graph">Pridať týždňový stĺpcový graf</string>
-	<string name="dashboard_fab_add_module">Pridať hodnotu senzoru</string>
+    <string name="dashboard_fab_add_graph">Pridať čiarový graf</string>
+    <string name="dashboard_fab_add_week_bar_graph">Pridať týždňový stĺpcový graf</string>
+    <string name="dashboard_fab_add_module">Pridať hodnotu senzoru</string>
     <string name="dashboard_add_ventilation_card">Pridať asistenta pre vetranie</string>
     <string name="dashboard_add_actual_value_label">Vyberte senzor</string>
-	<string name="dashboard_add_graph_name_hint">Názov karty</string>
-	<string name="dashboard_add_graph_left_axis_label">Vyberte senzor pre ľavú osu</string>
-	<string name="dashboard_add_graph_right_axis_label">Vyberte senzor pre pravú osu</string>
-	<string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dát pre graf</string>
-	<string name="dashboard_add_graph_week_module_label">Vyberte senzor pre graf</string>
-	<string name="dashboard_add_graph_week_data_type_label">vyberte typ dát pre graf</string>
-	<plurals name="dashboard_delete_snackbar">
-		<item quantity="one">Karta bola zmazaná</item>
-		<item quantity="few">Karty boli zmazané</item>
-		<item quantity="other">Karty boli zmazané</item>
-	</plurals>
-	<string name="dashboard_undo">Späť</string>
-	<string name="dashboard_add_graph_name_error">Pomenujte novú kartu</string>
+    <string name="dashboard_add_graph_name_hint">Názov karty</string>
+    <string name="dashboard_add_graph_left_axis_label">Vyberte senzor pre ľavú osu</string>
+    <string name="dashboard_add_graph_right_axis_label">Vyberte senzor pre pravú osu</string>
+    <string name="dashboard_add_graph_graph_range_label">Vyberte rozsah dát pre graf</string>
+    <string name="dashboard_add_graph_week_module_label">Vyberte senzor pre graf</string>
+    <string name="dashboard_add_graph_week_data_type_label">vyberte typ dát pre graf</string>
+    <plurals name="dashboard_delete_snackbar">
+        <item quantity="one">Karta bola zmazaná</item>
+        <item quantity="few">Karty boli zmazané</item>
+        <item quantity="other">Karty boli zmazané</item>
+    </plurals>
+    <string name="dashboard_undo">Späť</string>
+    <string name="dashboard_add_graph_name_error">Pomenujte novú kartu</string>
     <string name="dashboard_add_item_additional_settings">Ďalšie nastavenia</string>
     <string name="dashboard_add_ventilation_select_provider">Vyberte zdroj vonkajšej teploty</string>
     <string name="dashboard_add_ventilation_provider_weather">Teplota z poskytovateľa počasia</string>
@@ -479,5 +479,11 @@
     <string name="my_location">Moja poloha</string>
     <string name="location_not_available">Poloha nie je k dispozícií</string>
     <string name="open_location_settings">Otvoriť nastavenie polohy</string>
+
+    <!-- validation -->
+    <string name="validation_empty">Je potrebné vyplniť.</string>
+    <string name="validation_number">Vložte platné číslo.</string>
+    <string name="validation_email">Vložte platnú e-mailovú adresu.</string>
+    <string name="validation_ip_address">Vložte platnú IP adresu. Môže vyzerat napríklad 192.168.100.100.</string>
 
 </resources>
