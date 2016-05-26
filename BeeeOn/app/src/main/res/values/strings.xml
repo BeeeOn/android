@@ -348,13 +348,13 @@
     <string name="settings_language_default">Default(from system)</string>
     <string name="settings_general_category_title">General settings</string>
     <string name="settings_hide_unavailable_modules">Hide unavailable modules</string>
-    <string name="settings_actualization_category_title">Actualization settings</string>
-    <string name="settings_actualization_screen_title">Automatic data actualization interval</string>
+    <string name="settings_actualization_category_title">Data fetching settings</string>
+    <string name="settings_actualization_screen_title">Automatic data fetching interval</string>
     <string name="settings_cache_reload_title">Cache reload time</string>
     <plurals name="settings_actualization_time_listpreference_seconds">
         <item quantity="other">%d seconds</item>
     </plurals>
-    <string name="settings_actualizationtime_listpreference_dont_actualize">Don\'t actualize</string>
+    <string name="settings_actualizationtime_listpreference_dont_actualize">Manually</string>
     <plurals name="settings_cache_listpreference_minutes">
         <item quantity="one">1 minute</item>
         <item quantity="other">%d minutes</item>

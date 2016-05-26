@@ -340,15 +340,15 @@
     <string name="settings_language_default">Východzí(Jazyk systému)</string>
     <string name="settings_general_category_title">Obecné nastavenia</string>
     <string name="settings_hide_unavailable_modules">Skryť nedostupné moduly</string>
-    <string name="settings_actualization_category_title">Nastavenie aktualizácií</string>
-    <string name="settings_actualization_screen_title">Interval automatickej aktualizácie</string>
+    <string name="settings_actualization_category_title">Nastavenie načitania dát</string>
+    <string name="settings_actualization_screen_title">Interval automatického načítavania</string>
     <string name="settings_cache_reload_title">Doba uchovávania cache</string>
     <plurals name="settings_actualization_time_listpreference_seconds">
         <item quantity="one">1 sekunda</item>
         <item quantity="few">%d sekundy</item>
         <item quantity="other">%d sekúnd</item>
     </plurals>
-    <string name="settings_actualizationtime_listpreference_dont_actualize">Neaktualizovať</string>
+    <string name="settings_actualizationtime_listpreference_dont_actualize">Manuálne</string>
     <plurals name="settings_cache_listpreference_minutes">
         <item quantity="one">1 minúta</item>
         <item quantity="few">%d minúty</item>
