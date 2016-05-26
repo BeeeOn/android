@@ -78,6 +78,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@State long mCountDownTimeElapsed;
 	@State @Nullable String mSelectedItemId;
 	@State long mLastKnownTime;
+	@State String mDeviceIpAddress;
 
 	public static SearchDeviceFragment newInstance(String gateId) {
 		Bundle args = new Bundle();
@@ -148,17 +149,15 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 	/**
 	 * Shows finished snackbar with retry button
-	 *
-	 * @param deviceIpAddress might retry searching with this ip address
 	 */
-	public void showFinishedSnackbar(@Nullable final String deviceIpAddress) {
+	public void showFinishedSnackbar() {
 		Snackbar.make(mRootView, R.string.device_search_snack_bar_title_search_end, Snackbar.LENGTH_INDEFINITE)
 				.setAction(R.string.device_search_snack_bar_retry, new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						mAdapter.clearData();
 						mCountDownTimeElapsed = 0;
-						startPairing(deviceIpAddress);
+						startPairing();
 					}
 				})
 				.show();
@@ -181,11 +180,11 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		}
 
 		if (mCountDownTimeElapsed < COUNTDOWN_INTERVAL) {
-			startPairing(null);
+			startPairing();
 		} else {
-			doPairRequestTask(false, null); // last time tries to get unitialized devices
+			doPairRequestTask(false); // last time tries to get unitialized devices
 			mCountDownText.setText(convertMillisToText(0));
-			showFinishedSnackbar(null);
+			showFinishedSnackbar();
 		}
 	}
 
@@ -210,16 +209,14 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 	/**
 	 * Starts pairing with updating time
-	 *
-	 * @param deviceIpAddress might have set special ip address which will be searched for
 	 */
-	private void startPairing(@Nullable final String deviceIpAddress) {
+	private void startPairing() {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
 
 		// sends request to the server
-		doPairRequestTask(mCountDownTimeElapsed == 0, deviceIpAddress);
+		doPairRequestTask(mCountDownTimeElapsed == 0);
 
 		mCountDownTimer = new CountDownTimer(COUNTDOWN_INTERVAL - mCountDownTimeElapsed, DateUtils.SECOND_IN_MILLIS) {
 			@Override
@@ -229,14 +226,14 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 				mCountDownText.setText(convertMillisToText(millisUntilFinished));
 				// every repeat interval check new devices
 				if (mCountDownTimeElapsed % PAIR_REQUEST_REPEAT_INTERVAL == 0) {
-					doPairRequestTask(false, null);
+					doPairRequestTask(false);
 				}
 			}
 
 			@Override
 			public void onFinish() {
 				mCountDownText.setText(convertMillisToText(0));
-				showFinishedSnackbar(deviceIpAddress);
+				showFinishedSnackbar();
 			}
 		}.start();
 
@@ -263,10 +260,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	 * Creates pair request that handles pairing between the gate and the account
 	 *
 	 * @param sendPairRequest should be true only for the first time to send it to server, otherwise only collect data
-	 * @param deviceIpAddress if specified only devices with this ip address will be searched for
 	 */
-	private void doPairRequestTask(boolean sendPairRequest, String deviceIpAddress) {
-		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId, sendPairRequest, deviceIpAddress);
+	private void doPairRequestTask(boolean sendPairRequest) {
+		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId, sendPairRequest, mDeviceIpAddress);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
@@ -407,7 +403,8 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 		mAdapter.clearData();
 		mCountDownTimeElapsed = 0;
-		startPairing(editText.getText().toString());
+		mDeviceIpAddress = editText.getText().toString();
+		startPairing();
 		dialog.dismiss();
 	}
 

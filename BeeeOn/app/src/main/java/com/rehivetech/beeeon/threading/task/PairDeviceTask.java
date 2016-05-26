@@ -36,7 +36,7 @@ public class PairDeviceTask extends CallbackTask<String> {
 
 		if (mSendPairRequest) {
 			//clear uninitialized devices cache before first pair request
-			if (mDeviceIpAddress == null) {
+			if (mDeviceIpAddress == null || mDeviceIpAddress.trim().isEmpty()) {
 				uninitializedDevicesModel.clearUninitializedDevicesCacheByGate(mGateId);
 			}
 
