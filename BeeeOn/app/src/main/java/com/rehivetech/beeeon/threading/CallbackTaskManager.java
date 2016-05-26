@@ -241,7 +241,7 @@ public class CallbackTaskManager {
 						if (errCode instanceof NetworkError) {
 							switch ((NetworkError) errCode) {
 								case BAD_BT: {
-									BaseApplicationActivity.redirectToLogin(mActivity);
+									BaseApplicationActivity.redirectToLogin(mActivity, false);
 									break;
 									// Intentionally no return here to let show error toast below
 								}

@@ -94,11 +94,12 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		});
 	}
 
-
 	@Override
-	protected void onAppResume() {
-		if (mGate != null)
+	public void onResume() {
+		super.onResume();
+		if (mGate != null) {
 			doReloadGateUsersTask(mGate.getId(), true);
+		}
 	}
 
 	private void setUserSelected() {
@@ -137,7 +138,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(reloadUsersTask, gateId);
 	}
-
 
 
 	private void doRemoveUserTask(User user) {
@@ -276,6 +276,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 			doEditUserTask(user);
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_USER) {
 			doRemoveUserTask(user);
-	}
+		}
 	}
 }

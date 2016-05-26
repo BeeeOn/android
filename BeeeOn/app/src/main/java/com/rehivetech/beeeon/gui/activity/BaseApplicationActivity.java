@@ -34,7 +34,7 @@ import icepick.Icepick;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
- * <p/>
+ * <p>
  * When user is not logged in, it will switch to LoginActivity automatically.
  * Provides useful methods for using CallbackTasks.
  */
@@ -66,9 +66,6 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	@Nullable
 	protected ActionBar mActionBar;
 	private Toolbar mToolbar;
-
-	protected boolean isPaused = false;
-
 	public CallbackTaskManager callbackTaskManager;
 
 	@Override
@@ -106,7 +103,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		if (!controller.isLoggedIn()) {
 			if (!triedLoginAlready) {
 				triedLoginAlready = true;
-				redirectToLogin(this);
+				redirectToLogin(this, false);
 			} else {
 				finish();
 			}
@@ -116,9 +113,6 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		}
 
 		controller.getGcmModel().registerNotificationReceiver(this);
-
-		isPaused = false;
-		onAppResume();
 	}
 
 	@Override
@@ -127,9 +121,6 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 
 		Controller controller = Controller.getInstance(this);
 		controller.getGcmModel().unregisterNotificationReceiver(this);
-
-		isPaused = true;
-		onAppPause();
 	}
 
 	@Override
@@ -169,7 +160,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	 * Redirects to login activity
 	 *
 	 * @param context
-	 * @param logout
+	 * @param logout  if user will be logged out
 	 */
 	public static void redirectToLogin(Context context, boolean logout) {
 		if (logout) {
@@ -184,24 +175,6 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		context.startActivity(intent);
 	}
 
-	public static void redirectToLogin(Context context) {
-		redirectToLogin(context, false);
-	}
-
-	/**
-	 * This is called after onResume(), but only when user is correctly logged in
-	 */
-	protected void onAppResume() {
-		// Empty default method
-	}
-
-	/**
-	 * This is called after onPause()
-	 */
-	protected void onAppPause() {
-		// Empty default method
-	}
-
 	/**
 	 * Called from {@link CallbackTaskManager} when task is started/canceled.
 	 *
@@ -211,16 +184,6 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		if (mToolbar == null) {
 			return;
 		}
-
-//		if (mProgressBar == null) {
-//			mProgressBar = (ProgressBar) mToolbar.findViewById(R.id.beeeon_toolbar_progress);
-//
-//			if (mProgressBar == null) {
-//				// This activity probably doesn't have progressbar in layout
-//				Log.w(TAG, String.format("Can't set visibility of progressbar in '%s', it wasn't found in layout.", getClass().getSimpleName()));
-//				return;
-//			}
-//		}
 
 		// if refresh icon was setup we either show progress or refresh icon
 		if (mRefreshIcon != null) {
@@ -232,7 +195,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		}
 	}
 
-	public synchronized void showProgressDialog(/*@StringRes int progressMessageRes*/) {
+	public synchronized void showProgressDialog() {
 		if (mProgressDialog == null) {
 			// Prepare progress dialog
 			mProgressDialog = new BetterProgressDialog(this);

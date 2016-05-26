@@ -122,11 +122,12 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 //		migrateDashboard();
 	}
 
-	public void onAppResume() {
+	@Override
+	public void onResume() {
+		super.onResume();
 		setActiveGateAndMenu();
 		redrawNavigation();
 		reloadFragment(); // FIXME: do better (only when needed)
-
 		reloadData();
 	}
 
