@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -43,6 +42,8 @@ import com.rehivetech.beeeon.threading.task.SendParameterTask;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.util.Validator;
 
+import org.joda.time.DateTimeUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,6 @@ import icepick.State;
 /**
  * @author Martin Matejcik
  * @author Tomas Mlynaric
- *         TODO should count properly timer when stopped/resumed app (time before stop - actual time)
  */
 public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, EditTextDialog.IPositiveButtonDialogListener, EnterPasswordDialog.PasswordDialogListener {
 	private static final String TAG = SearchDeviceFragment.class.getSimpleName();
@@ -74,10 +74,10 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Bind(R.id.search_device_searching_text) TextView mSearchingText;
 
 	private DeviceRecycleAdapter mAdapter;
-	@Nullable private Handler mHandler;
 	@Nullable private CountDownTimer mCountDownTimer;
 	@State long mCountDownTimeElapsed;
 	@State @Nullable String mSelectedItemId;
+	@State long mLastKnownTime;
 
 	public static SearchDeviceFragment newInstance(String gateId) {
 		Bundle args = new Bundle();
@@ -143,15 +143,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.SEARCH_DEVICE_SCREEN);
-
-		if (mCountDownTimeElapsed != COUNTDOWN_INTERVAL) {
-			startPairing(null);
-		} else {
-			mCountDownText.setText(convertMillisToText(0));
-			showFinishedSnackbar(null);
-		}
 	}
 
 	/**
@@ -173,11 +165,35 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+
+		// calculation of difference between last known time before close and actual
+		if (mLastKnownTime > 0) {
+			long timeLeft = (DateTimeUtils.currentTimeMillis() - mLastKnownTime);
+			if (timeLeft > COUNTDOWN_INTERVAL) {
+				mCountDownTimeElapsed = COUNTDOWN_INTERVAL;
+			} else if (timeLeft > 0) {
+				mCountDownTimeElapsed += timeLeft;
+			}
+
+			mLastKnownTime = 0;
+		}
+
+		if (mCountDownTimeElapsed < COUNTDOWN_INTERVAL) {
+			startPairing(null);
+		} else {
+			doPairRequestTask(false, null); // last time tries to get unitialized devices
+			mCountDownText.setText(convertMillisToText(0));
+			showFinishedSnackbar(null);
+		}
+	}
+
+	@Override
 	public void onStop() {
 		super.onStop();
-		if (mHandler != null) {
-			mHandler.removeCallbacksAndMessages(null);
-		}
+		mLastKnownTime = DateTimeUtils.currentTimeMillis();
+
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
@@ -202,43 +218,27 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 			mCountDownTimer.cancel();
 		}
 
-		if (mHandler != null) {
-			mHandler.removeCallbacksAndMessages(null);
-		}
+		// sends request to the server
+		doPairRequestTask(mCountDownTimeElapsed == 0, deviceIpAddress);
 
 		mCountDownTimer = new CountDownTimer(COUNTDOWN_INTERVAL - mCountDownTimeElapsed, DateUtils.SECOND_IN_MILLIS) {
 			@Override
 			public void onTick(long millisUntilFinished) {
-				if (mCountDownText != null) {
-					mCountDownText.setText(convertMillisToText(millisUntilFinished));
+				mCountDownTimeElapsed += DateUtils.SECOND_IN_MILLIS;
+				// show how much left
+				mCountDownText.setText(convertMillisToText(millisUntilFinished));
+				// every repeat interval check new devices
+				if (mCountDownTimeElapsed % PAIR_REQUEST_REPEAT_INTERVAL == 0) {
+					doPairRequestTask(false, null);
 				}
 			}
 
 			@Override
 			public void onFinish() {
 				mCountDownText.setText(convertMillisToText(0));
+				showFinishedSnackbar(deviceIpAddress);
 			}
 		}.start();
-
-		mHandler = new Handler();
-
-		doPairRequestTask(mCountDownTimeElapsed == 0, deviceIpAddress);
-
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				mCountDownTimeElapsed += PAIR_REQUEST_REPEAT_INTERVAL;
-
-				doPairRequestTask(false, null);
-
-				if (mCountDownTimeElapsed == COUNTDOWN_INTERVAL) {
-					showFinishedSnackbar(deviceIpAddress);
-					return;
-				}
-
-				mHandler.postDelayed(this, PAIR_REQUEST_REPEAT_INTERVAL);
-			}
-		}, PAIR_REQUEST_REPEAT_INTERVAL);
 
 		// show search snackbar
 		Snackbar.make(mRootView, R.string.device_search_snack_bar_title_searching, Snackbar.LENGTH_INDEFINITE).show();
@@ -276,10 +276,10 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 					updateAdapter(devices);
 				} else {
 					if (pairDeviceTask.getException() != null) {
-						mActivity.callbackTaskManager.cancelAndRemoveAll();
-						if (mHandler != null) {
-							mHandler.removeCallbacksAndMessages(null);
+						if (mCountDownTimer != null) {
+							mCountDownTimer.cancel();
 						}
+						mActivity.callbackTaskManager.cancelAndRemoveAll();
 						mActivity.finish();
 					}
 				}
@@ -405,9 +405,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		if (editText == null || !Validator.validate(textInputLayout, Validator.IP_ADDRESS))
 			return;
 
-		if (mHandler != null) {
-			mHandler.removeCallbacksAndMessages(null);
-		}
 		mAdapter.clearData();
 		mCountDownTimeElapsed = 0;
 		startPairing(editText.getText().toString());
