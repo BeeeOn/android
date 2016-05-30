@@ -9,6 +9,6 @@
 	<FrameLayout
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:id="@+id/device_edit_frament_holder"/>
+		android:id="@+id/device_edit_fragment_holder"/>
 
 </LinearLayout>

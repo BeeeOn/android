@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.Menu;
@@ -49,26 +48,17 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 		}
 
 		if (savedInstanceState == null) {
-			GateEditFragment gateEditFragment = GateEditFragment.newInstance(mGateId);
-			getSupportFragmentManager().beginTransaction().replace(R.id.gate_edit_container, gateEditFragment, FRAGMENT_EDIT).commit();
+			mFragment = GateEditFragment.newInstance(mGateId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.gate_edit_container, mFragment, FRAGMENT_EDIT).commit();
+		} else {
+			mFragment = (GateEditFragment) getSupportFragmentManager().findFragmentById(R.id.gate_edit_container);
 		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		doReloadGateInfo(mGateId, false);
-	}
-
-	@Override
-	public void onAttachFragment(Fragment fragment) {
-		super.onAttachFragment(fragment);
-		try {
-			mFragment = (GateEditFragment) fragment;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must be GateEditFragment", fragment.toString()));
-		}
 	}
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {

@@ -85,8 +85,10 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		}
 
 		if (savedInstanceState == null) {
-			GateDetailFragment gateDetailFragment = GateDetailFragment.newInstance(mGateId);
-			getSupportFragmentManager().beginTransaction().replace(R.id.gate_detail_container, gateDetailFragment, FRAGMENT_DETAILS).commit();
+			mFragment = GateDetailFragment.newInstance(mGateId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.gate_detail_container, mFragment, FRAGMENT_DETAILS).commit();
+		} else {
+			mFragment = (GateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.gate_detail_container);
 		}
 		setAutoReloadDataTimer();
 	}
@@ -102,18 +104,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		doReloadGateInfo(mGateId, false);
-	}
-
-	@Override
-	public void onAttachFragment(Fragment fragment) {
-		super.onAttachFragment(fragment);
-		try {
-			mFragment = (GateDetailFragment) fragment;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must be GateDetailFragment", fragment.toString()));
-		}
 	}
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
