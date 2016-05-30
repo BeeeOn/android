@@ -49,12 +49,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_users);
-
-		setupToolbar(R.string.gate_users_title_gate_users);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		setupToolbar(R.string.gate_users_title_gate_users, INDICATOR_BACK);
 
 		// Get selected gate
 		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(EXTRA_GATE_ID));
@@ -94,23 +89,13 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		});
 	}
 
-
 	@Override
-	protected void onAppResume() {
-		if (mGate != null)
+	public void onResume() {
+		super.onResume();
+		if (mGate != null) {
 			doReloadGateUsersTask(mGate.getId(), true);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
 		}
-		return super.onOptionsItemSelected(item);
 	}
-
 
 	private void setUserSelected() {
 		getViewByPosition(mSelectedItemPos, ((ListView) findViewById(R.id.gate_users_list))).findViewById(R.id.list_user_item_layout).setBackgroundColor(ContextCompat.getColor(this, R.color.gray_light));
@@ -148,7 +133,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(reloadUsersTask, gateId);
 	}
-
 
 
 	private void doRemoveUserTask(User user) {
@@ -287,6 +271,6 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 			doEditUserTask(user);
 		} else if (confirmType == ConfirmDialog.TYPE_DELETE_USER) {
 			doRemoveUserTask(user);
-	}
+		}
 	}
 }

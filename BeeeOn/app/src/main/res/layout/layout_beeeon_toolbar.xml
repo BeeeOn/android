@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.Toolbar
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:id="@+id/beeeon_toolbar"
-	android:minHeight="?attr/actionBarSize"
-	android:background="?attr/colorPrimary"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
-	android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-	app:popupTheme="@style/Theme.AppCompat.Light"
-	app:titleMarginStart="16dp">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/beeeon_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    android:minHeight="?attr/actionBarSize"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/Theme.AppCompat.Light"
+    app:titleMarginStart="16dp"
+    app:titleTextAppearance="@style/TextAppearance.AppCompat.Title"
+    >
 
-	<!-- frame layout so that progress/refresh icon can overlay -->
-	<!-- TODO could be managed by <ViewSwitcher> -->
-	<FrameLayout
-		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:layout_gravity="end"
-		>
+    <!-- frame layout so that progress/refresh icon can overlay -->
+    <!-- TODO could be managed by <ViewSwitcher> -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        >
 
-		<!-- refresh icon -->
-		<ImageView
-			android:id="@+id/beeeon_toolbar_refresh"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/ic_action_refresh"
-			android:padding="0dp"
-			style="@style/Widget.AppCompat.ActionButton"
-			android:visibility="invisible"
-			/>
+        <!-- refresh icon -->
+        <ImageView
+            android:id="@+id/beeeon_toolbar_refresh"
+            style="@style/Widget.AppCompat.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:src="@drawable/ic_action_refresh"
+            android:visibility="invisible"
+            />
 
-		<!-- refreshing progress bar -->
-		<ProgressBar
-			android:id="@+id/beeeon_toolbar_progress"
-			android:layout_width="30dp"
-			android:layout_height="30dp"
-			android:indeterminate="true"
-			android:layout_gravity="center"
-			android:visibility="invisible"
-			/>
+        <!-- refreshing progress bar -->
+        <ProgressBar
+            android:id="@+id/beeeon_toolbar_progress"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="invisible"
+            />
 
-	</FrameLayout>
+    </FrameLayout>
 
 </android.support.v7.widget.Toolbar>

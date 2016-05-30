@@ -18,16 +18,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.ColorInt;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
-import android.util.Patterns;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -94,7 +90,7 @@ final public class Utils {
 
 	/**
 	 * Downloads image from URL address
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -130,7 +126,7 @@ final public class Utils {
 
 	/**
 	 * Reads the response from the input stream and returns it as a string.
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -158,7 +154,7 @@ final public class Utils {
 	/**
 	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
 	 * as a map of (key, value) pairs. Encoding is solved internally.
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -485,81 +481,6 @@ final public class Utils {
 		return Color.argb(alpha, red, green, blue);
 	}
 
-	/**
-	 * Enum for validation types
-	 */
-	@IntDef({INTEGER, DOUBLE, EMAIL, IP_ADDRESS})
-	public @interface ValidationType {}
-	public static final int INTEGER = 0;
-	public static final int DOUBLE = 1;
-	public static final int EMAIL = 2;
-	public static final int IP_ADDRESS = 3;
-
-	/**
-	 * Helper function for validating TextInputLayout (EditText) input
-	 *
-	 * @param context of application (so that strings can be accessed)
-	 * @param textInputLayout input layout for validation
-	 * @param additional any additional information which can be checked
-	 * @return success if input was validated correctly
-	 */
-	public static boolean validateInput(Context context, TextInputLayout textInputLayout, @ValidationType int... additional) {
-		EditText editText = textInputLayout.getEditText();
-		if (editText == null) return false;
-
-		String inputText = editText.getText().toString().trim();
-		if (inputText.length() == 0) {
-			textInputLayout.requestFocus();
-			textInputLayout.setError(context.getString(R.string.activity_utils_toast_field_must_be_filled));
-			return false;
-		}
-
-		for (@ValidationType int type : additional) {
-			switch (type) {
-				case INTEGER:
-					try {
-						//noinspection ResultOfMethodCallIgnored
-						Integer.parseInt(inputText);
-					} catch (NumberFormatException e) {
-						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
-						return false;
-					}
-					break;
-
-				case DOUBLE:
-					try {
-						//noinspection ResultOfMethodCallIgnored
-						Double.parseDouble(inputText);
-					} catch (NumberFormatException e) {
-						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_number));
-						return false;
-					}
-					break;
-
-				case EMAIL:
-					if (!android.util.Patterns.EMAIL_ADDRESS.matcher(inputText).matches()) {
-						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_email));
-						return false;
-					}
-					break;
-
-				case IP_ADDRESS:
-					if(!Patterns.IP_ADDRESS.matcher(inputText).matches()){
-						textInputLayout.requestFocus();
-						textInputLayout.setError(context.getString(R.string.utils_toast_field_must_be_ip_address));
-						return false;
-					}
-					break;
-			}
-		}
-
-		return true;
-
-	}
-
 	@ColorInt
 	public static int getGraphColor(Context context, int index) {
 		if (index < sGraphColors.length) {
@@ -597,15 +518,20 @@ final public class Utils {
 
 	/**
 	 * Safely gets units helper
-	 * @param prefs shared preferences of logged user
+	 *
+	 * @param prefs   shared preferences of logged user
 	 * @param context existing! context of app
 	 * @return helper or null
 	 */
-	public static @Nullable UnitsHelper getUnitsHelper(@Nullable SharedPreferences prefs, Context context){
+	public static
+	@Nullable
+	UnitsHelper getUnitsHelper(@Nullable SharedPreferences prefs, Context context) {
 		return (prefs == null) ? null : new UnitsHelper(prefs, context);
 	}
 
-	public static @Nullable UnitsHelper getUnitsHelper(Context context){
+	public static
+	@Nullable
+	UnitsHelper getUnitsHelper(Context context) {
 		Controller controller = Controller.getInstance(context);
 		SharedPreferences prefs = controller.getUserSettings();
 		return getUnitsHelper(prefs, context);
@@ -613,15 +539,19 @@ final public class Utils {
 
 	/**
 	 * Safely gets time helper
+	 *
 	 * @param prefs shared preferences of logged user
 	 * @return helper or null
 	 */
-	public static @Nullable TimeHelper getTimeHelper(@Nullable SharedPreferences prefs){
+	public static
+	@Nullable
+	TimeHelper getTimeHelper(@Nullable SharedPreferences prefs) {
 		return (prefs == null) ? null : new TimeHelper(prefs);
 	}
 
 	/**
 	 * Create absolute module id string
+	 *
 	 * @param deviceId
 	 * @param moduleId
 	 * @return
@@ -632,6 +562,7 @@ final public class Utils {
 
 	/**
 	 * Parse absolute module id to device and module id
+	 *
 	 * @param absoluteModuleId
 	 * @return array with device and module ids
 	 */
@@ -641,8 +572,9 @@ final public class Utils {
 
 	/**
 	 * Change drawable color
+	 *
 	 * @param drawable drawable to be changed
-	 * @param color color
+	 * @param color    color
 	 * @return tinted drawable
 	 */
 	public static Drawable setDrawableTint(Drawable drawable, @ColorInt int color) {

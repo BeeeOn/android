@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 project.ext.set("versionName", "1.6.5")
-project.ext.set("supportLibVersion", "23.3.0")
+project.ext.set("supportLibVersion", "23.4.0")
 project.ext.set("playServicesVersion", "8.4.0")
 
 android {
@@ -70,6 +70,7 @@ android {
 repositories {
 	flatDir { dirs 'libs' }
 	maven { url "https://jitpack.io" } // MP Android Chart
+	maven {url "https://clojars.org/repo/"}
 	mavenCentral()
 }
 
@@ -100,4 +101,6 @@ dependencies {
 	compile 'com.google.code.gson:gson:2.6.1'
 	compile 'me.dm7.barcodescanner:zxing:1.8.4'
 	compile 'com.flipboard:bottomsheet-core:1.5.0'
+	compile 'frankiesardo:icepick:3.2.0'
+	provided 'frankiesardo:icepick-processor:3.2.0'
 }

@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.view.Menu;
@@ -39,13 +38,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_edit);
-
-		setupToolbar(R.string.empty);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-			mActionBar.setHomeAsUpIndicator(R.drawable.ic_action_cancel);
-		}
+		setupToolbar(R.string.empty, INDICATOR_DISCARD);
 
 		mGateId = getIntent().getStringExtra(EXTRA_GATE_ID);
 		if (mGateId == null) {
@@ -55,26 +48,17 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 		}
 
 		if (savedInstanceState == null) {
-			GateEditFragment gateEditFragment = GateEditFragment.newInstance(mGateId);
-			getSupportFragmentManager().beginTransaction().replace(R.id.gate_edit_container, gateEditFragment, FRAGMENT_EDIT).commit();
+			mFragment = GateEditFragment.newInstance(mGateId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.gate_edit_container, mFragment, FRAGMENT_EDIT).commit();
+		} else {
+			mFragment = (GateEditFragment) getSupportFragmentManager().findFragmentById(R.id.gate_edit_container);
 		}
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		doReloadGateInfo(mGateId, false);
-	}
-
-	@Override
-	public void onFragmentAttached(Fragment fragment) {
-		super.onFragmentAttached(fragment);
-		try {
-			mFragment = (GateEditFragment) fragment;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must be GateEditFragment", fragment.toString()));
-		}
 	}
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
@@ -107,10 +91,6 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home: {
-				finish();
-				break;
-			}
 			case R.id.gate_edit_action_delete: {
 				String title = getString(R.string.activity_menu_dialog_title_remove_gate_default);
 				String message = getString(R.string.activity_menu_dialog_message_remove_gate);
@@ -121,14 +101,14 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				}
 
 				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
-				break;
+				return true;
 			}
 			case R.id.gate_edit_action_save: {
 				if (mFragment != null) {
 					Pair<Gate, GpsData> pair = mFragment.getNewGate();
 					doEditGateTask(pair);
 				}
-				break;
+				return true;
 			}
 		}
 		return super.onOptionsItemSelected(item);

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	  xmlns:app="http://schemas.android.com/apk/res-auto"
-	  xmlns:tools="http://schemas.android.com/tools"
-	  tools:context="com.rehivetech.beeeon.gui.activity.GateEditActivity">
-	<item
-		android:id="@+id/device_edit_action_delete"
-		android:title="@string/gate_menu_layout_menu_del"
-		android:icon="@drawable/ic_delete_white_24dp"
-		app:showAsAction="ifRoom|collapseActionView"/>
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.rehivetech.beeeon.gui.activity.GateEditActivity">
+    <item
+        android:id="@+id/device_edit_action_delete"
+        android:icon="@drawable/ic_delete_white_24dp"
+        android:title="@string/activity_fragment_menu_btn_remove"
+        app:showAsAction="ifRoom|collapseActionView"/>
 
-	<item
-		android:id="@+id/device_edit_action_save"
-		android:title="@string/activity_gate_user_setup_device_btn_save"
-		android:icon="@drawable/ic_action_accept"
-		android:orderInCategory="100"
-		app:showAsAction="always|collapseActionView"/>
+    <item
+        android:id="@+id/device_edit_action_save"
+        android:icon="@drawable/ic_done_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/activity_gate_user_setup_device_btn_save"
+        app:showAsAction="always|collapseActionView"/>
 </menu>

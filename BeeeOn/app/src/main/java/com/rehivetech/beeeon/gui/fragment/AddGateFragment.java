@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
 import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.Validator;
 
 import org.joda.time.DateTimeZone;
 
@@ -109,7 +110,7 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, BaseDialogFragment fragment) {
 		TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
-		if (!Utils.validateInput(mActivity, textInputLayout)) {
+		if (!Validator.validate(textInputLayout)) {
 			return;
 		}
 

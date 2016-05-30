@@ -8,13 +8,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 
+import icepick.State;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class ScanQRActivity extends BaseApplicationActivity implements ZXingScannerView.ResultHandler {
@@ -22,9 +22,7 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 	public static final String EXTRA_CAMERA_PERMISSION_DENIED = "CAMERA_PERMISSION_DENIED";
 	public static final String EXTRA_SCAN_FORMAT = "SCAN_FORMAT";
 
-	private static final String STATE_IS_PERMISSION_DIALOG_SHOWN = "STATE_IS_PERMISSION_DIALOG_SHOWN";
-
-	private boolean mIsRequestDialogShown = false;
+	@State public boolean mIsRequestDialogShown = false;
 	private ZXingScannerView mScannerView;
 	private String mScannerFormat;
 
@@ -40,23 +38,6 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 		if (mScannerFormat == null) {
 			mScannerFormat = "QR_CODE";
 		}
-	}
-
-	/**
-	 * Is called only when any instance was saved (likewise in onCreate())
-	 *
-	 * @param savedInstanceState
-	 */
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		mIsRequestDialogShown = savedInstanceState.getBoolean(STATE_IS_PERMISSION_DIALOG_SHOWN);
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putBoolean(STATE_IS_PERMISSION_DIALOG_SHOWN, mIsRequestDialogShown);
 	}
 
 	@Override
@@ -113,16 +94,6 @@ public class ScanQRActivity extends BaseApplicationActivity implements ZXingScan
 	public void onPause() {
 		super.onPause();
 		mScannerView.stopCamera();
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				finish();
-				break;
-		}
-		return false;
 	}
 
 	@Override

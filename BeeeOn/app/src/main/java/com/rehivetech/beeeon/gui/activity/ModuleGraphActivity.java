@@ -166,17 +166,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				callbackTaskManager.cancelAndRemoveAll();
-				finish();
-				break;
-		}
-		return false;
-	}
-
-	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
 		callbackTaskManager.cancelAndRemoveAll();

@@ -1,10 +1,10 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -12,6 +12,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,9 +40,16 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.PairDeviceTask;
 import com.rehivetech.beeeon.threading.task.SendParameterTask;
 import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.Validator;
+
+import org.joda.time.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import icepick.State;
 
 /**
  * @author Martin Matejcik
@@ -54,30 +62,25 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	private static final int PAIR_REQUEST_REPEAT_INTERVAL = (int) (DateUtils.SECOND_IN_MILLIS * 3);
 	public static final String KEY_GATE_ID = "gate_id";
 
-	private static final String STATE_COUNTDOWN_TIME_ELAPSED = "countdown_time_elapsed";
-	private static final String STATE_SELECTED_ITEM_ID = "selected_item_id";
-
 	private static final int DIALOG_CODE_MANUAL = 1;
 	private static final int DIALOG_CODE_PASSWORD = 2;
+	private static final int REQUEST_SETUP_DEVICE = 50;
 
 	private String mGateId;
 
-	private CoordinatorLayout mRootView;
-	private TextView mCountDownText;
-	private RecyclerView mRecyclerView;
-	private TextView mSearchingText;
+	CoordinatorLayout mRootView;
+	@Bind(R.id.search_countdown_text) TextView mCountDownText;
+	@Bind(R.id.search_device_recycler_view) RecyclerView mRecyclerView;
+	@Bind(R.id.search_device_searching_text) TextView mSearchingText;
 
 	private DeviceRecycleAdapter mAdapter;
-	@Nullable
-	private Handler mHandler;
-	@Nullable
-	private CountDownTimer mCountDownTimer;
-	private long mCountDownTimeElapsed;
-	@Nullable
-	private String mSelectedItemId;
+	@Nullable private CountDownTimer mCountDownTimer;
+	@State long mCountDownTimeElapsed;
+	@State @Nullable String mSelectedItemId;
+	@State long mLastKnownTime;
+	@State String mDeviceIpAddress;
 
 	public static SearchDeviceFragment newInstance(String gateId) {
-
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
 		SearchDeviceFragment fragment = new SearchDeviceFragment();
@@ -90,7 +93,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		super.onCreate(savedInstanceState);
 
 		Bundle args = getArguments();
-
 		if (args != null) {
 			mGateId = args.getString(KEY_GATE_ID);
 		}
@@ -101,12 +103,8 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mRootView = (CoordinatorLayout) inflater.inflate(R.layout.fragment_search_devices, container, false);
-
-		mCountDownText = (TextView) mRootView.findViewById(R.id.search_countdown_text);
-		mSearchingText = (TextView) mRootView.findViewById(R.id.search_device_searching_text);
-		mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.search_device_recycler_view);
+		ButterKnife.bind(this, mRootView);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-
 		mAdapter = new DeviceRecycleAdapter(mActivity, this, true);
 		mRecyclerView.setAdapter(mAdapter);
 		return mRootView;
@@ -116,8 +114,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (savedInstanceState != null) {
-			mCountDownTimeElapsed = savedInstanceState.getLong(STATE_COUNTDOWN_TIME_ELAPSED);
-			mSelectedItemId = savedInstanceState.getString(STATE_SELECTED_ITEM_ID);
 			List<Device> devices = Controller.getInstance(mActivity).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 			updateAdapter(devices);
 		}
@@ -128,149 +124,158 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		inflater.inflate(R.menu.fragment_device_search, menu);
 	}
 
+	/**
+	 * Manual search clicking handler
+	 *
+	 * @param item clicked
+	 * @return if consumed
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.device_search_manual_button:
 				dialogManualSearchShow();
 				return true;
-			case android.R.id.home: {
-				if (mHandler != null) {
-					mHandler.removeCallbacksAndMessages(null);
-				}
-				break;
-			}
 		}
 
-		return false;
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.SEARCH_DEVICE_SCREEN);
+	}
 
-		if (mCountDownTimeElapsed != COUNTDOWN_INTERVAL) {
-			startAutomaticPairing();
+	/**
+	 * Shows finished snackbar with retry button
+	 */
+	public void showFinishedSnackbar() {
+		Snackbar.make(mRootView, R.string.device_search_snack_bar_title_search_end, Snackbar.LENGTH_INDEFINITE)
+				.setAction(R.string.device_search_snack_bar_retry, new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						mAdapter.clearData();
+						mCountDownTimeElapsed = 0;
+						startPairing();
+					}
+				})
+				.show();
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+
+		// calculation of difference between last known time before close and actual
+		if (mLastKnownTime > 0) {
+			long timeLeft = (DateTimeUtils.currentTimeMillis() - mLastKnownTime);
+			if (timeLeft > COUNTDOWN_INTERVAL) {
+				mCountDownTimeElapsed = COUNTDOWN_INTERVAL;
+			} else if (timeLeft > 0) {
+				mCountDownTimeElapsed += timeLeft;
+			}
+
+			mLastKnownTime = 0;
+		}
+
+		if (mCountDownTimeElapsed < COUNTDOWN_INTERVAL) {
+			startPairing();
 		} else {
+			doPairRequestTask(false); // last time tries to get unitialized devices
 			mCountDownText.setText(convertMillisToText(0));
-			Snackbar.make(mRootView, R.string.device_search_snack_bar_title_search_end, Snackbar.LENGTH_INDEFINITE)
-					.setAction(R.string.device_search_snack_bar_retry, new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							mAdapter.clearData();
-							mCountDownTimeElapsed = 0;
-							startAutomaticPairing();
-						}
-					})
-					.show();
+			showFinishedSnackbar();
 		}
 	}
 
 	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
+	public void onStop() {
+		super.onStop();
+		mLastKnownTime = DateTimeUtils.currentTimeMillis();
 
-		outState.putString(STATE_SELECTED_ITEM_ID, mSelectedItemId);
-		outState.putLong(STATE_COUNTDOWN_TIME_ELAPSED, mCountDownTimeElapsed);
-		mActivity.callbackTaskManager.cancelAndRemoveAll();
-		if (mHandler != null) {
-			mHandler.removeCallbacksAndMessages(null);
+		if (mCountDownTimer != null) {
+			mCountDownTimer.cancel();
 		}
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (resultCode == Activity.RESULT_OK) {
+		if (requestCode == REQUEST_SETUP_DEVICE && resultCode == Activity.RESULT_OK) {
 			mActivity.setResult(Activity.RESULT_OK);
 			mActivity.finish();
 		}
 	}
 
-	private void startAutomaticPairing() {
-		startPairing(null);
-	}
-
-	private void startPairing(@Nullable final String deviceIpAddress) {
+	/**
+	 * Starts pairing with updating time
+	 */
+	private void startPairing() {
 		if (mCountDownTimer != null) {
 			mCountDownTimer.cancel();
 		}
 
-		if (mHandler != null) {
-			mHandler.removeCallbacksAndMessages(null);
-		}
+		// sends request to the server
+		doPairRequestTask(mCountDownTimeElapsed == 0);
 
 		mCountDownTimer = new CountDownTimer(COUNTDOWN_INTERVAL - mCountDownTimeElapsed, DateUtils.SECOND_IN_MILLIS) {
 			@Override
 			public void onTick(long millisUntilFinished) {
+				mCountDownTimeElapsed += DateUtils.SECOND_IN_MILLIS;
+				// show how much left
 				mCountDownText.setText(convertMillisToText(millisUntilFinished));
+				// every repeat interval check new devices
+				if (mCountDownTimeElapsed % PAIR_REQUEST_REPEAT_INTERVAL == 0) {
+					doPairRequestTask(false);
+				}
 			}
 
 			@Override
 			public void onFinish() {
 				mCountDownText.setText(convertMillisToText(0));
+				showFinishedSnackbar();
 			}
 		}.start();
 
-		mHandler = new Handler();
-
-		doPairRequestTask(mCountDownTimeElapsed == 0, deviceIpAddress);
-
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				mCountDownTimeElapsed += PAIR_REQUEST_REPEAT_INTERVAL;
-
-				doPairRequestTask(false, null);
-
-				if (mCountDownTimeElapsed == COUNTDOWN_INTERVAL) {
-					Snackbar.make(mRootView, R.string.device_search_snack_bar_title_search_end, Snackbar.LENGTH_INDEFINITE)
-							.setAction(R.string.device_search_snack_bar_retry, new View.OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									mAdapter.clearData();
-									mCountDownTimeElapsed = 0;
-									startPairing(deviceIpAddress);
-								}
-							})
-							.show();
-					return;
-				}
-
-				mHandler.postDelayed(this, PAIR_REQUEST_REPEAT_INTERVAL);
-			}
-		}, PAIR_REQUEST_REPEAT_INTERVAL);
-
-		Snackbar.make(mRootView, R.string.device_search_snack_bar_title_searching, Snackbar.LENGTH_INDEFINITE)
-				.show();
+		// show search snackbar
+		Snackbar.make(mRootView, R.string.device_search_snack_bar_title_searching, Snackbar.LENGTH_INDEFINITE).show();
 	}
 
+	/**
+	 * Converts milliseconds to minutes:seconds string
+	 *
+	 * @param millisUntilFinished milliseconds to convert
+	 * @return formatted string
+	 */
+	@SuppressLint("DefaultLocale")
 	private static String convertMillisToText(long millisUntilFinished) {
 		int minutes = (int) (millisUntilFinished / DateUtils.MINUTE_IN_MILLIS);
 		millisUntilFinished -= minutes * DateUtils.MINUTE_IN_MILLIS;
 		int seconds = (int) (millisUntilFinished / DateUtils.SECOND_IN_MILLIS);
 
-		return String.format("%2d:%02d", minutes, seconds);
+		return String.format("%02d:%02d", minutes, seconds);
 	}
 
-	private void doPairRequestTask(boolean sendPairRequest, String deviceIpAddress) {
-		// function creates and starts Task that handles pairing between the gate and the account
-		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId, sendPairRequest, deviceIpAddress);
+	/**
+	 * Creates pair request that handles pairing between the gate and the account
+	 *
+	 * @param sendPairRequest should be true only for the first time to send it to server, otherwise only collect data
+	 */
+	private void doPairRequestTask(boolean sendPairRequest) {
+		final PairDeviceTask pairDeviceTask = new PairDeviceTask(mActivity, mGateId, sendPairRequest, mDeviceIpAddress);
 		pairDeviceTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
 
 				if (success) {
-					List<Device> devices = Controller.getInstance(getActivity()).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
+					List<Device> devices = Controller.getInstance(mActivity).getUninitializedDevicesModel().getUninitializedDevicesByGate(mGateId);
 					updateAdapter(devices);
 				} else {
 					if (pairDeviceTask.getException() != null) {
-						mActivity.callbackTaskManager.cancelAndRemoveAll();
-						if (mHandler != null) {
-							mHandler.removeCallbacksAndMessages(null);
+						if (mCountDownTimer != null) {
+							mCountDownTimer.cancel();
 						}
+						mActivity.callbackTaskManager.cancelAndRemoveAll();
 						mActivity.finish();
 					}
 				}
@@ -280,8 +285,13 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		mActivity.callbackTaskManager.executeTask(pairDeviceTask, mGateId, CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
 	}
 
+	/**
+	 * Refreshes adapter with new data
+	 *
+	 * @param adapterData list od devices
+	 */
 	private void updateAdapter(List<Device> adapterData) {
-
+		// updates manufacturers
 		List<Integer> manufacturers = new ArrayList<>();
 		for (Device device : adapterData) {
 			if (!manufacturers.contains(device.getType().getManufacturerRes())) {
@@ -291,7 +301,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 		ArrayList<Object> adapterList = new ArrayList<>();
 		for (int manufacturer : manufacturers) {
-			adapterList.add(mActivity.getString(manufacturer));
+			adapterList.add(getString(manufacturer));
 			for (Device device : adapterData) {
 				if (manufacturer == device.getType().getManufacturerRes()) {
 					adapterList.add(device);
@@ -315,18 +325,21 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	 */
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
-		if (viewType == DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
-			Device device = (Device) mAdapter.getItem(position);
-			mSelectedItemId = device.getId();
+		if (viewType != DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
+			Log.e(TAG, "Clicked on other type then unpaired device!");
+			return;
+		}
 
-			// TODO should be in DeviceType as parameter "password_protected"
+		Device device = (Device) mAdapter.getItem(position);
+		mSelectedItemId = device.getId();
+
+		// TODO should be in DeviceType as parameter "password_protected"
 //			if (device.getType().equals(DeviceType.TYPE_6) || device.getType().equals(DeviceType.TYPE_1)) {
 //				dialogEnterPasswordShow();
 //			} else {
 //				startDeviceSetupActivity(device);
 //			}
-			startDeviceSetupActivity(device);
-		}
+		startDeviceSetupActivity(device);
 	}
 
 	@Override
@@ -342,7 +355,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	private void startDeviceSetupActivity(Device device) {
 		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SETUP, device.getId());
 		mSelectedItemId = null;
-		startActivityForResult(intent, 50);
+		startActivityForResult(intent, REQUEST_SETUP_DEVICE);
 	}
 
 	/**
@@ -385,14 +398,13 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 		EditText editText = textInputLayout.getEditText();
 
 		// validate input if is in specified format
-		if (editText == null || !Utils.validateInput(mActivity, textInputLayout, Utils.IP_ADDRESS)) return;
+		if (editText == null || !Validator.validate(textInputLayout, Validator.IP_ADDRESS))
+			return;
 
-		if (mHandler != null) {
-			mHandler.removeCallbacksAndMessages(null);
-		}
 		mAdapter.clearData();
 		mCountDownTimeElapsed = 0;
-		startPairing(editText.getText().toString());
+		mDeviceIpAddress = editText.getText().toString();
+		startPairing();
 		dialog.dismiss();
 	}
 
@@ -466,5 +478,11 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, EnterPasswordDialog dialog) {
 		dialogEnterPasswordSubmitted(view, dialog);
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
 	}
 }

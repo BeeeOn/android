@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -26,7 +27,7 @@ public class WebViewActivity extends BaseApplicationActivity {
 	@Bind(R.id.webview_progressbar) ProgressBar mWebviewProgressbar;
 	@Bind(R.id.webview_container) WebView mWebView;
 
-
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,7 +37,7 @@ public class WebViewActivity extends BaseApplicationActivity {
 
 		String urlAddress = getIntent().getStringExtra(EXTRA_URL_ADDRESS);
 		if (urlAddress == null) {
-			Toast.makeText(this, "No URL address specified!", Toast.LENGTH_LONG).show();
+			Toast.makeText(this, R.string.error_no_url, Toast.LENGTH_LONG).show();
 			finish();
 		}
 
@@ -50,13 +51,5 @@ public class WebViewActivity extends BaseApplicationActivity {
 			}
 		});
 		mWebView.loadUrl(urlAddress);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == android.R.id.home) {
-			finish();
-		}
-		return super.onOptionsItemSelected(item);
 	}
 }

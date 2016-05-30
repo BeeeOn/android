@@ -32,6 +32,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	/**
 	 * Indicates if the item at position position is selected
+	 *
 	 * @param position Position of the item to check
 	 * @return true if the item is selected, false otherwise
 	 */
@@ -41,6 +42,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	/**
 	 * Toggle the selection status of the item at a given position
+	 *
 	 * @param position Position of the item to toggle the selection status for
 	 */
 	public void toggleSelection(int position) {
@@ -65,6 +67,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	/**
 	 * Swap selected item position while dragging item
+	 *
 	 * @param fromPosition
 	 * @param toPosition
 	 */
@@ -77,15 +80,17 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	/**
 	 * Selects only one item at a time
+	 *
 	 * @param position
 	 */
-	public void selectOne(int position){
+	public void selectOne(int position) {
 		clearSelection();
 		toggleSelection(position);
 	}
 
 	/**
 	 * Count the selected items
+	 *
 	 * @return Selected items count
 	 */
 	public int getSelectedItemCount() {
@@ -94,6 +99,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	/**
 	 * Indicates the list of selected items
+	 *
 	 * @return List of selected items ids
 	 */
 	public List<Integer> getSelectedItems() {
@@ -106,11 +112,12 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	/**
 	 * Sets selected items sparseArray based on list of selected positions
+	 *
 	 * @param selectedPositions
 	 */
-	public void setSelectedItems(List<Integer> selectedPositions){
+	public void setSelectedItems(List<Integer> selectedPositions) {
 		mSelectedItems.clear();
-		for(Integer pos : selectedPositions){
+		for (Integer pos : selectedPositions) {
 			mSelectedItems.put(pos, true);
 			notifyItemChanged(pos);
 		}
@@ -118,13 +125,14 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	/**
 	 * Returns first selected item
+	 *
 	 * @return
 	 */
-	public int getFirstSelectedItem(){
+	public int getFirstSelectedItem() {
 		return mSelectedItems.keyAt(0);
 	}
 
-	public abstract class SelectableViewHolder extends RecyclerView.ViewHolder{
+	public abstract class SelectableViewHolder extends RecyclerView.ViewHolder {
 
 		public SelectableViewHolder(View itemView) {
 			super(itemView);
@@ -132,6 +140,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 		/**
 		 * Returns background of item (if selected different, otherwise clickable)
+		 *
 		 * @param isSelected
 		 */
 		protected void setSelectedBackground(boolean isSelected) {
@@ -146,12 +155,11 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 		 * @param isSelected
 		 * @param defaultSrc
 		 */
-		protected void setSelectedIcon(ImageView icon, boolean isSelected, int defaultSrc){
-			if(isSelected){
-				icon.setImageResource(R.drawable.ic_action_accept);
+		protected void setSelectedIcon(ImageView icon, boolean isSelected, int defaultSrc) {
+			if (isSelected) {
+				icon.setImageResource(R.drawable.ic_done_white_24dp);
 				icon.setBackgroundResource(R.drawable.oval_selected);
-			}
-			else{
+			} else {
 				icon.setImageResource(defaultSrc);
 				icon.setBackgroundResource(R.drawable.oval_primary);
 			}
@@ -159,23 +167,25 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 		/**
 		 * Sets selected without icon
+		 *
 		 * @param isSelected
 		 */
-		public void setSelected(boolean isSelected){
+		public void setSelected(boolean isSelected) {
 			setSelected(isSelected, null, 0);
 		}
 
 		/**
 		 * Sets selected item with icon
+		 *
 		 * @param isSelected
 		 * @param icon
 		 * @param defaultSrc
 		 */
-		public void setSelected(boolean isSelected, @Nullable ImageView icon, int defaultSrc){
+		public void setSelected(boolean isSelected, @Nullable ImageView icon, int defaultSrc) {
 			// setups background resource based on "selected"
 			setSelectedBackground(isSelected);
 			// setups icon based on selection
-			if(icon != null && defaultSrc > 0) {
+			if (icon != null && defaultSrc > 0) {
 				setSelectedIcon(icon, isSelected, defaultSrc);
 			}
 		}
@@ -184,6 +194,7 @@ public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.View
 
 	public interface IItemClickListener {
 		void onRecyclerViewItemClick(int position, int viewType);
+
 		boolean onRecyclerViewItemLongClick(int position, int viewType);
 	}
 

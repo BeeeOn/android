@@ -91,15 +91,4 @@ public class AddDeviceActivity extends BaseApplicationActivity{
 		setupToolbar(mToolbarTitleRes > 0 ? getString(mToolbarTitleRes): "", INDICATOR_BACK);
 		setupRefreshIcon(null);
 	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home: {
-				finish();
-				break;
-			}
-		}
-		return super.onOptionsItemSelected(item);
-	}
 }

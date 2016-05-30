@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 
 import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
@@ -17,7 +19,7 @@ public class ConfirmDialog extends BaseDialogFragment {
 
 	public static int TYPE_DELETE_GATE = 10;
 	public static int TYPE_DELETE_USER = 11;
-	public static int TYPE_DELETE_DASHBOARD_VIEW  = 12;
+	public static int TYPE_DELETE_DASHBOARD_VIEW = 12;
 	public static int TYPE_DELETE_DEVICE = 13;
 	public static int TYPE_CHANGE_OWNERSHIP = 20;
 
@@ -57,6 +59,27 @@ public class ConfirmDialog extends BaseDialogFragment {
 		confirmDialog.show(fragment.getFragmentManager(), TAG);
 	}
 
+
+	/**
+	 * Changes colors of dialog's buttons.
+	 * Because builder does not have access to whole view, we have to change colors here
+	 *
+	 * @param savedInstanceState
+	 */
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+
+		Button negativeButton = (Button) getDialog().findViewById(R.id.sdl_button_negative);
+		if (negativeButton != null) {
+			negativeButton.setTextColor(ContextCompat.getColor(getActivity(), R.color.gray_material_400));
+		}
+		Button negativeButtonStacked = (Button) getDialog().findViewById(R.id.sdl_button_negative_stacked);
+		if (negativeButtonStacked != null) {
+			negativeButtonStacked.setTextColor(ContextCompat.getColor(getActivity(), R.color.gray_material_400));
+		}
+	}
+
 	@Override
 	public BaseDialogFragment.Builder build(final BaseDialogFragment.Builder builder) {
 		final Bundle args = getArguments();
@@ -67,7 +90,7 @@ public class ConfirmDialog extends BaseDialogFragment {
 			@Override
 			public void onClick(View v) {
 
-				for (ConfirmDialogListener listener : ConfirmDialog.this.getDialogListeners(ConfirmDialogListener.class)) {
+				for (ConfirmDialogListener listener : getDialogListeners(ConfirmDialogListener.class)) {
 					listener.onConfirm(args.getInt(EXTRA_CONFIRM_TYPE), args.getString(EXTRA_DATA_ID));
 				}
 

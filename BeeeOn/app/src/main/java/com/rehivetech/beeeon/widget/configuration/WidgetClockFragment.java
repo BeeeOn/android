@@ -1,11 +1,9 @@
 package com.rehivetech.beeeon.widget.configuration;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,6 +22,7 @@ import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.Validator;
 import com.rehivetech.beeeon.widget.data.WidgetClockData;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.service.WeatherProvider;
@@ -58,14 +57,14 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	}
 
 	@Override
-    protected int getFragmentLayoutResource() {
-        return R.layout.fragment_widget_clock;
-    }
+	protected int getFragmentLayoutResource() {
+		return R.layout.fragment_widget_clock;
+	}
 
 	@Override
-    protected int getFragmentTitle() {
-        return R.string.widget_clock_widget_configuration_clock;
-    }
+	protected int getFragmentTitle() {
+		return R.string.widget_clock_widget_configuration_clock;
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -89,13 +88,13 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		int marginBottomPx = Utils.convertDpToPixel(SPACE_BETWEEN_MODULE_SPINNERS);
 		spinnerLayoutParams.setMargins(0, 0, 0, marginBottomPx);
 
-        TextView moduleEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_device_emptyview);
+		TextView moduleEmptyView = (TextView) mActivity.findViewById(R.id.widget_config_device_emptyview);
 
 		for (WidgetModulePersistence ignored : mWidgetModules) {
 			Spinner moduleSpinner = new Spinner(mActivity);
-            if(moduleEmptyView != null){
-                moduleSpinner.setEmptyView(moduleEmptyView);
-            }
+			if (moduleEmptyView != null) {
+				moduleSpinner.setEmptyView(moduleEmptyView);
+			}
 
 			moduleSpinnersWrapper.addView(moduleSpinner, spinnerLayoutParams);
 			mModuleSpinners.add(moduleSpinner);
@@ -133,34 +132,35 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		});
 	}
 
-    @Override
-    protected void onBeforeGateChanged() {
-        super.onBeforeGateChanged();
-        int index = 0;
-        for (WidgetModulePersistence ignored : mWidgetModules) {
-            Spinner spinner = mModuleSpinners.get(index);
-            spinner.setAdapter(null);
-            index++;
-        }
-    }
+	@Override
+	protected void onBeforeGateChanged() {
+		super.onBeforeGateChanged();
+		int index = 0;
+		for (WidgetModulePersistence ignored : mWidgetModules) {
+			Spinner spinner = mModuleSpinners.get(index);
+			spinner.setAdapter(null);
+			index++;
+		}
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // setup weather location if provided
-        if (!mWidgetData.weather.cityName.isEmpty()) mCityLabel.setText(mWidgetData.weather.cityName);
+	@Override
+	public void onResume() {
+		super.onResume();
+		// setup weather location if provided
+		if (!mWidgetData.weather.cityName.isEmpty())
+			mCityLabel.setText(mWidgetData.weather.cityName);
 
-        // setup color scheme
-        if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
-            mColorSchemeGroup.check(R.id.scheme_white);
-        } else if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
-            mColorSchemeGroup.check(R.id.scheme_pink_cyan);
-        } else if (mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)) {
-            mColorSchemeGroup.check(R.id.scheme_black);
-        }
-    }
+		// setup color scheme
+		if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
+			mColorSchemeGroup.check(R.id.scheme_white);
+		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.white, R.color.white)) {
+			mColorSchemeGroup.check(R.id.scheme_pink_cyan);
+		} else if (mWidgetData.settings.isColorSchemeEqual(R.color.black, R.color.black)) {
+			mColorSchemeGroup.check(R.id.scheme_black);
+		}
+	}
 
-    private void showLocationPickerDialog() {
+	private void showLocationPickerDialog() {
 		EditTextDialog
 				.createBuilder(mActivity, mActivity.getSupportFragmentManager())
 				.setTitle(mActivity.getString(R.string.widget_clock_dialog_location_select))
@@ -176,7 +176,7 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, final BaseDialogFragment dialog) {
 		TextInputLayout cityTextInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_edit_text_input_layout);
-		if(!Utils.validateInput(mActivity, cityTextInputLayout)){
+		if (!Validator.validate(cityTextInputLayout)) {
 			return;
 		}
 
@@ -188,7 +188,8 @@ public class WidgetClockFragment extends WidgetConfigurationFragment implements 
 		final String cityInput = editText.getText().toString();
 
 		// show dialog of loading
-		if (mActivity.getDialog() != null) mActivity.getDialog(mActivity.getString(R.string.widget_clock_progress_checking_location)).show();
+		if (mActivity.getDialog() != null)
+			mActivity.getDialog(mActivity.getString(R.string.widget_clock_progress_checking_location)).show();
 
 		// load city data in background
 		new Thread() {

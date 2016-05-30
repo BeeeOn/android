@@ -22,8 +22,12 @@ import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
- * Created by david on 17.6.15.
+ * @author david
+ * @since 25.05.2016
  */
 public class GateEditFragment extends BaseApplicationFragment {
 	private static final String EXTRA_GATE_ID = "gate_id";
@@ -34,9 +38,9 @@ public class GateEditFragment extends BaseApplicationFragment {
 	private String mGateId;
 	private List<TimezoneWrapper> mTimezones = TimezoneWrapper.getTimezones();
 
-	private EditText mGateNameEditText;
-	private Spinner mTimezoneSpinner;
-	private TextView mGateIdTextView;
+	@Bind(R.id.gate_edit_text) EditText mGateNameEditText;
+	@Bind(R.id.gate_edit_spinner) Spinner mTimezoneSpinner;
+	@Bind(R.id.gate_edit_gate_id_text) TextView mGateIdTextView;
 
 	public static GateEditFragment newInstance(String gateId) {
 		GateEditFragment gateEditFragment = new GateEditFragment();
@@ -56,10 +60,7 @@ public class GateEditFragment extends BaseApplicationFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_gate_edit, container, false);
-
-		mGateNameEditText = ((EditText) view.findViewById(R.id.gate_edit_text));
-		mGateIdTextView = ((TextView) view.findViewById(R.id.gate_edit_gate_id_text));
-		mTimezoneSpinner = ((Spinner) view.findViewById(R.id.gate_edit_spinner));
+		ButterKnife.bind(this, view);
 
 		ArrayAdapter<TimezoneWrapper> adapter = new ArrayAdapter<>(mActivity, R.layout.fragment_gate_edit_update_gate_spinner, mTimezones);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -71,7 +72,6 @@ public class GateEditFragment extends BaseApplicationFragment {
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-
 		fillData(savedInstanceState);
 	}
 
@@ -132,4 +132,9 @@ public class GateEditFragment extends BaseApplicationFragment {
 		return Pair.create(gate, gpsData);
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ButterKnife.unbind(this);
+	}
 }

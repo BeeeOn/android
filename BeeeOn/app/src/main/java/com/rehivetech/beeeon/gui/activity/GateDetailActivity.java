@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +23,8 @@ import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
 
 /**
- * Created by david on 23.6.15.
+ * @author david
+ * @since 30.05.2016
  */
 public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener, ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = GateDetailActivity.class.getSimpleName();
@@ -85,8 +85,10 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		}
 
 		if (savedInstanceState == null) {
-			GateDetailFragment gateDetailFragment = GateDetailFragment.newInstance(mGateId);
-			getSupportFragmentManager().beginTransaction().replace(R.id.gate_detail_container, gateDetailFragment, FRAGMENT_DETAILS).commit();
+			mFragment = GateDetailFragment.newInstance(mGateId);
+			getSupportFragmentManager().beginTransaction().replace(R.id.gate_detail_container, mFragment, FRAGMENT_DETAILS).commit();
+		} else {
+			mFragment = (GateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.gate_detail_container);
 		}
 		setAutoReloadDataTimer();
 	}
@@ -102,18 +104,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		doReloadGateInfo(mGateId, false);
-	}
-
-	@Override
-	public void onFragmentAttached(Fragment fragment) {
-		super.onFragmentAttached(fragment);
-		try {
-			mFragment = (GateDetailFragment) fragment;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(String.format("%s must be GateDetailFragment", fragment.toString()));
-		}
 	}
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
@@ -124,28 +115,11 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case android.R.id.home: {
-				finish();
-				break;
-			}
-			case R.id.gate_detail_menu_delete: {
-				String title = getString(R.string.activity_menu_dialog_title_remove_gate_default);
-				String message = getString(R.string.activity_menu_dialog_message_remove_gate);
-
-				GateInfo gateInfo = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
-				if (gateInfo != null) {
-					title = getString(R.string.activity_fragment_menu_dialog_title_remove, gateInfo.getName());
-				}
-
-				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
-				break;
-			}
-			case R.id.gate_detail_menu_edit: {
+			case R.id.gate_detail_menu_edit:
 				Intent intent = new Intent(this, GateEditActivity.class);
 				intent.putExtra(GateEditActivity.EXTRA_GATE_ID, mGateId);
 				startActivity(intent);
-				break;
-			}
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}

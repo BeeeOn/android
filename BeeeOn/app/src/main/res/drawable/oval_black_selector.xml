@@ -4,7 +4,7 @@
 	<item android:state_checked="true">
 		<layer-list>
 			<item android:drawable="@drawable/oval_black_border"/>
-			<item android:drawable="@drawable/ic_action_accept" />
+			<item android:drawable="@drawable/ic_done_white_24dp" />
 		</layer-list>
 	</item>
 
