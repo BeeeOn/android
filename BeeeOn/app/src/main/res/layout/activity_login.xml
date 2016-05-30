@@ -5,7 +5,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/beeeon_primary"
                 android:theme="@style/AppTheme.AppBarOverlay"
-                app:popupTheme="@style/Theme.AppCompat.Light"
+                app:popupTheme="@style/AppTheme.PopupTheme"
                 tools:context=".gui.activity.LoginActivity"
     >
 
@@ -136,5 +136,6 @@
         android:background="@android:color/transparent"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/Theme.AppCompat.Light"
         />
 </RelativeLayout>

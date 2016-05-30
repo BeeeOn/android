@@ -1,6 +1,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarPopupTheme">@style/AppTheme.PopupTheme</item>
 
         <!-- Style of toolbar's action mode -->
         <item name="windowActionModeOverlay">true</item>
@@ -37,6 +38,10 @@
         <item name="colorControlHighlight">@color/beeeon_overlay_text</item>
         <item name="colorAccent">@color/beeeon_overlay_text</item>
         <item name="colorButtonNormal">@color/white</item>
+    </style>
+
+    <style name="AppTheme.PopupTheme" parent="Theme.AppCompat.Light">
+        <item name="android:textColorSecondary">@color/beeeon_primary_text</item>
     </style>
 
     <!--MainActivity custom theme-->
