@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -49,6 +50,8 @@ import com.rehivetech.beeeon.util.Utils;
  * @author Robyer
  */
 public class LoginActivity extends AppCompatActivity {
+	private static final String TAG = LoginActivity.class.getSimpleName();
+
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 	private static final String TAG_DIALOG = "about_dialog";
 
@@ -57,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
 	 */
 	private static final boolean SERVER_ENABLED_DEFAULT = true;
 
-	private static final String TAG = LoginActivity.class.getSimpleName();
 	private BetterProgressDialog mProgress;
 
 	private View mSelectServer;
@@ -74,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		Log.i("BeeeOn app starting...", "___________________________________");
 
 		// Get controller
 		Controller controller = Controller.getInstance(this);

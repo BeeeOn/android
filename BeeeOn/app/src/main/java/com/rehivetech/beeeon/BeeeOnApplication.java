@@ -7,7 +7,9 @@ package com.rehivetech.beeeon;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
+import com.facebook.FacebookSdk;
 import com.google.android.gms.analytics.Tracker;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 
@@ -21,6 +23,9 @@ public class BeeeOnApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.i("BeeeOn app starting...", "___________________________________");
+		FacebookSdk.sdkInitialize(getApplicationContext());
+
 		GoogleAnalyticsManager.getInstance().init(getApplicationContext(), getString(R.string.api_keys_google_analytics_tracking_id));
 		sContext = getApplicationContext();
 	}
