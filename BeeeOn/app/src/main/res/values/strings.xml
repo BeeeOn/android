@@ -491,5 +491,9 @@
     <string name="validation_number">Input must be number.</string>
     <string name="validation_email">Input must be valid email address.</string>
     <string name="validation_ip_address">Enter a valid IP address. It should look like 192.168.100.100.</string>
+
+
+    <!-- errors -->
+    <string name="error_no_url">No URL address specified!</string>
 </resources>
 
