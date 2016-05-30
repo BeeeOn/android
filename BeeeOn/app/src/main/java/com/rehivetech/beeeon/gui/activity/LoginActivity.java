@@ -323,7 +323,7 @@ public class LoginActivity extends AppCompatActivity {
 	 */
 	private void prepareLogin(final IAuthProvider authProvider) {
 		final boolean demoMode = (authProvider instanceof DemoAuthProvider);
-		if (!demoMode && !Utils.isInternetAvailable(this)) {
+		if (!demoMode && !Utils.isInternetAvailable()) {
 			mProgress.dismiss();
 			Toast.makeText(this, getString(R.string.login_toast_internet_connection), Toast.LENGTH_LONG).show();
 			return;

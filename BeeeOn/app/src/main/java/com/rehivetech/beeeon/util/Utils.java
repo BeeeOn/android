@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
@@ -90,7 +91,7 @@ final public class Utils {
 
 	/**
 	 * Downloads image from URL address
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -126,7 +127,7 @@ final public class Utils {
 
 	/**
 	 * Reads the response from the input stream and returns it as a string.
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -154,7 +155,7 @@ final public class Utils {
 	/**
 	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
 	 * as a map of (key, value) pairs. Encoding is solved internally.
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -266,11 +267,10 @@ final public class Utils {
 	/**
 	 * Checks if Internet connection is available.
 	 *
-	 * @param context
 	 * @return true if available, false otherwise
 	 */
-	public static boolean isInternetAvailable(Context context) {
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	public static boolean isInternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) BeeeOnApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
@@ -278,11 +278,10 @@ final public class Utils {
 	/**
 	 * Returns the type which actual network uses
 	 *
-	 * @param context
 	 * @return ConnectivityManager#TYPE_xxxxxx
 	 */
-	public static int getNetworkConnectionType(Context context) {
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	public static int getNetworkConnectionType() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) BeeeOnApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
 			return -1; // the same as ConnectivityManager.TYPE_NONE which can't be used;
