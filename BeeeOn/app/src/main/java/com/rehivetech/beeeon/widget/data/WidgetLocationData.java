@@ -89,7 +89,7 @@ public class WidgetLocationData extends WidgetData {
 
 		// TODO scroll to location?
 		mBuilder.setOnClickListener(R.id.widget_location_icon, startMainActivityPendingIntent(mContext, widgetGateId));
-		mBuilder.setOnClickListener(R.id.menu_empty_listview_login_name_text, startMainActivityPendingIntent(mContext, widgetGateId));
+		mBuilder.setOnClickListener(R.id.widget_location_name, startMainActivityPendingIntent(mContext, widgetGateId));
 
 		// onclick listener when clicked on item
 		mRemoteViewsFactoryIntent = new Intent(mContext, WidgetListService.class);

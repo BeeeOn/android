@@ -113,7 +113,7 @@
     <!-- Login -->
     <string name="login_app_name">BeeeOn</string>
     <string name="login_app_slogan">Dům pod vaší kontrolou.</string>
-    <string name="login_btn_demo_mode">Spustit v demo režimu</string>
+    <string name="login_btn_demo_mode">Zkusit demo režim</string>
     <string name="login_btn_direct_connect">Přímé připojení k bráně</string>
     <string name="login_dialog_message_register_new_account">Ještě nemáte vytvořený BeeeOn účet, přejete si jej vytvořit nyní?</string>
     <string name="login_dialog_title_choose_provider">Výběr poskytovatele účtu</string>
@@ -485,5 +485,6 @@
     <string name="validation_number">Vložte platné číslo.</string>
     <string name="validation_email">Vložte platnou e-mailovou adresu.</string>
     <string name="validation_ip_address">Vložte platnou IP adresu ve tvaru podobném do 192.168.100.100.</string>
+    <string name="login_take_tour">Zobrazit průvodce</string>
 
 </resources>

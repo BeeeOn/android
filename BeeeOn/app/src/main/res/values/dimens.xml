@@ -10,9 +10,11 @@
 	<dimen name="space_big">16dp</dimen>
 	<dimen name="space_bigger">32dp</dimen>
 
+	<dimen name="space_one_and_half">12dp</dimen>
 	<dimen name="space_double">16dp</dimen>
 	<dimen name="space_triple">24dp</dimen>
 	<dimen name="space_quadra">32dp</dimen>
+	<dimen name="space_penta">48dp</dimen>
 
 
 	<dimen name="nav_drawer_header_height">86dp</dimen>

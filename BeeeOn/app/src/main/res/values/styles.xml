@@ -232,4 +232,17 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
+    <style name="BeeeOn.Button.Login" parent="@style/Base.TextAppearance.AppCompat.Widget.Button">
+    </style>
+
+
+    <style name="BeeeOn.Button.Login.Facebook" parent="com_facebook_loginview_default_style">
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:paddingLeft">14dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+    </style>
 </resources>

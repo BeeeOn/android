@@ -116,14 +116,14 @@
     <!-- Login -->
     <string name="login_app_name">BeeeOn</string>
     <string name="login_app_slogan">Home under your control.</string>
-    <string name="login_btn_demo_mode">Start in demo mode</string>
+    <string name="login_btn_demo_mode">Try the demo mode</string>
     <string name="login_btn_direct_connect">Direct connect to gateway</string>
     <string name="login_dialog_message_register_new_account">You don\'t have a BeeeOn account yet, do you want to create it now?</string>
     <string name="login_dialog_title_choose_provider">Choose login provider</string>
     <string name="login_dialog_title_register_new_account">No account</string>
     <string name="login_image_description_logo">Application logo</string>
     <string name="login_label_login">Login with:</string>
-    <string name="login_label_server">Select BeeeOn server:</string>
+    <string name="login_label_server">Select server:</string>
     <string name="login_label_work_offline">Or you can work offline:</string>
     <string name="login_menu_action_choose_server_manually">Choose BeeeOn server manually</string>
     <string name="login_progress_loading_demo">Loading demo data&#8230;</string>
@@ -495,5 +495,6 @@
 
     <!-- errors -->
     <string name="error_no_url">No URL address specified!</string>
+    <string name="login_take_tour">Take a tour</string>
 </resources>
 

@@ -1,8 +1,8 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.Manifest;
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,14 +19,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -44,6 +43,10 @@ import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
  *
@@ -59,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
 	 * Defines whether choose server spinner will be showed by default or not
 	 */
 	private static final boolean SERVER_ENABLED_DEFAULT = true;
+	@Bind(android.R.id.content) View mRootView;
+	@Bind(R.id.login_select_server_spinner) Spinner mLoginSelectServerSpinner;
+	@Bind(R.id.login_select_server_layout) LinearLayout mLoginSelectServerLayout;
 
 	private BetterProgressDialog mProgress;
 
@@ -75,10 +81,27 @@ public class LoginActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
+		ButterKnife.bind(this);
 
 		// Get controller
 		Controller controller = Controller.getInstance(this);
+
+		// Check already logged in user (but ignore demo mode)
+		if (controller.isLoggedIn() && !controller.isDemoMode()) {
+			Log.d(TAG, "Already logged in, going to next activity...");
+			onLoggedIn(); // finishes this activity
+			return;
+		}
+
+		// Intro to app
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		if (prefs.getBoolean(Constants.GUI_INTRO_PLAY, true)) {
+			Log.d(TAG, "Go to INTRO");
+			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY, false).apply();
+			Intent intent = new Intent(this, IntroActivity.class);
+			startActivity(intent);
+			return;
+		}
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
@@ -92,40 +115,8 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		});
 
-		// Set login buttons listeners
-		prepareLoginButtons();
-
 		// Initialize server related views
 		prepareServerSpinner();
-
-		// Set logo on click listener to show about dialog
-		findViewById(R.id.login_logo_imageview).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showAboutDialog();
-			}
-		});
-
-		// Set choose server visibility
-		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
-		setSelectServerVisibility(chooseServerEnabled);
-
-		// Intro to app
-		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-		if (prefs != null && prefs.getBoolean(Constants.GUI_INTRO_PLAY, true)) {
-			Log.d(TAG, "Go to INTRO");
-			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY, false).apply();
-			Intent intent = new Intent(this, IntroActivity.class);
-			startActivity(intent);
-			return;
-		}
-
-		// Check already logged in user (but ignore demo mode)
-		if (controller.isLoggedIn() && !controller.isDemoMode()) {
-			Log.d(TAG, "Already logged in, going to next activity...");
-			onLoggedIn(); // finishes this activity
-			return;
-		}
 
 		// Do automatic login if we have remembered last logged in user
 		IAuthProvider lastAuthProvider = controller.getLastAuthProvider();
@@ -136,61 +127,10 @@ public class LoginActivity extends AppCompatActivity {
 		}
 	}
 
-	private void prepareLoginButtons() {
-		OnClickListener onClickListener = new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				switch (v.getId()) {
-					case R.id.login_demo_button: {
-						mProgress.setMessageResource(R.string.login_progress_loading_demo);
-						prepareLogin(new DemoAuthProvider());
-						return;
-					}
-					case R.id.login_google_button: {
-						prepareLogin(new GoogleAuthProvider());
-						return;
-					}
-					case R.id.login_facebook_button: {
-						prepareLogin(new FacebookAuthProvider());
-						return;
-					}
-					case R.id.login_direct_button: {
-						Toast.makeText(LoginActivity.this, R.string.login_toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
-						return;
-					}
-					case R.id.login_choose_button: {
-						// Show choose dialog for other providers
-						AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-						builder.setTitle(R.string.login_dialog_title_choose_provider);
-						builder.setItems(new String[]{"MojeID"}, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dialog, int which) {
-								if (which == 0) {
-									// MojeID
-									Toast.makeText(LoginActivity.this, R.string.login_toast_error_not_supported_yet, Toast.LENGTH_SHORT).show();
-									// prepareLogin(new MojeIdAuthProvider());
-								}
-							}
-						});
-						builder.show();
-					}
-				}
-			}
-		};
-
-		findViewById(R.id.login_demo_button).setOnClickListener(onClickListener);
-		findViewById(R.id.login_direct_button).setOnClickListener(onClickListener);
-		findViewById(R.id.login_google_button).setOnClickListener(onClickListener);
-		findViewById(R.id.login_facebook_button).setOnClickListener(onClickListener);
-		findViewById(R.id.login_choose_button).setOnClickListener(onClickListener);
-	}
-
 	private void prepareServerSpinner() {
-		// Set server spinner items
-		Spinner spinner = (Spinner) findViewById(R.id.login_select_server_spinner);
 
 		// TODO: This is a bit dirty way to set the name. Use own adapter to have translated "(default)" sufix (and perhaps also server names itself) properly
-		ArrayAdapter adapter = new ArrayAdapter<NetworkServer>(this, android.R.layout.simple_spinner_item, NetworkServer.values()) {
+		ArrayAdapter adapter = new ArrayAdapter<NetworkServer>(this, R.layout.overlay_spinner_item, NetworkServer.values()) {
 			private View changeText(View view, int position) {
 				NetworkServer item = getItem(position);
 				String name = item.getTranslatedName(LoginActivity.this);
@@ -209,11 +149,11 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		};
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
+		mLoginSelectServerSpinner.setAdapter(adapter);
 
 		String serverId = Persistence.loadLoginServerId(this);
 		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
-		spinner.setSelection(server.ordinal());
+		mLoginSelectServerSpinner.setSelection(server.ordinal());
 
 		// Set choose server visibility
 		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
@@ -345,10 +285,7 @@ public class LoginActivity extends AppCompatActivity {
 	}
 
 	private void setSelectServerVisibility(boolean visible) {
-		if (mSelectServer == null) {
-			mSelectServer = findViewById(R.id.login_select_server_layout);
-		}
-		mSelectServer.setVisibility(visible ? View.VISIBLE : View.GONE);
+		mLoginSelectServerLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
 	private void showAboutDialog() {
@@ -399,22 +336,6 @@ public class LoginActivity extends AppCompatActivity {
 	}
 
 	/**
-	 * Checks if app has permission to check user's accounts
-	 *
-	 * @return success
-	 */
-	private boolean checkAccountsPermission() {
-		if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-			// explanation shown
-			ActivityCompat.requestPermissions(this, new String[]{
-					android.Manifest.permission.GET_ACCOUNTS,
-			}, Constants.PERMISSION_CODE_GET_ACCOUNTS);
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Shows dialog with login and starts authenticating by specified auth provider
 	 */
 	private void startAuthenticating() {
@@ -422,6 +343,34 @@ public class LoginActivity extends AppCompatActivity {
 		mProgress.setMessageResource(R.string.login_progress_signing);
 		mProgress.show();
 		mAuthProvider.prepareAuth(LoginActivity.this);
+	}
+
+	private void doLogin(final IAuthProvider authProvider) {
+		mProgress.setMessageResource(R.string.login_progress_signing);
+		mProgress.show();
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				loggingAction(authProvider);
+			}
+		}).start();
+	}
+
+	/**
+	 * Checks if app has permission to check user's accounts
+	 *
+	 * @return success
+	 */
+	private boolean checkAccountsPermission() {
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+			// explanation shown
+			ActivityCompat.requestPermissions(this, new String[]{
+					Manifest.permission.GET_ACCOUNTS,
+			}, Constants.PERMISSION_CODE_GET_ACCOUNTS);
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -440,22 +389,10 @@ public class LoginActivity extends AppCompatActivity {
 					startAuthenticating();
 				} else {
 					// permission denied
-					Snackbar.make(findViewById(android.R.id.content), R.string.permission_accounts_warning, Snackbar.LENGTH_LONG).show();
+					Snackbar.make(mRootView, R.string.permission_accounts_warning, Snackbar.LENGTH_LONG).show();
 				}
 				break;
 		}
-	}
-
-	private void doLogin(final IAuthProvider authProvider) {
-		mProgress.setMessageResource(R.string.login_progress_signing);
-		mProgress.show();
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				loggingAction(authProvider);
-			}
-		}).start();
 	}
 
 	/**
@@ -579,12 +516,12 @@ public class LoginActivity extends AppCompatActivity {
 			mProgress.dismiss();
 		}
 	}
-	
+
 	/**
 	 * Finish this activity, dismiss progressDialog and if it's not redirect (set in Intent as BUNDLE_REDIRECT) then also start MainActivity
 	 */
 	private void onLoggedIn() {
-		mProgress.dismiss();
+		if (mProgress != null) mProgress.dismiss();
 
 		// Check whether this activity started as redirect (e.g., after connection loss) or it is task's root (probably classic start)
 		Bundle bundle = getIntent().getExtras();
@@ -596,4 +533,45 @@ public class LoginActivity extends AppCompatActivity {
 		finish();
 	}
 
+	/**
+	 * Click listeners for tour and about app
+	 *
+	 * @param view which view was clicked
+	 */
+	@OnClick({R.id.login_logo_imageview, R.id.login_take_tour})
+	public void onClick(View view) {
+		switch (view.getId()) {
+			case R.id.login_logo_imageview:
+				showAboutDialog();
+				break;
+
+			case R.id.login_take_tour:
+				Intent intent = new Intent(this, IntroActivity.class);
+				startActivity(intent);
+				break;
+		}
+	}
+
+	/**
+	 * Click listeners for login buttons
+	 *
+	 * @param view which button was clicked
+	 */
+	@OnClick({R.id.login_demo_button, R.id.login_google_button, R.id.login_facebook_button})
+	public void onLoginClick(View view) {
+		switch (view.getId()) {
+			case R.id.login_demo_button:
+				mProgress.setMessageResource(R.string.login_progress_loading_demo);
+				prepareLogin(new DemoAuthProvider());
+				break;
+
+			case R.id.login_google_button:
+				prepareLogin(new GoogleAuthProvider());
+				break;
+
+			case R.id.login_facebook_button:
+				prepareLogin(new FacebookAuthProvider());
+				break;
+		}
+	}
 }
