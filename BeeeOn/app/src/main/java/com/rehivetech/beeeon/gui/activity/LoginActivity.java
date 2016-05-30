@@ -52,7 +52,7 @@ import butterknife.OnClick;
  *
  * @author Robyer
  */
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
@@ -68,8 +68,6 @@ public class LoginActivity extends AppCompatActivity {
 
 	private BetterProgressDialog mProgress;
 
-	private View mSelectServer;
-
 	private boolean mLoginCancel = false;
 	private IAuthProvider mAuthProvider;
 
@@ -82,6 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		ButterKnife.bind(this);
+		setupToolbar("", INDICATOR_NONE);
 
 		// Get controller
 		Controller controller = Controller.getInstance(this);
@@ -268,17 +267,17 @@ public class LoginActivity extends AppCompatActivity {
 		super.onOptionsItemSelected(item);
 
 		switch (item.getItemId()) {
-			case R.id.login_menu_action_choose_server_manually: {
+			case R.id.login_menu_action_choose_server_manually:
 				boolean checked = !item.isChecked();
 				item.setChecked(checked);
 				Controller.getInstance(this).getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
 				setSelectServerVisibility(checked);
 				return true;
-			}
-			case R.id.login_menu_action_about: {
-				showAboutDialog();
+
+			case R.id.login_menu_action_about:
+				InfoDialogFragment dialog = new InfoDialogFragment();
+				dialog.show(getSupportFragmentManager(), TAG_DIALOG);
 				return true;
-			}
 		}
 
 		return false;
@@ -288,10 +287,6 @@ public class LoginActivity extends AppCompatActivity {
 		mLoginSelectServerLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
-	private void showAboutDialog() {
-		InfoDialogFragment dialog = new InfoDialogFragment();
-		dialog.show(getSupportFragmentManager(), TAG_DIALOG);
-	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Custom METHODS
@@ -306,9 +301,8 @@ public class LoginActivity extends AppCompatActivity {
 	protected void setDemoMode(boolean demoMode) {
 		// Get selected server
 		String serverId = "";
-		if (mSelectServer.getVisibility() == View.VISIBLE) {
-			Spinner spinner = (Spinner) mSelectServer.findViewById(R.id.login_select_server_spinner);
-			NetworkServer server = (NetworkServer) spinner.getSelectedItem();
+		if (mLoginSelectServerLayout.getVisibility() == View.VISIBLE) {
+			NetworkServer server = (NetworkServer) mLoginSelectServerSpinner.getSelectedItem();
 			serverId = server != null ? server.getId() : "";
 		}
 
@@ -538,18 +532,10 @@ public class LoginActivity extends AppCompatActivity {
 	 *
 	 * @param view which view was clicked
 	 */
-	@OnClick({R.id.login_logo_imageview, R.id.login_take_tour})
-	public void onClick(View view) {
-		switch (view.getId()) {
-			case R.id.login_logo_imageview:
-				showAboutDialog();
-				break;
-
-			case R.id.login_take_tour:
-				Intent intent = new Intent(this, IntroActivity.class);
-				startActivity(intent);
-				break;
-		}
+	@OnClick(R.id.login_take_tour)
+	public void onClickTakeTour(View view) {
+		Intent intent = new Intent(this, IntroActivity.class);
+		startActivity(intent);
 	}
 
 	/**
@@ -558,7 +544,7 @@ public class LoginActivity extends AppCompatActivity {
 	 * @param view which button was clicked
 	 */
 	@OnClick({R.id.login_demo_button, R.id.login_google_button, R.id.login_facebook_button})
-	public void onLoginClick(View view) {
+	public void onClickLoginButton(View view) {
 		switch (view.getId()) {
 			case R.id.login_demo_button:
 				mProgress.setMessageResource(R.string.login_progress_loading_demo);

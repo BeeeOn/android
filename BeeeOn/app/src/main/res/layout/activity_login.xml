@@ -5,6 +5,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/beeeon_primary"
                 android:theme="@style/AppTheme.AppBarOverlay"
+                app:popupTheme="@style/Theme.AppCompat.Light"
                 tools:context=".gui.activity.LoginActivity"
     >
 
@@ -126,4 +127,14 @@
             tools:listitem="@layout/overlay_spinner_item"
             />
     </LinearLayout>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/beeeon_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        />
 </RelativeLayout>
