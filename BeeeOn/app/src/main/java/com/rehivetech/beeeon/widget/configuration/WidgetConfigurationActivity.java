@@ -140,13 +140,6 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		return mAppWidgetEditing;
 	}
 
-	public void setToolbarTitle(@StringRes int titleRes) {
-		if (mActionBar != null) {
-			mActionBar.setTitle(titleRes);
-		}
-	}
-
-
 	/**
 	 * Sets that this activity does not handle option click (fragment does that)
 	 *

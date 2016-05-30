@@ -16,11 +16,7 @@ public class SettingsUnitActivity extends BaseApplicationActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_settings_units);
-		setupToolbar(R.string.settings_unit_unit);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		setupToolbar(R.string.settings_unit_unit, INDICATOR_BACK);
 
 		if (!Controller.getInstance(this).isLoggedIn()) {
 			// We need user to get his preferences

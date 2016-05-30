@@ -60,10 +60,11 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	private ProgressBar mProgressBar;
 	@Nullable
 	private View mRefreshIcon;
+	private View.OnClickListener mOnRefreshClickListener;
+
 	@Nullable
 	private BetterProgressDialog mProgressDialog;
 	@Nullable
-	protected ActionBar mActionBar;
 	private Toolbar mToolbar;
 
 	public CallbackTaskManager callbackTaskManager;
@@ -180,26 +181,6 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		context.startActivity(intent);
 	}
 
-	/**
-	 * Called from {@link CallbackTaskManager} when task is started/canceled.
-	 *
-	 * @param visible whether progressbar will be shown/hidden && refresh icon vice versa
-	 */
-	public synchronized void setBeeeOnProgressBarVisibility(boolean visible) {
-		if (mToolbar == null) {
-			return;
-		}
-
-		// if refresh icon was setup we either show progress or refresh icon
-		if (mRefreshIcon != null) {
-			mRefreshIcon.setVisibility(visible ? View.INVISIBLE : View.VISIBLE);
-		}
-
-		if (mProgressBar != null) {
-			mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-		}
-	}
-
 	public synchronized void showProgressDialog() {
 		if (mProgressDialog == null) {
 			// Prepare progress dialog
@@ -239,40 +220,59 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	@Nullable
 	public Toolbar setupToolbar(String title, @IndicatorType int indicatorType) {
 		mToolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
-		if (mToolbar != null) {
-			setSupportActionBar(mToolbar);
-			mToolbar.setTitle(title);
+		if (mToolbar == null) {
+			Log.e(TAG, "Trying to setup toolbar without element in layout!");
+			return null;
 		}
-		mActionBar = getSupportActionBar();
-		if (mActionBar != null) {
-			mActionBar.setTitle(title);
+
+		setSupportActionBar(mToolbar);
+		mToolbar.setTitle(title);
+		mProgressBar = (ProgressBar) mToolbar.findViewById(R.id.beeeon_toolbar_progress);
+		mRefreshIcon = mToolbar.findViewById(R.id.beeeon_toolbar_refresh);
+
+		ActionBar actionBar = getSupportActionBar();
+		if (actionBar != null) {
+			actionBar.setTitle(title);
 
 			if (indicatorType != INDICATOR_NONE) {
-				mActionBar.setHomeButtonEnabled(true);
-				mActionBar.setDisplayHomeAsUpEnabled(true);
+				actionBar.setHomeButtonEnabled(true);
+				actionBar.setDisplayHomeAsUpEnabled(true);
 				if (indicatorType > INDICATOR_BACK) {
-					mActionBar.setHomeAsUpIndicator(indicatorType);
+					actionBar.setHomeAsUpIndicator(indicatorType);
 				}
 			}
 		}
 
-		mProgressBar = (ProgressBar) mToolbar.findViewById(R.id.beeeon_toolbar_progress);
-		mRefreshIcon = mToolbar.findViewById(R.id.beeeon_toolbar_refresh);
-
 		return mToolbar;
 	}
 
+	public Toolbar setupToolbar(@StringRes int titleResId, @IndicatorType int indicatorType) {
+		return setupToolbar(getString(titleResId), indicatorType);
+	}
+
+	/**
+	 * Setups toolbar with no indicator
+	 *
+	 * @param titleResId title res
+	 * @return toolbar
+	 */
+	public Toolbar setupToolbar(@StringRes int titleResId) {
+		return setupToolbar(titleResId, INDICATOR_NONE);
+	}
+
+	/**
+	 * Setups toolbar with no indicator
+	 *
+	 * @param title string
+	 * @return toolbar
+	 */
 	public Toolbar setupToolbar(String title) {
 		return setupToolbar(title, INDICATOR_NONE);
 	}
 
-	public Toolbar setupToolbar(@StringRes int titleResId, @IndicatorType int indicatorType) {
-		String title = getString(titleResId);
-		return setupToolbar(title, indicatorType);
-	}
 
-	public Toolbar setupToolbar(@StringRes int titleResId) {
-		return setupToolbar(titleResId, INDICATOR_NONE);
+	public void setToolbarTitle(@StringRes int titleRes) {
+		setToolbarTitle(getString(titleRes));
 	}
 
 	public void setToolbarTitle(String title) {
@@ -284,38 +284,23 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	}
 
 	/**
-	 * When set, refresh icon will be shown in Toolbar and when async task, icon will be hidden/visible
+	 * When set, refresh icon will be shown in Toolbar and when async task running, icon will be hidden/visible
 	 * {@link #setBeeeOnProgressBarVisibility(boolean)} changes visibility of icon
 	 *
 	 * @param onClickListener Callback for refresh icon
 	 */
-	public void setupRefreshIcon(View.OnClickListener onClickListener) {
-		if (onClickListener == null) {
-			if (mRefreshIcon != null) {
-				// Reset callback
-				mRefreshIcon.setOnClickListener(null);
-				mRefreshIcon.setOnLongClickListener(null);
-
-				// Hide refresh icon
-				mRefreshIcon.setVisibility(View.INVISIBLE);
-				mRefreshIcon = null;
-			}
+	public void setupRefreshIcon(@Nullable View.OnClickListener onClickListener) {
+		if (mToolbar == null || mRefreshIcon == null || mProgressBar == null) {
+			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
 			return;
 		}
 
-		if (mRefreshIcon == null) {
-			mRefreshIcon = mToolbar.findViewById(R.id.beeeon_toolbar_refresh);
+		mOnRefreshClickListener = onClickListener;
 
-			if (mRefreshIcon == null) {
-				// This activity probably doesn't have refreshIcon (or toolbar) in layout
-				Log.w(TAG, String.format("Can't set visibility of refreshIcon in '%s', it wasn't found in layout.", getClass().getSimpleName()));
-				return;
-			}
-		}
-
-		boolean show = (mProgressBar == null || mProgressBar.getVisibility() == View.INVISIBLE);
-		mRefreshIcon.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-		mRefreshIcon.setOnClickListener(onClickListener);
+		// always show only icon (if set listener)
+		mRefreshIcon.setVisibility(mOnRefreshClickListener != null ? View.VISIBLE : View.INVISIBLE);
+		mProgressBar.setVisibility(View.INVISIBLE);
+		mRefreshIcon.setOnClickListener(mOnRefreshClickListener);
 		mRefreshIcon.setOnLongClickListener(new View.OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
@@ -324,10 +309,29 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 				// toast will be under the view and half from right
 				toast.setGravity(Gravity.TOP | Gravity.END, v.getWidth() - (v.getWidth() / 2), v.getBottom());
 				toast.show();
-
 				return true;
 			}
 		});
+	}
+
+	/**
+	 * Called from {@link CallbackTaskManager} when task is started/canceled.
+	 * Must be {@link #setupRefreshIcon(View.OnClickListener)} called first!
+	 *
+	 * @param visible whether progressbar will be shown/hidden && refresh icon vice versa
+	 */
+	public synchronized void setBeeeOnProgressBarVisibility(boolean visible) {
+		// check if listener was set, otherwise do nothing
+		if (mOnRefreshClickListener == null) return;
+
+		if (mToolbar == null || mRefreshIcon == null || mProgressBar == null) {
+			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
+			return;
+		}
+
+		// if refresh icon was setup we either show progress or refresh icon
+		mRefreshIcon.setVisibility(visible ? View.INVISIBLE : View.VISIBLE);
+		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 	}
 
 	/**

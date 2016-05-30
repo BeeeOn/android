@@ -49,12 +49,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_users);
-
-		setupToolbar(R.string.gate_users_title_gate_users);
-		if (mActionBar != null) {
-			mActionBar.setHomeButtonEnabled(true);
-			mActionBar.setDisplayHomeAsUpEnabled(true);
-		}
+		setupToolbar(R.string.gate_users_title_gate_users, INDICATOR_BACK);
 
 		// Get selected gate
 		mGate = Controller.getInstance(this).getGatesModel().getGate(getIntent().getStringExtra(EXTRA_GATE_ID));
