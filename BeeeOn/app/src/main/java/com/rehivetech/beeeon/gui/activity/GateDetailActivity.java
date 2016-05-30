@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +23,8 @@ import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
 
 /**
- * Created by david on 23.6.15.
+ * @author david
+ * @since 30.05.2016
  */
 public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener, ConfirmDialog.ConfirmDialogListener {
 	private static final String TAG = GateDetailActivity.class.getSimpleName();
@@ -115,24 +115,11 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case R.id.gate_detail_menu_delete: {
-				String title = getString(R.string.activity_menu_dialog_title_remove_gate_default);
-				String message = getString(R.string.activity_menu_dialog_message_remove_gate);
-
-				GateInfo gateInfo = Controller.getInstance(this).getGatesModel().getGateInfo(mGateId);
-				if (gateInfo != null) {
-					title = getString(R.string.activity_fragment_menu_dialog_title_remove, gateInfo.getName());
-				}
-
-				ConfirmDialog.confirm(this, title, message, R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_GATE, mGateId);
-				return true;
-			}
-			case R.id.gate_detail_menu_edit: {
+			case R.id.gate_detail_menu_edit:
 				Intent intent = new Intent(this, GateEditActivity.class);
 				intent.putExtra(GateEditActivity.EXTRA_GATE_ID, mGateId);
 				startActivity(intent);
 				return true;
-			}
 		}
 		return super.onOptionsItemSelected(item);
 	}

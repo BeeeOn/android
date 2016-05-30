@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	  xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item
-		android:id="@+id/gate_detail_menu_edit"
-		android:title="@string/layout_gate_edit"
-		android:icon="@drawable/ic_mode_edit_white_24dp"
-		app:showAsAction="always|collapseActionView"/>
-
-	<item
-		android:id="@+id/gate_detail_menu_delete"
-		android:title="@string/gate_menu_layout_menu_del"
-		android:icon="@drawable/ic_delete_white_24dp"
-		app:showAsAction="ifRoom|collapseActionView"/>
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/gate_detail_menu_edit"
+        android:icon="@drawable/ic_mode_edit_white_24dp"
+        android:title="@string/layout_gate_edit"
+        app:showAsAction="always|collapseActionView"
+        />
 </menu>
