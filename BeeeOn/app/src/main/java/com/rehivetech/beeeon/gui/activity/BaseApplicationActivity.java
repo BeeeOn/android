@@ -34,7 +34,7 @@ import icepick.Icepick;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
- * <p>
+ * <p/>
  * When user is not logged in, it will switch to LoginActivity automatically.
  * Provides useful methods for using CallbackTasks.
  */
@@ -62,10 +62,10 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	private View mRefreshIcon;
 	@Nullable
 	private BetterProgressDialog mProgressDialog;
-
 	@Nullable
 	protected ActionBar mActionBar;
 	private Toolbar mToolbar;
+
 	public CallbackTaskManager callbackTaskManager;
 
 	@Override
@@ -134,6 +134,11 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		hideProgressDialog();
 	}
 
+	/**
+	 * Uses Icepick for saving instance variables -> just use @State
+	 *
+	 * @param outState persistent state
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -159,7 +164,7 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 	/**
 	 * Redirects to login activity
 	 *
-	 * @param context
+	 * @param context from which will be started login activity
 	 * @param logout  if user will be logged out
 	 */
 	public static void redirectToLogin(Context context, boolean logout) {
@@ -222,10 +227,6 @@ public abstract class BaseApplicationActivity extends AppCompatActivity implemen
 		// FIXME: Leo (or someone else?) should implement correct handling of notifications (showing somewhere in activity or something like that?)
 
 		return false;
-	}
-
-	public void onFragmentAttached(Fragment fragment) {
-
 	}
 
 	/**

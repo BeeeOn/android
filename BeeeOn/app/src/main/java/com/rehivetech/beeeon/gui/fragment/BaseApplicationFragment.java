@@ -22,8 +22,6 @@ public abstract class BaseApplicationFragment extends android.support.v4.app.Fra
 		} catch (ClassCastException e) {
 			throw new ClassCastException(context.toString()+ " must be subclass of BaseApplicationActivity");
 		}
-
-		mActivity.onFragmentAttached(this);
 	}
 
 	@Override

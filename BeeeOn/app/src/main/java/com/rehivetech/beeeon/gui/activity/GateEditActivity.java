@@ -62,8 +62,8 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 	}
 
 	@Override
-	public void onFragmentAttached(Fragment fragment) {
-		super.onFragmentAttached(fragment);
+	public void onAttachFragment(Fragment fragment) {
+		super.onAttachFragment(fragment);
 		try {
 			mFragment = (GateEditFragment) fragment;
 		} catch (ClassCastException e) {

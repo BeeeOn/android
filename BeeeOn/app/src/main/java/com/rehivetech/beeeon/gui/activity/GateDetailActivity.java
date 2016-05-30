@@ -107,8 +107,8 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	}
 
 	@Override
-	public void onFragmentAttached(Fragment fragment) {
-		super.onFragmentAttached(fragment);
+	public void onAttachFragment(Fragment fragment) {
+		super.onAttachFragment(fragment);
 		try {
 			mFragment = (GateDetailFragment) fragment;
 		} catch (ClassCastException e) {

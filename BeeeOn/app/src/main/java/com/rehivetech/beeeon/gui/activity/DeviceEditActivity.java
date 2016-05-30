@@ -55,8 +55,8 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 	}
 
 	@Override
-	public void onFragmentAttached(Fragment fragment) {
-		super.onFragmentAttached(fragment);
+	public void onAttachFragment(Fragment fragment) {
+		super.onAttachFragment(fragment);
 		try {
 			mFragment = (DeviceEditFragment) fragment;
 		} catch (ClassCastException e) {
