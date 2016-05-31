@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
+import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 
 import icepick.Icepick;
 
@@ -31,6 +32,7 @@ import icepick.Icepick;
 public abstract class BaseActivity extends AppCompatActivity {
 
 	private static final String TAG = BaseActivity.class.getSimpleName();
+	protected static final String TAG_ABOUT_DIALOG = "about_dialog";
 
 	@IntDef({INDICATOR_NONE, INDICATOR_BACK, INDICATOR_DISCARD, INDICATOR_ACCEPT, INDICATOR_MENU})
 	@interface IndicatorType {
@@ -103,6 +105,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 //		conf.locale = new Locale(activeLocale);
 //		res.updateConfiguration(conf, dm);
 //	}
+
+	/**
+	 * Shows about app dialog from any activity
+	 */
+	public void showAboutDialog() {
+		InfoDialogFragment dialog = new InfoDialogFragment();
+		dialog.show(getSupportFragmentManager(), TAG_ABOUT_DIALOG);
+	}
+
 
 	public synchronized void showProgressDialog() {
 		if (mProgressDialog == null) {
