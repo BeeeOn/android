@@ -35,7 +35,7 @@ import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.adapter.ServerAdapter;
 import com.rehivetech.beeeon.gui.adapter.base.ClickableRecyclerViewAdapter;
-import com.rehivetech.beeeon.gui.dialog.BaseFragmentDialog;
+import com.rehivetech.beeeon.gui.dialog.BaseBeeeOnDialog;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.ServerDetailDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
@@ -56,14 +56,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
-import io.realm.RealmObject;
 
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
  *
  * @author Robyer
  */
-public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IPositiveButtonDialogListener<ServerDetailDialog>, BaseFragmentDialog.IDeleteButtonDialogListener<ServerDetailDialog> {
+public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPositiveButtonDialogListener, BaseBeeeOnDialog.IDeleteButtonDialogListener {
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
@@ -72,6 +71,7 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 	 * Defines whether choose server spinner will be showed by default or not
 	 */
 	private static final boolean SERVER_ENABLED_DEFAULT = true;
+	private static final int DIALOG_REQUEST_SERVER_DETAIL = 1;
 
 	@Bind(android.R.id.content) View mRootView;
 	@Bind(R.id.login_select_server_spinner) Spinner mLoginSelectServerSpinner;
@@ -202,7 +202,7 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 			@Override
 			public void onRecyclerViewItemClick(ClickableRecyclerViewAdapter.ViewHolder viewHolder, int position, int viewType) {
 				Server server = serverAdapter.getItem(position);
-				ServerDetailDialog.showEdit(LoginActivity.this, getSupportFragmentManager(), server.getId());
+				ServerDetailDialog.showEdit(LoginActivity.this, getSupportFragmentManager(), DIALOG_REQUEST_SERVER_DETAIL, server.getId());
 			}
 		});
 		mLoginSelectServerRecyclerView.setAdapter(serverAdapter);
@@ -588,7 +588,7 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 
 	@OnClick(R.id.login_server_add)
 	public void onClickServerAddButton(View view) {
-		ServerDetailDialog.showCreate(this, getSupportFragmentManager());
+		ServerDetailDialog.showCreate(this, getSupportFragmentManager(), DIALOG_REQUEST_SERVER_DETAIL);
 	}
 
 	/**
@@ -615,7 +615,12 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 	}
 
 	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, final ServerDetailDialog dialog) {
+	public void onPositiveButtonClicked(int requestCode, View view, final BaseBeeeOnDialog baseDialog) {
+		if (requestCode != DIALOG_REQUEST_SERVER_DETAIL) {
+			return;
+		}
+
+		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
 		final TextInputLayout serverNameView = (TextInputLayout) view.findViewById(R.id.server_name);
 		final TextInputLayout serverHostView = (TextInputLayout) view.findViewById(R.id.server_host);
 		final TextInputLayout serverPortView = (TextInputLayout) view.findViewById(R.id.server_port);
@@ -644,18 +649,25 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 
 	/**
 	 * Deleting from dialog
+	 *
 	 * @param requestCode
 	 * @param view
-	 * @param dialog
+	 * @param baseDialog
 	 */
 	@Override
-	public void onDeleteButtonClicked(int requestCode, View view, final ServerDetailDialog dialog) {
+	public void onDeleteButtonClicked(int requestCode, View view, final BaseBeeeOnDialog baseDialog) {
+		if (requestCode != DIALOG_REQUEST_SERVER_DETAIL) {
+			return;
+		}
+
+		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
+
 		final Server server = dialog.getServer();
 		mRealm.executeTransaction(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {
-				if (RealmObject.isValid(server) && server.isDeletable()) {
-					RealmObject.deleteFromRealm(server);
+				if (server.isValid() && Server.isDeletable(server.getId())) {
+					server.deleteFromRealm();
 				} else {
 					Log.e(TAG, "Trying to delete non deletable server!");
 				}

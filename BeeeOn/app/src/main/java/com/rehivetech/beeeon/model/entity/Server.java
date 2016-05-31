@@ -3,16 +3,14 @@ package com.rehivetech.beeeon.model.entity;
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 
-import io.realm.RealmModel;
+import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.RealmClass;
 
 /**
  * @author mlyko
  * @since 30.05.2016
  */
-@RealmClass
-public class Server implements RealmModel {
+public class Server extends RealmObject {
 	public static final long SERVER_ID_PRODUCTION = 1;
 	public static final long SERVER_ID_DEVEL = 2;
 	public static final int DEFAULT_PORT = 4565;
@@ -24,7 +22,6 @@ public class Server implements RealmModel {
 	public int port;
 	public String certAssetsFilename;
 	public String certVerifyUrl;
-	private boolean mIsDeletable = true;
 
 	public Server() {
 	}
@@ -34,9 +31,6 @@ public class Server implements RealmModel {
 	}
 
 	public void setId(long id) {
-		if (id == SERVER_ID_PRODUCTION || id == SERVER_ID_DEVEL) {
-			mIsDeletable = false;
-		}
 		this.id = id;
 	}
 
@@ -44,8 +38,8 @@ public class Server implements RealmModel {
 		return id;
 	}
 
-	public boolean isDeletable() {
-		return mIsDeletable;
+	public static boolean isDeletable(long id) {
+		return !(id == SERVER_ID_PRODUCTION || id == SERVER_ID_DEVEL);
 	}
 
 	@Override

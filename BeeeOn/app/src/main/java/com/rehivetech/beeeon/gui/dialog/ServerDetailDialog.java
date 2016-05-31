@@ -18,7 +18,7 @@ import io.realm.Realm;
  * @author mlyko
  * @since 31.05.2016
  */
-public class ServerDetailDialog extends BaseFragmentDialog {
+public class ServerDetailDialog extends BaseBeeeOnDialog {
 	private static final String ARG_SERVER_ID = "server_id";
 	private long mServerId;
 	private Realm mRealm;
@@ -33,11 +33,12 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 	 * @param context
 	 * @param fragmentManager
 	 */
-	public static void showCreate(Context context, FragmentManager fragmentManager) {
+	public static void showCreate(Context context, FragmentManager fragmentManager, int requestCode) {
 		new ServerDetailDialogBuilder(context, fragmentManager)
 				.setTitle(R.string.server_detail_title_create)
 				.setPositiveButtonText(R.string.dialog_create)
 				.setNegativeButtonText(R.string.dialog_cancel)
+				.setRequestCode(requestCode)
 				.show();
 	}
 
@@ -47,13 +48,14 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 	 * @param context
 	 * @param fragmentManager
 	 */
-	public static void showEdit(Context context, FragmentManager fragmentManager, long serverId) {
+	public static void showEdit(Context context, FragmentManager fragmentManager, int requestCode, long serverId) {
 		new ServerDetailDialogBuilder(context, fragmentManager)
 				.setServerId(serverId)
 				.setTitle(R.string.server_detail_title_edit)
 				.setPositiveButtonText(R.string.dialog_edit)
 				.setNegativeButtonText(R.string.dialog_cancel)
 				.setNeutralButtonText(R.string.dialog_delete)
+				.setRequestCode(requestCode)
 				.show();
 	}
 
@@ -104,7 +106,7 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 	public Server getServer() {
 		if (mServer == null) {
 			mServer = new Server(Utils.autoIncrement(mRealm, Server.class));
-			mServer.port = mServer.DEFAULT_PORT;
+			mServer.port = Server.DEFAULT_PORT;
 		}
 		return mServer;
 	}
@@ -124,10 +126,15 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 		mPortView = (TextInputLayout) mRootView.findViewById(R.id.server_port);
 		mHostView = (TextInputLayout) mRootView.findViewById(R.id.server_host);
 
+		// delete button
+		if (Server.isDeletable(mServerId)) {
+			setDeleteButton(builder, getNeutralButtonText());
+		}
+
 		return builder;
 	}
 
-	public static class ServerDetailDialogBuilder extends BaseFragmentDialogBuilder {
+	public static class ServerDetailDialogBuilder extends BaseBeeeOnDialogBuilder {
 		private long mServerId;
 
 		public ServerDetailDialogBuilder(Context context, FragmentManager fragmentManager) {

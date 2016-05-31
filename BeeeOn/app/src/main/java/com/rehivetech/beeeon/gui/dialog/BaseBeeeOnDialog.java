@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.R;
  * @author mlyko
  * @since 31.05.2016
  */
-public abstract class BaseFragmentDialog extends SimpleDialogFragment {
+public abstract class BaseBeeeOnDialog extends SimpleDialogFragment {
 	protected View mRootView;
 
 	/**
@@ -48,7 +48,7 @@ public abstract class BaseFragmentDialog extends SimpleDialogFragment {
 				@Override
 				public void onClick(View v) {
 					for (IPositiveButtonDialogListener listener : getDialogListeners(IPositiveButtonDialogListener.class)) {
-						listener.onPositiveButtonClicked(mRequestCode, mRootView, BaseFragmentDialog.this);
+						listener.onPositiveButtonClicked(mRequestCode, mRootView, BaseBeeeOnDialog.this);
 					}
 					// dismiss should be called inside of listener
 				}
@@ -62,21 +62,7 @@ public abstract class BaseFragmentDialog extends SimpleDialogFragment {
 				@Override
 				public void onClick(View v) {
 					for (INegativeButtonDialogListner listener : getDialogListeners(INegativeButtonDialogListner.class)) {
-						listener.onNegativeButtonClicked(mRequestCode, mRootView, BaseFragmentDialog.this);
-					}
-					dismiss();
-				}
-			});
-		}
-
-		// delete button
-		final CharSequence neutralButtonText = getNeutralButtonText();
-		if (!TextUtils.isEmpty(neutralButtonText)) {
-			builder.setNeutralButton(neutralButtonText, new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					for (IDeleteButtonDialogListener listener : getDialogListeners(IDeleteButtonDialogListener.class)) {
-						listener.onDeleteButtonClicked(mRequestCode, mRootView, BaseFragmentDialog.this);
+						listener.onNegativeButtonClicked(mRequestCode, mRootView, BaseBeeeOnDialog.this);
 					}
 					dismiss();
 				}
@@ -84,6 +70,23 @@ public abstract class BaseFragmentDialog extends SimpleDialogFragment {
 		}
 
 		return builder;
+	}
+
+	public void setDeleteButton(Builder builder, CharSequence text) {
+		if (!TextUtils.isEmpty(text)) {
+			builder.setNeutralButton(text, new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					for (IDeleteButtonDialogListener listener : getDialogListeners(IDeleteButtonDialogListener.class)) {
+						listener.onDeleteButtonClicked(mRequestCode, mRootView, BaseBeeeOnDialog.this);
+					}
+					dismiss();
+				}
+			});
+		}
+		else{
+			builder.setNeutralButton(null, null);
+		}
 	}
 
 	/**
@@ -116,27 +119,22 @@ public abstract class BaseFragmentDialog extends SimpleDialogFragment {
 		}
 	}
 
-	public static class BaseFragmentDialogBuilder extends SimpleDialogFragment.SimpleDialogBuilder {
+	public static class BaseBeeeOnDialogBuilder extends SimpleDialogFragment.SimpleDialogBuilder {
 
-		public BaseFragmentDialogBuilder(Context context, FragmentManager fragmentManager) {
+		public BaseBeeeOnDialogBuilder(Context context, FragmentManager fragmentManager) {
 			super(context, fragmentManager, ServerDetailDialog.class);
 		}
-
-		@Override
-		protected BaseFragmentDialogBuilder self() {
-			return this;
-		}
 	}
 
-	public interface IPositiveButtonDialogListener<T extends BaseFragmentDialog> {
-		void onPositiveButtonClicked(int requestCode, View view, T dialog);
+	public interface IPositiveButtonDialogListener {
+		void onPositiveButtonClicked(int requestCode, View view, BaseBeeeOnDialog baseDialog);
 	}
 
-	public interface INegativeButtonDialogListner<T extends BaseFragmentDialog> {
-		void onNegativeButtonClicked(int requestCode, View view, T dialog);
+	public interface INegativeButtonDialogListner {
+		void onNegativeButtonClicked(int requestCode, View view, BaseBeeeOnDialog baseDialog);
 	}
 
-	public interface IDeleteButtonDialogListener<T extends BaseFragmentDialog> {
-		void onDeleteButtonClicked(int requestCode, View view, T dialog);
+	public interface IDeleteButtonDialogListener {
+		void onDeleteButtonClicked(int requestCode, View view, BaseBeeeOnDialog baseDialog);
 	}
 }
