@@ -20,6 +20,11 @@ import com.rehivetech.beeeon.R;
 public abstract class BaseFragmentDialog extends SimpleDialogFragment {
 	protected View mRootView;
 
+	/**
+	 * Forces to specify layout which will be used for this type of dialogs
+	 *
+	 * @return Layout resource id
+	 */
 	@LayoutRes
 	public abstract int getLayoutResource();
 

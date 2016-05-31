@@ -1,45 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<TableLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:paddingLeft="@dimen/space_double"
+    android:paddingRight="@dimen/space_double"
+    android:stretchColumns="0"
     >
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/project_detail_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="65dp"
-        android:layout_marginStart="8dp"
-        android:hint="ahoj"
-        >
+    <TableRow>
 
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/server_name"
+            android:layout_span="2"
+            android:hint="@string/server_detail_name"
+            >
 
-    </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/project_share"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="65dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
-        android:hint="ahoj2"
-        android:visibility="visible"
-        >
+        </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:visibility="visible"
-            />
+    </TableRow>
 
-    </android.support.design.widget.TextInputLayout>
-</FrameLayout>
+    <TableRow>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/server_host"
+            android:hint="@string/server_detail_host"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/server_port"
+            android:hint="@string/server_detail_port"
+            android:minWidth="72dp"
+            >
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                />
+        </android.support.design.widget.TextInputLayout>
+
+
+    </TableRow>
+
+</TableLayout>

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +46,7 @@ import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.Validator;
 
 import java.util.Arrays;
 
@@ -595,18 +597,28 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 	}
 
 	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, ServerDetailDialog dialog) {
-		Toast.makeText(this, "ahoj", Toast.LENGTH_LONG).show();
+	public void onPositiveButtonClicked(int requestCode, View view, final ServerDetailDialog dialog) {
+		final TextInputLayout serverNameView = (TextInputLayout) view.findViewById(R.id.server_name);
+		final TextInputLayout serverHostView = (TextInputLayout) view.findViewById(R.id.server_host);
+		final TextInputLayout serverPortView = (TextInputLayout) view.findViewById(R.id.server_port);
+		if (!Validator.validate(serverNameView) || !Validator.validate(serverHostView) || !Validator.validate(serverPortView)) {
+			return;
+		}
 
-		//		mRealm.executeTransaction(new Realm.Transaction() {
-//			@Override
-//			public void execute(Realm realm) {
-//				long nextID = Utils.autoIncrement(realm, Server.class);
-//				Server myServer = new Server();
-//				myServer.setId(nextID);
-//				myServer.setName("První server");
-//				realm.copyToRealm(myServer);
-//			}
-//		});
+		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null) {
+			Log.e(TAG, "There is none EditText inside TextInputLayout!");
+			return;
+		}
+
+		mRealm.executeTransaction(new Realm.Transaction() {
+			@Override
+			public void execute(Realm realm) {
+				Server server = dialog.getServer();
+				server.name = serverNameView.getEditText().getText().toString();
+				server.address = serverHostView.getEditText().getText().toString();
+				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
+				realm.copyToRealmOrUpdate(server);
+			}
+		});
 	}
 }

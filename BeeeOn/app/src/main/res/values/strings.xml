@@ -499,6 +499,13 @@
     <!-- errors -->
     <string name="error_no_url">No URL address specified!</string>
     <string name="login_take_tour">Take a tour</string>
-    <string name="server_title_create">Create server</string>
+
+
+    <!-- server detail -->
+    <string name="server_detail_title_create">Create server</string>
+    <string name="server_detail_title_edit">Edit server</string>
+    <string name="server_detail_name">Server name</string>
+    <string name="server_detail_host">Host address</string>
+    <string name="server_detail_port">Port</string>
 </resources>
 
