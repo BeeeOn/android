@@ -104,4 +104,5 @@ dependencies {
 	compile 'com.flipboard:bottomsheet-core:1.5.0'
 	compile 'frankiesardo:icepick:3.2.0'
 	provided 'frankiesardo:icepick-processor:3.2.0'
+	compile 'io.realm:android-adapters:1.2.2'
 }

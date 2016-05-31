@@ -146,5 +146,13 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/Theme.AppCompat.Light"
             />
+
+        <!-- TODO -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/login_select_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_select_server_layout"
+            />
     </RelativeLayout>
 </LinearLayout>

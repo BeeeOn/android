@@ -15,6 +15,7 @@
 	<dimen name="space_triple">24dp</dimen>
 	<dimen name="space_quadra">32dp</dimen>
 	<dimen name="space_penta">48dp</dimen>
+	<dimen name="space_sexta">56dp</dimen>
 
 
 	<dimen name="nav_drawer_header_height">86dp</dimen>

@@ -56,6 +56,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 
+import io.realm.Realm;
+
 final public class Utils {
 	private static final String TAG = Utils.class.getSimpleName();
 
@@ -377,6 +379,16 @@ final public class Utils {
 			if (tempObj.getId().equals(id)) return tempObj;
 		}
 		return null;
+	}
+
+	public synchronized static long autoIncrement(Realm realm, Class clazz) {
+		Number currentMax = realm.where(clazz).max("id"); // TODO "id" should have only identifiers or sth
+		long nextId = 1;
+		if (currentMax != null) {
+			nextId = currentMax.longValue() + 1;
+		}
+
+		return nextId;
 	}
 
 	/**

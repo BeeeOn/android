@@ -1,141 +1,209 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/beeeon_primary"
-                android:theme="@style/AppTheme.AppBarOverlay"
-                app:popupTheme="@style/AppTheme.PopupTheme"
-                tools:context=".gui.activity.LoginActivity"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/beeeon_primary"
+    android:theme="@style/AppTheme.AppBarOverlay"
+    app:popupTheme="@style/AppTheme.PopupTheme"
+    tools:context=".gui.activity.LoginActivity"
     >
 
-    <ImageView
-        android:id="@+id/login_logo_imageview"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/space_normal"
-        android:layout_marginTop="@dimen/space_quadra"
-        android:contentDescription="@string/login_image_description_logo"
-        android:orientation="horizontal"
-        android:src="@drawable/beeeon_logo_white_transparent"
-        />
-
-    <TextView
-        android:id="@+id/login_app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_logo_imageview"
-        android:layout_centerHorizontal="true"
-        android:text="@string/login_app_name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        />
-
-    <TextView
-        android:id="@+id/login_slogan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_app_name"
-        android:layout_centerHorizontal="true"
-        android:text="@string/login_app_slogan"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        />
-
-
-    <!-- here linear layout so every button has the same width -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_slogan"
-        android:layout_centerHorizontal="true"
-        android:layout_marginLeft="@dimen/space_triple"
-        android:layout_marginRight="@dimen/space_triple"
-        android:layout_marginTop="@dimen/space_double"
-        android:orientation="vertical"
-        >
-
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/login_google_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/space_normal"
-            app:buttonSize="wide"
-            />
-
-        <Button
-            android:id="@+id/login_facebook_button"
-            style="@style/BeeeOn.Button.Login.Facebook"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginTop="@dimen/space_normal"
-            android:text="@string/com_facebook_loginview_log_in_button_long"
-            />
-
-        <Button
-            android:id="@+id/login_demo_button"
-            style="@style/BeeeOn.Button.Login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/space_mini"
-            android:layout_marginTop="@dimen/space_mini"
-            android:text="@string/login_btn_demo_mode"
-            android:textAllCaps="false"
-            android:textColor="@color/beeeon_primary_dark"
-            />
-
-        <Button
-            android:id="@+id/login_take_tour"
-            style="@style/Widget.AppCompat.Button.Borderless"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_normal"
-            android:gravity="center"
-            android:text="@string/login_take_tour"
-            />
-
-    </LinearLayout>
-
-
-    <!-- select server -->
-    <LinearLayout
-        android:id="@+id/login_select_server_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/space_double"
-        android:layout_marginLeft="@dimen/space_double"
-        android:layout_marginRight="@dimen/space_double"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
         >
+
+        <ImageView
+            android:id="@+id/login_logo_imageview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/space_normal"
+            android:layout_marginTop="@dimen/space_quadra"
+            android:contentDescription="@string/login_image_description_logo"
+            android:orientation="horizontal"
+            android:src="@drawable/beeeon_logo_white_transparent"
+            />
 
         <TextView
+            android:id="@+id/login_app_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_label_server"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_below="@+id/login_logo_imageview"
+            android:layout_centerHorizontal="true"
+            android:text="@string/login_app_name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             />
 
-        <android.support.v7.widget.AppCompatSpinner
-            android:id="@+id/login_select_server_spinner"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/login_slogan"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/space_normal"
-            android:layout_marginStart="@dimen/space_normal"
-            app:popupTheme="@style/AppTheme"
-            tools:listitem="@layout/overlay_spinner_item"
+            android:layout_below="@+id/login_app_name"
+            android:layout_centerHorizontal="true"
+            android:text="@string/login_app_slogan"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             />
-    </LinearLayout>
+
+        <!-- here linear layout so every button has the same width -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_slogan"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="@dimen/space_triple"
+            android:layout_marginRight="@dimen/space_triple"
+            android:layout_marginTop="@dimen/space_double"
+            android:orientation="vertical"
+            >
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/login_google_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_normal"
+                app:buttonSize="wide"
+                />
+
+            <Button
+                android:id="@+id/login_facebook_button"
+                style="@style/BeeeOn.Button.Login.Facebook"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="@dimen/space_normal"
+                android:text="@string/com_facebook_loginview_log_in_button_long"
+                />
+
+            <Button
+                android:id="@+id/login_demo_button"
+                style="@style/BeeeOn.Button.Login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/space_mini"
+                android:layout_marginTop="@dimen/space_mini"
+                android:text="@string/login_btn_demo_mode"
+                android:textAllCaps="false"
+                android:textColor="@color/beeeon_primary_dark"
+                />
+
+            <Button
+                android:id="@+id/login_take_tour"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_normal"
+                android:gravity="center"
+                android:text="@string/login_take_tour"
+                />
+        </LinearLayout>
+    </RelativeLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/beeeon_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/Theme.AppCompat.Light"
         />
-</RelativeLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/login_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:minHeight="200dp"
+        android:theme="@style/AppTheme"
+        app:behavior_peekHeight="56dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/header_shadow"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/beeeon_background"
+                android:padding="@dimen/space_double"
+                >
+
+                <TextView
+                    android:id="@+id/login_select_server_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_double"
+                    android:text="@string/login_label_server"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/login_select_server"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/login_server_add"
+                    android:layout_below="@+id/login_select_server_label"
+                    tools:listitem="@layout/item_list_server"
+                    />
+
+                <Button
+                    android:id="@+id/login_server_add"
+                    style="@style/Widget.AppCompat.Button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="Add new"
+                    android:textAllCaps="false"
+                    android:textColor="@color/beeeon_primary_dark"
+                    />
+            </RelativeLayout>
+
+            <!-- select server -->
+            <LinearLayout
+                android:id="@+id/login_select_server_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_double"
+                android:layout_marginLeft="@dimen/space_double"
+                android:layout_marginRight="@dimen/space_double"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/login_label_server"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                    />
+
+                <android.support.v7.widget.AppCompatSpinner
+                    android:id="@+id/login_select_server_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/space_normal"
+                    android:layout_marginStart="@dimen/space_normal"
+                    app:popupTheme="@style/AppTheme"
+                    tools:listitem="@layout/overlay_spinner_item"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</android.support.design.widget.CoordinatorLayout>

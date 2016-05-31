@@ -3,22 +3,16 @@ package com.rehivetech.beeeon.network.server;
 import android.content.Context;
 import android.support.annotation.StringRes;
 
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.IIdentifier;
-import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
 
 /**
  * @author Robyer
  */
 public enum NetworkServer implements IIdentifier {
-	SERVER_BEEEON("beeeon", R.string.server_production, "cloud.beeeon.com", 4565),
-	SERVER_ANT2_ALPHA("ant-2-alpha", R.string.server_development, "ant-2.fit.vutbr.cz", 4566);
-
-	/** Name of default CA certificate located in assets */
-	private static final String ASSETS_CA_CERT = "cacert.crt";
-
-	/** Default CN value to be verified in server certificate */
-	private static final String SERVER_CN_CERTIFICATE = "ant-2.fit.vutbr.cz";
+	SERVER_BEEEON("beeeon", R.string.server_production, "cloud.beeeon.com", 4565, "cacert.crt", "ant-2.fit.vutbr.cz"),
+	SERVER_ANT2_ALPHA("ant-2-alpha", R.string.server_development, "ant-2.fit.vutbr.cz", 4566, "cacert.crt", "ant-2.fit.vutbr.cz");
 
 	private final String mId;
 	private final int mNameRes;
@@ -27,14 +21,9 @@ public enum NetworkServer implements IIdentifier {
 	public final String certAssetsFilename;
 	public final String certVerifyUrl;
 
-	NetworkServer(String id, @StringRes int nameRes, String address, int port) {
-		this(id, nameRes, address, port, ASSETS_CA_CERT, SERVER_CN_CERTIFICATE);
-	}
-
 	NetworkServer(String id, @StringRes int nameRes, String address, int port, String certAssetsFilename, String certVerifyUrl) {
 		mId = id;
 		mNameRes = nameRes;
-
 		this.address = address;
 		this.port = port;
 		this.certAssetsFilename = certAssetsFilename;
@@ -56,7 +45,7 @@ public enum NetworkServer implements IIdentifier {
 
 	@Override
 	public String toString() {
-		return mId;
+		return getTranslatedName(BeeeOnApplication.getContext()); // TODO was mId here!
 	}
 
 	public static NetworkServer getDefaultServer() {

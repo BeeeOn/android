@@ -10,20 +10,20 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -32,9 +32,11 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
+import com.rehivetech.beeeon.gui.adapter.ServerAdapter;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.model.entity.Server;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
@@ -43,9 +45,12 @@ import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
 
+import java.util.Arrays;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
@@ -65,11 +70,14 @@ public class LoginActivity extends BaseActivity {
 	@Bind(android.R.id.content) View mRootView;
 	@Bind(R.id.login_select_server_spinner) Spinner mLoginSelectServerSpinner;
 	@Bind(R.id.login_select_server_layout) LinearLayout mLoginSelectServerLayout;
-
+	@Bind(R.id.login_select_server) RecyclerView mLoginSelectServerRecyclerView;
+	private ServerAdapter mServerAdapter;
 	private BetterProgressDialog mProgress;
-
+	@Bind(R.id.login_bottom_sheet) View mBottomSheet;
 	private boolean mLoginCancel = false;
 	private IAuthProvider mAuthProvider;
+	private Realm mRealm;
+	private BottomSheetBehavior<View> mBottomSheetBehavior;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -79,8 +87,11 @@ public class LoginActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		mRealm = Realm.getDefaultInstance();
 		ButterKnife.bind(this);
 		setupToolbar("", INDICATOR_NONE);
+
+		mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
 		// Get controller
 		Controller controller = Controller.getInstance(this);
@@ -92,15 +103,7 @@ public class LoginActivity extends BaseActivity {
 			return;
 		}
 
-		// Intro to app
-		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-		if (prefs.getBoolean(Constants.GUI_INTRO_PLAY, true)) {
-			Log.d(TAG, "Go to INTRO");
-			prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY, false).apply();
-			Intent intent = new Intent(this, IntroActivity.class);
-			startActivity(intent);
-			return;
-		}
+		showIntroFirstTime();
 
 		// Prepare progressDialog
 		mProgress = new BetterProgressDialog(this);
@@ -124,29 +127,53 @@ public class LoginActivity extends BaseActivity {
 			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", lastAuthProvider.getProviderName(), lastAuthProvider.getPrimaryParameter()));
 			prepareLogin(lastAuthProvider);
 		}
+
+//		mRealm.executeTransaction(new Realm.Transaction() {
+//			@Override
+//			public void execute(Realm realm) {
+//				long nextID = Utils.autoIncrement(realm, Server.class);
+//				Server myServer = new Server();
+//				myServer.setId(nextID);
+//				myServer.setName("První server");
+//				realm.copyToRealm(myServer);
+//			}
+//		});
+
+		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+		mServerAdapter = new ServerAdapter(this, mRealm.where(Server.class).findAllAsync());
+		mLoginSelectServerRecyclerView.setAdapter(mServerAdapter);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+			mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+		} else {
+			super.onBackPressed();
+		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mRealm.close();
+	}
+
+	/**
+	 * Shows intro to the app if was not previously shown
+	 */
+	private void showIntroFirstTime() {
+		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+		if (!prefs.getBoolean(Constants.GUI_INTRO_PLAY, true)) return;
+
+		Log.d(TAG, "Go to INTRO");
+		prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY, false).apply();
+		Intent intent = new Intent(this, IntroActivity.class);
+		startActivity(intent);
 	}
 
 	private void prepareServerSpinner() {
-
-		// TODO: This is a bit dirty way to set the name. Use own adapter to have translated "(default)" sufix (and perhaps also server names itself) properly
-		ArrayAdapter adapter = new ArrayAdapter<NetworkServer>(this, R.layout.overlay_spinner_item, NetworkServer.values()) {
-			private View changeText(View view, int position) {
-				NetworkServer item = getItem(position);
-				String name = item.getTranslatedName(LoginActivity.this);
-				((TextView) view).setText(name);
-				return view;
-			}
-
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent) {
-				return changeText(super.getView(position, convertView, parent), position);
-			}
-
-			@Override
-			public View getDropDownView(int position, View convertView, ViewGroup parent) {
-				return changeText(super.getDropDownView(position, convertView, parent), position);
-			}
-		};
+		ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.overlay_spinner_item, Arrays.asList(NetworkServer.values()));
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mLoginSelectServerSpinner.setAdapter(adapter);
 
@@ -241,12 +268,6 @@ public class LoginActivity extends BaseActivity {
 				break;
 			}
 		}
-	}
-
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		finish();
 	}
 
 	@Override
@@ -537,6 +558,12 @@ public class LoginActivity extends BaseActivity {
 		Intent intent = new Intent(this, IntroActivity.class);
 		startActivity(intent);
 	}
+
+	// TODO not working
+//	@OnClick(R.id.login_bottom_sheet)
+//	public void onClickBottomSheet(){
+//		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//	}
 
 	/**
 	 * Click listeners for login buttons
