@@ -49,7 +49,6 @@ public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapte
 	public static class ServerViewHolder extends RecyclerView.ViewHolder {
 		@Bind(R.id.server_radio) public RadioButton radio;
 		@Bind(R.id.server_name) public TextView name;
-		@Bind(R.id.server_delete) public ImageView deleteIcon;
 
 		public Server data;
 

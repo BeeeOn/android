@@ -9,6 +9,9 @@
     <string name="not_specified">Not specified</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_delete">Delete</string>
+    <string name="dialog_edit">Edit</string>
+    <string name="dialog_create">Create</string>
 
     <!-- Permissions -->
     <string name="permission_accounts_warning">If you want to login, you must enable permission to access accounts.</string>
@@ -496,5 +499,6 @@
     <!-- errors -->
     <string name="error_no_url">No URL address specified!</string>
     <string name="login_take_tour">Take a tour</string>
+    <string name="server_title_create">Create server</string>
 </resources>
 

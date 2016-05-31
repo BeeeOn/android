@@ -319,8 +319,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 				break;
 			}
 			case R.id.nav_drawer_about: {
-				InfoDialogFragment dialog = new InfoDialogFragment();
-				dialog.show(getSupportFragmentManager(), FRAGMENT_TAG_INFO);
+				showAboutDialog();
 				break;
 			}
 			case R.id.nav_drawer_logout: {
