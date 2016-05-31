@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -21,9 +22,14 @@ import io.realm.RealmRecyclerViewAdapter;
  */
 public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapter.ServerViewHolder> {
 	private ClickableRecyclerViewAdapter.OnItemClickListener mOnItemClickListener;
+	private ClickableRecyclerViewAdapter.OnItemLongClickListener mOnItemLongClickListener;
 
 	public void setOnItemClickListener(ClickableRecyclerViewAdapter.OnItemClickListener onItemClickListener) {
 		mOnItemClickListener = onItemClickListener;
+	}
+
+	public void setOnItemLongClickListener(ClickableRecyclerViewAdapter.OnItemLongClickListener onItemLongClickListener){
+		mOnItemLongClickListener = onItemLongClickListener;
 	}
 
 	public ServerAdapter(Context context, OrderedRealmCollection<Server> data) {
@@ -35,6 +41,7 @@ public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapte
 		View v = inflater.inflate(R.layout.item_list_server, parent, false);
 		ServerViewHolder viewHolder = new ServerViewHolder(v);
 		viewHolder.setOnItemClickListener(mOnItemClickListener);
+		viewHolder.setOnItemLongClickListener(mOnItemLongClickListener);
 		return viewHolder;
 	}
 
@@ -42,16 +49,13 @@ public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapte
 	@Override
 	public void onBindViewHolder(ServerViewHolder holder, int position) {
 		Server server = getData().get(position);
-		holder.data = server;
 		holder.name.setText(server.toString());
-//		holder.
+		holder.name.setTextColor(ContextCompat.getColor(context, server.isDeletable() ? R.color.beeeon_secondary_text : R.color.beeeon_primary_text));
 	}
 
 	public static class ServerViewHolder extends ClickableRecyclerViewAdapter.ViewHolder {
 		@Bind(R.id.server_radio) public RadioButton radio;
 		@Bind(R.id.server_name) public TextView name;
-
-		public Server data;
 
 		public ServerViewHolder(View itemView) {
 			super(itemView);

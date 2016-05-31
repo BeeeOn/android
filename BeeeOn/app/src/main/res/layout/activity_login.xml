@@ -135,6 +135,7 @@
                 />
 
             <RelativeLayout
+                android:id="@+id/login_select_server_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/beeeon_background"
@@ -148,6 +149,15 @@
                     android:layout_marginBottom="@dimen/space_double"
                     android:text="@string/login_label_server"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    />
+
+                <View
+                    android:id="@+id/login_select_server_icon"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
                     />
 
                 <android.support.v7.widget.RecyclerView
@@ -171,37 +181,6 @@
                     android:textColor="@color/beeeon_primary_dark"
                     />
             </RelativeLayout>
-
-            <!-- select server -->
-            <LinearLayout
-                android:id="@+id/login_select_server_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/space_double"
-                android:layout_marginLeft="@dimen/space_double"
-                android:layout_marginRight="@dimen/space_double"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/login_label_server"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    />
-
-                <android.support.v7.widget.AppCompatSpinner
-                    android:id="@+id/login_select_server_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/space_normal"
-                    android:layout_marginStart="@dimen/space_normal"
-                    app:popupTheme="@style/AppTheme"
-                    tools:listitem="@layout/overlay_spinner_item"
-                    />
-            </LinearLayout>
-
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

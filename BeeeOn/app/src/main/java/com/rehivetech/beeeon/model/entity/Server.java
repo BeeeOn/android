@@ -15,6 +15,8 @@ public class Server extends RealmObject {
 	public static final long SERVER_ID_DEVEL = 2;
 	public static final int DEFAULT_PORT = 4565;
 
+	public static final Server PRODUCTION_SERVER = new Server(SERVER_ID_PRODUCTION, BeeeOnApplication.getContext().getString(R.string.server_production), "cloud.beeeon.com", 4565, "cacert.crt", "ant-2.fit.vutbr.cz");
+
 	@PrimaryKey
 	private long id;
 	public String name;
@@ -24,6 +26,15 @@ public class Server extends RealmObject {
 	public String certVerifyUrl;
 
 	public Server() {
+	}
+
+	public Server(long id, String name, String address, int port, String certAssetsFilename, String certVerifyUrl) {
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.port = port;
+		this.certAssetsFilename = certAssetsFilename;
+		this.certVerifyUrl = certVerifyUrl;
 	}
 
 	public Server(long id) {
@@ -36,6 +47,10 @@ public class Server extends RealmObject {
 
 	public long getId() {
 		return id;
+	}
+
+	public boolean isDeletable() {
+		return Server.isDeletable(getId());
 	}
 
 	public static boolean isDeletable(long id) {

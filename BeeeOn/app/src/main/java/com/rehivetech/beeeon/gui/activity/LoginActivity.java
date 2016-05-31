@@ -22,9 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -49,8 +46,6 @@ import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.util.Validator;
 
-import java.util.Arrays;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -74,10 +69,9 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	private static final int DIALOG_REQUEST_SERVER_DETAIL = 1;
 
 	@Bind(android.R.id.content) View mRootView;
-	@Bind(R.id.login_select_server_spinner) Spinner mLoginSelectServerSpinner;
-	@Bind(R.id.login_select_server_layout) LinearLayout mLoginSelectServerLayout;
 	@Bind(R.id.login_select_server) RecyclerView mLoginSelectServerRecyclerView;
 	@Bind(R.id.login_bottom_sheet) View mBottomSheet;
+	@Bind(R.id.login_select_server_icon) View mSelectServerIcon;
 
 	private BetterProgressDialog mProgress;
 	private boolean mLoginCancel = false;
@@ -172,37 +166,53 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 * Prepares UI for server spinner
 	 */
 	private void prepareServers() {
-		ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.overlay_spinner_item, Arrays.asList(NetworkServer.values()));
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		mLoginSelectServerSpinner.setAdapter(adapter);
+		String serverId = Persistence.loadLoginServerId(this); //beeeon / ant-2-alpha
 
-		String serverId = Persistence.loadLoginServerId(this);
+
 		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
-		mLoginSelectServerSpinner.setSelection(server.ordinal());
 
 		// Set choose server visibility
 		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 		setSelectServerVisibility(chooseServerEnabled);
 
 		mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+		mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+			@Override
+			public void onStateChanged(@NonNull View bottomSheet, int newState) {
+				if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+					mSelectServerIcon.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+				} else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
+					mSelectServerIcon.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+				}
+			}
 
-//		RealmResults<Server> servers = mRealm.where(Server.class).findAllAsync();
-//		servers.addChangeListener(new RealmChangeListener<RealmResults<Server>>() {
-//			@Override
-//			public void onChange(RealmResults<Server> element) {
-//
-//			}
-//		});
+			@Override
+			public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+				// TODO handle icons here so that it changes right when sliding
+			}
+		});
+		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAllAsync();
 
 		final ServerAdapter serverAdapter = new ServerAdapter(this, serversData);
+
+		// click on server item --> SELECTS AS SERVER
 		serverAdapter.setOnItemClickListener(new ClickableRecyclerViewAdapter.OnItemClickListener() {
 			@Override
 			public void onRecyclerViewItemClick(ClickableRecyclerViewAdapter.ViewHolder viewHolder, int position, int viewType) {
 				Server server = serverAdapter.getItem(position);
+				Toast.makeText(LoginActivity.this, server.name, Toast.LENGTH_LONG).show();
+			}
+		});
+
+		// long click on server item --> EDITING
+		serverAdapter.setOnItemLongClickListener(new ClickableRecyclerViewAdapter.OnItemLongClickListener() {
+			@Override
+			public boolean onRecyclerViewItemLongClick(ClickableRecyclerViewAdapter.ViewHolder viewHolder, int position, int viewType) {
+				Server server = serverAdapter.getItem(position);
 				ServerDetailDialog.showEdit(LoginActivity.this, getSupportFragmentManager(), DIALOG_REQUEST_SERVER_DETAIL, server.getId());
+				return true;
 			}
 		});
 		mLoginSelectServerRecyclerView.setAdapter(serverAdapter);
@@ -341,9 +351,13 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		return false;
 	}
 
-	private void setSelectServerVisibility(boolean visible) {
-		mLoginSelectServerLayout.setVisibility(visible ? View.VISIBLE : View.GONE); // TODO put away
-		mBottomSheet.setVisibility(visible ? View.VISIBLE : View.GONE);
+	/**
+	 * In case it's shown/viewed selecting servers
+	 *
+	 * @param isVisible wheter visible or not
+	 */
+	private void setSelectServerVisibility(boolean isVisible) {
+		mBottomSheet.setVisibility(isVisible ? View.VISIBLE : View.GONE);
 	}
 
 
@@ -360,10 +374,11 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	protected void setDemoMode(boolean demoMode) {
 		// Get selected server
 		String serverId = "";
-		if (mLoginSelectServerLayout.getVisibility() == View.VISIBLE) {
-			NetworkServer server = (NetworkServer) mLoginSelectServerSpinner.getSelectedItem();
-			serverId = server != null ? server.getId() : "";
-		}
+		// TODO
+//		if (mLoginSelectServerLayout.getVisibility() == View.VISIBLE) {
+//			NetworkServer server = (NetworkServer) mLoginSelectServerSpinner.getSelectedItem();
+//			serverId = server != null ? server.getId() : "";
+//		}
 
 		// After changing demo mode must be controller reloaded
 		Controller.setDemoMode(this, demoMode, serverId);
@@ -580,11 +595,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		startActivity(intent);
 	}
 
-	// TODO not working
-//	@OnClick(R.id.login_bottom_sheet)
-//	public void onClickBottomSheet(){
-//		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//	}
+	@OnClick(R.id.login_select_server_wrapper)
+	public void onClickBottomSheet() {
+		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+	}
 
 	@OnClick(R.id.login_server_add)
 	public void onClickServerAddButton(View view) {
