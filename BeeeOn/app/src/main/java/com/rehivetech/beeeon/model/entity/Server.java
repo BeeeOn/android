@@ -15,6 +15,7 @@ import io.realm.annotations.RealmClass;
 public class Server implements RealmModel {
 	public static final long SERVER_ID_PRODUCTION = 1;
 	public static final long SERVER_ID_DEVEL = 2;
+	public static final int DEFAULT_PORT = 4565;
 
 	@PrimaryKey
 	private long id;

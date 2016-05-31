@@ -485,6 +485,9 @@
     <string name="validation_number">Vložte platné číslo.</string>
     <string name="validation_email">Vložte platnou e-mailovou adresu.</string>
     <string name="validation_ip_address">Vložte platnou IP adresu ve tvaru podobném do 192.168.100.100.</string>
+    <string name="validation_port">Vložte číslo v\u00A0rozsahu 1\u00A0–\u00A065535.</string>
+
+
     <string name="login_take_tour">Zobrazit průvodce</string>
 
 </resources>

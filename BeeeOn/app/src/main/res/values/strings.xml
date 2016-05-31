@@ -494,6 +494,7 @@
     <string name="validation_number">Input must be number.</string>
     <string name="validation_email">Input must be valid email address.</string>
     <string name="validation_ip_address">Enter a valid IP address. It should look like 192.168.100.100.</string>
+    <string name="validation_port">Enter number in\u00A0range 1\u00A0–\u00A065535.</string>
 
 
     <!-- errors -->

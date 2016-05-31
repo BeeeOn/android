@@ -601,7 +601,7 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 		final TextInputLayout serverNameView = (TextInputLayout) view.findViewById(R.id.server_name);
 		final TextInputLayout serverHostView = (TextInputLayout) view.findViewById(R.id.server_host);
 		final TextInputLayout serverPortView = (TextInputLayout) view.findViewById(R.id.server_port);
-		if (!Validator.validate(serverNameView) || !Validator.validate(serverHostView) || !Validator.validate(serverPortView)) {
+		if (!Validator.validate(serverNameView) || !Validator.validate(serverHostView) || !Validator.validate(serverPortView, Validator.PORT)) {
 			return;
 		}
 
@@ -620,5 +620,7 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 				realm.copyToRealmOrUpdate(server);
 			}
 		});
+
+		dialog.dismiss();
 	}
 }

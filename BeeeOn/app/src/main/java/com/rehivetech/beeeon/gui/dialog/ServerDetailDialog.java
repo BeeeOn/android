@@ -78,8 +78,20 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 		super.onStart();
 		mRealm = Realm.getDefaultInstance();
 		mServer = mRealm.where(Server.class).equalTo("id", mServerId).findFirst();
-		if (mServer == null) {
-			mServer = new Server(Utils.autoIncrement(mRealm, Server.class));
+		fillUI();
+	}
+
+	private void fillUI() {
+		if (mNameView.getEditText() != null) {
+			mNameView.getEditText().setText(getServer().name);
+		}
+
+		if (mPortView.getEditText() != null) {
+			mPortView.getEditText().setText(String.valueOf(getServer().port));
+		}
+
+		if (mHostView.getEditText() != null) {
+			mHostView.getEditText().setText(getServer().address);
 		}
 	}
 
@@ -90,6 +102,10 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 	 */
 	@NonNull
 	public Server getServer() {
+		if (mServer == null) {
+			mServer = new Server(Utils.autoIncrement(mRealm, Server.class));
+			mServer.port = mServer.DEFAULT_PORT;
+		}
 		return mServer;
 	}
 
@@ -105,19 +121,8 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 		Builder builder = super.build(parentBuilder);
 
 		mNameView = (TextInputLayout) mRootView.findViewById(R.id.server_name);
-		if (mNameView.getEditText() != null) {
-			mNameView.getEditText().setText(getServer().name);
-		}
-
 		mPortView = (TextInputLayout) mRootView.findViewById(R.id.server_port);
-		if (mPortView.getEditText() != null) {
-			mPortView.getEditText().setText(getServer().port);
-		}
-
 		mHostView = (TextInputLayout) mRootView.findViewById(R.id.server_host);
-		if (mHostView.getEditText() != null) {
-			mHostView.getEditText().setText(getServer().address);
-		}
 
 		return builder;
 	}
