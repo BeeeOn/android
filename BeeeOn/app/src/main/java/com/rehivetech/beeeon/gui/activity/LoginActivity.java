@@ -34,6 +34,7 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.adapter.ServerAdapter;
+import com.rehivetech.beeeon.gui.adapter.base.ClickableRecyclerViewAdapter;
 import com.rehivetech.beeeon.gui.dialog.BaseFragmentDialog;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.ServerDetailDialog;
@@ -55,13 +56,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
+import io.realm.RealmObject;
 
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
  *
  * @author Robyer
  */
-public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IPositiveButtonDialogListener<ServerDetailDialog> {
+public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IPositiveButtonDialogListener<ServerDetailDialog>, BaseFragmentDialog.IDeleteButtonDialogListener<ServerDetailDialog> {
 	private static final String TAG = LoginActivity.class.getSimpleName();
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
@@ -184,9 +186,25 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 
 		mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+//		RealmResults<Server> servers = mRealm.where(Server.class).findAllAsync();
+//		servers.addChangeListener(new RealmChangeListener<RealmResults<Server>>() {
+//			@Override
+//			public void onChange(RealmResults<Server> element) {
+//
+//			}
+//		});
+
 		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAllAsync();
 
-		ServerAdapter serverAdapter = new ServerAdapter(this, serversData);
+		final ServerAdapter serverAdapter = new ServerAdapter(this, serversData);
+		serverAdapter.setOnItemClickListener(new ClickableRecyclerViewAdapter.OnItemClickListener() {
+			@Override
+			public void onRecyclerViewItemClick(ClickableRecyclerViewAdapter.ViewHolder viewHolder, int position, int viewType) {
+				Server server = serverAdapter.getItem(position);
+				ServerDetailDialog.showEdit(LoginActivity.this, getSupportFragmentManager(), server.getId());
+			}
+		});
 		mLoginSelectServerRecyclerView.setAdapter(serverAdapter);
 	}
 
@@ -622,5 +640,26 @@ public class LoginActivity extends BaseActivity implements BaseFragmentDialog.IP
 		});
 
 		dialog.dismiss();
+	}
+
+	/**
+	 * Deleting from dialog
+	 * @param requestCode
+	 * @param view
+	 * @param dialog
+	 */
+	@Override
+	public void onDeleteButtonClicked(int requestCode, View view, final ServerDetailDialog dialog) {
+		final Server server = dialog.getServer();
+		mRealm.executeTransaction(new Realm.Transaction() {
+			@Override
+			public void execute(Realm realm) {
+				if (RealmObject.isValid(server) && server.isDeletable()) {
+					RealmObject.deleteFromRealm(server);
+				} else {
+					Log.e(TAG, "Trying to delete non deletable server!");
+				}
+			}
+		});
 	}
 }

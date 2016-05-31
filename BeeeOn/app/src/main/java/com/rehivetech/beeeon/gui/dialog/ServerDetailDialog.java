@@ -51,7 +51,7 @@ public class ServerDetailDialog extends BaseFragmentDialog {
 		new ServerDetailDialogBuilder(context, fragmentManager)
 				.setServerId(serverId)
 				.setTitle(R.string.server_detail_title_edit)
-				.setPositiveButtonText(R.string.dialog_create)
+				.setPositiveButtonText(R.string.dialog_edit)
 				.setNegativeButtonText(R.string.dialog_cancel)
 				.setNeutralButtonText(R.string.dialog_delete)
 				.show();
