@@ -11,7 +11,6 @@
     <string name="ClientError___UNKNOWN_HOST">Unknown host.</string>
     <string name="ClientError___XML">Processing of message failed.\n\nTry again later.</string>
     <string name="ClientError___UNEXPECTED_RESPONSE">Received unexpected response.</string>
-    <string name="ClientError___CERTIFICATE_NOT_FOUND">Server\'s certificate not found in device.</string>
 
     <string name="NetworkError___GATE_HAVE_YET">You have already registered this gateway.</string>
     <string name="NetworkError___GATE_NOT_EXISTS">This gateway has not connected to cloud yet.\n\nPlease check its Internet connection.</string>

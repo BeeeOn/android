@@ -498,5 +498,7 @@
     <string name="server_detail_port">Port</string>
     <string name="server_detail_title_create">Vytvoriť server</string>
     <string name="server_detail_title_edit">Upraviť server</string>
+    <string name="server_detail_certificate">Certifikát</string>
+    <string name="server_detail_url_verify">URL na overenie</string>
 
 </resources>

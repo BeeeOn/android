@@ -509,5 +509,7 @@
     <string name="server_detail_name">Server name</string>
     <string name="server_detail_host">Host address</string>
     <string name="server_detail_port">Port</string>
+    <string name="server_detail_certificate">Certificate</string>
+    <string name="server_detail_url_verify">URL to verify</string>
 </resources>
 
