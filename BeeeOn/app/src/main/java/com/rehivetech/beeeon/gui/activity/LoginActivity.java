@@ -39,6 +39,7 @@ import com.rehivetech.beeeon.gui.dialog.BaseBeeeOnDialog;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.ServerDetailDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
+import com.rehivetech.beeeon.model.DatabaseSeed;
 import com.rehivetech.beeeon.model.entity.Server;
 import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
@@ -197,6 +198,9 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAll();
+		if (serversData.isEmpty() || serversData.size() < 2) {
+			mRealm.executeTransaction(new DatabaseSeed());
+		}
 
 		mServersAdapter = new ServerAdapter(this, serversData);
 
@@ -236,14 +240,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		});
 		mLoginSelectServerRecyclerView.setAdapter(mServersAdapter);
 
-		long serverId = Persistence.loadLoginServerId(this);
-		int index = 0;
-		for (Server server : serversData) {
-			if (serverId == server.getId()) {
-				mServersAdapter.setSelectedPosition(index);
-				break;
-			}
-			index++;
+		Long serverId = Persistence.loadLoginServerId(this);
+		int index = Utils.getIndexFromList(serverId, serversData);
+		if (index > Constants.NO_INDEX) {
+			mServersAdapter.setSelectedPosition(index);
 		}
 	}
 
@@ -718,10 +718,18 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 					// need to set some id of server (default)
 					if (selectedServer != null && selectedServer.equals(serverToDelete)) {
 						Persistence.saveLoginServerId(LoginActivity.this, Server.SERVER_ID_PRODUCTION);
+						mServersAdapter.setSelectedPosition(0);    // we assume first server is production (always will be!)
 					}
 
-					// delete server from db
-					serverToDelete.deleteFromRealm();
+					int index = Utils.getIndexFromList(serverToDelete.getId(), mServersAdapter.getData());
+					if (index > Constants.NO_INDEX) {
+						mServersAdapter.getData().deleteFromRealm(index);
+					} else {
+						// delete server from db
+						serverToDelete.deleteFromRealm();
+					}
+
+
 				} else {
 					Log.e(TAG, "Trying to delete non deletable server!");
 				}

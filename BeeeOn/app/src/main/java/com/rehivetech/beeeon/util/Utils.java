@@ -335,7 +335,24 @@ final public class Utils {
 	 * @param <T>
 	 * @return index or -1 if not found
 	 */
-	public static <T extends IIdentifier> int getObjectIndexFromList(String id, List<T> objects) {
+	public static <T extends IIdentifier> int getObjectIndexFromList(Object id, List<T> objects) {
+		int index = 0;
+		for (T tempObj : objects) {
+			if (tempObj.getId().equals(id)) return index;
+			index++;
+		}
+		return -1;
+	}
+
+	/**
+	 * Somehow manage to merge it with other function for gettin index
+	 *
+	 * @param id
+	 * @param objects
+	 * @param <T>
+	 * @return
+	 */
+	public static <T extends com.rehivetech.beeeon.model.entity.IIdentifier> int getIndexFromList(Object id, List<T> objects) {
 		int index = 0;
 		for (T tempObj : objects) {
 			if (tempObj.getId().equals(id)) return index;

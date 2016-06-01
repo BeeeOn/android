@@ -75,4 +75,6 @@
 	<integer name="graph_number_circles">20</integer>
 	
 	<integer name="dashboard_span_count">1</integer>
+
+	<dimen name="bottomsheet_width">400dp</dimen>
 </resources>

@@ -10,6 +10,8 @@ package com.rehivetech.beeeon;
  * @author Robyer
  */
 public final class Constants {
+	public static final int NO_ID = -1;
+	public static final int NO_INDEX = -1;
 
 	/**
 	 * Persistence's shared preferences

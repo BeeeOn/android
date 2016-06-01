@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
  * @author mlyko
  * @since 30.05.2016
  */
-public class Server extends RealmObject {
+public class Server extends RealmObject implements IIdentifier {
 	public static final long SERVER_ID_PRODUCTION = 1;
 	public static final long SERVER_ID_DEVEL = 2;
 	public static final int DEFAULT_PORT = 4565;
@@ -46,7 +46,7 @@ public class Server extends RealmObject {
 		this.id = id;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 

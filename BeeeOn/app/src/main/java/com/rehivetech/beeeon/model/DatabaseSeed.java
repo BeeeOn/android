@@ -17,6 +17,9 @@ public class DatabaseSeed implements Realm.Transaction {
 	public void execute(Realm realm) {
 		Context appContext = BeeeOnApplication.getContext();
 
+		// deleting all servers
+		realm.delete(Server.class);
+
 		// seeding production server
 		Server production = new Server(Server.SERVER_ID_PRODUCTION);
 		production.name = appContext.getString(R.string.server_production);
