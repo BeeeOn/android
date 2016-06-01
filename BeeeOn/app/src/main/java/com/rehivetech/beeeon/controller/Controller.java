@@ -33,7 +33,6 @@ import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.demo.DemoNetwork;
 import com.rehivetech.beeeon.network.server.Network;
-import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.persistence.DashBoardPersistence;
 import com.rehivetech.beeeon.persistence.GraphSettingsPersistence;
 import com.rehivetech.beeeon.persistence.Persistence;
@@ -132,14 +131,12 @@ public final class Controller {
 		// Load login server
 		long serverId = Persistence.loadLoginServerId(context);
 
-		// Create login server
-		NetworkServer networkServer = NetworkServer.getDefaultServer();//Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
-
+		// get login server
 		Server server = Server.getServerSafeById(serverId);
-		Log.d(TAG, "Selected server: " + networkServer);
 
 		// Create basic objects
-		mNetwork = mDemoMode ? new DemoNetwork(mContext) : new Network(mContext, server);
+		mNetwork = mDemoMode ? new DemoNetwork() : new Network(server);
+
 		mPersistence = new Persistence(mContext);
 		mUser = new User();
 
@@ -159,6 +156,19 @@ public final class Controller {
 		}
 	}
 
+	public static void checkServer(Context context) throws AppException{
+		// Load last used mode
+		boolean demoMode = Persistence.loadLastDemoMode(context);
+
+		// Load login server
+		long serverId = Persistence.loadLoginServerId(context);
+
+		// get login server
+		Server server = Server.getServerSafeById(serverId);
+
+		INetwork network = demoMode ? new DemoNetwork() : new Network(server);
+	}
+
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
 	 * <p/>
@@ -167,9 +177,8 @@ public final class Controller {
 	 *
 	 * @param context
 	 * @param demoMode
-	 * @param serverId
 	 */
-	public static synchronized void setDemoMode(@NonNull Context context, boolean demoMode, String serverId) {
+	public static synchronized void setDemoMode(@NonNull Context context, boolean demoMode) {
 		// Remember last used mode
 		Persistence.saveLastDemoMode(context, demoMode);
 

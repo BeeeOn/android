@@ -1,12 +1,10 @@
 package com.rehivetech.beeeon.network.server;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.IErrorCode;
@@ -87,12 +85,11 @@ public class Network implements INetwork {
 
 	private static final int SSL_TIMEOUT = 35000;
 
-	private final Context mContext;
 	private final Server mServer;
 	private String mSessionId = "";
 
 	@Nullable
-	private final SSLSocketFactory mSocketFactory;
+	private SSLSocketFactory mSocketFactory;
 
 	private final Object mSocketLock = new Object();
 	private SSLSocket mSocket = null;
@@ -101,14 +98,17 @@ public class Network implements INetwork {
 
 	private boolean mInterrupted;
 
-	public Network(Context context, Server server) {
-		mContext = context;
+	public Network(Server server) {
 		mServer = server;
+		connect();
+	}
 
+	public void connect() {
 		SSLSocketFactory socketFactory = null;
+
 		try {
 			// Open CA certificate from assets
-			InputStream inStreamCertTmp = mContext.getAssets().open(mServer.certAssetsFilename);
+			InputStream inStreamCertTmp = BeeeOnApplication.getContext().getAssets().open(mServer.certAssetsFilename);
 			InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
 			Certificate ca;
 			try {
@@ -133,13 +133,13 @@ public class Network implements INetwork {
 			sslContext.init(null, tmf.getTrustManagers(), null);
 
 			socketFactory = sslContext.getSocketFactory();
-		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException | IllegalArgumentException e) {
 			// IOException - Can't read CA certificate from assets or can't create new socket
 			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
 			// KeyStoreException - Bad type of KeyStore, can't set CA certificate to KeyStore
 			// NoSuchAlgorithmException - Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
 			// KeyManagementException - general exception, thrown to indicate an exception during processing an operation concerning key management
-
+			// IllegalArgumentException - asset is empty
 			Log.e(TAG, "Can't create socketFactory! No network connection is possible.");
 		}
 
@@ -301,9 +301,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean isAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+		return Utils.isInternetAvailable();
 	}
 
 	/**
@@ -327,6 +325,10 @@ public class Network implements INetwork {
 	 *                      ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE, ClientError.SOCKET or ClientError.NO_RESPONSE
 	 */
 	private synchronized String doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
+		if (mSocketFactory == null) {
+			throw new AppException(ClientError.CERTIFICATE); // TODO was not here;
+		}
+
 		// Check internet connection
 		if (!isAvailable())
 			throw new AppException(ClientError.INTERNET_CONNECTION);

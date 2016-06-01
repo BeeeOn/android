@@ -60,9 +60,19 @@ public class IntroActivity extends AppCompatActivity {
 		if (mPager.getCurrentItem() != (mPager.getAdapter().getCount() - 1)) {
 			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 		} else {
-			finish();
-			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			finishWithAnimation();
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		finishWithAnimation();
+	}
+
+	private void finishWithAnimation(){
+		finish();
+		overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
 	public boolean isLastFragment() {

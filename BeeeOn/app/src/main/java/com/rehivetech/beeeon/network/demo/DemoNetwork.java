@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.network.demo;
 
 import android.content.Context;
 
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.NetworkError;
@@ -57,8 +58,8 @@ public class DemoNetwork implements INetwork {
 	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>();
 	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>();
 
-	public DemoNetwork(Context context) {
-		mContext = context;
+	public DemoNetwork() {
+		mContext = BeeeOnApplication.getContext();
 
 		String demoModeName = mContext.getString(R.string.demo_network_demo_mode);
 		String demoModeEmail = mContext.getString(R.string.demo_network_demo_mode_email);

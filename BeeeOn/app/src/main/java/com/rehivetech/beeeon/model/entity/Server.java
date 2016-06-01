@@ -50,11 +50,11 @@ public class Server extends RealmObject {
 		return id;
 	}
 
-	public boolean isDeletable() {
-		return Server.isDeletable(getId());
+	public boolean isEditable() {
+		return Server.isEditable(getId());
 	}
 
-	public static boolean isDeletable(long id) {
+	public static boolean isEditable(long id) {
 		return !(id == SERVER_ID_PRODUCTION || id == SERVER_ID_DEVEL);
 	}
 

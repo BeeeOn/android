@@ -503,6 +503,7 @@
 
 
     <!-- server detail -->
+    <string name="server_add_new">Add new</string>
     <string name="server_detail_title_create">Create server</string>
     <string name="server_detail_title_edit">Edit server</string>
     <string name="server_detail_name">Server name</string>

@@ -114,7 +114,7 @@
     <!-- Login -->
     <string name="login_app_name">BeeeOn</string>
     <string name="login_app_slogan">Dom pod vašou kontrolou.</string>
-    <string name="login_btn_demo_mode">Zkusiť demo režim</string>
+    <string name="login_btn_demo_mode">Vyskúšať demo režim</string>
     <string name="login_btn_direct_connect">Priame pripojenie k bráne</string>
     <string name="login_dialog_message_register_new_account">Ešte nemáte vytvorený BeeeOn účet, chcete si ho teraz vytvoriť?</string>
     <string name="login_dialog_title_choose_provider">Vyberte poskytovateľa účtu</string>
@@ -488,5 +488,15 @@
     <string name="validation_port">Vložte číslo v\u00A0rozsahu 1\u00A0–\u00A065535.</string>
 
     <string name="login_take_tour">Zobraziť sprievodca</string>
+    <string name="server_add_new">Pridať nový</string>
+    <string name="dialog_create">Vytvoriť</string>
+    <string name="dialog_delete">Zmazať</string>
+    <string name="dialog_edit">Upraviť</string>
+    <string name="error_no_url">Neuvedená URL adresa!</string>
+    <string name="server_detail_host">Adresa</string>
+    <string name="server_detail_name">Název serveru</string>
+    <string name="server_detail_port">Port</string>
+    <string name="server_detail_title_create">Vytvoriť server</string>
+    <string name="server_detail_title_edit">Upraviť server</string>
 
 </resources>

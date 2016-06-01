@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -71,14 +73,15 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 	@Bind(android.R.id.content) View mRootView;
 	@Bind(R.id.login_select_server) RecyclerView mLoginSelectServerRecyclerView;
-	@Bind(R.id.login_bottom_sheet) View mBottomSheet;
+	@Bind(R.id.login_bottom_sheet) NestedScrollView mBottomSheet;
 	@Bind(R.id.login_select_server_icon) ImageView mSelectServerIcon;
 
 	private BetterProgressDialog mProgress;
 	private boolean mLoginCancel = false;
 	private IAuthProvider mAuthProvider;
 	private Realm mRealm;
-	private BottomSheetBehavior<View> mBottomSheetBehavior;
+	private BottomSheetBehavior<NestedScrollView> mBottomSheetBehavior;
+	private ServerAdapter mServersAdapter;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -193,36 +196,55 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		});
 		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAllAsync();
-		final ServerAdapter serverAdapter = new ServerAdapter(this, serversData);
+		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAll();
+
+		mServersAdapter = new ServerAdapter(this, serversData);
 
 		// click on server item --> SELECTS AS SERVER
-		serverAdapter.setOnItemClickListener(new ClickableRecyclerViewAdapter.OnItemClickListener() {
+		mServersAdapter.setOnItemClickListener(new ClickableRecyclerViewAdapter.OnItemClickListener() {
 			@Override
 			public void onRecyclerViewItemClick(ClickableRecyclerViewAdapter.ViewHolder viewHolder, int position, int viewType) {
-				Server server = serverAdapter.getItem(position);
+				Server server = mServersAdapter.getItem(position);
 
 				ServerAdapter.ServerViewHolder holder = (ServerAdapter.ServerViewHolder) viewHolder;
 				holder.radio.setChecked(true);
-				serverAdapter.setSelectedPosition(position);
+				mServersAdapter.setSelectedPosition(position);
 
 				// Remember login server
 				Persistence.saveLoginServerId(LoginActivity.this, server.getId());
 
-				Toast.makeText(LoginActivity.this, server.name, Toast.LENGTH_LONG).show();
+				// need to be handled this way because otherwise not finished clicking
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+					}
+				}, 100);
 			}
 		});
 
 		// long click on server item --> EDITING
-		serverAdapter.setOnItemLongClickListener(new ClickableRecyclerViewAdapter.OnItemLongClickListener() {
+		mServersAdapter.setOnItemLongClickListener(new ClickableRecyclerViewAdapter.OnItemLongClickListener() {
 			@Override
 			public boolean onRecyclerViewItemLongClick(ClickableRecyclerViewAdapter.ViewHolder viewHolder, int position, int viewType) {
-				Server server = serverAdapter.getItem(position);
+				Server server = mServersAdapter.getItem(position);
+				// check if is editable
+				if (!server.isEditable()) return false;
 				ServerDetailDialog.showEdit(LoginActivity.this, getSupportFragmentManager(), DIALOG_REQUEST_SERVER_DETAIL, server.getId());
 				return true;
 			}
 		});
-		mLoginSelectServerRecyclerView.setAdapter(serverAdapter);
+		mLoginSelectServerRecyclerView.setAdapter(mServersAdapter);
+
+		long serverId = Persistence.loadLoginServerId(this);
+		int index = 0;
+		for (Server server : serversData) {
+			if (serverId == server.getId()) {
+				mServersAdapter.setSelectedPosition(index);
+				break;
+			}
+			index++;
+		}
 	}
 
 	/**
@@ -316,7 +338,8 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						setDemoMode(authProvider.isDemo());
+						// After changing demo mode must be controller reloaded
+						Controller.setDemoMode(LoginActivity.this, authProvider.isDemo());
 						loggingBackgroundAction(authProvider);
 					}
 				}).start();
@@ -371,25 +394,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Custom METHODS
 	// ////////////////////////////////////////////////////////////////////////////////////
-
-	/**
-	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
-	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
-	 *
-	 * @param demoMode
-	 */
-	protected void setDemoMode(boolean demoMode) {
-		// Get selected server
-		String serverId = "";
-		// TODO
-//		if (mLoginSelectServerLayout.getVisibility() == View.VISIBLE) {
-//			NetworkServer server = (NetworkServer) mLoginSelectServerSpinner.getSelectedItem();
-//			serverId = server != null ? server.getId() : "";
-//		}
-
-		// After changing demo mode must be controller reloaded
-		Controller.setDemoMode(this, demoMode, serverId);
-	}
 
 	/**
 	 * Last loggingAction method that call controller to proceed access to server
@@ -643,13 +647,23 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				loginWithPermissionCheck(new FacebookAuthProvider());
 				break;
 		}
+
+		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 	}
 
+	/**
+	 * Server dialog was submitted
+	 *
+	 * @param requestCode in case other dialogs are here specify request code
+	 * @param view        root view of dialog
+	 * @param baseDialog  dialog itself so its possible not to dissmiss on error
+	 */
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, final BaseBeeeOnDialog baseDialog) {
 		if (requestCode != DIALOG_REQUEST_SERVER_DETAIL) {
 			return;
 		}
+		// TODO validation
 
 		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
 		final TextInputLayout serverNameView = (TextInputLayout) view.findViewById(R.id.server_name);
@@ -671,6 +685,9 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				server.name = serverNameView.getEditText().getText().toString();
 				server.address = serverHostView.getEditText().getText().toString();
 				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
+				// TODO what to do with this
+				server.certAssetsFilename = "cacert.crt";
+				server.certVerifyUrl = "ant-2.fit.vutbr.cz";
 				realm.copyToRealmOrUpdate(server);
 			}
 		});
@@ -679,11 +696,11 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	}
 
 	/**
-	 * Deleting from dialog
+	 * Deleting from server dialog
 	 *
-	 * @param requestCode
-	 * @param view
-	 * @param baseDialog
+	 * @param requestCode in case other dialogs in this activity
+	 * @param view        root view
+	 * @param baseDialog  so can get other data
 	 */
 	@Override
 	public void onDeleteButtonClicked(int requestCode, View view, final BaseBeeeOnDialog baseDialog) {
@@ -692,13 +709,19 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		}
 
 		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
-
-		final Server server = dialog.getServer();
 		mRealm.executeTransaction(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {
-				if (server.isValid() && Server.isDeletable(server.getId())) {
-					server.deleteFromRealm();
+				Server serverToDelete = dialog.getServer();
+				if (serverToDelete.isValid() && Server.isEditable(serverToDelete.getId())) {
+					Server selectedServer = mServersAdapter.getItem(mServersAdapter.getSelectedPosition());
+					// need to set some id of server (default)
+					if (selectedServer != null && selectedServer.equals(serverToDelete)) {
+						Persistence.saveLoginServerId(LoginActivity.this, Server.SERVER_ID_PRODUCTION);
+					}
+
+					// delete server from db
+					serverToDelete.deleteFromRealm();
 				} else {
 					Log.e(TAG, "Trying to delete non deletable server!");
 				}

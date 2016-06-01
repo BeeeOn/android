@@ -201,22 +201,6 @@ final public class Utils {
 		return 0;
 	}
 
-	/**
-	 * Check if this is debug version of application.
-	 *
-	 * @return true if version in Manifest contains "debug", false otherwise
-	 */
-	public static boolean isDebugVersion(Context context) {
-		try {
-			String version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-			return version.contains("debug");
-		} catch (NameNotFoundException e) {
-			// should never happen
-		}
-
-		return false;
-	}
-
 	public static String uriEncode(final String s) {
 		try {
 			return URLEncoder.encode(s, "UTF-8");
@@ -381,6 +365,13 @@ final public class Utils {
 		return null;
 	}
 
+	/**
+	 * Temporary auto increment helper for realm database
+	 *
+	 * @param realm instance
+	 * @param clazz for which will be generating max id
+	 * @return id number
+	 */
 	public synchronized static long autoIncrement(Realm realm, Class clazz) {
 		Number currentMax = realm.where(clazz).max("id"); // TODO "id" should have only identifiers or sth
 		long nextId = 1;

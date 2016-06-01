@@ -127,7 +127,7 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 		mHostView = (TextInputLayout) mRootView.findViewById(R.id.server_host);
 
 		// delete button
-		if (Server.isDeletable(mServerId)) {
+		if (Server.isEditable(mServerId)) {
 			setDeleteButton(builder, getNeutralButtonText());
 		}
 

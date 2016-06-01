@@ -115,7 +115,6 @@
         android:id="@+id/login_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true"
         android:minHeight="200dp"
         android:theme="@style/AppTheme"
         app:behavior_peekHeight="56dp"
@@ -139,49 +138,56 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/beeeon_background"
-                android:padding="@dimen/space_double"
                 >
 
                 <TextView
                     android:id="@+id/login_select_server_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/space_double"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="@dimen/space_double"
+                    android:layout_toLeftOf="@+id/login_select_server_icon"
+                    android:layout_toStartOf="@+id/login_select_server_icon"
                     android:text="@string/login_label_server"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     />
 
                 <ImageView
                     android:id="@+id/login_select_server_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="6dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
+                    android:padding="@dimen/space_normal"
                     android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
                     />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/login_select_server"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_below="@+id/login_select_server_label"
+                    android:layout_marginLeft="@dimen/space_double"
+                    android:layout_marginRight="@dimen/space_double"
                     tools:listitem="@layout/item_list_server"
                     />
 
                 <Button
                     android:id="@+id/login_server_add"
-                    style="@style/Widget.AppCompat.Button"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_below="@+id/login_select_server"
-                    android:text="Add new"
+                    android:layout_margin="@dimen/space_double"
+                    android:text="@string/server_add_new"
                     android:textAllCaps="false"
-                    android:textColor="@color/beeeon_primary_dark"
                     />
             </RelativeLayout>
         </LinearLayout>
