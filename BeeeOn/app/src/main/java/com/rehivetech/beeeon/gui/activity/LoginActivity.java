@@ -172,11 +172,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 * Prepares UI for server spinner
 	 */
 	private void prepareServers() {
-//		String serverId = Persistence.loadLoginServerId(this); //beeeon / ant-2-alpha
-
-
-//		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
-
 		// Set choose server visibility
 		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 		setSelectServerVisibility(chooseServerEnabled);
@@ -199,7 +194,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAllAsync();
-
 		final ServerAdapter serverAdapter = new ServerAdapter(this, serversData);
 
 		// click on server item --> SELECTS AS SERVER
@@ -210,9 +204,12 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 				ServerAdapter.ServerViewHolder holder = (ServerAdapter.ServerViewHolder) viewHolder;
 				holder.radio.setChecked(true);
+				serverAdapter.setSelectedPosition(position);
 
 				// Remember login server
 				Persistence.saveLoginServerId(LoginActivity.this, server.getId());
+
+				Toast.makeText(LoginActivity.this, server.name, Toast.LENGTH_LONG).show();
 			}
 		});
 
@@ -603,6 +600,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	public void onClickTakeTour(View view) {
 		Intent intent = new Intent(this, IntroActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.left_in, R.anim.left_out);
 	}
 
 	@OnClick(R.id.login_select_server_wrapper)

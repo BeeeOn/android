@@ -14,56 +14,55 @@ import com.viewpagerindicator.CirclePageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntroActivity extends AppCompatActivity{
-	private ViewPager mPager;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class IntroActivity extends AppCompatActivity {
+	@Bind(R.id.base_guide_intro_pager) ViewPager mPager;
+	@Bind(R.id.base_guide_intro_indicator) CirclePageIndicator mIndicator;
+
+	@Bind(R.id.base_guide_add_gate_skip_button) Button mButtonSkip;
+	@Bind(R.id.base_guide_add_gate_cancel_button) Button mButtonCancel;
+	@Bind(R.id.base_guide_add_gate_next_button) Button mButtonNext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_base_guide);
+		ButterKnife.bind(this);
 
 		List<IntroImageFragment.ImageTextPair> pairs = new ArrayList<>();
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_border,R.string.intro_tut_intro_text_1, R.string.intro_tut_intro_title_1));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2,R.string.intro_tut_intro_text_2, R.string.intro_tut_intro_title_2));
-		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3,R.string.intro_tut_intro_text_3, R.string.intro_tut_intro_title_3));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_logo_white_border, R.string.intro_tut_intro_text_1, R.string.intro_tut_intro_title_1));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_2, R.string.intro_tut_intro_text_2, R.string.intro_tut_intro_title_2));
+		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_3, R.string.intro_tut_intro_text_3, R.string.intro_tut_intro_title_3));
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.intro_tut_intro_text_4, R.string.intro_tut_intro_title_4));
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5, R.string.intro_tut_intro_text_5, R.string.intro_tut_intro_title_5));
 
-		IntroFragmentPagerAdapter adapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(),pairs,null);
-
-		mPager = (ViewPager) findViewById(R.id.base_guide_intro_pager);
+		IntroFragmentPagerAdapter adapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, null);
 		mPager.setAdapter(adapter);
-
-		CirclePageIndicator indicator = (CirclePageIndicator) findViewById(R.id.base_guide_intro_indicator);
-		indicator.setViewPager(mPager);
-
-		indicator.setPageColor(0x88FFFFFF);
-		indicator.setFillColor(0xFFFFFFFF);
-		indicator.setStrokeColor(0x88FFFFFF);
 
 		initLayout();
 	}
 
 	private void initLayout() {
-		// Get buttons
-		Button skipBtn = (Button) findViewById(R.id.base_guide_add_gate_skip_button);
-		Button cancelBtn = (Button) findViewById(R.id.base_guide_add_gate_cancel_button);
-		Button nextBtn = (Button) findViewById(R.id.base_guide_add_gate_next_button);
+		mIndicator.setViewPager(mPager);
+		mIndicator.setPageColor(0x88FFFFFF);
+		mIndicator.setFillColor(0xFFFFFFFF);
+		mIndicator.setStrokeColor(0x88FFFFFF);
 
-		skipBtn.setVisibility(View.INVISIBLE);
-		cancelBtn.setVisibility(View.INVISIBLE);
+		mButtonSkip.setVisibility(View.INVISIBLE);
+		mButtonCancel.setVisibility(View.INVISIBLE);
+	}
 
-		nextBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (mPager.getCurrentItem() != (mPager.getAdapter().getCount() - 1)) {
-					mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-				} else {
-					finish();
-				}
-
-			}
-		});
+	@OnClick(R.id.base_guide_add_gate_next_button)
+	public void onClickButtonNext() {
+		if (mPager.getCurrentItem() != (mPager.getAdapter().getCount() - 1)) {
+			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+		} else {
+			finish();
+			overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		}
 	}
 
 	public boolean isLastFragment() {
@@ -71,10 +70,10 @@ public class IntroActivity extends AppCompatActivity{
 	}
 
 	public void resetBtn() {
-		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.intro_base_guide_btn_next));
+		mButtonNext.setText(this.getString(R.string.intro_base_guide_btn_next));
 	}
 
 	public void setLastFragmentBtn() {
-		((Button) findViewById(R.id.base_guide_add_gate_next_button)).setText(this.getString(R.string.intro_tut_btn_start_app));
+		mButtonNext.setText(this.getString(R.string.intro_tut_btn_start_app));
 	}
 }
