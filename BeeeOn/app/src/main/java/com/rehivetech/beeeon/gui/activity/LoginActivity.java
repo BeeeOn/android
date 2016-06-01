@@ -83,6 +83,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	private Realm mRealm;
 	private BottomSheetBehavior<NestedScrollView> mBottomSheetBehavior;
 	private ServerAdapter mServersAdapter;
+	private boolean mChooseServerEnabled;
 
 	// ////////////////////////////////////////////////////////////////////////////////////
 	// ///////////////// Override METHODS
@@ -106,6 +107,8 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			onLoggedIn(); // finishes this activity
 			return;
 		}
+
+		mChooseServerEnabled = controller.getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 
 		// show intro if was not shown
 		showIntroFirstTime();
@@ -177,8 +180,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 */
 	private void prepareServers() {
 		// Set choose server visibility
-		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
-		setSelectServerVisibility(chooseServerEnabled);
+		setSelectServerVisibility(mChooseServerEnabled);
 
 		mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 		mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -354,9 +356,8 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		inflater.inflate(R.menu.activity_login_menu, menu);
 
 		// Set choose server item (un)checked
-		boolean checked = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 		MenuItem item = menu.findItem(R.id.login_menu_action_choose_server_manually);
-		item.setChecked(checked);
+		item.setChecked(mChooseServerEnabled);
 
 		return true;
 	}
