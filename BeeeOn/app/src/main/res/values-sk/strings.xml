@@ -121,7 +121,7 @@
     <string name="login_dialog_title_register_new_account">Nemáte účet</string>
     <string name="login_image_description_logo">Logo aplikácie</string>
     <string name="login_label_login">Prihláste sa pomocou:</string>
-    <string name="login_label_server">Zvoľte server:</string>
+    <string name="login_label_server">Dostupné servery</string>
     <string name="login_label_work_offline">Alebo môžete pracovať offline:</string>
     <string name="login_menu_action_choose_server_manually">Vybrať BeeeOn server ručne</string>
     <string name="login_progress_loading_demo">Nahrávam demo dáta&#8230;</string>

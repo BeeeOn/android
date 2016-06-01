@@ -151,13 +151,16 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     />
 
-                <View
+                <ImageView
                     android:id="@+id/login_select_server_icon"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/ic_keyboard_arrow_up_black_24dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
                     />
 
                 <android.support.v7.widget.RecyclerView

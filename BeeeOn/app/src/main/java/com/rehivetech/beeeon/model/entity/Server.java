@@ -4,6 +4,7 @@ import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -24,6 +25,9 @@ public class Server extends RealmObject {
 	public int port;
 	public String certAssetsFilename;
 	public String certVerifyUrl;
+
+	@Ignore
+	public String banan = "ant-2-alpha";
 
 	public Server() {
 	}

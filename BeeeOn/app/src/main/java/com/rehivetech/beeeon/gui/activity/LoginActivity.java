@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -67,11 +68,12 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 */
 	private static final boolean SERVER_ENABLED_DEFAULT = true;
 	private static final int DIALOG_REQUEST_SERVER_DETAIL = 1;
+	private static final double ICON_SLIDE_THRESHOLD = 0.2;
 
 	@Bind(android.R.id.content) View mRootView;
 	@Bind(R.id.login_select_server) RecyclerView mLoginSelectServerRecyclerView;
 	@Bind(R.id.login_bottom_sheet) View mBottomSheet;
-	@Bind(R.id.login_select_server_icon) View mSelectServerIcon;
+	@Bind(R.id.login_select_server_icon) ImageView mSelectServerIcon;
 
 	private BetterProgressDialog mProgress;
 	private boolean mLoginCancel = false;
@@ -103,11 +105,11 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		}
 
 		// Do automatic login if we have remembered last logged in user
-		IAuthProvider lastAuthProvider = controller.getLastAuthProvider();
-		if (lastAuthProvider != null && !(lastAuthProvider instanceof DemoAuthProvider)) {
+		mAuthProvider = controller.getLastAuthProvider();
+		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
 			// Automatic login with last used provider
-			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", lastAuthProvider.getProviderName(), lastAuthProvider.getPrimaryParameter()));
-			loginWithPermissionCheck(lastAuthProvider);
+			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter()));
+			loginWithPermissionCheck(mAuthProvider);
 		}
 
 		// show intro if was not shown
@@ -179,16 +181,15 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
 			@Override
 			public void onStateChanged(@NonNull View bottomSheet, int newState) {
-				if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-					mSelectServerIcon.setBackgroundResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
-				} else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-					mSelectServerIcon.setBackgroundResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-				}
 			}
 
 			@Override
 			public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-				// TODO handle icons here so that it changes right when sliding
+				if (slideOffset > ICON_SLIDE_THRESHOLD) {
+					mSelectServerIcon.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+				} else {
+					mSelectServerIcon.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+				}
 			}
 		});
 		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -202,6 +203,16 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			@Override
 			public void onRecyclerViewItemClick(ClickableRecyclerViewAdapter.ViewHolder viewHolder, int position, int viewType) {
 				Server server = serverAdapter.getItem(position);
+
+				ServerAdapter.ServerViewHolder holder = (ServerAdapter.ServerViewHolder) viewHolder;
+				holder.radio.setChecked(true);
+
+				// After changing demo mode must be controller reloaded
+//				Controller.setDemoMode(LoginActivity.this, mAuthProvider.isDemo(), server.banan);
+
+				// Remember login server
+				Persistence.saveLoginServerId(LoginActivity.this, "ant-2-alpha");
+
 				Toast.makeText(LoginActivity.this, server.name, Toast.LENGTH_LONG).show();
 			}
 		});
@@ -598,6 +609,15 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	@OnClick(R.id.login_select_server_wrapper)
 	public void onClickBottomSheet() {
 		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+	}
+
+	@OnClick(R.id.login_select_server_icon)
+	public void onClickServerSelectIcon() {
+		if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+			mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+		} else if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+			mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+		}
 	}
 
 	@OnClick(R.id.login_server_add)

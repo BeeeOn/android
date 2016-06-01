@@ -126,7 +126,7 @@
     <string name="login_dialog_title_register_new_account">No account</string>
     <string name="login_image_description_logo">Application logo</string>
     <string name="login_label_login">Login with:</string>
-    <string name="login_label_server">Select server:</string>
+    <string name="login_label_server">Available servers</string>
     <string name="login_label_work_offline">Or you can work offline:</string>
     <string name="login_menu_action_choose_server_manually">Choose BeeeOn server manually</string>
     <string name="login_progress_loading_demo">Loading demo data&#8230;</string>
