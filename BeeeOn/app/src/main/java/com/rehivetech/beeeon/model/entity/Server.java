@@ -3,8 +3,8 @@ package com.rehivetech.beeeon.model.entity;
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
-import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
 /**
@@ -25,9 +25,6 @@ public class Server extends RealmObject {
 	public int port;
 	public String certAssetsFilename;
 	public String certVerifyUrl;
-
-	@Ignore
-	public String banan = "ant-2-alpha";
 
 	public Server() {
 	}
@@ -69,5 +66,24 @@ public class Server extends RealmObject {
 		return name;
 	}
 
+	/**
+	 * Safely returns server by its id or default server if no server found
+	 *
+	 * @param serverId id which will be searched for
+	 * @return server instance
+	 */
+	public static Server getServerSafeById(long serverId) {
+		Server server;
+		Realm realm = Realm.getDefaultInstance();
+		Server serverInDb = realm.where(Server.class).equalTo("id", serverId).findFirst();
+		if (serverInDb != null) {
+			server = realm.copyFromRealm(serverInDb);
+		} else {
+			server = Server.PRODUCTION_SERVER;
+		}
+		realm.close();
+
+		return server;
+	}
 
 }

@@ -42,7 +42,6 @@ import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.network.server.NetworkServer;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.util.Validator;
@@ -104,6 +103,13 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			return;
 		}
 
+		// show intro if was not shown
+		showIntroFirstTime();
+		// Prepare progressDialog
+		prepareProgressDialog();
+		// Initialize server related views
+		prepareServers();
+
 		// Do automatic login if we have remembered last logged in user
 		mAuthProvider = controller.getLastAuthProvider();
 		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
@@ -111,13 +117,11 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter()));
 			loginWithPermissionCheck(mAuthProvider);
 		}
+	}
 
-		// show intro if was not shown
-		showIntroFirstTime();
-		// Prepare progressDialog
-		prepareProgressDialog();
-		// Initialize server related views
-		prepareServers();
+	@Override
+	protected void onStart() {
+		super.onStart();
 	}
 
 	@Override
@@ -168,10 +172,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 * Prepares UI for server spinner
 	 */
 	private void prepareServers() {
-		String serverId = Persistence.loadLoginServerId(this); //beeeon / ant-2-alpha
+//		String serverId = Persistence.loadLoginServerId(this); //beeeon / ant-2-alpha
 
 
-		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
+//		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
 
 		// Set choose server visibility
 		boolean chooseServerEnabled = Controller.getInstance(this).getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
@@ -207,13 +211,8 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				ServerAdapter.ServerViewHolder holder = (ServerAdapter.ServerViewHolder) viewHolder;
 				holder.radio.setChecked(true);
 
-				// After changing demo mode must be controller reloaded
-//				Controller.setDemoMode(LoginActivity.this, mAuthProvider.isDemo(), server.banan);
-
 				// Remember login server
-				Persistence.saveLoginServerId(LoginActivity.this, "ant-2-alpha");
-
-				Toast.makeText(LoginActivity.this, server.name, Toast.LENGTH_LONG).show();
+				Persistence.saveLoginServerId(LoginActivity.this, server.getId());
 			}
 		});
 

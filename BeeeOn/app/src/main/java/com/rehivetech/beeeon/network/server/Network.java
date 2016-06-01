@@ -19,6 +19,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.model.entity.Server;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.server.xml.XmlCreator;
@@ -87,7 +88,7 @@ public class Network implements INetwork {
 	private static final int SSL_TIMEOUT = 35000;
 
 	private final Context mContext;
-	private final NetworkServer mServer;
+	private final Server mServer;
 	private String mSessionId = "";
 
 	@Nullable
@@ -100,7 +101,7 @@ public class Network implements INetwork {
 
 	private boolean mInterrupted;
 
-	public Network(Context context, NetworkServer server) {
+	public Network(Context context, Server server) {
 		mContext = context;
 		mServer = server;
 

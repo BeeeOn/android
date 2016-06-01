@@ -28,6 +28,7 @@ import com.rehivetech.beeeon.model.ModuleLogsModel;
 import com.rehivetech.beeeon.model.UninitializedDevicesModel;
 import com.rehivetech.beeeon.model.UsersModel;
 import com.rehivetech.beeeon.model.WeatherModel;
+import com.rehivetech.beeeon.model.entity.Server;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.demo.DemoNetwork;
@@ -108,14 +109,8 @@ public final class Controller {
 		if (sController == null) {
 			synchronized (Controller.class) {
 				if (sController == null) {
-					// Load last used mode
-					boolean demoMode = Persistence.loadLastDemoMode(context);
-
-					// Load login server
-					String serverId = Persistence.loadLoginServerId(context);
-
 					// Create new singleton instance of controller
-					sController = new Controller(context, demoMode, serverId);
+					sController = new Controller(context);
 				}
 			}
 		}
@@ -127,15 +122,21 @@ public final class Controller {
 	 * Private constructor.
 	 *
 	 * @param context
-	 * @param demoMode Whether should be created Controller in demoMode
-	 * @param serverId Identifier of server to use for communication
 	 */
-	private Controller(@NonNull Context context, boolean demoMode, String serverId) {
+	private Controller(@NonNull Context context) {
 		mContext = context.getApplicationContext();
-		mDemoMode = demoMode;
+
+		// Load last used mode
+		mDemoMode = Persistence.loadLastDemoMode(context);
+
+		// Load login server
+		long serverId = Persistence.loadLoginServerId(context);
 
 		// Create login server
-		NetworkServer server = Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
+		NetworkServer networkServer = NetworkServer.getDefaultServer();//Utils.getEnumFromId(NetworkServer.class, serverId, NetworkServer.getDefaultServer());
+
+		Server server = Server.getServerSafeById(serverId);
+		Log.d(TAG, "Selected server: " + networkServer);
 
 		// Create basic objects
 		mNetwork = mDemoMode ? new DemoNetwork(mContext) : new Network(mContext, server);
@@ -160,7 +161,7 @@ public final class Controller {
 
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
-	 * <p>
+	 * <p/>
 	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
 	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
 	 *
@@ -172,11 +173,8 @@ public final class Controller {
 		// Remember last used mode
 		Persistence.saveLastDemoMode(context, demoMode);
 
-		// Remember login server
-		Persistence.saveLoginServerId(context, serverId);
-
 		// We always need to create a new Controller, due to account switch and first (not) loading of demo
-		sController = new Controller(context, demoMode, serverId);
+		sController = new Controller(context);
 	}
 
 	public boolean isDemoMode() {
@@ -491,7 +489,7 @@ public final class Controller {
 
 	/**
 	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -537,7 +535,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
@@ -681,7 +679,7 @@ public final class Controller {
 		List<Gate> gates = getGatesModel().getGates();
 
 		for (Gate gate : gates) {
-			String gateId  = gate.getId();
+			String gateId = gate.getId();
 			List<BaseItem> dashboardOld = DashBoardPersistence.loadOld(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
 			if (dashboardOld != null) {

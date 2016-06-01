@@ -13,6 +13,7 @@ import com.rehivetech.beeeon.household.device.units.NoiseUnit;
 import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
+import com.rehivetech.beeeon.model.entity.Server;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.ActualizationTime;
 import com.rehivetech.beeeon.util.CacheHoldTime;
@@ -189,17 +190,17 @@ public class Persistence {
 	}
 
 	// Last server
-	public static String loadLoginServerId(Context context) {
-		return getSettings(context, GLOBAL).getString(Constants.PERSISTENCE_PREF_LOGIN_SERVER, "");
+	public static long loadLoginServerId(Context context) {
+		return getSettings(context, GLOBAL).getLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, Server.SERVER_ID_PRODUCTION);
 	}
 
-	public static void saveLoginServerId(Context context, String server) {
+	public static void saveLoginServerId(Context context, long server) {
 		SharedPreferences.Editor editor = getSettings(context, GLOBAL).edit();
 
-		if (server == null)
+		if (server <= 0)
 			editor.remove(Constants.PERSISTENCE_PREF_LOGIN_SERVER);
 		else
-			editor.putString(Constants.PERSISTENCE_PREF_LOGIN_SERVER, server);
+			editor.putLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, server);
 
 		editor.apply();
 	}
