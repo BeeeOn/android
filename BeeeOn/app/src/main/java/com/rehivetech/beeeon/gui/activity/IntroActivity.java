@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -19,12 +20,14 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class IntroActivity extends AppCompatActivity {
+	private static final String TAG = IntroActivity.class.getSimpleName();
 	@Bind(R.id.base_guide_intro_pager) ViewPager mPager;
 	@Bind(R.id.base_guide_intro_indicator) CirclePageIndicator mIndicator;
 
 	@Bind(R.id.base_guide_add_gate_skip_button) Button mButtonSkip;
 	@Bind(R.id.base_guide_add_gate_cancel_button) Button mButtonCancel;
 	@Bind(R.id.base_guide_add_gate_next_button) Button mButtonNext;
+	private IntroFragmentPagerAdapter mPagerAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +42,38 @@ public class IntroActivity extends AppCompatActivity {
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_4, R.string.intro_tut_intro_text_4, R.string.intro_tut_intro_title_4));
 		pairs.add(new IntroImageFragment.ImageTextPair(R.drawable.beeeon_tutorial_intro_5, R.string.intro_tut_intro_text_5, R.string.intro_tut_intro_title_5));
 
-		IntroFragmentPagerAdapter adapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, null);
-		mPager.setAdapter(adapter);
+		mPagerAdapter = new IntroFragmentPagerAdapter(getSupportFragmentManager(), pairs, null);
+		mPager.setAdapter(mPagerAdapter);
 
 		initLayout();
 	}
 
 	private void initLayout() {
+		mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			boolean lastPageChange = false;
+			boolean wasCalledFinish = false;
+
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				int lastIndex = mPagerAdapter.getCount() - 1;
+				if (!wasCalledFinish && lastPageChange && position == lastIndex) {
+					finishWithAnimation();
+					wasCalledFinish = true;
+				}
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+				int currentItem = mPager.getCurrentItem();
+				int lastIndex = mPagerAdapter.getCount() - 1;
+				lastPageChange = currentItem == lastIndex && state == ViewPager.SCROLL_STATE_DRAGGING;
+			}
+		});
+
 		mIndicator.setViewPager(mPager);
 		mIndicator.setPageColor(0x88FFFFFF);
 		mIndicator.setFillColor(0xFFFFFFFF);
@@ -70,7 +98,7 @@ public class IntroActivity extends AppCompatActivity {
 		finishWithAnimation();
 	}
 
-	private void finishWithAnimation(){
+	private void finishWithAnimation() {
 		finish();
 		overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
