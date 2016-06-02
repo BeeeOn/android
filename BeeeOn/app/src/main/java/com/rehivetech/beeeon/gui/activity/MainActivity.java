@@ -24,7 +24,6 @@ import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
-import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.gui.fragment.DashboardPagerFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
 import com.rehivetech.beeeon.gui.fragment.EmptyFragment;
@@ -400,12 +399,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		email.setText(user.getEmail());
 
 		Bitmap bitmap = user.getPicture();
-		if (bitmap == null) {
-			picture.setImageResource(R.drawable.ic_person_white_48dp);
-			picture.setBackgroundResource(R.drawable.oval_primary);
-		} else {
-			picture.setImageBitmap(bitmap);
-		}
+		User.placePicture(picture, bitmap);
 
 		// Fill gates list in the header of navigation drawer
 		List<Gate> gates = controller.getGatesModel().getGates();

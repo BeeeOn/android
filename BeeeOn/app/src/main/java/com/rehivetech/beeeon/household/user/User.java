@@ -1,8 +1,14 @@
 package com.rehivetech.beeeon.household.user;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.widget.ImageView;
 
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
@@ -68,7 +74,7 @@ public class User implements INameIdentifier {
 		public String getId() {
 			return mRole;
 		}
-		
+
 		public int getStringResource() {
 			return mStringRes;
 		}
@@ -181,6 +187,27 @@ public class User implements INameIdentifier {
 
 	public String toDebugString() {
 		return String.format("Id: %s\nEmail: %s\nRole: %s\nName: %s\nGender: %s", mId, mEmail, mRole, mName, mGender);
+	}
+
+	/**
+	 * Helper for placing user picture or placeholder
+	 *
+	 * @param picture view to set
+	 * @param bitmap  user's picture
+	 */
+	public static void placePicture(ImageView picture, Bitmap bitmap) {
+		if (bitmap == null) {
+			Context appContext = BeeeOnApplication.getContext();
+			Drawable defaultPicture = ContextCompat.getDrawable(appContext, R.drawable.ic_person_black_24dp);
+			defaultPicture.mutate();
+			DrawableCompat.setTint(defaultPicture, ContextCompat.getColor(appContext, R.color.white));
+			picture.setImageDrawable(defaultPicture);
+			int padding = (int) appContext.getResources().getDimension(R.dimen.space_normal);
+			picture.setPadding(padding, padding, padding, padding);
+		} else {
+			picture.setImageBitmap(bitmap);
+			picture.setPadding(0, 0, 0, 0);
+		}
 	}
 
 	/**

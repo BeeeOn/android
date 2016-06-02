@@ -71,12 +71,7 @@ public class UsersListAdapter extends BaseAdapter {
 		holder.UserRole.setText(user.getRole().getStringResource());
 
 		Bitmap picture = user.getPicture();
-		if (picture != null) {
-			holder.UserIcon.setImageBitmap(Utils.getRoundedShape(picture));
-		} else {
-			holder.UserIcon.setImageResource(R.drawable.ic_person_white_48dp);
-			holder.UserIcon.setBackgroundResource(R.drawable.oval_primary);
-		}
+		User.placePicture(holder.UserIcon, picture);
 
 		return convertView;
 	}
