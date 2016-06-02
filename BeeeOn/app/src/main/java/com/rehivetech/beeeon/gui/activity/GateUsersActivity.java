@@ -31,10 +31,15 @@ import com.rehivetech.beeeon.threading.task.RemoveUserTask;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class GateUsersActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener, IListDialogListener {
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	private static final int ROLE_RADIO_MARGIN = 16;
+	@Bind(R.id.gate_users_list) ListView mGateUsersList;
 
 	private Gate mGate;
 	private List<User> mGateUsers;
@@ -49,6 +54,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gate_users);
+		ButterKnife.bind(this);
 		setupToolbar(R.string.gate_users_title_gate_users, INDICATOR_BACK);
 
 		// Get selected gate
@@ -61,37 +67,32 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 	private void initLayouts() {
 		// Get elements
-		final ListView listActUsers = (ListView) findViewById(R.id.gate_users_list);
 		mUsersListAdapter = new UsersListAdapter(this);
-		listActUsers.setAdapter(mUsersListAdapter);
+		mGateUsersList.setAdapter(mUsersListAdapter);
 
-		listActUsers.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		mGateUsersList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 				startSupportActionMode(new ActionModeEditModules());
-				mSelectedItem = (User) listActUsers.getAdapter().getItem(position);
+				mSelectedItem = (User) mGateUsersList.getAdapter().getItem(position);
 				mSelectedItemPos = position;
 				setUserSelected();
 				return true;
 			}
 		});
+	}
 
-		FloatingActionButton mButton = (FloatingActionButton) findViewById(R.id.gate_users_add_user_fab);
-		mButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// Go to add new user 
-				Intent intent = new Intent(GateUsersActivity.this, AddGateUserActivity.class);
-				intent.putExtra(AddGateUserActivity.EXTRA_GATE_ID, mGate.getId());
-				startActivity(intent);
-			}
-		});
+	@OnClick(R.id.gate_users_add_user_fab)
+	public void onClick() {
+		// Go to add new user
+		Intent intent = new Intent(GateUsersActivity.this, AddGateUserActivity.class);
+		intent.putExtra(AddGateUserActivity.EXTRA_GATE_ID, mGate.getId());
+		startActivity(intent);
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
 		if (mGate != null) {
 			doReloadGateUsersTask(mGate.getId(), true);
 		}

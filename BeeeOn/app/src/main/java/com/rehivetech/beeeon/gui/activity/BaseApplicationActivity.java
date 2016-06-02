@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
- * <p/>
+ * <p>
  * When user is not logged in, it will switch to LoginActivity automatically.
  * Provides useful methods for using CallbackTasks.
  */
@@ -36,11 +36,9 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
-
+	protected void onStart() {
+		super.onStart();
 		Controller controller = Controller.getInstance(this);
-
 		if (!controller.isLoggedIn()) {
 			if (!triedLoginAlready) {
 				triedLoginAlready = true;
@@ -52,21 +50,13 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		} else {
 			triedLoginAlready = false;
 		}
-
 		controller.getGcmModel().registerNotificationReceiver(this);
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-
-		Controller controller = Controller.getInstance(this);
-		controller.getGcmModel().unregisterNotificationReceiver(this);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
+		Controller.getInstance(this).getGcmModel().unregisterNotificationReceiver(this);
 
 		// Cancel and remove all remembered tasks
 		callbackTaskManager.cancelAndRemoveAll();

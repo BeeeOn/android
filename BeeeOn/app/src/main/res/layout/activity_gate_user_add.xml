@@ -1,73 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			  android:layout_width="match_parent"
-			  android:layout_height="match_parent"
-			  android:orientation="vertical">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
 
-	<include layout="@layout/layout_beeeon_toolbar"/>
+    <include layout="@layout/layout_beeeon_toolbar"/>
 
-	<ScrollView
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:paddingLeft="8dp"
-		android:paddingRight="8dp"
-		>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/space_double"
+        android:paddingRight="@dimen/space_double"
+        android:paddingTop="@dimen/space_double"
+        >
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
 
-			<TextView
-				android:text="@string/gate_user_add_add_user_email_header"
-				style="@style/LinearRow.Caption"
-				/>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/gate_user_add_user_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/gate_user_add_add_user_email_header"
+                >
 
-			<android.support.design.widget.TextInputLayout
-				android:layout_width="match_parent"
-				android:id="@+id/gate_user_add_user_email"
-				android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    >
 
-				<EditText
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:ems="10"
-					android:inputType="textEmailAddress"
-					>
+                    <requestFocus/>
+                </android.support.design.widget.TextInputEditText>
+            </android.support.design.widget.TextInputLayout>
 
-					<requestFocus/>
-				</EditText>
-			</android.support.design.widget.TextInputLayout>
+            <View
+                style="@style/BeeeOn.Divider.Full"
+                android:layout_marginBottom="@dimen/space_normal"
+                android:layout_marginTop="@dimen/space_normal"
+                />
 
-			<View
-				style="@style/BeeeOn.Divider.Full"
-				android:layout_marginTop="8dp"
-				/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="@dimen/space_mini"
+                android:layout_marginRight="@dimen/space_mini"
+                android:text="@string/gate_user_add_add_user_role_header"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/beeeon_accent"
+                />
 
-			<TextView
-				android:text="@string/gate_user_add_add_user_role_header"
-				style="@style/LinearRow.Caption"
-				/>
+            <Spinner
+                android:id="@+id/gate_user_add_user_role"
+                style="@style/BeeeOn.Spinner"
+                />
 
-			<Spinner
-				android:id="@+id/gate_user_add_user_role"
-				style="@style/BeeeOn.Spinner"
-				/>
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/gate_user_add_user_gate_save_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:src="@drawable/ic_done_black_24dp"
+                android:tint="@color/beeeon_overlay_text"
+                />
+        </LinearLayout>
 
-			<View
-				style="@style/BeeeOn.Divider.Full"
-				android:layout_marginTop="8dp"
-				/>
-
-			<Button
-				android:id="@+id/gate_user_add_user_gate_save_button"
-				android:layout_gravity="right|bottom"
-				android:layout_width="wrap_content"
-				android:layout_height="48dp"
-				android:text="@string/gate_user_add_add_user_gate"
-				/>
-		</LinearLayout>
-
-	</ScrollView>
+    </ScrollView>
 
 </LinearLayout>
