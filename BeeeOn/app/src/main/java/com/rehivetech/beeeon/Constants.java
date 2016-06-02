@@ -45,7 +45,7 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_USER_GENDER = "user_gender";
 	public static final String PERSISTENCE_PREF_USER_PICTURE = "user_picture";
 
-	public static final String PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY = "login_choose_server_manually";
+	public static final String PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY = "login_select_server_manually";
 	public static final String PERSISTENCE_PREF_LOGIN_SERVER = "login_server";
 
 	public static final String PERSISTENCE_PREF_DASHBOARD_ITEMS = "dashboard_items";

@@ -127,11 +127,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-	}
-
-	@Override
 	public void onBackPressed() {
 		if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
 			mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -201,6 +196,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAll();
 		if (serversData.isEmpty() || serversData.size() < 2) {
+			// if lower than 2 items we assume there are not default server and seed the DB
 			mRealm.executeTransaction(new DatabaseSeed());
 		}
 
@@ -370,6 +366,13 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			case R.id.login_menu_action_choose_server_manually:
 				boolean checked = !item.isChecked();
 				item.setChecked(checked);
+				if (!checked) {
+					// default server should be first
+					mServersAdapter.setSelectedPosition(0);
+					// Remember login server
+					Persistence.saveLoginServerId(LoginActivity.this, Server.SERVER_ID_PRODUCTION);
+				}
+
 				Controller.getInstance(this).getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
 				setSelectServerVisibility(checked);
 				return true;
