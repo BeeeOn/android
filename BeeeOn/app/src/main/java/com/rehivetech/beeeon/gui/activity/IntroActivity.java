@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class IntroActivity extends AppCompatActivity {
-	private static final String TAG = IntroActivity.class.getSimpleName();
 	@Bind(R.id.base_guide_intro_pager) ViewPager mPager;
 	@Bind(R.id.base_guide_intro_indicator) CirclePageIndicator mIndicator;
 
@@ -68,16 +67,14 @@ public class IntroActivity extends AppCompatActivity {
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				int currentItem = mPager.getCurrentItem();
-				int lastIndex = mPagerAdapter.getCount() - 1;
-				lastPageChange = currentItem == lastIndex && state == ViewPager.SCROLL_STATE_DRAGGING;
+				lastPageChange = isLastFragment() && state == ViewPager.SCROLL_STATE_DRAGGING;
 			}
 		});
 
 		mIndicator.setViewPager(mPager);
-		mIndicator.setPageColor(0x88FFFFFF);
-		mIndicator.setFillColor(0xFFFFFFFF);
-		mIndicator.setStrokeColor(0x88FFFFFF);
+		mIndicator.setPageColor(ContextCompat.getColor(this, R.color.beeeon_white_transparent));
+		mIndicator.setFillColor(ContextCompat.getColor(this, R.color.white));
+		mIndicator.setStrokeColor(ContextCompat.getColor(this, R.color.beeeon_white_transparent));
 
 		mButtonSkip.setVisibility(View.INVISIBLE);
 		mButtonCancel.setVisibility(View.INVISIBLE);
@@ -85,7 +82,7 @@ public class IntroActivity extends AppCompatActivity {
 
 	@OnClick(R.id.base_guide_add_gate_next_button)
 	public void onClickButtonNext() {
-		if (mPager.getCurrentItem() != (mPager.getAdapter().getCount() - 1)) {
+		if (!isLastFragment()) {
 			mPager.setCurrentItem(mPager.getCurrentItem() + 1);
 		} else {
 			finishWithAnimation();
@@ -98,11 +95,19 @@ public class IntroActivity extends AppCompatActivity {
 		finishWithAnimation();
 	}
 
+	/**
+	 * Finishes this activity with transition (swipe right) -> to LoginActivity
+	 */
 	private void finishWithAnimation() {
 		finish();
 		overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
+	/**
+	 * Checks if actual fragment is the last one
+	 *
+	 * @return if is last
+	 */
 	public boolean isLastFragment() {
 		return (mPager.getCurrentItem() == (mPager.getAdapter().getCount() - 1));
 	}
