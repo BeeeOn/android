@@ -1,80 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.flipboard.bottomsheet.BottomSheetLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:id="@+id/module_graph_botom_sheet_layout">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/module_graph_botom_sheet_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
-	<FrameLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
 
-			<RelativeLayout
-				style="@style/Widget.Design.AppBarLayout"
-				android:elevation="6dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+            <RelativeLayout
+                style="@style/Widget.Design.AppBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="6dp"
+                >
 
-				<include layout="@layout/layout_beeeon_toolbar"/>
+                <include layout="@layout/layout_beeeon_toolbar"/>
 
-				<TextView
-					android:id="@+id/module_graph_act_value"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_below="@id/beeeon_toolbar"
-					android:layout_centerHorizontal="true"
-					android:textAppearance="@style/TextAppearance.AppCompat.Title"
-					android:textColor="@color/white"
-					/>
+                <TextView
+                    android:id="@+id/module_graph_act_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/beeeon_toolbar"
+                    android:layout_centerHorizontal="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textColor="@color/white"
+                    />
 
-				<android.support.design.widget.TabLayout
-					android:id="@+id/module_graph_tab_layoout"
-					style="@style/ModuleGroupTabLayout"
-					android:layout_centerHorizontal="true"
-					android:layout_below="@id/module_graph_act_value"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"/>
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/module_graph_tab_layoout"
+                    style="@style/ModuleGroupTabLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/module_graph_act_value"
+                    android:layout_centerHorizontal="true"
+                    />
 
-			</RelativeLayout>
+            </RelativeLayout>
 
-			<com.rehivetech.beeeon.gui.view.NonSwipeAbleViewPager
-				android:id="@+id/module_graph_view_pager"
-				android:layout_width="match_parent"
-				android:layout_height="0dp"
-				android:layout_weight="1"
-				android:layout_marginBottom="70dp"
-				/>
+            <com.rehivetech.beeeon.gui.view.NonSwipeAbleViewPager
+                android:id="@+id/module_graph_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="70dp"
+                android:layout_weight="1"
+                />
 
-		</LinearLayout>
+        </LinearLayout>
 
-		<android.support.design.widget.FloatingActionButton
-			android:id="@+id/module_graph_fab"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom|end"
-			android:src="@drawable/ic_settings_white_24dp"
-			android:layout_marginRight="16dp"
-			android:layout_marginEnd="16dp"
-			android:layout_marginBottom="16dp"
-			app:rippleColor="@color/beeeon_accent_light"
-			app:borderWidth="0dp"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/module_graph_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_settings_black_24dp"
+            android:tint="@color/beeeon_overlay_text"
+            app:borderWidth="0dp"
+            app:rippleColor="@color/beeeon_accent_light"
+            />
 
-		<Button
-			android:id="@+id/module_graph_show_legend_btn"
-			style="@style/Widget.AppCompat.Button.Borderless"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="bottom|center_horizontal"
-			android:layout_marginBottom="16dp"
-			android:textColor="@color/beeeon_accent"
-			android:text="@string/module_graph_show_y_labels_button"/>
+        <Button
+            android:id="@+id/module_graph_show_legend_btn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:text="@string/module_graph_show_y_labels_button"
+            android:textColor="@color/beeeon_accent"
+            />
 
-	</FrameLayout>
+    </FrameLayout>
 
 </com.flipboard.bottomsheet.BottomSheetLayout>

@@ -1,111 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent"
-	android:padding="@dimen/widget_margin"
-	>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/widget_margin"
+    >
 
-	<RelativeLayout
-		android:layout_width="wrap_content"
-		android:minWidth="170dp"
-		android:layout_height="80dp"
-		android:background="@drawable/widget_bg"
-		android:id="@+id/widget_layout"
-		android:layout_gravity="center"
-		>
+    <RelativeLayout
+        android:id="@+id/widget_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:background="@drawable/widget_bg"
+        android:minWidth="170dp"
+        >
 
-		<LinearLayout
-			android:minWidth="170dp"
-			android:id="@+id/widget_header"
-			android:orientation="horizontal"
-			android:layout_width="wrap_content"
-			android:layout_height="@dimen/widget_header_height"
-			android:gravity="center_horizontal|left"
-			android:background="@drawable/widget_inside_bg"
-			android:layout_alignParentTop="true"
-			>
+        <LinearLayout
+            android:id="@+id/widget_header"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/widget_header_height"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/widget_inside_bg"
+            android:gravity="center_horizontal|left"
+            android:minWidth="170dp"
+            android:orientation="horizontal"
+            >
 
-			<ImageView
-				android:id="@+id/widget_module_icon"
-				android:layout_width="38dp"
-				android:layout_height="match_parent"
-				android:paddingLeft="8dp"
-				android:paddingStart="8dp"
-				android:paddingRight="8dp"
-				android:paddingEnd="8dp"
-				android:scaleType="fitCenter"
-				android:layout_gravity="center"
-				android:src="@drawable/ic_val_unknown"
-				android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
-				/>
+            <ImageView
+                android:id="@+id/widget_module_icon"
+                android:layout_width="38dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
+                android:paddingEnd="8dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingStart="8dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_val_unknown"
+                />
 
-			<TextView
-				android:id="@+id/widget_module_name"
-				android:layout_width="0dp"
-				android:layout_height="match_parent"
-				android:layout_weight="0.5"
-				android:ellipsize="end"
-				android:gravity="center_vertical"
-				android:singleLine="true"
-				android:text="@string/layout_widget_placeholder_none"
-				android:textColor="@color/white"
-				android:textSize="@dimen/abc_text_size_caption_material"
-				android:textStyle="bold"
-				/>
+            <TextView
+                android:id="@+id/widget_module_name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/layout_widget_placeholder_none"
+                android:textColor="@color/white"
+                android:textSize="@dimen/abc_text_size_caption_material"
+                android:textStyle="bold"
+                />
 
-			<ImageView
-				android:id="@+id/widget_options"
-				style="@style/AppWidget.ActionButton.Overflow"
-				android:layout_width="wrap_content"
-				android:layout_height="match_parent"
-				android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
-				/>
+            <ImageView
+                android:id="@+id/widget_options"
+                style="@style/Widget.AppCompat.ActionButton.Overflow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/layout_activity_fragment_widget_placeholder_icon"
+                />
 
-		</LinearLayout>
+        </LinearLayout>
 
-		<!-- shadow -->
-		<ImageView
-			android:id="@+id/widget_toolbar_shadow"
-			android:layout_width="wrap_content"
-			android:layout_height="6dp"
-			android:layout_below="@id/widget_header"
-			android:layout_alignLeft="@id/widget_header"
-			android:layout_alignStart="@id/widget_header"
-			android:layout_alignRight="@id/widget_header"
-			android:layout_alignEnd="@id/widget_header"
-			android:src="@drawable/toolbar_dropshadow"
-			/>
+        <!-- shadow -->
+        <ImageView
+            android:id="@+id/widget_toolbar_shadow"
+            android:layout_width="wrap_content"
+            android:layout_height="6dp"
+            android:layout_alignEnd="@id/widget_header"
+            android:layout_alignLeft="@id/widget_header"
+            android:layout_alignRight="@id/widget_header"
+            android:layout_alignStart="@id/widget_header"
+            android:layout_below="@id/widget_header"
+            android:src="@drawable/toolbar_dropshadow"
+            />
 
-		<!-- value inflated programmatically -->
-		<RelativeLayout
-			android:id="@+id/widget_value_container"
-			android:layout_below="@id/widget_toolbar_shadow"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignLeft="@id/widget_header"
-			android:layout_alignStart="@id/widget_header"
-			android:gravity="center_vertical"
-			android:paddingLeft="8dp"
-			android:paddingRight="8dp"
-			>
+        <!-- value inflated programmatically -->
+        <RelativeLayout
+            android:id="@+id/widget_value_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/widget_header"
+            android:layout_alignStart="@id/widget_header"
+            android:layout_below="@id/widget_toolbar_shadow"
+            android:gravity="center_vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            >
 
-			<include layout="@layout/widget_persistence_module_value_unit"/>
-		</RelativeLayout>
+            <include layout="@layout/widget_persistence_module_value_unit"/>
+        </RelativeLayout>
 
-		<TextView
-			android:id="@+id/widget_last_update"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@id/widget_toolbar_shadow"
-			android:text="@string/layout_widget_placeholder_none"
-			android:textColor="@color/gray_dark"
-			android:textSize="@dimen/abc_text_size_caption_material"
-			android:layout_alignRight="@id/widget_header"
-			android:layout_alignEnd="@id/widget_header"
-			android:layout_marginRight="8dp"
-			android:layout_marginEnd="8dp"
-			/>
+        <TextView
+            android:id="@+id/widget_last_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/widget_header"
+            android:layout_alignRight="@id/widget_header"
+            android:layout_below="@id/widget_toolbar_shadow"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:text="@string/layout_widget_placeholder_none"
+            android:textColor="@color/gray_dark"
+            android:textSize="@dimen/abc_text_size_caption_material"
+            />
 
-	</RelativeLayout>
+    </RelativeLayout>
 </FrameLayout>

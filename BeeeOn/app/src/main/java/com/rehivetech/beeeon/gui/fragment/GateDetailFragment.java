@@ -83,7 +83,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 				mCallback.onGateUsersClicked();
 			}
 		}));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_router_gray_24dp, R.string.gate_detail_num_of_devices, loadingText, new View.OnClickListener() {
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_router_black_24dp, R.string.gate_detail_num_of_devices, loadingText, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mCallback.onGateDevicesClicked();

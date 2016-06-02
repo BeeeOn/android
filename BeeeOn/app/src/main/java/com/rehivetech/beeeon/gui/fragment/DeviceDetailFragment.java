@@ -192,7 +192,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (rssi != null) {
 			mDeviceSignal = new DeviceFeatureView(mActivity);
 			mDeviceSignal.setCaption(getString(R.string.module_detail_label_signal));
-			mDeviceSignal.setIcon(R.drawable.ic_signal_wifi_4_bar_white_24dp);
+			mDeviceSignal.setIcon(R.drawable.ic_signal_wifi_4_bar_black_24dp);
 			mDeviceSignal.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -372,7 +372,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		Integer rssi = mDevice.getRssi();
 		if (rssi != null && mDeviceSignal != null) {
 			mDeviceSignal.setValue(String.format("%d%%", rssi));
-			mDeviceSignal.setIcon(rssi == 0 ? R.drawable.ic_signal_wifi_off_white_24dp : R.drawable.ic_signal_wifi_4_bar_white_24dp);
+			mDeviceSignal.setIcon(rssi == 0 ? R.drawable.ic_signal_wifi_off_black_24dp : R.drawable.ic_signal_wifi_4_bar_black_24dp);
 		}
 
 		// battery

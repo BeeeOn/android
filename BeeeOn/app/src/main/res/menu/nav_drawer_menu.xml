@@ -13,7 +13,7 @@
             android:title="@string/nav_drawer_menu_menu_household"/>
         <item
             android:id="@+id/nav_drawer_gateway"
-            android:icon="@drawable/ic_router_gray_24dp"
+            android:icon="@drawable/ic_router_black_24dp"
             android:title="@string/nav_drawer_menu_menu_gate"/>
     </group>
 
