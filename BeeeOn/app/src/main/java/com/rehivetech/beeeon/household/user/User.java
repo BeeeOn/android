@@ -198,9 +198,8 @@ public class User implements INameIdentifier {
 	public static void placePicture(ImageView picture, Bitmap bitmap) {
 		if (bitmap == null) {
 			Context appContext = BeeeOnApplication.getContext();
-			Drawable defaultPicture = ContextCompat.getDrawable(appContext, R.drawable.ic_person_black_24dp);
-			defaultPicture.mutate();
-			DrawableCompat.setTint(defaultPicture, ContextCompat.getColor(appContext, R.color.white));
+			Drawable defaultPicture = DrawableCompat.wrap(ContextCompat.getDrawable(appContext, R.drawable.ic_person_black_24dp));
+			DrawableCompat.setTint(defaultPicture.mutate(), ContextCompat.getColor(appContext, R.color.white));
 			picture.setImageDrawable(defaultPicture);
 			int padding = (int) appContext.getResources().getDimension(R.dimen.space_normal);
 			picture.setPadding(padding, padding, padding, padding);

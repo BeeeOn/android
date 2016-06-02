@@ -75,8 +75,7 @@ public class DeviceFeatureView extends LinearLayout {
 	}
 
 	public void setIcon(@DrawableRes int iconRes) {
-		Drawable icon = ContextCompat.getDrawable(mContext, iconRes);
-		icon.mutate();
+		Drawable icon = DrawableCompat.wrap(ContextCompat.getDrawable(mContext, iconRes)).mutate();
 		DrawableCompat.setTint(icon, ContextCompat.getColor(mContext, R.color.white));
 		int size = Utils.convertDpToPixel(20);
 		icon.setBounds(0, 0, size, size);
