@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/beeeon_primary"
-    android:theme="@style/AppTheme.AppBarOverlay"
+    android:theme="@style/AppTheme.AppBar.Overlay"
     tools:context=".gui.activity.LoginActivity"
     >
 

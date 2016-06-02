@@ -220,7 +220,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (mDevice.getRefresh() != null) {
 			mDeviceRefresh = new DeviceFeatureView(mActivity);
 			mDeviceRefresh.setCaption(getString(R.string.devices__type_refresh));
-			mDeviceRefresh.setIcon(R.drawable.ic_refresh);
+			mDeviceRefresh.setIcon(R.drawable.ic_refresh_black_24dp);
 			mDeviceRefresh.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
