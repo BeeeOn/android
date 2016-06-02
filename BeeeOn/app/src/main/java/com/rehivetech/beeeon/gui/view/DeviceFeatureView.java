@@ -78,7 +78,7 @@ public class DeviceFeatureView extends LinearLayout {
 		Drawable icon = ContextCompat.getDrawable(mContext, iconRes);
 		icon.mutate();
 		DrawableCompat.setTint(icon, ContextCompat.getColor(mContext, R.color.white));
-		int size = Utils.convertDpToPixel(24);
+		int size = Utils.convertDpToPixel(20);
 		icon.setBounds(0, 0, size, size);
 		mValue.setCompoundDrawables(icon, null, null, null);
 	}

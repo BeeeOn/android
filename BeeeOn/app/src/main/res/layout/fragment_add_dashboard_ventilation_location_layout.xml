@@ -52,7 +52,7 @@
 				android:layout_height="50dp"
 				android:layout_alignParentRight="true"
 				android:layout_alignParentEnd="true"
-				app:srcCompat="@drawable/ic_gps"
+				app:srcCompat="@drawable/ic_gps_fixed_black_24dp"
 				android:tint="@color/white"
 				android:layout_alignBottom="@id/fragment_add_dashboard_item_ventilation_location_textinput"/>
 

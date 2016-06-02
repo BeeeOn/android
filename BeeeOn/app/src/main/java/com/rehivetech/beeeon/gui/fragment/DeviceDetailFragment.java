@@ -206,7 +206,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (battery != null) {
 			mDeviceBattery = new DeviceFeatureView(mActivity);
 			mDeviceBattery.setCaption(getString(R.string.devices__type_battery));
-			mDeviceBattery.setIcon(R.drawable.ic_battery);
+			mDeviceBattery.setIcon(R.drawable.ic_battery_std_black_24dp);
 			mDeviceBattery.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -234,7 +234,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		mDeviceLastUpdate = new DeviceFeatureView(mActivity);
 		mDeviceLastUpdate.setCaption(getString(R.string.module_detail_label_last_update));
-		mDeviceLastUpdate.setIcon(R.drawable.ic_clock);
+		mDeviceLastUpdate.setIcon(R.drawable.ic_update_black_24dp);
 		featuresLayout.addView(mDeviceLastUpdate);
 
 		mDeviceLocation = new DeviceFeatureView(mActivity);

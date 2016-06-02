@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	>
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
-	<TextView
-		android:id="@+id/device_feature_item_value"
-		android:layout_width="wrap_content"
-		android:layout_height="32dp"
-		android:gravity="center"
-		android:layout_gravity="center_horizontal"
-		android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-		android:textColor="@color/white"
-		android:drawablePadding="8dp"
-		android:paddingLeft="8dp"
-		android:paddingRight="8dp"
-		tools:text="20 sekund"
-		tools:drawableLeft="@drawable/ic_battery"
-		android:background="@drawable/round_rectangle"/>
+    <TextView
+        android:id="@+id/device_feature_item_value"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/round_rectangle"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/white"
+        tools:drawableLeft="@drawable/ic_battery_std_black_24dp"
+        tools:text="20 sekund"
+        />
 
-	<TextView
-		android:id="@+id/device_feature_item_caption"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="center_horizontal"
-		android:gravity="center_horizontal"
-		tools:text="Interval aktualizace"
-		android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-		android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/device_feature_item_caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@color/white"
+        tools:layout_marginTop="32dp"
+        tools:text="Interval aktualizace"
+        />
 
 </merge>
