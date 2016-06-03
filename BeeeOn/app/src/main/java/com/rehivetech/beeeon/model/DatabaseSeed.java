@@ -21,21 +21,17 @@ public class DatabaseSeed implements Realm.Transaction {
 		realm.delete(Server.class);
 
 		// seeding production server
-		Server production = new Server(Server.SERVER_ID_PRODUCTION);
-		production.name = appContext.getString(R.string.server_production);
-		production.address = "cloud.beeeon.com";
-		production.port = 4565;
-		production.certAssetsFilename = "cacert.crt";
-		production.certVerifyUrl = "ant-2.fit.vutbr.cz";
+		Server production = Server.PRODUCTION_SERVER;
 		realm.copyToRealm(production);
 
 		// seeding devel server
-		Server devel = new Server(Server.SERVER_ID_DEVEL);
-		devel.name = appContext.getString(R.string.server_development);
-		devel.address = "ant-2.fit.vutbr.cz";
-		devel.port = 4566;
-		devel.certAssetsFilename = "cacert.crt";
-		devel.certVerifyUrl = "ant-2.fit.vutbr.cz";
+		Server devel = new Server(
+				Server.SERVER_ID_DEVEL,
+				R.string.server_development,
+				"ant-2.fit.vutbr.cz",
+				4566,
+				"ant-2.fit.vutbr.cz"
+		);
 		realm.copyToRealm(devel);
 	}
 }

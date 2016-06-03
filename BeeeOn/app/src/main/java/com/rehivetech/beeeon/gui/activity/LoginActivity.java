@@ -690,7 +690,8 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				server.address = serverHostView.getEditText().getText().toString();
 				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
 				// TODO what to do with this
-				server.certAssetsFilename = "cacert.crt";
+//				server.certAssetsFilename = "cacert.crt";
+//				server.setCertificate();
 				server.certVerifyUrl = "ant-2.fit.vutbr.cz";
 				realm.copyToRealmOrUpdate(server);
 			}
@@ -713,7 +714,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		}
 
 		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
-		mRealm.executeTransaction(new Realm.Transaction() {
+		mRealm.executeTransactionAsync(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {
 				Server serverToDelete = dialog.getServer();

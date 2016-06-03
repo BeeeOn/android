@@ -4,7 +4,6 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.IErrorCode;
@@ -26,9 +25,7 @@ import com.rehivetech.beeeon.network.server.xml.XmlParser.Result;
 import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
@@ -108,20 +105,16 @@ public class Network implements INetwork {
 
 		try {
 			// Open CA certificate from assets
-			InputStream inStreamCertTmp = BeeeOnApplication.getContext().getAssets().open(mServer.certAssetsFilename);
-			InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
-			Certificate ca;
-			try {
-				CertificateFactory cf = CertificateFactory.getInstance("X.509");
-				ca = cf.generateCertificate(inStreamCert);
-			} finally {
-				inStreamCert.close();
-			}
+			Certificate certificate;
+
+			CertificateFactory cf = CertificateFactory.getInstance("X.509");
+			certificate = cf.generateCertificate(mServer.getCertificate());
+
 			// Create a KeyStore containing our trusted CAs
 			String keyStoreType = KeyStore.getDefaultType();
 			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
 			keyStore.load(null, null);
-			keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
+			keyStore.setCertificateEntry(ALIAS_CA_CERT, certificate);
 
 			// Create a TrustManager that trusts the CAs in our KeyStore
 			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
