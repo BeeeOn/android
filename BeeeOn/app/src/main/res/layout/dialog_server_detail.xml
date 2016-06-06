@@ -83,6 +83,14 @@
 
         <TableRow>
 
+            <Button
+                android:id="@+id/server_certificate_button"
+                android:text="Vybrat X.509 certifikát"
+                />
+        </TableRow>
+
+        <TableRow>
+
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/server_url_verify"
                 android:layout_width="wrap_content"

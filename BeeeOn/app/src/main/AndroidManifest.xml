@@ -1,297 +1,346 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="com.rehivetech.beeeon"
-		  android:installLocation="auto">
+          package="com.rehivetech.beeeon"
+          android:installLocation="auto"
+    >
 
-	<!-- The Google Maps Android API uses OpenGL ES version 2 to render the map. -->
-	<uses-feature
-		android:glEsVersion="0x00020000"
-		android:required="true"/>
-	<uses-feature
-		android:name="android.hardware.telephony"
-		android:required="false"/>
+    <!-- The Google Maps Android API uses OpenGL ES version 2 to render the map. -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"
+        />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false"
+        />
 
-	<!--
-	Creates a custom permission so only this app can receive its messages.
-	NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where
-	PACKAGE is the application's package name.
+    <!--
+    Creates a custom permission so only this app can receive its messages.
+    NOTE: the permission *must* be called PACKAGE.permission.C2D_MESSAGE, where
+    PACKAGE is the application's package name.
     -->
-	<permission
-		android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"
-		android:protectionLevel="signature"/>
-	<permission
-		android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"
-		android:protectionLevel="signature"/>
+    <permission
+        android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"
+        />
+    <permission
+        android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature"
+        />
 
-	<!-- dangerous permissions -->
-	<!-- <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/> -->
-	<uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-	<uses-permission android:name="android.permission.CAMERA"/>
+    <!-- dangerous permissions -->
+    <!-- <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/> -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
-	<!--
-	 The following two permissions are not required to use
-	 Google Maps Android API v2, but are recommended.
+    <!--
+     The following two permissions are not required to use
+     Google Maps Android API v2, but are recommended.
     -->
-	 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-	 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
 
-	<!-- normal permissions -->
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-	<uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- normal permissions -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
-	<!-- Keeps the processor from sleeping when a message is received. -->
-	<uses-permission android:name="android.permission.WAKE_LOCK"/>
-	<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
 
-	<!-- custom permissions -->
-	<uses-permission android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"/>
-	<uses-permission android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"/>
+    <!-- custom permissions -->
+    <uses-permission android:name="com.rehivetech.beeeon.permission.MAPS_RECEIVE"/>
+    <uses-permission android:name="com.rehivetech.beeeon.permission.C2D_MESSAGE"/>
 
-	<application
-		android:name=".BeeeOnApplication"
-		android:allowBackup="true"
-		android:icon="@mipmap/ic_launcher"
-		android:label="@string/app_name"
-		android:theme="@style/AppTheme">
-		<meta-data
-			android:name="com.google.android.gms.version"
-			android:value="@integer/google_play_services_version"/>
-		<meta-data
-			android:name="com.google.android.maps.v2.API_KEY"
-			android:value="@string/api_keys_google_maps"/>
-		<meta-data
-			android:name="com.facebook.sdk.ApplicationId"
-			android:value="@string/api_keys_facebook_app_id"/>
+    <application
+        android:name=".BeeeOnApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme"
+        >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"
+            />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="@string/api_keys_google_maps"
+            />
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/api_keys_facebook_app_id"
+            />
 
-		<activity
-			android:name=".gui.activity.LoginActivity"
-			android:configChanges="orientation"
-			android:label="@string/app_name">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
+        <activity
+            android:name=".gui.activity.LoginActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".gui.activity.WebViewActivity"
-			android:label="@string/manifest_title_main">
-		</activity>
-		<activity
-			android:name=".gui.activity.WebAuthActivity"
-			android:label="@string/manifest_title_main">
-		</activity>
-		<activity
-			android:name=".gui.activity.MainActivity"
-			android:label="@string/manifest_title_main"
-			android:theme="@style/MainActivityTheme">
-		</activity>
-		<activity
-			android:name=".gui.activity.AddDeviceActivity"
-			android:label="@string/manifest_title_device_add">
-		</activity>
-		<activity android:name=".gui.activity.DeviceDetailActivity">
-			android:label="@string/manifest_title_device_detail">
-		</activity>
-		<activity
-			android:name=".gui.activity.DeviceEditActivity"
-			android:label="@string/manifest_title_device_edit">
-		</activity>
-		<activity
-			android:name=".gui.activity.AddGateActivity"
-			android:label="@string/manifest_title_gate_add">
-		</activity>
-		<activity
-			android:name=".gui.activity.ScanQRActivity"
-			android:label="@string/manifest_title_gate_add">
-		</activity>
-		<activity
-			android:name=".gui.activity.GateEditActivity"
-			android:label="@string/manifest_title_gate_edit">
-		</activity>
-		<activity
-			android:name=".widget.configuration.WidgetConfigurationActivity"
-			android:excludeFromRecents="true"
-			android:label="@string/widget_configuration_title_widget_config"
-			android:noHistory="true">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-			</intent-filter>
-		</activity>
-		<activity
-			android:name=".gui.activity.SettingsMainActivity"
-			android:configChanges="locale|orientation"
-			android:label="@string/manifest_title_settings">
-		</activity>
-		<activity
-			android:name=".gui.activity.SettingsUnitActivity"
-			android:label="@string/settings_unit_unit"
-			android:theme="@style/SettingsActivity">
-		</activity>
-		<activity
-			android:name=".gui.activity.GateUsersActivity"
-			android:label="@string/gate_users_title_gate_users">
-		</activity>
-		<activity
-			android:name=".gui.activity.AddGateUserActivity"
-			android:label="@string/manifest_title_gate_add_user">
-		</activity>
-		<activity
-			android:name=".gui.activity.NotificationActivity"
-			android:label="@string/manifest_action_notification">
-		</activity>
-		<activity
-			android:name=".gui.activity.GateDetailActivity"
-			android:label="@string/manifest_title_gate_detail"/>
-		<activity
-			android:name=".gui.activity.IntroActivity"
-			android:label="@string/app_name"/>
-		<activity android:name=".gui.activity.ModuleGraphActivity"/>
-		<!-- Facebook login screen -->
-		<activity
-			android:name="com.facebook.FacebookActivity"
-			android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-			android:label="@string/app_name"
-			android:theme="@android:style/Theme.Translucent.NoTitleBar">
-		</activity>
-		<activity
-			android:name=".gui.activity.DevicesListActivity"
-			android:label="@string/nav_drawer_menu_menu_devices"/>
-		<activity
-			android:name=".gui.activity.AddDashboardItemActivity"
-			android:theme="@style/AddDashboardItemActivity"
-			android:label="@string/app_name"/>
-		<activity
-			android:name=".gui.activity.DashboardDetailActivity"
-			android:label="@string/app_name"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".gui.activity.WebViewActivity"
+            android:label="@string/manifest_title_main"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.WebAuthActivity"
+            android:label="@string/manifest_title_main"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.MainActivity"
+            android:label="@string/manifest_title_main"
+            android:theme="@style/MainActivityTheme"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.AddDeviceActivity"
+            android:label="@string/manifest_title_device_add"
+            >
+        </activity>
+        <activity android:name=".gui.activity.DeviceDetailActivity">
+            android:label="@string/manifest_title_device_detail">
+        </activity>
+        <activity
+            android:name=".gui.activity.DeviceEditActivity"
+            android:label="@string/manifest_title_device_edit"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.AddGateActivity"
+            android:label="@string/manifest_title_gate_add"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.ScanQRActivity"
+            android:label="@string/manifest_title_gate_add"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.GateEditActivity"
+            android:label="@string/manifest_title_gate_edit"
+            >
+        </activity>
+        <activity
+            android:name=".widget.configuration.WidgetConfigurationActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/widget_configuration_title_widget_config"
+            android:noHistory="true"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".gui.activity.SettingsMainActivity"
+            android:configChanges="locale|orientation"
+            android:label="@string/manifest_title_settings"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.SettingsUnitActivity"
+            android:label="@string/settings_unit_unit"
+            android:theme="@style/SettingsActivity"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.GateUsersActivity"
+            android:label="@string/gate_users_title_gate_users"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.AddGateUserActivity"
+            android:label="@string/manifest_title_gate_add_user"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.NotificationActivity"
+            android:label="@string/manifest_action_notification"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.GateDetailActivity"
+            android:label="@string/manifest_title_gate_detail"
+            />
+        <activity
+            android:name=".gui.activity.IntroActivity"
+            android:label="@string/app_name"
+            />
+        <activity android:name=".gui.activity.ModuleGraphActivity"/>
+        <!-- Facebook login screen -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            >
+        </activity>
+        <activity
+            android:name=".gui.activity.DevicesListActivity"
+            android:label="@string/nav_drawer_menu_menu_devices"
+            />
+        <activity
+            android:name=".gui.activity.AddDashboardItemActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AddDashboardItemActivity"
+            />
+        <activity
+            android:name=".gui.activity.DashboardDetailActivity"
+            android:label="@string/app_name"
+            />
 
-		<!-- WIDGETS -->
-		<service
-			android:name=".widget.service.WidgetService"
-			android:exported="false"/>
-		<service
-			android:name=".widget.service.WidgetListService"
-			android:enabled="@bool/is_api_11"
-			android:exported="false"
-			android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <!-- WIDGETS -->
+        <service
+            android:name=".widget.service.WidgetService"
+            android:exported="false"
+            />
+        <service
+            android:name=".widget.service.WidgetListService"
+            android:enabled="@bool/is_api_11"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS"
+            />
 
-		<!-- list widget -->
-		<receiver
-			android:name=".widget.receivers.WidgetLocationListProvider"
-			android:enabled="@bool/is_api_11"
-			android:label="@string/manifest_title_widget_location_list">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-			</intent-filter>
+        <!-- list widget -->
+        <receiver
+            android:name=".widget.receivers.WidgetLocationListProvider"
+            android:enabled="@bool/is_api_11"
+            android:label="@string/manifest_title_widget_location_list"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
 
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_location_info"/>
-		</receiver>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_location_info"
+                />
+        </receiver>
 
-		<!-- clock widget -->
-		<receiver
-			android:name=".widget.receivers.WidgetClockProvider"
-			android:label="@string/manifest_title_widget_clock">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-			</intent-filter>
+        <!-- clock widget -->
+        <receiver
+            android:name=".widget.receivers.WidgetClockProvider"
+            android:label="@string/manifest_title_widget_clock"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
 
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_clock_info"/>
-		</receiver>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_clock_info"
+                />
+        </receiver>
 
-		<!-- sensor widget -->
-		<receiver
-			android:name=".widget.receivers.WidgetModuleProvider"
-			android:label="@string/manifest_title_widget_module_small">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-			</intent-filter>
+        <!-- sensor widget -->
+        <receiver
+            android:name=".widget.receivers.WidgetModuleProvider"
+            android:label="@string/manifest_title_widget_module_small"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
 
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_device_1x1_info"/>
-		</receiver>
-		<receiver
-			android:name=".widget.receivers.WidgetModuleProviderMedium"
-			android:label="@string/manifest_title_widget_module_medium">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-			</intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_device_1x1_info"
+                />
+        </receiver>
+        <receiver
+            android:name=".widget.receivers.WidgetModuleProviderMedium"
+            android:label="@string/manifest_title_widget_module_medium"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
 
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_device_2x1_info"/>
-		</receiver>
-		<receiver
-			android:name=".widget.receivers.WidgetModuleProviderLarge"
-			android:label="@string/manifest_title_widget_module_large">
-			<intent-filter>
-				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-			</intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_device_2x1_info"
+                />
+        </receiver>
+        <receiver
+            android:name=".widget.receivers.WidgetModuleProviderLarge"
+            android:label="@string/manifest_title_widget_module_large"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+            </intent-filter>
 
-			<meta-data
-				android:name="android.appwidget.provider"
-				android:resource="@xml/widget_device_3x1_info"/>
-		</receiver>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_device_3x1_info"
+                />
+        </receiver>
 
-		<!-- GOOGLE CLOUD MESSAGING -->
-		<receiver
-			android:name="com.google.android.gms.gcm.GcmReceiver"
-			android:permission="com.google.android.c2dm.permission.SEND">
-			<intent-filter>
-				<action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-				<!-- for Gingerbread GSF backward compat -->
-				<action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
-			</intent-filter>
-		</receiver>
-		<receiver
-			android:name=".gcm.UpdateBroadcastReceiver$LegacyUpdateBroadcastReceiver"
-			android:enabled="@bool/is_at_most_api_11">
-			<intent-filter>
-				<action android:name="android.intent.action.PACKAGE_REPLACED"/>
+        <!-- GOOGLE CLOUD MESSAGING -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND"
+            >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <!-- for Gingerbread GSF backward compat -->
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".gcm.UpdateBroadcastReceiver$LegacyUpdateBroadcastReceiver"
+            android:enabled="@bool/is_at_most_api_11"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
 
-				<data android:scheme="package"/>
-			</intent-filter>
-		</receiver>
-		<receiver
-			android:name=".gcm.UpdateBroadcastReceiver"
-			android:enabled="@bool/is_at_least_api_12">
-			<intent-filter>
-				<action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
-			</intent-filter>
-		</receiver>
-		<!-- <receiver android:name=".gcm.BootBroadcastReceiver"> -->
-		<!-- <intent-filter> -->
-		<!-- <action android:name="android.intent.action.BOOT_COMPLETED"/> -->
-		<!-- </intent-filter> -->
-		<!-- </receiver> -->
-		<service
-			android:name=".gcm.MyGcmListenerService"
-			android:exported="false">
-			<intent-filter>
-				<action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <data android:scheme="package"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".gcm.UpdateBroadcastReceiver"
+            android:enabled="@bool/is_at_least_api_12"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            </intent-filter>
+        </receiver>
+        <!-- <receiver android:name=".gcm.BootBroadcastReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED"/> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <service
+            android:name=".gcm.MyGcmListenerService"
+            android:exported="false"
+            >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
 
-				<category android:name="com.rehivetech.beeeon"/>
-			</intent-filter>
-		</service>
-		<service
-			android:name=".gcm.MyInstanceIdListenerService"
-			android:exported="false">
-			<intent-filter>
-				<action android:name="com.google.android.gms.iid.InstanceID"/>
-			</intent-filter>
-		</service>
-		<service
-			android:name=".gcm.GcmRegistrationIntentService"
-			android:exported="false">
-		</service>
-	</application>
+                <category android:name="com.rehivetech.beeeon"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".gcm.MyInstanceIdListenerService"
+            android:exported="false"
+            >
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name=".gcm.GcmRegistrationIntentService"
+            android:exported="false"
+            >
+        </service>
+    </application>
 
 </manifest>
