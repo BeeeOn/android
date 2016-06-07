@@ -34,7 +34,7 @@ public class Server extends RealmObject implements IIdentifier {
 	private long id;
 	public String name;
 	public String address;
-	public int port;
+	public int port = DEFAULT_PORT;
 	public String certVerifyUrl;
 	private String certificate;
 
@@ -44,7 +44,9 @@ public class Server extends RealmObject implements IIdentifier {
 	 *
 	 * @return input stream containing certificate data
 	 */
+	@Nullable
 	public ByteArrayInputStream getCertificate() {
+		if (certificate == null) return null;
 		return new ByteArrayInputStream(certificate.getBytes());
 	}
 

@@ -72,10 +72,14 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	private static final int DIALOG_REQUEST_SERVER_DETAIL = 1;
 	private static final double ICON_SLIDE_THRESHOLD = 0.2;
 
-	@Bind(android.R.id.content) View mRootView;
-	@Bind(R.id.login_select_server) RecyclerView mLoginSelectServerRecyclerView;
-	@Bind(R.id.login_bottom_sheet) NestedScrollView mBottomSheet;
-	@Bind(R.id.login_select_server_icon) ImageView mSelectServerIcon;
+	@Bind(android.R.id.content)
+	View mRootView;
+	@Bind(R.id.login_select_server)
+	RecyclerView mLoginSelectServerRecyclerView;
+	@Bind(R.id.login_bottom_sheet)
+	NestedScrollView mBottomSheet;
+	@Bind(R.id.login_select_server_icon)
+	ImageView mSelectServerIcon;
 
 	private BetterProgressDialog mProgress;
 	private boolean mLoginCancel = false;
@@ -108,7 +112,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			return;
 		}
 
-		mChooseServerEnabled = controller.getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
+		mChooseServerEnabled = Persistence.getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
 
 		// show intro if was not shown
 		showIntroFirstTime();
@@ -261,6 +265,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 		// RequestCode uniquely identifies authProvider - all providers must respect that and use it in startActivityForResult(providerId)
 		switch (requestCode) {
+			case ServerDetailDialog.REQUEST_CERTIFICATE_PICK:
+				// ignoring, because handled in dialog!
+				return;
+
 			case GoogleAuthProvider.PROVIDER_ID: {
 				authProvider = new GoogleAuthProvider();
 				break;
@@ -373,7 +381,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 					Persistence.saveLoginServerId(LoginActivity.this, Server.SERVER_ID_PRODUCTION);
 				}
 
-				Controller.getInstance(this).getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
+				Persistence.getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
 				setSelectServerVisibility(checked);
 				return true;
 
@@ -442,6 +450,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 */
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		switch (requestCode) {
 			case Constants.PERMISSION_CODE_GET_ACCOUNTS:
 				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -656,51 +665,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	}
 
 	/**
-	 * Server dialog was submitted
-	 *
-	 * @param requestCode in case other dialogs are here specify request code
-	 * @param view        root view of dialog
-	 * @param baseDialog  dialog itself so its possible not to dissmiss on error
-	 */
-	@Override
-	public void onPositiveButtonClicked(int requestCode, View view, final BaseBeeeOnDialog baseDialog) {
-		if (requestCode != DIALOG_REQUEST_SERVER_DETAIL) {
-			return;
-		}
-		// TODO validation
-
-		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
-		final TextInputLayout serverNameView = (TextInputLayout) view.findViewById(R.id.server_name);
-		final TextInputLayout serverHostView = (TextInputLayout) view.findViewById(R.id.server_host);
-		final TextInputLayout serverPortView = (TextInputLayout) view.findViewById(R.id.server_port);
-		if (!Validator.validate(serverNameView) || !Validator.validate(serverHostView) || !Validator.validate(serverPortView, Validator.PORT)) {
-			return;
-		}
-
-		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null) {
-			Log.e(TAG, "There is none EditText inside TextInputLayout!");
-			return;
-		}
-
-		mRealm.executeTransaction(new Realm.Transaction() {
-			@Override
-			public void execute(Realm realm) {
-				Server server = dialog.getServer();
-				server.name = serverNameView.getEditText().getText().toString();
-				server.address = serverHostView.getEditText().getText().toString();
-				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
-				// TODO what to do with this
-//				server.certAssetsFilename = "cacert.crt";
-//				server.setCertificate();
-				server.certVerifyUrl = "ant-2.fit.vutbr.cz";
-				realm.copyToRealmOrUpdate(server);
-			}
-		});
-
-		dialog.dismiss();
-	}
-
-	/**
 	 * Deleting from server dialog
 	 *
 	 * @param requestCode in case other dialogs in this activity
@@ -740,5 +704,59 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				}
 			}
 		});
+	}
+
+	/**
+	 * Server dialog was submitted
+	 *
+	 * @param requestCode in case other dialogs are here specify request code
+	 * @param view        root view of dialog
+	 * @param baseDialog  dialog itself so its possible not to dissmiss on error
+	 */
+	@Override
+	public void onPositiveButtonClicked(int requestCode, View view, final BaseBeeeOnDialog baseDialog) {
+		if (requestCode != DIALOG_REQUEST_SERVER_DETAIL) {
+			return;
+		}
+
+		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
+
+		Log.d(TAG, dialog.mCertificateUri == null ? "certificate null" : dialog.mCertificateUri);
+
+		final TextInputLayout serverNameView = ButterKnife.findById(view, R.id.server_name);
+		final TextInputLayout serverHostView = ButterKnife.findById(view, R.id.server_host);
+		final TextInputLayout serverPortView = ButterKnife.findById(view, R.id.server_port);
+		final TextInputLayout serverVerifyView = ButterKnife.findById(view, R.id.server_port);
+		if (!Validator.validate(serverNameView) || !Validator.validate(serverHostView) || !Validator.validate(serverPortView, Validator.PORT) || !Validator.validate(serverVerifyView)) {
+			return;
+		}
+
+		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null || serverVerifyView.getEditText() == null) {
+			Log.e(TAG, "There is none EditText inside TextInputLayout!");
+			return;
+		}
+
+		//					try {
+//						InputStream inputStream = getContext().getContentResolver().openInputStream(uriData);
+//						mServer.setCertificate(inputStream);
+//						Toast.makeText(getActivity(), uriData.toString(), Toast.LENGTH_LONG).show();
+//					} catch (FileNotFoundException e) {
+//						e.printStackTrace();
+//					}
+
+
+		mRealm.executeTransaction(new Realm.Transaction() {
+			@Override
+			public void execute(Realm realm) {
+				Server server = dialog.getServer();
+				server.name = serverNameView.getEditText().getText().toString();
+				server.address = serverHostView.getEditText().getText().toString();
+				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
+				server.certVerifyUrl = serverVerifyView.getEditText().getText().toString();
+				realm.copyToRealmOrUpdate(server);
+			}
+		});
+
+		dialog.dismiss();
 	}
 }

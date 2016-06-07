@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -13,12 +14,26 @@ import android.widget.Button;
 import com.avast.android.dialogs.fragment.SimpleDialogFragment;
 import com.rehivetech.beeeon.R;
 
+import icepick.Icepick;
+
 /**
  * @author mlyko
  * @since 31.05.2016
  */
 public abstract class BaseBeeeOnDialog extends SimpleDialogFragment {
 	protected View mRootView;
+
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		Icepick.restoreInstanceState(this, savedInstanceState);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Icepick.saveInstanceState(this, outState);
+	}
 
 	/**
 	 * Forces to specify layout which will be used for this type of dialogs
