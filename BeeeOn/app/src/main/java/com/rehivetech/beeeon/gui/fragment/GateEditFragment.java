@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -38,9 +38,9 @@ public class GateEditFragment extends BaseApplicationFragment {
 	private String mGateId;
 	private List<TimezoneWrapper> mTimezones = TimezoneWrapper.getTimezones();
 
-	@Bind(R.id.gate_edit_text) EditText mGateNameEditText;
-	@Bind(R.id.gate_edit_spinner) Spinner mTimezoneSpinner;
-	@Bind(R.id.gate_edit_gate_id_text) TextView mGateIdTextView;
+	@BindView(R.id.gate_edit_text) EditText mGateNameEditText;
+	@BindView(R.id.gate_edit_spinner) Spinner mTimezoneSpinner;
+	@BindView(R.id.gate_edit_gate_id_text) TextView mGateIdTextView;
 
 	public static GateEditFragment newInstance(String gateId) {
 		GateEditFragment gateEditFragment = new GateEditFragment();
@@ -60,7 +60,7 @@ public class GateEditFragment extends BaseApplicationFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_gate_edit, container, false);
-		ButterKnife.bind(this, view);
+		mUnbinder = ButterKnife.bind(this, view);
 
 		ArrayAdapter<TimezoneWrapper> adapter = new ArrayAdapter<>(mActivity, R.layout.fragment_gate_edit_update_gate_spinner, mTimezones);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -130,11 +130,5 @@ public class GateEditFragment extends BaseApplicationFragment {
 		gpsData.setAltitude(altitude);
 
 		return Pair.create(gate, gpsData);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
 	}
 }

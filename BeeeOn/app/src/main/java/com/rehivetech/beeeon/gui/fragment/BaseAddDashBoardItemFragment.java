@@ -23,8 +23,9 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  *  Created by martin on 7.2.16.
@@ -37,13 +38,16 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	protected int mIndex;
 	protected String mGateId;
 
-	@Bind(R.id.fragment_add_dashboard_item_button_done)
+	@BindView(R.id.fragment_add_dashboard_item_button_done)
 	FloatingActionButton mButtonDone;
 	@Nullable
-	@Bind(R.id.fragment_add_dashboard_item_recyclerview)
+	@BindView(R.id.fragment_add_dashboard_item_recyclerview)
 	RecyclerView mRecyclerView;
 
 	protected DashboardModuleSelectAdapter mAdapter;
+
+	// probably has to be here because
+	private Unbinder mBaseUnbinder;
 
 	protected static void fillBaseArgs(Bundle args, int index, String gateId) {
 		args.putInt(ARG_INDEX, index);
@@ -65,7 +69,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	@CallSuper
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		ButterKnife.bind(this, view);
+		mBaseUnbinder = ButterKnife.bind(this, view);
 
 		mAdapter = new DashboardModuleSelectAdapter(mActivity, this);
 		GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);
@@ -157,7 +161,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		ButterKnife.unbind(this);
+		mBaseUnbinder.unbind();
 	}
 
 	@Override

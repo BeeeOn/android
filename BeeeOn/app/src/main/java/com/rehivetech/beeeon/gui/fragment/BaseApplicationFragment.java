@@ -7,11 +7,13 @@ import android.view.MenuItem;
 
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
+import butterknife.Unbinder;
 import icepick.Icepick;
 
-public abstract class BaseApplicationFragment extends android.support.v4.app.Fragment{
+public abstract class BaseApplicationFragment extends android.support.v4.app.Fragment {
 
 	protected BaseApplicationActivity mActivity;
+	@Nullable protected Unbinder mUnbinder;
 
 	@Override
 	public void onAttach(Context context) {
@@ -20,7 +22,7 @@ public abstract class BaseApplicationFragment extends android.support.v4.app.Fra
 		try {
 			mActivity = (BaseApplicationActivity) context;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(context.toString()+ " must be subclass of BaseApplicationActivity");
+			throw new ClassCastException(context.toString() + " must be subclass of BaseApplicationActivity");
 		}
 	}
 
@@ -34,5 +36,17 @@ public abstract class BaseApplicationFragment extends android.support.v4.app.Fra
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		Icepick.saveInstanceState(this, outState);
+	}
+
+
+	/**
+	 * Unbinds butterknife if was present
+	 */
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		if (mUnbinder != null) {
+			mUnbinder.unbind();
+		}
 	}
 }

@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -21,7 +20,6 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.adapter.UsersListAdapter;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
-import com.rehivetech.beeeon.gui.view.FloatingActionButton;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.threading.CallbackTask.ICallbackTaskListener;
@@ -31,7 +29,7 @@ import com.rehivetech.beeeon.threading.task.RemoveUserTask;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -39,7 +37,7 @@ public class GateUsersActivity extends BaseApplicationActivity implements Confir
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	private static final int ROLE_RADIO_MARGIN = 16;
-	@Bind(R.id.gate_users_list) ListView mGateUsersList;
+	@BindView(R.id.gate_users_list) ListView mGateUsersList;
 
 	private Gate mGate;
 	private List<User> mGateUsers;

@@ -47,7 +47,7 @@ import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.model.place.Place;
 import com.rehivetech.beeeon.util.Utils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -81,10 +81,10 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	private int mOutSideProviderType;
 
 	@Nullable
-	@Bind(R.id.fragment_add_dashboard_item_title)
+	@BindView(R.id.fragment_add_dashboard_item_title)
 	TextView mTitle;
 	@Nullable
-	@Bind(R.id.fragment_add_dashboard_item_ventilation_location_textview)
+	@BindView(R.id.fragment_add_dashboard_item_ventilation_location_textview)
 	AutoCompleteTextView mAutoCompleteTextView;
 
 	private PlaceAdapter mPlaceAdapter;
@@ -141,7 +141,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		}
 		rootView.addView(view, 0);
 
-		ButterKnife.bind(this, rootView);
+		mUnbinder = ButterKnife.bind(this, rootView);
 		return rootView;
 	}
 
@@ -251,12 +251,6 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putBoolean(OUT_STATE_ANIMATION_CALLED, mBackgroundAnimationCalled);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
 	}
 
 	@Nullable

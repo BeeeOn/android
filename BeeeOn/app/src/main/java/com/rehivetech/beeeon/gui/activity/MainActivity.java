@@ -37,8 +37,9 @@ import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import icepick.State;
 
 public class MainActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener, NavigationView.OnNavigationItemSelectedListener {
@@ -60,9 +61,9 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	@State public String mActiveGateId;
 
 	/* Navigation drawer items */
-	@Bind(R.id.main_drawer_layout)
+	@BindView(R.id.main_drawer_layout)
 	DrawerLayout mDrawerLayout;
-	@Bind(R.id.navigationview_layout_drawer)
+	@BindView(R.id.navigationview_layout_drawer)
 	NavigationView mNavigationView;
 
 	private View mNavigationHeader;
@@ -217,12 +218,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 				break;
 		}
 		return true;
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		ButterKnife.unbind(this);
 	}
 
 	public void logout() {

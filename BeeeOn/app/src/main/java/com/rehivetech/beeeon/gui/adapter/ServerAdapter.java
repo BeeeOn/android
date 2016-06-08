@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,7 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.base.ClickableRecyclerViewAdapter;
 import com.rehivetech.beeeon.model.entity.Server;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
@@ -74,7 +73,7 @@ public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapte
 	@Override
 	public void onBindViewHolder(ServerViewHolder holder, int position) {
 		Server server = getData().get(position);
-		if(!server.isValid()){
+		if (!server.isValid()) {
 			Log.e(TAG, "Not valid server binding!");
 			return;
 		}
@@ -84,8 +83,8 @@ public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapte
 	}
 
 	public static class ServerViewHolder extends ClickableRecyclerViewAdapter.ViewHolder {
-		@Bind(R.id.server_radio) public RadioButton radio;
-		@Bind(R.id.server_name) public TextView name;
+		@BindView(R.id.server_radio) public RadioButton radio;
+		@BindView(R.id.server_name) public TextView name;
 
 		public ServerViewHolder(View itemView) {
 			super(itemView);

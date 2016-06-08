@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
@@ -39,11 +39,10 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 
 	private ModuleItem mLeftAxisModule;
 	private ModuleItem mRightAxisModule;
-	@Bind(R.id.fragment_add_dashboard_item_title)
+	@BindView(R.id.fragment_add_dashboard_item_title)
 	TextView mTitle;
 
 	public static AddDashboardGraphItemFragment newInstance(int index, String gateId, ModuleItem leftAxisModule, ModuleItem rightAxisModule) {
-
 		Bundle args = new Bundle();
 		fillBaseArgs(args, index, gateId);
 		args.putParcelable(ARG_LEFT_AXIS_MODULE, leftAxisModule);
@@ -78,7 +77,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 		}
 
 		rootView.addView(view, 0);
-		ButterKnife.bind(rootView);
+		mUnbinder = ButterKnife.bind(rootView);
 		return rootView;
 	}
 
@@ -192,12 +191,6 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 		}
 
 		return ranges;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
 	}
 
 	@Override

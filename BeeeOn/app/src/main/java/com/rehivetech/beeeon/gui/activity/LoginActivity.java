@@ -57,7 +57,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.OrderedRealmCollection;
@@ -80,13 +80,13 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	private static final int DIALOG_REQUEST_SERVER_DETAIL = 1;
 	private static final double ICON_SLIDE_THRESHOLD = 0.2;
 
-	@Bind(android.R.id.content)
+	@BindView(android.R.id.content)
 	View mRootView;
-	@Bind(R.id.login_select_server)
+	@BindView(R.id.login_select_server)
 	RecyclerView mLoginSelectServerRecyclerView;
-	@Bind(R.id.login_bottom_sheet)
+	@BindView(R.id.login_bottom_sheet)
 	NestedScrollView mBottomSheet;
-	@Bind(R.id.login_select_server_icon)
+	@BindView(R.id.login_select_server_icon)
 	ImageView mSelectServerIcon;
 
 	private BetterProgressDialog mProgress;

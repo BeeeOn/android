@@ -48,7 +48,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -69,7 +69,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 	private ModuleGraphActivity mActivity;
 
-	@Bind(R.id.module_graph_layout)
+	@BindView(R.id.module_graph_layout)
 	RelativeLayout mRootLayout;
 
 	private UnitsHelper mUnitsHelper;
@@ -190,7 +190,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_module_graph, container, false);
-		ButterKnife.bind(this, view);
+		mUnbinder = ButterKnife.bind(this, view);
 
 		mActivity.setShowLegendButtonOnClickListener(new View.OnClickListener() {
 			@Override
@@ -231,12 +231,6 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 		GraphSettingsPersistence persistence = Controller.getInstance(mActivity).getGraphSettingsPersistence(mGateId, Utils.getAbsoluteModuleId(mDeviceId, mModuleId), mRange);
 		persistence.saveCheckBoxesStates(mCheckboxMin, mCheckboxAvg, mCheckboxMax);
 		persistence.saveSliderValue(mSliderProgress);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
 	}
 
 	private void addGraphView() {
@@ -286,9 +280,9 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 			mDataSetMin = new BarDataSet(new ArrayList<BarEntry>(), dataSetMinName);
 			mDataSetAvg = new BarDataSet(new ArrayList<BarEntry>(), dataSetAvgName);
 			mDataSetMax = new BarDataSet(new ArrayList<BarEntry>(), dataSetMaxName);
-			((BarDataSet)mDataSetMin).setBarSpacePercent(0);
-			((BarDataSet)mDataSetAvg).setBarSpacePercent(0);
-			((BarDataSet)mDataSetMax).setBarSpacePercent(0);
+			((BarDataSet) mDataSetMin).setBarSpacePercent(0);
+			((BarDataSet) mDataSetAvg).setBarSpacePercent(0);
+			((BarDataSet) mDataSetMax).setBarSpacePercent(0);
 		} else {
 			mDataSetMin = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetMinName);
 			mDataSetAvg = new LineDataSet(new ArrayList<com.github.mikephil.charting.data.Entry>(), dataSetAvgName);

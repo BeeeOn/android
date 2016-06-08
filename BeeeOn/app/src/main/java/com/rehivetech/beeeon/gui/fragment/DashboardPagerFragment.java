@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -53,14 +53,14 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 
 	private String mGateId;
 
-	@Bind(R.id.dashboard_pager_root_layout)
+	@BindView(R.id.dashboard_pager_root_layout)
 	CoordinatorLayout mRootLayout;
 
-	@Bind(R.id.dashboard_tab_layout)
+	@BindView(R.id.dashboard_tab_layout)
 	TabLayout mTabLayout;
-	@Bind(R.id.dashboard_viewpager)
+	@BindView(R.id.dashboard_viewpager)
 	ViewPager mViewPager;
-	@Bind(R.id.dashboard_fab_menu)
+	@BindView(R.id.dashboard_fab_menu)
 	FloatingActionMenu mFloatingActionMenu;
 
 	DashboardPagerAdapter mAdapter;
@@ -91,7 +91,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_pager_dashboard, container, false);
-		ButterKnife.bind(this, view);
+		mUnbinder = ButterKnife.bind(this, view);
 		setupViewpager();
 		return view;
 	}

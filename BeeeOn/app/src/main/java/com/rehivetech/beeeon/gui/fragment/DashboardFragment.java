@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -52,10 +52,10 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
 
-	@Bind(R.id.dashboard_recyclerview)
+	@BindView(R.id.dashboard_recyclerview)
 	RecyclerView mRecyclerView;
 
-	@Bind(R.id.dashboard_empty_text)
+	@BindView(R.id.dashboard_empty_text)
 	TextView mEmptyText;
 
 	private ItemTouchHelper mItemTouchHelper;
@@ -105,7 +105,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-		ButterKnife.bind(this, view);
+		mUnbinder = ButterKnife.bind(this, view);
 
 		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
 		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
