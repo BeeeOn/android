@@ -210,14 +210,14 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		switch (item.getItemId()) {
 			case android.R.id.home:
 				openNavDrawer();
-				break;
+				return true;
 			case R.id.main_menu_action_notification:
 				// Notification
 				Intent intent = new Intent(this, NotificationActivity.class);
 				startActivity(intent);
-				break;
+				return true;
 		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void logout() {
