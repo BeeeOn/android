@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
@@ -54,6 +55,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
+
+import io.realm.Realm;
 
 final public class Utils {
 	private static final String TAG = Utils.class.getSimpleName();
@@ -90,7 +94,7 @@ final public class Utils {
 
 	/**
 	 * Downloads image from URL address
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -126,7 +130,7 @@ final public class Utils {
 
 	/**
 	 * Reads the response from the input stream and returns it as a string.
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -154,7 +158,7 @@ final public class Utils {
 	/**
 	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
 	 * as a map of (key, value) pairs. Encoding is solved internally.
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread.
 	 *
 	 * @param requestUrl
@@ -196,22 +200,6 @@ final public class Utils {
 		}
 
 		return 0;
-	}
-
-	/**
-	 * Check if this is debug version of application.
-	 *
-	 * @return true if version in Manifest contains "debug", false otherwise
-	 */
-	public static boolean isDebugVersion(Context context) {
-		try {
-			String version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-			return version.contains("debug");
-		} catch (NameNotFoundException e) {
-			// should never happen
-		}
-
-		return false;
 	}
 
 	public static String uriEncode(final String s) {
@@ -266,11 +254,10 @@ final public class Utils {
 	/**
 	 * Checks if Internet connection is available.
 	 *
-	 * @param context
 	 * @return true if available, false otherwise
 	 */
-	public static boolean isInternetAvailable(Context context) {
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	public static boolean isInternetAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) BeeeOnApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
@@ -278,11 +265,10 @@ final public class Utils {
 	/**
 	 * Returns the type which actual network uses
 	 *
-	 * @param context
 	 * @return ConnectivityManager#TYPE_xxxxxx
 	 */
-	public static int getNetworkConnectionType(Context context) {
-		ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+	public static int getNetworkConnectionType() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) BeeeOnApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 		if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
 			return -1; // the same as ConnectivityManager.TYPE_NONE which can't be used;
@@ -350,7 +336,24 @@ final public class Utils {
 	 * @param <T>
 	 * @return index or -1 if not found
 	 */
-	public static <T extends IIdentifier> int getObjectIndexFromList(String id, List<T> objects) {
+	public static <T extends IIdentifier> int getObjectIndexFromList(Object id, List<T> objects) {
+		int index = 0;
+		for (T tempObj : objects) {
+			if (tempObj.getId().equals(id)) return index;
+			index++;
+		}
+		return -1;
+	}
+
+	/**
+	 * Somehow manage to merge it with other function for gettin index
+	 *
+	 * @param id
+	 * @param objects
+	 * @param <T>
+	 * @return
+	 */
+	public static <T extends com.rehivetech.beeeon.model.entity.IIdentifier> int getIndexFromList(Object id, List<T> objects) {
 		int index = 0;
 		for (T tempObj : objects) {
 			if (tempObj.getId().equals(id)) return index;
@@ -378,6 +381,23 @@ final public class Utils {
 			if (tempObj.getId().equals(id)) return tempObj;
 		}
 		return null;
+	}
+
+	/**
+	 * Temporary auto increment helper for realm database
+	 *
+	 * @param realm instance
+	 * @param clazz for which will be generating max id
+	 * @return id number
+	 */
+	public synchronized static long autoIncrement(Realm realm, Class clazz) {
+		Number currentMax = realm.where(clazz).max("id"); // TODO "id" should have only identifiers or sth
+		long nextId = 1;
+		if (currentMax != null) {
+			nextId = currentMax.longValue() + 1;
+		}
+
+		return nextId;
 	}
 
 	/**
@@ -590,5 +610,13 @@ final public class Utils {
 		} else {
 			imageView.setBackgroundDrawable(drawable);
 		}
+	}
+
+	@Nullable
+	public static String convertInputStreamToString(InputStream stream) {
+		Scanner s = new Scanner(stream).useDelimiter("\\A");
+		if (!s.hasNext()) return null;
+
+		return s.next();
 	}
 }

@@ -54,6 +54,11 @@ public class GoogleAuthProvider implements IAuthProvider {
 	private String mEmail = "";
 
 	@Override
+	public boolean isDemo() {
+		return false;
+	}
+
+	@Override
 	public String getProviderName() {
 		return PROVIDER_NAME;
 	}

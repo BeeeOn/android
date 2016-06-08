@@ -28,6 +28,8 @@ public interface IAuthProvider {
 
 	// Interface methods
 
+	boolean isDemo();
+
 	/**
 	 * @return identifier for the provider as server knows it to correctly identify this login service.
 	 */

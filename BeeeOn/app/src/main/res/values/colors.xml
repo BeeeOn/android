@@ -17,7 +17,10 @@
     <color name="beeeon_background_drawer">#FFFFFF</color>
     <color name="beeeon_background_gray_transparent">#beeeeeee</color>
 
+    <color name="beeeon_overlay_text">#FFFFFF</color>
     <color name="beeeon_placeholder_primary">#B2EBF2</color>
+
+    <color name="beeeon_white_transparent">#88FFFFFF</color>
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>

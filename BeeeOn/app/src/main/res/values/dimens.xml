@@ -10,6 +10,14 @@
 	<dimen name="space_big">16dp</dimen>
 	<dimen name="space_bigger">32dp</dimen>
 
+	<dimen name="space_one_and_half">12dp</dimen>
+	<dimen name="space_double">16dp</dimen>
+	<dimen name="space_triple">24dp</dimen>
+	<dimen name="space_quadra">32dp</dimen>
+	<dimen name="space_penta">48dp</dimen>
+	<dimen name="space_sexta">56dp</dimen>
+
+
 	<dimen name="nav_drawer_header_height">86dp</dimen>
 
 	<bool name="is_tablet">false</bool>
@@ -67,4 +75,6 @@
 	<integer name="graph_number_circles">20</integer>
 	
 	<integer name="dashboard_span_count">1</integer>
+
+	<dimen name="bottomsheet_width">400dp</dimen>
 </resources>

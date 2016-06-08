@@ -18,7 +18,7 @@ import com.rehivetech.beeeon.R;
 public class Validator {
 	private static final String TAG = Validator.class.getSimpleName();
 
-	@IntDef(flag = true, value = {INTEGER, DOUBLE, EMAIL, IP_ADDRESS})
+	@IntDef(flag = true, value = {INTEGER, DOUBLE, EMAIL, IP_ADDRESS, PORT})
 	public @interface ValidationType {
 	}
 
@@ -26,6 +26,7 @@ public class Validator {
 	public static final int DOUBLE = 1 << 1;
 	public static final int EMAIL = 1 << 2;
 	public static final int IP_ADDRESS = 1 << 3;
+	public static final int PORT = 1 << 4;
 
 	/**
 	 * Validates specified text layout for emptiness and optional additionals
@@ -42,6 +43,7 @@ public class Validator {
 		}
 
 		Context appContext = BeeeOnApplication.getContext();
+		boolean isSuccess = false;
 
 		String input = editText.getText().toString().trim();
 		if (input.length() == 0) {
@@ -52,14 +54,20 @@ public class Validator {
 
 		// validation integer/double
 		if ((flags & INTEGER) == INTEGER || (flags & DOUBLE) == DOUBLE) {
-			try {
-				//noinspection ResultOfMethodCallIgnored
-				Double.parseDouble(input);
-				//noinspection ResultOfMethodCallIgnored
-				Integer.parseInt(input);
-			} catch (NumberFormatException e) {
+			isSuccess = numberValidation(input);
+			if (!isSuccess) {
 				textInputLayout.requestFocus();
 				textInputLayout.setError(appContext.getString(R.string.validation_number));
+				return false;
+			}
+		}
+
+		// port validation
+		if ((flags & PORT) == PORT) {
+			isSuccess = portValidation(input);
+			if (!isSuccess) {
+				textInputLayout.requestFocus();
+				textInputLayout.setError(appContext.getString(R.string.validation_port));
 				return false;
 			}
 		}
@@ -84,8 +92,61 @@ public class Validator {
 		return true;
 	}
 
+	/**
+	 * Helper for validating many inputs without any flags
+	 *
+	 * @param inputLayouts text inputs
+	 * @return success (if one fails, all fails)
+	 */
+	public static boolean validateAll(TextInputLayout... inputLayouts) {
+		for (TextInputLayout input : inputLayouts) {
+			if (!validate(input)) return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validation for number (double or integer)
+	 *
+	 * @param input string with number
+	 * @return success
+	 */
+	private static boolean numberValidation(String input) {
+		try {
+			//noinspection ResultOfMethodCallIgnored
+			Double.parseDouble(input);
+			//noinspection ResultOfMethodCallIgnored
+			Integer.parseInt(input);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	/**
+	 * Validating view without flags
+	 *
+	 * @param textInputLayout view to validate
+	 * @return success
+	 */
 	public static boolean validate(TextInputLayout textInputLayout) {
 		return validate(textInputLayout, 0);
+	}
+
+	/**
+	 * Validation for port number
+	 *
+	 * @param input string which should contain port
+	 * @return success
+	 */
+	public static boolean portValidation(String input) {
+		try {
+			int port = Integer.parseInt(input);
+			return !(port <= 0 || port > (Short.MAX_VALUE << 2 + 1));
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 }
 

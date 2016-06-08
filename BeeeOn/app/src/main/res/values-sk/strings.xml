@@ -114,14 +114,14 @@
     <!-- Login -->
     <string name="login_app_name">BeeeOn</string>
     <string name="login_app_slogan">Dom pod vašou kontrolou.</string>
-    <string name="login_btn_demo_mode">Spustiť v demo režime</string>
+    <string name="login_btn_demo_mode">Vyskúšať demo režim</string>
     <string name="login_btn_direct_connect">Priame pripojenie k bráne</string>
     <string name="login_dialog_message_register_new_account">Ešte nemáte vytvorený BeeeOn účet, chcete si ho teraz vytvoriť?</string>
     <string name="login_dialog_title_choose_provider">Vyberte poskytovateľa účtu</string>
     <string name="login_dialog_title_register_new_account">Nemáte účet</string>
     <string name="login_image_description_logo">Logo aplikácie</string>
     <string name="login_label_login">Prihláste sa pomocou:</string>
-    <string name="login_label_server">Zvoľte server:</string>
+    <string name="login_label_server">Dostupné servery</string>
     <string name="login_label_work_offline">Alebo môžete pracovať offline:</string>
     <string name="login_menu_action_choose_server_manually">Vybrať BeeeOn server ručne</string>
     <string name="login_progress_loading_demo">Nahrávam demo dáta&#8230;</string>
@@ -327,7 +327,7 @@
 
     <!-- Dialog info -->
     <string name="dialog_info_btn_rate">Hodnotenie</string>
-    <string name="dialog_info_copyright">\u00A9 2014–15 BeeeOn Team. Všetky práva vyhradené.</string>
+    <string name="dialog_info_copyright">\u00A9 2014–16 BeeeOn Team. Všetky práva vyhradené.</string>
     <string name="dialog_info_version">Verzia</string>
 
     <!-- Settings -->
@@ -485,5 +485,25 @@
     <string name="validation_number">Vložte platné číslo.</string>
     <string name="validation_email">Vložte platnú e-mailovú adresu.</string>
     <string name="validation_ip_address">Vložte platnú IP adresu. Môže vyzerat napríklad 192.168.100.100.</string>
+    <string name="validation_port">Vložte číslo v\u00A0rozsahu 1\u00A0–\u00A065535.</string>
+
+    <string name="login_take_tour">Zobraziť sprievodca</string>
+    <string name="server_add_new">Pridať nový</string>
+    <string name="dialog_create">Vytvoriť</string>
+    <string name="dialog_delete">Zmazať</string>
+    <string name="dialog_edit">Upraviť</string>
+    <string name="error_no_url">Neuvedená URL adresa!</string>
+    <string name="server_detail_host">Adresa</string>
+    <string name="server_detail_name">Název serveru</string>
+    <string name="server_detail_port">Port</string>
+    <string name="server_detail_title_create">Vytvoriť server</string>
+    <string name="server_detail_title_edit">Upraviť server</string>
+    <string name="server_detail_certificate">Certifikát</string>
+    <string name="server_detail_url_verify">URL na overenie</string>
+    <string name="permission_storage_warning">Ak chcete načítať súbor zo zariadenia, musíte povoliť oprávnenie.</string>
+    <string name="server_detail_certificate_button">Vybrať X.509 certifikát</string>
+    <string name="server_detail_certificate_not_selected">Je potrebné zvoliť certifikát</string>
+    <string name="server_detail_certificate_file_not_found">Vybraný súbor nebol nájdený</string>
+    <string name="server_detail_certificate_wrong_type">Zlý typ certifikátu</string>
 
 </resources>

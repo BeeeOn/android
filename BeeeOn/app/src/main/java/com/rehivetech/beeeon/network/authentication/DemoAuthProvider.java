@@ -13,6 +13,11 @@ public class DemoAuthProvider implements IAuthProvider {
 	public static final int PROVIDER_ID = 200;
 
 	@Override
+	public boolean isDemo() {
+		return true;
+	}
+
+	@Override
 	public String getProviderName() {
 		return "";
 	}

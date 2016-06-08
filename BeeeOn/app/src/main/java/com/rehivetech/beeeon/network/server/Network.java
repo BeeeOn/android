@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.network.server;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -19,6 +16,7 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.model.entity.Server;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.network.server.xml.XmlCreator;
@@ -27,7 +25,6 @@ import com.rehivetech.beeeon.network.server.xml.XmlParser.Result;
 import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -86,12 +83,11 @@ public class Network implements INetwork {
 
 	private static final int SSL_TIMEOUT = 35000;
 
-	private final Context mContext;
-	private final NetworkServer mServer;
+	private final Server mServer;
 	private String mSessionId = "";
 
 	@Nullable
-	private final SSLSocketFactory mSocketFactory;
+	private SSLSocketFactory mSocketFactory;
 
 	private final Object mSocketLock = new Object();
 	private SSLSocket mSocket = null;
@@ -100,27 +96,35 @@ public class Network implements INetwork {
 
 	private boolean mInterrupted;
 
-	public Network(Context context, NetworkServer server) {
-		mContext = context;
+	public Network(Server server) {
 		mServer = server;
+		connect();
+	}
 
+	/**
+	 * Loads certificate by our compatible certificate factories
+	 *
+	 * @param certificateStream input stream certificate (input file, or string from DB)
+	 * @return successfully validated certificate
+	 * @throws CertificateException
+	 */
+	public static Certificate checkAndGetCertificate(InputStream certificateStream) throws CertificateException {
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
+		return cf.generateCertificate(certificateStream);
+	}
+
+	public void connect() {
 		SSLSocketFactory socketFactory = null;
+
 		try {
-			// Open CA certificate from assets
-			InputStream inStreamCertTmp = mContext.getAssets().open(mServer.certAssetsFilename);
-			InputStream inStreamCert = new BufferedInputStream(inStreamCertTmp);
-			Certificate ca;
-			try {
-				CertificateFactory cf = CertificateFactory.getInstance("X.509");
-				ca = cf.generateCertificate(inStreamCert);
-			} finally {
-				inStreamCert.close();
-			}
+			// Open CA certificate from server
+			Certificate certificate = checkAndGetCertificate(mServer.getCertificate());
+
 			// Create a KeyStore containing our trusted CAs
 			String keyStoreType = KeyStore.getDefaultType();
 			KeyStore keyStore = KeyStore.getInstance(keyStoreType);
 			keyStore.load(null, null);
-			keyStore.setCertificateEntry(ALIAS_CA_CERT, ca);
+			keyStore.setCertificateEntry(ALIAS_CA_CERT, certificate);
 
 			// Create a TrustManager that trusts the CAs in our KeyStore
 			String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
@@ -132,13 +136,13 @@ public class Network implements INetwork {
 			sslContext.init(null, tmf.getTrustManagers(), null);
 
 			socketFactory = sslContext.getSocketFactory();
-		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException e) {
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException | IllegalArgumentException e) {
 			// IOException - Can't read CA certificate from assets or can't create new socket
 			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
 			// KeyStoreException - Bad type of KeyStore, can't set CA certificate to KeyStore
 			// NoSuchAlgorithmException - Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
 			// KeyManagementException - general exception, thrown to indicate an exception during processing an operation concerning key management
-
+			// IllegalArgumentException - asset is empty
 			Log.e(TAG, "Can't create socketFactory! No network connection is possible.");
 		}
 
@@ -222,7 +226,7 @@ public class Network implements INetwork {
 			// Open SSLSocket directly to server
 			SSLSocket socket = (SSLSocket) mSocketFactory.createSocket(mServer.address, mServer.port);
 
-			HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+
 			//socket.setKeepAlive(true);
 			socket.setSoTimeout(SSL_TIMEOUT);
 			SSLSession s = socket.getSession();
@@ -231,9 +235,10 @@ public class Network implements INetwork {
 
 			// Verify that the certificate hostName
 			// This is due to lack of SNI support in the current SSLSocket.
-			if (!hv.verify(mServer.certVerifyUrl, s)) {
+			HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
+			if (!hostnameVerifier.verify(mServer.verifyHostname, s)) {
 				throw new AppException("Certificate is not verified!", ClientError.CERTIFICATE)
-						.set("Expected CN", mServer.certVerifyUrl)
+						.set("Expected CN", mServer.verifyHostname)
 						.set("Found CN", s.getPeerPrincipal());
 			}
 			// Reset interrupted flag
@@ -300,9 +305,7 @@ public class Network implements INetwork {
 
 	@Override
 	public boolean isAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+		return Utils.isInternetAvailable();
 	}
 
 	/**
@@ -326,6 +329,10 @@ public class Network implements INetwork {
 	 *                      ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE, ClientError.SOCKET or ClientError.NO_RESPONSE
 	 */
 	private synchronized String doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
+		if (mSocketFactory == null) {
+			throw new AppException(ClientError.CERTIFICATE); // TODO was not here;
+		}
+
 		// Check internet connection
 		if (!isAvailable())
 			throw new AppException(ClientError.INTERNET_CONNECTION);

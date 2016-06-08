@@ -71,6 +71,11 @@ public class FacebookAuthProvider implements IAuthProvider {
 	}
 
 	@Override
+	public boolean isDemo() {
+		return false;
+	}
+
+	@Override
 	public String getProviderName() {
 		return PROVIDER_NAME;
 	}

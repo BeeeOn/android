@@ -152,7 +152,7 @@ public class WidgetService extends Service {
 		mContext = getApplicationContext();
 		mCalendar = Calendar.getInstance(mContext.getResources().getConfiguration().locale);
 		mController = Controller.getInstance(mContext);
-		mNetworkType = Utils.getNetworkConnectionType(mContext);
+		mNetworkType = Utils.getNetworkConnectionType();
 		mWeatherProvider = new WeatherProvider(mContext); // TODO should be as model in controler in the future
 
 		// Creates broadcast receiver which bridges broadcasts to appwidgets for handling time and screen
@@ -227,7 +227,7 @@ public class WidgetService extends Service {
 			if (isDeleteWidget) {
 				widgetsDelete(appWidgetIds);
 				// sets new alarm manager after calculation
-				setNewAlarmOrStopSelf(new int[]{}, Utils.getNetworkConnectionType(mContext));
+				setNewAlarmOrStopSelf(new int[]{}, Utils.getNetworkConnectionType());
 				return START_STICKY;
 			}
 
@@ -246,7 +246,7 @@ public class WidgetService extends Service {
 		// calculate it first time always or only when force update
 		if (isStartUpdating || !isForceUpdate) {
 			// sets new alarm manager after calculation
-			if (!setNewAlarmOrStopSelf(appWidgetIds, Utils.getNetworkConnectionType(mContext))) return START_STICKY;
+			if (!setNewAlarmOrStopSelf(appWidgetIds, Utils.getNetworkConnectionType())) return START_STICKY;
 		}
 
 		final boolean forceUpdating = isForceUpdate;
@@ -1116,7 +1116,7 @@ public class WidgetService extends Service {
 
 				// connection changed
 				case ConnectivityManager.CONNECTIVITY_ACTION:
-					int networkType = Utils.getNetworkConnectionType(context);
+					int networkType = Utils.getNetworkConnectionType();
 					// is connected to the internet
 					if (networkType > -1) {
 						// only changed connection, recalculate widgets cause some can have update only on wi-fi
