@@ -512,5 +512,9 @@
 	<string name="server_detail_port">Port</string>
 	<string name="server_detail_certificate">Certificate</string>
 	<string name="server_detail_url_verify">URL to verify</string>
+	<string name="server_detail_certificate_button">Select X.509 certificate</string>
+	<string name="server_detail_certificate_not_selected">You must provide certificate</string>
+	<string name="server_detail_certificate_wrong_type">Wrong certificate type</string>
+	<string name="server_detail_certificate_file_not_found">Selected file not found</string>
 </resources>
 

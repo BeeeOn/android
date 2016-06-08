@@ -15,6 +15,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -43,6 +44,8 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 	private TextInputLayout mPortView;
 	private TextInputLayout mHostView;
 	private TextInputLayout mVerifyView;
+	private Button mCertificateButtonView;
+	private TextView mCertificateErrorView;
 
 	// statefull information
 	@State public String mServerName;
@@ -163,7 +166,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 		super.onSaveInstanceState(outState);
 	}
 
-
 	/**
 	 * Gets server object which should be alwasy filled with id (either generated or existing one)
 	 *
@@ -184,13 +186,16 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 		mHostView = ButterKnife.findById(mRootView, R.id.server_host);
 		mVerifyView = ButterKnife.findById(mRootView, R.id.server_url_verify);
 
+
 		// delete button
 		if (Server.isEditable(mServerId)) {
 			setDeleteButton(builder, getNeutralButtonText());
 		}
 
-		Button btn = ButterKnife.findById(mRootView, R.id.server_certificate_button);
-		btn.setOnClickListener(new View.OnClickListener() {
+		mCertificateErrorView = ButterKnife.findById(mRootView, R.id.server_certificate_button_error);
+
+		mCertificateButtonView = ButterKnife.findById(mRootView, R.id.server_certificate_button);
+		mCertificateButtonView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (checkStoragePermission()) {
@@ -270,14 +275,34 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 			case REQUEST_CERTIFICATE_PICK:
 				if (resultCode == Activity.RESULT_OK) {
 					mCertificateUri = data.getDataString();
+					setCertificateError(null);
 				} else if (resultCode == Activity.RESULT_CANCELED) {
-					Toast.makeText(getActivity(), "ahoj", Toast.LENGTH_LONG).show();
+					// TODO
 				}
 
 				break;
 		}
 
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	/**
+	 * Handles showing certificate button error
+	 *
+	 * @param error if null, hides error
+	 */
+	public void setCertificateError(@Nullable String error) {
+		if (error == null) {
+			mCertificateErrorView.setVisibility(View.GONE);
+			mCertificateButtonView.setTextColor(ContextCompat.getColor(getActivity(), R.color.beeeon_primary_dark));
+			return;
+		}
+
+		// sets the error with proper styles
+		mCertificateErrorView.setVisibility(View.VISIBLE);
+		mCertificateErrorView.setText(error);
+		mCertificateButtonView.requestFocus();
+		mCertificateButtonView.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
 	}
 
 	/**

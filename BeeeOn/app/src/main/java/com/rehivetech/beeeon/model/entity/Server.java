@@ -3,11 +3,13 @@ package com.rehivetech.beeeon.model.entity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.util.Log;
 
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -24,18 +26,22 @@ import io.realm.annotations.PrimaryKey;
  * @since 30.05.2016
  */
 public class Server extends RealmObject implements IIdentifier {
+	private static final String TAG = Server.class.getSimpleName();
+
 	public static final long SERVER_ID_PRODUCTION = 1;
 	public static final long SERVER_ID_DEVEL = 2;
 	public static final int DEFAULT_PORT = 4565;
+	public static final String DEFAULT_VERIFY = "ant-2.fit.vutbr.cz";
 
-	public static final Server PRODUCTION_SERVER = new Server(SERVER_ID_PRODUCTION, R.string.server_production, "cloud.beeeon.com", 4565, "ant-2.fit.vutbr.cz");
+	// default production server
+	public static final Server PRODUCTION_SERVER = new Server(SERVER_ID_PRODUCTION, R.string.server_production, "cloud.beeeon.com", DEFAULT_PORT, DEFAULT_VERIFY);
 
 	@PrimaryKey
 	private long id;
 	public String name;
 	public String address;
 	public int port = DEFAULT_PORT;
-	public String certVerifyUrl;
+	public String certVerifyUrl = DEFAULT_VERIFY;
 	private String certificate;
 
 	/**
@@ -51,24 +57,15 @@ public class Server extends RealmObject implements IIdentifier {
 	}
 
 	/**
-	 * Setups certificate from input stream, this might be from file.
-	 * If input null, loads default certificate
-	 *
-	 * @param certificateStream input stream containing certificate
-	 * @throws AppException
+	 * Set certificate from string (this hould be loaded from file, etc.)
+	 * If certificate nullable passed, loads default one
 	 */
-	public void setCertificate(@Nullable InputStream certificateStream) throws AppException {
-
-		if (certificateStream == null) {
-			loadDefaultCertificate();
-			return;
+	public void setCertificate(@Nullable String certificate) {
+		if (certificate == null) {
+			certificate = loadDefaultCertificate(BeeeOnApplication.getContext());
 		}
 
-		Scanner s = new Scanner(certificateStream).useDelimiter("\\A");
-		if (!s.hasNext()) {
-			throw new AppException(ClientError.CERTIFICATE);
-		}
-		this.certificate = s.next();
+		this.certificate = certificate;
 	}
 
 	/**
@@ -94,29 +91,25 @@ public class Server extends RealmObject implements IIdentifier {
 		this.address = address;
 		this.port = port;
 		this.certVerifyUrl = certVerifyUrl;
-
-		// load certificate from raw file
-		loadDefaultCertificate();
+		this.certificate = loadDefaultCertificate(appContext);
 	}
 
 	/**
 	 * Loads default certificate in raw files
 	 */
-	private void loadDefaultCertificate() {
+	private String loadDefaultCertificate(Context context) {
 		try {
-			InputStream inputStream = new BufferedInputStream(BeeeOnApplication.getContext().getResources().openRawResource(R.raw.cacert));
-			setCertificate(inputStream);
+			InputStream inputStream = new BufferedInputStream(context.getResources().openRawResource(R.raw.cacert));
+			String certificate = Utils.convertInputStreamToString(inputStream);
 			inputStream.close();
+			return certificate;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e(TAG, "Problem with loading default server certificate!");
+			return null;
 		}
 	}
 
 	public Server(long id) {
-		setId(id);
-	}
-
-	public void setId(long id) {
 		this.id = id;
 	}
 

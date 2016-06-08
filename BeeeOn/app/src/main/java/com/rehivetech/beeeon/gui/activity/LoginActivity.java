@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -24,13 +25,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.exception.IErrorCode;
 import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.adapter.ServerAdapter;
@@ -45,9 +49,15 @@ import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.network.server.Network;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.util.Validator;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.security.cert.CertificateException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -263,12 +273,14 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		// Prepare correct authProvider object
 		final IAuthProvider authProvider;
 
+		if ((requestCode & 0xffff) == ServerDetailDialog.REQUEST_CERTIFICATE_PICK) {
+			// ignoring, because handled in dialog!
+			// NOTE: quite not best handling -> this is how handles it FragmentActivity
+			return;
+		}
+
 		// RequestCode uniquely identifies authProvider - all providers must respect that and use it in startActivityForResult(providerId)
 		switch (requestCode) {
-			case ServerDetailDialog.REQUEST_CERTIFICATE_PICK:
-				// ignoring, because handled in dialog!
-				return;
-
 			case GoogleAuthProvider.PROVIDER_ID: {
 				authProvider = new GoogleAuthProvider();
 				break;
@@ -677,11 +689,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			return;
 		}
 
-		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
-		mRealm.executeTransactionAsync(new Realm.Transaction() {
+		mRealm.executeTransaction(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {
-				Server serverToDelete = dialog.getServer();
+				Server serverToDelete = ((ServerDetailDialog) baseDialog).getServer();
 				if (serverToDelete.isValid() && Server.isEditable(serverToDelete.getId())) {
 					Server selectedServer = mServersAdapter.getItem(mServersAdapter.getSelectedPosition());
 					// need to set some id of server (default)
@@ -720,43 +731,88 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		}
 
 		final ServerDetailDialog dialog = (ServerDetailDialog) baseDialog;
-
-		Log.d(TAG, dialog.mCertificateUri == null ? "certificate null" : dialog.mCertificateUri);
-
 		final TextInputLayout serverNameView = ButterKnife.findById(view, R.id.server_name);
 		final TextInputLayout serverHostView = ButterKnife.findById(view, R.id.server_host);
 		final TextInputLayout serverPortView = ButterKnife.findById(view, R.id.server_port);
-		final TextInputLayout serverVerifyView = ButterKnife.findById(view, R.id.server_port);
-		if (!Validator.validate(serverNameView) || !Validator.validate(serverHostView) || !Validator.validate(serverPortView, Validator.PORT) || !Validator.validate(serverVerifyView)) {
+		final TextInputLayout serverVerifyView = ButterKnife.findById(view, R.id.server_url_verify);
+		if (!Validator.validateAll(serverNameView, serverHostView, serverVerifyView) || !Validator.validate(serverPortView, Validator.PORT)) {
 			return;
 		}
 
+		// checking if edit text (because of lint, checked already in validation)
 		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null || serverVerifyView.getEditText() == null) {
 			Log.e(TAG, "There is none EditText inside TextInputLayout!");
 			return;
 		}
 
-		//					try {
-//						InputStream inputStream = getContext().getContentResolver().openInputStream(uriData);
-//						mServer.setCertificate(inputStream);
-//						Toast.makeText(getActivity(), uriData.toString(), Toast.LENGTH_LONG).show();
-//					} catch (FileNotFoundException e) {
-//						e.printStackTrace();
-//					}
+		final Server server = dialog.getServer();
 
+		// certificate button + error
+		final TextView certificateError = ButterKnife.findById(view, R.id.server_certificate_button_error);
+		final Button certificateButton = ButterKnife.findById(view, R.id.server_certificate_button);
 
+		String certificate = null;
+		if (dialog.mCertificateUri == null || dialog.mCertificateUri.isEmpty()) {
+			// check if server has certificate
+			if (server.getCertificate() == null) {
+				dialog.setCertificateError(getString(R.string.server_detail_certificate_not_selected));
+				return;
+			}
+		} else {
+			certificate = loadCertificate(Uri.parse(dialog.mCertificateUri), dialog);
+			// something went wrong with loading, don't continue
+			if (certificate == null) return;
+		}
+
+		// hide error message
+		dialog.setCertificateError(null);
+
+		final String finalCertificate = certificate;
 		mRealm.executeTransaction(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {
-				Server server = dialog.getServer();
 				server.name = serverNameView.getEditText().getText().toString();
 				server.address = serverHostView.getEditText().getText().toString();
 				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
 				server.certVerifyUrl = serverVerifyView.getEditText().getText().toString();
+				if (finalCertificate != null) {
+					server.setCertificate(finalCertificate);
+				}
+
 				realm.copyToRealmOrUpdate(server);
 			}
 		});
 
+
 		dialog.dismiss();
+	}
+
+	/**
+	 * Loads certificate from device's disk and handles errors (with showing toast)
+	 *
+	 * @param fileUri specified file
+	 * @return certificate string
+	 */
+	private String loadCertificate(Uri fileUri, ServerDetailDialog dialog) {
+		try {
+			InputStream inputStream = getContentResolver().openInputStream(fileUri);
+			String certificate = Utils.convertInputStreamToString(inputStream);
+			if (certificate == null) {
+				throw new AppException(ClientError.CERTIFICATE);
+			}
+			// checks if certificate is ok
+			Network.checkAndGetCertificate(new ByteArrayInputStream(certificate.getBytes()));
+			return certificate;
+		} catch (FileNotFoundException e) {
+			// this should never happen because we select it properly, but just in case
+			dialog.setCertificateError(getString(R.string.server_detail_certificate_file_not_found));
+			return null;
+		} catch (CertificateException e) {
+			dialog.setCertificateError(getString(R.string.server_detail_certificate_wrong_type));
+			return null;
+		} catch (AppException e) {
+			dialog.setCertificateError(e.getTranslatedErrorMessage(this));
+			return null;
+		}
 	}
 }

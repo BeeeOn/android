@@ -93,6 +93,20 @@ public class Validator {
 	}
 
 	/**
+	 * Helper for validating many inputs without any flags
+	 *
+	 * @param inputLayouts text inputs
+	 * @return success (if one fails, all fails)
+	 */
+	public static boolean validateAll(TextInputLayout... inputLayouts) {
+		for (TextInputLayout input : inputLayouts) {
+			if (!validate(input)) return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Validation for number (double or integer)
 	 *
 	 * @param input string with number

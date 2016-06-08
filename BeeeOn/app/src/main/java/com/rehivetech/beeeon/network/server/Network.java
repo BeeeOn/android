@@ -26,6 +26,7 @@ import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
@@ -100,15 +101,24 @@ public class Network implements INetwork {
 		connect();
 	}
 
+	/**
+	 * Loads certificate by our compatible certificate factories
+	 *
+	 * @param certificateStream input stream certificate (input file, or string from DB)
+	 * @return successfully validated certificate
+	 * @throws CertificateException
+	 */
+	public static Certificate checkAndGetCertificate(InputStream certificateStream) throws CertificateException {
+		CertificateFactory cf = CertificateFactory.getInstance("X.509");
+		return cf.generateCertificate(certificateStream);
+	}
+
 	public void connect() {
 		SSLSocketFactory socketFactory = null;
 
 		try {
-			// Open CA certificate from assets
-			Certificate certificate;
-
-			CertificateFactory cf = CertificateFactory.getInstance("X.509");
-			certificate = cf.generateCertificate(mServer.getCertificate());
+			// Open CA certificate from server
+			Certificate certificate = checkAndGetCertificate(mServer.getCertificate());
 
 			// Create a KeyStore containing our trusted CAs
 			String keyStoreType = KeyStore.getDefaultType();
@@ -216,7 +226,7 @@ public class Network implements INetwork {
 			// Open SSLSocket directly to server
 			SSLSocket socket = (SSLSocket) mSocketFactory.createSocket(mServer.address, mServer.port);
 
-			HostnameVerifier hv = HttpsURLConnection.getDefaultHostnameVerifier();
+
 			//socket.setKeepAlive(true);
 			socket.setSoTimeout(SSL_TIMEOUT);
 			SSLSession s = socket.getSession();
@@ -225,7 +235,8 @@ public class Network implements INetwork {
 
 			// Verify that the certificate hostName
 			// This is due to lack of SNI support in the current SSLSocket.
-			if (!hv.verify(mServer.certVerifyUrl, s)) {
+			HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
+			if (!hostnameVerifier.verify(mServer.certVerifyUrl, s)) {
 				throw new AppException("Certificate is not verified!", ClientError.CERTIFICATE)
 						.set("Expected CN", mServer.certVerifyUrl)
 						.set("Found CN", s.getPeerPrincipal());

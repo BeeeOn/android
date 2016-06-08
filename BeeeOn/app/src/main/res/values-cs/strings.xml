@@ -501,5 +501,10 @@
     <string name="server_detail_title_edit">Upravit server</string>
     <string name="server_detail_certificate">Certifikát</string>
     <string name="server_detail_url_verify">URL k ověření</string>
+    <string name="permission_storage_warning">Pokud chcete načíst soubor ze zařízení, musíte povolit oprávnění.</string>
+    <string name="server_detail_certificate_button">Vybrat X.509 certifikát</string>
+    <string name="server_detail_certificate_not_selected">Je potřeba zvolit certifikát</string>
+    <string name="server_detail_certificate_file_not_found">Vybraný soubor nebyl nalezen</string>
+    <string name="server_detail_certificate_wrong_type">Špatný typ certifikátu</string>
 
 </resources>

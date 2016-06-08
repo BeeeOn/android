@@ -15,8 +15,6 @@ import io.realm.Realm;
 public class DatabaseSeed implements Realm.Transaction {
 	@Override
 	public void execute(Realm realm) {
-		Context appContext = BeeeOnApplication.getContext();
-
 		// deleting all servers
 		realm.delete(Server.class);
 

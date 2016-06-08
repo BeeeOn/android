@@ -55,6 +55,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
+import java.util.Scanner;
 
 import io.realm.Realm;
 
@@ -609,5 +610,13 @@ final public class Utils {
 		} else {
 			imageView.setBackgroundDrawable(drawable);
 		}
+	}
+
+	@Nullable
+	public static String convertInputStreamToString(InputStream stream) {
+		Scanner s = new Scanner(stream).useDelimiter("\\A");
+		if (!s.hasNext()) return null;
+
+		return s.next();
 	}
 }
