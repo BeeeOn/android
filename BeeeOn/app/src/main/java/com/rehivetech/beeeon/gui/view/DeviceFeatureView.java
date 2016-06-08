@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import com.rehivetech.beeeon.util.Utils;
 /**
  * Created by martin on 7.11.15.
  */
-public class DeviceFeatureView extends LinearLayout{
+public class DeviceFeatureView extends LinearLayout {
 
 	private Context mContext;
 
@@ -74,8 +75,9 @@ public class DeviceFeatureView extends LinearLayout{
 	}
 
 	public void setIcon(@DrawableRes int iconRes) {
-		Drawable icon = ContextCompat.getDrawable(mContext, iconRes);
-		int size = Utils.convertDpToPixel(24);
+		Drawable icon = DrawableCompat.wrap(ContextCompat.getDrawable(mContext, iconRes)).mutate();
+		DrawableCompat.setTint(icon, ContextCompat.getColor(mContext, R.color.white));
+		int size = Utils.convertDpToPixel(20);
 		icon.setBounds(0, 0, size, size);
 		mValue.setCompoundDrawables(icon, null, null, null);
 	}

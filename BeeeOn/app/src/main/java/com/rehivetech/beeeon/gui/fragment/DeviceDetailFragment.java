@@ -192,7 +192,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (rssi != null) {
 			mDeviceSignal = new DeviceFeatureView(mActivity);
 			mDeviceSignal.setCaption(getString(R.string.module_detail_label_signal));
-			mDeviceSignal.setIcon(R.drawable.ic_signal_wifi_4_bar_white_24dp);
+			mDeviceSignal.setIcon(R.drawable.ic_signal_wifi_4_bar_black_24dp);
 			mDeviceSignal.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -206,7 +206,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (battery != null) {
 			mDeviceBattery = new DeviceFeatureView(mActivity);
 			mDeviceBattery.setCaption(getString(R.string.devices__type_battery));
-			mDeviceBattery.setIcon(R.drawable.ic_battery);
+			mDeviceBattery.setIcon(R.drawable.ic_battery_std_black_24dp);
 			mDeviceBattery.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -220,7 +220,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (mDevice.getRefresh() != null) {
 			mDeviceRefresh = new DeviceFeatureView(mActivity);
 			mDeviceRefresh.setCaption(getString(R.string.devices__type_refresh));
-			mDeviceRefresh.setIcon(R.drawable.ic_refresh);
+			mDeviceRefresh.setIcon(R.drawable.ic_refresh_black_24dp);
 			mDeviceRefresh.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -234,7 +234,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		mDeviceLastUpdate = new DeviceFeatureView(mActivity);
 		mDeviceLastUpdate.setCaption(getString(R.string.module_detail_label_last_update));
-		mDeviceLastUpdate.setIcon(R.drawable.ic_clock);
+		mDeviceLastUpdate.setIcon(R.drawable.ic_update_black_24dp);
 		featuresLayout.addView(mDeviceLastUpdate);
 
 		mDeviceLocation = new DeviceFeatureView(mActivity);
@@ -372,7 +372,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		Integer rssi = mDevice.getRssi();
 		if (rssi != null && mDeviceSignal != null) {
 			mDeviceSignal.setValue(String.format("%d%%", rssi));
-			mDeviceSignal.setIcon(rssi == 0 ? R.drawable.ic_signal_wifi_off_white_24dp : R.drawable.ic_signal_wifi_4_bar_white_24dp);
+			mDeviceSignal.setIcon(rssi == 0 ? R.drawable.ic_signal_wifi_off_black_24dp : R.drawable.ic_signal_wifi_4_bar_black_24dp);
 		}
 
 		// battery

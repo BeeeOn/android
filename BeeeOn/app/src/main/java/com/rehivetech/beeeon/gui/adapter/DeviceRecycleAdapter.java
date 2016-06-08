@@ -159,7 +159,7 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 					// showing status icon
 					deviceHolder.mStatusIcon.setVisibility(statusOk ? View.GONE : View.VISIBLE);
 
-					int iconRes = R.drawable.ic_status_online;
+					int iconRes = R.drawable.ic_settings_input_antenna_black_24dp;
 					int backRes = R.drawable.oval_primary;
 					deviceHolder.setSelected(isSelected(position), deviceHolder.mIcon, iconRes);
 					deviceHolder.mIcon.setBackgroundResource(backRes);

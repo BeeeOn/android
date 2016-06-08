@@ -72,10 +72,10 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		String loadingText = getString(R.string.gate_detail_loading_data);
 
 		mDetailsItemList = new ArrayList<>();
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_gray_24dp, R.string.gate_detail_gate_id, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_gate_owner, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_gray_24dp, R.string.gate_detail_your_role, loadingText));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_gray_24dp, R.string.gate_detail_timezone, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_info_black_24dp, R.string.gate_detail_gate_id, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_black_24dp, R.string.gate_detail_gate_owner, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_person_black_24dp, R.string.gate_detail_your_role, loadingText));
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_language_black_24dp, R.string.gate_detail_timezone, loadingText));
 		mDetailsItemList.add(new DetailsItem(0, R.string.gate_detail_altitude, loadingText));
 		mDetailsItemList.add(new DetailsItem(R.drawable.ic_supervisor_account_gray_24dp, R.string.gate_detail_num_of_users, loadingText, new View.OnClickListener() {
 			@Override
@@ -83,7 +83,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 				mCallback.onGateUsersClicked();
 			}
 		}));
-		mDetailsItemList.add(new DetailsItem(R.drawable.ic_router_gray_24dp, R.string.gate_detail_num_of_devices, loadingText, new View.OnClickListener() {
+		mDetailsItemList.add(new DetailsItem(R.drawable.ic_router_black_24dp, R.string.gate_detail_num_of_devices, loadingText, new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				mCallback.onGateDevicesClicked();

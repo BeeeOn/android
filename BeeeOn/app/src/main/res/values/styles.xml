@@ -32,7 +32,9 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="AppTheme.AppBar" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.AppBar.Overlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="colorControlNormal">@color/beeeon_overlay_text</item>
         <item name="colorControlActivated">@color/beeeon_overlay_text</item>
         <item name="colorControlHighlight">@color/beeeon_overlay_text</item>
