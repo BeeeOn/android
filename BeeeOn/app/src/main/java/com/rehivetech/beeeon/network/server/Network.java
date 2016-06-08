@@ -236,9 +236,9 @@ public class Network implements INetwork {
 			// Verify that the certificate hostName
 			// This is due to lack of SNI support in the current SSLSocket.
 			HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
-			if (!hostnameVerifier.verify(mServer.certVerifyUrl, s)) {
+			if (!hostnameVerifier.verify(mServer.verifyHostname, s)) {
 				throw new AppException("Certificate is not verified!", ClientError.CERTIFICATE)
-						.set("Expected CN", mServer.certVerifyUrl)
+						.set("Expected CN", mServer.verifyHostname)
 						.set("Found CN", s.getPeerPrincipal());
 			}
 			// Reset interrupted flag

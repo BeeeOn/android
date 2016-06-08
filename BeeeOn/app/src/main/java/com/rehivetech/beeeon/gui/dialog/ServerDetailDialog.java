@@ -119,7 +119,7 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 			mServerName = mServer.name;
 			mServerPort = String.valueOf(mServer.port);
 			mServerHost = mServer.address;
-			mServerVerify = mServer.certVerifyUrl;
+			mServerVerify = mServer.verifyHostname;
 		}
 
 		fillUI();

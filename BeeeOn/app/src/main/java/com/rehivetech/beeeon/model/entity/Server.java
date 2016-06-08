@@ -7,15 +7,12 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Scanner;
 
 import io.realm.Realm;
 import io.realm.RealmObject;
@@ -41,7 +38,7 @@ public class Server extends RealmObject implements IIdentifier {
 	public String name;
 	public String address;
 	public int port = DEFAULT_PORT;
-	public String certVerifyUrl = DEFAULT_VERIFY;
+	public String verifyHostname;
 	private String certificate;
 
 	/**
@@ -81,16 +78,16 @@ public class Server extends RealmObject implements IIdentifier {
 	 * @param nameRes       resource for name
 	 * @param address       server host address
 	 * @param port          port
-	 * @param certVerifyUrl verifying url address
+	 * @param verifyHostname verifying url address
 	 */
-	public Server(long id, @StringRes int nameRes, String address, int port, String certVerifyUrl) {
+	public Server(long id, @StringRes int nameRes, String address, int port, String verifyHostname) {
 		Context appContext = BeeeOnApplication.getContext();
 
 		this.id = id;
 		this.name = appContext.getString(nameRes);
 		this.address = address;
 		this.port = port;
-		this.certVerifyUrl = certVerifyUrl;
+		this.verifyHostname = verifyHostname;
 		this.certificate = loadDefaultCertificate(appContext);
 	}
 

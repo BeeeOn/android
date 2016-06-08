@@ -29,11 +29,10 @@ public class BeeeOnApplication extends Application {
 		super.onCreate();
 		Log.i("BeeeOn app starting...", "___________________________________");
 		sContext = getApplicationContext();
-		// TODO setup locale not in activity
 		GoogleAnalyticsManager.getInstance().init(sContext, getString(R.string.api_keys_google_analytics_tracking_id));
 		// initialize database
 		RealmConfiguration config = new RealmConfiguration.Builder(this)
-				.deleteRealmIfMigrationNeeded() 			// TODO put away later !!!!
+//				.deleteRealmIfMigrationNeeded() // only for developing purposes
 				.schemaVersion(1)
 				.name("beeeon.realm")
 				.initialData(new DatabaseSeed())

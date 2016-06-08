@@ -25,9 +25,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.Constants;
@@ -78,7 +76,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	/**
 	 * Defines whether choose server spinner will be showed by default or not
 	 */
-	private static final boolean SERVER_ENABLED_DEFAULT = true;
+	private static final boolean SERVER_SELECTION_SHOWN_DEFAULT = false;
 	private static final int DIALOG_REQUEST_SERVER_DETAIL = 1;
 	private static final double ICON_SLIDE_THRESHOLD = 0.2;
 
@@ -122,7 +120,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			return;
 		}
 
-		mChooseServerEnabled = Persistence.getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_ENABLED_DEFAULT);
+		mChooseServerEnabled = Persistence.getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_SELECTION_SHOWN_DEFAULT);
 
 		// show intro if was not shown
 		showIntroFirstTime();
@@ -747,10 +745,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 		final Server server = dialog.getServer();
 
-		// certificate button + error
-		final TextView certificateError = ButterKnife.findById(view, R.id.server_certificate_button_error);
-		final Button certificateButton = ButterKnife.findById(view, R.id.server_certificate_button);
-
 		String certificate = null;
 		if (dialog.mCertificateUri == null || dialog.mCertificateUri.isEmpty()) {
 			// check if server has certificate
@@ -774,7 +768,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				server.name = serverNameView.getEditText().getText().toString();
 				server.address = serverHostView.getEditText().getText().toString();
 				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
-				server.certVerifyUrl = serverVerifyView.getEditText().getText().toString();
+				server.verifyHostname = serverVerifyView.getEditText().getText().toString();
 				if (finalCertificate != null) {
 					server.setCertificate(finalCertificate);
 				}
