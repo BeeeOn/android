@@ -57,6 +57,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 
+import butterknife.BindBitmap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -732,13 +733,12 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		final TextInputLayout serverNameView = ButterKnife.findById(view, R.id.server_name);
 		final TextInputLayout serverHostView = ButterKnife.findById(view, R.id.server_host);
 		final TextInputLayout serverPortView = ButterKnife.findById(view, R.id.server_port);
-		final TextInputLayout serverVerifyView = ButterKnife.findById(view, R.id.server_url_verify);
-		if (!Validator.validateAll(serverNameView, serverHostView, serverVerifyView) || !Validator.validate(serverPortView, Validator.PORT)) {
+		if (!Validator.validateAll(serverNameView, serverHostView) || !Validator.validate(serverPortView, Validator.PORT)) {
 			return;
 		}
 
 		// checking if edit text (because of lint, checked already in validation)
-		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null || serverVerifyView.getEditText() == null) {
+		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null) {
 			Log.e(TAG, "There is none EditText inside TextInputLayout!");
 			return;
 		}
@@ -768,7 +768,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				server.name = serverNameView.getEditText().getText().toString();
 				server.address = serverHostView.getEditText().getText().toString();
 				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
-				server.verifyHostname = serverVerifyView.getEditText().getText().toString();
 				if (finalCertificate != null) {
 					server.setCertificate(finalCertificate);
 				}

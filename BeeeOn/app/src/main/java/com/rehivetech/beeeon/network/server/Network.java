@@ -225,8 +225,6 @@ public class Network implements INetwork {
 		try {
 			// Open SSLSocket directly to server
 			SSLSocket socket = (SSLSocket) mSocketFactory.createSocket(mServer.address, mServer.port);
-
-
 			//socket.setKeepAlive(true);
 			socket.setSoTimeout(SSL_TIMEOUT);
 			SSLSession s = socket.getSession();
@@ -236,11 +234,15 @@ public class Network implements INetwork {
 			// Verify that the certificate hostName
 			// This is due to lack of SNI support in the current SSLSocket.
 			HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
-			if (!hostnameVerifier.verify(mServer.verifyHostname, s)) {
+
+			// verifying hostname against that what expects server
+			// TODO when the right time (server applied this) -> delete verifying againt Server.DEFAULT_VERIFY
+			if (!hostnameVerifier.verify(mServer.address, s) && !hostnameVerifier.verify("ant-2.fit.vutbr.cz", s)) {
 				throw new AppException("Certificate is not verified!", ClientError.CERTIFICATE)
-						.set("Expected CN", mServer.verifyHostname)
+						.set("Expected CN", mServer.address)
 						.set("Found CN", s.getPeerPrincipal());
 			}
+
 			// Reset interrupted flag
 			mInterrupted = false;
 

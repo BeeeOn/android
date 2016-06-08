@@ -28,17 +28,15 @@ public class Server extends RealmObject implements IIdentifier {
 	public static final long SERVER_ID_PRODUCTION = 1;
 	public static final long SERVER_ID_DEVEL = 2;
 	public static final int DEFAULT_PORT = 4565;
-	public static final String DEFAULT_VERIFY = "ant-2.fit.vutbr.cz";
 
 	// default production server
-	public static final Server PRODUCTION_SERVER = new Server(SERVER_ID_PRODUCTION, R.string.server_production, "cloud.beeeon.com", DEFAULT_PORT, DEFAULT_VERIFY);
+	public static final Server PRODUCTION_SERVER = new Server(SERVER_ID_PRODUCTION, R.string.server_production, "cloud.beeeon.com", DEFAULT_PORT);
 
 	@PrimaryKey
 	private long id;
 	public String name;
 	public String address;
 	public int port = DEFAULT_PORT;
-	public String verifyHostname;
 	private String certificate;
 
 	/**
@@ -74,20 +72,18 @@ public class Server extends RealmObject implements IIdentifier {
 	/**
 	 * Constructor for default servers
 	 *
-	 * @param id            server id, might be {@link #SERVER_ID_PRODUCTION} or {@link #SERVER_ID_DEVEL}
-	 * @param nameRes       resource for name
-	 * @param address       server host address
-	 * @param port          port
-	 * @param verifyHostname verifying url address
+	 * @param id      server id, might be {@link #SERVER_ID_PRODUCTION} or {@link #SERVER_ID_DEVEL}
+	 * @param nameRes resource for name
+	 * @param address server host address
+	 * @param port    port
 	 */
-	public Server(long id, @StringRes int nameRes, String address, int port, String verifyHostname) {
+	public Server(long id, @StringRes int nameRes, String address, int port) {
 		Context appContext = BeeeOnApplication.getContext();
 
 		this.id = id;
 		this.name = appContext.getString(nameRes);
 		this.address = address;
 		this.port = port;
-		this.verifyHostname = verifyHostname;
 		this.certificate = loadDefaultCertificate(appContext);
 	}
 

@@ -43,7 +43,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 	private TextInputLayout mNameView;
 	private TextInputLayout mPortView;
 	private TextInputLayout mHostView;
-	private TextInputLayout mVerifyView;
 	private Button mCertificateButtonView;
 	private TextView mCertificateErrorView;
 
@@ -52,7 +51,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 	@State public String mServerPort;
 	@State public String mCertificateUri;
 	@State public String mServerHost;
-	@State public String mServerVerify;
 
 	/**
 	 * Shows dialog for editting project
@@ -119,7 +117,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 			mServerName = mServer.name;
 			mServerPort = String.valueOf(mServer.port);
 			mServerHost = mServer.address;
-			mServerVerify = mServer.verifyHostname;
 		}
 
 		fillUI();
@@ -146,10 +143,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 		if (mHostView.getEditText() != null) {
 			mHostView.getEditText().setText(mServerHost);
 		}
-
-		if (mVerifyView.getEditText() != null) {
-			mVerifyView.getEditText().setText(mServerVerify);
-		}
 	}
 
 	/**
@@ -162,7 +155,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 		mServerPort = mPortView.getEditText().getText().toString();
 		mServerName = mNameView.getEditText().getText().toString();
 		mServerHost = mHostView.getEditText().getText().toString();
-		mServerVerify = mVerifyView.getEditText().getText().toString();
 		super.onSaveInstanceState(outState);
 	}
 
@@ -184,8 +176,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 		mNameView = ButterKnife.findById(mRootView, R.id.server_name);
 		mPortView = ButterKnife.findById(mRootView, R.id.server_port);
 		mHostView = ButterKnife.findById(mRootView, R.id.server_host);
-		mVerifyView = ButterKnife.findById(mRootView, R.id.server_url_verify);
-
 
 		// delete button
 		if (Server.isEditable(mServerId)) {

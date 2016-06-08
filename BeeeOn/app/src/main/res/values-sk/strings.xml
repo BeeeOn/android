@@ -499,7 +499,6 @@
     <string name="server_detail_title_create">Vytvoriť server</string>
     <string name="server_detail_title_edit">Upraviť server</string>
     <string name="server_detail_certificate">Certifikát</string>
-    <string name="server_detail_url_verify">URL na overenie</string>
     <string name="permission_storage_warning">Ak chcete načítať súbor zo zariadenia, musíte povoliť oprávnenie.</string>
     <string name="server_detail_certificate_button">Vybrať X.509 certifikát</string>
     <string name="server_detail_certificate_not_selected">Je potrebné zvoliť certifikát</string>
