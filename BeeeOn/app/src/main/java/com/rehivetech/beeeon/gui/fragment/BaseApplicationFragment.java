@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;

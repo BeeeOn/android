@@ -12,6 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -85,7 +86,6 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		}
 		setHasOptionsMenu(true);
 	}
-
 
 	@Nullable
 	@Override
@@ -172,10 +172,67 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
 
 			if (fragment != null) {
+				mViewPager.setCurrentItem(index); // TODO not working
 				fragment.addItem(item);
-//				mViewPager.setCurrentItem(index); // TODO not working
 			}
 		}
+	}
+
+	/**
+	 * Async task for refreshing data
+	 *
+	 * @param forceReload forcing reload
+	 */
+	private void doReloadDevicesTask(boolean forceReload) {
+		Log.d("AHOJ", "reload");
+		Controller controller = Controller.getInstance(mActivity);
+
+		VentilationItem ventilationItem = null;
+		int numOfItems = controller.getNumberOfDashboardTabs(mGateId) + 1;
+		for (int i = 0; i < numOfItems; i++) {
+			List<BaseItem> items = controller.getDashboardItems(i, mGateId);
+			if (items == null) continue;
+
+			for (BaseItem item : items) {
+				if (item instanceof VentilationItem) {
+					ventilationItem = (VentilationItem) item;
+					break;
+				}
+			}
+		}
+
+		CallbackTask reloadDeviceTask = createReloadDevicesTask(forceReload);
+		// if outside temperature from provider, reload weather
+		if (ventilationItem != null && ventilationItem.getOutsideAbsoluteModuleId() == null) {
+			mActivity.callbackTaskManager.executeTask(reloadDeviceTask, mGateId, ventilationItem.getLatitude(), ventilationItem.getLongitude());
+		} else {
+			mActivity.callbackTaskManager.executeTask(reloadDeviceTask, mGateId);
+		}
+	}
+
+	/**
+	 * Task for reloading devices in
+	 *
+	 * @param forceReload if should reload
+	 * @return task
+	 */
+	private CallbackTask createReloadDevicesTask(final boolean forceReload) {
+		ReloadDashboardDataTask reloadDashboardDataTask = new ReloadDashboardDataTask(
+				mActivity,
+				forceReload,
+				ReloadGateDataTask.ReloadWhat.DEVICES
+		);
+
+		reloadDashboardDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (!success || !forceReload)
+					return;
+
+				updateViewPager();
+			}
+		});
+		return reloadDashboardDataTask;
 	}
 
 	/**
@@ -183,8 +240,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	 */
 	private void setupViewpager() {
 		Controller controller = Controller.getInstance(mActivity);
-		String userId = controller.getActualUser().getId();
-		int numOfItems = controller.getNumberOfDashboardTabs(userId, mGateId);
+		int numOfItems = controller.getNumberOfDashboardTabs(mGateId);
 
 		numOfItems = numOfItems == 0 ? 1 : numOfItems;
 
@@ -206,12 +262,18 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		}
 	}
 
+	/**
+	 * Clicking on add card button (from FAmenu)
+	 */
 	@OnClick(R.id.dashboard_add_item_fab)
 	public void onFloatingActionButtonClicked() {
 		Intent intent = AddDashboardItemActivity.getAddDashBoardActivityIntent(mActivity, mViewPager.getCurrentItem(), mGateId);
 		startActivityForResult(intent, 0);
 	}
 
+	/**
+	 * Clicking on add view button (from FAmenu)
+	 */
 	@OnClick(R.id.dashboard_add_view_fab)
 	public void onAddViewFloatingActionButtonClicked() {
 		DashboardFragment fragment = DashboardFragment.newInstance(mViewsAdapter.getCount(), mGateId);
@@ -222,75 +284,17 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		mViewPager.setCurrentItem(mViewsAdapter.getCount() - 1, true);
 
 		Controller controller = Controller.getInstance(mActivity);
-		String userId = controller.getActualUser().getId();
-		controller.saveNumberOfDashboardTabs(userId, mGateId, mViewsAdapter.getCount());
+		controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount());
 	}
 
+	/**
+	 * Shows snackbar with undo action
+	 *
+	 * @param text          snackbar's text
+	 * @param clickListener undo click listener
+	 */
 	public void showSnackbar(String text, View.OnClickListener clickListener) {
 		Snackbar.make(mRootLayout, text, Snackbar.LENGTH_LONG).setAction(R.string.dashboard_undo, clickListener).show();
-	}
-
-	/**
-	 * Async task for refreshing data
-	 *
-	 * @param forceReload
-	 */
-	private void doReloadDevicesTask(boolean forceReload) {
-		VentilationItem ventilationItem = null;
-
-		Controller controller = Controller.getInstance(mActivity);
-		String userId = controller.getActualUser().getId();
-		int numOfItems = controller.getNumberOfDashboardTabs(userId, mGateId) + 1;
-
-		for (int i = 0; i < numOfItems; i++) {
-
-			List<BaseItem> items = Controller.getInstance(mActivity).getDashboardItems(i, mGateId);
-
-			if (items != null) {
-
-				for (BaseItem item : items) {
-					if (item instanceof VentilationItem) {
-						ventilationItem = (VentilationItem) item;
-						break;
-					}
-				}
-			}
-		}
-
-		if (ventilationItem != null && ventilationItem.getOutsideAbsoluteModuleId() == null) {
-			mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mGateId, ventilationItem.getLatitiude(), ventilationItem.getLongitiude());
-		} else {
-			mActivity.callbackTaskManager.executeTask(createReloadDevicesTask(forceReload), mGateId);
-		}
-	}
-
-	/**
-	 * Task for reloading devices in
-	 *
-	 * @param forceReload if should reload
-	 * @return task
-	 */
-	private CallbackTask createReloadDevicesTask(final boolean forceReload) {
-		if (getActivity() == null)
-			return null;
-
-		ReloadDashboardDataTask reloadDashboardDataTask = new ReloadDashboardDataTask(
-				getActivity(),
-				forceReload,
-				mGateId == null
-						? ReloadGateDataTask.RELOAD_GATES_AND_ACTIVE_GATE_DEVICES
-						: EnumSet.of(ReloadGateDataTask.ReloadWhat.DEVICES));
-
-		reloadDashboardDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (!success || !forceReload)
-					return;
-
-				updateViewPager();
-			}
-		});
-		return reloadDashboardDataTask;
 	}
 
 	/**
@@ -304,15 +308,17 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 
 		if (confirmType == ConfirmDialog.TYPE_DELETE_DASHBOARD_VIEW) {
 			Controller controller = Controller.getInstance(mActivity);
-			String userId = controller.getActualUser().getId();
 
-			controller.removeDashboardView(mViewPager.getCurrentItem(), mGateId);
+			int index = mViewPager.getCurrentItem();
 
-			mViewsAdapter.removeFragment(mViewsAdapter.getCount() - 1);
-			controller.saveNumberOfDashboardTabs(userId, mGateId, mViewsAdapter.getCount());
+			controller.removeDashboardView(index, mGateId);
+			mViewsAdapter.removeFragment(index);
+			controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount());
+			// TODO not showing correctly
+			if (mViewsAdapter.getCount() == 0) {
+				setupViewpager();
+			}
 
-			mViewsAdapter.removeAll();
-			setupViewpager();
 			Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
 		}
 	}
@@ -360,9 +366,15 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 			mFragmentTitles.add(title);
 		}
 
+		/**
+		 * Removes fragment on position
+		 *
+		 * @param index position to delete fragment on
+		 */
 		public void removeFragment(int index) {
 			mFragments.remove(index);
 			mFragmentTitles.remove(index);
+			notifyDataSetChanged();
 		}
 
 		public void removeAll() {

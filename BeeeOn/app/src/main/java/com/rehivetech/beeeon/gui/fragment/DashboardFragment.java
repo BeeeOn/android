@@ -8,7 +8,6 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +27,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
+import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
@@ -65,21 +65,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 
 	private boolean mItemMoved = false;
 
-	private AsyncTask<VentilationItem, Void, Boolean> mReloadWeatherTask = new AsyncTask<VentilationItem, Void, Boolean>() {
-		@Override
-		protected Boolean doInBackground(VentilationItem... params) {
-			VentilationItem item = params[0];
-			return Controller.getInstance(mActivity).getWeatherModel().reloadWeather(mActivity, item.getGateId(), item.getLatitiude(), item.getLongitiude());
-		}
-
-		@Override
-		protected void onPostExecute(Boolean success) {
-			if (success) {
-				updateDashboard();
-			}
-		}
-	};
-
+	CallbackTask<VentilationItem> mReloadWeatherTask;
 
 	/**
 	 * Custom constructor with specified parametery
@@ -89,7 +75,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	 * @return
 	 */
 	public static DashboardFragment newInstance(int index, String gateId) {
-
 		Bundle args = new Bundle();
 		args.putInt(KEY_INDEX, index);
 		args.putString(KEY_GATE_ID, gateId);
@@ -98,7 +83,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		fragment.setArguments(args);
 		return fragment;
 	}
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +95,32 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 	}
 
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mReloadWeatherTask = new CallbackTask<VentilationItem>(getActivity()) {
+			@Override
+			protected Boolean doInBackground(VentilationItem param) {
+				return Controller.getInstance(mActivity).getWeatherModel().reloadWeather(mActivity, param.getGateId(), param.getLatitude(), param.getLongitude());
+			}
+		};
+
+		mReloadWeatherTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) updateDashboard();
+			}
+		});
+	}
+
+	/**
+	 * Binds rootview + prepares recyclerviev with adapter
+	 *
+	 * @param inflater
+	 * @param container
+	 * @param savedInstanceState
+	 * @return
+	 */
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -159,7 +169,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public void onStart() {
 		super.onStart();
-		Log.d(TAG, "onStart() " + mPageIndex);
 		updateDashboard();
 	}
 
@@ -222,25 +231,20 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	 * Updates adapter with fresh data
 	 */
 	public void updateDashboard() {
-		if (mGateId == null) {
-			return;
-		}
 
 		Controller controller = Controller.getInstance(mActivity);
 		List<BaseItem> items = controller.getDashboardItems(mPageIndex, mGateId);
+		if (items == null) return;
 
-		if (items != null) {
-
-			for (BaseItem item : items) {
-				if (item instanceof VentilationItem && controller.getWeatherModel().getWeather(mGateId) == null) {
-					mReloadWeatherTask.execute((VentilationItem) item);
-					return;
-				}
+		for (BaseItem item : items) {
+			if (item instanceof VentilationItem && controller.getWeatherModel().getWeather(mGateId) == null) {
+				mActivity.callbackTaskManager.executeTask(mReloadWeatherTask, (VentilationItem) item);
+				return;
 			}
-
-			mAdapter.setItems(items);
-			handleEmptyViewVisibility();
 		}
+
+		mAdapter.setItems(items);
+		handleEmptyViewVisibility();
 	}
 
 

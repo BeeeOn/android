@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.threading.task;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
@@ -8,9 +9,10 @@ import com.rehivetech.beeeon.exception.AppException;
 import java.util.EnumSet;
 
 /**
- * Created by martin on 29.3.16.
+ * @author martin
+ * @since 29.3.16
  */
-public class ReloadDashboardDataTask extends ReloadGateDataTask{
+public class ReloadDashboardDataTask extends ReloadGateDataTask {
 
 
 	public ReloadDashboardDataTask(Context context, boolean forceReload, ReloadWhat what) {
@@ -24,8 +26,10 @@ public class ReloadDashboardDataTask extends ReloadGateDataTask{
 
 	@Override
 	public Boolean doInBackground(String... params) {
+		String gateId = params[0];
+
 		try {
-			if (!super.doInBackground(params[0])) {
+			if (!super.doInBackground(gateId)) {
 				return false;
 			}
 		} catch (AppException e) {
@@ -36,6 +40,8 @@ public class ReloadDashboardDataTask extends ReloadGateDataTask{
 			return true;
 		}
 
-		return Controller.getInstance(mContext).getWeatherModel().reloadWeather(mContext, params[0], params[1], params[2]);
+		String latitude = params[1];
+		String longitude = params[2];
+		return Controller.getInstance(mContext).getWeatherModel().reloadWeather(mContext, gateId, latitude, longitude);
 	}
 }
