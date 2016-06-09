@@ -70,7 +70,6 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
 		if (mModuleItem == null) {
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(true, null);

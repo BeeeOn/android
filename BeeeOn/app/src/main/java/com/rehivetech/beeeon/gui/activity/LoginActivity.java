@@ -57,7 +57,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 
-import butterknife.BindBitmap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -131,7 +130,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		prepareServers();
 
 		// Do automatic login if we have remembered last logged in user
-		mAuthProvider = controller.getLastAuthProvider();
+		mAuthProvider = Persistence.getLastAuthProvider();
 		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
 			// Automatic login with last used provider
 			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter()));

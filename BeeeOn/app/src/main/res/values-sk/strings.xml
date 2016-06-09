@@ -428,8 +428,8 @@
     <!--Dashboard-->
     <string name="dashboard_no_items">Pohľad je prázdny</string>
     <string name="dashboard_view">Pohľad %s</string>
-    <string name="dashboard_add_item">Pridať novú položku</string>
-    <string name="dashboard_add_view">Pridať nový pohľad</string>
+    <string name="dashboard_add_item">Pridať kartu</string>
+    <string name="dashboard_add_view">Pridať pohľad</string>
     <string name="dashboard_delete_view">Odstrániť pohľad</string>
     <string name="dashboard_delete_view_x">Odstrániť pohľad %s</string>
     <string name="dashboard_delete_view_message">Všetky položky z pohľadu budu vymazané</string>

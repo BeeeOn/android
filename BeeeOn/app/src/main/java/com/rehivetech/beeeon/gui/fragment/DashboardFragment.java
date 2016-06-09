@@ -8,6 +8,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,11 +34,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by martin on 15.11.15.
+ * @author martin
+ * @since 15.11.15
  */
 public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener, DashboardAdapter.ActionModeCallback {
 
@@ -46,11 +49,13 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_INDEX = "index";
 
-
 	private String mGateId;
 	private int mPageIndex;
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
+
+	@BindInt(R.integer.dashboard_span_count)
+	public int mGridSpanCount;
 
 	@BindView(R.id.dashboard_recyclerview)
 	RecyclerView mRecyclerView;
@@ -58,7 +63,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@BindView(R.id.dashboard_empty_text)
 	TextView mEmptyText;
 
-	private ItemTouchHelper mItemTouchHelper;
 	private boolean mItemMoved = false;
 
 	private AsyncTask<VentilationItem, Void, Boolean> mReloadWeatherTask = new AsyncTask<VentilationItem, Void, Boolean>() {
@@ -77,6 +81,13 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	};
 
 
+	/**
+	 * Custom constructor with specified parametery
+	 *
+	 * @param index
+	 * @param gateId
+	 * @return
+	 */
 	public static DashboardFragment newInstance(int index, String gateId) {
 
 		Bundle args = new Bundle();
@@ -104,16 +115,13 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
 		mUnbinder = ButterKnife.bind(this, view);
 
-		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
-		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
-
 		mAdapter = new DashboardAdapter(mActivity, this, this);
+		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(mGridSpanCount, StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
 
-		mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
 				ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
 
 			@Override
@@ -143,17 +151,24 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			}
 		});
 
-		mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+		itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
 		return view;
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
+		Log.d(TAG, "onStart() " + mPageIndex);
 		updateDashboard();
 	}
 
+	/**
+	 * Clicking on dashboard item
+	 *
+	 * @param position of item
+	 * @param viewType dashboard type
+	 */
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
 		switch (viewType) {
@@ -179,6 +194,13 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 	}
 
+	/**
+	 * Long click on dashboard item
+	 *
+	 * @param position of item
+	 * @param viewType dashboard type
+	 * @return
+	 */
 	@Override
 	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
 		if (mActionMode == null) {
@@ -196,6 +218,9 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 	}
 
+	/**
+	 * Updates adapter with fresh data
+	 */
 	public void updateDashboard() {
 		if (mGateId == null) {
 			return;
@@ -207,7 +232,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		if (items != null) {
 
 			for (BaseItem item : items) {
-
 				if (item instanceof VentilationItem && controller.getWeatherModel().getWeather(mGateId) == null) {
 					mReloadWeatherTask.execute((VentilationItem) item);
 					return;
@@ -226,12 +250,12 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 	}
 
+	/**
+	 * Shows/hides empty view
+	 * TODO sometimes crashes here
+	 */
 	private void handleEmptyViewVisibility() {
-		if (mAdapter.getItems().size() == 0) {
-			mEmptyText.setVisibility(View.VISIBLE);
-		} else {
-			mEmptyText.setVisibility(View.GONE);
-		}
+		mEmptyText.setVisibility(mAdapter.getItems().size() == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {

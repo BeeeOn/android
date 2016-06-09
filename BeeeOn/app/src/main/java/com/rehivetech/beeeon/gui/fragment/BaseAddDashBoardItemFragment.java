@@ -1,12 +1,16 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -28,7 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- *  Created by martin on 7.2.16.
+ * Created by martin on 7.2.16.
  */
 public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragment implements DashboardModuleSelectAdapter.ItemClickListener {
 
@@ -46,13 +50,14 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 	protected DashboardModuleSelectAdapter mAdapter;
 
-	// probably has to be here because
+	// probably has to be here because twice binding
 	private Unbinder mBaseUnbinder;
 
 	protected static void fillBaseArgs(Bundle args, int index, String gateId) {
 		args.putInt(ARG_INDEX, index);
 		args.putString(ARG_GATE_ID, gateId);
 	}
+
 	@Override
 	@CallSuper
 	public void onCreate(Bundle savedInstanceState) {
@@ -150,18 +155,25 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		mAdapter.setItems(items);
 	}
 
+	/**
+	 * Finishes activity by adding result to wrapper fragment/activity
+	 *
+	 * @param item which item was added
+	 */
 	protected void finishActivity(BaseItem item) {
 		Intent data = new Intent();
 		data.putExtra(DashboardPagerFragment.EXTRA_ADD_ITEM, item);
 		data.putExtra(DashboardPagerFragment.EXTRA_INDEX, mIndex);
-		mActivity.setResult(10, data);
+		mActivity.setResult(DashboardPagerFragment.RESULT_CODE_ADD_ITEM, data);
 		mActivity.finish();
 	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		mBaseUnbinder.unbind();
+		if (mBaseUnbinder != null) {
+			mBaseUnbinder.unbind();
+		}
 	}
 
 	@Override

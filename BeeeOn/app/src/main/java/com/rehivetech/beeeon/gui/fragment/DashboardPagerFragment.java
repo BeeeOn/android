@@ -41,10 +41,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by martin on 23.4.16.
+ * @author martin
+ * @since 23.4.16
  */
 public class DashboardPagerFragment extends BaseApplicationFragment implements ConfirmDialog.ConfirmDialogListener {
 
+	public static final int RESULT_CODE_ADD_ITEM = 10;
 
 	private static final String KEY_GATE_ID = "gate_id";
 
@@ -55,7 +57,6 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 
 	@BindView(R.id.dashboard_pager_root_layout)
 	CoordinatorLayout mRootLayout;
-
 	@BindView(R.id.dashboard_tab_layout)
 	TabLayout mTabLayout;
 	@BindView(R.id.dashboard_viewpager)
@@ -63,10 +64,9 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@BindView(R.id.dashboard_fab_menu)
 	FloatingActionMenu mFloatingActionMenu;
 
-	DashboardPagerAdapter mAdapter;
+	DashboardPagerAdapter mViewsAdapter;
 
 	public static DashboardPagerFragment newInstance(String gateId) {
-
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
 
@@ -92,10 +92,16 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_pager_dashboard, container, false);
 		mUnbinder = ButterKnife.bind(this, view);
+		mViewsAdapter = new DashboardPagerAdapter(getChildFragmentManager());
 		setupViewpager();
 		return view;
 	}
 
+	/**
+	 * Setups toolbar + refresh icon
+	 *
+	 * @param savedInstanceState fragment's state
+	 */
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -103,7 +109,6 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
 		layoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
 		toolbar.setLayoutParams(layoutParams);
-
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -118,48 +123,65 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		inflater.inflate(R.menu.fragment_dashboard, menu);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		doReloadDevicesTask(false);
-		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_SCREEN);
-	}
-
+	/**
+	 * Handles deleting view
+	 *
+	 * @param item selected
+	 * @return if consumed here
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
 		switch (item.getItemId()) {
 			case R.id.dashboard_delete_tab:
 				ConfirmDialog.confirm(this, mActivity.getString(R.string.dashboard_delete_view_x, mViewPager.getCurrentItem() + 1), mActivity.getString(R.string.dashboard_delete_view_message),
 						R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_DASHBOARD_VIEW, "");
 
-				break;
+				return true;
 		}
-		return true;
+		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_SCREEN);
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		doReloadDevicesTask(false);
+	}
+
+	/**
+	 * Handles result of adding item
+	 * TODO should be handled with requestCode and Activity.RESULT_OK !!!!!!!
+	 *
+	 * @param requestCode
+	 * @param resultCode
+	 * @param data
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		if (resultCode == 10) {
-
+		if (resultCode == RESULT_CODE_ADD_ITEM) {
 			BaseItem item = data.getParcelableExtra(EXTRA_ADD_ITEM);
 			int index = data.getIntExtra(EXTRA_INDEX, 0);
 
-			DashboardFragment fragment = (DashboardFragment) mAdapter.getItem(index);
+			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
 
 			if (fragment != null) {
 				fragment.addItem(item);
+//				mViewPager.setCurrentItem(index); // TODO not working
 			}
 		}
 	}
 
+	/**
+	 * Prepares viewpager with different dashboard views
+	 */
 	private void setupViewpager() {
-		if (mAdapter == null) {
-			mAdapter = new DashboardPagerAdapter(getChildFragmentManager());
-		}
-
 		Controller controller = Controller.getInstance(mActivity);
 		String userId = controller.getActualUser().getId();
 		int numOfItems = controller.getNumberOfDashboardTabs(userId, mGateId);
@@ -167,40 +189,41 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		numOfItems = numOfItems == 0 ? 1 : numOfItems;
 
 		for (int i = 1; i <= numOfItems; i++) {
-			mAdapter.addFragment(DashboardFragment.newInstance(i - 1, mGateId), mActivity.getString(R.string.dashboard_view, i));
+			mViewsAdapter.addFragment(DashboardFragment.newInstance(i - 1, mGateId), mActivity.getString(R.string.dashboard_view, i));
 
 		}
-		mViewPager.setAdapter(mAdapter);
+		mViewPager.setAdapter(mViewsAdapter);
 		mTabLayout.setupWithViewPager(mViewPager);
 	}
 
+	/**
+	 * Update views with fresh data
+	 */
 	private void updateViewPager() {
-		for (int i = 0; i < mAdapter.getCount(); i++) {
-			DashboardFragment fragment = (DashboardFragment) mAdapter.getItem(i);
+		for (int i = 0; i < mViewsAdapter.getCount(); i++) {
+			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(i);
 			fragment.updateDashboard();
 		}
 	}
 
 	@OnClick(R.id.dashboard_add_item_fab)
-	@SuppressWarnings("unused")
 	public void onFloatingActionButtonClicked() {
-		Intent intent = AddDashboardItemActivity.getADdDashBoardActivityIntent(mActivity, mViewPager.getCurrentItem(), mGateId);
+		Intent intent = AddDashboardItemActivity.getAddDashBoardActivityIntent(mActivity, mViewPager.getCurrentItem(), mGateId);
 		startActivityForResult(intent, 0);
 	}
 
 	@OnClick(R.id.dashboard_add_view_fab)
-	@SuppressWarnings("unused")
 	public void onAddViewFloatingActionButtonClicked() {
-		DashboardFragment fragment = DashboardFragment.newInstance(mAdapter.getCount(), mGateId);
-		mAdapter.addFragment(fragment, mActivity.getString(R.string.dashboard_view, mAdapter.getCount() + 1));
-		mAdapter.notifyDataSetChanged();
+		DashboardFragment fragment = DashboardFragment.newInstance(mViewsAdapter.getCount(), mGateId);
+		mViewsAdapter.addFragment(fragment, mActivity.getString(R.string.dashboard_view, mViewsAdapter.getCount() + 1));
+		mViewsAdapter.notifyDataSetChanged();
 
 		mFloatingActionMenu.close(true);
-		mViewPager.setCurrentItem(mAdapter.getCount() - 1, true);
+		mViewPager.setCurrentItem(mViewsAdapter.getCount() - 1, true);
 
 		Controller controller = Controller.getInstance(mActivity);
 		String userId = controller.getActualUser().getId();
-		controller.saveNumberOfDashboardTabs(userId, mGateId, mAdapter.getCount());
+		controller.saveNumberOfDashboardTabs(userId, mGateId, mViewsAdapter.getCount());
 	}
 
 	public void showSnackbar(String text, View.OnClickListener clickListener) {
@@ -241,7 +264,12 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		}
 	}
 
-
+	/**
+	 * Task for reloading devices in
+	 *
+	 * @param forceReload if should reload
+	 * @return task
+	 */
 	private CallbackTask createReloadDevicesTask(final boolean forceReload) {
 		if (getActivity() == null)
 			return null;
@@ -265,6 +293,12 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		return reloadDashboardDataTask;
 	}
 
+	/**
+	 * Confirming "confirm" dialog
+	 *
+	 * @param confirmType who sent request (submitted)
+	 * @param dataId      data sent through dialog
+	 */
 	@Override
 	public void onConfirm(int confirmType, String dataId) {
 
@@ -274,18 +308,19 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 
 			controller.removeDashboardView(mViewPager.getCurrentItem(), mGateId);
 
-			mAdapter.removeFragment(mAdapter.getCount() - 1);
-			controller.saveNumberOfDashboardTabs(userId, mGateId, mAdapter.getCount());
+			mViewsAdapter.removeFragment(mViewsAdapter.getCount() - 1);
+			controller.saveNumberOfDashboardTabs(userId, mGateId, mViewsAdapter.getCount());
 
-			mAdapter.removeAll();
-			mAdapter.notifyDataSetChanged();
+			mViewsAdapter.removeAll();
 			setupViewpager();
-			mAdapter.notifyDataSetChanged();
 			Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
 		}
 	}
 
 
+	/**
+	 * Viewpager for different dashboard views
+	 */
 	static class DashboardPagerAdapter extends FragmentPagerAdapter {
 		private final List<Fragment> mFragments = new ArrayList<>();
 		private final List<String> mFragmentTitles = new ArrayList<>();

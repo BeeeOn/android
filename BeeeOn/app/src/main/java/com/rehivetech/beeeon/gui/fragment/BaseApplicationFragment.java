@@ -15,6 +15,11 @@ public abstract class BaseApplicationFragment extends android.support.v4.app.Fra
 	protected BaseApplicationActivity mActivity;
 	@Nullable protected Unbinder mUnbinder;
 
+	/**
+	 * Attaches only to BaseApplicationActivity, other not allowed
+	 *
+	 * @param context activity context
+	 */
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
@@ -26,12 +31,22 @@ public abstract class BaseApplicationFragment extends android.support.v4.app.Fra
 		}
 	}
 
+	/**
+	 * Handles restoring state with Icepick
+	 *
+	 * @param savedInstanceState old state
+	 */
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Icepick.restoreInstanceState(this, savedInstanceState);
 	}
 
+	/**
+	 * Handles saving state with Icepick
+	 *
+	 * @param outState new state
+	 */
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);

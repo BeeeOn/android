@@ -273,11 +273,6 @@ public final class Controller {
      * Persistence methods ************************************************
      */
 
-    @Nullable
-    public IAuthProvider getLastAuthProvider() {
-        return mPersistence.loadLastAuthProvider();
-    }
-
     /**
      * Get SharedPreferences for actually logged in user
      *

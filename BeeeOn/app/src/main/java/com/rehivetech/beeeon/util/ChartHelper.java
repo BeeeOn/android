@@ -440,7 +440,7 @@ final public class ChartHelper {
 		boolean barChart = (dataSet instanceof BarDataSet);
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
-		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString()));
+		Log.v(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString()));
 
 		dataSet.clear();
 
@@ -467,7 +467,7 @@ final public class ChartHelper {
 
 		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
 
-		Log.d(TAG, String.format("Computing %d values", (end - start) / everyMsecs));
+		Log.v(TAG, String.format("Computing %d values", (end - start) / everyMsecs));
 
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {
