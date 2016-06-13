@@ -100,6 +100,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_pager_dashboard, container, false);
 		mUnbinder = ButterKnife.bind(this, view);
+		mFloatingActionMenu.setClosedOnTouchOutside(true);
 		mViewsAdapter = new ViewPagerAdapter(getChildFragmentManager());
 		mViewPager.setAdapter(mViewsAdapter);
 		mTabLayout.setupWithViewPager(mViewPager);
@@ -198,6 +199,8 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 					int index = data.getIntExtra(EXTRA_INDEX, 0);
 					DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
 					if (fragment != null) {
+						// TODO crashes here when fragment not visible
+						mViewPager.setCurrentItem(index);
 						fragment.addItem(item);
 					}
 				}
@@ -300,6 +303,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@OnClick(R.id.dashboard_add_item_fab)
 	public void onFloatingActionButtonClicked() {
 		Intent intent = AddDashboardItemActivity.getAddDashBoardActivityIntent(mActivity, mViewPager.getCurrentItem(), mGateId);
+		mFloatingActionMenu.close(true);
 		startActivityForResult(intent, REQUEST_CODE_ADD_ITEM);
 	}
 
@@ -310,8 +314,6 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	public void onAddViewFloatingActionButtonClicked() {
 		DashboardFragment fragment = DashboardFragment.newInstance(mViewsAdapter.getCount(), mGateId);
 		mViewsAdapter.addFragment(fragment, mActivity.getString(R.string.dashboard_view, mViewsAdapter.getCount() + 1));
-		mViewsAdapter.notifyDataSetChanged();
-
 		mFloatingActionMenu.close(true);
 		mViewPager.setCurrentItem(mViewsAdapter.getCount() - 1, true);
 

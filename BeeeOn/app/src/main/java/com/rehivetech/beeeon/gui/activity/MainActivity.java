@@ -50,7 +50,8 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	public static final String GATE_ID = "last_gate_id";
 
 	/* Holds active menu and gate ids */
-	@State public String mActiveMenuId;
+	@State String mActiveContentTag;
+	@State String mActiveGateId;
 
 	/* Navigation drawer items */
 	@BindView(R.id.main_drawer_layout)
@@ -77,7 +78,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		if (savedInstanceState == null) {
 			// loads user's last content fragment
 			SharedPreferences userSettings = controller.getUserSettings();
-			mActiveMenuId = userSettings == null ? CONTENT_TAG_DEVICES : userSettings.getString(Constants.PERSISTENCE_PREF_LAST_MENU_ID, CONTENT_TAG_DEVICES);
+			mActiveContentTag = userSettings == null ? CONTENT_TAG_DEVICES : userSettings.getString(Constants.PERSISTENCE_PREF_LAST_CONTENT_TAG, CONTENT_TAG_DEVICES);
 		}
 
 		redrawContent(null, true);
@@ -169,10 +170,12 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	 * Replaces fragment for specified one by its tag. If no active gate found, shows empty fragment
 	 * FIXME: do better (only when needed)
 	 *
-	 * @param contentTag this specifies which fragment should be shown
+	 * @param newContentTag this specifies which fragment should be shown
 	 */
-	private void redrawContent(@Nullable String contentTag, boolean shouldDrawerRedraw) {
-		if (contentTag == null) contentTag = mActiveMenuId;
+	private void redrawContent(@Nullable String newContentTag, boolean shouldRedrawDrawer) {
+		Log.d(TAG, "redrawContent");
+
+		if (newContentTag == null) newContentTag = mActiveContentTag;
 		Controller controller = Controller.getInstance(this);
 
 		Gate activeGate = controller.getActiveGate();
@@ -184,13 +187,20 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 
 		String activeGateId = activeGate.getId();
 
-//		if (contentTag.equals(mActiveMenuId)) {
-//			// dont replace just update
-//			Toast.makeText(this, "the same content", Toast.LENGTH_LONG).show();
-//		}
+		if (shouldRedrawDrawer) {
+			redrawNavDrawer(activeGateId);
+		}
+
+		// if the same page and same gate skips instantiating new fragment
+		if (activeGateId.equals(mActiveGateId) && mActiveContentTag.equals(newContentTag)) {
+			// FIXME this is not proper way to prevent multiple restarts of fragment. Existing fragment might be updated by some method in it
+//			getSupportFragmentManager().findFragmentByTag(newContentTag);
+			Log.i(TAG, "Skipping reloading fragment");
+			return;
+		}
 
 		Fragment fragment;
-		switch (contentTag) {
+		switch (newContentTag) {
 			case CONTENT_TAG_DASHBOARD:
 				Migration.Dashboard.migrate(MainActivity.this);
 				mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
@@ -204,17 +214,14 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 				break;
 		}
 
-		fragmentReplace(fragment, contentTag);
+		fragmentReplace(fragment, newContentTag);
 
 		SharedPreferences userSettings = controller.getUserSettings();
 		if (userSettings != null) {
-			userSettings.edit().putString(Constants.PERSISTENCE_PREF_LAST_MENU_ID, contentTag).apply();
+			userSettings.edit().putString(Constants.PERSISTENCE_PREF_LAST_CONTENT_TAG, newContentTag).apply();
 		}
-		mActiveMenuId = contentTag;
-
-		if (shouldDrawerRedraw) {
-			redrawNavDrawer(activeGateId);
-		}
+		mActiveContentTag = newContentTag;
+		mActiveGateId = activeGateId;
 	}
 
 	/**

@@ -89,11 +89,21 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		mUnitsHelper = Utils.getUnitsHelper(prefs, mActivity);
 	}
 
-
+	/**
+	 * Binds empty view to this adapter which is correctly showing/hiding based on items count
+	 *
+	 * @param view any view can be sat
+	 */
 	public void setEmptyView(@Nullable View view) {
 		mEmptyView = view;
+		setEmptyViewVisibility(mItems.isEmpty());
 	}
 
+	/**
+	 * Safely sets empty view visibility. If no empty view was set, does nothing
+	 *
+	 * @param isVisible whether empty view should be visible
+	 */
 	private void setEmptyViewVisibility(boolean isVisible) {
 		if (mEmptyView == null) return;
 		mEmptyView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
@@ -180,13 +190,13 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	public void addItem(BaseItem item) {
 		mItems.add(item);
-		setEmptyViewVisibility(mItems.size() == 0);
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyItemRangeInserted(0, mItems.size());
 	}
 
 	public void addItem(int position, BaseItem item) {
 		mItems.add(position, item);
-		setEmptyViewVisibility(mItems.size() == 0);
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyItemInserted(position);
 	}
 
@@ -197,7 +207,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	public void setItems(List<BaseItem> items) {
 		mItems.clear();
 		mItems.addAll(items);
-		setEmptyViewVisibility(mItems.size() == 0);
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyDataSetChanged();
 	}
 
@@ -215,7 +225,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	public void deleteItem(BaseItem item) {
 		int position = mItems.indexOf(item);
 		mItems.remove(item);
-		setEmptyViewVisibility(mItems.size() == 0);
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyItemRemoved(position);
 	}
 
