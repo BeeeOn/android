@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,20 +39,21 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import icepick.State;
 
 /**
  * @author martin
  * @since 23.4.16
  */
 public class DashboardPagerFragment extends BaseApplicationFragment implements ConfirmDialog.ConfirmDialogListener {
+	private static final String TAG = DashboardPagerFragment.class.getSimpleName();
 
-	public static final int RESULT_CODE_ADD_ITEM = 10;
+	public static final int REQUEST_CODE_ADD_ITEM = 10;
 
 	private static final String KEY_GATE_ID = "gate_id";
 
 	public static final String EXTRA_ADD_ITEM = "add_item";
 	public static final String EXTRA_INDEX = "index";
-	private static final String TAG = DashboardPagerFragment.class.getSimpleName();
 
 	private String mGateId;
 
@@ -65,6 +67,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	FloatingActionMenu mFloatingActionMenu;
 
 	ViewPagerAdapter mViewsAdapter;
+	@State int mSelectedViewIndex = 0;
 
 	/**
 	 * Proper constructor
@@ -166,6 +169,14 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		super.onStart();
 		Log.d(TAG, "onStart");
 		doReloadDevicesTask(false);
+		// TODO this is not working because MainActivity replaces this fragment instead of recreating its instance
+		mViewPager.setCurrentItem(mSelectedViewIndex);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		mSelectedViewIndex = mViewPager.getCurrentItem();
+		super.onSaveInstanceState(outState);
 	}
 
 	/**
@@ -180,16 +191,18 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.d(TAG, "onActivityResult");
+		switch (requestCode) {
+			case REQUEST_CODE_ADD_ITEM:
+				if (resultCode == Activity.RESULT_OK) {
+					BaseItem item = data.getParcelableExtra(EXTRA_ADD_ITEM);
+					int index = data.getIntExtra(EXTRA_INDEX, 0);
+					DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
+					if (fragment != null) {
+						fragment.addItem(item);
+					}
+				}
+				break;
 
-		if (resultCode == RESULT_CODE_ADD_ITEM) {
-			BaseItem item = data.getParcelableExtra(EXTRA_ADD_ITEM);
-			int index = data.getIntExtra(EXTRA_INDEX, 0);
-			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
-
-			if (fragment != null) {
-//				mViewPager.setCurrentItem(index); // TODO not working
-				fragment.addItem(item);
-			}
 		}
 	}
 
@@ -287,7 +300,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@OnClick(R.id.dashboard_add_item_fab)
 	public void onFloatingActionButtonClicked() {
 		Intent intent = AddDashboardItemActivity.getAddDashBoardActivityIntent(mActivity, mViewPager.getCurrentItem(), mGateId);
-		startActivityForResult(intent, 0);
+		startActivityForResult(intent, REQUEST_CODE_ADD_ITEM);
 	}
 
 	/**

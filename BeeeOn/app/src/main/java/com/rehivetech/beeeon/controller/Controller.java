@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
+import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.gcm.GcmRegistrationIntentService;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
@@ -160,7 +161,7 @@ public final class Controller {
 
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
-	 * <p/>
+	 * <p>
 	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
 	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
 	 *
@@ -275,6 +276,7 @@ public final class Controller {
 
 	/**
 	 * Get SharedPreferences for actually logged in user
+	 * TODO add throwing exception if user not logged in and handle it generaly instead of havin nullable
 	 *
 	 * @return null if user is not logged in
 	 */
@@ -473,8 +475,19 @@ public final class Controller {
 	}
 
 	/**
+	 * Returns id of active gate or null if no gate available
+	 *
+	 * @return
+	 */
+	@Nullable
+	public String getActiveGateId() {
+		Gate gate = getActiveGate();
+		return gate == null ? null : gate.getId();
+	}
+
+	/**
 	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -520,7 +533,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {

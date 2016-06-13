@@ -12,16 +12,17 @@ import com.avast.android.dialogs.core.BaseDialogFragment;
 import com.rehivetech.beeeon.R;
 
 /**
- * Created by vico on 30.6.2015.
+ * @author Peter Vican
+ * @since 30.6.2015
  */
 public class ConfirmDialog extends BaseDialogFragment {
 	public static String TAG = "confirmDialog";
 
-	public static int TYPE_DELETE_GATE = 10;
-	public static int TYPE_DELETE_USER = 11;
-	public static int TYPE_DELETE_DASHBOARD_VIEW = 12;
-	public static int TYPE_DELETE_DEVICE = 13;
-	public static int TYPE_CHANGE_OWNERSHIP = 20;
+	public static final int TYPE_DELETE_GATE = 10;
+	public static final int TYPE_DELETE_USER = 11;
+	public static final int TYPE_DELETE_DASHBOARD_VIEW = 12;
+	public static final int TYPE_DELETE_DEVICE = 13;
+	public static final int TYPE_CHANGE_OWNERSHIP = 20;
 
 	private static final String EXTRA_TITLE = "extra_title";
 	private static final String EXTRA_MESSAGE = "extra_message";
@@ -107,6 +108,12 @@ public class ConfirmDialog extends BaseDialogFragment {
 	}
 
 	public interface ConfirmDialogListener {
+		/**
+		 * Listener for confirming dialog
+		 *
+		 * @param confirmType which dialog requested confirmation
+		 * @param dataId      any string data sent through dialog
+		 */
 		void onConfirm(int confirmType, String dataId);
 	}
 }

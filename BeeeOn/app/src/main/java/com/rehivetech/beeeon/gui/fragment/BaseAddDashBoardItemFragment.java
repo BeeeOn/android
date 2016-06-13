@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -161,7 +162,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		Intent data = new Intent();
 		data.putExtra(DashboardPagerFragment.EXTRA_ADD_ITEM, item);
 		data.putExtra(DashboardPagerFragment.EXTRA_INDEX, mIndex);
-		mActivity.setResult(DashboardPagerFragment.RESULT_CODE_ADD_ITEM, data);
+		mActivity.setResult(Activity.RESULT_OK, data);
 		mActivity.finish();
 	}
 

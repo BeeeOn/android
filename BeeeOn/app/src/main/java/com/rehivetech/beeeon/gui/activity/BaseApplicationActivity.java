@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -157,4 +158,18 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 	}
 
+	/**
+	 * Safely replaces fragment (stops any tasks, disables refresh icon)
+	 *
+	 * @param fragment to be shown
+	 * @param tag      for the fragment
+	 */
+	public void fragmentReplace(Fragment fragment, String tag) {
+		callbackTaskManager.cancelAndRemoveAll();
+		setupRefreshIcon(null);
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.main_content_frame, fragment, tag)
+				.commit();
+	}
 }

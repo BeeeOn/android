@@ -445,8 +445,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	/**
 	 * When confirmed dialog -> Deleting device from list
 	 *
-	 * @param confirmType
-	 * @param dataId
+	 * @param confirmType which dialog requested confirmation
+	 * @param dataId      any string data sent through dialog
 	 */
 	@Override
 	public void onConfirm(int confirmType, String dataId) {
