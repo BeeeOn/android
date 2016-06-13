@@ -8,8 +8,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -25,6 +23,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDashboardItemActivity;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
+import com.rehivetech.beeeon.gui.adapter.ViewPagerAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
@@ -32,9 +31,8 @@ import com.rehivetech.beeeon.gui.view.FloatingActionMenu;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadDashboardDataTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
+import com.rehivetech.beeeon.util.Utils;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,6 +51,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 
 	public static final String EXTRA_ADD_ITEM = "add_item";
 	public static final String EXTRA_INDEX = "index";
+	private static final String TAG = DashboardPagerFragment.class.getSimpleName();
 
 	private String mGateId;
 
@@ -65,8 +64,14 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@BindView(R.id.dashboard_fab_menu)
 	FloatingActionMenu mFloatingActionMenu;
 
-	DashboardPagerAdapter mViewsAdapter;
+	ViewPagerAdapter mViewsAdapter;
 
+	/**
+	 * Proper constructor
+	 *
+	 * @param gateId for this dashboard
+	 * @return this fragment
+	 */
 	public static DashboardPagerFragment newInstance(String gateId) {
 		Bundle args = new Bundle();
 		args.putString(KEY_GATE_ID, gateId);
@@ -92,7 +97,9 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_pager_dashboard, container, false);
 		mUnbinder = ButterKnife.bind(this, view);
-		mViewsAdapter = new DashboardPagerAdapter(getChildFragmentManager());
+		mViewsAdapter = new ViewPagerAdapter(getChildFragmentManager());
+		mViewPager.setAdapter(mViewsAdapter);
+		mTabLayout.setupWithViewPager(mViewPager);
 		setupViewpager();
 		return view;
 	}
@@ -133,8 +140,14 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.dashboard_delete_tab:
-				ConfirmDialog.confirm(this, mActivity.getString(R.string.dashboard_delete_view_x, mViewPager.getCurrentItem() + 1), mActivity.getString(R.string.dashboard_delete_view_message),
-						R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_DASHBOARD_VIEW, "");
+				int index = mViewPager.getCurrentItem();
+				ConfirmDialog.confirm(
+						this,
+						mActivity.getString(R.string.dashboard_delete_view_x, index + 1),
+						mActivity.getString(R.string.dashboard_delete_view_message),
+						R.string.activity_fragment_menu_btn_remove, ConfirmDialog.TYPE_DELETE_DASHBOARD_VIEW,
+						String.valueOf(index)
+				);
 
 				return true;
 		}
@@ -144,17 +157,19 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@Override
 	public void onResume() {
 		super.onResume();
+		Log.d(TAG, "onResume");
 		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_SCREEN);
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
+		Log.d(TAG, "onStart");
 		doReloadDevicesTask(false);
 	}
 
 	/**
-	 * Handles result of adding item
+	 * Handles result of adding item -> Called before onResume()
 	 * TODO should be handled with requestCode and Activity.RESULT_OK !!!!!!!
 	 *
 	 * @param requestCode
@@ -164,15 +179,15 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Log.d(TAG, "onActivityResult");
 
 		if (resultCode == RESULT_CODE_ADD_ITEM) {
 			BaseItem item = data.getParcelableExtra(EXTRA_ADD_ITEM);
 			int index = data.getIntExtra(EXTRA_INDEX, 0);
-
 			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
 
 			if (fragment != null) {
-				mViewPager.setCurrentItem(index); // TODO not working
+//				mViewPager.setCurrentItem(index); // TODO not working
 				fragment.addItem(item);
 			}
 		}
@@ -184,7 +199,6 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	 * @param forceReload forcing reload
 	 */
 	private void doReloadDevicesTask(boolean forceReload) {
-		Log.d("AHOJ", "reload");
 		Controller controller = Controller.getInstance(mActivity);
 
 		VentilationItem ventilationItem = null;
@@ -241,25 +255,30 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	private void setupViewpager() {
 		Controller controller = Controller.getInstance(mActivity);
 		int numOfItems = controller.getNumberOfDashboardTabs(mGateId);
+		// adds always minimum 1 item
+		if (numOfItems == 0) numOfItems = 1;
 
-		numOfItems = numOfItems == 0 ? 1 : numOfItems;
-
-		for (int i = 1; i <= numOfItems; i++) {
-			mViewsAdapter.addFragment(DashboardFragment.newInstance(i - 1, mGateId), mActivity.getString(R.string.dashboard_view, i));
-
+		for (int i = 0; i < numOfItems; i++) {
+			Fragment fragment = DashboardFragment.newInstance(i, mGateId);
+			String title = mActivity.getString(R.string.dashboard_view, i + 1);
+			mViewsAdapter.addFragment(fragment, title);
 		}
-		mViewPager.setAdapter(mViewsAdapter);
-		mTabLayout.setupWithViewPager(mViewPager);
 	}
 
 	/**
 	 * Update views with fresh data
 	 */
 	private void updateViewPager() {
-		for (int i = 0; i < mViewsAdapter.getCount(); i++) {
-			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(i);
+		// TODO only update current item
+		DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getActiveFragment(mViewPager);
+//		fragment.isResumed()
+		if (fragment != null) {
 			fragment.updateDashboard();
 		}
+//		for (int i = 0; i < mViewsAdapter.getCount(); i++) {
+//			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(i);
+//			fragment.updateDashboard();
+//		}
 	}
 
 	/**
@@ -301,88 +320,23 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	 * Confirming "confirm" dialog
 	 *
 	 * @param confirmType who sent request (submitted)
-	 * @param dataId      data sent through dialog
+	 * @param dataId      view index
 	 */
 	@Override
 	public void onConfirm(int confirmType, String dataId) {
+		if (confirmType != ConfirmDialog.TYPE_DELETE_DASHBOARD_VIEW) return;
 
-		if (confirmType == ConfirmDialog.TYPE_DELETE_DASHBOARD_VIEW) {
-			Controller controller = Controller.getInstance(mActivity);
+		int index = Utils.parseIntSafely(dataId, 0);
+		Controller controller = Controller.getInstance(mActivity);
 
-			int index = mViewPager.getCurrentItem();
-
-			controller.removeDashboardView(index, mGateId);
-			mViewsAdapter.removeFragment(index);
-			controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount());
-			// TODO not showing correctly
-			if (mViewsAdapter.getCount() == 0) {
-				setupViewpager();
-			}
-
-			Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
+		controller.removeDashboardView(index, mGateId);
+		mViewsAdapter.removeFragment(index);
+		controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount());
+		// TODO not showing correctly
+		if (mViewsAdapter.getCount() == 0) {
+			setupViewpager();
 		}
+
+		Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
 	}
-
-
-	/**
-	 * Viewpager for different dashboard views
-	 */
-	static class DashboardPagerAdapter extends FragmentPagerAdapter {
-		private final List<Fragment> mFragments = new ArrayList<>();
-		private final List<String> mFragmentTitles = new ArrayList<>();
-		private final FragmentManager mFragmentManager;
-
-		public DashboardPagerAdapter(FragmentManager fm) {
-			super(fm);
-			mFragmentManager = fm;
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			return mFragments.get(position);
-		}
-
-		@Override
-		public int getCount() {
-			return mFragments.size();
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return mFragmentTitles.get(position);
-		}
-
-		public Fragment getActiveFragment(ViewPager container, int position) {
-			String name = makeFragmentName(container.getId(), position);
-			return mFragmentManager.findFragmentByTag(name);
-		}
-
-		private static String makeFragmentName(int viewId, int index) {
-			return "android:switcher:" + viewId + ":" + index;
-		}
-
-		public void addFragment(Fragment fragment, String title) {
-			mFragments.add(fragment);
-			mFragmentTitles.add(title);
-		}
-
-		/**
-		 * Removes fragment on position
-		 *
-		 * @param index position to delete fragment on
-		 */
-		public void removeFragment(int index) {
-			mFragments.remove(index);
-			mFragmentTitles.remove(index);
-			notifyDataSetChanged();
-		}
-
-		public void removeAll() {
-			mFragments.clear();
-			mFragmentTitles.clear();
-			notifyDataSetChanged();
-		}
-	}
-
-
 }

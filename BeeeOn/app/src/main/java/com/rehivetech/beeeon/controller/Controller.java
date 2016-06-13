@@ -583,23 +583,21 @@ public final class Controller {
 	 */
 	public void removeDashboardView(int index, String gateId) {
 		String userId = getActualUser().getId();
-		if (index > -1) {
+		SharedPreferences dashboardSettings = mPersistence.getSettings(getDashboardKey(userId, gateId));
+		if (index > Constants.NO_INDEX) {
 
-			List<List<BaseItem>> itemsList = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+			List<List<BaseItem>> itemsList = DashBoardPersistence.load(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
 			if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
 				itemsList.remove(index);
 			}
 
-			DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
+			DashBoardPersistence.save(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
 		} else {
-
-			SharedPreferences preferences = mPersistence.getSettings(getDashboardKey(userId, gateId));
-			SharedPreferences.Editor editor = preferences.edit();
-			editor.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
-			editor.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "");
-			editor.apply();
-
+			dashboardSettings.edit()
+					.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS)
+					.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "")
+					.apply();
 			saveNumberOfDashboardTabs(gateId, 0);
 		}
 	}

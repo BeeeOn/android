@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -27,12 +25,12 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by martin on 7.2.16.
+ * @author martin
+ * @since 7.2.16
  */
 public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragment implements DashboardModuleSelectAdapter.ItemClickListener {
 
@@ -42,11 +40,8 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	protected int mIndex;
 	protected String mGateId;
 
-	@BindView(R.id.fragment_add_dashboard_item_button_done)
 	FloatingActionButton mButtonDone;
-	@Nullable
-	@BindView(R.id.fragment_add_dashboard_item_recyclerview)
-	RecyclerView mRecyclerView;
+	@Nullable RecyclerView mRecyclerView;
 
 	protected DashboardModuleSelectAdapter mAdapter;
 
@@ -74,7 +69,9 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 	@CallSuper
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mBaseUnbinder = ButterKnife.bind(this, view);
+
+		mButtonDone = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_button_done);
+		mRecyclerView = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_recyclerview);
 
 		mAdapter = new DashboardModuleSelectAdapter(mActivity, this);
 		GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 2);
@@ -166,14 +163,6 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 		data.putExtra(DashboardPagerFragment.EXTRA_INDEX, mIndex);
 		mActivity.setResult(DashboardPagerFragment.RESULT_CODE_ADD_ITEM, data);
 		mActivity.finish();
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		if (mBaseUnbinder != null) {
-			mBaseUnbinder.unbind();
-		}
 	}
 
 	@Override

@@ -21,7 +21,8 @@ import com.rehivetech.beeeon.household.device.Module;
 import butterknife.ButterKnife;
 
 /**
- * Created by martin on 7.2.16.
+ * @author martin
+ * @since 7.2.16
  */
 public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragment {
 

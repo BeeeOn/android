@@ -1,13 +1,17 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +38,7 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.SwitchGateTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
+import com.rehivetech.beeeon.util.Migration;
 
 import java.util.List;
 
@@ -47,17 +52,15 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 	private static final String FRAGMENT_TAG_DEVICES = "tag_devices";
 	private static final String FRAGMENT_TAG_DASHBOARD = "tag_dashboard";
-	private static final String FRAGMENT_TAG_INFO = "tag_info";
 
 	public static final String MENU_ITEM_DEVICES = "item_devices";
 	public static final String MENU_ITEM_GRAPHS = "item_graphs";
 	public static final String MENU_ITEM_GATEWAY = "item_gateway";
 
 	public static final String GATE_ID = "lastGateId";
-	private static final String LAST_MENU_ID = "lastMenuId";
 
 	/* Holds active menu and gate ids */
-	@State public String mActiveMenuId;
+	@State public String mActiveMenuId = MENU_ITEM_DEVICES;
 	@State public String mActiveGateId;
 
 	/* Navigation drawer items */
@@ -76,11 +79,10 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
+		Log.d(TAG, "onCreate");
 
 		mNavigationView.setNavigationItemSelectedListener(this);
-
 		mNavigationMenu = mNavigationView.getMenu();
-
 		mNavigationHeader = mNavigationView.getHeaderView(0);
 
 		mGatesSpinner = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_gates_spinner);
@@ -111,52 +113,16 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		mGatesAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_spinner_item);
 		mGatesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		mGatesSpinner.setAdapter(mGatesAdapter);
-
-		if (savedInstanceState == null) {
-			setActiveGateAndMenu();
-		}
-
-		redrawNavigation();
-		reloadFragment();
-
-//		migrateDashboard();
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	protected void onStart() {
+		super.onStart();
+		Log.d(TAG, "onStart");
 		setActiveGateAndMenu();
 		redrawNavigation();
 		reloadFragment(); // FIXME: do better (only when needed)
 		reloadData();
-	}
-
-	/**
-	 * Back pressing will close navDrawer if opened, otherwise usual functionality
-	 */
-	@Override
-	public void onBackPressed() {
-		if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-			closeNavDrawer();
-			return;
-		}
-		super.onBackPressed();
-	}
-
-	private void reloadFragment() {
-		if (mActiveMenuId == null || mActiveMenuId.equals(MENU_ITEM_DEVICES)) {
-			mNavigationView.setCheckedItem(R.id.nav_drawer_devices);
-			changeFragment(DevicesListFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DEVICES);
-		} else if (mActiveMenuId.equals(MENU_ITEM_GRAPHS)) {
-			mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
-			changeFragment(DashboardPagerFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
-		} else if (mActiveMenuId.equals(MENU_ITEM_GATEWAY)) {
-			if (mActiveGateId != null) {
-				Intent intent = new Intent(this, GateDetailActivity.class);
-				intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mActiveGateId);
-				startActivity(intent);
-			}
-		}
 	}
 
 	public void setActiveGateAndMenu() {
@@ -166,30 +132,65 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		Gate gate = controller.getActiveGate();
 		if (gate != null) {
 			mActiveGateId = gate.getId();
-
-			// FIXME: This should get ACTIVE fragment, not just some random (deviceslist) one
-			/*if (mDevicesListFragment != null) {
-				mDevicesListFragment.setActiveGateId(mActiveGateId);
-			}*/
-
-			if (mActiveMenuId == null) {
-				mActiveMenuId = MENU_ITEM_DEVICES;
-			}
 		} else {
 			// User has no gate
 			mActiveGateId = null;
-			mActiveMenuId = null;
-
-			// UserSettings can be null when user is not logged in!
-			// FIXME: Make this work, but after when everything else is finished...
-			/*SharedPreferences prefs = controller.getUserSettings();
-			if (prefs != null && !prefs.getBoolean(Constants.PERSISTENCE_PREF_IGNORE_NO_GATE, false)) {
-				Log.d(TAG, "Call ADD GATE");
-				Intent intent = new Intent(MainActivity.this, AddGateActivity.class);
-				startActivity(intent);
-			}*/
 		}
 	}
+
+	private void reloadFragment() {
+		Log.d(TAG, "reloadFragment");
+		switch (mActiveMenuId) {
+			case MENU_ITEM_DEVICES:
+				mNavigationView.setCheckedItem(R.id.nav_drawer_devices);
+				changeFragment(DevicesListFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DEVICES);
+				break;
+
+			case MENU_ITEM_GRAPHS:
+				mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
+				changeFragment(DashboardPagerFragment.newInstance(mActiveGateId), FRAGMENT_TAG_DASHBOARD);
+				break;
+
+			case MENU_ITEM_GATEWAY:
+				Intent intent = new Intent(this, GateDetailActivity.class);
+				intent.putExtra(GateDetailActivity.EXTRA_GATE_ID, mActiveGateId);
+				startActivity(intent);
+				break;
+		}
+	}
+
+	private void changeFragment(Fragment fragment, String tag) {
+		if (tag.equals(FRAGMENT_TAG_DASHBOARD)) {
+			mActiveMenuId = MENU_ITEM_GRAPHS;
+		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
+			mActiveMenuId = MENU_ITEM_DEVICES;
+		}
+
+		Gate activeGate = Controller.getInstance(this).getActiveGate();
+		if (activeGate == null) {
+			fragment = EmptyFragment.newInstance(getString(R.string.nav_drawer_menu_no_gates)); // FIXME: Better string / data
+		}
+
+		callbackTaskManager.cancelAndRemoveAll();
+		setupRefreshIcon(null);
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.main_content_frame, fragment, tag)
+				.commit();
+	}
+
+	/**
+	 * Back pressing will close navDrawer if opened, otherwise usual functionality
+	 */
+	@Override
+	public void onBackPressed() {
+		if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+			setNavDrawerOpened(false);
+			return;
+		}
+		super.onBackPressed();
+	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -209,7 +210,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
-				openNavDrawer();
+				setNavDrawerOpened(true);
 				return true;
 			case R.id.main_menu_action_notification:
 				// Notification
@@ -218,13 +219,6 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	public void logout() {
-		Controller.getInstance(this).logout(false);
-		Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-		startActivity(intent);
-		this.finish();
 	}
 
 	private void doUnregisterGateTask(String gateId) {
@@ -253,7 +247,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 			public void onExecute(boolean success) {
 				mActiveGateId = gateId;
 				reloadFragment();
-				closeNavDrawer();
+				setNavDrawerOpened(false);
 			}
 		});
 
@@ -324,7 +318,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 
 		// Close navigation drawer only when we're changing main fragment
 		if (result) {
-			closeNavDrawer();
+			setNavDrawerOpened(false);
 		}
 
 		return result;
@@ -342,7 +336,7 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 					setActiveGateAndMenu();
 					redrawNavigation();
 					reloadFragment(); // FIXME: do better (only when needed)
-					migrateDashboard();
+					Migration.migrateDashboard(MainActivity.this);
 				}
 			}
 		});
@@ -351,34 +345,19 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		callbackTaskManager.executeTask(fullReloadTask);
 	}
 
-	private void openNavDrawer() {
-		if (mDrawerLayout != null)
+	/**
+	 * Handles opening,closing nav drawer
+	 *
+	 * @param shouldOpen if true -> opens, false -> closes
+	 */
+	private void setNavDrawerOpened(boolean shouldOpen) {
+		if (mDrawerLayout == null) return;
+
+		if (shouldOpen) {
 			mDrawerLayout.openDrawer(GravityCompat.START);
-	}
-
-	private void closeNavDrawer() {
-		if (mDrawerLayout != null)
+		} else {
 			mDrawerLayout.closeDrawer(GravityCompat.START);
-	}
-
-	private void changeFragment(Fragment fragment, String tag) {
-		if (tag.equals(FRAGMENT_TAG_DASHBOARD)) {
-			mActiveMenuId = MENU_ITEM_GRAPHS;
-		} else /*if (tag.equals(FRAGMENT_TAG_DEVICES))*/ {
-			mActiveMenuId = MENU_ITEM_DEVICES;
 		}
-
-		Gate activeGate = Controller.getInstance(this).getActiveGate();
-		if (activeGate == null) {
-			fragment = EmptyFragment.newInstance(getString(R.string.nav_drawer_menu_no_gates)); // FIXME: Better string / data
-		}
-
-		callbackTaskManager.cancelAndRemoveAll();
-		setupRefreshIcon(null);
-		getSupportFragmentManager()
-				.beginTransaction()
-				.replace(R.id.main_content_frame, fragment, tag)
-				.commit();
 	}
 
 	private void redrawNavigation() {
@@ -421,20 +400,5 @@ public class MainActivity extends BaseApplicationActivity implements ConfirmDial
 		// Show / hide menu items based on existence of any gates
 		mNavigationMenu.setGroupVisible(R.id.item_overview, hasGates);
 		mNavigationMenu.findItem(R.id.item_no_gates).setVisible(!hasGates);
-	}
-
-
-	private void migrateDashboard() {
-		Controller controller = Controller.getInstance(this);
-		SharedPreferences preferences = controller.getUserSettings();
-		if (preferences != null) {
-			boolean isDashboardMigrated = preferences.getBoolean(Constants.PERSISTENCE_KEY_DASHBOARD_MIGRATE, false);
-
-			if (!isDashboardMigrated) {
-				controller.migrateDashboard();
-				preferences.edit().putBoolean(Constants.PERSISTENCE_KEY_DASHBOARD_MIGRATE, true).apply();
-			}
-
-		}
 	}
 }

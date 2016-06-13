@@ -8,6 +8,7 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -128,6 +129,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		mUnbinder = ButterKnife.bind(this, view);
 
 		mAdapter = new DashboardAdapter(mActivity, this, this);
+		mAdapter.setEmptyView(mEmptyText);
 		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(mGridSpanCount, StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
 
@@ -231,7 +233,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	 * Updates adapter with fresh data
 	 */
 	public void updateDashboard() {
-
 		Controller controller = Controller.getInstance(mActivity);
 		List<BaseItem> items = controller.getDashboardItems(mPageIndex, mGateId);
 		if (items == null) return;
@@ -244,22 +245,11 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 
 		mAdapter.setItems(items);
-		handleEmptyViewVisibility();
 	}
-
 
 	public void addItem(BaseItem item) {
 		mAdapter.addItem(item);
-		handleEmptyViewVisibility();
 		Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
-	}
-
-	/**
-	 * Shows/hides empty view
-	 * TODO sometimes crashes here
-	 */
-	private void handleEmptyViewVisibility() {
-		mEmptyText.setVisibility(mAdapter.getItems().size() == 0 ? View.VISIBLE : View.GONE);
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {

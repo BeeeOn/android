@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
- * <p>
+ * <p/>
  * When user is not logged in, it will switch to LoginActivity automatically.
  * Provides useful methods for using CallbackTasks.
  */
@@ -82,6 +82,16 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
 
 		context.startActivity(intent);
+	}
+
+	/**
+	 * Logouts from application and redirects to login
+	 */
+	public void logout() {
+		Controller.getInstance(this).logout(false);
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+		this.finish();
 	}
 
 	/**
