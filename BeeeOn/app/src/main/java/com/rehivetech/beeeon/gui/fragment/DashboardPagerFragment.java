@@ -350,6 +350,8 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		// TODO not showing correctly
 		if (mViewsAdapter.getCount() == 0) {
 			setupViewpager();
+		} else {
+			mViewPager.setCurrentItem(index - 1);
 		}
 
 		Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
