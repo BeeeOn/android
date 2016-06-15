@@ -44,9 +44,6 @@ import butterknife.ButterKnife;
  * @since 15.11.15
  */
 public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener, DashboardAdapter.ActionModeCallback {
-
-	private static final String TAG = DashboardFragment.class.getSimpleName();
-
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_INDEX = "index";
 
@@ -126,7 +123,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-		mUnbinder = ButterKnife.bind(this, view);
+		ButterKnife.bind(this, view); // TODO should be unbinded at some time
 
 		mAdapter = new DashboardAdapter(mActivity, this, this);
 		mAdapter.setEmptyView(mEmptyText);
@@ -247,6 +244,11 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		mAdapter.setItems(items);
 	}
 
+	/**
+	 * Todo should save items not from adapter because adapter might not be initialized (because fragment might be in stop state)
+	 *
+	 * @param item
+	 */
 	public void addItem(BaseItem item) {
 		mAdapter.addItem(item);
 		Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());

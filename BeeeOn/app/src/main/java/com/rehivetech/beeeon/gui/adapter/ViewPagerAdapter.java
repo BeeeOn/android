@@ -2,7 +2,9 @@ package com.rehivetech.beeeon.gui.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +15,7 @@ import java.util.List;
  * @author mlyko
  * @since 13.06.16
  */
-public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapter {
+public class ViewPagerAdapter extends android.support.v4.app.FragmentStatePagerAdapter {
 	private final List<Fragment> mFragments = new ArrayList<>();
 	private final List<String> mFragmentTitles = new ArrayList<>();
 	private final FragmentManager mFragmentManager;
@@ -53,20 +55,25 @@ public class ViewPagerAdapter extends android.support.v4.app.FragmentPagerAdapte
 		notifyDataSetChanged();
 	}
 
-	/**
-	 * Removes fragment on position
-	 *
-	 * @param index position to delete fragment on
-	 */
-	public void removeFragment(int index) {
-		mFragments.remove(index);
-		mFragmentTitles.remove(index);
+	public void removeFragment(int position) {
+		mFragments.remove(position);
+		mFragmentTitles.remove(position);
 		notifyDataSetChanged();
 	}
 
-	public void removeAll() {
+	public void removeAllFragments() {
 		mFragments.clear();
 		mFragmentTitles.clear();
 		notifyDataSetChanged();
+	}
+
+	@Override
+	public int getItemPosition(Object object) {
+		int index = mFragments.indexOf((Fragment) object);
+
+		if (index == -1)
+			return POSITION_NONE;
+		else
+			return index;
 	}
 }

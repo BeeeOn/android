@@ -11,7 +11,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -161,16 +160,13 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@Override
 	public void onResume() {
 		super.onResume();
-		Log.d(TAG, "onResume");
 		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.DASHBOARD_SCREEN);
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		Log.d(TAG, "onStart");
 		doReloadDevicesTask(false);
-		// TODO this is not working because MainActivity replaces this fragment instead of recreating its instance
 		mViewPager.setCurrentItem(mSelectedViewIndex);
 	}
 
@@ -182,16 +178,14 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 
 	/**
 	 * Handles result of adding item -> Called before onResume()
-	 * TODO should be handled with requestCode and Activity.RESULT_OK !!!!!!!
 	 *
-	 * @param requestCode
-	 * @param resultCode
-	 * @param data
+	 * @param requestCode accepting only {@link #REQUEST_CODE_ADD_ITEM}
+	 * @param resultCode  if was ok or canceled etc.
+	 * @param data        expecting EXTRA_ADD_ITEM and EXTRA_INDEX
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Log.d(TAG, "onActivityResult");
 		switch (requestCode) {
 			case REQUEST_CODE_ADD_ITEM:
 				if (resultCode == Activity.RESULT_OK) {
@@ -200,7 +194,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 					DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
 					if (fragment != null) {
 						// TODO crashes here when fragment not visible
-						mViewPager.setCurrentItem(index);
+//						mViewPager.setCurrentItem(index);
 						fragment.addItem(item);
 					}
 				}
@@ -256,10 +250,9 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		reloadDashboardDataTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (!success || !forceReload)
-					return;
+				if (!success || !forceReload) return;
 
-				updateViewPager();
+				updateActiveFragment();
 			}
 		});
 		return reloadDashboardDataTask;
@@ -279,22 +272,18 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 			String title = mActivity.getString(R.string.dashboard_view, i + 1);
 			mViewsAdapter.addFragment(fragment, title);
 		}
+
+//		mViewPager.setCurrentItem(0);
 	}
 
 	/**
-	 * Update views with fresh data
+	 * Update active view with fresh data
 	 */
-	private void updateViewPager() {
-		// TODO only update current item
+	private void updateActiveFragment() {
 		DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getActiveFragment(mViewPager);
-//		fragment.isResumed()
 		if (fragment != null) {
 			fragment.updateDashboard();
 		}
-//		for (int i = 0; i < mViewsAdapter.getCount(); i++) {
-//			DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(i);
-//			fragment.updateDashboard();
-//		}
 	}
 
 	/**
@@ -313,7 +302,8 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	@OnClick(R.id.dashboard_add_view_fab)
 	public void onAddViewFloatingActionButtonClicked() {
 		DashboardFragment fragment = DashboardFragment.newInstance(mViewsAdapter.getCount(), mGateId);
-		mViewsAdapter.addFragment(fragment, mActivity.getString(R.string.dashboard_view, mViewsAdapter.getCount() + 1));
+		String title = mActivity.getString(R.string.dashboard_view, mViewsAdapter.getCount() + 1);
+		mViewsAdapter.addFragment(fragment, title);
 		mFloatingActionMenu.close(true);
 		mViewPager.setCurrentItem(mViewsAdapter.getCount() - 1, true);
 
@@ -345,14 +335,10 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		Controller controller = Controller.getInstance(mActivity);
 
 		controller.removeDashboardView(index, mGateId);
+		controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount() - 1);
 		mViewsAdapter.removeFragment(index);
-		controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount());
-		// TODO not showing correctly
-		if (mViewsAdapter.getCount() == 0) {
-			setupViewpager();
-		} else {
-			mViewPager.setCurrentItem(index - 1);
-		}
+//		mViewsAdapter.removeAllFragments();
+//		setupViewpager();
 
 		Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
 	}
