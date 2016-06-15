@@ -21,13 +21,13 @@ function start_emulator(){
 }
 
 #prepare output files
-if [ ! -f ${DIR}/${LOG_FILE} ] ; then
-	touch ${LOG_FILE}
-fi
-
-if [ ! -f ${DIR}/${ERR_FILE} ] ; then
-	touch ${ERR_FILE}
-fi
+#if [ ! -f ${DIR}/${LOG_FILE} ] ; then
+#	touch ${LOG_FILE}
+#fi
+#
+#if [ ! -f ${DIR}/${ERR_FILE} ] ; then
+#	touch ${ERR_FILE}
+#fi
 
 
 #checks if the device was specified as argument

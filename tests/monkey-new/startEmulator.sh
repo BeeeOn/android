@@ -20,7 +20,7 @@ if [ ! -z ${1} ] ; then
 fi
 
 echo "Starting the emulator"
-emulator -avd ${NAME} ${OPTS} &
+emulator64-x86 -avd ${NAME} ${OPTS} &
 
 echo "## Device is starting, now the script has to wait until the device is ready"
 while [ -z $(adb devices | grep "device$" | head -1 | sed -e 's/\(.*\)\t.*/\1/g') ]  
