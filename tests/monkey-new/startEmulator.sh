@@ -25,7 +25,7 @@ emulator64-x86 -avd ${NAME} ${OPTS} &
 echo "## Device is starting, now the script has to wait until the device is ready"
 while [ -z $(adb devices | grep "device$" | head -1 | sed -e 's/\(.*\)\t.*/\1/g') ]  
 do
-	echo "## The device has not started yet, sleeping for ${SLEEP_TIME} secs and try again"
+	echo "## The device has not started yet, I will sleep for ${SLEEP_TIME} secs and try again"
 	sleep ${SLEEP_TIME}
 done
 echo "## The device is ready"
