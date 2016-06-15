@@ -4,7 +4,6 @@
 #If you have any question or encountered any problem, feel free to contact me : xkozak15@stud.fit.vutbr.cz
 
 device=$1
-iter=$2
 
 if [ -z "${device}" ] ; then
 	echo "No device was specified, exiting..." >&2
@@ -23,22 +22,11 @@ echo "Executing basic monkey test:"
 adb -s ${device} shell monkey -p ${PACKAGE_NAME} -c android.intent.category.LAUNCHER 1;
 sleep 3
 
-if [[ "$iter" -eq "1" ]]; then
-	echo "first time"
-	for i in $(seq 1 5) 
-	do
-		adb -s ${device} shell input tap 450 750
-	done
-fi
-
-adb -s ${device} shell input tap 200 750
-
-adb -s emulator-5554 shell input tap 350 500
-
-# now put random monkey taps
-adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT}  2>>${ERR_FILE}
-sleep 1
-
+#put some random monkey "clicks"
+for i in $(seq 1 ${ITER}) ; do
+        adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT} >>${LOG_FILE} 2>>${ERR_FILE}
+        sleep 1
+done
 
 
 #PID=$(adb shell ps | grep ${APP_NAME} | tr -s ' ' | cut -d ' ' -f 2)
@@ -51,4 +39,4 @@ adb -s ${device} shell am force-stop ${PACKAGE_NAME}
 echo "Test finished"
 echo "
 ---------------------------------------------------------------------------------------------------
-"
+
