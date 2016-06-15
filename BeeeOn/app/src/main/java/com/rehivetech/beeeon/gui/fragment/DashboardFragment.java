@@ -1,14 +1,13 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -231,7 +230,7 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 	 */
 	public void updateDashboard() {
 		Controller controller = Controller.getInstance(mActivity);
-		List<BaseItem> items = controller.getDashboardItems(mPageIndex, mGateId);
+		List<BaseItem> items = controller.getDashboardViewItems(mPageIndex, mGateId);
 		if (items == null) return;
 
 		for (BaseItem item : items) {
@@ -300,7 +299,9 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 					}
 				};
 
-				fragment.showSnackbar(getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), listener);
+				Snackbar.make(fragment.mRootLayout, getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), Snackbar.LENGTH_LONG)
+						.setAction(R.string.dashboard_undo, listener)
+						.show();
 
 				Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 			}

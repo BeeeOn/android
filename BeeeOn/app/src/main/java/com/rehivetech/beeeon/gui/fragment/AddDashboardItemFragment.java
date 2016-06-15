@@ -98,7 +98,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH,
 				R.drawable.dashboard_week_bar_graph_preview, R.string.dashboard_fab_add_week_bar_graph));
 
-		List<BaseItem> dashboardItems = Controller.getInstance(mActivity).getDashboardItems(0, mGateId);
+		List<BaseItem> dashboardItems = Controller.getInstance(mActivity).getDashboardViewItems(0, mGateId);
 		VentilationItem ventilationItem = null;
 		if (dashboardItems != null) {
 

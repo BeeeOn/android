@@ -161,7 +161,7 @@ public final class Controller {
 
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
-	 * <p>
+	 * <p/>
 	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
 	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
 	 *
@@ -487,7 +487,7 @@ public final class Controller {
 
 	/**
 	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -533,7 +533,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 * <p>
+	 * <p/>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
@@ -548,21 +548,17 @@ public final class Controller {
 	 * @param gateId active gate id
 	 * @return dashboard items list
 	 */
-	public List<BaseItem> getDashboardItems(int index, String gateId) {
+	public List<BaseItem> getDashboardViewItems(int index, String gateId) {
 		String userId = getActualUser().getId();
 		List<List<BaseItem>> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
 		return items != null && items.size() > index ? items.get(index) : null;
 	}
 
-	public int getNumberOfDashboardTabs(String gateId) {
+	@Nullable
+	public List<List<BaseItem>> getDashboardViews(String gateId) {
 		String userId = getActualUser().getId();
-		return mPersistence.getSettings(getDashboardKey(userId, gateId)).getInt("items", 0);
-	}
-
-	public void saveNumberOfDashboardTabs(String gateId, int numOfItems) {
-		String userId = getActualUser().getId();
-		mPersistence.getSettings(getDashboardKey(userId, gateId)).edit().putInt("items", numOfItems).apply();
+		return DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 	}
 
 	/**
@@ -578,7 +574,6 @@ public final class Controller {
 		if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
 			itemsList.get(index).clear();
 			itemsList.get(index).addAll(items);
-
 		} else if (itemsList != null) {
 			itemsList.add(items);
 		} else {
@@ -590,6 +585,44 @@ public final class Controller {
 	}
 
 	/**
+	 * Adds dashboard item to specified view
+	 *
+	 * @param viewIndex where will be added item
+	 * @param gateId    active gate id
+	 * @param item      to be added
+	 */
+	public void addDashboardItem(int viewIndex, String gateId, BaseItem item) {
+		String userId = getActualUser().getId();
+		List<BaseItem> items = getDashboardViewItems(viewIndex, gateId);
+		if (items == null) {
+			items = new ArrayList<>();
+		}
+
+		items.add(item);
+
+		saveDashboardItems(viewIndex, gateId, items);
+	}
+
+	/**
+	 * Adds new dashboard view to the end of tabs
+	 *
+	 * @param gateId id of gate
+	 */
+
+	public void addDashboardView(String gateId) {
+		String userId = getActualUser().getId();
+		SharedPreferences dashboardSettings = mPersistence.getSettings(getDashboardKey(userId, gateId));
+		List<List<BaseItem>> itemsList = DashBoardPersistence.load(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		if (itemsList == null) {
+			Log.e(TAG, "addDashboardView - null items list");
+			return;
+		}
+
+		itemsList.add(new ArrayList<BaseItem>());
+		DashBoardPersistence.save(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
+	}
+
+	/**
 	 * Remove all dashboard cards by gate
 	 *
 	 * @param gateId id of gate
@@ -598,7 +631,6 @@ public final class Controller {
 		String userId = getActualUser().getId();
 		SharedPreferences dashboardSettings = mPersistence.getSettings(getDashboardKey(userId, gateId));
 		if (index > Constants.NO_INDEX) {
-
 			List<List<BaseItem>> itemsList = DashBoardPersistence.load(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
 			if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
@@ -611,7 +643,6 @@ public final class Controller {
 					.remove(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS)
 					.putString(Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, "")
 					.apply();
-			saveNumberOfDashboardTabs(gateId, 0);
 		}
 	}
 

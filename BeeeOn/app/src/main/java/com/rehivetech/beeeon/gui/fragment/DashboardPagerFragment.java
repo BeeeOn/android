@@ -33,6 +33,7 @@ import com.rehivetech.beeeon.threading.task.ReloadDashboardDataTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.util.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -103,7 +104,12 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		mViewsAdapter = new ViewPagerAdapter(getChildFragmentManager());
 		mViewPager.setAdapter(mViewsAdapter);
 		mTabLayout.setupWithViewPager(mViewPager);
-		setupViewpager();
+
+		Controller controller = Controller.getInstance(mActivity);
+		List<List<BaseItem>> dashboardViews = controller.getDashboardViews(mGateId);
+		// if no dashboard views, set to one at least
+		int viewsCount = (dashboardViews == null || dashboardViews.isEmpty()) ? 1 : dashboardViews.size();
+		setupViewpager(viewsCount);
 		return view;
 	}
 
@@ -191,12 +197,8 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 				if (resultCode == Activity.RESULT_OK) {
 					BaseItem item = data.getParcelableExtra(EXTRA_ADD_ITEM);
 					int index = data.getIntExtra(EXTRA_INDEX, 0);
-					DashboardFragment fragment = (DashboardFragment) mViewsAdapter.getItem(index);
-					if (fragment != null) {
-						// TODO crashes here when fragment not visible
-//						mViewPager.setCurrentItem(index);
-						fragment.addItem(item);
-					}
+					// fragment's UI is update through it's method onStart() which is called after this (onActivityResult)
+					Controller.getInstance(mActivity).addDashboardItem(index, mGateId, item);
 				}
 				break;
 
@@ -209,22 +211,7 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 	 * @param forceReload forcing reload
 	 */
 	private void doReloadDevicesTask(boolean forceReload) {
-		Controller controller = Controller.getInstance(mActivity);
-
-		VentilationItem ventilationItem = null;
-		int numOfItems = controller.getNumberOfDashboardTabs(mGateId) + 1;
-		for (int i = 0; i < numOfItems; i++) {
-			List<BaseItem> items = controller.getDashboardItems(i, mGateId);
-			if (items == null) continue;
-
-			for (BaseItem item : items) {
-				if (item instanceof VentilationItem) {
-					ventilationItem = (VentilationItem) item;
-					break;
-				}
-			}
-		}
-
+		VentilationItem ventilationItem = getVentilationItem();
 		CallbackTask reloadDeviceTask = createReloadDevicesTask(forceReload);
 		// if outside temperature from provider, reload weather
 		if (ventilationItem != null && ventilationItem.getOutsideAbsoluteModuleId() == null) {
@@ -232,6 +219,27 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		} else {
 			mActivity.callbackTaskManager.executeTask(reloadDeviceTask, mGateId);
 		}
+	}
+
+	/**
+	 * Gets ventilation item from any dashboard view so that it can be inserted only once
+	 *
+	 * @return ventilation item
+	 */
+	@Nullable
+	private VentilationItem getVentilationItem() {
+		List<List<BaseItem>> views = Controller.getInstance(mActivity).getDashboardViews(mGateId);
+		if (views == null) return null;
+
+		for (List<BaseItem> items : views) {
+			for (BaseItem item : items) {
+				if (item instanceof VentilationItem) {
+					return (VentilationItem) item;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -251,29 +259,22 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 			@Override
 			public void onExecute(boolean success) {
 				if (!success || !forceReload) return;
-
 				updateActiveFragment();
 			}
 		});
 		return reloadDashboardDataTask;
 	}
 
+
 	/**
 	 * Prepares viewpager with different dashboard views
 	 */
-	private void setupViewpager() {
-		Controller controller = Controller.getInstance(mActivity);
-		int numOfItems = controller.getNumberOfDashboardTabs(mGateId);
-		// adds always minimum 1 item
-		if (numOfItems == 0) numOfItems = 1;
-
-		for (int i = 0; i < numOfItems; i++) {
-			Fragment fragment = DashboardFragment.newInstance(i, mGateId);
-			String title = mActivity.getString(R.string.dashboard_view, i + 1);
+	private void setupViewpager(int viewsCount) {
+		for (int index = 0; index < viewsCount; index++) {
+			Fragment fragment = DashboardFragment.newInstance(index, mGateId);
+			String title = mActivity.getString(R.string.dashboard_view, index + 1);
 			mViewsAdapter.addFragment(fragment, title);
 		}
-
-//		mViewPager.setCurrentItem(0);
 	}
 
 	/**
@@ -304,21 +305,9 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		DashboardFragment fragment = DashboardFragment.newInstance(mViewsAdapter.getCount(), mGateId);
 		String title = mActivity.getString(R.string.dashboard_view, mViewsAdapter.getCount() + 1);
 		mViewsAdapter.addFragment(fragment, title);
-		mFloatingActionMenu.close(true);
 		mViewPager.setCurrentItem(mViewsAdapter.getCount() - 1, true);
-
-		Controller controller = Controller.getInstance(mActivity);
-		controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount());
-	}
-
-	/**
-	 * Shows snackbar with undo action
-	 *
-	 * @param text          snackbar's text
-	 * @param clickListener undo click listener
-	 */
-	public void showSnackbar(String text, View.OnClickListener clickListener) {
-		Snackbar.make(mRootLayout, text, Snackbar.LENGTH_LONG).setAction(R.string.dashboard_undo, clickListener).show();
+		Controller.getInstance(mActivity).addDashboardView(mGateId);
+		mFloatingActionMenu.close(true);
 	}
 
 	/**
@@ -335,11 +324,26 @@ public class DashboardPagerFragment extends BaseApplicationFragment implements C
 		Controller controller = Controller.getInstance(mActivity);
 
 		controller.removeDashboardView(index, mGateId);
-		controller.saveNumberOfDashboardTabs(mGateId, mViewsAdapter.getCount() - 1);
 		mViewsAdapter.removeFragment(index);
-//		mViewsAdapter.removeAllFragments();
-//		setupViewpager();
+		fixViewsAfterRemove();
 
 		Snackbar.make(mRootLayout, R.string.activity_fragment_toast_delete_success, Snackbar.LENGTH_SHORT).show();
+	}
+
+	/**
+	 * After deleting page, fixes titles so that it shows correct numbers from 1
+	 */
+	public void fixViewsAfterRemove() {
+		int viewsCount = mViewsAdapter.getCount();
+		if (viewsCount == 0) {
+			setupViewpager(1);
+			return;
+		}
+
+		List<String> fixedTitles = new ArrayList<>();
+		for (int index = 0; index < viewsCount; index++) {
+			fixedTitles.add(index, mActivity.getString(R.string.dashboard_view, index + 1));
+		}
+		mViewsAdapter.setFragmentTitles(fixedTitles);
 	}
 }

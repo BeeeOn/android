@@ -1,10 +1,14 @@
 package com.rehivetech.beeeon.gui.adapter;
 
+import android.content.Context;
+import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
+
+import com.rehivetech.beeeon.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,9 +20,9 @@ import java.util.List;
  * @since 13.06.16
  */
 public class ViewPagerAdapter extends android.support.v4.app.FragmentStatePagerAdapter {
-	private final List<Fragment> mFragments = new ArrayList<>();
-	private final List<String> mFragmentTitles = new ArrayList<>();
-	private final FragmentManager mFragmentManager;
+	private List<Fragment> mFragments = new ArrayList<>();
+	private List<String> mFragmentTitles = new ArrayList<>();
+	private FragmentManager mFragmentManager;
 
 	public ViewPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -61,9 +65,8 @@ public class ViewPagerAdapter extends android.support.v4.app.FragmentStatePagerA
 		notifyDataSetChanged();
 	}
 
-	public void removeAllFragments() {
-		mFragments.clear();
-		mFragmentTitles.clear();
+	public void setFragmentTitles(List<String> titles) {
+		mFragmentTitles = titles;
 		notifyDataSetChanged();
 	}
 
