@@ -3,7 +3,7 @@
 
 # TODO find a better way to use these variables than copy-past from stressTest
 DIR=$(pwd) 
-APK="app-debug.apk"
+APK="../../artifacts/app-debug.apk"
 export PACKAGE_NAME="com.rehivetech.beeeon.debug"
 
 #check for parameter --download-new - it is used for getting the .apk file if neccessary
