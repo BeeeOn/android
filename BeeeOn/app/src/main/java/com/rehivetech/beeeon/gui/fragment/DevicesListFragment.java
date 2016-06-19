@@ -180,12 +180,14 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	@OnClick(R.id.devices_list_action_add_device)
 	public void onClickAddDevice() {
+		mFloatingActionMenu.close(false);
 		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mActiveGateId, AddDeviceActivity.ACTION_INITIAL, null);
 		mActivity.startActivityForResult(intent, Constants.ADD_DEVICE_REQUEST_CODE);
 	}
 
 	@OnClick(R.id.devices_list_action_add_gate)
 	public void onClickAddGate() {
+		mFloatingActionMenu.close(false);
 		Intent intent = new Intent(getActivity(), AddGateActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_GATE_REQUEST_CODE);
 	}
@@ -255,7 +257,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 
 		// prevent for showing based on user's role
-		mFabAddDevice.setVisibility(controller.isUserAllowed(activeGate.getRole()) ? View.VISIBLE : View.GONE);
+		mFabAddDevice.setVisibility(controller.isUserAllowed(activeGate.getRole()) ? mFabAddDevice.getVisibility(): View.GONE);
 
 		mActiveGateId = activeGate.getId();
 		doReloadDevicesTask(mActiveGateId, false);
