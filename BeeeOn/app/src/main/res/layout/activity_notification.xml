@@ -1,19 +1,49 @@
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context="com.rehivetech.beeeon.gui.activity.NotificationActivity"
+	>
 
-    <include
-        android:id="@+id/beeeon_toolbar"
-        layout="@layout/layout_beeeon_toolbar"
-        />
+	<include
+		android:id="@+id/layout_appbar"
+		layout="@layout/app_bar"
+		/>
 
-    <RelativeLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/beeeon_toolbar"
-        />
+	<RelativeLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_below="@id/layout_appbar"
+		>
+
+		<ListView
+			android:id="@+id/notification_listview"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:divider="@null"
+			/>
+
+		<ProgressBar
+			android:id="@+id/notification_progress_bar"
+			style="?android:attr/android:progressBarStyleLarge"
+			android:layout_width="80dp"
+			android:layout_height="80dp"
+			android:layout_centerInParent="true"
+			android:indeterminate="true"
+			/>
+
+		<TextView
+			android:id="@+id/notification_text"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:text="@string/notification_no_notifications_cap"
+			android:textAllCaps="true"
+			android:textColor="@color/gray_dark"
+			android:textSize="24sp"
+			/>
+
+	</RelativeLayout>
 
 </RelativeLayout>

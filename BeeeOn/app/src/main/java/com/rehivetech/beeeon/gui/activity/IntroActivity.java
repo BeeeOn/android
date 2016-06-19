@@ -15,17 +15,17 @@ import com.viewpagerindicator.CirclePageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class IntroActivity extends AppCompatActivity {
-	@Bind(R.id.base_guide_intro_pager) ViewPager mPager;
-	@Bind(R.id.base_guide_intro_indicator) CirclePageIndicator mIndicator;
+	@BindView(R.id.base_guide_intro_pager) ViewPager mPager;
+	@BindView(R.id.base_guide_intro_indicator) CirclePageIndicator mIndicator;
 
-	@Bind(R.id.base_guide_add_gate_skip_button) Button mButtonSkip;
-	@Bind(R.id.base_guide_add_gate_cancel_button) Button mButtonCancel;
-	@Bind(R.id.base_guide_add_gate_next_button) Button mButtonNext;
+	@BindView(R.id.base_guide_add_gate_skip_button) Button mButtonSkip;
+	@BindView(R.id.base_guide_add_gate_cancel_button) Button mButtonCancel;
+	@BindView(R.id.base_guide_add_gate_next_button) Button mButtonNext;
 	private IntroFragmentPagerAdapter mPagerAdapter;
 
 	@Override

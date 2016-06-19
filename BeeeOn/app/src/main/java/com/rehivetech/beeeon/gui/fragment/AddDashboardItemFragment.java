@@ -19,8 +19,9 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by martin on 25.2.16.
@@ -34,11 +35,12 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 
 	private String mGateId;
 
-	@Bind(R.id.fragment_add_dashboard_item_cards_recyclerview)
+	@BindView(R.id.fragment_add_dashboard_item_cards_recyclerview)
 	RecyclerView mRecyclerView;
 
 	private AddDashboardCardAdapter mAdapter;
 	private int mIndex;
+	private Unbinder mUnbinder;
 
 	public static AddDashboardItemFragment newInstance(int index, String gateId) {
 
@@ -63,7 +65,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_add_dashboard_item, container, false);
-		ButterKnife.bind(this, view);
+		mUnbinder = ButterKnife.bind(this, view);
 
 		mRecyclerView.setLayoutManager(new GridLayoutManager(mActivity, 2));
 		mRecyclerView.setHasFixedSize(true);
@@ -83,7 +85,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		ButterKnife.unbind(this);
+		mUnbinder.unbind();
 	}
 
 	private void fillAdapter() {
@@ -96,7 +98,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 		items.add(new AddDashboardCardAdapter.CardItem(AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH,
 				R.drawable.dashboard_week_bar_graph_preview, R.string.dashboard_fab_add_week_bar_graph));
 
-		List<BaseItem> dashboardItems = Controller.getInstance(mActivity).getDashboardItems(0, mGateId);
+		List<BaseItem> dashboardItems = Controller.getInstance(mActivity).getDashboardViewItems(0, mGateId);
 		VentilationItem ventilationItem = null;
 		if (dashboardItems != null) {
 
@@ -128,7 +130,7 @@ public class AddDashboardItemFragment extends BaseApplicationFragment implements
 				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_GRAPH_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_BAR_GRAPH:
-				fragment = AddDashboardOverviewGraphItemFragment.newInstance(mIndex,mGateId, null);
+				fragment = AddDashboardOverviewGraphItemFragment.newInstance(mIndex, mGateId, null);
 				analyticsItemName = GoogleAnalyticsManager.DASHBOARD_ADD_GRAPH_OVERVIEW_ITEM;
 				break;
 			case AddDashboardCardAdapter.CardItem.CARD_PIE_GRAPH:

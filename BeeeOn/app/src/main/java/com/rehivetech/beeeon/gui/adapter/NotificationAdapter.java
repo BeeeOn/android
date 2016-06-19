@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,21 +10,28 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
-import com.rehivetech.beeeon.gui.fragment.NotificationFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Martin on 1. 5. 2015.
+ * @author Martin
+ * @since 1. 5. 2015
  */
 public class NotificationAdapter extends BaseAdapter {
 
-	private final NotificationFragment mFragment;
-	private final List<VisibleNotification> mList;
+	private List<VisibleNotification> mList = new ArrayList<>();
+	private Context mContext;
+	private LayoutInflater mInflater;
 
-	public NotificationAdapter(NotificationFragment fragment, List<VisibleNotification> list) {
-		mFragment = fragment;
+	public NotificationAdapter(Context context) {
+		mContext = context;
+		mInflater = LayoutInflater.from(context);
+	}
+
+	public void swapItems(List<VisibleNotification> list) {
 		mList = list;
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -45,8 +53,7 @@ public class NotificationAdapter extends BaseAdapter {
 	public View getView(int pos, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		if (convertView == null) {
-			LayoutInflater inflater = mFragment.getActivity().getLayoutInflater();
-			convertView = inflater.inflate(R.layout.adapter_notification, parent, false);
+			convertView = mInflater.inflate(R.layout.adapter_notification, parent, false);
 
 			holder = new ViewHolder();
 			holder.img = (ImageView) convertView.findViewById(R.id.notification_item_imageview);
@@ -67,7 +74,7 @@ public class NotificationAdapter extends BaseAdapter {
 			holder.separator.setVisibility(View.VISIBLE);
 		}
 
-		mList.get(pos).setView(mFragment.getActivity(), holder);
+		mList.get(pos).setView(mContext, holder);
 
 		return convertView;
 	}

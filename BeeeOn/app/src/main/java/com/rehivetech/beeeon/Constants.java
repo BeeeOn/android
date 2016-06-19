@@ -36,6 +36,8 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_LAST_AUTH_PROVIDER = "last_auth_provider";
 	public static final String PERSISTENCE_PREF_LAST_AUTH_PARAMETER = "last_auth_parameter";
 	public static final String PERSISTENCE_PREF_LAST_DEMO_MODE = "last_demo_mode";
+	public static final String PERSISTENCE_PREF_LAST_CONTENT_TAG = "last_content_tag";
+
 
 	public static final String PERSISTENCE_PREF_USER_BT = "user_bt";
 	public static final String PERSISTENCE_PREF_USER_ID = "user_id";
@@ -87,7 +89,7 @@ public final class Constants {
 
 	/**
 	 * Actor change broadcasts
- 	 */
+	 */
 	public static final String BROADCAST_ACTOR_CHANGED = "com.rehivetech.beeeon.BROADCAST_ACTOR_CHANGED";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_ID = "com.rehivetech.beeeon.EXTRA_ACTION_CHANGED_ID";
 	public static final String BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID = "com.rehivetech.beeeon.BROADCAST_EXTRA_ACTOR_CHANGED_GATE_ID";

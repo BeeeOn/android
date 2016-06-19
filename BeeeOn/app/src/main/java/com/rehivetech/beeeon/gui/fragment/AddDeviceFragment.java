@@ -12,10 +12,9 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddDeviceActivity;
-import com.rehivetech.beeeon.gui.activity.ScanQRActivity;
 import com.rehivetech.beeeon.gui.activity.WebViewActivity;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -27,7 +26,7 @@ public class AddDeviceFragment extends BaseApplicationFragment {
 
 	String mGateId;
 
-	@Bind(R.id.device_add_guide_text)
+	@BindView(R.id.device_add_guide_text)
 	TextView mDeviceAddGuideText;
 
 	public static AddDeviceFragment newInstance(String gateId) {
@@ -49,7 +48,7 @@ public class AddDeviceFragment extends BaseApplicationFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_device_add, container, false);
-		ButterKnife.bind(this, view);
+		mUnbinder = ButterKnife.bind(this, view);
 
 		mDeviceAddGuideText.setMovementMethod(LinkMovementMethod.getInstance());
 		return view;
@@ -85,11 +84,5 @@ public class AddDeviceFragment extends BaseApplicationFragment {
 	private void startActivityForDeviceSearch() {
 		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mGateId, AddDeviceActivity.ACTION_SEARCH, null);
 		startActivityForResult(intent, 0);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
 	}
 }

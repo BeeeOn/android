@@ -383,7 +383,7 @@ public class DemoNetwork implements INetwork {
 		// Create unique device id
 		String address;
 		do {
-			address = gateId + "/" + String.valueOf(rand.nextInt());
+			address = gateId + "_" + String.valueOf(rand.nextInt());
 		} while (mDevices.hasObject(gateId, address));
 
 		// Get random device type

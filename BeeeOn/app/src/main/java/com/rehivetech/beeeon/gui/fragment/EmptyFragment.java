@@ -54,7 +54,7 @@ public class EmptyFragment extends BaseApplicationFragment {
 		mActivity.setupRefreshIcon(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				((MainActivity) mActivity).reloadData();
+				((MainActivity) mActivity).doReloadAllData();
 			}
 		});
 	}

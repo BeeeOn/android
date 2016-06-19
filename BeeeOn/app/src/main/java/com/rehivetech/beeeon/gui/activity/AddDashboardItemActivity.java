@@ -23,7 +23,7 @@ public class AddDashboardItemActivity extends BaseApplicationActivity {
 	private static final String ARG_GATE_ID = "gate_id";
 	private static final String ARG_INDEX = "index";
 
-	public static Intent getADdDashBoardActivityIntent(Context context, int index, String gateId) {
+	public static Intent getAddDashBoardActivityIntent(Context context, int index, String gateId) {
 		Intent intent = new Intent(context, AddDashboardItemActivity.class);
 		intent.putExtra(ARG_INDEX, index);
 		intent.putExtra(ARG_GATE_ID, gateId);

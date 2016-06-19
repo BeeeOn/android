@@ -117,16 +117,16 @@ public abstract class BaseBeeeOnDialog extends SimpleDialogFragment {
 		// setup delete button as red
 		Button neutralButton = (Button) getDialog().findViewById(R.id.sdl_button_neutral);
 		if (neutralButton != null) {
-			neutralButton.setTextColor(getResources().getColor(R.color.black));
+			neutralButton.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 		}
 		Button neutralButtonStacked = (Button) getDialog().findViewById(R.id.sdl_button_neutral_stacked);
 		if (neutralButtonStacked != null) {
-			neutralButtonStacked.setTextColor(getResources().getColor(R.color.black));
+			neutralButtonStacked.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 		}
 
 		Button negativeButton = (Button) getDialog().findViewById(R.id.sdl_button_negative);
 		if (negativeButton != null) {
-			negativeButton.setTextColor(getResources().getColor(R.color.gray_material_400));
+			negativeButton.setTextColor(ContextCompat.getColor(getContext(), R.color.gray_material_400));
 		}
 		Button negativeButtonStacked = (Button) getDialog().findViewById(R.id.sdl_button_negative_stacked);
 		if (negativeButtonStacked != null) {

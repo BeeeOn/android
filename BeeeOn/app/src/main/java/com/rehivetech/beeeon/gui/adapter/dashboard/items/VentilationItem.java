@@ -17,7 +17,7 @@ public class VentilationItem extends BaseItem {
 	private String mInSideAbsoluteModuleId;
 
 	@SerializedName("coordinates")
-	private double[] mLocation;
+	@Nullable private double[] mLocation;
 
 	public VentilationItem(String name, String gateId, @Nullable double[] location, @Nullable String outsideAbsoluteModuleId, String inSideAbsoluteModuleId) {
 		super(name, gateId);
@@ -35,18 +35,22 @@ public class VentilationItem extends BaseItem {
 		return mInSideAbsoluteModuleId;
 	}
 
+	@Nullable
 	public double[] getLocation() {
 		return mLocation;
 	}
 
-	public String getLatitiude() {
+	@Nullable
+	public String getLatitude() {
+		if (mLocation == null) return "";
 		return Double.toString(mLocation[0]);
 	}
 
-	public String getLongitiude() {
+	public String getLongitude() {
+		if (mLocation == null) return "";
 		return Double.toString(mLocation[1]);
 	}
-	@Override
+
 	public int describeContents() {
 		return 0;
 	}

@@ -428,8 +428,8 @@
     <!--Dashboard-->
     <string name="dashboard_no_items">Pohled je prázdný</string>
     <string name="dashboard_view">Pohled %s</string>
-    <string name="dashboard_add_item">Přidat novú položku</string>
-    <string name="dashboard_add_view">Přidat nový pohled</string>
+    <string name="dashboard_add_item">Přidat kartu</string>
+    <string name="dashboard_add_view">Přidat pohled</string>
     <string name="dashboard_delete_view">Odstranit pohled</string>
     <string name="dashboard_delete_view_x">Odstranit pohled %s</string>
     <string name="dashboard_delete_view_message">Všechny položky z pohledu budou vymazány</string>
@@ -500,7 +500,6 @@
     <string name="server_detail_title_create">Vytvořit server</string>
     <string name="server_detail_title_edit">Upravit server</string>
     <string name="server_detail_certificate">Certifikát</string>
-    <string name="server_detail_url_verify">URL k ověření</string>
     <string name="permission_storage_warning">Pokud chcete načíst soubor ze zařízení, musíte povolit oprávnění.</string>
     <string name="server_detail_certificate_button">Vybrat X.509 certifikát</string>
     <string name="server_detail_certificate_not_selected">Je potřeba zvolit certifikát</string>

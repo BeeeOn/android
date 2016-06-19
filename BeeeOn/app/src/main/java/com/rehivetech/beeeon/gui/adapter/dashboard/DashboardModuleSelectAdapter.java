@@ -26,7 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by martin on 27.2.16.
+ * @author martin
+ * @since 27.2.16
  */
 public class DashboardModuleSelectAdapter extends RecyclerViewSelectableAdapter {
 

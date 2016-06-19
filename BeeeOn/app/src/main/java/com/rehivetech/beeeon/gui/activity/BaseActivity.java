@@ -251,5 +251,4 @@ public abstract class BaseActivity extends AppCompatActivity {
 		transaction.replace(R.id.activity_add_dashboard_container, fragment);
 		transaction.commit();
 	}
-
 }

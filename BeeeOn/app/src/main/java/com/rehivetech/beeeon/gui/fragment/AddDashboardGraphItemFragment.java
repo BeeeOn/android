@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.fragment;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,13 +25,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
 
 /**
- * Created by martin on 13.1.16.
+ * @author martin
+ * @since 13.1.16
  */
 public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment implements AddDashboardCardAdapter.ItemClickListener {
 
@@ -39,11 +41,8 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 
 	private ModuleItem mLeftAxisModule;
 	private ModuleItem mRightAxisModule;
-	@Bind(R.id.fragment_add_dashboard_item_title)
-	TextView mTitle;
 
 	public static AddDashboardGraphItemFragment newInstance(int index, String gateId, ModuleItem leftAxisModule, ModuleItem rightAxisModule) {
-
 		Bundle args = new Bundle();
 		fillBaseArgs(args, index, gateId);
 		args.putParcelable(ARG_LEFT_AXIS_MODULE, leftAxisModule);
@@ -69,31 +68,28 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		FrameLayout rootView = (FrameLayout) inflater.inflate(R.layout.fragment_add_dashboard_graph_item, container, false);
 
-		View view;
+		@LayoutRes int layout = (mLeftAxisModule == null || mRightAxisModule == null) ?
+				R.layout.add_dashboard_recyclerview_item_layout1 :
+				R.layout.add_dashboard_graph_item_layout2;
 
-		if (mLeftAxisModule == null || mRightAxisModule == null) {
-			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_recyclerview_item_layout1, null);
-		} else {
-			view = LayoutInflater.from(mActivity).inflate(R.layout.add_dashboard_graph_item_layout2, null);
-		}
-
+		View view = LayoutInflater.from(mActivity).inflate(layout, null);
 		rootView.addView(view, 0);
-		ButterKnife.bind(rootView);
 		return rootView;
 	}
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
 		if (mLeftAxisModule == null || mRightAxisModule == null) {
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(false, null);
 			mButtonDone.setImageResource(R.drawable.arrow_right_bold);
 		}
 
+		TextView title = ButterKnife.findById(view, R.id.fragment_add_dashboard_item_title);
+
 		if (mLeftAxisModule == null) {
 			mAdapter.selectFirstModuleItem();
-			mTitle.setText(R.string.dashboard_add_graph_left_axis_label);
+			title.setText(R.string.dashboard_add_graph_left_axis_label);
 
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -106,7 +102,7 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 				}
 			});
 		} else if (mRightAxisModule == null) {
-			mTitle.setText(R.string.dashboard_add_graph_right_axis_label);
+			title.setText(R.string.dashboard_add_graph_right_axis_label);
 
 			mButtonDone.setOnClickListener(new View.OnClickListener() {
 				@Override
@@ -192,12 +188,6 @@ public class AddDashboardGraphItemFragment extends BaseAddDashBoardItemFragment 
 		}
 
 		return ranges;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
 	}
 
 	@Override

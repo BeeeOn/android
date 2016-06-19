@@ -34,7 +34,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -42,9 +42,9 @@ import butterknife.ButterKnife;
  */
 public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFragment {
 
-	@Bind(R.id.fragment_dashboard_detail_axis_unit)
+	@BindView(R.id.fragment_dashboard_detail_axis_unit)
 	TextView mUnit;
-	@Bind(R.id.fragment_dashboard_detail_graph)
+	@BindView(R.id.fragment_dashboard_detail_graph)
 	BarChart mChart;
 
 	private BarDataSet mDataSet;
@@ -96,7 +96,7 @@ public class DashboardOverviewGraphDetailFragment extends BaseDashboardDetailFra
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard_detail_overview_week_graph, container, false);
-		ButterKnife.bind(this, view);
+		mUnbinder = ButterKnife.bind(this, view);
 		return view;
 	}
 

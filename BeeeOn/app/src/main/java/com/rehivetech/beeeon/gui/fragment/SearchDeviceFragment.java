@@ -47,7 +47,7 @@ import org.joda.time.DateTimeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.State;
 
@@ -69,9 +69,9 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	private String mGateId;
 
 	CoordinatorLayout mRootView;
-	@Bind(R.id.search_countdown_text) TextView mCountDownText;
-	@Bind(R.id.search_device_recycler_view) RecyclerView mRecyclerView;
-	@Bind(R.id.search_device_searching_text) TextView mSearchingText;
+	@BindView(R.id.search_countdown_text) TextView mCountDownText;
+	@BindView(R.id.search_device_recycler_view) RecyclerView mRecyclerView;
+	@BindView(R.id.search_device_searching_text) TextView mSearchingText;
 
 	private DeviceRecycleAdapter mAdapter;
 	@Nullable private CountDownTimer mCountDownTimer;
@@ -103,7 +103,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		mRootView = (CoordinatorLayout) inflater.inflate(R.layout.fragment_search_devices, container, false);
-		ButterKnife.bind(this, mRootView);
+		mUnbinder = ButterKnife.bind(this, mRootView);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
 		mAdapter = new DeviceRecycleAdapter(mActivity, this, true);
 		mRecyclerView.setAdapter(mAdapter);
@@ -478,11 +478,5 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onPositiveButtonClicked(int requestCode, View view, EnterPasswordDialog dialog) {
 		dialogEnterPasswordSubmitted(view, dialog);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
 	}
 }

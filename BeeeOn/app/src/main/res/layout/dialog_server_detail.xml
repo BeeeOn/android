@@ -78,28 +78,6 @@
 						/>
 				</android.support.design.widget.TextInputLayout>
 			</TableRow>
-
-			<TableRow
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				>
-
-				<android.support.design.widget.TextInputLayout
-					android:id="@+id/server_url_verify"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_span="2"
-					android:hint="@string/server_detail_url_verify"
-					>
-
-					<android.support.design.widget.TextInputEditText
-						android:layout_width="match_parent"
-						android:layout_height="wrap_content"
-						android:inputType="textUri"
-						android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-						/>
-				</android.support.design.widget.TextInputLayout>
-			</TableRow>
 		</TableLayout>
 
 

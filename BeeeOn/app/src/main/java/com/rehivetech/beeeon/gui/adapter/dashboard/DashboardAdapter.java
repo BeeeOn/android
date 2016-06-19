@@ -71,6 +71,8 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	private final TimeHelper mTimeHelper;
 	private final UnitsHelper mUnitsHelper;
 
+	@Nullable
+	private View mEmptyView;
 	private BaseApplicationActivity mActivity;
 	private IItemClickListener mItemClickListener;
 	private ActionModeCallback mActionModeCallback;
@@ -87,6 +89,25 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		mUnitsHelper = Utils.getUnitsHelper(prefs, mActivity);
 	}
 
+	/**
+	 * Binds empty view to this adapter which is correctly showing/hiding based on items count
+	 *
+	 * @param view any view can be sat
+	 */
+	public void setEmptyView(@Nullable View view) {
+		mEmptyView = view;
+		setEmptyViewVisibility(mItems.isEmpty());
+	}
+
+	/**
+	 * Safely sets empty view visibility. If no empty view was set, does nothing
+	 *
+	 * @param isVisible whether empty view should be visible
+	 */
+	private void setEmptyViewVisibility(boolean isVisible) {
+		if (mEmptyView == null) return;
+		mEmptyView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+	}
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -169,12 +190,13 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	public void addItem(BaseItem item) {
 		mItems.add(item);
-
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyItemRangeInserted(0, mItems.size());
 	}
 
 	public void addItem(int position, BaseItem item) {
 		mItems.add(position, item);
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyItemInserted(position);
 	}
 
@@ -185,6 +207,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	public void setItems(List<BaseItem> items) {
 		mItems.clear();
 		mItems.addAll(items);
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyDataSetChanged();
 	}
 
@@ -202,6 +225,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 	public void deleteItem(BaseItem item) {
 		int position = mItems.indexOf(item);
 		mItems.remove(item);
+		setEmptyViewVisibility(mItems.isEmpty());
 		notifyItemRemoved(position);
 	}
 
@@ -259,7 +283,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
+	public class DashboardGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener {
 		public final TextView mGraphName;
 		public final TextView mLeftAxisUnit;
 		public final TextView mRightAxisUnit;
@@ -326,7 +350,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 				final LineDataSet dataSet = new LineDataSet(new ArrayList<Entry>(), modules.get(i));
 				dataSet.setAxisDependency(axisDependency);
-				ChartHelper.prepareDataSet(mActivity,null, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
+				ChartHelper.prepareDataSet(mActivity, null, dataSet, false, true, Utils.getGraphColor(mActivity, i), ContextCompat.getColor(mActivity, R.color.beeeon_accent), false);
 
 				ChartHelper.ChartLoadListener chartLoadListener = new ChartHelper.ChartLoadListener() {
 					@Override
@@ -381,7 +405,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 
 	}
 
-	public class ActualValueViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
+	public class ActualValueViewHolder extends BaseDashboardViewHolder implements View.OnClickListener {
 		public final ImageView mIcon;
 		public final AppCompatImageView mTrend;
 		public final TextView mLabel;
@@ -458,7 +482,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
+	public class OverviewGraphViewHolder extends BaseDashboardViewHolder implements View.OnClickListener {
 
 		public final TextView mGraphName;
 		public final TextView mGraphUnit;
@@ -552,7 +576,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 		}
 	}
 
-	public class VentilationViewHolder extends BaseDashboardViewHolder implements View.OnClickListener{
+	public class VentilationViewHolder extends BaseDashboardViewHolder implements View.OnClickListener {
 
 		final TextView mOutSideTemp;
 		final TextView mInsideTemp;

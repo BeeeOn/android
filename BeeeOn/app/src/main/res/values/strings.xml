@@ -438,8 +438,8 @@
 	<!--Dashboard-->
 	<string name="dashboard_no_items">View is empty</string>
 	<string name="dashboard_view">View %s</string>
-	<string name="dashboard_add_item">Add new item</string>
-	<string name="dashboard_add_view">Add new view</string>
+	<string name="dashboard_add_item">Add card</string>
+	<string name="dashboard_add_view">Add view</string>
 	<string name="dashboard_delete_view">Remove view</string>
 	<string name="dashboard_delete_view_x">Remove view %s</string>
 	<string name="dashboard_delete_view_message">All cards from view will be removed</string>
@@ -511,7 +511,6 @@
 	<string name="server_detail_host">Host address</string>
 	<string name="server_detail_port">Port</string>
 	<string name="server_detail_certificate">Certificate</string>
-	<string name="server_detail_url_verify">URL to verify</string>
 	<string name="server_detail_certificate_button">Select X.509 certificate</string>
 	<string name="server_detail_certificate_not_selected">You must provide certificate</string>
 	<string name="server_detail_certificate_wrong_type">Wrong certificate type</string>

@@ -21,7 +21,8 @@ import com.rehivetech.beeeon.household.device.Module;
 import butterknife.ButterKnife;
 
 /**
- * Created by martin on 7.2.16.
+ * @author martin
+ * @since 7.2.16
  */
 public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragment {
 
@@ -70,7 +71,6 @@ public class AddDashboardActualValueFragment extends BaseAddDashBoardItemFragmen
 
 	@Override
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
 		if (mModuleItem == null) {
 			super.onViewCreated(view, savedInstanceState);
 			fillAdapter(true, null);

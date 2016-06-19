@@ -3,11 +3,13 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	>
 
 	<android.support.design.widget.AppBarLayout
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content">
+		android:layout_height="wrap_content"
+		>
 
 		<include layout="@layout/layout_beeeon_toolbar"/>
 
@@ -17,8 +19,8 @@
 		android:id="@+id/device_setup_scrollview"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		android:paddingBottom="?attr/actionBarSize"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior"
 		/>
 
 	<android.support.design.widget.FloatingActionButton
@@ -26,12 +28,12 @@
 		style="@style/BeeeOn.Button"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_margin="@dimen/space_big"
 		android:layout_gravity="bottom|end"
+		android:layout_margin="@dimen/space_big"
+		android:clickable="true"
+		android:src="@drawable/ic_save_white_24dp"
 		app:borderWidth="0dp"
 		app:fabSize="normal"
-		android:clickable="true"
-		android:src="@drawable/ic_content_save_white_24dp"
 		/>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,9 +1,9 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -27,58 +27,51 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.GraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.OverviewGraphItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.VentilationItem;
+import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import butterknife.Bind;
+import butterknife.BindInt;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by martin on 15.11.15.
+ * @author martin
+ * @since 15.11.15
  */
 public class DashboardFragment extends BaseApplicationFragment implements RecyclerViewSelectableAdapter.IItemClickListener, DashboardAdapter.ActionModeCallback {
-
-	private static final String TAG = DashboardFragment.class.getSimpleName();
-
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_INDEX = "index";
-
 
 	private String mGateId;
 	private int mPageIndex;
 	private DashboardAdapter mAdapter;
 	private ActionMode mActionMode;
 
-	@Bind(R.id.dashboard_recyclerview)
+	@BindInt(R.integer.dashboard_span_count)
+	public int mGridSpanCount;
+
+	@BindView(R.id.dashboard_recyclerview)
 	RecyclerView mRecyclerView;
 
-	@Bind(R.id.dashboard_empty_text)
+	@BindView(R.id.dashboard_empty_text)
 	TextView mEmptyText;
 
-	private ItemTouchHelper mItemTouchHelper;
 	private boolean mItemMoved = false;
 
-	private AsyncTask<VentilationItem, Void, Boolean> mReloadWeatherTask = new AsyncTask<VentilationItem, Void, Boolean>() {
-		@Override
-		protected Boolean doInBackground(VentilationItem... params) {
-			VentilationItem item = params[0];
-			return Controller.getInstance(mActivity).getWeatherModel().reloadWeather(mActivity, item.getGateId(), item.getLatitiude(), item.getLongitiude());
-		}
+	CallbackTask<VentilationItem> mReloadWeatherTask;
 
-		@Override
-		protected void onPostExecute(Boolean success) {
-			if (success) {
-				updateDashboard();
-			}
-		}
-	};
-
-
+	/**
+	 * Custom constructor with specified parametery
+	 *
+	 * @param index
+	 * @param gateId
+	 * @return
+	 */
 	public static DashboardFragment newInstance(int index, String gateId) {
-
 		Bundle args = new Bundle();
 		args.putInt(KEY_INDEX, index);
 		args.putString(KEY_GATE_ID, gateId);
@@ -87,7 +80,6 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		fragment.setArguments(args);
 		return fragment;
 	}
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -100,20 +92,44 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 	}
 
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		mReloadWeatherTask = new CallbackTask<VentilationItem>(getActivity()) {
+			@Override
+			protected Boolean doInBackground(VentilationItem param) {
+				return Controller.getInstance(mActivity).getWeatherModel().reloadWeather(mActivity, param.getGateId(), param.getLatitude(), param.getLongitude());
+			}
+		};
+
+		mReloadWeatherTask.setListener(new CallbackTask.ICallbackTaskListener() {
+			@Override
+			public void onExecute(boolean success) {
+				if (success) updateDashboard();
+			}
+		});
+	}
+
+	/**
+	 * Binds rootview + prepares recyclerviev with adapter
+	 *
+	 * @param inflater
+	 * @param container
+	 * @param savedInstanceState
+	 * @return
+	 */
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
-
-		ButterKnife.bind(this, view);
-
-		int spanCount = getResources().getInteger(R.integer.dashboard_span_count);
-		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(spanCount, StaggeredGridLayoutManager.VERTICAL));
+		ButterKnife.bind(this, view); // TODO should be unbinded at some time
 
 		mAdapter = new DashboardAdapter(mActivity, this, this);
+		mAdapter.setEmptyView(mEmptyText);
+		mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(mGridSpanCount, StaggeredGridLayoutManager.VERTICAL));
 		mRecyclerView.setAdapter(mAdapter);
 
-		mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
+		ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(
 				ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0) {
 
 			@Override
@@ -143,17 +159,23 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 			}
 		});
 
-		mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+		itemTouchHelper.attachToRecyclerView(mRecyclerView);
 
 		return view;
 	}
 
 	@Override
-	public void onResume() {
-		super.onResume();
+	public void onStart() {
+		super.onStart();
 		updateDashboard();
 	}
 
+	/**
+	 * Clicking on dashboard item
+	 *
+	 * @param position of item
+	 * @param viewType dashboard type
+	 */
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
 		switch (viewType) {
@@ -179,6 +201,13 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 	}
 
+	/**
+	 * Long click on dashboard item
+	 *
+	 * @param position of item
+	 * @param viewType dashboard type
+	 * @return
+	 */
 	@Override
 	public boolean onRecyclerViewItemLongClick(int position, int viewType) {
 		if (mActionMode == null) {
@@ -196,42 +225,32 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 		}
 	}
 
+	/**
+	 * Updates adapter with fresh data
+	 */
 	public void updateDashboard() {
-		if (mGateId == null) {
-			return;
-		}
-
 		Controller controller = Controller.getInstance(mActivity);
-		List<BaseItem> items = controller.getDashboardItems(mPageIndex, mGateId);
+		List<BaseItem> items = controller.getDashboardViewItems(mPageIndex, mGateId);
+		if (items == null) return;
 
-		if (items != null) {
-
-			for (BaseItem item : items) {
-
-				if (item instanceof VentilationItem && controller.getWeatherModel().getWeather(mGateId) == null) {
-					mReloadWeatherTask.execute((VentilationItem) item);
-					return;
-				}
+		for (BaseItem item : items) {
+			if (item instanceof VentilationItem && controller.getWeatherModel().getWeather(mGateId) == null) {
+				mActivity.callbackTaskManager.executeTask(mReloadWeatherTask, (VentilationItem) item);
+				return;
 			}
-
-			mAdapter.setItems(items);
-			handleEmptyViewVisibility();
 		}
+
+		mAdapter.setItems(items);
 	}
 
-
+	/**
+	 * Todo should save items not from adapter because adapter might not be initialized (because fragment might be in stop state)
+	 *
+	 * @param item
+	 */
 	public void addItem(BaseItem item) {
 		mAdapter.addItem(item);
-		handleEmptyViewVisibility();
 		Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
-	}
-
-	private void handleEmptyViewVisibility() {
-		if (mAdapter.getItems().size() == 0) {
-			mEmptyText.setVisibility(View.VISIBLE);
-		} else {
-			mEmptyText.setVisibility(View.GONE);
-		}
 	}
 
 	private class ActionModeDashboard implements ActionMode.Callback {
@@ -280,7 +299,9 @@ public class DashboardFragment extends BaseApplicationFragment implements Recycl
 					}
 				};
 
-				fragment.showSnackbar(getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), listener);
+				Snackbar.make(fragment.mRootLayout, getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), Snackbar.LENGTH_LONG)
+						.setAction(R.string.dashboard_undo, listener)
+						.show();
 
 				Controller.getInstance(mActivity).saveDashboardItems(mPageIndex, mGateId, mAdapter.getItems());
 			}

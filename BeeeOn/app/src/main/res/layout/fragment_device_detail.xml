@@ -34,7 +34,6 @@
                 android:layout_marginStart="@dimen/space_double"
                 android:layout_marginTop="?attr/actionBarSize"
                 android:background="@drawable/oval_primary"
-                android:padding="@dimen/space_normal"
                 android:src="@drawable/ic_settings_input_antenna_black_24dp"
                 android:tint="@color/white"
                 app:layout_collapseMode="parallax"

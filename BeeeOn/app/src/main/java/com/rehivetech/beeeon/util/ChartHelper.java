@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
-import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -12,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.Chart;
@@ -324,12 +322,8 @@ final public class ChartHelper {
 		legend.setWordWrapEnabled(true);
 
 
-		TextView tempText = new TextView(context);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			tempText.setTextAppearance(R.style.TextAppearance_AppCompat_Body1);
-		} else {
-			tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Body1);
-		}
+		AppCompatTextView tempText = new AppCompatTextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Body1);
 
 		legend.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
 		legend.setFormSize(Utils.convertPixelsToDp(tempText.getTextSize()));
@@ -440,7 +434,7 @@ final public class ChartHelper {
 		boolean barChart = (dataSet instanceof BarDataSet);
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
-		Log.d(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString()));
+		Log.v(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString()));
 
 		dataSet.clear();
 
@@ -467,7 +461,7 @@ final public class ChartHelper {
 
 		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
 
-		Log.d(TAG, String.format("Computing %d values", (end - start) / everyMsecs));
+		Log.v(TAG, String.format("Computing %d values", (end - start) / everyMsecs));
 
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {

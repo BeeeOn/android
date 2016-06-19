@@ -57,7 +57,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.OrderedRealmCollection;
@@ -80,13 +80,13 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	private static final int DIALOG_REQUEST_SERVER_DETAIL = 1;
 	private static final double ICON_SLIDE_THRESHOLD = 0.2;
 
-	@Bind(android.R.id.content)
+	@BindView(android.R.id.content)
 	View mRootView;
-	@Bind(R.id.login_select_server)
+	@BindView(R.id.login_select_server)
 	RecyclerView mLoginSelectServerRecyclerView;
-	@Bind(R.id.login_bottom_sheet)
+	@BindView(R.id.login_bottom_sheet)
 	NestedScrollView mBottomSheet;
-	@Bind(R.id.login_select_server_icon)
+	@BindView(R.id.login_select_server_icon)
 	ImageView mSelectServerIcon;
 
 	private BetterProgressDialog mProgress;
@@ -130,7 +130,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		prepareServers();
 
 		// Do automatic login if we have remembered last logged in user
-		mAuthProvider = controller.getLastAuthProvider();
+		mAuthProvider = Persistence.getLastAuthProvider();
 		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
 			// Automatic login with last used provider
 			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter()));
@@ -732,13 +732,12 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		final TextInputLayout serverNameView = ButterKnife.findById(view, R.id.server_name);
 		final TextInputLayout serverHostView = ButterKnife.findById(view, R.id.server_host);
 		final TextInputLayout serverPortView = ButterKnife.findById(view, R.id.server_port);
-		final TextInputLayout serverVerifyView = ButterKnife.findById(view, R.id.server_url_verify);
-		if (!Validator.validateAll(serverNameView, serverHostView, serverVerifyView) || !Validator.validate(serverPortView, Validator.PORT)) {
+		if (!Validator.validateAll(serverNameView, serverHostView) || !Validator.validate(serverPortView, Validator.PORT)) {
 			return;
 		}
 
 		// checking if edit text (because of lint, checked already in validation)
-		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null || serverVerifyView.getEditText() == null) {
+		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null) {
 			Log.e(TAG, "There is none EditText inside TextInputLayout!");
 			return;
 		}
@@ -768,7 +767,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				server.name = serverNameView.getEditText().getText().toString();
 				server.address = serverHostView.getEditText().getText().toString();
 				server.port = Integer.parseInt(serverPortView.getEditText().getText().toString());
-				server.verifyHostname = serverVerifyView.getEditText().getText().toString();
 				if (finalCertificate != null) {
 					server.setCertificate(finalCertificate);
 				}

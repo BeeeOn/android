@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.model;
 
-import android.content.Context;
-
-import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.model.entity.Server;
 
@@ -27,8 +24,7 @@ public class DatabaseSeed implements Realm.Transaction {
 				Server.SERVER_ID_DEVEL,
 				R.string.server_development,
 				"ant-2.fit.vutbr.cz",
-				4566,
-				"ant-2.fit.vutbr.cz"
+				4566
 		);
 		realm.copyToRealm(devel);
 	}

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -17,7 +18,7 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
- * <p>
+ * <p/>
  * When user is not logged in, it will switch to LoginActivity automatically.
  * Provides useful methods for using CallbackTasks.
  */
@@ -85,6 +86,16 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	}
 
 	/**
+	 * Logouts from application and redirects to login
+	 */
+	public void logout() {
+		Controller.getInstance(this).logout(false);
+		Intent intent = new Intent(this, LoginActivity.class);
+		startActivity(intent);
+		this.finish();
+	}
+
+	/**
 	 * Method that receives Notifications.
 	 */
 	public boolean receiveNotification(final IGcmNotification notification) {
@@ -147,4 +158,18 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
 	}
 
+	/**
+	 * Safely replaces fragment (stops any tasks, disables refresh icon)
+	 *
+	 * @param fragment to be shown
+	 * @param tag      for the fragment
+	 */
+	public void fragmentReplace(Fragment fragment, String tag) {
+		callbackTaskManager.cancelAndRemoveAll();
+		setupRefreshIcon(null);
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.main_content_frame, fragment, tag)
+				.commit();
+	}
 }

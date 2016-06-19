@@ -47,14 +47,17 @@ import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.model.place.Place;
 import com.rehivetech.beeeon.util.Utils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
+import icepick.State;
 
 import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
 
 /**
- * Created by martin on 20.3.16.
+ * @author martin
+ * @since 20.3.16
  */
 public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFragment implements OnMapReadyCallback, AdapterView.OnItemClickListener {
 	private static final String TAG = AddDashboardVentilationItemFragment.class.getSimpleName();
@@ -64,8 +67,6 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	private static final String ARG_OUTSIDE_MODULE_ITEM = "outside_module_item";
 	private static final String ARG_LOCATION = "location";
 	private static final String ARG_OUTSIDE_PROVIDER_TYPE = "outside_provider_type";
-
-	private static final String OUT_STATE_ANIMATION_CALLED = "out_state_animation_called";
 
 	@IntDef({OutSideProviderType.OUTSIDE_TYPE_MODULE, OutSideProviderType.OUTSIDE_TYPE_WEATHER, OutSideProviderType.NONE})
 	private @interface OutSideProviderType {
@@ -81,15 +82,14 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 	private int mOutSideProviderType;
 
 	@Nullable
-	@Bind(R.id.fragment_add_dashboard_item_title)
-	TextView mTitle;
+	@BindView(R.id.fragment_add_dashboard_item_title) TextView mTitle;
+
 	@Nullable
-	@Bind(R.id.fragment_add_dashboard_item_ventilation_location_textview)
+	@BindView(R.id.fragment_add_dashboard_item_ventilation_location_textview)
 	AutoCompleteTextView mAutoCompleteTextView;
 
 	private PlaceAdapter mPlaceAdapter;
 	private GoogleMap mMap;
-	private boolean mBackgroundAnimationCalled = false;
 
 	public static AddDashboardVentilationItemFragment newInstance(int index, String gateId, @Nullable Place location, @Nullable ModuleItem outSideModuleItem, @Nullable ModuleItem insideModuleItem, @Nullable @OutSideProviderType Integer outSideType) {
 
@@ -117,11 +117,6 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 			mInsideModuleItem = args.getParcelable(ARG_INSIDE_MODULE_ITEM);
 			//noinspection ResourceType
 			mOutSideProviderType = args.getInt(ARG_OUTSIDE_PROVIDER_TYPE, OutSideProviderType.NONE);
-
-		}
-
-		if (savedInstanceState != null) {
-			mBackgroundAnimationCalled = savedInstanceState.getBoolean(OUT_STATE_ANIMATION_CALLED);
 		}
 	}
 
@@ -141,7 +136,7 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		}
 		rootView.addView(view, 0);
 
-		ButterKnife.bind(this, rootView);
+		mUnbinder = ButterKnife.bind(this, rootView);
 		return rootView;
 	}
 
@@ -248,20 +243,8 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 		GoogleAnalyticsManager.getInstance().logScreen(GoogleAnalyticsManager.ADD_DASHBOARD_VENTILATION_HELPER_SCREEN);
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		outState.putBoolean(OUT_STATE_ANIMATION_CALLED, mBackgroundAnimationCalled);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ButterKnife.unbind(this);
-	}
-
-	@Nullable
+	@Optional
 	@OnClick(R.id.fragment_add_dashboard_item_ventilation_location_gps_icon)
-	@SuppressWarnings("unused")
 	public void onGpsButtonClicked() {
 		if (!checkLocationPermissions()) {
 			return;
@@ -284,13 +267,13 @@ public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFra
 
 	@Override
 	public void onMapReady(GoogleMap googleMap) {
-		if (Utils.isGooglePlayServicesAvailable(mActivity)) {
-			mMap = googleMap;
-			mMap.getUiSettings().setMyLocationButtonEnabled(false);
-			MapsInitializer.initialize(mActivity);
-			if (mLocation != null) {
-				updateMapCamera(mLocation);
-			}
+		if (!Utils.isGooglePlayServicesAvailable(mActivity)) return;
+
+		mMap = googleMap;
+		mMap.getUiSettings().setMyLocationButtonEnabled(false);
+		MapsInitializer.initialize(mActivity);
+		if (mLocation != null) {
+			updateMapCamera(mLocation);
 		}
 	}
 

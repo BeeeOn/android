@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.util.ActualizationTime;
  * @author david
  * @since 30.05.2016
  */
-public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener, ConfirmDialog.ConfirmDialogListener {
+public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener {
 	private static final String TAG = GateDetailActivity.class.getSimpleName();
 
 	private static final String FRAGMENT_DETAILS = "fragment_details";
@@ -133,25 +133,6 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 		return true;
 	}
 
-	private void doUnregisterGateTask(String gateId) {
-		UnregisterGateTask unregisterGateTask = new UnregisterGateTask(this);
-
-		unregisterGateTask.setListener(new CallbackTask.ICallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					Toast.makeText(GateDetailActivity.this, R.string.gate_detail_toast_gate_removed, Toast.LENGTH_LONG).show();
-					Controller.getInstance(GateDetailActivity.this).removeDashboardView(-1, mGateId);
-					finish();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		this.callbackTaskManager.executeTask(unregisterGateTask, gateId);
-	}
-
 	@Override
 	public void onGateUsersClicked() {
 		Intent intent = new Intent(this, GateUsersActivity.class);
@@ -169,14 +150,5 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 	@Override
 	public void onForceReloadData() {
 		doReloadGateInfo(mGateId, true);
-	}
-
-
-	@Override
-	public void onConfirm(int confirmType, String dataId) {
-		if (confirmType == ConfirmDialog.TYPE_DELETE_GATE) {
-			doUnregisterGateTask(dataId);
-			finish();
-		}
 	}
 }

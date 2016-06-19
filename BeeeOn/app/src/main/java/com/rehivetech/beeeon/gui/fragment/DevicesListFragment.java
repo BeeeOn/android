@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -69,17 +69,17 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 	};
 
-	@Bind(R.id.devices_list_fab)
+	@BindView(R.id.devices_list_fab)
 	FloatingActionMenu mFloatingActionMenu;
-	@Bind(R.id.devices_list_action_add_device)
+	@BindView(R.id.devices_list_action_add_device)
 	public FloatingActionButton mFabAddDevice;
-	@Bind(R.id.devices_list_action_add_gate)
+	@BindView(R.id.devices_list_action_add_gate)
 	public FloatingActionButton mFabAddGate;
-	@Bind(R.id.devices_list_no_items_text)
+	@BindView(R.id.devices_list_no_items_text)
 	public TextView mNoItemsTextView;
-	@Bind(R.id.devices_list_refresh_button)
+	@BindView(R.id.devices_list_refresh_button)
 	public Button mRefreshButton;
-	@Bind(R.id.devices_list_recyclerview)
+	@BindView(R.id.devices_list_recyclerview)
 	RecyclerView mDevicesListRecyclerview;
 
 	public @Nullable ActionMode mActionMode;
@@ -159,7 +159,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_devices_list, container, false);
-		ButterKnife.bind(this, rootView);
+		mUnbinder = ButterKnife.bind(this, rootView);
 
 		// recyclerview
 		mDeviceAdapter = new DeviceRecycleAdapter(getActivity(), this, false);
@@ -180,12 +180,14 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	@OnClick(R.id.devices_list_action_add_device)
 	public void onClickAddDevice() {
+		mFloatingActionMenu.close(false);
 		Intent intent = AddDeviceActivity.prepareAddDeviceActivityIntent(mActivity, mActiveGateId, AddDeviceActivity.ACTION_INITIAL, null);
 		mActivity.startActivityForResult(intent, Constants.ADD_DEVICE_REQUEST_CODE);
 	}
 
 	@OnClick(R.id.devices_list_action_add_gate)
 	public void onClickAddGate() {
+		mFloatingActionMenu.close(false);
 		Intent intent = new Intent(getActivity(), AddGateActivity.class);
 		mActivity.startActivityForResult(intent, Constants.ADD_GATE_REQUEST_CODE);
 	}
@@ -255,7 +257,7 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 		}
 
 		// prevent for showing based on user's role
-		mFabAddDevice.setVisibility(controller.isUserAllowed(activeGate.getRole()) ? View.VISIBLE : View.GONE);
+		mFabAddDevice.setVisibility(controller.isUserAllowed(activeGate.getRole()) ? mFabAddDevice.getVisibility(): View.GONE);
 
 		mActiveGateId = activeGate.getId();
 		doReloadDevicesTask(mActiveGateId, false);
@@ -445,8 +447,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 	/**
 	 * When confirmed dialog -> Deleting device from list
 	 *
-	 * @param confirmType
-	 * @param dataId
+	 * @param confirmType which dialog requested confirmation
+	 * @param dataId      any string data sent through dialog
 	 */
 	@Override
 	public void onConfirm(int confirmType, String dataId) {

@@ -3,15 +3,19 @@ package com.rehivetech.beeeon.network.authentication;
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.RequiresPermission;
 import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -32,6 +36,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.R.attr.description;
 
 public class GoogleAuthProvider implements IAuthProvider {
 	private static final String TAG = GoogleAuthProvider.class.getSimpleName();
@@ -179,7 +185,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 				public void run() {
 					try {
 						// Load token from Google server and save it
-						String token = GoogleAuthUtil.getToken(activity, mEmail, SCOPE);
+						String token = GoogleAuthUtil.getToken(activity, new Account(mEmail, "user"), SCOPE);
 
 						Intent data = new Intent();
 						data.putExtra(AUTH_INTENT_DATA_TOKEN, token);
@@ -266,25 +272,16 @@ public class GoogleAuthProvider implements IAuthProvider {
 			}
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-			// On any error (either expected or unexpected) we are closing this activity, so we hide webView immediately
-			view.setVisibility(View.INVISIBLE);
+			handleWebviewError(view, errorCode, failingUrl);
+		}
 
-			if (!done) {
-				done = true;
-
-				if ((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(REDIRECT_URL)) {
-					Log.w(TAG, String.format("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl));
-					finishWebLoginAuth(failingUrl);
-				} else {
-					Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
-
-					// Report error to caller
-					mActivity.setResult(IAuthProvider.RESULT_ERROR);
-					mActivity.finish();
-				}
-			}
+		@TargetApi(Build.VERSION_CODES.M)
+		@Override
+		public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+			handleWebviewError(view, error.getErrorCode(), request.getUrl().toString());
 		}
 
 		@Override
@@ -310,6 +307,26 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 			mFinishLoginTask = new FinishLoginTask(code);
 			mFinishLoginTask.execute();
+		}
+
+		private void handleWebviewError(WebView view, int errorCode, String failingUrl) {
+			// On any error (either expected or unexpected) we are closing this activity, so we hide webView immediately
+			view.setVisibility(View.INVISIBLE);
+
+			if (!done) {
+				done = true;
+
+				if ((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(REDIRECT_URL)) {
+					Log.w(TAG, String.format("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl));
+					finishWebLoginAuth(failingUrl);
+				} else {
+					Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
+
+					// Report error to caller
+					mActivity.setResult(IAuthProvider.RESULT_ERROR);
+					mActivity.finish();
+				}
+			}
 		}
 
 		private class FinishLoginTask extends AsyncTask<Void, Void, String> {

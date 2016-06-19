@@ -1,12 +1,8 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebResourceError;
-import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -14,7 +10,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -24,8 +20,8 @@ import butterknife.ButterKnife;
 public class WebViewActivity extends BaseApplicationActivity {
 
 	public static final String EXTRA_URL_ADDRESS = "url_address";
-	@Bind(R.id.webview_progressbar) ProgressBar mWebviewProgressbar;
-	@Bind(R.id.webview_container) WebView mWebView;
+	@BindView(R.id.webview_progressbar) ProgressBar mWebviewProgressbar;
+	@BindView(R.id.webview_container) WebView mWebView;
 
 	@SuppressLint("SetJavaScriptEnabled")
 	@Override

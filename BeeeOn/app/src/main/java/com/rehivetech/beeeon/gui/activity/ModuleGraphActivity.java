@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,7 +35,7 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -56,17 +55,17 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	private String mDeviceId;
 	private String mModuleId;
 
-	@Bind(R.id.module_graph_act_value)
+	@BindView(R.id.module_graph_act_value)
 	TextView mActValue;
-	@Bind(R.id.module_graph_tab_layoout)
+	@BindView(R.id.module_graph_tab_layoout)
 	TabLayout mTabLayout;
-	@Bind(R.id.module_graph_view_pager)
+	@BindView(R.id.module_graph_view_pager)
 	ViewPager mViewPager;
-	@Bind(R.id.module_graph_botom_sheet_layout)
+	@BindView(R.id.module_graph_botom_sheet_layout)
 	BottomSheetLayout mBottomSheetLayout;
-	@Bind(R.id.module_graph_fab)
+	@BindView(R.id.module_graph_fab)
 	FloatingActionButton mFab;
-	@Bind(R.id.module_graph_show_legend_btn)
+	@BindView(R.id.module_graph_show_legend_btn)
 	Button mShowLegendButton;
 
 	private GraphSettings mGraphSettings;
@@ -169,12 +168,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	public void onBackPressed() {
 		super.onBackPressed();
 		callbackTaskManager.cancelAndRemoveAll();
-	}
-
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		ButterKnife.unbind(this);
 	}
 
 	@OnClick(R.id.module_graph_fab)

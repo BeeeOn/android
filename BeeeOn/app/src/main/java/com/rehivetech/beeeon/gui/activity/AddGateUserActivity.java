@@ -22,7 +22,7 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.AddUserTask;
 import com.rehivetech.beeeon.util.Validator;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -31,8 +31,8 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 	public static final String EXTRA_GATE_ID = "gate_id";
 
 	protected static final String TAG = "AddGateUserActivity";
-	@Bind(R.id.gate_user_add_user_email) TextInputLayout mGateUserAddUserEmail;
-	@Bind(R.id.gate_user_add_user_role) Spinner mGateUserAddUserRole;
+	@BindView(R.id.gate_user_add_user_email) TextInputLayout mGateUserAddUserEmail;
+	@BindView(R.id.gate_user_add_user_role) Spinner mGateUserAddUserRole;
 
 	private Gate mGate;
 	private User mNewUser;

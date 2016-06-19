@@ -428,8 +428,8 @@
     <!--Dashboard-->
     <string name="dashboard_no_items">Pohľad je prázdny</string>
     <string name="dashboard_view">Pohľad %s</string>
-    <string name="dashboard_add_item">Pridať novú položku</string>
-    <string name="dashboard_add_view">Pridať nový pohľad</string>
+    <string name="dashboard_add_item">Pridať kartu</string>
+    <string name="dashboard_add_view">Pridať pohľad</string>
     <string name="dashboard_delete_view">Odstrániť pohľad</string>
     <string name="dashboard_delete_view_x">Odstrániť pohľad %s</string>
     <string name="dashboard_delete_view_message">Všetky položky z pohľadu budu vymazané</string>
@@ -499,7 +499,6 @@
     <string name="server_detail_title_create">Vytvoriť server</string>
     <string name="server_detail_title_edit">Upraviť server</string>
     <string name="server_detail_certificate">Certifikát</string>
-    <string name="server_detail_url_verify">URL na overenie</string>
     <string name="permission_storage_warning">Ak chcete načítať súbor zo zariadenia, musíte povoliť oprávnenie.</string>
     <string name="server_detail_certificate_button">Vybrať X.509 certifikát</string>
     <string name="server_detail_certificate_not_selected">Je potrebné zvoliť certifikát</string>
