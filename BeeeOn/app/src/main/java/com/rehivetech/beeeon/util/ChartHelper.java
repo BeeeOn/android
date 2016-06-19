@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.util;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
-import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -12,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
 import com.github.mikephil.charting.charts.Chart;
@@ -324,12 +322,8 @@ final public class ChartHelper {
 		legend.setWordWrapEnabled(true);
 
 
-		TextView tempText = new TextView(context);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-			tempText.setTextAppearance(R.style.TextAppearance_AppCompat_Body1);
-		} else {
-			tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Body1);
-		}
+		AppCompatTextView tempText = new AppCompatTextView(context);
+		tempText.setTextAppearance(context, R.style.TextAppearance_AppCompat_Body1);
 
 		legend.setTextSize(Utils.convertPixelsToDp(tempText.getTextSize()));
 		legend.setFormSize(Utils.convertPixelsToDp(tempText.getTextSize()));

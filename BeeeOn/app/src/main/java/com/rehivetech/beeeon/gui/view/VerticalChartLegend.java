@@ -6,9 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.IntDef;
 import android.support.annotation.StyleRes;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
@@ -62,7 +62,7 @@ public class VerticalChartLegend<T extends DataSet<? extends Entry>> extends Vie
 		mTextResId = R.style.TextAppearance_AppCompat_Body1;
 
 		//create textView for styling paint
-		TextView text = new TextView(context);
+		AppCompatTextView text = new AppCompatTextView(context);
 		text.setTextAppearance(context, mTextResId);
 
 		mPaint = new Paint();
