@@ -185,7 +185,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 				public void run() {
 					try {
 						// Load token from Google server and save it
-						String token = GoogleAuthUtil.getToken(activity, new Account(mEmail, "user"), SCOPE);
+						String token = GoogleAuthUtil.getToken(activity, mEmail, SCOPE);
 
 						Intent data = new Intent();
 						data.putExtra(AUTH_INTENT_DATA_TOKEN, token);
