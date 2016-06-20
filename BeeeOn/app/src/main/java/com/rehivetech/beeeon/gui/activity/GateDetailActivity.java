@@ -12,14 +12,12 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.dialog.ConfirmDialog;
 import com.rehivetech.beeeon.gui.fragment.GateDetailFragment;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
-import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
 
 /**
@@ -109,7 +107,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(createReloadGateInfoTask(forceReload), gateId, CallbackTaskManager.PROGRESS_ICON);
+		callbackTaskManager.executeTask(createReloadGateInfoTask(forceReload), CallbackTaskManager.PROGRESS_ICON, gateId);
 	}
 
 	@Override

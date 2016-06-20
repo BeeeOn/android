@@ -87,10 +87,10 @@ public class CallbackTaskManager {
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 	 *
 	 * @param task              task to be executed
-	 * @param param             param for the task
 	 * @param progressIndicator what kind of progress indicator this task should show in Activity
+	 * @param params            param for the task
 	 */
-	public <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T param, @ProgressIndicator int progressIndicator) {
+	public <T> void executeTask(@Nullable CallbackTask<T> task, @ProgressIndicator int progressIndicator, @Nullable T... params) {
 		// Check if we've got task object
 		if (task == null)
 			return;
@@ -111,8 +111,8 @@ public class CallbackTaskManager {
 		addTask(task);
 
 		// Execute task
-		if (param != null) {
-			task.execute(param);
+		if (params != null) {
+			task.execute(params);
 		} else {
 			task.execute();
 		}
@@ -127,31 +127,7 @@ public class CallbackTaskManager {
 	 */
 	@SafeVarargs
 	public final <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T... params) {
-		// Check if we've got task object
-		if (task == null)
-			return;
-
-		// TODO: check if it makes sense to start the task (data are expired, etc.) - need implementation in each particular task
-		/*if (!task.needRun()) {
-			return;
-		}*/
-
-		// Don't wait for task's preExecuteCallback for showing progressbar and show it immediately
-		// because when switching activities there could be still running previous task which would postpone executing of this one
-		setProgressIndicator(PROGRESS_ICON, true);
-
-		// Prepare listeners for showing/hiding progress indicator
-		prepareTaskListeners(task, PROGRESS_ICON);
-
-		// Remember task
-		addTask(task);
-
-		// Execute task
-		if (params != null) {
-			task.execute(params);
-		} else {
-			task.execute();
-		}
+		executeTask(task, PROGRESS_ICON, params);
 	}
 
 	/**
