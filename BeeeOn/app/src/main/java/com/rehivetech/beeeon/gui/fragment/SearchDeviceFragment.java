@@ -275,7 +275,6 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 						if (mCountDownTimer != null) {
 							mCountDownTimer.cancel();
 						}
-						mActivity.callbackTaskManager.cancelAndRemoveAll();
 						mActivity.finish();
 					}
 				}

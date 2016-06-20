@@ -89,7 +89,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		Controller.getInstance(this).getGcmModel().unregisterNotificationReceiver(this);
 
 		// Cancel and remove all remembered tasks
-		callbackTaskManager.cancelAndRemoveAll();
+		callbackTaskManager.cancelAllTasks();
 
 		// Hide progress dialog if it is showing
 		setProgressDialogVisibility(false);
@@ -138,7 +138,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 	/**
 	 * When set, refresh icon will be shown in Toolbar and when async task running, icon will be hidden/visible
-	 * {@link #setBeeeOnProgressBarVisibility(boolean)} changes visibility of icon
+	 * {@link #setRefreshIconProgress(boolean)} changes visibility of icon
 	 *
 	 * @param onClickListener Callback for refresh icon
 	 */
@@ -172,7 +172,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	 *
 	 * @param isRefreshing whether progressbar will be shown/hidden && refresh icon vice versa
 	 */
-	public synchronized void setBeeeOnProgressBarVisibility(boolean isRefreshing) {
+	public synchronized void setRefreshIconProgress(boolean isRefreshing) {
 		// check if listener was set, otherwise do nothing
 		if (mOnRefreshClickListener == null) return;
 
@@ -201,7 +201,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	 * @param tag      for the fragment
 	 */
 	public void fragmentReplace(Fragment fragment, String tag) {
-		callbackTaskManager.cancelAndRemoveAll();
+		callbackTaskManager.cancelAllTasks();
 		setupRefreshIcon(null);
 		getSupportFragmentManager()
 				.beginTransaction()

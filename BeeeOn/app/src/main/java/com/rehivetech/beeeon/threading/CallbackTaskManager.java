@@ -33,7 +33,6 @@ public class CallbackTaskManager {
 	public static final int PROGRESS_ICON = 1;
 	public static final int PROGRESS_DIALOG = 2;
 
-
 	/**
 	 * Holder for running tasks that we need to stop when activity is being stopped.
 	 */
@@ -46,17 +45,16 @@ public class CallbackTaskManager {
 
 	private final BaseApplicationActivity mActivity;
 
-	private Timer mTimer;
+	@Nullable private Timer mTimer;
 
 	public CallbackTaskManager(@NonNull BaseApplicationActivity activity) {
 		mActivity = activity;
 	}
 
-	public void addTask(CallbackTask task) {
-		mTasks.add(task);
-	}
-
-	public void cancelAndRemoveAll() {
+	/**
+	 * Cancels all scheduled tasks
+	 */
+	public void cancelAllTasks() {
 		// Cancel and remove all tasks
 		Iterator<CallbackTask> tasksIterator = mTasks.iterator();
 		while (tasksIterator.hasNext()) {
@@ -79,7 +77,7 @@ public class CallbackTaskManager {
 		}
 
 		// Hide progressbar and dialog when cancelling tasks
-		mActivity.setBeeeOnProgressBarVisibility(false);
+		mActivity.setRefreshIconProgress(false);
 		mActivity.setProgressDialogVisibility(false);
 	}
 
@@ -108,7 +106,7 @@ public class CallbackTaskManager {
 		prepareTaskListeners(task, progressIndicator);
 
 		// Remember task
-		addTask(task);
+		mTasks.add(task);
 
 		// Execute task
 		if (params != null) {
@@ -275,7 +273,7 @@ public class CallbackTaskManager {
 			case PROGRESS_NONE:
 				break;
 			case PROGRESS_ICON:
-				mActivity.setBeeeOnProgressBarVisibility(isInProgress);
+				mActivity.setRefreshIconProgress(isInProgress);
 				break;
 			case PROGRESS_DIALOG:
 				mActivity.setProgressDialogVisibility(isInProgress);
