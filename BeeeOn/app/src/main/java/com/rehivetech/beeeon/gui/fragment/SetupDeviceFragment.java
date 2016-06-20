@@ -215,6 +215,6 @@ public class SetupDeviceFragment extends BaseApplicationFragment {
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(initializeDeviceTask, CallbackTaskManager.PROGRESS_DIALOG, pair);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_DIALOG, initializeDeviceTask, pair);
 	}
 }

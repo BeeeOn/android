@@ -281,7 +281,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 			}
 		});
 
-		mActivity.callbackTaskManager.executeTask(pairDeviceTask, CallbackTaskManager.PROGRESS_NONE, mGateId);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_NONE, pairDeviceTask, mGateId);
 	}
 
 	/**
@@ -471,7 +471,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 		// run async task
 		progressBar.setVisibility(View.VISIBLE);
-		mActivity.callbackTaskManager.executeTask(parameterTask, CallbackTaskManager.PROGRESS_NONE, Pair.create("password", editText.getText().toString()));
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_NONE, parameterTask, Pair.create("password", editText.getText().toString()));
 	}
 
 	@Override

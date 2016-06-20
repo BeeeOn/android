@@ -78,7 +78,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(reloadGateInfoTask, CallbackTaskManager.PROGRESS_ICON, gateId);
+		callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_ICON, reloadGateInfoTask, gateId);
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 				}
 			}
 		});
-		callbackTaskManager.executeTask(editGateTask, CallbackTaskManager.PROGRESS_DIALOG, pair);
+		callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_DIALOG, editGateTask, pair);
 	}
 
 	private void doUnregisterGateTask(String gateId) {

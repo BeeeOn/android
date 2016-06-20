@@ -184,6 +184,6 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(registerGateTask, CallbackTaskManager.PROGRESS_DIALOG, gate);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_DIALOG, registerGateTask, gate);
 	}
 }

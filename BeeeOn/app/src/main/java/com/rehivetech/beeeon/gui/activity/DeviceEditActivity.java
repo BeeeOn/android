@@ -92,7 +92,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 				}
 			}
 		});
-		callbackTaskManager.executeTask(saveDeviceTask, CallbackTaskManager.PROGRESS_DIALOG, pair);
+		callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_DIALOG, saveDeviceTask, pair);
 	}
 
 	private void doRemoveDeviceTask(Device device) {

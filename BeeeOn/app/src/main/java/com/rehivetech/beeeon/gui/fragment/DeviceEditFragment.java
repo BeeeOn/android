@@ -275,7 +275,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		});
 
 		mIsShownDialog = false;
-		mActivity.callbackTaskManager.executeTask(addLocationTask, CallbackTaskManager.PROGRESS_DIALOG, location);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_DIALOG, addLocationTask, location);
 	}
 
 	/**

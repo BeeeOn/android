@@ -83,12 +83,11 @@ public class CallbackTaskManager {
 
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-	 *
+	 *  @param progressIndicator what kind of progress indicator this task should show in Activity
 	 * @param task              task to be executed
-	 * @param progressIndicator what kind of progress indicator this task should show in Activity
 	 * @param params            param for the task
 	 */
-	public <T> void executeTask(@Nullable CallbackTask<T> task, @ProgressIndicator int progressIndicator, @Nullable T... params) {
+	public <T> void executeTask(@ProgressIndicator int progressIndicator, @Nullable CallbackTask<T> task, @Nullable T... params) {
 		// Check if we've got task object
 		if (task == null)
 			return;
@@ -125,7 +124,7 @@ public class CallbackTaskManager {
 	 */
 	@SafeVarargs
 	public final <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T... params) {
-		executeTask(task, PROGRESS_ICON, params);
+		executeTask(PROGRESS_ICON, task, params);
 	}
 
 	/**

@@ -203,7 +203,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		});
 
 		// async reload task
-		mActivity.callbackTaskManager.executeTask(mReloadTask, CallbackTaskManager.PROGRESS_ICON, gateId);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_ICON, mReloadTask, gateId);
 
 		updateIntervalLayout();
 
@@ -286,7 +286,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 			}
 		});
 
-		mActivity.callbackTaskManager.executeTask(mReloadTask, CallbackTaskManager.PROGRESS_ICON, gateId);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_ICON, mReloadTask, gateId);
 	}
 
 	/**
