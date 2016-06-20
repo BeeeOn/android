@@ -1,10 +1,16 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
@@ -15,13 +21,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
+import com.rehivetech.beeeon.threading.CallbackTaskManager;
+import com.rehivetech.beeeon.util.Utils;
+
+import java.util.Date;
 
 import icepick.Icepick;
 
@@ -53,10 +67,30 @@ public abstract class BaseActivity extends AppCompatActivity {
 	@Nullable
 	protected View mRefreshIcon;
 
+	@Nullable private View.OnClickListener mOnRefreshClickListener;
+	private Animation mRotation;
+	private long mRefreshAnimStart;
+	private Handler mHandler = new Handler();
+
+	/**
+	 * Runnable handling stopping refresh animation
+	 */
+	private Runnable mStopAnimationRunnable = new Runnable() {
+		@Override
+		public void run() {
+			if (mRefreshIcon != null) {
+				mRefreshAnimStart = 0;
+				mRefreshIcon.clearAnimation();
+			}
+		}
+	};
+
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		//		setLocale();
 		super.onCreate(savedInstanceState);
+		mRotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
+		mRotation.setRepeatCount(Animation.INFINITE);
 		Icepick.restoreInstanceState(this, savedInstanceState);
 	}
 
@@ -214,6 +248,68 @@ public abstract class BaseActivity extends AppCompatActivity {
 	}
 
 	// ------------------------------------------------------- //
+	// -------------------- REFRESH SETUP -------------------- //
+	// ------------------------------------------------------- //
+
+	/**
+	 * When set, refresh icon will be shown in Toolbar and when async task running, icon will be hidden/visible
+	 * {@link #setRefreshIconProgress(boolean)} changes visibility of icon
+	 *
+	 * @param onClickListener Callback for refresh icon
+	 */
+	public void setupRefreshIcon(@Nullable View.OnClickListener onClickListener) {
+		if (mToolbar == null || mRefreshIcon == null) {
+			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
+			return;
+		}
+
+		mOnRefreshClickListener = onClickListener;
+
+		// always show only icon (if set listener)
+		mRefreshIcon.setVisibility(mOnRefreshClickListener != null ? View.VISIBLE : View.INVISIBLE);
+		mRefreshIcon.setOnClickListener(mOnRefreshClickListener);
+		mRefreshIcon.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				// show toast right below the view
+				Toast toast = Toast.makeText(v.getContext(), R.string.toolbar_refresh_title, Toast.LENGTH_SHORT);
+				// toast will be under the view and half from right
+				toast.setGravity(Gravity.TOP | Gravity.END, v.getWidth() - (v.getWidth() / 2), v.getBottom());
+				toast.show();
+				return true;
+			}
+		});
+	}
+
+	/**
+	 * Called from {@link CallbackTaskManager} when task is started/canceled.
+	 * Must be {@link #setupRefreshIcon(View.OnClickListener)} called first!
+	 *
+	 * @param isRefreshing whether progressbar will be shown/hidden && refresh icon vice versa
+	 */
+	public synchronized void setRefreshIconProgress(boolean isRefreshing) {
+		// check if listener was set, otherwise do nothing
+		if (mOnRefreshClickListener == null) return;
+
+		if (mToolbar == null || mRefreshIcon == null) {
+			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
+			return;
+		}
+
+		if (isRefreshing) {
+			mRefreshAnimStart = new Date().getTime();
+			mRefreshIcon.startAnimation(mRotation);
+		} else {
+			Animation animation = mRefreshIcon.getAnimation();
+			if (animation != null) {
+				// calculates time in when animation should be properly stopped
+				long postTime = mRefreshAnimStart + animation.getDuration() - new Date().getTime();
+				mHandler.postDelayed(mStopAnimationRunnable, postTime);
+			}
+		}
+	}
+
+	// ------------------------------------------------------- //
 	// ----------------------- OTHERS ------------------------ //
 	// ------------------------------------------------------- //
 
@@ -229,13 +325,13 @@ public abstract class BaseActivity extends AppCompatActivity {
 	}
 
 	@Override
-	public void onSupportActionModeStarted(ActionMode mode) {
+	public void onSupportActionModeStarted(@NonNull ActionMode mode) {
 		super.onSupportActionModeStarted(mode);
 		setStatusBarColor(ContextCompat.getColor(this, R.color.gray_status_bar));
 	}
 
 	@Override
-	public void onSupportActionModeFinished(ActionMode mode) {
+	public void onSupportActionModeFinished(@NonNull ActionMode mode) {
 		super.onSupportActionModeFinished(mode);
 		setStatusBarColor(ContextCompat.getColor(this, R.color.beeeon_primary_dark));
 	}

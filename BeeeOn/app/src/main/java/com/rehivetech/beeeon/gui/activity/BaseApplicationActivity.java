@@ -31,30 +31,11 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 
 	private boolean triedLoginAlready = false;
-	@Nullable private View.OnClickListener mOnRefreshClickListener;
 	public CallbackTaskManager callbackTaskManager;
-	private Animation mRotation;
-	private long mRefreshAnimStart;
-	private Handler mHandler = new Handler();
-
-	/**
-	 * Runnable handling stopping refresh animation
-	 */
-	private Runnable mStopAnimationRunnable = new Runnable() {
-		@Override
-		public void run() {
-			if (mRefreshIcon != null) {
-				mRefreshAnimStart = 0;
-				mRefreshIcon.clearAnimation();
-			}
-		}
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mRotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
-		mRotation.setRepeatCount(Animation.INFINITE);
 		callbackTaskManager = new CallbackTaskManager(this);
 	}
 
@@ -90,9 +71,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 
 		// Cancel and remove all remembered tasks
 		callbackTaskManager.cancelAllTasks();
-
-		// Hide progress dialog if it is showing
-		setProgressDialogVisibility(false);
 	}
 
 	/**
@@ -130,68 +108,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	public boolean receiveNotification(final IGcmNotification notification) {
 		// FIXME: Leo (or someone else?) should implement correct handling of notifications (showing somewhere in activity or something like that?)
 		return false;
-	}
-
-	// ------------------------------------------------------- //
-	// -------------------- REFRESH SETUP -------------------- //
-	// ------------------------------------------------------- //
-
-	/**
-	 * When set, refresh icon will be shown in Toolbar and when async task running, icon will be hidden/visible
-	 * {@link #setRefreshIconProgress(boolean)} changes visibility of icon
-	 *
-	 * @param onClickListener Callback for refresh icon
-	 */
-	public void setupRefreshIcon(@Nullable View.OnClickListener onClickListener) {
-		if (mToolbar == null || mRefreshIcon == null) {
-			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
-			return;
-		}
-
-		mOnRefreshClickListener = onClickListener;
-
-		// always show only icon (if set listener)
-		mRefreshIcon.setVisibility(mOnRefreshClickListener != null ? View.VISIBLE : View.INVISIBLE);
-		mRefreshIcon.setOnClickListener(mOnRefreshClickListener);
-		mRefreshIcon.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				// show toast right below the view
-				Toast toast = Toast.makeText(v.getContext(), R.string.toolbar_refresh_title, Toast.LENGTH_SHORT);
-				// toast will be under the view and half from right
-				toast.setGravity(Gravity.TOP | Gravity.END, v.getWidth() - (v.getWidth() / 2), v.getBottom());
-				toast.show();
-				return true;
-			}
-		});
-	}
-
-	/**
-	 * Called from {@link CallbackTaskManager} when task is started/canceled.
-	 * Must be {@link #setupRefreshIcon(View.OnClickListener)} called first!
-	 *
-	 * @param isRefreshing whether progressbar will be shown/hidden && refresh icon vice versa
-	 */
-	public synchronized void setRefreshIconProgress(boolean isRefreshing) {
-		// check if listener was set, otherwise do nothing
-		if (mOnRefreshClickListener == null) return;
-
-		if (mToolbar == null || mRefreshIcon == null) {
-			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
-			return;
-		}
-
-		if (isRefreshing) {
-			mRefreshAnimStart = new Date().getTime();
-			mRefreshIcon.startAnimation(mRotation);
-		} else {
-			Animation animation = mRefreshIcon.getAnimation();
-			if (animation != null) {
-				// calculates time in when animation should be properly stopped
-				long postTime = mRefreshAnimStart + animation.getDuration() - new Date().getTime();
-				mHandler.postDelayed(mStopAnimationRunnable, postTime);
-			}
-		}
 	}
 
 	/**

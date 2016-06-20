@@ -52,7 +52,7 @@ public class CallbackTaskManager {
 	}
 
 	/**
-	 * Cancels all scheduled tasks
+	 * Cancels all scheduled tasks and hides progresses (dialog and icon if set)
 	 */
 	public void cancelAllTasks() {
 		// Cancel and remove all tasks
@@ -83,7 +83,8 @@ public class CallbackTaskManager {
 
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-	 *  @param progressIndicator what kind of progress indicator this task should show in Activity
+	 *
+	 * @param progressIndicator what kind of progress indicator this task should show in Activity
 	 * @param task              task to be executed
 	 * @param params            param for the task
 	 */
