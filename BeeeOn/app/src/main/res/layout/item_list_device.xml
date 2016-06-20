@@ -32,7 +32,7 @@
         android:layout_toEndOf="@+id/list_item_icon"
         android:layout_toRightOf="@+id/list_item_icon"
         android:background="@drawable/oval_red"
-        android:padding="4dp"
+        android:padding="@dimen/space_mini"
         android:src="@drawable/ic_warning_black_24dp"
         android:tint="@color/white"
         android:visibility="gone"
@@ -40,52 +40,21 @@
         />
 
     <TextView
-        android:id="@+id/list_item_additional"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/list_item_icon"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        tools:text="100%"
-        />
-
-    <TextView
         android:id="@+id/list_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/list_item_icon"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginLeft="@dimen/space_double"
+        android:layout_marginStart="@dimen/space_double"
+        android:layout_marginRight="@dimen/space_normal"
+        android:layout_marginEnd="@dimen/space_normal"
         android:layout_marginTop="-2dp"
         android:layout_toEndOf="@id/list_item_icon"
-        android:layout_toLeftOf="@id/list_item_additional"
         android:layout_toRightOf="@id/list_item_icon"
-        android:layout_toStartOf="@id/list_item_additional"
-        android:singleLine="true"
+        android:maxLines="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/beeeon_primary_text"
         tools:text="Device name"
-        />
-
-    <TextView
-        android:id="@+id/list_item_subtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@id/list_item_additional"
-        android:layout_alignLeft="@id/list_item_title"
-        android:layout_alignRight="@id/list_item_additional"
-        android:layout_alignStart="@id/list_item_title"
-        android:layout_below="@id/list_item_title"
-        android:gravity="bottom"
-        android:singleLine="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:textColor="@color/beeeon_secondary_text"
-        tools:text="Device manufacturer"
         />
 
     <TextView
@@ -94,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/list_item_title"
         android:layout_alignStart="@id/list_item_title"
-        android:layout_below="@id/list_item_subtitle"
+        android:layout_below="@id/list_item_title"
         android:gravity="bottom"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
