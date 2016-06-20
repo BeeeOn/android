@@ -51,8 +51,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 	@Nullable
 	protected Toolbar mToolbar;
 	@Nullable
-	protected ProgressBar mProgressBar;
-	@Nullable
 	protected View mRefreshIcon;
 
 	@Override
@@ -171,7 +169,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 		}
 
 		mRefreshIcon = mToolbar.findViewById(R.id.beeeon_toolbar_refresh);
-		mProgressBar = (ProgressBar) mToolbar.findViewById(R.id.beeeon_toolbar_progress);
 
 		return mToolbar;
 	}
