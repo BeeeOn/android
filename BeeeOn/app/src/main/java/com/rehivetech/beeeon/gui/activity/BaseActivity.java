@@ -113,24 +113,28 @@ public abstract class BaseActivity extends AppCompatActivity {
 	}
 
 
-	public synchronized void showProgressDialog() {
-		if (mProgressDialog == null) {
-			// Prepare progress dialog
-			mProgressDialog = new BetterProgressDialog(this);
-			mProgressDialog.setMessageResource(R.string.base_application_progress_saving_data);
-			mProgressDialog.setCancelable(false);
-			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	/**
+	 * Shows/hides progress dialog
+	 *
+	 * @param isVisible whether will be shown or hidden
+	 */
+	public synchronized void setProgressDialogVisibility(boolean isVisible) {
+		if (isVisible) {
+			if (mProgressDialog == null) {
+				// Prepare progress dialog
+				mProgressDialog = new BetterProgressDialog(this);
+				mProgressDialog.setMessageResource(R.string.base_application_progress_saving_data);
+				mProgressDialog.setCancelable(false);
+				mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			}
+
+			mProgressDialog.show();
+		} else {
+			if (mProgressDialog == null || !mProgressDialog.isShowing()) {
+				return;
+			}
+			mProgressDialog.dismiss();
 		}
-
-		mProgressDialog.show();
-	}
-
-	public synchronized void hideProgressDialog() {
-		if (mProgressDialog == null || !mProgressDialog.isShowing()) {
-			return;
-		}
-
-		mProgressDialog.dismiss();
 	}
 
 	// ------------------------------------------------------- //

@@ -109,7 +109,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	private void doReloadGateInfo(final String gateId, boolean forceReload) {
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(createReloadGateInfoTask(forceReload), gateId, CallbackTaskManager.ProgressIndicator.PROGRESS_ICON);
+		callbackTaskManager.executeTask(createReloadGateInfoTask(forceReload), gateId, CallbackTaskManager.PROGRESS_ICON);
 	}
 
 	@Override

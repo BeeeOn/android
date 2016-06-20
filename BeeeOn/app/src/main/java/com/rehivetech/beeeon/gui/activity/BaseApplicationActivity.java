@@ -92,7 +92,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		callbackTaskManager.cancelAndRemoveAll();
 
 		// Hide progress dialog if it is showing
-		hideProgressDialog();
+		setProgressDialogVisibility(false);
 	}
 
 	/**
