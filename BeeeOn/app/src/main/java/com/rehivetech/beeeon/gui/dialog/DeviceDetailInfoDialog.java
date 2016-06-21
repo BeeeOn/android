@@ -14,6 +14,8 @@ import butterknife.ButterKnife;
 /**
  * @author martin
  * @since 20.06.2016
+ *
+ * Dialog used to show additional information about device
  */
 public class DeviceDetailInfoDialog extends BaseBeeeOnDialog {
 
@@ -28,6 +30,13 @@ public class DeviceDetailInfoDialog extends BaseBeeeOnDialog {
 	public String mUuid;
 	public String mManufacture;
 
+	/**
+	 * Helper method which build and show dialog
+	 * @param context app context
+	 * @param fragmentManager support fragmentManager
+	 * @param uuid device uuid to show
+	 * @param manufacture device manufacture to show
+	 */
 	public static void showDialog(Context context, FragmentManager fragmentManager, String uuid, String manufacture) {
 		new DeviceDetailInfoDialogBuilder(context, fragmentManager)
 				.setDeviceUuid(uuid)
@@ -36,6 +45,11 @@ public class DeviceDetailInfoDialog extends BaseBeeeOnDialog {
 				.show();
 	}
 
+	/**
+	 * Forces to specify layout which will be used for this type of dialogs
+	 *
+	 * @return Layout resource id
+	 */
 	@Override
 	public int getLayoutResource() {
 		return R.layout.dialog_device_info;
