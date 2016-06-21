@@ -287,8 +287,13 @@
 
 	<!--Device detail -->
 	<string name="device_detail_menu_edit_title">Edit device</string>
+	<string name="device_detail_menu_show_info">Show additional information</string>
 	<string name="device_detail_list_modules_no_item_title">NO MODULES</string>
 	<string name="device_detail_default_group">Default</string>
+	<string name="device_detail_info_dialog_title">Additional information</string>
+	<string name="device_detail_dialog_manufacture_label">Manufacture</string>
+	<string name="device_detail_dialog_uuid_label">Device id</string>
+
 
 	<!-- Module edit -->
 	<string name="module_edit_label_detail_location">Location</string>

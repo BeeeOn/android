@@ -7,4 +7,11 @@
 		android:title="@string/device_detail_menu_edit_title"
 		android:icon="@drawable/ic_mode_edit_white_24dp"
 		app:showAsAction="ifRoom|collapseActionView"/>
+
+	<item
+		android:id="@+id/device_detail_menu_info"
+		android:title="@string/device_detail_menu_show_info"
+		app:showAsAction="never">
+
+	</item>
 </menu>

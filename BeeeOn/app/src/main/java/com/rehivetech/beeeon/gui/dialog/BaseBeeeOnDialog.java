@@ -136,8 +136,8 @@ public abstract class BaseBeeeOnDialog extends SimpleDialogFragment {
 
 	public static class BaseBeeeOnDialogBuilder extends SimpleDialogFragment.SimpleDialogBuilder {
 
-		public BaseBeeeOnDialogBuilder(Context context, FragmentManager fragmentManager) {
-			super(context, fragmentManager, ServerDetailDialog.class);
+		public BaseBeeeOnDialogBuilder(Context context, FragmentManager fragmentManager, Class<? extends SimpleDialogFragment> clazz) {
+			super(context, fragmentManager, clazz);
 		}
 	}
 
