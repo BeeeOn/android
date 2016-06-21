@@ -61,7 +61,7 @@ class DeviceHandler():
 		if not snapshot.sameAs(other,0.9):
 			self.error("Snaphots are not equal")
 		else:
-			print("OK")
+			print("Snapshots are equal")
 
 	def error(self,msg):
 		print(msg)
