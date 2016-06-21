@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.dialog.DeviceDetailInfoDialog;
 import com.rehivetech.beeeon.gui.fragment.DeviceDetailFragment;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.threading.CallbackTask;
@@ -61,12 +62,17 @@ public class DeviceDetailActivity extends BaseApplicationActivity implements Dev
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if(item.getItemId() == R.id.device_detail_menu_action_edit){
-			Intent intent = new Intent(this, DeviceEditActivity.class);
-			intent.putExtra(EXTRA_GATE_ID, mGateId);
-			intent.putExtra(EXTRA_DEVICE_ID, mDeviceId);
-			startActivity(intent);
-			return true;
+		switch (item.getItemId()) {
+			case R.id.device_detail_menu_action_edit:
+				Intent intent = new Intent(this, DeviceEditActivity.class);
+				intent.putExtra(EXTRA_GATE_ID, mGateId);
+				intent.putExtra(EXTRA_DEVICE_ID, mDeviceId);
+				startActivity(intent);
+				return true;
+			case R.id.device_detail_menu_info:
+				if (mDevice != null) {
+					DeviceDetailInfoDialog.showDialog(this, getSupportFragmentManager(), mDeviceId, getString(mDevice.getType().getManufacturerRes()));
+				}
 		}
 
 		return super.onOptionsItemSelected(item);

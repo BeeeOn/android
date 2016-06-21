@@ -280,8 +280,12 @@
 
     <!--Device detail -->
     <string name="device_detail_menu_edit_title">Editovat zařízení</string>
+    <string name="device_detail_menu_show_info">Zobrazit další informace</string>
     <string name="device_detail_list_modules_no_item_title">ŽÁDNE MODULY</string>
     <string name="device_detail_default_group">Výchozí</string>
+    <string name="device_detail_info_dialog_title">Ďalší informace</string>
+    <string name="device_detail_dialog_manufacture_label">Výrobce</string>
+    <string name="device_detail_dialog_uuid_label">Id zařízení</string>
 
     <!-- Module edit -->
     <string name="module_edit_label_detail_location">Umístění</string>

@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -20,6 +21,9 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author Tomas Mlynaric
@@ -129,30 +133,13 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 
 				deviceHolder.mTitle.setText(device.getName(mContext));
 				if (!mUnpairedDevices) {
-					deviceHolder.mSubTitle.setText(device.getType().getManufacturerRes());
 					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getLastUpdate(), gate) : "");
-				} else {
+				} else if (deviceHolder.mSubTitle != null){
 					deviceHolder.mSubText.setText((mTimeHelper != null && gate != null) ? mTimeHelper.formatLastUpdate(device.getPairedTime(), gate) : "");
 					deviceHolder.mSubTitle.setText(mContext.getString(R.string.device_setup_device_list_paired_label));
 				}
 
-
-				Integer battery = device.getBattery();
-				// no battery, hide info
-				if (!mUnpairedDevices) {
-
-					if (battery == null || battery < 0) {
-						deviceHolder.mAdditional.setVisibility(View.INVISIBLE);
-					}
-					// otherwise set text and show
-					else {
-						deviceHolder.mAdditional.setText(String.format("%d %%", battery));
-						deviceHolder.mAdditional.setVisibility(View.VISIBLE);
-					}
-				}
-
-
-				if (deviceHolder.mIcon != null) {
+				if (deviceHolder.mIcon != null && deviceHolder.mStatusIcon != null) {
 					// sets selected background && icon
 					boolean statusOk = device.getStatus().equals(Status.AVAILABLE);
 
@@ -251,22 +238,26 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	 * ViewHolder for Device data
 	 */
 	public class DeviceViewHolder extends SelectableViewHolder implements View.OnClickListener, View.OnLongClickListener {
+		@BindView(R.id.list_item_title)
 		public TextView mTitle;
-		public ImageView mIcon;
-		public ImageView mStatusIcon;
-		public TextView mSubTitle;
+
+		@BindView(R.id.list_item_icon)
+		@Nullable public ImageView mIcon;
+
+		@BindView(R.id.list_item_status)
+		@Nullable public ImageView mStatusIcon;
+
+		@BindView(R.id.list_item_subtitle)
+		@Nullable public TextView mSubTitle;
+
+		@BindView(R.id.list_item_subtext)
 		public TextView mSubText;
-		public TextView mAdditional;
+
 		public IItemClickListener mListener;
 
 		public DeviceViewHolder(View itemView, IItemClickListener listener) {
 			super(itemView);
-			mTitle = (TextView) itemView.findViewById(R.id.list_item_title);
-			mIcon = (ImageView) itemView.findViewById(R.id.list_item_icon);
-			mStatusIcon = (ImageView) itemView.findViewById(R.id.list_item_status);
-			mSubTitle = (TextView) itemView.findViewById(R.id.list_item_subtitle);
-			mSubText = (TextView) itemView.findViewById(R.id.list_item_subtext);
-			mAdditional = (TextView) itemView.findViewById(R.id.list_item_additional);
+			ButterKnife.bind(this, itemView);
 			mListener = listener;
 
 			itemView.setOnClickListener(this);
@@ -294,13 +285,12 @@ public class DeviceRecycleAdapter extends RecyclerViewSelectableAdapter<Recycler
 	 * ViewHolder for Header
 	 */
 	public static class HeaderViewHolder extends RecyclerView.ViewHolder {
+		@BindView(R.id.list_location_header_text)
 		public TextView mHeader;
-		//public View mDivider;
 
 		public HeaderViewHolder(View itemView) {
 			super(itemView);
-			mHeader = (TextView) itemView.findViewById(R.id.list_location_header_text);
-			//mDivider = itemView.findViewById(R.id.list_module_item_sep_middle);
+			ButterKnife.bind(this, itemView);
 		}
 	}
 

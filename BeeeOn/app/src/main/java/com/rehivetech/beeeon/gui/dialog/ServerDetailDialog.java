@@ -302,7 +302,7 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 		private long mServerId;
 
 		public ServerDetailDialogBuilder(Context context, FragmentManager fragmentManager) {
-			super(context, fragmentManager);
+			super(context, fragmentManager, ServerDetailDialog.class);
 		}
 
 		public ServerDetailDialogBuilder setServerId(long serverId) {
