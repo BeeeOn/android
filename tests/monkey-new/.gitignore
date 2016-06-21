@@ -2,3 +2,5 @@
 /log.out
 /err_seeds
 /tmp
+**/*.apk
+**/.idea/*
