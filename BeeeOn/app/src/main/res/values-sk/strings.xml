@@ -281,8 +281,12 @@
 
     <!--Device detail -->
     <string name="device_detail_menu_edit_title">Editovať zariadenie</string>
+    <string name="device_detail_menu_show_info">Zobraziť ďalšie informácie</string>
     <string name="device_detail_list_modules_no_item_title">ŽIADNE MODULY</string>
     <string name="device_detail_default_group">Východzia</string>
+    <string name="device_detail_info_dialog_title">Ďalšie informácie</string>
+    <string name="device_detail_dialog_manufacture_label">Výrobca</string>
+    <string name="device_detail_dialog_uuid_label">Id zariadenia</string>
 
     <!-- Module edit -->
     <string name="module_edit_label_detail_location">Umiestnenie</string>
