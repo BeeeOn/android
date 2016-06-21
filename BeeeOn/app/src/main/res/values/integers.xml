@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="swipe_animation_duration">200</integer>
+    <integer name="refresh_rotate_duration">500</integer>
 </resources>

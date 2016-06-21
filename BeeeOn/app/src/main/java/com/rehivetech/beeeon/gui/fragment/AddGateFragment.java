@@ -25,7 +25,6 @@ import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RegisterGateTask;
-import com.rehivetech.beeeon.util.Utils;
 import com.rehivetech.beeeon.util.Validator;
 
 import org.joda.time.DateTimeZone;
@@ -185,6 +184,6 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 			}
 		});
 		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(registerGateTask, gate, CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_DIALOG, registerGateTask, gate);
 	}
 }

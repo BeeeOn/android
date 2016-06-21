@@ -1,7 +1,9 @@
 package com.rehivetech.beeeon.threading;
 
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.exception.AppException;
@@ -20,7 +22,16 @@ import java.util.TimerTask;
 
 public class CallbackTaskManager {
 
-	private static final String TAG = CallbackTaskManager.class.getSimpleName();
+	/**
+	 * Progress indicator types when task is executing
+	 */
+	@IntDef({PROGRESS_NONE, PROGRESS_ICON, PROGRESS_DIALOG})
+	public @interface ProgressIndicator {
+	}
+
+	public static final int PROGRESS_NONE = 0;
+	public static final int PROGRESS_ICON = 1;
+	public static final int PROGRESS_DIALOG = 2;
 
 	/**
 	 * Holder for running tasks that we need to stop when activity is being stopped.
@@ -34,17 +45,16 @@ public class CallbackTaskManager {
 
 	private final BaseApplicationActivity mActivity;
 
-	private Timer mTimer;
+	@Nullable private Timer mTimer;
 
 	public CallbackTaskManager(@NonNull BaseApplicationActivity activity) {
 		mActivity = activity;
 	}
 
-	public void addTask(CallbackTask task) {
-		mTasks.add(task);
-	}
-
-	public void cancelAndRemoveAll() {
+	/**
+	 * Cancels all scheduled tasks and hides progresses (dialog and icon if set)
+	 */
+	public void cancelAllTasks() {
 		// Cancel and remove all tasks
 		Iterator<CallbackTask> tasksIterator = mTasks.iterator();
 		while (tasksIterator.hasNext()) {
@@ -67,18 +77,18 @@ public class CallbackTaskManager {
 		}
 
 		// Hide progressbar and dialog when cancelling tasks
-		mActivity.setBeeeOnProgressBarVisibility(false);
-		mActivity.hideProgressDialog();
+		mActivity.setRefreshIconProgress(false);
+		mActivity.setProgressDialogVisibility(false);
 	}
 
 	/**
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 	 *
-	 * @param task            		task to be executed
-	 * @param param           		param for the task
 	 * @param progressIndicator what kind of progress indicator this task should show in Activity
+	 * @param task              task to be executed
+	 * @param params            param for the task
 	 */
-	public <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T param, ProgressIndicator progressIndicator) {
+	public <T> void executeTask(@ProgressIndicator int progressIndicator, @Nullable CallbackTask<T> task, @Nullable T... params) {
 		// Check if we've got task object
 		if (task == null)
 			return;
@@ -90,49 +100,13 @@ public class CallbackTaskManager {
 
 		// Don't wait for task's preExecuteCallback for showing progressbar and show it immediately
 		// because when switching activities there could be still running previous task which would postpone executing of this one
-		showProgressIndicator(progressIndicator);
+		setProgressIndicator(progressIndicator, true);
 
 		// Prepare listeners for showing/hiding progress indicator
 		prepareTaskListeners(task, progressIndicator);
 
 		// Remember task
-		addTask(task);
-
-		// Execute task
-		if (param != null) {
-			task.execute(param);
-		} else {
-			task.execute();
-		}
-	}
-
-	/**
-	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
-	 * Shows progress indicator in Activity automatically during its running.
-	 *
-	 * @param task  task to be executed
-	 * @param params param for the task
-	 */
-	@SafeVarargs
-	public final <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T... params) {
-		// Check if we've got task object
-		if (task == null)
-			return;
-
-		// TODO: check if it makes sense to start the task (data are expired, etc.) - need implementation in each particular task
-		/*if (!task.needRun()) {
-			return;
-		}*/
-
-		// Don't wait for task's preExecuteCallback for showing progressbar and show it immediately
-		// because when switching activities there could be still running previous task which would postpone executing of this one
-		showProgressIndicator(ProgressIndicator.PROGRESS_ICON);
-
-		// Prepare listeners for showing/hiding progress indicator
-		prepareTaskListeners(task, ProgressIndicator.PROGRESS_ICON);
-
-		// Remember task
-		addTask(task);
+		mTasks.add(task);
 
 		// Execute task
 		if (params != null) {
@@ -146,10 +120,22 @@ public class CallbackTaskManager {
 	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
 	 * Shows progress indicator in Activity automatically during its running.
 	 *
+	 * @param task   task to be executed
+	 * @param params param for the task
+	 */
+	@SafeVarargs
+	public final <T> void executeTask(@Nullable CallbackTask<T> task, @Nullable T... params) {
+		executeTask(PROGRESS_ICON, task, params);
+	}
+
+	/**
+	 * Add this task to internal list of tasks which will be automatically stopped and removed at activity's onStop() method.
+	 * Shows progress indicator in Activity automatically during its running.
+	 *
 	 * @param task task to be executed
 	 */
 	public <T> void executeTask(@Nullable CallbackTask task) {
-		executeTask(task, (T)null);
+		executeTask(task, (T) null);
 	}
 
 	/**
@@ -189,7 +175,7 @@ public class CallbackTaskManager {
 			oldTask.cancel();
 		}
 
-		mTimer.scheduleAtFixedRate(timerTask, everySecs * 1000, everySecs * 1000);
+		mTimer.scheduleAtFixedRate(timerTask, everySecs * DateUtils.SECOND_IN_MILLIS, everySecs * DateUtils.SECOND_IN_MILLIS);
 	}
 
 	/**
@@ -198,13 +184,13 @@ public class CallbackTaskManager {
 	 * @param task
 	 * @param progressIndicator what kind of progress indicator this task should show in Activity
 	 */
-	private void prepareTaskListeners(final CallbackTask task, final ProgressIndicator progressIndicator) {
+	private void prepareTaskListeners(final CallbackTask task, @ProgressIndicator final int progressIndicator) {
 		final CallbackTask.ICallbackTaskPreExecuteListener origPreListener = task.getPreExecuteListener();
 		task.setPreExecuteListener(new CallbackTask.ICallbackTaskPreExecuteListener() {
 			@Override
 			public void onPreExecute() {
 				// Show progress indicator in activity
-				showProgressIndicator(progressIndicator);
+				setProgressIndicator(progressIndicator, true);
 
 				// Call original listener, if exists
 				if (origPreListener != null) {
@@ -228,7 +214,7 @@ public class CallbackTaskManager {
 
 				// Hide progress indicator in activity if all tasks were executed
 				if (mTasks.size() == 0) {
-					hideProgressIndicator(progressIndicator);
+					setProgressIndicator(progressIndicator, false);
 				}
 
 				// Handle eventual exceptions
@@ -276,36 +262,22 @@ public class CallbackTaskManager {
 		});
 	}
 
-	private void showProgressIndicator(ProgressIndicator type) {
+	/**
+	 * Sets the state of progress indicator
+	 *
+	 * @param type         type of indicator
+	 * @param isInProgress if in progress, animates icon, shows dialog
+	 */
+	private void setProgressIndicator(@ProgressIndicator int type, boolean isInProgress) {
 		switch (type) {
 			case PROGRESS_NONE:
 				break;
 			case PROGRESS_ICON:
-				mActivity.setBeeeOnProgressBarVisibility(true);
+				mActivity.setRefreshIconProgress(isInProgress);
 				break;
 			case PROGRESS_DIALOG:
-				mActivity.showProgressDialog();
+				mActivity.setProgressDialogVisibility(isInProgress);
 				break;
 		}
 	}
-
-	private void hideProgressIndicator(ProgressIndicator type) {
-		switch (type) {
-			case PROGRESS_NONE:
-				break;
-			case PROGRESS_ICON:
-				mActivity.setBeeeOnProgressBarVisibility(false);
-				break;
-			case PROGRESS_DIALOG:
-				mActivity.hideProgressDialog();
-				break;
-		}
-	}
-
-	public enum ProgressIndicator {
-		PROGRESS_NONE,
-		PROGRESS_ICON,
-		PROGRESS_DIALOG,
-	}
-
 }

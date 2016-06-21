@@ -3,11 +3,14 @@ package com.rehivetech.beeeon.gui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
@@ -15,6 +18,8 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
+
+import java.util.Date;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
@@ -26,8 +31,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 
 	private boolean triedLoginAlready = false;
-
-	@Nullable private View.OnClickListener mOnRefreshClickListener;
 	public CallbackTaskManager callbackTaskManager;
 
 	@Override
@@ -36,6 +39,10 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		callbackTaskManager = new CallbackTaskManager(this);
 	}
 
+	/**
+	 * Checks if user is logged in, otherwise redirects to {@link LoginActivity}
+	 * Also registers notification receiver
+	 */
 	@Override
 	protected void onStart() {
 		super.onStart();
@@ -54,16 +61,16 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		controller.getGcmModel().registerNotificationReceiver(this);
 	}
 
+	/**
+	 * Stops receiving notification in activities, stops all callback tasks, hides progress dialog
+	 */
 	@Override
 	public void onStop() {
 		super.onStop();
 		Controller.getInstance(this).getGcmModel().unregisterNotificationReceiver(this);
 
 		// Cancel and remove all remembered tasks
-		callbackTaskManager.cancelAndRemoveAll();
-
-		// Hide progress dialog if it is showing
-		hideProgressDialog();
+		callbackTaskManager.cancelAllTasks();
 	}
 
 	/**
@@ -103,61 +110,6 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 		return false;
 	}
 
-	// ------------------------------------------------------- //
-	// -------------------- REFRESH SETUP -------------------- //
-	// ------------------------------------------------------- //
-
-	/**
-	 * When set, refresh icon will be shown in Toolbar and when async task running, icon will be hidden/visible
-	 * {@link #setBeeeOnProgressBarVisibility(boolean)} changes visibility of icon
-	 *
-	 * @param onClickListener Callback for refresh icon
-	 */
-	public void setupRefreshIcon(@Nullable View.OnClickListener onClickListener) {
-		if (mToolbar == null || mRefreshIcon == null || mProgressBar == null) {
-			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
-			return;
-		}
-
-		mOnRefreshClickListener = onClickListener;
-
-		// always show only icon (if set listener)
-		mRefreshIcon.setVisibility(mOnRefreshClickListener != null ? View.VISIBLE : View.INVISIBLE);
-		mProgressBar.setVisibility(View.INVISIBLE);
-		mRefreshIcon.setOnClickListener(mOnRefreshClickListener);
-		mRefreshIcon.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View v) {
-				// show toast right below the view
-				Toast toast = Toast.makeText(v.getContext(), R.string.toolbar_refresh_title, Toast.LENGTH_SHORT);
-				// toast will be under the view and half from right
-				toast.setGravity(Gravity.TOP | Gravity.END, v.getWidth() - (v.getWidth() / 2), v.getBottom());
-				toast.show();
-				return true;
-			}
-		});
-	}
-
-	/**
-	 * Called from {@link CallbackTaskManager} when task is started/canceled.
-	 * Must be {@link #setupRefreshIcon(View.OnClickListener)} called first!
-	 *
-	 * @param visible whether progressbar will be shown/hidden && refresh icon vice versa
-	 */
-	public synchronized void setBeeeOnProgressBarVisibility(boolean visible) {
-		// check if listener was set, otherwise do nothing
-		if (mOnRefreshClickListener == null) return;
-
-		if (mToolbar == null || mRefreshIcon == null || mProgressBar == null) {
-			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
-			return;
-		}
-
-		// if refresh icon was setup we either show progress or refresh icon
-		mRefreshIcon.setVisibility(visible ? View.INVISIBLE : View.VISIBLE);
-		mProgressBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
-	}
-
 	/**
 	 * Safely replaces fragment (stops any tasks, disables refresh icon)
 	 *
@@ -165,7 +117,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 	 * @param tag      for the fragment
 	 */
 	public void fragmentReplace(Fragment fragment, String tag) {
-		callbackTaskManager.cancelAndRemoveAll();
+		callbackTaskManager.cancelAllTasks();
 		setupRefreshIcon(null);
 		getSupportFragmentManager()
 				.beginTransaction()

@@ -275,14 +275,13 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 						if (mCountDownTimer != null) {
 							mCountDownTimer.cancel();
 						}
-						mActivity.callbackTaskManager.cancelAndRemoveAll();
 						mActivity.finish();
 					}
 				}
 			}
 		});
 
-		mActivity.callbackTaskManager.executeTask(pairDeviceTask, mGateId, CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_NONE, pairDeviceTask, mGateId);
 	}
 
 	/**
@@ -472,7 +471,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 
 		// run async task
 		progressBar.setVisibility(View.VISIBLE);
-		mActivity.callbackTaskManager.executeTask(parameterTask, Pair.create("password", editText.getText().toString()), CallbackTaskManager.ProgressIndicator.PROGRESS_NONE);
+		mActivity.callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_NONE, parameterTask, Pair.create("password", editText.getText().toString()));
 	}
 
 	@Override

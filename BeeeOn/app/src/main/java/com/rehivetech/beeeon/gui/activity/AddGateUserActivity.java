@@ -97,7 +97,7 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 		});
 
 		// Execute and remember task so it can be stopped automatically
-		callbackTaskManager.executeTask(addUserTask, new User.DataPair(user, mGate.getId()), CallbackTaskManager.ProgressIndicator.PROGRESS_DIALOG);
+		callbackTaskManager.executeTask(CallbackTaskManager.PROGRESS_DIALOG, addUserTask, new User.DataPair(user, mGate.getId()));
 	}
 
 	@Override

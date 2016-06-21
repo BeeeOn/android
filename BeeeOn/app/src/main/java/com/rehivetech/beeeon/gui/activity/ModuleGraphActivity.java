@@ -164,12 +164,6 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 		}
 	}
 
-	@Override
-	public void onBackPressed() {
-		super.onBackPressed();
-		callbackTaskManager.cancelAndRemoveAll();
-	}
-
 	@OnClick(R.id.module_graph_fab)
 	@SuppressWarnings("unused")
 	public void onFloatingActionButtonClicked() {
@@ -201,7 +195,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 					mRequestRedrawActiveFragmentCalled = true;
 				}
 
-				callbackTaskManager.cancelAndRemoveAll();
+				callbackTaskManager.cancelAllTasks();
 				initActiveFragment();
 
 				GoogleAnalyticsManager.getInstance().logEvent(GoogleAnalyticsManager.EVENT_CATEGORY_MODULE_GRAPH_DETAIL, GoogleAnalyticsManager.EVENT_ACTION_SELECT_TAB, String.valueOf(position));
@@ -249,12 +243,13 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 
 	@Override
 	public void onDismissed(BottomSheetLayout bottomSheetLayout) {
+		callbackTaskManager.cancelAllTasks();
 		mFab.show(mOnVisibilityChangedListener);
 	}
 
 	@Override
 	public void onButtonDoneClick(boolean minChecked, boolean avgChecked, boolean maxChecked, ModuleLog.DataInterval dataInterval, int sliderProgress) {
-		callbackTaskManager.cancelAndRemoveAll();
+		callbackTaskManager.cancelAllTasks();
 		mBottomSheetLayout.dismissSheet();
 		redrawActiveFragment(minChecked, avgChecked, maxChecked, dataInterval, sliderProgress);
 	}
