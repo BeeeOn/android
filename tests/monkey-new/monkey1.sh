@@ -22,11 +22,18 @@ echo "Executing basic monkey test:"
 adb -s ${device} shell monkey -p ${PACKAGE_NAME} -c android.intent.category.LAUNCHER 1;
 sleep 3
 
-#put some random monkey "clicks"
-for i in $(seq 1 ${ITER}) ; do
-        adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT} >>${LOG_FILE} 2>>${ERR_FILE}
-        sleep 1
+for i in 1 2 3 4 5 
+do
+	adb -s ${device} shell input tap 450 770
 done
+
+adb -s ${device} shell input tap 230 575
+sleep 3
+adb -s ${device} shell input tap 385 515
+
+#put some random monkey "clicks"
+adb -s ${device} shell monkey -p ${PACKAGE_NAME} ${EVENT} >>${LOG_FILE} 2>>${ERR_FILE}
+sleep 1
 
 
 #PID=$(adb shell ps | grep ${APP_NAME} | tr -s ' ' | cut -d ' ' -f 2)
