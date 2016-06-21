@@ -3,6 +3,10 @@
 
 export PACKAGE_NAME="com.rehivetech.beeeon.debug"
 
+if [ -z ${APK_LOCATION}  ] ; then
+	APK_LOCATION="../../artifacts/app-debug.apk"
+fi
+
 #check for parameter --download-new - it is used for getting the .apk file if neccessary
 if [ ! -z ${1} ] ; then
 	if [ ${1} == "--download-new" ] ; then 

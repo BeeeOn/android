@@ -4,7 +4,7 @@ from com.android.monkeyrunner.easy import EasyMonkeyDevice, By
 class DeviceHandler():
 	package = 'com.rehivetech.beeeon.debug'
 	main_activity = 'com.rehivetech.beeeon.gui.activity.LoginActivity'
-	apk_path = '../app-debug.apk'
+	apk_path = '../../../artifacts/app-debug.apk'
 
 	def __init__(self,insert_sleeps = True):
 		print("Waiting for device")	
@@ -18,10 +18,11 @@ class DeviceHandler():
 
 		apk_path = self.device.shell('pm path ' + DeviceHandler.package)
 		if apk_path.startswith('package:'):
-		    print "BeeeOn already installed."
+		    print "BeeeOn already installed,but I am gonna reinstall it to test the newest version"
+		    self.device.installPackage(DeviceHandler.apk_path)
 		else:
 		    print "BeeeOn not installed, installing APKs..."
-		    device.installPackage(DeviceHandler.apk_path)
+		    self.device.installPackage(DeviceHandler.apk_path)
 
 		# sets the name of the component to start
 		runComponent = DeviceHandler.package + '/' + DeviceHandler.main_activity
