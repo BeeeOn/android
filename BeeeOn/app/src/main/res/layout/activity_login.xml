@@ -114,7 +114,7 @@
 
 	<android.support.v4.widget.NestedScrollView
 		android:id="@+id/login_bottom_sheet"
-		android:layout_width="match_parent"
+		style="@style/BeeeOn.BottomSheet.LoginActivity"
 		android:layout_height="wrap_content"
 		app:behavior_peekHeight="56dp"
 		app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
