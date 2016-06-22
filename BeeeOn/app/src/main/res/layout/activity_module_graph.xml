@@ -60,12 +60,10 @@
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/module_graph_fab"
+            style="@style/BeeeOn.ModuleGraph.FloatingActionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:src="@drawable/ic_settings_black_24dp"
             android:tint="@color/beeeon_overlay_text"
             app:borderWidth="0dp"

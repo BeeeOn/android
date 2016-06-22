@@ -191,6 +191,10 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="BeeeOn.ModuleGraph.FloatingActionButton" parent="">
+
+    </style>
+
     <!--Tab Layout-->
     <style name="ModuleGroupTabLayout" parent="Widget.Design.TabLayout">
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark</item>

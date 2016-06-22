@@ -19,4 +19,10 @@
 	<style name="BeeeOn.ProgressDialog" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
 		<item name="colorAccent">@color/beeeon_accent</item>
 	</style>
+
+	<style name="BeeeOn.ModuleGraph.FloatingActionButton" parent="">
+		<item name="android:layout_marginRight">@dimen/space_double</item>
+		<item name="android:layout_marginEnd">@dimen/space_double</item>
+		<item name="android:layout_marginBottom">@dimen/space_double</item>
+	</style>
 </resources>
