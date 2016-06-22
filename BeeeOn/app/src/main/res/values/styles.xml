@@ -259,4 +259,16 @@
         <item name="android:layout_marginTop">@dimen/space_normal</item>
         <item name="android:layout_marginBottom">@dimen/space_normal</item>
     </style>
+
+    <style name="BeeeOn.BottomSheet.LoginActivity" parent="">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="BeeeOn.LoginActivity.AppName" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+    </style>
+
+    <style name="BeeeOn.LoginActivity.LoginSlogan" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+    </style>
 </resources>

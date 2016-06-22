@@ -4,4 +4,17 @@
 		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_width">450dp</item>
 	</style>
+
+	<style name="BeeeOn.BottomSheet.LoginActivity" parent="">
+		<item name="android:layout_width">@dimen/bottomsheet_width</item>
+		<item name="android:layout_gravity">center_horizontal|top</item>
+	</style>
+
+	<style name="BeeeOn.LoginActivity.AppName" parent="">
+		<item name="android:textAppearance">@style/TextAppearance.AppCompat.Display2</item>
+	</style>
+
+	<style name="BeeeOn.LoginActivity.LoginSlogan" parent="">
+		<item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+	</style>
 </resources>
