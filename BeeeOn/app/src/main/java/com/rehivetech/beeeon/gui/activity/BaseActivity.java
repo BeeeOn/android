@@ -1,13 +1,8 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
@@ -25,17 +20,14 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
-import com.rehivetech.beeeon.util.Utils;
-
-import java.util.Date;
 
 import icepick.Icepick;
 
@@ -68,30 +60,41 @@ public abstract class BaseActivity extends AppCompatActivity {
 	protected View mRefreshIcon;
 
 	@Nullable private View.OnClickListener mOnRefreshClickListener;
-	private Animation mRotation;
-	private long mRefreshAnimStart;
-	private Handler mHandler = new Handler();
-
-	/**
-	 * Runnable handling stopping refresh animation
-	 */
-	private Runnable mStopAnimationRunnable = new Runnable() {
-		@Override
-		public void run() {
-			if (mRefreshIcon != null) {
-				mRefreshAnimStart = 0;
-				mRefreshIcon.clearAnimation();
-			}
-		}
-	};
+	private AnimationSet mRotation;
+	private boolean mStopRefreshing = false;
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		//		setLocale();
 		super.onCreate(savedInstanceState);
-		mRotation = AnimationUtils.loadAnimation(this, R.anim.rotate);
-		mRotation.setRepeatCount(Animation.INFINITE);
+		loadRotateAnimation();
 		Icepick.restoreInstanceState(this, savedInstanceState);
+	}
+
+	/**
+	 * Prepares rotating animation with listener for stopping on repeat
+	 */
+	private void loadRotateAnimation() {
+		mRotation = (AnimationSet) AnimationUtils.loadAnimation(this, R.anim.rotate);
+		for (Animation anim : mRotation.getAnimations()) {
+			anim.setAnimationListener(new Animation.AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+				}
+
+				@Override
+				public void onAnimationEnd(Animation animation) {
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+					if (mStopRefreshing && mRefreshIcon != null) {
+						mStopRefreshing = false;
+						mRefreshIcon.clearAnimation();
+					}
+				}
+			});
+		}
 	}
 
 	/**
@@ -297,15 +300,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 		}
 
 		if (isRefreshing) {
-			mRefreshAnimStart = new Date().getTime();
+			mStopRefreshing = false;
 			mRefreshIcon.startAnimation(mRotation);
 		} else {
-			Animation animation = mRefreshIcon.getAnimation();
-			if (animation != null) {
-				// calculates time in when animation should be properly stopped
-				long postTime = mRefreshAnimStart + animation.getDuration() - new Date().getTime();
-				mHandler.postDelayed(mStopAnimationRunnable, postTime);
-			}
+			// stopping animation is called in on repeat listener so that animation ends when finishes one cycle
+			mStopRefreshing = true;
 		}
 	}
 
