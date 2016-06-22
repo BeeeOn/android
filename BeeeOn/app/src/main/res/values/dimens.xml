@@ -78,4 +78,6 @@
     <integer name="dashboard_span_count">1</integer>
 
     <dimen name="bottomsheet_width">400dp</dimen>
+
+    <dimen name="login_activity_logo_size">100dp</dimen>
 </resources>

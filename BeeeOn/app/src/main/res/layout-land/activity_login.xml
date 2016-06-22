@@ -28,26 +28,26 @@
 
             <ImageView
                 android:id="@+id/login_logo_imageview"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/login_activity_logo_size"
+                android:layout_height="@dimen/login_activity_logo_size"
                 android:contentDescription="@string/login_image_description_logo"
                 android:src="@drawable/beeeon_logo_white_transparent"
                 />
 
             <TextView
                 android:id="@+id/login_app_name"
+                style="@style/BeeeOn.LoginActivity.AppName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_app_name"
-                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 />
 
             <TextView
                 android:id="@+id/login_slogan"
+                style="@style/BeeeOn.LoginActivity.LoginSlogan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/login_app_slogan"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 />
 
             <Button
