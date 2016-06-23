@@ -491,14 +491,14 @@
     <string name="validation_ip_address">Vložte platnú IP adresu. Môže vyzerat napríklad 192.168.100.100.</string>
     <string name="validation_port">Vložte číslo v\u00A0rozsahu 1\u00A0–\u00A065535.</string>
 
-    <string name="login_take_tour">Zobraziť sprievodca</string>
+    <string name="login_take_tour">Zobraziť sprievodcu</string>
     <string name="server_add_new">Pridať nový</string>
     <string name="dialog_create">Vytvoriť</string>
     <string name="dialog_delete">Zmazať</string>
     <string name="dialog_edit">Upraviť</string>
     <string name="error_no_url">Neuvedená URL adresa!</string>
     <string name="server_detail_host">Adresa</string>
-    <string name="server_detail_name">Název serveru</string>
+    <string name="server_detail_name">Názov serveru</string>
     <string name="server_detail_port">Port</string>
     <string name="server_detail_title_create">Vytvoriť server</string>
     <string name="server_detail_title_edit">Upraviť server</string>
