@@ -207,7 +207,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		mLoginSelectServerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 		OrderedRealmCollection<Server> serversData = mRealm.where(Server.class).findAll();
-		if (serversData.isEmpty() || serversData.size() < 2) {
+		if (serversData.isEmpty() || serversData.size() < Server.DEFAULT_SERVERS_COUNT) {
 			// if lower than 2 items we assume there are not default server and seed the DB
 			mRealm.executeTransaction(new DatabaseSeed());
 		}

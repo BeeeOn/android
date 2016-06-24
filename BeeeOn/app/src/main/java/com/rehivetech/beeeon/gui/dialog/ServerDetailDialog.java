@@ -230,7 +230,7 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 					pickFile();
 				} else {
 					// permission denied
-					Toast.makeText(getContext(), R.string.permission_camera_warning, Toast.LENGTH_LONG).show();
+					Toast.makeText(getContext(), R.string.permission_storage_warning, Toast.LENGTH_LONG).show();
 				}
 				break;
 		}
@@ -266,8 +266,6 @@ public class ServerDetailDialog extends BaseBeeeOnDialog {
 				if (resultCode == Activity.RESULT_OK) {
 					mCertificateUri = data.getDataString();
 					setCertificateError(null);
-				} else if (resultCode == Activity.RESULT_CANCELED) {
-					// TODO
 				}
 
 				break;

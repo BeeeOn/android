@@ -24,6 +24,7 @@ import io.realm.annotations.PrimaryKey;
  */
 public class Server extends RealmObject implements IIdentifier {
 	private static final String TAG = Server.class.getSimpleName();
+	public static final int DEFAULT_SERVERS_COUNT = 2;
 
 	public static final long SERVER_ID_PRODUCTION = 1;
 	public static final long SERVER_ID_DEVEL = 2;

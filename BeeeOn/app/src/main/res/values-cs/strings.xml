@@ -9,6 +9,7 @@
     <!-- Permission -->
     <string name="permission_accounts_warning">Pokud se chcete přihlásit, musíte povolit oprávnění přístupu k účtům.</string>
     <string name="permission_camera_warning">Pokud chcete použít fotoaparát, musíte povolit oprávnění.</string>
+	<string name="permission_storage_warning">Pokud chcete načíst soubor ze zařízení, musíte povolit oprávnění.</string>
 
     <!-- Titles in manifest -->
     <string name="manifest_action_notification">Notifikace</string>
@@ -504,7 +505,6 @@
     <string name="server_detail_title_create">Vytvořit server</string>
     <string name="server_detail_title_edit">Upravit server</string>
     <string name="server_detail_certificate">Certifikát</string>
-    <string name="permission_storage_warning">Pokud chcete načíst soubor ze zařízení, musíte povolit oprávnění.</string>
     <string name="server_detail_certificate_button">Vybrat X.509 certifikát</string>
     <string name="server_detail_certificate_not_selected">Je potřeba zvolit certifikát</string>
     <string name="server_detail_certificate_file_not_found">Vybraný soubor nebyl nalezen</string>
