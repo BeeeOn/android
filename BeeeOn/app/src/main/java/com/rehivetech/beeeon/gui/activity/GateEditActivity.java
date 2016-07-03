@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -21,11 +20,12 @@ import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.threading.task.UnregisterGateTask;
 import com.rehivetech.beeeon.util.GpsData;
 
+import timber.log.Timber;
+
 /**
  * Created by david on 17.6.15.
  */
 public class GateEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
-	private static final String TAG = GateEditActivity.class.getSimpleName();
 
 	private static final String FRAGMENT_EDIT = "fragment_edit";
 
@@ -68,7 +68,7 @@ public class GateEditActivity extends BaseApplicationActivity implements Confirm
 			public void onExecute(boolean success) {
 				GateInfo gate = Controller.getInstance(GateEditActivity.this).getGatesModel().getGateInfo(mGateId);
 				if (gate == null) {
-					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
+					Timber.e("Gate #%s does not exists", mGateId);
 					finish();
 				} else {
 					if (success && mFragment != null) {

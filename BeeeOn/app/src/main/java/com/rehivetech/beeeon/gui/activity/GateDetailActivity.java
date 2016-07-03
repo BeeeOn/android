@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,12 +19,13 @@ import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
 import com.rehivetech.beeeon.util.ActualizationTime;
 
+import timber.log.Timber;
+
 /**
  * @author david
  * @since 30.05.2016
  */
 public class GateDetailActivity extends BaseApplicationActivity implements GateDetailFragment.OnGateDetailsButtonsClickedListener {
-	private static final String TAG = GateDetailActivity.class.getSimpleName();
 
 	private static final String FRAGMENT_DETAILS = "fragment_details";
 
@@ -53,7 +53,7 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 			public void onExecute(boolean success) {
 				GateInfo gateInfo = Controller.getInstance(GateDetailActivity.this).getGatesModel().getGateInfo(mGateId);
 				if (gateInfo == null) {
-					Log.e(TAG, String.format("Gate #%s does not exists", mGateId));
+					Timber.e("Gate #%s does not exists", mGateId);
 					finish();
 				} else {
 					if (mFragment != null) {

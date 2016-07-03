@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,13 +32,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * @author martin on 15.8.2015.
  */
 public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener,
 		DeviceModuleAdapter.ItemClickListener, NumberPickerDialogFragment.SetNewValueListener {
-
-	private static final String TAG = DeviceDetailGroupModuleFragment.class.getSimpleName();
 
 	private static final String KEY_GROUP_NAME = "group_name";
 	private static final String KEY_GATE_ID = "gate_id";
@@ -131,28 +130,28 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 
 	@Override
 	public void onItemClick(String moduleId) {
-		Log.d(TAG, "onItemClick:" + moduleId);
+		Timber.d("onItemClick %s:", moduleId);
 		Intent intent = ModuleGraphActivity.getActivityIntent(mActivity, mGateId, mDeviceId, moduleId);
 		startActivity(intent);
 	}
 
 	@Override
 	public void onButtonChangeState(String moduleId) {
-		Log.d(TAG, "onButtonChangeState");
+		Timber.d("onButtonChangeState");
 		mModuleId = moduleId;
 		showListDialog(moduleId);
 	}
 
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
-		Log.d(TAG, "onButtonSetNewValue");
+		Timber.d("onButtonSetNewValue");
 
 		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
 	}
 
 	@Override
 	public void onSwitchChange(String moduleId) {
-		Log.d(TAG, "onSwitchChange");
+		Timber.d("onSwitchChange");
 		Module module = mDevice.getModuleById(moduleId);
 		doActorAction(module);
 	}
@@ -162,7 +161,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		if (requestCode == REQUEST_SET_ACTUATOR) {
 			Module module = mDevice.getModuleById(mModuleId);
 			if (module == null) {
-				Log.e(TAG, "Can't load module for changing its value");
+				Timber.e("Can't load module for changing its value");
 				return;
 			}
 
@@ -203,7 +202,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 				.setCancelButtonText(R.string.activity_fragment_btn_cancel)
 				.setTargetFragment(DeviceDetailGroupModuleFragment.this, REQUEST_SET_ACTUATOR)
 				.show();
-		Log.d(TAG, "dialog is created");
+		Timber.d("dialog is created");
 	}
 
 	private void doChangeStateModuleTask(final Module module) {
@@ -233,7 +232,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		if (value instanceof EnumValue) {
 			((EnumValue) value).setNextValue();
 		} else {
-			Log.e(TAG, "We can't switch actor, which value isn't inherited from EnumValue, yet");
+			Timber.e("We can't switch actor, which value isn't inherited from EnumValue, yet");
 			return;
 		}
 
@@ -258,7 +257,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	public void onSetNewValue(String moduleId, String actualValue) {
 		Module module = mDevice.getModuleById(moduleId);
 		if (module == null) {
-			Log.e(TAG, "Can't load module for changing its value");
+			Timber.e("Can't load module for changing its value");
 			return;
 		}
 

@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gcm;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -12,13 +11,12 @@ import com.rehivetech.beeeon.model.GcmModel;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 /**
  * Created by martin on 21.01.16.
  */
 public class GcmRegistrationIntentService extends IntentService {
-
-	public final static String TAG = GcmRegistrationIntentService.class.getSimpleName();
-
 
 	public GcmRegistrationIntentService() {
 		super("GcmRegistrationIntentService");
@@ -33,7 +31,7 @@ public class GcmRegistrationIntentService extends IntentService {
 			GcmModel gcmModel = controller.getGcmModel();
 			gcmModel.saveGcm(token);
 		} catch (IOException e) {
-			Log.e(TAG, "Error while getting GCM token");
+			Timber.e("Error while getting GCM token");
 			e.printStackTrace();
 		}
 	}

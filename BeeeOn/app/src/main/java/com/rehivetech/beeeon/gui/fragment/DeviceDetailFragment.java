@@ -18,7 +18,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,14 +58,14 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * @author martin
  * @since 04.08.2015
  */
 public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener,
 		AppBarLayout.OnOffsetChangedListener, IListDialogListener, NumberPickerDialogFragment.SetNewValueListener {
-
-	private static final String TAG = DeviceDetailFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gateId";
 	private static final String KEY_DEVICE_ID = "deviceId";
@@ -278,7 +277,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		if (savedInstanceState != null && mViewPager != null) {
 			mViewPager.setCurrentItem(savedInstanceState.getInt(KEY_VIEW_PAGER_SELECTED_ITEM));
-			Log.d(TAG, "restore instance");
+			Timber.d("restore instance");
 		}
 
 		Toolbar toolbar = mActivity.setupToolbar("", BaseApplicationActivity.INDICATOR_BACK);
@@ -401,7 +400,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 				ModuleGroupPagerAdapter adapter = (ModuleGroupPagerAdapter) mViewPager.getAdapter();
 				DeviceDetailGroupModuleFragment fragment = (DeviceDetailGroupModuleFragment) adapter.getActiveFragment(mViewPager, i);
 				if (fragment != null) {
-					Log.d(TAG, "updating viewpager fragment " + fragment.getTag());
+					Timber.d("updating viewpager fragment %s", fragment.getTag());
 					fragment.updateData();
 				}
 			}
@@ -442,7 +441,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (requestCode == REQUEST_SET_ACTUATOR) {
 			Module module = mDevice.getModuleById(mModuleId);
 			if (module == null) {
-				Log.e(TAG, "Can't load module for changing its value");
+				Timber.e("Can't load module for changing its value");
 				return;
 			}
 
@@ -513,7 +512,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		if (value instanceof EnumValue) {
 			((EnumValue) value).setNextValue();
 		} else {
-			Log.e(TAG, "We can't switch actor, which value isn't inherited from EnumValue, yet");
+			Timber.e("We can't switch actor, which value isn't inherited from EnumValue, yet");
 			return;
 		}
 
@@ -543,7 +542,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	public void onSetNewValue(String moduleId, String actualValue) {
 		Module module = mDevice.getModuleById(moduleId);
 		if (module == null) {
-			Log.e(TAG, "Can't load module for changing its value");
+			Timber.e("Can't load module for changing its value");
 			return;
 		}
 

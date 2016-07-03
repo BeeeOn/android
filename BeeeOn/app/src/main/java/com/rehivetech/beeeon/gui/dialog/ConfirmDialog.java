@@ -16,7 +16,7 @@ import com.rehivetech.beeeon.R;
  * @since 30.6.2015
  */
 public class ConfirmDialog extends BaseDialogFragment {
-	public static String TAG = "confirmDialog";
+	public static String DIALOG_TAG = "confirmDialog";
 
 	public static final int TYPE_DELETE_GATE = 10;
 	public static final int TYPE_DELETE_USER = 11;
@@ -42,7 +42,7 @@ public class ConfirmDialog extends BaseDialogFragment {
 		args.putString(EXTRA_DATA_ID, dataId);
 		confirmDialog.setArguments(args);
 
-		confirmDialog.show(activity.getSupportFragmentManager(), TAG);
+		confirmDialog.show(activity.getSupportFragmentManager(), DIALOG_TAG);
 	}
 
 	public static <T extends Fragment & ConfirmDialogListener> void confirm(T fragment, String title, String message, @StringRes int buttonTextRes, int confirmType, String dataId) {
@@ -57,7 +57,7 @@ public class ConfirmDialog extends BaseDialogFragment {
 		confirmDialog.setArguments(args);
 		confirmDialog.setTargetFragment(fragment, confirmType);
 
-		confirmDialog.show(fragment.getFragmentManager(), TAG);
+		confirmDialog.show(fragment.getFragmentManager(), DIALOG_TAG);
 	}
 
 

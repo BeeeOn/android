@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.household.device;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.OrderIdentifierComparator;
@@ -19,8 +18,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import timber.log.Timber;
+
 public final class Device implements IIdentifier {
-	public static final String TAG = Device.class.getSimpleName();
 
 	/**
 	 * Properties inherited from device's specification table.
@@ -292,7 +292,7 @@ public final class Device implements IIdentifier {
 			if (!mModules.hasObject(id)) {
 				if (!isUnknownType()) {
 					// Log error of unexpected module
-					Log.e(TAG, String.format("Module #%s doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId()));
+					Timber.e("Module #%s doesn't exists in this device type #%s. Only unknown devices can set values of unspecified modules.", id, mType.getId());
 					return;
 				}
 

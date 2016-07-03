@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.util.Log;
 import android.util.SparseArray;
 
 import com.rehivetech.beeeon.Constants;
@@ -51,11 +50,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * @author mlyko
  */
 public class WidgetService extends Service {
-	private final static String TAG = WidgetService.class.getSimpleName();
 
 	public static final RefreshInterval UPDATE_INTERVAL_DEFAULT = RefreshInterval.SEC_30;
 	public static final RefreshInterval UPDATE_INTERVAL_MIN = RefreshInterval.SEC_10;
@@ -110,7 +110,7 @@ public class WidgetService extends Service {
 	 * @param widgetShouldReload
 	 */
 	public static void startUpdating(Context context, int[] appWidgetIds, boolean widgetShouldReload) {
-		Log.d(TAG, String.format("startUpdating(%b)", widgetShouldReload));
+		Timber.d("startUpdating(%b)", widgetShouldReload);
 		final Intent intent = getIntentUpdate(context);
 		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 		intent.putExtra(EXTRA_START_UPDATING, true);
@@ -134,7 +134,7 @@ public class WidgetService extends Service {
 	 * @param context
 	 */
 	public void stopAlarmAndService(Context context) {
-		Log.d(TAG, "stopAlarmAndService()");
+		Timber.d("stopAlarmAndService()");
 		// stop alarm - no more updates
 		stopAlarm();
 		// stop this service
@@ -146,7 +146,7 @@ public class WidgetService extends Service {
 	 */
 	@Override
 	public void onCreate() {
-		Log.d(TAG, "onCreate()");
+		Timber.d("onCreate()");
 		super.onCreate();
 
 		mContext = getApplicationContext();
@@ -164,7 +164,7 @@ public class WidgetService extends Service {
 	 */
 	@Override
 	public void onDestroy() {
-		Log.d(TAG, "onDestroy()");
+		Timber.d("onDestroy()");
 		super.onDestroy();
 		// removes all widgets in list
 		mAvailableWidgets.clear();
@@ -241,7 +241,7 @@ public class WidgetService extends Service {
 			}
 		}
 
-		Log.v(TAG, String.format("isServiceStandBy = %b | networkType = %d", mServiceIsStandby, mNetworkType));
+		Timber.v("isServiceStandBy = %b | networkType = %d", mServiceIsStandby, mNetworkType);
 
 		// calculate it first time always or only when force update
 		if (isStartUpdating || !isForceUpdate) {
@@ -272,7 +272,7 @@ public class WidgetService extends Service {
 	 * @param allWidgetIds
 	 */
 	private void updateWidgets(Intent intent, boolean isForceUpdate, int[] allWidgetIds) {
-		Log.d(TAG, "updateWidgets()");
+		Timber.d("updateWidgets()");
 
 		// if there are no widgets passed by intent, try to get all widgets
 		if (allWidgetIds == null || allWidgetIds.length == 0) allWidgetIds = getAllWidgetIds();
@@ -289,7 +289,7 @@ public class WidgetService extends Service {
 			// ziska bud z pole pouzitych dat nebo instanciuje z disku
 			WidgetData widgetData = getWidgetData(widgetId);
 			if (widgetData == null) {
-				Log.i(TAG, String.format("WidgetData(%d) doesn't exist & couldn't be created", widgetId));
+				Timber.i("WidgetData(%d) doesn't exist & couldn't be created", widgetId);
 				continue;
 			}
 
@@ -298,19 +298,19 @@ public class WidgetService extends Service {
 
 			// Ignore uninitialized widgets
 			if (!widgetData.widgetInitialized) {
-				Log.v(TAG, String.format("Ignoring widget %d (not widgetInitialized)", widgetId));
+				Timber.v("Ignoring widget %d (not widgetInitialized)", widgetId);
 				continue;
 			}
 
 			// if widget has setting to update only on wifi - skip if not this
 			if (widgetData.widgetWifiOnly && mNetworkType != ConnectivityManager.TYPE_WIFI && !isForceUpdate) {
-				Log.v(TAG, String.format("Ignoring widget %d - updates only on wifi", widgetId));
+				Timber.v("Ignoring widget %d - updates only on wifi", widgetId);
 				continue;
 			}
 
 			// Don't update widgets until their interval elapsed or we have force update
 			if (!isForceUpdate && !widgetData.isExpired(timeNow)) {
-				Log.v(TAG, String.format("Ignoring widget %d (not expired nor forced)", widgetId));
+				Timber.v("Ignoring widget %d (not expired nor forced)", widgetId);
 				continue;
 			}
 
@@ -321,7 +321,7 @@ public class WidgetService extends Service {
 
 		try {
 			if (widgetsToUpdate.size() == 0) {
-				Log.i(TAG, "No widget to update from server..");
+				Timber.i("No widget to update from server..");
 				return;
 			}
 
@@ -355,7 +355,7 @@ public class WidgetService extends Service {
 
 			// updates all devices in once
 			if (!usedDevices.isEmpty()) {
-				Log.v(TAG, "refreshing devices...");
+				Timber.v("refreshing devices...");
 				mController.getDevicesModel().refreshDevices(usedDevices, isForceUpdate);
 			}
 
@@ -376,7 +376,7 @@ public class WidgetService extends Service {
 		} catch (AppException e) {
 			IErrorCode errCode = e.getErrorCode();
 			if (errCode != null) {
-				Log.e(TAG, e.getSimpleErrorMessage());
+				Timber.e(e.getSimpleErrorMessage());
 				setAllWidgetsCached();
 				// we know, that if internet connection changes, we start updating again
 				if (errCode instanceof ClientError && e.getErrorCode() == ClientError.INTERNET_CONNECTION) {
@@ -395,7 +395,7 @@ public class WidgetService extends Service {
 	 */
 	private void updateWeatherData(List<WidgetWeatherPersistence> weatherDatas) {
 		for (WidgetWeatherPersistence weather : weatherDatas) {
-			Log.v(TAG, "updating clock weather....");
+			Timber.v("updating clock weather....");
 			// TODO should check if city changed
 			if (weather.cityName.isEmpty()) continue;
 
@@ -420,7 +420,7 @@ public class WidgetService extends Service {
 	private void resizeWidget(int[] widgetIds, int layoutMinWidth, int layoutMinHeight) {
 		// if there are no widgets passed by intent, does nothing
 		if (widgetIds == null || widgetIds.length == 0) return;
-		Log.d(TAG, "resizeWidget()");
+		Timber.d("resizeWidget()");
 
 		for (int widgetId : widgetIds) {
 			WidgetData widgetData = getWidgetData(widgetId);
@@ -441,20 +441,20 @@ public class WidgetService extends Service {
 	 * @param actorId
 	 */
 	private void changeWidgetActorRequest(final String gateId, final String actorId) {
-		Log.d(TAG, String.format("changeWidgetActorRequest(%s, %s)", gateId, actorId));
+		Timber.d("changeWidgetActorRequest(%s, %s)", gateId, actorId);
 		if (actorId == null || gateId == null || actorId.isEmpty() || gateId.isEmpty()) return;
 
 		// ----- first get the module and change value
 		final Module module = mController.getDevicesModel().getModule(gateId, actorId);
 		if (module == null || !module.isActuator()) {
-			Log.e(TAG, "MODULE NOT actor OR NOT FOUND --> probably need to refresh controller");
+			Timber.e("MODULE NOT actor OR NOT FOUND --> probably need to refresh controller");
 			return;
 		}
 
 		// ----- check if value is boolean
 		BaseValue value = module.getValue();
 		if (!(value instanceof BooleanValue)) {
-			Log.e(TAG, "We can't switch actor, which value isn't inherited from EnumValue, yet");
+			Timber.e("We can't switch actor, which value isn't inherited from EnumValue, yet");
 			return;
 		}
 
@@ -489,7 +489,7 @@ public class WidgetService extends Service {
 	 * @param actorId
 	 */
 	private void changeWidgetActorResult(String gateId, String actorId) {
-		Log.d(TAG, String.format("changeWidgetActorResult(%s, %s)", gateId, actorId));
+		Timber.d("changeWidgetActorResult(%s, %s)", gateId, actorId);
 		if (actorId == null || gateId == null || actorId.isEmpty() || gateId.isEmpty()) return;
 
 		// does not set value cause updates whole widget (and there asks for new value)
@@ -507,7 +507,7 @@ public class WidgetService extends Service {
 	@Override
 	public void onLowMemory() {
 		super.onLowMemory();
-		Log.i(TAG, "onLowMemory()");
+		Timber.i("onLowMemory()");
 		mAvailableWidgets.clear();
 	}
 
@@ -516,7 +516,7 @@ public class WidgetService extends Service {
 	 */
 	private void setAllWidgetsCached() {
 		if (isCached) {
-			Log.i(TAG, "already cached data, skipping...");
+			Timber.i("already cached data, skipping...");
 			return;
 		}
 		setWidgetsCached(getAllWidgetIds());
@@ -601,7 +601,7 @@ public class WidgetService extends Service {
 			if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) continue;
 			WidgetData data = getWidgetData(widgetId);
 			if (data == null) continue;
-			Log.v(TAG, String.format("delete widgetData(%d)", widgetId));
+			Timber.v("delete widgetData(%d)", widgetId);
 
 			data.delete();
 			mAvailableWidgets.delete(widgetId);
@@ -622,7 +622,7 @@ public class WidgetService extends Service {
 			try {
 				// instantiate class from string
 				widgetData = (WidgetData) Class.forName(widgetClassName).getConstructor(int.class, Context.class, UnitsHelper.class, TimeHelper.class).newInstance(widgetId, mContext, mUnitsHelper, mTimeHelper);
-				Log.v(TAG, "instantiated new widgetData " + widgetId);
+				Timber.v("instantiated new widgetData %s", widgetId);
 				widgetData.load();
 				// if its clock widget -> we put instance of calendar inside
 				if (widgetData instanceof WidgetClockData) {
@@ -631,7 +631,7 @@ public class WidgetService extends Service {
 					widgetData.init();
 				}
 				widgetAdd(widgetData);
-				Log.v(TAG, String.format("finished creation of WidgetData(%d)", widgetId));
+				Timber.v("finished creation of WidgetData(%d)", widgetId);
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 				return null;
@@ -659,7 +659,7 @@ public class WidgetService extends Service {
 	 */
 	private void setAlarm(long triggerAtMillis) {
 		// Set new alarm time
-		Log.d(TAG, String.format("Next update in %d seconds", (int) (triggerAtMillis - SystemClock.elapsedRealtime()) / 1000));
+		Timber.d("Next update in %d seconds", (int) (triggerAtMillis - SystemClock.elapsedRealtime()) / 1000);
 		AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 		m.set(AlarmManager.ELAPSED_REALTIME, triggerAtMillis, getPendingIntentUpdate(mContext));
 	}
@@ -669,7 +669,7 @@ public class WidgetService extends Service {
 	 */
 	private void stopAlarm() {
 		// cancel frequently refreshing
-		Log.d(TAG, "stopping alarm..");
+		Timber.d("stopping alarm..");
 		AlarmManager m = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 		m.cancel(getPendingIntentUpdate(mContext));
 	}
@@ -691,10 +691,10 @@ public class WidgetService extends Service {
 			return true;
 		} else {
 			if (mStandbyWidgets > 0) {
-				Log.v(TAG, "No planned next update (cause standby widgets)");
+				Timber.v("No planned next update (cause standby widgets)");
 				return true;
 			} else {
-				Log.d(TAG, "No planned next update..");
+				Timber.d("No planned next update..");
 				this.stopAlarmAndService(mContext);
 				return false;
 			}
@@ -707,7 +707,7 @@ public class WidgetService extends Service {
 	 * @return
 	 */
 	private long calcNextUpdate(int[] appWidgetIds) {
-		Log.v(TAG, "calculating next update...");
+		Timber.v("calculating next update...");
 		int minInterval = 0;
 		long nextUpdate = 0, timeNow = SystemClock.elapsedRealtime();
 		boolean first = true, existsClockWidget = false, receiverChanged = false;
@@ -993,7 +993,7 @@ public class WidgetService extends Service {
 	 * @return IntentFilter
 	 */
 	private IntentFilter recreateIntentFilter() {
-		Log.v(TAG, "recreateIntentFilter()");
+		Timber.v("recreateIntentFilter()");
 		mClockFilterReg = false;
 		mIntentFilter = new IntentFilter();
 		addDefaultFilters();
@@ -1020,7 +1020,7 @@ public class WidgetService extends Service {
 	 * Intents for updating time
 	 */
 	private void addTimeFilters() {
-		Log.v(TAG, "addTimeFilters()");
+		Timber.v("addTimeFilters()");
 		mClockFilterReg = true;
 		// --- time broadcasts
 		mIntentFilter.addAction(Intent.ACTION_TIME_TICK);
@@ -1049,7 +1049,7 @@ public class WidgetService extends Service {
 		public void onReceive(Context context, Intent intent) {
 			int serviceState = SERVICE_NOT_CHANGED;
 			String receivedAction = intent.getAction();
-			Log.d(TAG, "broadcastReceived: " + receivedAction);
+			Timber.d("broadcastReceived: %s",  receivedAction);
 
 			switch (receivedAction) {
 				// if time was changed (any way), update clock widgets
@@ -1071,7 +1071,7 @@ public class WidgetService extends Service {
 					final String actorId = intent.getStringExtra(Constants.BROADCAST_EXTRA_ACTOR_CHANGED_ID);
 
 					if (gateId == null || gateId.isEmpty() || actorId == null || actorId.isEmpty()) {
-						Log.e(TAG, "Not all data received from actor change broadcast");
+						Timber.e("Not all data received from actor change broadcast");
 						return;
 					}
 
@@ -1137,7 +1137,7 @@ public class WidgetService extends Service {
 				case SERVICE_STANDBY:
 					mServiceIsStandby = true;
 					stopAlarm();
-					Log.i(TAG, "stopped updating service...");
+					Timber.i("stopped updating service...");
 					break;
 
 				case SERVICE_UPDATE_FORCED:

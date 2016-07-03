@@ -11,7 +11,6 @@ import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.RequiresPermission;
-import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
@@ -37,10 +36,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import timber.log.Timber;
+
 import static android.R.attr.description;
 
 public class GoogleAuthProvider implements IAuthProvider {
-	private static final String TAG = GoogleAuthProvider.class.getSimpleName();
 
 	// This ID must be unique amongst all providers
 	public static final int PROVIDER_ID = 201;
@@ -136,7 +136,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 	}
 
 	private void webloginAuth(final LoginActivity activity) {
-		Log.d(TAG, "Start webloginAuth");
+		Timber.d("Start webloginAuth");
 
 		final Intent intent = new Intent(activity, WebAuthActivity.class);
 		intent.putExtra(WebAuthActivity.EXTRA_PROVIDER_ID, PROVIDER_ID);
@@ -146,7 +146,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 	}
 
 	private void androidAuth(final LoginActivity activity) {
-		Log.d(TAG, "Start androidAuth");
+		Timber.d("Start androidAuth");
 
 		String[] accounts = this.getAccountNames(activity);
 		if (!mEmail.isEmpty()) {
@@ -166,7 +166,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 		if (mEmail.isEmpty()) {
 
-			Log.d(TAG, String.format("Found number of accounts on this device: %d", accounts.length));
+			Timber.d("Found number of accounts on this device: %d", accounts.length);
 
 			if (accounts.length == 1) {
 				// Set the only one email account used
@@ -264,7 +264,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 			if (!done) {
 				done = true;
 
-				Log.e(TAG, String.format("Received SSL error: %s", error.toString()));
+				Timber.e("Received SSL error: %s", error.toString());
 				Toast.makeText(mActivity, R.string.login_toast_ssl_error, Toast.LENGTH_LONG).show();
 
 				mActivity.setResult(IAuthProvider.RESULT_ERROR);
@@ -296,7 +296,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 			final String error = parsed.getQueryParameter("error");
 			if (error != null)
-				Log.e(TAG, String.format("received error: %s", error));
+				Timber.e("received error: %s", error);
 
 			final String code = parsed.getQueryParameter("code");
 			if (code == null) {
@@ -317,10 +317,10 @@ public class GoogleAuthProvider implements IAuthProvider {
 				done = true;
 
 				if ((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(REDIRECT_URL)) {
-					Log.w(TAG, String.format("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl));
+					Timber.w("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl);
 					finishWebLoginAuth(failingUrl);
 				} else {
-					Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
+					Timber.e("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description);
 
 					// Report error to caller
 					mActivity.setResult(IAuthProvider.RESULT_ERROR);
@@ -349,7 +349,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 				String token = "";
 				try {
 					JSONObject tokenJson = Utils.fetchJsonByPost(TOKEN_URL, params);
-					Log.d(TAG, String.format("received: %s", tokenJson.toString()));
+					Timber.d("received: %s", tokenJson.toString());
 					token = tokenJson.getString("access_token");
 				} catch (IOException | JSONException e) {
 					e.printStackTrace();

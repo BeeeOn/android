@@ -20,7 +20,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -62,6 +61,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;
+import timber.log.Timber;
 
 /**
  * Default application activity, handles login or automatic redirect to MainActivity.
@@ -69,7 +69,6 @@ import io.realm.Realm;
  * @author Robyer
  */
 public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPositiveButtonDialogListener, BaseBeeeOnDialog.IDeleteButtonDialogListener {
-	private static final String TAG = LoginActivity.class.getSimpleName();
 
 	public static final String BUNDLE_REDIRECT = "isRedirect";
 
@@ -115,7 +114,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 		// Check already logged in user (but ignore demo mode)
 		if (controller.isLoggedIn() && !controller.isDemoMode()) {
-			Log.d(TAG, "Already logged in, going to next activity...");
+			Timber.d( "Already logged in, going to next activity...");
 			onLoggedIn(); // finishes this activity
 			return;
 		}
@@ -133,7 +132,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		mAuthProvider = Persistence.getLastAuthProvider();
 		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
 			// Automatic login with last used provider
-			Log.d(TAG, String.format("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter()));
+			Timber.d("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter());
 			loginWithPermissionCheck(mAuthProvider);
 		}
 	}
@@ -160,7 +159,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		SharedPreferences prefs = getPreferences(MODE_PRIVATE);
 		if (!prefs.getBoolean(Constants.GUI_INTRO_PLAY, true)) return;
 
-		Log.d(TAG, "Go to INTRO");
+		Timber.d( "Go to INTRO");
 		prefs.edit().putBoolean(Constants.GUI_INTRO_PLAY, false).apply();
 		Intent intent = new Intent(this, IntroActivity.class);
 		startActivity(intent);
@@ -296,7 +295,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 					authProvider = new FacebookAuthProvider();
 					((FacebookAuthProvider) authProvider).processResult(this, requestCode, resultCode, data);
 				} else {
-					Log.e(TAG, String.format("Unknown requestCode (%d)", requestCode));
+					Timber.e( String.format("Unknown requestCode (%d)", requestCode));
 					mLoginCancel = true;
 					mProgress.dismiss();
 				}
@@ -308,13 +307,13 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		switch (resultCode) {
 			case Activity.RESULT_CANCELED:
 			case IAuthProvider.RESULT_CANCEL: {
-				Log.d(TAG, "Received RESULT_CANCEL from authProvider");
+				Timber.d( "Received RESULT_CANCEL from authProvider");
 				mLoginCancel = true;
 				mProgress.dismiss();
 				break;
 			}
 			case IAuthProvider.RESULT_ERROR: {
-				Log.e(TAG, "Received RESULT_ERROR from authProvider");
+				Timber.e( "Received RESULT_ERROR from authProvider");
 				mLoginCancel = true;
 				mProgress.dismiss();
 
@@ -328,7 +327,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				if (authProvider instanceof GoogleAuthProvider) {
 					String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 					if (email == null) {
-						Log.w(TAG, "Received RESULT_OK from GoogleAuthProvider but without email");
+						Timber.w( "Received RESULT_OK from GoogleAuthProvider but without email");
 						mLoginCancel = true;
 						mProgress.dismiss();
 						return;
@@ -342,7 +341,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			}
 			case IAuthProvider.RESULT_AUTH: {
 				if (!authProvider.loadAuthIntent(data)) {
-					Log.e(TAG, "Received RESULT_AUTH but authProvider can't load the required data");
+					Timber.e( "Received RESULT_AUTH but authProvider can't load the required data");
 					mProgress.dismiss();
 					return;
 				}
@@ -497,7 +496,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		try {
 			// Here is authProvider already filled with needed parameters so we can send them to the server
 			if (controller.login(authProvider)) {
-				Log.d(TAG, "Login successfull");
+				Timber.d( "Login successfull");
 				errFlag = false;
 
 				// Load all gates and data for active one on login
@@ -522,7 +521,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				}
 			}
 
-			Log.i(TAG, "Login finished");
+			Timber.i( "Login finished");
 		} catch (AppException e) {
 			IErrorCode errorCode = e.getErrorCode();
 
@@ -575,7 +574,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		try {
 			// Here is authProvider already filled with needed parameters so we can send them to the server
 			if (controller.register(authProvider)) {
-				Log.d(TAG, "Register successful");
+				Timber.d( "Register successful");
 				errFlag = false;
 
 				// Finish registration by start loggingAction in
@@ -709,7 +708,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 
 				} else {
-					Log.e(TAG, "Trying to delete non deletable server!");
+					Timber.e( "Trying to delete non deletable server!");
 				}
 			}
 		});
@@ -738,7 +737,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 		// checking if edit text (because of lint, checked already in validation)
 		if (serverNameView.getEditText() == null || serverHostView.getEditText() == null || serverPortView.getEditText() == null) {
-			Log.e(TAG, "There is none EditText inside TextInputLayout!");
+			Timber.e( "There is none EditText inside TextInputLayout!");
 			return;
 		}
 

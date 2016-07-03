@@ -8,13 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.rehivetech.beeeon.util.Compatibility;
 import com.rehivetech.beeeon.widget.service.WidgetService;
 
+import timber.log.Timber;
+
 abstract public class WidgetProvider extends AppWidgetProvider {
-	private static String TAG = WidgetProvider.class.getSimpleName();
 
 
 	@Override
@@ -30,7 +30,7 @@ abstract public class WidgetProvider extends AppWidgetProvider {
 	@Override
 	public void onDeleted(Context context, int[] appWidgetIds) {
 		super.onDeleted(context, appWidgetIds);
-		Log.d(TAG, "onDeleted()");
+		Timber.d("onDeleted()");
 
 		// delete widget from service
 		context.startService(WidgetService.getIntentWidgetDelete(context, appWidgetIds));
@@ -38,7 +38,7 @@ abstract public class WidgetProvider extends AppWidgetProvider {
 
 	@Override
 	public void onDisabled(Context context) {
-		Log.d(TAG, "onDisabled()");
+		Timber.d("onDisabled()");
 	}
 
 	@Override

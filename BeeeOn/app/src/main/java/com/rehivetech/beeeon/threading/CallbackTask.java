@@ -11,8 +11,6 @@ import com.rehivetech.beeeon.exception.AppException;
 
 public abstract class CallbackTask<Params> extends AsyncTask<Params, Void, Boolean> {
 
-	private static final String TAG = CallbackTask.class.getSimpleName();
-
 	private ICallbackTaskListener mListener;
 	private ICallbackTaskPreExecuteListener mPreExecuteListener;
 

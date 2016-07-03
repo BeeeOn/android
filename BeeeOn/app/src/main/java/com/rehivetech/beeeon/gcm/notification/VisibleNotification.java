@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -25,12 +24,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 /**
  * Created by Martin on 26. 4. 2015.
  */
 public abstract class VisibleNotification extends BaseNotification {
-
-	public static final String TAG = VisibleNotification.class.getSimpleName();
 
 	public VisibleNotification(int msgid, long time, NotificationType type, boolean read) {
 		super(msgid, time, type, read);
@@ -72,7 +71,7 @@ public abstract class VisibleNotification extends BaseNotification {
 
 			return getInstance(name, type, id, time, isRead, parser);
 		} catch (IllegalArgumentException e) {
-			Log.e(TAG, "Some value couldn't be parsed from String value. Returning null." + e.getMessage());
+			Timber.e("Some value couldn't be parsed from String value. Returning null. %s", e.getMessage());
 			e.printStackTrace();
 			return null;
 		}

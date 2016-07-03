@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.network.server.xml;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.util.Xml;
 
 import com.rehivetech.beeeon.IIdentifier;
@@ -29,13 +28,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * @author ThinkDeep
  * @author Robyer
  */
 public class XmlParser {
-
-	private static final String TAG = XmlParser.class.getSimpleName();
 
 	private static final String ns = null;
 
@@ -295,7 +294,7 @@ public class XmlParser {
 					// Split row data
 					String[] parts = row.split("\\s+");
 					if (parts.length != 2) {
-						Log.e(TAG, String.format("Wrong number of parts (%d) of data: %s", parts.length, row));
+						Timber.e("Wrong number of parts (%d) of data: %s", parts.length, row);
 						throw new AppException(ClientError.XML).set("parts", parts);
 					}
 
@@ -450,7 +449,7 @@ public class XmlParser {
 	@SuppressWarnings("unused")
 	private void skip() {
 		try {
-			Log.d(TAG, "Skipping unknown child '" + mParser.getName() + "'");
+			Timber.d("Skipping unknown child '%s'", mParser.getName());
 			if (mParser.getEventType() != XmlPullParser.START_TAG) {
 				throw new IllegalStateException();
 			}

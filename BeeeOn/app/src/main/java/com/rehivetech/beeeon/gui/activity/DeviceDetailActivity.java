@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -15,12 +14,12 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 
+import timber.log.Timber;
+
 /**
  * Class that handle screen with detail of some sensor
  */
 public class DeviceDetailActivity extends BaseApplicationActivity implements DeviceDetailFragment.UpdateDevice {
-
-	private static final String TAG = DeviceDetailActivity.class.getSimpleName();
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_DEVICE_ID = "device_id";
@@ -90,7 +89,7 @@ public class DeviceDetailActivity extends BaseApplicationActivity implements Dev
 				mDevice = Controller.getInstance(activity).getDevicesModel().getDevice(mGateId, mDeviceId);
 
 				if (mDevice == null) {
-					Log.e(TAG, String.format("Device #%s does not exists", mDeviceId));
+					Timber.e("Device #%s does not exists", mDeviceId);
 					activity.finish();
 				}
 

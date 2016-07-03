@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -25,6 +24,8 @@ import com.rehivetech.beeeon.widget.data.WidgetLocationData;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetListService extends RemoteViewsService {
 	@Override
@@ -35,7 +36,6 @@ public class WidgetListService extends RemoteViewsService {
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
-	private static final String TAG = ListRemoteViewsFactory.class.getSimpleName();
 
 	private List<Device> mDevices;
 	private List<Module> mModules;
@@ -60,7 +60,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	}
 
 	public void onCreate() {
-		Log.d(TAG, "onCreate()");
+		Timber.d("onCreate()");
 		// In onCreate() you setup any connections / cursors to your data source. Heavy lifting,
 		// for example downloading or creating content etc, should be deferred to onDataSetChanged()
 		// or getViewAt(). Taking more than 20 seconds in this call will result in an ANR.
@@ -88,7 +88,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
 		Module module = mModules.get(position);
 		if (module == null) {
-			Log.d(TAG, "NOT FOUND MODULE BY POS");
+			Timber.d("NOT FOUND MODULE BY POS");
 			return rv;
 		}
 
@@ -134,7 +134,7 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 	}
 
 	public void onDataSetChanged() {
-		Log.d(TAG, String.format("onDataSetChanged(%d), locationId=%s, gateId=%s", mWidgetId, mLocationId, mLocationGateId));
+		Timber.d("onDataSetChanged(%d), locationId=%s, gateId=%s", mWidgetId, mLocationId, mLocationGateId);
 
 		// TODO problem if logged out
 		// TODO problem when changed location
@@ -149,12 +149,12 @@ class ListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 		}
 
 
-		Log.d(TAG, String.format("Devices length = %d", mDevices.size()));
+		Timber.d("Devices length = %d", mDevices.size());
 		mModules.clear();
 		for (Device device : mDevices) {
 			if (device == null) continue;
 
-			Log.d("DEVICE: ", device.getName(mContext));
+			Timber.d("DEVICE: %s", device.getName(mContext));
 			mModules.addAll(device.getAllModules(false));
 		}
 	}

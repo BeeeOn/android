@@ -7,7 +7,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,8 +31,9 @@ import org.joda.time.DateTimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import timber.log.Timber;
+
 public class AddGateFragment extends BaseApplicationFragment implements EditTextDialog.IPositiveButtonDialogListener {
-	private static final String TAG = AddGateFragment.class.getSimpleName();
 
 	private static final int REQUEST_SCAN = 0;
 	private static final int REQUEST_DIALOG_GATE_CODE = 1;
@@ -134,7 +134,7 @@ public class AddGateFragment extends BaseApplicationFragment implements EditText
 			if (requestCode == REQUEST_SCAN) {
 				// Enable the Scan QR button again
 				setScanQrButtonEnabled(true);
-				Log.d(TAG, data.getStringExtra(ScanQRActivity.EXTRA_SCAN_FORMAT));
+				Timber.d(data.getStringExtra(ScanQRActivity.EXTRA_SCAN_FORMAT));
 				onScanQRCode(data.getStringExtra(ScanQRActivity.EXTRA_SCAN_RESULT));
 			}
 		} else if (resultCode == Activity.RESULT_CANCELED && data != null) {

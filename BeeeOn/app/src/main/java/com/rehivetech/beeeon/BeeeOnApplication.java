@@ -8,7 +8,6 @@ package com.rehivetech.beeeon;
 
 import android.app.Application;
 import android.content.Context;
-import android.util.Log;
 
 import com.google.android.gms.analytics.Tracker;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
@@ -16,6 +15,7 @@ import com.rehivetech.beeeon.model.DatabaseSeed;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import timber.log.Timber;
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app, such as
@@ -27,7 +27,9 @@ public class BeeeOnApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.i("BeeeOn app starting...", "___________________________________");
+		Timber.plant(new Timber.DebugTree());
+
+		Timber.i("BeeeOn app starting...___________________________________");
 		sContext = getApplicationContext();
 		GoogleAnalyticsManager.getInstance().init(sContext, getString(R.string.api_keys_google_analytics_tracking_id));
 		// initialize database

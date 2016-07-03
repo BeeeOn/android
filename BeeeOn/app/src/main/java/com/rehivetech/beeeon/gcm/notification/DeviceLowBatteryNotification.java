@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gcm.notification;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -10,11 +9,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 /**
  * Created by Martin on 22. 4. 2015.
  */
 public class DeviceLowBatteryNotification extends VisibleNotification {
-	public static final String TAG = DeviceLowBatteryNotification.class.getSimpleName();
 
 	private String mGateId;
 	private String mDeviceId;
@@ -34,7 +34,7 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 			String batterylevel = bundle.getString("batt");
 
 			if (gateId == null || deviceId == null || batterylevel == null) {
-				Log.d(TAG, "DeviceAdded: some compulsory value is missing.");
+				Timber.d("DeviceAdded: some compulsory value is missing.");
 				return null;
 			}
 
@@ -82,7 +82,7 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 		}
 
 		if (gateId == null || deviceId == null || batteryLevel == null) {
-			Log.d(TAG, "Xml: Some compulsory value is missing.");
+			Timber.d("Xml: Some compulsory value is missing.");
 			return null;
 		}
 

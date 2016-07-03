@@ -4,19 +4,19 @@ package com.rehivetech.beeeon.util;
 import android.content.Context;
 import android.support.annotation.IntDef;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.util.Patterns;
 import android.widget.EditText;
 
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 
+import timber.log.Timber;
+
 /**
  * @author mlyko
  * @since 25.05.2016
  */
 public class Validator {
-	private static final String TAG = Validator.class.getSimpleName();
 
 	@IntDef(flag = true, value = {INTEGER, DOUBLE, EMAIL, IP_ADDRESS, PORT})
 	public @interface ValidationType {
@@ -38,7 +38,7 @@ public class Validator {
 	public static boolean validate(TextInputLayout textInputLayout, @ValidationType int flags) {
 		EditText editText = textInputLayout.getEditText();
 		if (editText == null) {
-			Log.w(TAG, "Inside TextInputLayout is no EditText!");
+			Timber.w("Inside TextInputLayout is no EditText!");
 			return false;
 		}
 

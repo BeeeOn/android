@@ -5,25 +5,21 @@ import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Class for sensor app widget (1x1, 2x1, 3x1)
  */
 public class WidgetModuleData extends WidgetData {
-	private static final String TAG = WidgetModuleData.class.getSimpleName();
 
 	protected List<Object> mDevices;
 
@@ -60,7 +56,7 @@ public class WidgetModuleData extends WidgetData {
 		for (WidgetModulePersistence dev : widgetModules) {
 			Module module = dev.getModule();
 			if (dev.getId().isEmpty() || module == null) {
-				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
+				Timber.i("Could not retrieve module from widget %s ",  String.valueOf(mWidgetId));
 				continue;
 			}
 
@@ -108,7 +104,7 @@ public class WidgetModuleData extends WidgetData {
 			switch (widgetLayout) {
 				case R.layout.widget_data_module_3x1:
 				case R.layout.widget_data_module_2x1:
-					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s " + mContext.getString(R.string.widget_module_data_widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
+					mBuilder.setTextViewText(R.id.widget_last_update, getIsCached() ? String.format("%s %s", mContext.getString(R.string.widget_module_data_widget_cached), dev.lastUpdateText) : dev.lastUpdateText);
 					break;
 				case R.layout.widget_data_module_1x1:
 					dev.setValueUnitSize(R.dimen.abc_text_size_caption_material);
@@ -143,10 +139,10 @@ public class WidgetModuleData extends WidgetData {
 
 			// Save fresh data
 			this.save();
-			Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+			Timber.v("Updating widget (%d) with fresh data", getWidgetId());
 		} else {
 			// TODO show some kind of icon
-			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+			Timber.v("Updating widget (%d) with cached data", getWidgetId());
 		}
 
 		return updated > 0;

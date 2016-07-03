@@ -10,7 +10,6 @@ import com.rehivetech.beeeon.widget.data.WidgetLocationData;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetLocationListProvider extends WidgetProvider {
-	private static final String TAG = WidgetLocationListProvider.class.getSimpleName();
 
 	@Override
 	public void onReceive(Context context, Intent intent) {

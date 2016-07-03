@@ -51,7 +51,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Optional;
-import icepick.State;
 
 import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
 
@@ -60,7 +59,6 @@ import static com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectA
  * @since 20.3.16
  */
 public class AddDashboardVentilationItemFragment extends BaseAddDashBoardItemFragment implements OnMapReadyCallback, AdapterView.OnItemClickListener {
-	private static final String TAG = AddDashboardVentilationItemFragment.class.getSimpleName();
 
 	private static final String ARG_GATE_ID = "gate_id";
 	private static final String ARG_INSIDE_MODULE_ITEM = "inside_module_item";

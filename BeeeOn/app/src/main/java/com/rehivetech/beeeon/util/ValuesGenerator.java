@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.util;
 
-import android.util.Log;
-
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
@@ -11,8 +9,9 @@ import com.rehivetech.beeeon.household.device.values.EnumValue;
 import java.util.List;
 import java.util.Random;
 
+import timber.log.Timber;
+
 public class ValuesGenerator {
-	private static final String TAG = ValuesGenerator.class.getSimpleName();
 
 	private static final int RAW_ENUM_VALUES_COUNT_IN_LOG = 100;
 
@@ -95,7 +94,7 @@ public class ValuesGenerator {
 
 		int changes = (refresh != null ? refresh.getIntervalIndex() + 1 : 1);
 
-		Log.d(TAG, String.format("Filling %d values", (end - start) / everyMsecs));
+		Timber.d("Filling %d values", (end - start) / everyMsecs);
 
 		while (start < end) {
 			// First make decision if we want any change

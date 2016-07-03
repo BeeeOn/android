@@ -42,7 +42,6 @@ import java.util.Random;
  * @author Robyer
  */
 public class DemoNetwork implements INetwork {
-	private static final String TAG = DemoNetwork.class.getSimpleName();
 
 	public static final String DEMO_USER_ID = "demo";
 	private static final String DEMO_USER_BT = "12345";

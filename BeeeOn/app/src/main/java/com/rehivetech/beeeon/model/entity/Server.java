@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.model.entity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.util.Log;
 
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
@@ -17,13 +16,13 @@ import java.io.InputStream;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import timber.log.Timber;
 
 /**
  * @author mlyko
  * @since 30.05.2016
  */
 public class Server extends RealmObject implements IIdentifier {
-	private static final String TAG = Server.class.getSimpleName();
 	public static final int DEFAULT_SERVERS_COUNT = 2;
 
 	public static final long SERVER_ID_PRODUCTION = 1;
@@ -98,7 +97,7 @@ public class Server extends RealmObject implements IIdentifier {
 			inputStream.close();
 			return certificate;
 		} catch (IOException e) {
-			Log.e(TAG, "Problem with loading default server certificate!");
+			Timber.e("Problem with loading default server certificate!");
 			return null;
 		}
 	}

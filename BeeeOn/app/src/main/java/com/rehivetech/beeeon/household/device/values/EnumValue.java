@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.household.device.values;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
@@ -10,9 +9,9 @@ import com.rehivetech.beeeon.household.device.units.BlankUnit;
 import java.util.Collections;
 import java.util.List;
 
-public class EnumValue extends BaseValue {
+import timber.log.Timber;
 
-	private static final String TAG = EnumValue.class.getSimpleName();
+public class EnumValue extends BaseValue {
 
 	protected final List<Item> mItems;
 
@@ -123,12 +122,12 @@ public class EnumValue extends BaseValue {
 	private boolean setValueToOffset(int offset) {
 		int pos = mItems.indexOf(mValue);
 		if (pos == -1) {
-			Log.e(TAG, "Item was not found (probably unknown value), we can't use any offset");
+			Timber.e("Item was not found (probably unknown value), we can't use any offset");
 			return false;
 		}
 
 		if (mItems.size() < 2) {
-			Log.e(TAG, "There are less than 2 items in this value, we can't use any offset");
+			Timber.e("There are less than 2 items in this value, we can't use any offset");
 			return false;
 		}
 

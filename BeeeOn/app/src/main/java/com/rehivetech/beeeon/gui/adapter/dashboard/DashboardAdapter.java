@@ -59,7 +59,6 @@ import java.util.List;
  * Created by martin on 15.11.15.
  */
 public class DashboardAdapter extends RecyclerViewSelectableAdapter {
-	private static final String TAG = DashboardAdapter.class.getSimpleName();
 
 	private static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 

@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,12 +49,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 /**
  * @author martin on 18.8.2015.
  */
 public class ModuleGraphFragment extends BaseApplicationFragment implements ModuleGraphActivity.ChartSettingListener {
-	private static final String TAG = ModuleGraphFragment.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_DEVICE_ID = "device_id";
@@ -128,7 +127,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 			mActivity.setRequestRedrawActiveFragmentCalled(false);
 
-			Log.d(TAG, String.format("dataSet added: %s", dataSet.getLabel()));
+			Timber.d("dataSet added: %s", dataSet.getLabel());
 		}
 	};
 
@@ -213,7 +212,7 @@ public class ModuleGraphFragment extends BaseApplicationFragment implements Modu
 
 		Device device = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
 		if (device == null) {
-			Log.e(TAG, String.format("Device #%s does not exists", mDeviceId));
+			Timber.e("Device #%s does not exists", mDeviceId);
 			mActivity.finish();
 		}
 	}

@@ -32,7 +32,6 @@ import io.realm.Realm;
  * @since 31.05.2016
  */
 public class ServerDetailDialog extends BaseBeeeOnDialog {
-	private static final String TAG = ServerDetailDialog.class.getSimpleName();
 	private static final String ARG_SERVER_ID = "server_id";
 	public static final int REQUEST_CERTIFICATE_PICK = 10;
 

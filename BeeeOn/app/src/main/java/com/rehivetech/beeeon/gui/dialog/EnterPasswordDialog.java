@@ -17,12 +17,12 @@ import com.rehivetech.beeeon.R;
  */
 public class EnterPasswordDialog extends SimpleDialogFragment {
 
-	private static final String TAG = "password_dialog";
+	private static final String DIALOG_TAG = "password_dialog";
 
 	public static void show(FragmentActivity activity, Fragment fragment, int requestCode) {
 		EnterPasswordDialog dialog = new EnterPasswordDialog();
 		dialog.setTargetFragment(fragment, requestCode);
-		dialog.show(activity.getSupportFragmentManager(), TAG);
+		dialog.show(activity.getSupportFragmentManager(), DIALOG_TAG);
 	}
 
 	@SuppressLint("InflateParams")

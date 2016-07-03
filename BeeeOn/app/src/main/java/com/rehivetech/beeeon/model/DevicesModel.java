@@ -1,7 +1,5 @@
 package com.rehivetech.beeeon.model;
 
-import android.util.Log;
-
 import com.rehivetech.beeeon.IdentifierComparator;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
@@ -17,10 +15,10 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import timber.log.Timber;
+
 
 public class DevicesModel extends BaseModel {
-
-	private static final String TAG = DevicesModel.class.getSimpleName();
 
 	private final int mReloadEverySecs;
 
@@ -203,7 +201,7 @@ public class DevicesModel extends BaseModel {
 	 */
 	public boolean switchActor(Module module) throws AppException {
 		if (!module.isActuator()) {
-			Log.e(TAG, String.format("Tried to switch NOT-actor module '%s'", module.getModuleId().absoluteId));
+			Timber.e("Tried to switch NOT-actor module '%s'", module.getModuleId().absoluteId);
 			return false;
 		}
 

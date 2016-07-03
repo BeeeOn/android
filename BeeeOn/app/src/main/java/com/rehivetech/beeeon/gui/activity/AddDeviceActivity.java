@@ -7,7 +7,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.fragment.AddDeviceFragment;
@@ -18,8 +17,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 public class AddDeviceActivity extends BaseApplicationActivity{
-
-	private static final String TAG = AddDeviceActivity.class.getSimpleName();
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 	public static final String EXTRA_ACTION_STATE = "action_state";

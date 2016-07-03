@@ -3,14 +3,13 @@ package com.rehivetech.beeeon.gcm.notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+
+import timber.log.Timber;
 
 /**
  * Created by Martin on 22. 4. 2015.
  */
 public class DeleteNotification extends BaseNotification {
-
-	public static final String TAG = DeleteNotification.class.getSimpleName();
 
 	public static final String JSON_TAG_DEL_NOTIFICATION_ID = "mid_del";
 
@@ -33,7 +32,7 @@ public class DeleteNotification extends BaseNotification {
 			Integer delNotificationId = Integer.valueOf(bundle.getString(JSON_TAG_DEL_NOTIFICATION_ID));
 
 			if (delNotificationId == null) {
-				Log.d(TAG, "DeleteNotification: some compulsory value is missing.");
+				Timber.d("DeleteNotification: some compulsory value is missing.");
 				return null;
 			}
 

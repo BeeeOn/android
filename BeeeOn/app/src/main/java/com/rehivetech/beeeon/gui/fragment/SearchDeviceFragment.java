@@ -12,7 +12,6 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,13 +49,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.State;
+import timber.log.Timber;
 
 /**
  * @author Martin Matejcik
  * @author Tomas Mlynaric
  */
 public class SearchDeviceFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, EditTextDialog.IPositiveButtonDialogListener, EnterPasswordDialog.PasswordDialogListener {
-	private static final String TAG = SearchDeviceFragment.class.getSimpleName();
 
 	private static final long COUNTDOWN_INTERVAL = DateUtils.MINUTE_IN_MILLIS * 2;
 	private static final int PAIR_REQUEST_REPEAT_INTERVAL = (int) (DateUtils.SECOND_IN_MILLIS * 3);
@@ -325,7 +324,7 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	@Override
 	public void onRecyclerViewItemClick(int position, int viewType) {
 		if (viewType != DeviceRecycleAdapter.TYPE_UNPAIRED_DEVICE) {
-			Log.e(TAG, "Clicked on other type then unpaired device!");
+			Timber.e("Clicked on other type then unpaired device!");
 			return;
 		}
 

@@ -20,7 +20,6 @@ import java.util.List;
  * Created by martin on 26.3.16.
  */
 public class PlaceAdapter extends ArrayAdapter<Place> {
-	private static final String TAG = PlaceAdapter.class.getSimpleName();
 
 	private List<Place> mPlaces = new ArrayList<>();
 

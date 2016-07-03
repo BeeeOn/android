@@ -51,6 +51,8 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
+import timber.log.Timber;
+
 /**
  * Network class that handles communication with server.
  *
@@ -58,8 +60,6 @@ import javax.net.ssl.TrustManagerFactory;
  * @author Robyer
  */
 public class Network implements INetwork {
-
-	private static final String TAG = Network.class.getSimpleName();
 
 	/**
 	 * Communication version
@@ -143,7 +143,7 @@ public class Network implements INetwork {
 			// NoSuchAlgorithmException - Unknown SSL/TLS protocol or unknown TrustManager algorithm (it shouldn't occur)
 			// KeyManagementException - general exception, thrown to indicate an exception during processing an operation concerning key management
 			// IllegalArgumentException - asset is empty
-			Log.e(TAG, "Can't create socketFactory! No network connection is possible.");
+			Timber.e("Can't create socketFactory! No network connection is possible.");
 		}
 
 		mSocketFactory = socketFactory;
@@ -229,7 +229,7 @@ public class Network implements INetwork {
 			socket.setSoTimeout(SSL_TIMEOUT);
 			SSLSession s = socket.getSession();
 			if (!s.isValid())
-				Log.e(TAG, "Socket is not valid! TLS handshake failed.");
+				Timber.e("Socket is not valid! TLS handshake failed.");
 
 			// Verify that the certificate hostName
 			// This is due to lack of SNI support in the current SSLSocket.
@@ -263,7 +263,7 @@ public class Network implements INetwork {
 	 * Closes actual connection (opened socket).
 	 */
 	public void interruptConnection() {
-		Log.w(TAG, "Interrupting connection.");
+		Timber.w("Interrupting connection.");
 		closeCommunicationSocket();
 	}
 
@@ -346,7 +346,7 @@ public class Network implements INetwork {
 		String result = "";
 		AppException cause = null;
 
-		Log.i(TAG + " fromApp >>", messageToSend);
+		Timber.i(" fromApp >>", messageToSend);
 		try {
 			result = startCommunication(messageToSend);
 		} catch (AppException e) {
@@ -359,7 +359,7 @@ public class Network implements INetwork {
 			// In other cases remember it
 			cause = e;
 		}
-		Log.i(TAG + " << fromSrv", result.isEmpty() ? "- no response -" : result);
+		Timber.i(" << fromSrv %s", result.isEmpty() ? "- no response -" : result);
 
 		// Check if we received no response and try it again eventually
 		if (result.isEmpty()) {
@@ -375,7 +375,7 @@ public class Network implements INetwork {
 			SystemClock.sleep(50);
 
 			// Try to do this request again (with decremented retries)
-			Log.d(TAG, String.format("Try to repeat request (retries remaining: %d)", retries - 1));
+			Timber.d("Try to repeat request (retries remaining: %d)", retries - 1);
 			return doRequest(messageToSend, checkBT, retries - 1);
 		}
 

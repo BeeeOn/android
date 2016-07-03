@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gcm.notification;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -10,12 +9,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 /**
  * Created by Martin on 22. 4. 2015.
  */
 public class GateOfflineNotification extends VisibleNotification {
-
-	public static final String TAG = GateOfflineNotification.class.getSimpleName();
 
 	private String mGateId;
 
@@ -29,7 +28,7 @@ public class GateOfflineNotification extends VisibleNotification {
 			String gateId = bundle.getString("gateid");
 
 			if (gateId == null) {
-				Log.d(TAG, "Gate added: some compulsory value is missing.");
+				Timber.d( "Gate added: some compulsory value is missing.");
 				return null;
 			}
 
@@ -71,7 +70,7 @@ public class GateOfflineNotification extends VisibleNotification {
 		}
 
 		if (gateId == null) {
-			Log.d(TAG, "Xml: Some compulsory value is missing.");
+			Timber.d( "Xml: Some compulsory value is missing.");
 			return null;
 		}
 

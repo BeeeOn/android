@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -22,9 +21,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class NotificationActivity extends BaseApplicationActivity {
-	private static final String TAG = NotificationActivity.class.getSimpleName();
 
 	@BindView(R.id.notification_listview)
 	ListView mListView;
@@ -77,7 +76,7 @@ public class NotificationActivity extends BaseApplicationActivity {
 					mNotifications = controller.getGcmModel().getNotificationHistory();
 					return true;
 				} catch (AppException e) {
-					Log.e(TAG, "Cannot get notification history, error: " + e.getTranslatedErrorMessage(NotificationActivity.this));
+					Timber.e("Cannot get notification history, error: %s", e.getTranslatedErrorMessage(NotificationActivity.this));
 					return false;
 				}
 			}

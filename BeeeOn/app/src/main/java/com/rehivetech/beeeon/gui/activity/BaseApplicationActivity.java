@@ -3,15 +3,7 @@ package com.rehivetech.beeeon.gui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -19,7 +11,7 @@ import com.rehivetech.beeeon.gcm.INotificationReceiver;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 
-import java.util.Date;
+import timber.log.Timber;
 
 /**
  * Abstract parent for application activities that requires logged in user and better using of tasks.
@@ -28,7 +20,6 @@ import java.util.Date;
  * Provides useful methods for using CallbackTasks.
  */
 public abstract class BaseApplicationActivity extends BaseActivity implements INotificationReceiver {
-	private static String TAG = BaseApplicationActivity.class.getSimpleName();
 
 	private boolean triedLoginAlready = false;
 	public CallbackTaskManager callbackTaskManager;
@@ -84,7 +75,7 @@ public abstract class BaseApplicationActivity extends BaseActivity implements IN
 			Controller.getInstance(context).logout(false);
 		}
 
-		Log.d(TAG, "Redirecting to login");
+		Timber.d( "Redirecting to login");
 		Intent intent = new Intent(context, LoginActivity.class);
 		intent.putExtra(LoginActivity.BUNDLE_REDIRECT, true);
 		intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);

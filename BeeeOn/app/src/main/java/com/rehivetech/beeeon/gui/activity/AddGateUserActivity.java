@@ -30,7 +30,6 @@ public class AddGateUserActivity extends BaseApplicationActivity implements IPos
 
 	public static final String EXTRA_GATE_ID = "gate_id";
 
-	protected static final String TAG = "AddGateUserActivity";
 	@BindView(R.id.gate_user_add_user_email) TextInputLayout mGateUserAddUserEmail;
 	@BindView(R.id.gate_user_add_user_role) Spinner mGateUserAddUserRole;
 

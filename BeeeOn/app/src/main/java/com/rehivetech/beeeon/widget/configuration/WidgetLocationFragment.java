@@ -19,7 +19,6 @@ import com.rehivetech.beeeon.widget.persistence.WidgetLocationPersistence;
  * @author mlyko
  */
 public class WidgetLocationFragment extends WidgetConfigurationFragment {
-	private static final String TAG = WidgetLocationFragment.class.getSimpleName();
 
 	protected WidgetLocationData mWidgetData;
 

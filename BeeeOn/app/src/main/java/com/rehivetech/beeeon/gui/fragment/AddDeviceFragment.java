@@ -20,7 +20,6 @@ import butterknife.OnClick;
 
 
 public class AddDeviceFragment extends BaseApplicationFragment {
-	private static final String TAG = AddDeviceFragment.class.getSimpleName();
 
 	public static final String KEY_GATE_ID = "gate_id";
 

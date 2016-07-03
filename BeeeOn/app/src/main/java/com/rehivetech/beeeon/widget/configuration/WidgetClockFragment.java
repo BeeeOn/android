@@ -37,7 +37,6 @@ import java.util.List;
  * @author mlyko
  */
 public class WidgetClockFragment extends WidgetConfigurationFragment implements EditTextDialog.IPositiveButtonDialogListener {
-	private static final String TAG = WidgetClockFragment.class.getSimpleName();
 	public static final int REQUEST_LOCATION_DIALOG = 5;
 	private static final int SPACE_BETWEEN_MODULE_SPINNERS = 8;
 

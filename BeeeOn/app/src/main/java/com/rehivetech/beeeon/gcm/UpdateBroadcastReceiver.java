@@ -3,13 +3,12 @@ package com.rehivetech.beeeon.gcm;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
 
-public class UpdateBroadcastReceiver extends BroadcastReceiver {
+import timber.log.Timber;
 
-	public static final String TAG = UpdateBroadcastReceiver.class.getSimpleName();
+public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -17,7 +16,7 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
 	}
 
 	public static void onUpdate(Context context) {
-		Log.i(TAG, Constants.GCM_TAG + "App updated, starting service for re-registering GCM ID.");
+		Timber.i("%s App updated, starting service for re-registering GCM ID.", Constants.GCM_TAG);
 		context.startService(new Intent(context, GcmRegistrationIntentService.class));
 	}
 

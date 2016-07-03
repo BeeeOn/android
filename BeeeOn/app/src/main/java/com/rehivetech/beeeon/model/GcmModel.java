@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.WeakHashMap;
 
-public class GcmModel extends BaseModel {
+import timber.log.Timber;
 
-	private static final String TAG = GcmModel.class.getSimpleName();
+public class GcmModel extends BaseModel {
 
 	private final Context mContext;
 	private final Persistence mPersistence;
@@ -133,7 +133,7 @@ public class GcmModel extends BaseModel {
 				} else {
 					// Save it just locally to update app version
 					gcmModel.setGCMIdLocal(gcmIdNew);
-					Log.i(TAG, Constants.GCM_TAG + "New GCM ID is the same, no need to change");
+					Timber.i("%s New GCM ID is the same, no need to change", Constants.GCM_TAG);
 				}
 	}
 
@@ -148,7 +148,7 @@ public class GcmModel extends BaseModel {
 	public String getGCMRegistrationId() {
 		String registrationId = mPersistence.loadGCMRegistrationId();
 		if (registrationId.isEmpty()) {
-			Log.i(TAG, Constants.GCM_TAG + "Registration not found.");
+			Timber.i("%s Registration not found.", Constants.GCM_TAG);
 			return "";
 		}
 		// Check if app was updated; if so, it must clear the registration ID since the existing regID is not guaranteed to work with the new app version.
@@ -158,7 +158,7 @@ public class GcmModel extends BaseModel {
 			// delete actual GCM ID from server
 			deleteGCM(mUser.getId(), registrationId);
 			setGCMIdLocal("");
-			Log.i(TAG, Constants.GCM_TAG + "App version changed.");
+			Timber.i("%s App version changed.", Constants.GCM_TAG);
 			return "";
 		}
 		return registrationId;
@@ -188,7 +188,7 @@ public class GcmModel extends BaseModel {
 						((Network) mNetwork).deleteGCMID(userId, id);
 					} catch (AppException e) {
 						// do nothing
-						Log.w(TAG, Constants.GCM_TAG + "Delete GCM ID failed: " + e.getTranslatedErrorMessage(mContext));
+						Timber.w("%s Delete GCM ID failed: %s", Constants.GCM_TAG , e.getTranslatedErrorMessage(mContext));
 					}
 				}
 			};
@@ -203,7 +203,7 @@ public class GcmModel extends BaseModel {
 	 */
 	private void setGCMIdLocal(String gcmId) {
 		int appVersion = Utils.getAppVersion(mContext);
-		Log.i(TAG, Constants.GCM_TAG + "Saving GCM ID on app version " + appVersion);
+		Timber.i("%s Saving GCM ID on app version %s", Constants.GCM_TAG , appVersion);
 
 		mPersistence.saveGCMRegistrationId(gcmId);
 		mPersistence.saveLastApplicationVersion(appVersion);
@@ -221,11 +221,11 @@ public class GcmModel extends BaseModel {
 			return;
 
 		try {
-			Log.i(TAG, Constants.GCM_TAG + "Set GCM ID to server: " + gcmID);
+			Timber.i("%s Set GCM ID to server: %s", Constants.GCM_TAG , gcmID);
 			((Network) mNetwork).setGCMID(gcmID);
 		} catch (AppException e) {
 			// nothing to do
-			Log.e(TAG, Constants.GCM_TAG + "Set GCM ID to server failed: " + e.getTranslatedErrorMessage(mContext));
+			Timber.e("%s Set GCM ID to server failed: %s",Constants.GCM_TAG , e.getTranslatedErrorMessage(mContext));
 		}
 	}
 

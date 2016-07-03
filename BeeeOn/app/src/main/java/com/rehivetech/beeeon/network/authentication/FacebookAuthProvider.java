@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FacebookAuthProvider implements IAuthProvider {
-	private static final String TAG = FacebookAuthProvider.class.getSimpleName();
 
 	// This ID must be unique amongst all providers
 	public static final int PROVIDER_ID = 202;

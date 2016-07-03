@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class RecyclerViewSelectableAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-	@SuppressWarnings("unused")
-	private static final String TAG = RecyclerViewSelectableAdapter.class.getSimpleName();
 
 	private SparseBooleanArray mSelectedItems = new SparseBooleanArray();
 	protected Context mContext;

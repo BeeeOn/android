@@ -7,11 +7,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.gcm.GcmRegistrationIntentService;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.BaseItem;
@@ -49,14 +47,14 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import timber.log.Timber;
+
 /**
  * Core of application (used as singleton), provides methods and access to all data and household.
  *
  * @author Robyer
  */
 public final class Controller {
-
-	public static final String TAG = Controller.class.getSimpleName();
 
 	/**
 	 * This singleton instance.
@@ -284,7 +282,7 @@ public final class Controller {
 	public SharedPreferences getUserSettings() {
 		String userId = mUser.getId();
 		if (userId.isEmpty()) {
-			Log.e(TAG, "getUserSettings() with no loaded userId");
+			Timber.e("getUserSettings() with no loaded userId");
 			return null;
 		}
 
@@ -312,9 +310,9 @@ public final class Controller {
 			if (!user.getId().equals(userId)) {
 				// UserId from server is not same as the cached one (or this is first login)
 				if (userId != null) {
-					Log.e(TAG, String.format("UserId from server (%s) is not same as the cached one (%s).", user.getId(), userId));
+					Timber.e("UserId from server (%s) is not same as the cached one (%s).", user.getId(), userId);
 				} else {
-					Log.d(TAG, String.format("Loaded userId from server (%s), this is first login.", user.getId()));
+					Timber.e("Loaded userId from server (%s), this is first login.", user.getId());
 				}
 				// So save the correct userId
 				mPersistence.saveLastUserId(user.getId());
@@ -364,13 +362,13 @@ public final class Controller {
 
 		// Do we have session now?
 		if (!mNetwork.hasSessionId()) {
-			Log.e(TAG, "BeeeOn token wasn't received. We are not logged in.");
+			Timber.e("BeeeOn token wasn't received. We are not logged in.");
 			return false;
 		}
 
 		String userId = mUser.getId();
 		if (userId.isEmpty()) {
-			Log.e(TAG, "UserId wasn't received. We can't continue with login.");
+			Timber.e( "UserId wasn't received. We can't continue with login.");
 			return false;
 		}
 
@@ -380,7 +378,7 @@ public final class Controller {
 		if (!(mNetwork instanceof DemoNetwork)) {
 			// Save our new sessionId
 			String bt = mNetwork.getSessionId();
-			Log.i(TAG, String.format("Loaded for user '%s' fresh new sessionId: %s", userId, bt));
+			Timber.e("Loaded for user '%s' fresh new sessionId: %s", userId, bt);
 			mPersistence.saveLastBT(userId, bt);
 
 			// Remember this email to use with auto login
@@ -506,11 +504,11 @@ public final class Controller {
 		mActiveGate = getGatesModel().getGate(id);
 
 		if (mActiveGate == null) {
-			Log.d(TAG, String.format("Can't set active gate to '%s'", id));
+			Timber.e("Can't set active gate to '%s'", id);
 			return false;
 		}
 
-		Log.d(TAG, String.format("Set active gate to '%s'", mActiveGate.getName()));
+		Timber.d("Set active gate to '%s'", mActiveGate.getName());
 
 		// Load locations and devices, if needed
 		getLocationsModel().reloadLocationsByGate(id, forceReload);
@@ -614,7 +612,7 @@ public final class Controller {
 		SharedPreferences dashboardSettings = mPersistence.getSettings(getDashboardKey(userId, gateId));
 		List<List<BaseItem>> itemsList = DashBoardPersistence.load(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 		if (itemsList == null) {
-			Log.e(TAG, "addDashboardView - null items list");
+			Timber.e("addDashboardView - null items list");
 			return;
 		}
 

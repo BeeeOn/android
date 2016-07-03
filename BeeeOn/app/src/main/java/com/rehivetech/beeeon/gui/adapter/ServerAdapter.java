@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -16,13 +15,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.OrderedRealmCollection;
 import io.realm.RealmRecyclerViewAdapter;
+import timber.log.Timber;
 
 /**
  * @author mlyko
  * @since 31.05.2016
  */
 public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapter.ServerViewHolder> {
-	private static final String TAG = ServerAdapter.class.getSimpleName();
 	private ClickableRecyclerViewAdapter.OnItemClickListener mOnItemClickListener;
 	private ClickableRecyclerViewAdapter.OnItemLongClickListener mOnItemLongClickListener;
 
@@ -74,7 +73,7 @@ public class ServerAdapter extends RealmRecyclerViewAdapter<Server, ServerAdapte
 	public void onBindViewHolder(ServerViewHolder holder, int position) {
 		Server server = getData().get(position);
 		if (!server.isValid()) {
-			Log.e(TAG, "Not valid server binding!");
+			Timber.e("Not valid server binding!");
 			return;
 		}
 		holder.name.setText(server.toString());

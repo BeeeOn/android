@@ -43,7 +43,6 @@ import butterknife.OnClick;
  * @author martin on 18.8.2015.
  */
 public class ModuleGraphActivity extends BaseApplicationActivity implements OnSheetDismissedListener, GraphSettings.GraphSettingsListener {
-	private final static String TAG = ModuleGraphActivity.class.getSimpleName();
 
 	private static final String EXTRA_GATE_ID = "gate_id";
 	private static final String EXTRA_DEVICE_ID = "device_id";

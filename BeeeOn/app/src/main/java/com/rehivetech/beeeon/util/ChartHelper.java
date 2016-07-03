@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.github.mikephil.charting.charts.BarLineChartBase;
@@ -54,8 +53,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 
+import timber.log.Timber;
+
 final public class ChartHelper {
-	private static final String TAG = ChartHelper.class.getSimpleName();
 
 	public static final String GRAPH_DATE_TIME_FORMAT = "dd.MM. HH:mm";
 
@@ -434,7 +434,7 @@ final public class ChartHelper {
 		boolean barChart = (dataSet instanceof BarDataSet);
 		SortedMap<Long, Float> values = moduleLog.getValues();
 
-		Log.v(TAG, String.format("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString()));
+		Timber.v("Filling graph with %d values. Min: %.1f, Max: %.1f, dataType: %s, dataInterval: %s", values.size(), moduleLog.getMinimum(), moduleLog.getMaximum(), moduleLog.getType().toString(), moduleLog.getInterval().toString());
 
 		dataSet.clear();
 
@@ -461,7 +461,7 @@ final public class ChartHelper {
 
 		long everyMsecs = pair.gap == ModuleLog.DataInterval.RAW ? refreshMsecs : pair.gap.getSeconds() * 1000;
 
-		Log.v(TAG, String.format("Computing %d values", (end - start) / everyMsecs));
+		Timber.v("Computing %d values", (end - start) / everyMsecs);
 
 		int i = 0;
 		for (Map.Entry<Long, Float> entry : values.entrySet()) {

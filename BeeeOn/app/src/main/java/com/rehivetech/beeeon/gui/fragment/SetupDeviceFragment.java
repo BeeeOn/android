@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import android.widget.Toast;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.MainActivity;
 import com.rehivetech.beeeon.gui.adapter.LocationArrayAdapter;
 import com.rehivetech.beeeon.gui.adapter.LocationIconAdapter;
 import com.rehivetech.beeeon.household.device.Device;
@@ -36,8 +34,9 @@ import com.rehivetech.beeeon.util.TimeHelper;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 public class SetupDeviceFragment extends BaseApplicationFragment {
-	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final String KEY_GATE_ID = "gate_id";
 	private static final String KEY_NEW_DEVICE_ID = "new_device_id";
@@ -175,7 +174,7 @@ public class SetupDeviceFragment extends BaseApplicationFragment {
 				mNewDevice.setLocationId(location.getId());
 
 				// Save that device
-				Log.d(TAG, String.format("InitializeDevice - device: %s, loc: %s", mNewDevice.getId(), location.getId()));
+				Timber.d("InitializeDevice - device: %s, loc: %s", mNewDevice.getId(), location.getId());
 				doInitializeDeviceTask(new Device.DataPair(mNewDevice, location, true));
 			}
 		});

@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
@@ -22,13 +21,14 @@ import com.rehivetech.beeeon.widget.service.WeatherProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import timber.log.Timber;
+
 /**
  * Created by Tomáš on 26. 4. 2015.
  */
 public class WidgetWeatherPersistence extends WidgetPersistence implements IIdentifier {
 
 	public static final int DEFAULT_WEATHER_ICON = R.string.weather_sunny;
-	public static final String TAG = WidgetWeatherPersistence.class.getSimpleName();
 
 	private static final String PREF_ID = "id";
 	private static final String PREF_TIMESTAMP = "timestamp";
@@ -173,7 +173,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	}
 
 	public void handleFailedUpdate() {
-		Log.i(TAG, "Failed to update weather");
+		Timber.i("Failed to update weather");
 		this.failedUpdate = true;
 	}
 
@@ -186,7 +186,7 @@ public class WidgetWeatherPersistence extends WidgetPersistence implements IIden
 	 */
 	public Bitmap getBitmapIcon(boolean forceReload, int size) {
 		if (generatedIcon == null || forceReload || oldIconResource != iconResource || oldIconSize != size) {
-			Log.v(TAG, "Generating new weather icon");
+			Timber.v("Generating new weather icon");
 
 			Bitmap iconBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_4444);
 			Canvas myCanvas = new Canvas(iconBitmap);

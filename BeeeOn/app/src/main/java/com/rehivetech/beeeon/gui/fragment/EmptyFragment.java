@@ -12,7 +12,6 @@ import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.activity.MainActivity;
 
 public class EmptyFragment extends BaseApplicationFragment {
-	private static final String TAG = EmptyFragment.class.getSimpleName();
 
 	private static final String KEY_MESSAGE = "message";
 

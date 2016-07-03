@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Pair;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -58,9 +57,9 @@ import java.util.Random;
 import java.util.Scanner;
 
 import io.realm.Realm;
+import timber.log.Timber;
 
 final public class Utils {
-	private static final String TAG = Utils.class.getSimpleName();
 
 	private static final int[] sGraphColors = new int[]{R.color.graph1, R.color.graph2, R.color.graph3, R.color.graph4, R.color.graph5,
 			R.color.graph6, R.color.graph7, R.color.graph8, R.color.graph9, R.color.graph10, R.color.graph11, R.color.graph12,
@@ -373,7 +372,7 @@ final public class Utils {
 	@Nullable
 	public static <T extends IIdentifier> T getFromList(String id, List<T> objects) {
 		if (id == null) {
-			Log.i(TAG, "getFromList given NULL id");
+			Timber.i("getFromList given NULL id");
 			return null;
 		}
 
@@ -411,7 +410,7 @@ final public class Utils {
 	@Nullable
 	public static <T extends IIdentifier> Pair<Integer, T> getIndexAndObjectFromList(String id, List<T> objects) {
 		if (id == null) {
-			Log.i(TAG, "getIndexAndObjectFromList given NULL id");
+			Timber.i("getIndexAndObjectFromList given NULL id");
 			return null;
 		}
 		int index = 0;

@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -18,12 +17,13 @@ import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
 import com.rehivetech.beeeon.threading.task.SaveDeviceTask;
 
+import timber.log.Timber;
+
 /**
  * @author David Kozak
  * @since 15.9.2015
  */
 public class DeviceEditActivity extends BaseApplicationActivity implements ConfirmDialog.ConfirmDialogListener {
-	private static final String TAG = DeviceEditActivity.class.getSimpleName();
 
 	private String mGateId;
 	private String mDeviceId;
@@ -62,7 +62,7 @@ public class DeviceEditActivity extends BaseApplicationActivity implements Confi
 				Controller controller = Controller.getInstance(this);
 				Device device = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
 				if (device == null) {
-					Log.e(TAG, "No device found!");
+					Timber.e( "No device found!");
 					return true;
 				}
 

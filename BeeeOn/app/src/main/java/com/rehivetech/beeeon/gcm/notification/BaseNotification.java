@@ -15,9 +15,9 @@ import com.rehivetech.beeeon.controller.Controller;
 
 import java.util.Calendar;
 
-public abstract class BaseNotification implements IGcmNotification, Comparable<BaseNotification> {
+import timber.log.Timber;
 
-	public static final String TAG = BaseNotification.class.getSimpleName();
+public abstract class BaseNotification implements IGcmNotification, Comparable<BaseNotification> {
 
 	private static final String SEPARATOR = "\\s+";
 	private final Calendar mDate;
@@ -49,7 +49,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 
 		Controller controller = Controller.getInstance(context);
 
-		Log.d(TAG, bundle.toString());
+		Log.d("%s", bundle.toString());
 		BaseNotification notification;
 		try {
 			NotificationName name = NotificationName.fromValue(bundle.getString("name"));
@@ -60,12 +60,12 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 
 			// control validity of message
 			if (name == null || msgId == null || userId == null || time == null || type == null) {
-				Log.w(TAG, "Some of compulsory values is missing");
+				Timber.w("Some of compulsory values is missing");
 				return null;
 			}
 			// control if actual user ID is the samesdsdas
 			if (!userId.equals(controller.getActualUser().getId())) {
-				Log.w(TAG, "GCM: Sent user ID is different from actual user ID. Deleting GCM on server. Actual ID: " + controller.getActualUser().getId() + ", recieved ID: " + userId);
+				Timber.w("GCM: Sent user ID is different from actual user ID. Deleting GCM on server. Actual ID: %s , recieved ID: %s", controller.getActualUser().getId(), userId);
 				controller.getGcmModel().deleteGCM(userId, null);
 				return null;
 			}
@@ -75,7 +75,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		// catch nullpointer if some of bundle values doesn't exist
 		// catch IllegalArgumentException if cannot cast
 		catch (NullPointerException | IllegalArgumentException e) {
-			Log.w(TAG, "Nullpointer or cannot parse to enum/number: " + e.getLocalizedMessage());
+			Timber.w("Nullpointer or cannot parse to enum/number: %s", e.getLocalizedMessage());
 
 			return null;
 		}

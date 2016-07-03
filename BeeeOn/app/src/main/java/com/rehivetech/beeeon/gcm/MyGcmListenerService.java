@@ -1,12 +1,13 @@
 package com.rehivetech.beeeon.gcm;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.gcm.notification.BaseNotification;
 import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
+
+import timber.log.Timber;
 
 /**
  * Created by martin on 21.01.16.
@@ -14,7 +15,6 @@ import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 
 
 	public class MyGcmListenerService extends GcmListenerService {
-		public static final String TAG = MyGcmListenerService.class.getSimpleName();
 
 		public MyGcmListenerService() {
 		}
@@ -22,11 +22,11 @@ import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 		@Override
 		public void onMessageReceived(String from, final Bundle data) {
 //        String message = data.getString("data");
-			Log.d(TAG, "From: " + from);
-			Log.d(TAG, "Message: " + data);
+			Timber.d("From: %s",from);
+			Timber.d("Message: %s", data);
 
 			if (data == null) {
-				Log.e(TAG, "onMessageReceived: data is NULL");
+				Timber.e("onMessageReceived: data is NULL");
 				return;
 			}
 
@@ -34,7 +34,7 @@ import com.rehivetech.beeeon.gcm.notification.IGcmNotification;
 
 			// control if message was valid
 			if (notification == null) {
-				Log.e(TAG, Constants.GCM_TAG + "Invalid message.");
+				Timber.e(" %s Invalid message.", Constants.GCM_TAG);
 				return;
 			}
 

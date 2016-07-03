@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.network.provider;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.rehivetech.beeeon.R;
@@ -17,11 +16,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by martin on 26.3.16.
  */
 public class PlacesProvider {
-	private static final String TAG = PlacesProvider.class.getSimpleName();
 
 	private static final String GOOGLE_PLACES_BASE_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json?types=locality";
 	private static final String QUERY_QUERY_PLACE = "query";
@@ -58,7 +58,7 @@ public class PlacesProvider {
 
 		reader.close();
 
-		Log.i(TAG, "google places json:" + json.toString());
+		Timber.i("google places json: %s", json.toString());
 
 		return new Gson().fromJson(json.toString(), PlaceResult.class).getResults();
 	}

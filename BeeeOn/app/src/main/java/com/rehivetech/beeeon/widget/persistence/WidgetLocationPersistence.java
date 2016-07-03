@@ -15,7 +15,6 @@ import com.rehivetech.beeeon.widget.ViewsBuilder;
  * @author mlyko
  */
 public class WidgetLocationPersistence extends WidgetBeeeOnPersistence {
-	private static final String TAG = WidgetLocationPersistence.class.getSimpleName();
 
 	private static final String PREF_TYPE = "type";
 

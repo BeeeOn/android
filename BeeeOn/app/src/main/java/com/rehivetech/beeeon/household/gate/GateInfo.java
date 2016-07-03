@@ -6,7 +6,6 @@ import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.util.GpsData;
 
 public class GateInfo extends Gate {
-	public static final String TAG = GateInfo.class.getSimpleName();
 
 	protected String mOwner = "";
 	protected int mDevicesCount;

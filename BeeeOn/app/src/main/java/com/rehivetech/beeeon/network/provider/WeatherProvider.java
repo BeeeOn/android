@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.network.provider;
 import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.WorkerThread;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.rehivetech.beeeon.R;
@@ -15,11 +14,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import timber.log.Timber;
+
 /**
  * Created by martin on 29.3.16.
  */
 public class WeatherProvider {
-	private static final String TAG = WeatherProvider.class.getSimpleName();
 
 	private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric";
 	private static final String QUERY_APP_ID = "appid";
@@ -59,7 +59,7 @@ public class WeatherProvider {
 
 		reader.close();
 
-		Log.i(TAG, "open weather maps json:" + json.toString());
+		Timber.i("open weather maps json: %s", json.toString());
 
 		return new Gson().fromJson(json.toString(), Weather.class);
 	}

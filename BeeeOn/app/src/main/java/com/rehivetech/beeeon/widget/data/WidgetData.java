@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
-import android.util.Log;
 
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.DeviceDetailActivity;
@@ -24,11 +23,12 @@ import com.rehivetech.beeeon.widget.service.WidgetService;
 
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by Tomáš on 29. 4. 2015.
  */
 public abstract class WidgetData {
-	private static final String TAG = WidgetData.class.getSimpleName();
 
 	// preference file name
 	public static final String PREF_FILENAME = "widget_%d";
@@ -102,7 +102,7 @@ public abstract class WidgetData {
 	 * Load all data of this widget - it's called only when opening configuration activity or reload() needed
 	 */
 	public void load() {
-		Log.d(TAG, "load()");
+		Timber.d("load()");
 		// set default widget data
 		widgetLayout = mPrefs.getInt(PREF_LAYOUT, mWidgetProviderInfo != null ? mWidgetProviderInfo.initialLayout : 0); // TODO sometimes providerInfo is null
 		widgetInterval = mPrefs.getInt(PREF_INTERVAL, WidgetService.UPDATE_INTERVAL_DEFAULT.getInterval());
@@ -133,7 +133,7 @@ public abstract class WidgetData {
 	 * If widget is editing, this is called after configuration activity ends - reload already created widget
 	 */
 	public final void reload() {
-		Log.d(TAG, "reload()");
+		Timber.d("reload()");
 		this.load();
 		init();
 	}
@@ -149,7 +149,7 @@ public abstract class WidgetData {
 	 * @param gate
 	 */
 	public void configure(boolean isEditing, int interval, boolean isWifiOnly, Gate gate) {
-		Log.d(TAG, String.format("configure(%b)", isEditing));
+		Timber.d("configure(%b)", isEditing);
 
 		widgetLastUpdate = 0;
 		widgetInitialized = true;
@@ -176,7 +176,7 @@ public abstract class WidgetData {
 	 * Save all data of this widget
 	 */
 	public void save() {
-		Log.d(TAG, "save()");
+		Timber.d("save()");
 
 		settings.save();
 
@@ -207,7 +207,7 @@ public abstract class WidgetData {
 	 * Can be called from outside to refresh widget (always needs to recreate whole widget)
 	 */
 	synchronized public final void renderWidget() {
-		Log.d(TAG, "renderWidget()");
+		Timber.d("renderWidget()");
 		initLayout();
 		renderLayout();
 		renderAppWidget();
@@ -249,12 +249,12 @@ public abstract class WidgetData {
 	public abstract boolean handleUpdateData();
 
 	public void handleSetNotCached() {
-		Log.v(TAG, String.format("handleSetNotCached(%d)", mWidgetId));
+		Timber.v("handleSetNotCached(%d)", mWidgetId);
 		mIsCached = false;
 	}
 
 	public void handleSetCached() {
-		Log.v(TAG, String.format("handleSetCached(%d)", mWidgetId));
+		Timber.v("handleSetCached(%d)", mWidgetId);
 		mIsCached = true;
 	}
 
@@ -265,7 +265,7 @@ public abstract class WidgetData {
 	 * @param minHeight
 	 */
 	public void handleResize(int minWidth, int minHeight) {
-		Log.v(TAG, String.format("handleResize(%d) [%d | %d]", mWidgetId, minWidth, minHeight));
+		Timber.v("handleResize(%d) [%d | %d]", mWidgetId, minWidth, minHeight);
 	}
 
 	// ----------------------------------------------------------- //

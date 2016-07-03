@@ -10,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,9 +38,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.State;
+import timber.log.Timber;
 
 public class MainActivity extends BaseApplicationActivity implements NavigationView.OnNavigationItemSelectedListener {
-	private static final String TAG = MainActivity.class.getSimpleName();
 
 	private static final String CONTENT_TAG_DEVICES = "tag_devices";
 	private static final String CONTENT_TAG_DASHBOARD = "tag_dashboard";
@@ -70,7 +69,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
-		Log.d(TAG, "onCreate");
+		Timber.d( "onCreate");
 		setupDrawer();
 
 		Controller controller = Controller.getInstance(this);
@@ -123,7 +122,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Log.d(TAG, "onStart");
+		Timber.d( "onStart");
 		doReloadAllData();
 	}
 
@@ -137,7 +136,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 			public void onExecute(boolean success) {
 				if (success) {
 					// Redraw Activity - probably list of modules
-					Log.d(TAG, "After reload task -> redraw mainActivity");
+					Timber.d( "After reload task -> redraw mainActivity");
 					redrawContent(null, true);
 				}
 			}
@@ -173,7 +172,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	 * @param newContentTag this specifies which fragment should be shown
 	 */
 	private void redrawContent(@Nullable String newContentTag, boolean shouldRedrawDrawer) {
-		Log.d(TAG, "redrawContent");
+		Timber.d( "redrawContent");
 
 		if (newContentTag == null) newContentTag = mActiveContentTag;
 		Controller controller = Controller.getInstance(this);
@@ -195,7 +194,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		if (activeGateId.equals(mActiveGateId) && mActiveContentTag.equals(newContentTag)) {
 			// FIXME this is not proper way to prevent multiple restarts of fragment. Existing fragment might be updated by some method in it
 //			getSupportFragmentManager().findFragmentByTag(newContentTag);
-			Log.i(TAG, "Skipping reloading fragment");
+			Timber.i("Skipping reloading fragment");
 			return;
 		}
 

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -22,12 +21,13 @@ import com.rehivetech.beeeon.widget.service.WidgetListService;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Class for location list app widget (3x2)
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetLocationData extends WidgetData {
-	private static final String TAG = WidgetLocationData.class.getSimpleName();
 
 	public static final String OPEN_DETAIL_ACTION = "com.rehivetech.beeeon.widget.locationlist.OPEN_DETAIL_ACTION";
 	public static final String EXTRA_ITEM_DEV_ID = "com.rehivetech.beeeon.widget.locationlist.ITEM_DEV_ID";
@@ -123,7 +123,7 @@ public class WidgetLocationData extends WidgetData {
 		Controller controller = Controller.getInstance(mContext);
 		Location location = controller.getLocationsModel().getLocation(widgetGateId, widgetLocation.id);
 		if (location == null) {
-			Log.v(TAG, String.format("Updating widget (%d) with cached data", getWidgetId()));
+			Timber.v("Updating widget (%d) with cached data", getWidgetId());
 			return false;
 		}
 
@@ -137,7 +137,7 @@ public class WidgetLocationData extends WidgetData {
 		mWidgetManager.notifyAppWidgetViewDataChanged(mWidgetId, R.id.widget_layout);
 
 		this.save();
-		Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+		Timber.v("Updating widget (%d) with fresh data", getWidgetId());
 		return true;
 	}
 

@@ -28,8 +28,6 @@ import butterknife.Unbinder;
  */
 public class AddDashboardItemFragment extends BaseApplicationFragment implements AddDashboardCardAdapter.ItemClickListener {
 
-	private static final String TAG = AddDashboardItemFragment.class.getSimpleName();
-
 	private static final String ARG_GATE_ID = "gate_id";
 	private static final String ARG_INDEX = "index";
 

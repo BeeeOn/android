@@ -46,7 +46,6 @@ import icepick.State;
  * @since 23.4.16
  */
 public class DashboardPagerFragment extends BaseApplicationFragment implements ConfirmDialog.ConfirmDialogListener {
-	private static final String TAG = DashboardPagerFragment.class.getSimpleName();
 
 	public static final int REQUEST_CODE_ADD_ITEM = 10;
 

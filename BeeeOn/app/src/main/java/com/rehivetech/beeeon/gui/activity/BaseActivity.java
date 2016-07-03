@@ -15,7 +15,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +29,7 @@ import com.rehivetech.beeeon.gui.dialog.InfoDialogFragment;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 
 import icepick.Icepick;
+import timber.log.Timber;
 
 /**
  * @author mlyko
@@ -37,7 +37,6 @@ import icepick.Icepick;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-	private static final String TAG = BaseActivity.class.getSimpleName();
 	protected static final String TAG_ABOUT_DIALOG = "about_dialog";
 
 	@IntDef({INDICATOR_NONE, INDICATOR_BACK, INDICATOR_DISCARD, INDICATOR_ACCEPT, INDICATOR_MENU})
@@ -189,7 +188,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 	public Toolbar setupToolbar(String title, @IndicatorType int indicatorType) {
 		mToolbar = (Toolbar) findViewById(R.id.beeeon_toolbar);
 		if (mToolbar == null) {
-			Log.e(TAG, "Trying to setup toolbar without element in layout!");
+			Timber.e( "Trying to setup toolbar without element in layout!");
 			return null;
 		}
 
@@ -262,7 +261,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 	 */
 	public void setupRefreshIcon(@Nullable View.OnClickListener onClickListener) {
 		if (mToolbar == null || mRefreshIcon == null) {
-			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
+			Timber.e( "Trying to setup refresh icon without element(s) in layout!");
 			return;
 		}
 
@@ -295,7 +294,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 		if (mOnRefreshClickListener == null) return;
 
 		if (mToolbar == null || mRefreshIcon == null) {
-			Log.e(TAG, "Trying to setup refresh icon without element(s) in layout!");
+			Timber.e( "Trying to setup refresh icon without element(s) in layout!");
 			return;
 		}
 

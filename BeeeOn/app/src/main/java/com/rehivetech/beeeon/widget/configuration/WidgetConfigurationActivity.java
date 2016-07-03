@@ -4,20 +4,19 @@ import android.app.ProgressDialog;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 
+import timber.log.Timber;
+
 /**
  * @author mlyko
  */
 public class WidgetConfigurationActivity extends BaseApplicationActivity {
-	private static final String TAG = WidgetConfigurationActivity.class.getSimpleName();
 
 	public static final String EXTRA_WIDGET_EDITING = "com.rehivetech.beeeon.widget.EXTRA_WIDGET_EDITING";
 
@@ -37,7 +36,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 		Bundle extras = intent.getExtras();
 		// if no extras, there's no widget id -> exit
 		if (extras == null) {
-			Log.e(TAG, "No widget Id => finish()");
+			Timber.e("No widget Id => finish()");
 			finishActivity();
 			return;
 		}
@@ -84,7 +83,7 @@ public class WidgetConfigurationActivity extends BaseApplicationActivity {
 				break;
 
 			default:
-				Log.e(TAG, "No widget with class: " + widgetProviderShortClassName);
+				Timber.e("No widget with class: %s", widgetProviderShortClassName);
 				finishActivity();
 				break;
 		}

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 
 import com.rehivetech.beeeon.R;
 
@@ -15,12 +14,12 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import timber.log.Timber;
+
 /**
  * Created by Martin on 22. 4. 2015.
  */
 public class UriNotification extends VisibleNotification {
-
-	public static final String TAG = UriNotification.class.getSimpleName();
 
 	private String mUri;
 	private String mMsg;
@@ -37,7 +36,7 @@ public class UriNotification extends VisibleNotification {
 			String uri = bundle.getString("uri");
 
 			if (message == null || uri == null) {
-				Log.d(TAG, "Watdog: some compulsory value is missing.");
+				Timber.d( "Watdog: some compulsory value is missing.");
 				return null;
 			}
 
@@ -82,7 +81,7 @@ public class UriNotification extends VisibleNotification {
 		}
 
 		if (message == null || uri == null) {
-			Log.d(TAG, "Xml: Some compulsory value is missing.");
+			Timber.d( "Xml: Some compulsory value is missing.");
 			return null;
 		}
 

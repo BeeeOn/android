@@ -6,7 +6,6 @@ import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.household.user.User;
 
 public class Gate implements INameIdentifier {
-	public static final String TAG = Gate.class.getSimpleName();
 
 	protected final String mId;
 	protected String mName;

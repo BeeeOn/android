@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,13 +23,13 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
 
 
 /**
  * Created by martin on 31.10.15.
  */
 public class NumberPickerDialogFragment extends BaseDialogFragment {
-	private static final String TAG = NumberPickerDialogFragment.class.getSimpleName();
 
 	private static final String ARG_TITLE = "title";
 	private static final String ARG_POSITIVE_BUTTON_TEXT = "positive_button_text";
@@ -144,7 +143,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 		numberPickerWhole.setValue(wholeSteps.indexOf(String.valueOf(actualValue.intValue())));
 
 		if (granularity != Math.floor(granularity) && granularity <= 1) {
-			Log.d(TAG, "granularity is with decimal part");
+			Timber.d("granularity is with decimal part");
 
 			numberPickerDecimal.setVisibility(View.VISIBLE);
 			decimalPoint.setVisibility(View.VISIBLE);

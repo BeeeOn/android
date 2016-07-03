@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class AddLocationDialog extends SimpleDialogFragment {
 
-	public static final String TAG = "new_loc";
+	public static final String DIALOG_TAG = "new_loc";
 
 	/**
 	 * Showing from fragment
@@ -36,7 +36,7 @@ public class AddLocationDialog extends SimpleDialogFragment {
 	public static <T extends Fragment & IAddLocationDialogListener> void show(FragmentActivity activity, @Nullable T fragment, int requestCode) {
 		AddLocationDialog dialog = new AddLocationDialog();
 		if (fragment != null) dialog.setTargetFragment(fragment, requestCode);
-		dialog.show(activity.getSupportFragmentManager(), TAG);
+		dialog.show(activity.getSupportFragmentManager(), DIALOG_TAG);
 	}
 
 	/**

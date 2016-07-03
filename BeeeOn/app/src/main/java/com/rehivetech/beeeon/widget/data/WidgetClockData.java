@@ -2,14 +2,12 @@ package com.rehivetech.beeeon.widget.data;
 
 import android.content.Context;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -18,8 +16,6 @@ import com.rehivetech.beeeon.widget.ViewsBuilder;
 import com.rehivetech.beeeon.widget.persistence.WidgetModulePersistence;
 import com.rehivetech.beeeon.widget.persistence.WidgetWeatherPersistence;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
 import java.text.DateFormatSymbols;
@@ -28,11 +24,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by Tomáš on 29. 4. 2015.
  */
 public class WidgetClockData extends WidgetData {
-	private static final String TAG = WidgetClockData.class.getSimpleName();
 
 	public static String weekDays[] = reloadWeekDays();
 	public WidgetWeatherPersistence weather;
@@ -95,7 +92,7 @@ public class WidgetClockData extends WidgetData {
 		for (WidgetModulePersistence dev : widgetModules) {
 			Module module = dev.getModule();
 			if (dev.getId().isEmpty() || module == null) {
-				Log.i(TAG, "Could not retrieve module from widget " + String.valueOf(mWidgetId));
+				Timber.i("Could not retrieve module from widget %s", String.valueOf(mWidgetId));
 				continue;
 			}
 
@@ -302,7 +299,7 @@ public class WidgetClockData extends WidgetData {
 	 * Updates always on time broadcasts
 	 */
 	public void handleClockUpdate() {
-		Log.d(TAG, String.format("handleClockUpdate(%d)", mWidgetId));
+		Timber.d("handleClockUpdate(%d)", mWidgetId);
 		renderWidget();
 	}
 
@@ -333,7 +330,7 @@ public class WidgetClockData extends WidgetData {
 
 			// Save fresh data
 			this.save();
-			Log.v(TAG, String.format("Updating widget (%d) with fresh data", getWidgetId()));
+			Timber.v("Updating widget (%d) with fresh data", getWidgetId());
 		}
 
 		return updated > 0;
@@ -364,7 +361,7 @@ public class WidgetClockData extends WidgetData {
 			}
 		}
 
-		Log.d(TAG, "changed to layout: " + debugName);
+		Timber.d("changed to layout: %s ", debugName);
 		changeLayout(layout);
 	}
 

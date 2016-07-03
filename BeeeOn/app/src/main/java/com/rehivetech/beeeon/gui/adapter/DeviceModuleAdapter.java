@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.Status;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
@@ -29,8 +27,6 @@ import java.util.List;
  * @author martin on 13.8.2015.
  */
 public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapter.DeviceModuleAdapterViewHolder> {
-
-	public static final String TAG = DeviceModuleAdapter.class.getSimpleName();
 
 	private Context mContext;
 	private List<Module> mModuleList;

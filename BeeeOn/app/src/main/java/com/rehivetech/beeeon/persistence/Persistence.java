@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.Constants;
@@ -31,13 +30,14 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import timber.log.Timber;
+
 /**
  * Persistence service that handles caching data on this module.
  *
  * @author Robyer
  */
 public class Persistence {
-	private static final String TAG = Persistence.class.getSimpleName();
 
 	/**
 	 * Namespace of global preferences
@@ -256,7 +256,7 @@ public class Persistence {
 			provider = (IAuthProvider) ctor.newInstance();
 			provider.setPrimaryParameter(parameter);
 		} catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | ClassCastException e) {
-			Log.e(TAG, String.format("Cant create IAuthProvider class '%s' with parameter '%s'", className, parameter));
+			Timber.e("Cant create IAuthProvider class '%s' with parameter '%s'", className, parameter);
 		}
 
 		return provider;

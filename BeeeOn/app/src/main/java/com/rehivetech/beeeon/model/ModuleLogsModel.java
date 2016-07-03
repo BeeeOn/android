@@ -1,12 +1,7 @@
 package com.rehivetech.beeeon.model;
 
-import android.util.Log;
-
 import com.rehivetech.beeeon.exception.AppException;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.ModuleLog;
-import com.rehivetech.beeeon.household.device.ModuleLog.DataInterval;
-import com.rehivetech.beeeon.household.device.ModuleLog.DataType;
 import com.rehivetech.beeeon.network.INetwork;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
@@ -15,15 +10,13 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 
-public class ModuleLogsModel extends BaseModel {
+import timber.log.Timber;
 
-	private static final String TAG = ModuleLogsModel.class.getSimpleName();
+public class ModuleLogsModel extends BaseModel {
 
 	private DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss").withZoneUTC();
 
@@ -54,11 +47,11 @@ public class ModuleLogsModel extends BaseModel {
 		String moduleId = pair.module.getModuleId().absoluteId;
 		ModuleLog log = new ModuleLog(pair.type, pair.gap);
 
-		Log.v(TAG, String.format("We want interval: %s -> %s (%s)", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), log.getId()));
+		Timber.v("We want interval: %s -> %s (%s)", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), log.getId());
 
 		if (!mModulesLogs.hasObject(moduleId, log.getId())) {
 			// No log for this module, download whole interval
-			Log.v(TAG, String.format("No cached log (%s) for module %s", log.getId(), moduleId));
+			Timber.v("No cached log (%s) for module %s", log.getId(), moduleId);
 			downloadIntervals.add(interval);
 		} else {
 			// We have this ModuleLog with (not necessarily all) values
@@ -68,7 +61,7 @@ public class ModuleLogsModel extends BaseModel {
 			SortedMap<Long, Float> rows = data.getValues();
 			if (rows.isEmpty()) {
 				// No values in this log, download whole interval
-				Log.v(TAG, String.format("We have log (%s), but with no values for module %s", log.getId(), moduleId));
+				Timber.v("We have log (%s), but with no values for module %s", log.getId(), moduleId);
 				downloadIntervals.add(interval);
 			} else {
 				// Use pair gap to make sure we won't make useless request when there won't be no new value anyway
@@ -78,33 +71,33 @@ public class ModuleLogsModel extends BaseModel {
 				long first = rows.firstKey();
 				long last = rows.lastKey();
 
-				Log.v(TAG, String.format("We have cached: %s -> %s for module %s", fmt.print(first), fmt.print(last), moduleId));
+				Timber.v("We have cached: %s -> %s for module %s", fmt.print(first), fmt.print(last), moduleId);
 
-				Log.v(TAG, String.format("We have log (%s) and there are some values for module %s", log.getId(), moduleId));
-				Log.v(TAG, String.format("Gap: %d ms", gap));
+				Timber.v("We have log (%s) and there are some values for module %s", log.getId(), moduleId);
+				Timber.v("Gap: %d ms", gap);
 
 				if (interval.isBefore(first) || interval.isAfter(last)) {
 					// Outside of values in this log, download whole interval
-					Log.v(TAG, String.format("Wanted interval is before or after cached interval for module %s", moduleId));
+					Timber.v("Wanted interval is before or after cached interval for module %s", moduleId);
 					downloadIntervals.add(interval);
 					// TODO: remember this new hole?
 				} else {
 					if (interval.contains(first)) {
-						Log.v(TAG, String.format("Wanted interval contains FIRST of cached interval for module %s", moduleId));
+						Timber.v("Wanted interval contains FIRST of cached interval for module %s", moduleId);
 						// <start of interval, start of saved data> 
 						Interval cutInterval = new Interval(interval.getStartMillis(), first);
-						Log.v(TAG, String.format("Cut (FIRST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleId));
-						Log.v(TAG, String.format("Is (FIRST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
+						Timber.v("Cut (FIRST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleId);
+						Timber.v("Is (FIRST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap);
 						if (cutInterval.toDurationMillis() > gap)
 							downloadIntervals.add(cutInterval);
 					}
 
 					if (interval.contains(last)) {
-						Log.v(TAG, String.format("Wanted interval contains LAST of cached interval for module %s", moduleId));
+						Timber.v("Wanted interval contains LAST of cached interval for module %s", moduleId);
 						// <end of saved data, end of interval>
 						Interval cutInterval = new Interval(last, interval.getEndMillis());
-						Log.v(TAG, String.format("Cut (LAST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleId));
-						Log.v(TAG, String.format("Is (LAST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap));
+						Timber.v("Cut (LAST) interval: %s -> %s for module %s", fmt.print(cutInterval.getStart()), fmt.print(cutInterval.getEnd()), moduleId);
+						Timber.v("Is (LAST) interval duration: %d > gap: %d ?", cutInterval.toDurationMillis(), gap);
 						if (cutInterval.toDurationMillis() > gap)
 							downloadIntervals.add(cutInterval);
 					}
@@ -146,9 +139,9 @@ public class ModuleLogsModel extends BaseModel {
 		List<Interval> downloadIntervals = getMissingIntervals(pair);
 
 		String moduleId = pair.module.getModuleId().absoluteId;
-		Log.d(TAG, String.format("%d missing intervals to download for module: %s", downloadIntervals.size(), moduleId));
+		Timber.d("%d missing intervals to download for module: %s", downloadIntervals.size(), moduleId);
 		for (Interval interval : downloadIntervals) {
-			Log.v(TAG, String.format("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), moduleId));
+			Timber.v("Missing interval: %s -> %s for module: %s", fmt.print(interval.getStart()), fmt.print(interval.getEnd()), moduleId);
 		}
 
 		try {

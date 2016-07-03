@@ -49,8 +49,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DevicesListFragment extends BaseApplicationFragment implements DeviceRecycleAdapter.IItemClickListener, ConfirmDialog.ConfirmDialogListener {
-	@SuppressWarnings("unused")
-	private static final String TAG = DevicesListFragment.class.getSimpleName();
 
 	//private static final String KEY_LOC_ID = "location_id";
 	private static final String KEY_GATE_ID = "gate_id";

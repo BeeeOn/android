@@ -25,7 +25,6 @@ import java.util.List;
  * @since 25. 4. 2015.
  */
 public class EditTextDialog extends BaseDialogFragment {
-	public static String TAG = "edit_text_picker";
 
 	public static final String ARG_TITLE = "title";
 	public static final String ARG_LAYOUT_RES = "layout_res";

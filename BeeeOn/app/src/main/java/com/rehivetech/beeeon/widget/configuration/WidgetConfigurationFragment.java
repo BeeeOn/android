@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -38,11 +37,12 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * @author mlyko
  */
 public abstract class WidgetConfigurationFragment extends BaseApplicationFragment {
-	private static final String TAG = WidgetConfigurationFragment.class.getSimpleName();
 
 	protected List<Module> mModules = new ArrayList<>();
 	protected List<Location> mLocations = new ArrayList<>();
@@ -130,7 +130,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 		if (gateEmptyView != null) {
 			mGateSpinner.setEmptyView(gateEmptyView);
 		} else {
-			Log.e(TAG, "EmptyView for GateWay spinner MISSING!");
+			Timber.e("EmptyView for GateWay spinner MISSING!");
 		}
 
 		mGateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -195,7 +195,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 			@Override
 			public void onExecute(boolean success) {
 				// Redraw Activity
-				Log.d(TAG, "After reload task - go to redraw activity");
+				Timber.d("After reload task - go to redraw activity");
 				onAllGatesReload();
 				// continue to refresh fragment
 				onReloadTaskFinished();
@@ -323,7 +323,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == android.R.id.home) {
 			if (mGeneralWidgetdata == null) {
-				Log.e(TAG, "There should be widgetData !");
+				Timber.e("There should be widgetData !");
 				Toast.makeText(mActivity, R.string.activity_configuration_toast_something_wrong, Toast.LENGTH_LONG).show();
 				finishConfiguration();
 			}
@@ -332,7 +332,7 @@ public abstract class WidgetConfigurationFragment extends BaseApplicationFragmen
 				mActivity.returnIntent(true);
 				finishConfiguration();
 			} else {
-				Log.e(TAG, "Could not save widget!");
+				Timber.e("Could not save widget!");
 				// NOTE: need to show Toast or something in saveSettings() !!
 			}
 
