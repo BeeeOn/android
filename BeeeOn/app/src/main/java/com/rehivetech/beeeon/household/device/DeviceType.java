@@ -187,6 +187,7 @@ public enum DeviceType implements IIdentifier {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
+					new Module(device, "300", 0x0A, null, null, null, true, null, new BaseValue.Constraints(15.0, 3600.0, 15.0), "15"),
 					new Module(device, "0", 0x01, 11, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
 							new Module.Rule(0, new int[] {1, 2, 3, 5, 6, 7, 11, 12, 13, 65, 73, 74, 75, 76}),
 							new Module.Rule(1, new int[] {6, 7, 74, 75}),
@@ -622,7 +623,7 @@ public enum DeviceType implements IIdentifier {
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1461618529586l;
+	public static final long DEVICES_DATE = 1468244353483l;
 
 	/** END OF GENERATED CONTENT **/
 
