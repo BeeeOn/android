@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.network.server;
 
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
@@ -346,7 +345,7 @@ public class Network implements INetwork {
 		String result = "";
 		AppException cause = null;
 
-		Timber.i(" fromApp >>", messageToSend);
+		Timber.i(" fromApp >> %s", messageToSend);
 		try {
 			result = startCommunication(messageToSend);
 		} catch (AppException e) {
