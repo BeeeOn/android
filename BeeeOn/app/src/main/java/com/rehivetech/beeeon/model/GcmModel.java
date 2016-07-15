@@ -119,13 +119,12 @@ public class GcmModel extends BaseModel {
 //		});
 //		thread.start();
 //	}
-
 	public void saveGcm(@NonNull String gcmIdNew) {
 		Controller controller = Controller.getInstance(mContext);
 		GcmModel gcmModel = controller.getGcmModel();
 		String gcmIdOld = gcmModel.getGCMRegistrationId();
-				if (!gcmIdOld.equals(gcmIdNew)) {
-					gcmModel.deleteGCM(controller.getActualUser().getId(), gcmIdOld);
+		if (!gcmIdOld.equals(gcmIdNew)) {
+			gcmModel.deleteGCM(controller.getActualUser().getId(), gcmIdOld);
 
 					// Persist the GCM ID - no need to register again.
 					gcmModel.setGCMIdLocal(gcmIdNew);
@@ -146,13 +145,13 @@ public class GcmModel extends BaseModel {
 	 * @return registration ID, or empty string if there is no existing registration ID.
 	 */
 	public String getGCMRegistrationId() {
-		String registrationId = mPersistence.loadGCMRegistrationId();
+		String registrationId = Persistence.Global.loadGCMRegistrationId();
 		if (registrationId.isEmpty()) {
 			Timber.i("%s Registration not found.", Constants.GCM_TAG);
 			return "";
 		}
 		// Check if app was updated; if so, it must clear the registration ID since the existing regID is not guaranteed to work with the new app version.
-		int registeredVersion = mPersistence.loadLastApplicationVersion();
+		int registeredVersion = Persistence.Global.loadLastApplicationVersion();
 		int currentVersion = Utils.getAppVersion(mContext);
 		if (registeredVersion != currentVersion) {
 			// delete actual GCM ID from server
@@ -205,8 +204,8 @@ public class GcmModel extends BaseModel {
 		int appVersion = Utils.getAppVersion(mContext);
 		Timber.i("%s Saving GCM ID on app version %s", Constants.GCM_TAG , appVersion);
 
-		mPersistence.saveGCMRegistrationId(gcmId);
-		mPersistence.saveLastApplicationVersion(appVersion);
+		Persistence.Global.saveGCMRegistrationId(gcmId);
+		Persistence.Global.saveLastApplicationVersion(appVersion);
 	}
 
 	/**

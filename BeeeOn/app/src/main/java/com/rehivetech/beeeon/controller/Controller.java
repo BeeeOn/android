@@ -124,7 +124,7 @@ public final class Controller {
 	private Controller(@NonNull Context context) {
 		mContext = context.getApplicationContext();
 		// Load last used mode
-		mDemoMode = Persistence.loadLastDemoMode(mContext);
+		mDemoMode = Persistence.Global.loadLastDemoMode();
 		// Create basic objects
 		mNetwork = loadNetwork();
 
@@ -137,19 +137,19 @@ public final class Controller {
 		}
 
 		// Load previous user
-		String userId = mPersistence.loadLastUserId();
+		String userId = Persistence.Global.loadLastUserId();
 		if (!userId.isEmpty()) {
 			mUser.setId(userId);
 			// Load rest of user details (if available)
-			mPersistence.loadUserDetails(userId, mUser);
+			Persistence.UserSettings.loadProfile(mContext, userId, mUser);
 			// Finally load sessionId - we can call it directly like that because here we doesn't care whether it's empty because it's empty since Network creation
-			mNetwork.setSessionId(mPersistence.loadLastBT(userId));
+			mNetwork.setSessionId(Persistence.UserSettings.loadLastBT(mContext, userId));
 		}
 	}
 
 	public INetwork loadNetwork() throws AppException {
 		// Load login server
-		long serverId = Persistence.loadLoginServerId(mContext);
+		long serverId = Persistence.Global.loadLoginServerId();
 
 		// get login server
 		Server server = Server.getServerSafeById(serverId);
@@ -159,7 +159,7 @@ public final class Controller {
 
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
-	 * <p/>
+	 * <p>
 	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
 	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
 	 *
@@ -168,7 +168,7 @@ public final class Controller {
 	 */
 	public static synchronized void setDemoMode(@NonNull Context context, boolean demoMode) {
 		// Remember last used mode
-		Persistence.saveLastDemoMode(context, demoMode);
+		Persistence.Global.saveLastDemoMode(demoMode);
 
 		// We always need to create a new Controller, due to account switch and first (not) loading of demo
 		sController = new Controller(context);
@@ -299,7 +299,7 @@ public final class Controller {
 	public void loadUserData(@Nullable String userId) {
 		// Load cached user details, if this is not first login
 		if (userId != null) {
-			mPersistence.loadUserDetails(userId, mUser);
+			Persistence.UserSettings.loadProfile(mContext, userId, mUser);
 		}
 
 		// Load user data from server
@@ -315,7 +315,7 @@ public final class Controller {
 					Timber.e("Loaded userId from server (%s), this is first login.", user.getId());
 				}
 				// So save the correct userId
-				mPersistence.saveLastUserId(user.getId());
+				Persistence.Global.saveLastUserId(user.getId());
 			}
 
 			// If we have no or changed picture, lets download it from server
@@ -337,7 +337,7 @@ public final class Controller {
 
 		// We have fresh user details, save them to cache (but not in demoMode)
 		if (!(mNetwork instanceof DemoNetwork)) {
-			mPersistence.saveUserDetails(user.getId(), mUser);
+			Persistence.UserSettings.saveProfile(mContext, user.getId(), mUser);
 		}
 	}
 
@@ -373,17 +373,17 @@ public final class Controller {
 		}
 
 		// Then initialize default settings
-		mPersistence.initializeDefaultSettings(userId);
+		Persistence.UserSettings.initializeDefaultSettings(mContext, userId);
 
 		if (!(mNetwork instanceof DemoNetwork)) {
 			// Save our new sessionId
 			String bt = mNetwork.getSessionId();
 			Timber.e("Loaded for user '%s' fresh new sessionId: %s", userId, bt);
-			mPersistence.saveLastBT(userId, bt);
+			Persistence.UserSettings.saveLastBT(mContext, userId, bt);
 
 			// Remember this email to use with auto login
-			mPersistence.saveLastUserId(mUser.getId());
-			mPersistence.saveLastAuthProvider(authProvider);
+			Persistence.Global.saveLastUserId(mUser.getId());
+			Persistence.Global.saveLastAuthProvider(authProvider);
 
 			Intent intent = new Intent(mContext, GcmRegistrationIntentService.class);
 			mContext.startService(intent);
@@ -433,9 +433,9 @@ public final class Controller {
 			prefs.edit().remove(Constants.PERSISTENCE_PREF_USER_BT).apply();
 
 		// Forgot info about last user
-		Persistence.saveLastDemoMode(mContext, null);
-		mPersistence.saveLastAuthProvider(null);
-		mPersistence.saveLastUserId(null);
+		Persistence.Global.saveLastDemoMode(null);
+		Persistence.Global.saveLastAuthProvider(null);
+		Persistence.Global.saveLastUserId(null);
 
 		// send logout broadcast so widget can set cached
 		mContext.sendBroadcast(new Intent(Constants.BROADCAST_USER_LOGOUT));
@@ -485,7 +485,7 @@ public final class Controller {
 
 	/**
 	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -531,7 +531,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
