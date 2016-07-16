@@ -35,6 +35,8 @@ import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
+import com.rehivetech.beeeon.gui.view.CircleTransformation;
+import com.squareup.picasso.Transformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -65,6 +67,9 @@ final public class Utils {
 			R.color.graph6, R.color.graph7, R.color.graph8, R.color.graph9, R.color.graph10, R.color.graph11, R.color.graph12,
 			R.color.graph13, R.color.graph14, R.color.graph15, R.color.graph16, R.color.graph17, R.color.graph18,
 			R.color.graph19, R.color.graph20};
+
+	private static Transformation sCircleTransformation = new CircleTransformation();
+
 
 	/**
 	 * Private constructor to avoid instantiation.
@@ -617,5 +622,10 @@ final public class Utils {
 		if (!s.hasNext()) return null;
 
 		return s.next();
+	}
+
+
+	public static Transformation getCircleTransformation() {
+		return sCircleTransformation;
 	}
 }

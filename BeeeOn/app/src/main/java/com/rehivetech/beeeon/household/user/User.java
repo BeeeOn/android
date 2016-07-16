@@ -12,9 +12,18 @@ import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.gui.activity.MainActivity;
+import com.rehivetech.beeeon.network.server.xml.XmlParser;
 import com.rehivetech.beeeon.util.Utils;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
+
+import timber.log.Timber;
+
 
 /**
  * Represents single person.
@@ -39,23 +48,6 @@ public class User implements INameIdentifier {
 
 	private HashMap<String, String> mJoinedProviders = new HashMap<>();
 
-	public User() {
-	}
-
-	public User(final String id, final String name, final String surname, final String email, final Gender gender, final Role role) {
-		mId = id;
-		mName = name;
-		mSurname = surname;
-		mEmail = email;
-		mGender = gender;
-		mRole = role;
-	}
-
-	public User(final String id, final String email, final Role role) {
-		mId = id;
-		mEmail = email;
-		mRole = role;
-	}
 
 	public enum Role implements IIdentifier {
 		Guest("guest", R.string.user_role_guest), // can only read gate and devices' data
@@ -66,19 +58,23 @@ public class User implements INameIdentifier {
 		private final String mRole;
 		private final int mStringRes;
 
+
 		Role(String role, int stringRes) {
 			mRole = role;
 			mStringRes = stringRes;
 		}
 
+
 		public String getId() {
 			return mRole;
 		}
+
 
 		public int getStringResource() {
 			return mStringRes;
 		}
 	}
+
 
 	public enum Gender implements IIdentifier {
 		UNKNOWN("unknown"),
@@ -87,91 +83,143 @@ public class User implements INameIdentifier {
 
 		String mValue;
 
+
 		Gender(String value) {
 			mValue = value;
 		}
+
 
 		public String getId() {
 			return mValue;
 		}
 	}
 
+
+	public User() {
+	}
+
+
+	public User(final String id, final String name, final String surname, final String email, final Gender gender, final Role role) {
+		mId = id;
+		mName = name;
+		mSurname = surname;
+		mEmail = email;
+		mGender = gender;
+		mRole = role;
+	}
+
+
+	public User(final String id, final String email, final Role role) {
+		mId = id;
+		mEmail = email;
+		mRole = role;
+	}
+
+
 	public String getId() {
-		if (!mId.isEmpty())
+		if(!mId.isEmpty())
 			return mId;
 		return getEmail();
 	}
+
 
 	public void setId(String id) {
 		this.mId = id;
 	}
 
-	public HashMap<String, String> getJoinedProviders() {
-		return mJoinedProviders;
-	}
-
-	public void setJoinedProviders(HashMap<String, String> joinedProviders) {
-		mJoinedProviders = joinedProviders;
-	}
-
-	public String getFullName() {
-		return String.format("%s %s", mName, mSurname).trim();
-	}
 
 	public String getName() {
 		return mName;
 	}
 
+
 	public void setName(String name) {
 		mName = name;
 	}
+
+
+	public HashMap<String, String> getJoinedProviders() {
+		return mJoinedProviders;
+	}
+
+
+	public void setJoinedProviders(HashMap<String, String> joinedProviders) {
+		mJoinedProviders = joinedProviders;
+	}
+
+
+	public String getFullName() {
+		return String.format("%s %s", mName, mSurname).trim();
+	}
+
 
 	public String getSurname() {
 		return mSurname;
 	}
 
+
 	public void setSurname(String surname) {
 		this.mSurname = surname;
 	}
+
 
 	public String getEmail() {
 		return mEmail;
 	}
 
+
 	public void setEmail(String email) {
 		mEmail = email;
 	}
+
 
 	public Role getRole() {
 		return mRole;
 	}
 
+
 	public void setRole(Role role) {
 		mRole = role;
 	}
+
 
 	public Gender getGender() {
 		return mGender;
 	}
 
+
 	public void setGender(Gender gender) {
 		mGender = gender;
 	}
+
 
 	public boolean isEmpty() {
 		return mId.isEmpty() || mEmail.isEmpty() || mName.isEmpty() || (mPicture == null && !mPictureUrl.isEmpty());
 	}
 
+
 	/**
 	 * @return picture url or empty string
 	 */
 	public String getPictureUrl() {
-		return mPictureUrl;
+		return "http://graph.facebook.com/10206387578759322/picture";
 	}
 
-	public void setPictureUrl(String url) {
-		mPictureUrl = url;
+
+	/**
+	 * Setups picture from encoded url string (might have "&amp;" etc)
+	 *
+	 * @param encodedUrl string in raw format which might be urlencoded
+	 */
+	public void setPictureUrl(String encodedUrl) {
+		try {
+			mPictureUrl = URLDecoder.decode(encodedUrl, XmlParser.DEFAULT_CHARSET);
+		} catch(UnsupportedEncodingException e) {
+			e.printStackTrace();
+			mPictureUrl = "";
+		}
 	}
+
 
 	/**
 	 * @return user picture bitmap or null
@@ -181,33 +229,54 @@ public class User implements INameIdentifier {
 		return mPicture;
 	}
 
+
 	public void setPicture(@Nullable Bitmap picture) {
 		mPicture = Utils.getRoundedShape(picture);
 	}
+
 
 	public String toDebugString() {
 		return String.format("Id: %s\nEmail: %s\nRole: %s\nName: %s\nGender: %s", mId, mEmail, mRole, mName, mGender);
 	}
 
+
 	/**
-	 * Helper for placing user picture or placeholder
+	 * Loads user's picture from its url address and sets into specified imageview
 	 *
-	 * @param picture view to set
-	 * @param bitmap  user's picture
+	 * @param context     for gettin resources and picasso
+	 * @param pictureView into this view will be picture loaded
 	 */
-	public static void placePicture(ImageView picture, Bitmap bitmap) {
-		if (bitmap == null) {
-			Context appContext = BeeeOnApplication.getContext();
-			Drawable defaultPicture = DrawableCompat.wrap(ContextCompat.getDrawable(appContext, R.drawable.ic_person_black_24dp));
-			DrawableCompat.setTint(defaultPicture.mutate(), ContextCompat.getColor(appContext, R.color.white));
-			picture.setImageDrawable(defaultPicture);
-			int padding = (int) appContext.getResources().getDimension(R.dimen.space_normal);
-			picture.setPadding(padding, padding, padding, padding);
-		} else {
-			picture.setImageBitmap(bitmap);
-			picture.setPadding(0, 0, 0, 0);
+	public void loadPicture(Context context, final ImageView pictureView) {
+		String url = getPictureUrl();
+		final int padding = (int) context.getResources().getDimension(R.dimen.space_normal);
+
+		// loads default icon with padding
+		if(url == null || url.isEmpty()) {
+			pictureView.setImageResource(R.drawable.ic_person_white_24dp);
+			pictureView.setPadding(padding, padding, padding, padding);
+			return;
 		}
+
+		// starts loading picture (sets padding on error + error icon .. without padding on success)
+		Picasso.with(context)
+				.load(url)
+				.error(R.drawable.ic_person_white_24dp)
+				.transform(Utils.getCircleTransformation())
+				.into(pictureView, new Callback() {
+					@Override
+					public void onSuccess() {
+						pictureView.setPadding(0, 0, 0, 0);
+					}
+
+
+					@Override
+					public void onError() {
+						Timber.e("asdfg");
+						pictureView.setPadding(padding, padding, padding, padding);
+					}
+				});
 	}
+
 
 	/**
 	 * Represents pair of user and gate for saving it to server
@@ -215,6 +284,7 @@ public class User implements INameIdentifier {
 	public static class DataPair {
 		public final User user;
 		public final String gateId;
+
 
 		public DataPair(final User user, final String gateId) {
 			this.user = user;

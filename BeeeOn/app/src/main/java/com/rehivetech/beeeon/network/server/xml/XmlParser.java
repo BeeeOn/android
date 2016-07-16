@@ -36,6 +36,7 @@ import timber.log.Timber;
  */
 public class XmlParser {
 
+	public static final String DEFAULT_CHARSET = "UTF-8";
 	private static final String ns = null;
 
 	private XmlPullParser mParser;
@@ -59,7 +60,7 @@ public class XmlParser {
 	private XmlParser(@NonNull String xmlInput) throws XmlPullParserException, UnsupportedEncodingException {
 		mParser = Xml.newPullParser();
 		mParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes("UTF-8")), null);
+		mParser.setInput(new ByteArrayInputStream(xmlInput.getBytes(DEFAULT_CHARSET)), null);
 	}
 
 	public static XmlParser parse(@NonNull String xmlInput) throws AppException {

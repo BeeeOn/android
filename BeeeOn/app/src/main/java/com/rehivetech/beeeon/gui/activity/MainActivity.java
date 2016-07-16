@@ -32,6 +32,8 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.SwitchGateTask;
 import com.rehivetech.beeeon.util.Migration;
+import com.rehivetech.beeeon.util.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,6 +41,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import icepick.State;
 import timber.log.Timber;
+
 
 public class MainActivity extends BaseApplicationActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -64,17 +67,18 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	private ArrayAdapter<Gate> mGatesAdapter;
 	private Handler mHandler = new Handler();
 
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ButterKnife.bind(this);
-		Timber.d( "onCreate");
+		Timber.d("onCreate");
 		setupDrawer();
 
 		Controller controller = Controller.getInstance(this);
 
-		if (savedInstanceState == null) {
+		if(savedInstanceState == null) {
 			// loads user's last content fragment
 			SharedPreferences userSettings = controller.getUserSettings();
 			mActiveContentTag = userSettings == null ? CONTENT_TAG_DEVICES : userSettings.getString(Constants.PERSISTENCE_PREF_LAST_CONTENT_TAG, CONTENT_TAG_DEVICES);
@@ -82,6 +86,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 
 		redrawContent(null, true);
 	}
+
 
 	/**
 	 * Setups NavDrawer with its content
@@ -97,20 +102,22 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		mGatesSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			private boolean firstSelect = true;
 
+
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 				// Ignore first select after creation (which is automatic - not selected by user)
-				if (firstSelect) {
+				if(firstSelect) {
 					firstSelect = false;
 					return;
 				}
 
 				Gate gate = (Gate) parent.getItemAtPosition(position);
-				if (gate == null) return;
+				if(gate == null) return;
 
 				// TODO: Don't switch gate if this is first "start" (on creating activity)
 				doSwitchGateTask(gate.getId());
 			}
+
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
@@ -119,12 +126,14 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		mGatesSpinner.setAdapter(mGatesAdapter);
 	}
 
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Timber.d( "onStart");
+		Timber.d("onStart");
 		doReloadAllData();
 	}
+
 
 	/**
 	 * Reloads all data user has (in case we don't load them in LoginActivity)
@@ -134,9 +143,9 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		fullReloadTask.setListener(new CallbackTask.ICallbackTaskListener() {
 			@Override
 			public void onExecute(boolean success) {
-				if (success) {
+				if(success) {
 					// Redraw Activity - probably list of modules
-					Timber.d( "After reload task -> redraw mainActivity");
+					Timber.d("After reload task -> redraw mainActivity");
 					redrawContent(null, true);
 				}
 			}
@@ -145,6 +154,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		// Execute and remember task so it can be stopped automatically
 		callbackTaskManager.executeTask(fullReloadTask);
 	}
+
 
 	/**
 	 * Switching among gates user has. Reloads actually shown page
@@ -165,6 +175,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		callbackTaskManager.executeTask(switchGateTask, gateId);
 	}
 
+
 	/**
 	 * Replaces fragment for specified one by its tag. If no active gate found, shows empty fragment
 	 * FIXME: do better (only when needed)
@@ -172,13 +183,13 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	 * @param newContentTag this specifies which fragment should be shown
 	 */
 	private void redrawContent(@Nullable String newContentTag, boolean shouldRedrawDrawer) {
-		Timber.d( "redrawContent");
+		Timber.d("redrawContent");
 
-		if (newContentTag == null) newContentTag = mActiveContentTag;
+		if(newContentTag == null) newContentTag = mActiveContentTag;
 		Controller controller = Controller.getInstance(this);
 
 		Gate activeGate = controller.getActiveGate();
-		if (activeGate == null) {
+		if(activeGate == null) {
 			Fragment emptyFragment = EmptyFragment.newInstance(getString(R.string.nav_drawer_menu_no_gates)); // FIXME: Better string / data
 			fragmentReplace(emptyFragment, CONTENT_TAG_EMPTY);
 			return;
@@ -186,12 +197,12 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 
 		String activeGateId = activeGate.getId();
 
-		if (shouldRedrawDrawer) {
+		if(shouldRedrawDrawer) {
 			redrawNavDrawer(activeGateId);
 		}
 
 		// if the same page and same gate skips instantiating new fragment
-		if (activeGateId.equals(mActiveGateId) && mActiveContentTag.equals(newContentTag)) {
+		if(activeGateId.equals(mActiveGateId) && mActiveContentTag.equals(newContentTag)) {
 			// FIXME this is not proper way to prevent multiple restarts of fragment. Existing fragment might be updated by some method in it
 //			getSupportFragmentManager().findFragmentByTag(newContentTag);
 			Timber.i("Skipping reloading fragment");
@@ -199,7 +210,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		}
 
 		Fragment fragment;
-		switch (newContentTag) {
+		switch(newContentTag) {
 			case CONTENT_TAG_DASHBOARD:
 				Migration.Dashboard.migrate(MainActivity.this);
 				mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
@@ -216,12 +227,13 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		fragmentReplace(fragment, newContentTag);
 
 		SharedPreferences userSettings = controller.getUserSettings();
-		if (userSettings != null) {
+		if(userSettings != null) {
 			userSettings.edit().putString(Constants.PERSISTENCE_PREF_LAST_CONTENT_TAG, newContentTag).apply();
 		}
 		mActiveContentTag = newContentTag;
 		mActiveGateId = activeGateId;
 	}
+
 
 	/**
 	 * Redraws nav drawer with actual data
@@ -234,14 +246,15 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		// Fill user info in the header of navigation drawer
 		TextView name = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_listview_name);
 		TextView email = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_listview_email);
-		ImageView picture = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_listview_icon);
+		ImageView pictureView = ButterKnife.findById(mNavigationHeader, R.id.menu_profile_listview_icon);
 
 		User user = controller.getActualUser();
 		name.setText(user.getFullName());
 		email.setText(user.getEmail());
 
-		Bitmap bitmap = user.getPicture();
-		User.placePicture(picture, bitmap);
+//		Bitmap bitmap = user.getPicture();
+		user.loadPicture(this, pictureView);
+
 
 		// Fill gates list in the header of navigation drawer
 		List<Gate> gates = controller.getGatesModel().getGates();
@@ -250,12 +263,12 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		// Reload gates adapter data
 		int activeGatePos = 0;
 		mGatesAdapter.clear();
-		for (int i = 0; i < gates.size(); i++) {
+		for(int i = 0; i < gates.size(); i++) {
 			Gate gate = gates.get(i);
 			mGatesAdapter.add(gate);
 
 			// Remember active gate position
-			if (gate.getId().equals(actualGateId)) {
+			if(gate.getId().equals(actualGateId)) {
 				activeGatePos = i;
 			}
 		}
@@ -270,17 +283,19 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		mNavigationMenu.findItem(R.id.item_no_gates).setVisible(!hasGates);
 	}
 
+
 	/**
 	 * Back pressing will close navDrawer if opened, otherwise usual functionality
 	 */
 	@Override
 	public void onBackPressed() {
-		if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+		if(mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
 			mDrawerLayout.closeDrawer(GravityCompat.START);
 			return;
 		}
 		super.onBackPressed();
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -290,6 +305,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		return super.onCreateOptionsMenu(menu);
 	}
 
+
 	/**
 	 * Shows/hides navDrawer or notifications
 	 *
@@ -298,7 +314,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
+		switch(item.getItemId()) {
 			case android.R.id.home:
 				mDrawerLayout.openDrawer(GravityCompat.START);
 				return true;
@@ -312,6 +328,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		return super.onOptionsItemSelected(item);
 	}
 
+
 	/**
 	 * On clicking in navigation drawer list
 	 *
@@ -323,7 +340,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		boolean shouldCloseDrawer = false;
 		boolean shouldStaySelected = false;
 
-		switch (menuItem.getItemId()) {
+		switch(menuItem.getItemId()) {
 			case R.id.nav_drawer_devices:
 				redrawContent(CONTENT_TAG_DEVICES, false);
 				shouldCloseDrawer = true;
@@ -359,12 +376,13 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 				break;
 		}
 
-		if (shouldCloseDrawer) {
+		if(shouldCloseDrawer) {
 			drawerCloseAsync();
 		}
 
 		return shouldStaySelected;
 	}
+
 
 	/**
 	 * Handles closing nav drawer asynchronously because hard ui replacing.
@@ -380,6 +398,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 			}
 		}, 50);
 	}
+
 
 	/**
 	 * Shows gate activity

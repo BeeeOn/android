@@ -1,9 +1,11 @@
 package com.rehivetech.beeeon;
 
 import com.facebook.stetho.Stetho;
+import com.squareup.picasso.Picasso;
 import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import io.realm.Realm;
+
 
 /**
  * @author mlyko
@@ -20,6 +22,8 @@ public class DebugApplication extends BeeeOnApplication {
 						.enableWebKitInspector(RealmInspectorModulesProvider.builder(this).build())
 						.build()
 		);
+
+		Picasso.with(this).setIndicatorsEnabled(true);
 
 
 //		RealmInspectorModulesProvider.builder(this)

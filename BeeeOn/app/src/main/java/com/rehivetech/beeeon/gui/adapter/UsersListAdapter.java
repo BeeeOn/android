@@ -16,6 +16,7 @@ import com.rehivetech.beeeon.util.Utils;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class UsersListAdapter extends BaseAdapter {
 
 	// Declare Variables
@@ -24,32 +25,37 @@ public class UsersListAdapter extends BaseAdapter {
 	private List<User> mUsers;
 	LayoutInflater mInflater;
 
+
 	public UsersListAdapter(Context context) {
 		mContext = context;
 		mUsers = new ArrayList<>();
 		mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
+
 	@Override
 	public int getCount() {
 		return mUsers.size();
 	}
+
 
 	@Override
 	public Object getItem(int position) {
 		return mUsers.get(position);
 	}
 
+
 	@Override
 	public long getItemId(int position) {
 		return position;
 	}
 
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 
-		if(convertView == null){
+		if(convertView == null) {
 			convertView = mInflater.inflate(R.layout.adapter_list_user, parent, false);
 			holder = new ViewHolder();
 
@@ -59,8 +65,7 @@ public class UsersListAdapter extends BaseAdapter {
 			holder.UserIcon = (ImageView) convertView.findViewById(R.id.adapter_list_user_icon);
 
 			convertView.setTag(holder);
-		}
-		else{
+		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 
@@ -70,16 +75,17 @@ public class UsersListAdapter extends BaseAdapter {
 		holder.UserEmail.setText(user.getEmail());
 		holder.UserRole.setText(user.getRole().getStringResource());
 
-		Bitmap picture = user.getPicture();
-		User.placePicture(holder.UserIcon, picture);
+		user.loadPicture(mContext, holder.UserIcon);
 
 		return convertView;
 	}
+
 
 	public void updateData(List<User> data) {
 		this.mUsers = data;
 		notifyDataSetChanged();
 	}
+
 
 	private static class ViewHolder {
 		public TextView UserName;
