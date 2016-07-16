@@ -104,10 +104,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
 		mRealm = Realm.getDefaultInstance();
-		ButterKnife.bind(this);
-		setupToolbar("", INDICATOR_NONE);
 
 		// Get controller
 		Controller controller = Controller.getInstance(this);
@@ -118,6 +115,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			onLoggedIn(); // finishes this activity
 			return;
 		}
+
+		setContentView(R.layout.activity_login);
+		ButterKnife.bind(this);
+		setupToolbar("", INDICATOR_NONE);
 
 		mChooseServerEnabled = Persistence.Global.getSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_SELECTION_SHOWN_DEFAULT);
 
