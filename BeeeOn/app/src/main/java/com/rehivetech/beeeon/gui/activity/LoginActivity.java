@@ -104,10 +104,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
 		mRealm = Realm.getDefaultInstance();
-		ButterKnife.bind(this);
-		setupToolbar("", INDICATOR_NONE);
 
 		// Get controller
 		Controller controller = Controller.getInstance(this);
@@ -119,7 +116,11 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			return;
 		}
 
-		mChooseServerEnabled = Persistence.getGlobalSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_SELECTION_SHOWN_DEFAULT);
+		setContentView(R.layout.activity_login);
+		ButterKnife.bind(this);
+		setupToolbar("", INDICATOR_NONE);
+
+		mChooseServerEnabled = Persistence.Global.getSettings().getBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, SERVER_SELECTION_SHOWN_DEFAULT);
 
 		// show intro if was not shown
 		showIntroFirstTime();
@@ -129,7 +130,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		prepareServers();
 
 		// Do automatic login if we have remembered last logged in user
-		mAuthProvider = Persistence.getLastAuthProvider();
+		mAuthProvider = Persistence.Global.getLastAuthProvider();
 		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
 			// Automatic login with last used provider
 			Timber.d("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter());
@@ -224,7 +225,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				mServersAdapter.setSelectedPosition(position);
 
 				// Remember login server
-				Persistence.saveLoginServerId(LoginActivity.this, server.getId());
+				Persistence.Global.saveLoginServerId(server.getId());
 
 				// need to be handled this way because otherwise not finished clicking
 				new Handler().postDelayed(new Runnable() {
@@ -249,7 +250,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		});
 		mLoginSelectServerRecyclerView.setAdapter(mServersAdapter);
 
-		Long serverId = Persistence.loadLoginServerId(this);
+		Long serverId = Persistence.Global.loadLoginServerId();
 		int index = Utils.getIndexFromList(serverId, serversData);
 		if (index > Constants.NO_INDEX) {
 			mServersAdapter.setSelectedPosition(index);
@@ -387,10 +388,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 					// default server should be first
 					mServersAdapter.setSelectedPosition(0);
 					// Remember login server
-					Persistence.saveLoginServerId(LoginActivity.this, Server.SERVER_ID_PRODUCTION);
+					Persistence.Global.saveLoginServerId(Server.SERVER_ID_PRODUCTION);
 				}
 
-				Persistence.getGlobalSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
+				Persistence.Global.getSettings().edit().putBoolean(Constants.PERSISTENCE_PREF_LOGIN_CHOOSE_SERVER_MANUALLY, checked).apply();
 				setSelectServerVisibility(checked);
 				return true;
 
@@ -694,7 +695,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 					Server selectedServer = mServersAdapter.getItem(mServersAdapter.getSelectedPosition());
 					// need to set some id of server (default)
 					if (selectedServer != null && selectedServer.equals(serverToDelete)) {
-						Persistence.saveLoginServerId(LoginActivity.this, Server.SERVER_ID_PRODUCTION);
+						Persistence.Global.saveLoginServerId(Server.SERVER_ID_PRODUCTION);
 						mServersAdapter.setSelectedPosition(0);    // we assume first server is production (always will be!)
 					}
 

@@ -52,6 +52,7 @@ import javax.net.ssl.TrustManagerFactory;
 
 import timber.log.Timber;
 
+
 /**
  * Network class that handles communication with server.
  *
@@ -95,10 +96,12 @@ public class Network implements INetwork {
 
 	private boolean mInterrupted;
 
+
 	public Network(Server server) {
 		mServer = server;
 		connect();
 	}
+
 
 	/**
 	 * Loads certificate by our compatible certificate factories
@@ -111,6 +114,7 @@ public class Network implements INetwork {
 		CertificateFactory cf = CertificateFactory.getInstance("X.509");
 		return cf.generateCertificate(certificateStream);
 	}
+
 
 	public void connect() {
 		SSLSocketFactory socketFactory = null;
@@ -135,7 +139,7 @@ public class Network implements INetwork {
 			sslContext.init(null, tmf.getTrustManagers(), null);
 
 			socketFactory = sslContext.getSocketFactory();
-		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException | IllegalArgumentException e) {
+		} catch(KeyManagementException | NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException | IllegalArgumentException e) {
 			// IOException - Can't read CA certificate from assets or can't create new socket
 			// CertificateException - Unknown certificate format (default X.509), can't generate CA certificate (it shouldn't occur)
 			// KeyStoreException - Bad type of KeyStore, can't set CA certificate to KeyStore
@@ -148,6 +152,7 @@ public class Network implements INetwork {
 		mSocketFactory = socketFactory;
 	}
 
+
 	/**
 	 * Method for communicating with server.
 	 *
@@ -156,13 +161,13 @@ public class Network implements INetwork {
 	 * @throws AppException with error ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE or ClientError.SOCKET
 	 */
 	private String startCommunication(String request) throws AppException {
-		if (mSocket != null && !mSocket.isConnected()) {
+		if(mSocket != null && !mSocket.isConnected()) {
 			closeCommunicationSocket();
 		}
 
 		// Init socket objects if not exists
-		synchronized (mSocketLock) {
-			if (mSocket == null || mSocketReader == null || mSocketWriter == null) {
+		synchronized(mSocketLock) {
+			if(mSocket == null || mSocketReader == null || mSocketWriter == null) {
 				mSocket = initSocket();
 
 				try {
@@ -170,7 +175,7 @@ public class Network implements INetwork {
 					// we have performed hostName verification, so it is safe to proceed.
 					mSocketWriter = new PrintWriter(mSocket.getOutputStream());
 					mSocketReader = new InputStreamReader(mSocket.getInputStream());
-				} catch (IOException e) {
+				} catch(IOException e) {
 					closeCommunicationSocket();
 					throw AppException.wrap(e, ClientError.SOCKET);
 				}
@@ -190,17 +195,17 @@ public class Network implements INetwork {
 			char[] buffer = new char[2048];
 			char[] cmpBuffer = new char[eofLen];
 
-			while (!mInterrupted && (charsRead = mSocketReader.read(buffer)) != -1) {
+			while(!mInterrupted && (charsRead = mSocketReader.read(buffer)) != -1) {
 				response.append(buffer, 0, charsRead);
 
 				// Check if we've received whole data (end element)
-				if ((respLen = response.length()) >= eofLen) {
+				if((respLen = response.length()) >= eofLen) {
 					response.getChars(respLen - eofLen, respLen, cmpBuffer, 0);
-					if (new String(cmpBuffer).contains(EOF))
+					if(new String(cmpBuffer).contains(EOF))
 						break;
 				}
 			}
-		} catch (IOException e) {
+		} catch(IOException e) {
 			closeCommunicationSocket();
 			throw AppException.wrap(e, ClientError.SOCKET);
 		}
@@ -208,6 +213,7 @@ public class Network implements INetwork {
 		// Return server response
 		return response.toString();
 	}
+
 
 	/**
 	 * Method for initializing socket for sending data to server via TLS protocol using own TrustManger to be able to trust self-signed
@@ -217,7 +223,7 @@ public class Network implements INetwork {
 	 * @throws AppException with error ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE or ClientError.SOCKET
 	 */
 	private SSLSocket initSocket() {
-		if (mSocketFactory == null) {
+		if(mSocketFactory == null) {
 			throw new AppException("SocketFactory is null.", ClientError.SOCKET);
 		}
 
@@ -227,7 +233,7 @@ public class Network implements INetwork {
 			//socket.setKeepAlive(true);
 			socket.setSoTimeout(SSL_TIMEOUT);
 			SSLSession s = socket.getSession();
-			if (!s.isValid())
+			if(!s.isValid())
 				Timber.e("Socket is not valid! TLS handshake failed.");
 
 			// Verify that the certificate hostName
@@ -236,7 +242,7 @@ public class Network implements INetwork {
 
 			// verifying hostname against that what expects server
 			// TODO when the right time (server applied this) -> delete verifying againt Server.DEFAULT_VERIFY
-			if (!hostnameVerifier.verify(mServer.address, s) && !hostnameVerifier.verify("ant-2.fit.vutbr.cz", s)) {
+			if(!hostnameVerifier.verify(mServer.address, s) && !hostnameVerifier.verify("ant-2.fit.vutbr.cz", s)) {
 				throw new AppException("Certificate is not verified!", ClientError.CERTIFICATE)
 						.set("Expected CN", mServer.address)
 						.set("Found CN", s.getPeerPrincipal());
@@ -246,17 +252,18 @@ public class Network implements INetwork {
 			mInterrupted = false;
 
 			return socket;
-		} catch (UnknownHostException e) {
+		} catch(UnknownHostException e) {
 			// Server address or hostName wasn't not found
 			throw AppException.wrap(e, ClientError.UNKNOWN_HOST);
-		} catch (ConnectException e) {
+		} catch(ConnectException e) {
 			// Connection refused, timeout, etc.
 			throw AppException.wrap(e, ClientError.SERVER_CONNECTION);
-		} catch (IOException e) {
+		} catch(IOException e) {
 			// Can't create new socket
 			throw AppException.wrap(e, ClientError.SOCKET);
 		}
 	}
+
 
 	/**
 	 * Closes actual connection (opened socket).
@@ -266,19 +273,20 @@ public class Network implements INetwork {
 		closeCommunicationSocket();
 	}
 
+
 	/**
 	 * Method close socket, writer and reader
 	 */
 	private void closeCommunicationSocket() {
-		synchronized (mSocketLock) {
+		synchronized(mSocketLock) {
 			// Set interrupted flag
 			mInterrupted = true;
 
 			// Securely close reader
-			if (mSocketReader != null) {
+			if(mSocketReader != null) {
 				try {
 					mSocketReader.close();
-				} catch (IOException e) {
+				} catch(IOException e) {
 					e.printStackTrace(); // Nothing we can do here
 				} finally {
 					mSocketReader = null;
@@ -286,16 +294,16 @@ public class Network implements INetwork {
 			}
 
 			// Close writer
-			if (mSocketWriter != null) {
+			if(mSocketWriter != null) {
 				mSocketWriter.close();
 				mSocketWriter = null;
 			}
 
 			// Securely close socket
-			if (mSocket != null) {
+			if(mSocket != null) {
 				try {
 					mSocket.close();
-				} catch (IOException e) {
+				} catch(IOException e) {
 					e.printStackTrace(); // Nothing we can do here
 				} finally {
 					mSocket = null;
@@ -304,10 +312,12 @@ public class Network implements INetwork {
 		}
 	}
 
+
 	@Override
 	public boolean isAvailable() {
 		return Utils.isInternetAvailable();
 	}
+
 
 	/**
 	 * Just calls {@link #doRequest(String, boolean, int)} with retries = RETRIES_COUNT
@@ -317,6 +327,7 @@ public class Network implements INetwork {
 	private synchronized String doRequest(String messageToSend, boolean checkBT) throws AppException {
 		return doRequest(messageToSend, checkBT, RETRIES_COUNT);
 	}
+
 
 	/**
 	 * Send request to server and return parsedMessage or throw exception on error.
@@ -330,16 +341,16 @@ public class Network implements INetwork {
 	 *                      ClientError.UNKNOWN_HOST, ClientError.CERTIFICATE, ClientError.SOCKET or ClientError.NO_RESPONSE
 	 */
 	private synchronized String doRequest(String messageToSend, boolean checkBT, int retries) throws AppException {
-		if (mSocketFactory == null) {
+		if(mSocketFactory == null) {
 			throw new AppException(ClientError.CERTIFICATE); // TODO was not here;
 		}
 
 		// Check internet connection
-		if (!isAvailable())
+		if(!isAvailable())
 			throw new AppException(ClientError.INTERNET_CONNECTION);
 
 		// Check existence of sessionId
-		if (checkBT && !hasSessionId())
+		if(checkBT && !hasSessionId())
 			throw new AppException(NetworkError.BAD_BT);
 
 		String result = "";
@@ -348,11 +359,11 @@ public class Network implements INetwork {
 		Timber.i(" fromApp >> %s", messageToSend);
 		try {
 			result = startCommunication(messageToSend);
-		} catch (AppException e) {
+		} catch(AppException e) {
 			IErrorCode error = e.getErrorCode();
 
 			// Rethrow all errors except some special
-			if (error instanceof NetworkError || error != ClientError.SOCKET)
+			if(error instanceof NetworkError || error != ClientError.SOCKET)
 				throw e;
 
 			// In other cases remember it
@@ -361,8 +372,8 @@ public class Network implements INetwork {
 		Timber.i(" << fromSrv %s", result.isEmpty() ? "- no response -" : result);
 
 		// Check if we received no response and try it again eventually
-		if (result.isEmpty()) {
-			if (retries <= 0) {
+		if(result.isEmpty()) {
+			if(retries <= 0) {
 				// We can't try again anymore, just throw error
 				throw cause != null ? cause : new AppException("No response from server.", ClientError.NO_RESPONSE);
 			}
@@ -381,6 +392,7 @@ public class Network implements INetwork {
 		return result;
 	}
 
+
 	/**
 	 * Just call's {@link #processCommunication(XmlCreator.Request, boolean)} with checkBT = true
 	 *
@@ -390,19 +402,20 @@ public class Network implements INetwork {
 		return processCommunication(request, true);
 	}
 
+
 	private XmlParser processCommunication(XmlCreator.Request request, boolean checkBT) throws AppException {
 		String response = doRequest(request.getMessage(), checkBT);
 		XmlParser parser = XmlParser.parse(response);
 
 		// Check communication protocol version
 		String version = parser.getVersion();
-		if (version.isEmpty()) {
+		if(version.isEmpty()) {
 			throw new AppException("Get no protocol version from response.", ClientError.XML);
-		} else if (!version.equals(PROTOCOL_VERSION)) {
+		} else if(!version.equals(PROTOCOL_VERSION)) {
 			String srv[] = version.split("\\.");
 			String app[] = PROTOCOL_VERSION.split("\\.");
 
-			if (srv.length == 3 && app.length == 3) {
+			if(srv.length == 3 && app.length == 3) {
 				try {
 					int srv_major = Utils.parseIntSafely(srv[0], 0);
 					//int srv_minor = Integer.parseInt(srv[1]);
@@ -411,13 +424,13 @@ public class Network implements INetwork {
 					//int app_minor = Integer.parseInt(app[1]);
 					//int app_build = (app.length >= 3) ? Integer.parseInt(app[2]) : 0;
 
-					if (srv_major != app_major) {
+					if(srv_major != app_major) {
 						// Server must have same major version as app
 						throw new AppException(NetworkError.COM_VER_MISMATCH)
 								.set(NetworkError.PARAM_COM_VER_LOCAL, PROTOCOL_VERSION)
 								.set(NetworkError.PARAM_COM_VER_SERVER, version);
 					}
-				} catch (NumberFormatException e) {
+				} catch(NumberFormatException e) {
 					throw new AppException("Get invalid protocol version from response.", ClientError.XML);
 				}
 			} else {
@@ -426,9 +439,9 @@ public class Network implements INetwork {
 		}
 
 		// Check and process errors
-		if (parser.getResult() == Result.ERROR) {
+		if(parser.getResult() == Result.ERROR) {
 			// Delete COM_SESSION_ID when we receive error saying that it is invalid
-			if (parser.getErrorCode() == NetworkError.BAD_BT.getNumber())
+			if(parser.getErrorCode() == NetworkError.BAD_BT.getNumber())
 				mSessionId = "";
 
 			// Throw AppException
@@ -436,7 +449,7 @@ public class Network implements INetwork {
 		}
 
 		// Check expected namespace/type/result
-		if (!parser.getNamespace().equals(request.namespace) || !parser.getType().equals(request.type) || parser.getResult() != request.expectedResult) {
+		if(!parser.getNamespace().equals(request.namespace) || !parser.getType().equals(request.type) || parser.getResult() != request.expectedResult) {
 			throw new AppException("Unexpected response", ClientError.UNEXPECTED_RESPONSE)
 					.set("ExpectedNamespace", request.namespace)
 					.set("ReceivedNamespace", parser.getNamespace())
@@ -449,15 +462,18 @@ public class Network implements INetwork {
 		return parser;
 	}
 
+
 	@Override
 	public String getSessionId() {
 		return mSessionId;
 	}
 
+
 	@Override
 	public void setSessionId(String token) {
 		mSessionId = token;
 	}
+
 
 	@Override
 	public boolean hasSessionId() {
@@ -473,7 +489,7 @@ public class Network implements INetwork {
 	public boolean accounts_login(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
-		if (parameters == null || parameters.isEmpty())
+		if(parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
 		XmlParser parser = processCommunication(
@@ -484,11 +500,12 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean accounts_register(IAuthProvider authProvider) {
 		// Check existence of authProvider parameters
 		Map<String, String> parameters = authProvider.getParameters();
-		if (parameters == null || parameters.isEmpty())
+		if(parameters == null || parameters.isEmpty())
 			throw new IllegalArgumentException(String.format("IAuthProvider '%s' provided no parameters.", authProvider.getProviderName()));
 
 		processCommunication(
@@ -498,6 +515,7 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean accounts_logout() {
 		processCommunication(
@@ -505,6 +523,7 @@ public class Network implements INetwork {
 
 		return true;
 	}
+
 
 	@Override
 	public User accounts_getMyProfile() {
@@ -514,6 +533,7 @@ public class Network implements INetwork {
 		return parser.parseGetMyProfile();
 	}
 
+
 	@Override
 	public boolean accounts_connectAuthProvider(IAuthProvider authProvider) {
 		processCommunication(
@@ -521,6 +541,7 @@ public class Network implements INetwork {
 
 		return true;
 	}
+
 
 	@Override
 	public boolean accounts_disconnectAuthProvider(String providerName) {
@@ -543,6 +564,7 @@ public class Network implements INetwork {
 		return parser.parseDevices();
 	}
 
+
 	@Override
 	public List<Device> devices_getNew(String gateId) {
 		XmlParser parser = processCommunication(
@@ -550,6 +572,7 @@ public class Network implements INetwork {
 
 		return parser.parseDevices();
 	}
+
 
 	@Override
 	public List<Device> devices_get(List<Device> devices) {
@@ -559,11 +582,13 @@ public class Network implements INetwork {
 		return parser.parseDevices();
 	}
 
+
 	@Override
 	public Device devices_get(Device device) {
 		List<Device> devices = devices_get(Collections.singletonList(device));
 		return devices.isEmpty() ? null : devices.get(0);
 	}
+
 
 	@Override
 	// FIXME: Use ModuleId instead
@@ -587,6 +612,7 @@ public class Network implements INetwork {
 		return result;
 	}
 
+
 	@Override
 	public boolean devices_update(String gateId, List<Device> devices) {
 		XmlParser parser = processCommunication(
@@ -597,6 +623,7 @@ public class Network implements INetwork {
 //		return parser.parse;
 	}
 
+
 	@Override
 	public boolean devices_update(String gateId, Device device) {
 		ArrayList<Device> list = new ArrayList<>();
@@ -604,6 +631,7 @@ public class Network implements INetwork {
 
 		return devices_update(gateId, list);
 	}
+
 
 	@Override
 	public boolean devices_setState(String gateId, Module module) {
@@ -613,6 +641,7 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean devices_unregister(Device device) {
 		processCommunication(
@@ -621,11 +650,13 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean devices_createParameter(Device device, String key, String value) {
 		processCommunication(XmlCreator.Devices.createParameter(mSessionId, device, key, value));
 		return true;
 	}
+
 
 	/**************************************************************************
 	 * GATES
@@ -639,6 +670,7 @@ public class Network implements INetwork {
 		return parser.parseGates();
 	}
 
+
 	@Override
 	public GateInfo gates_get(String gateId) {
 		XmlParser parser = processCommunication(
@@ -646,6 +678,7 @@ public class Network implements INetwork {
 
 		return parser.parseGateInfo();
 	}
+
 
 	@Override
 	public boolean gates_register(String gateId, String gateName, int offsetInMinutes) {
@@ -655,6 +688,7 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean gates_unregister(String gateId) {
 		processCommunication(
@@ -662,6 +696,7 @@ public class Network implements INetwork {
 
 		return true;
 	}
+
 
 	@Override
 	public boolean gates_startListen(String gateId) {
@@ -671,11 +706,13 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean gates_search(String gateId, String deviceIpAddress) {
 		processCommunication(XmlCreator.Gates.search(mSessionId, gateId, deviceIpAddress));
 		return false;
 	}
+
 
 	@Override
 	public boolean gates_update(Gate gate, GpsData gpsData) {
@@ -684,6 +721,7 @@ public class Network implements INetwork {
 
 		return true;
 	}
+
 
 	/**************************************************************************
 	 * GATEUSERS
@@ -694,15 +732,9 @@ public class Network implements INetwork {
 		XmlParser parser = processCommunication(
 				XmlCreator.GateUsers.getAll(mSessionId, gateId));
 
-		List<User> users = parser.parseGateUsers();
-		for (User user : users) {
-			if (!user.getPictureUrl().isEmpty()) {
-				user.setPicture(Utils.fetchImageFromUrl(user.getPictureUrl()));
-			}
-		}
-
-		return users;
+		return parser.parseGateUsers();
 	}
+
 
 	@Override
 	public boolean gateusers_invite(String gateId, ArrayList<User> users) {
@@ -712,6 +744,7 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean gateusers_invite(String gateId, User user) {
 		ArrayList<User> list = new ArrayList<>();
@@ -719,6 +752,7 @@ public class Network implements INetwork {
 
 		return gateusers_invite(gateId, list);
 	}
+
 
 	@Override
 	public boolean gateusers_remove(String gateId, List<User> users) {
@@ -728,6 +762,7 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean gateusers_remove(String gateId, User user) {
 		ArrayList<User> list = new ArrayList<>();
@@ -736,6 +771,7 @@ public class Network implements INetwork {
 		return gateusers_remove(gateId, list);
 	}
 
+
 	@Override
 	public boolean gateusers_updateAccess(String gateId, ArrayList<User> users) {
 		processCommunication(
@@ -743,6 +779,7 @@ public class Network implements INetwork {
 
 		return true;
 	}
+
 
 	@Override
 	public boolean gateusers_updateAccess(String gateId, User user) {
@@ -766,6 +803,7 @@ public class Network implements INetwork {
 		return location;
 	}
 
+
 	@Override
 	public boolean locations_update(Location location) {
 		processCommunication(
@@ -774,6 +812,7 @@ public class Network implements INetwork {
 		return true;
 	}
 
+
 	@Override
 	public boolean locations_delete(Location location) {
 		processCommunication(
@@ -781,6 +820,7 @@ public class Network implements INetwork {
 
 		return true;
 	}
+
 
 	@Override
 	public List<Location> locations_getAll(String gateId) {
@@ -802,6 +842,7 @@ public class Network implements INetwork {
 
 		return parser.parseNotifications();
 	}
+
 
 	@Override
 	public boolean notifications_read(ArrayList<String> notificationIds) {
@@ -829,6 +870,7 @@ public class Network implements INetwork {
 
 		return true;
 	}
+
 
 	/**
 	 * Method set gcmID to server

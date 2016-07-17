@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.Constants;
@@ -32,289 +34,270 @@ import java.lang.reflect.InvocationTargetException;
 
 import timber.log.Timber;
 
+
 /**
  * Persistence service that handles caching data on this module.
  *
  * @author Robyer
+ * @author Tomas Mlynaric
  */
 public class Persistence {
 
 	/**
-	 * Namespace of global preferences
+	 * Gets formatted filename for shared preferences
+	 * @param namespace postfix for the filename
+	 * @return forrmated filename as string
 	 */
-	public static final String GLOBAL = "global";
-
-	private final Context mContext;
-
-	public Persistence(Context context) {
-		mContext = context;
-	}
-
-	/**
-	 * SHAREDPREFERENCES MANIPULATION *
-	 */
-
 	public static String getPreferencesFilename(String namespace) {
 		return String.format(Constants.PERSISTENCE_PREF_FILENAME, namespace);
 	}
 
+	/**
+	 * Gets settings by namespace (shared preferences file name is formatted)
+	 *
+	 * @param context   might be app context
+	 * @param namespace file postfix
+	 * @return opened shared prefs
+	 */
 	public static SharedPreferences getSettings(Context context, String namespace) {
 		String name = getPreferencesFilename(namespace);
 		return context.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 
-	public SharedPreferences getSettings(String namespace) {
-		return getSettings(mContext, namespace);
-	}
 
 	/**
-	 * Get global SharedPreferences for whole application
+	 * User specific settings.
+	 * Contains data for one user, might be more users in the app.
 	 */
-	@NonNull
-	public static SharedPreferences getGlobalSettings() {
-		return Persistence.getSettings(BeeeOnApplication.getContext(), Persistence.GLOBAL);
-	}
+	public static class UserSettings {
 
-	/**
-	 * INITIALIZATION OF DEFAULT SETTINGS *
-	 */
-
-	private void initItemPreference(String namespace, SettingsItem item, int id) {
-		initializePreference(namespace, item.getPersistenceKey(), String.valueOf(id));
-	}
-
-	private void initItemDefaultPreference(String namespace, SettingsItem item) {
-		initItemPreference(namespace, item, item.getDefaultId());
-	}
-
-	public void initializeDefaultSettings(String namespace) {
+		public static String loadLastBT(Context context, String userId) {
+			return getSettings(context, userId).getString(Constants.PERSISTENCE_PREF_USER_BT, "");
+		}
 
 
-		initItemDefaultPreference(namespace, new Language());
-		initItemDefaultPreference(namespace, new Timezone());
+		public static void saveLastBT(Context context, String userId, @Nullable String beeeonToken) {
+			Editor settings = getSettings(context, userId).edit();
 
-		initItemDefaultPreference(namespace, new ActualizationTime());
-		initItemDefaultPreference(namespace, new CacheHoldTime());
+			if(beeeonToken == null) {
+				settings.remove(Constants.PERSISTENCE_PREF_USER_BT);
+			} else {
+				settings.putString(Constants.PERSISTENCE_PREF_USER_BT, beeeonToken);
+			}
 
-		// TODO: use different units based on user Locale, right now we use default values from unit
-		/*
-		 * Locale locale = Locale.getDefault(); if (locale.getCountry() == "en") { initItemPreference(namespace, new TemperatureUnit(), TemperatureUnit.FAHRENHEIT); } else {
-		 * initItemDefaultPreference(namespace, new TemperatureUnit()); }
+			settings.apply();
+		}
+
+
+		public static void loadProfile(Context context, String userId, User user) {
+			SharedPreferences prefs = getSettings(context, userId);
+
+			user.setId(prefs.getString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()));
+			user.setEmail(prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()));
+			user.setName(prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()));
+			user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()));
+			user.setGender(Utils.getEnumFromId(Gender.class, prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()), Gender.UNKNOWN));
+			user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()));
+		}
+
+
+		public static void saveProfile(Context context, String userId, User user) {
+			getSettings(context, userId)
+					.edit()
+					.putString(Constants.PERSISTENCE_PREF_USER_ID, user.getId())
+					.putString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail())
+					.putString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName())
+					.putString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname())
+					.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString())
+					.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl())
+					.apply();
+		}
+
+
+		/**
+		 * Initializes settings for specified namespace
+		 *
+		 * @param context
+		 * @param namespace
 		 */
+		public static void initializeDefaultSettings(Context context, String namespace) {
+			new Language().initDefaultSettings(context, namespace);
+			new Timezone().initDefaultSettings(context, namespace);
+			new ActualizationTime().initDefaultSettings(context, namespace);
+			new CacheHoldTime().initDefaultSettings(context, namespace);
 
-		initItemDefaultPreference(namespace, new TemperatureUnit());
-		initItemDefaultPreference(namespace, new NoiseUnit());
-	}
+			new TemperatureUnit().initDefaultSettings(context, namespace);
+			new NoiseUnit().initDefaultSettings(context, namespace);
 
-	/**
-	 * HELPERS *
-	 */
-
-	public void initializePreference(String namespace, String key, String value) {
-		if (!getSettings(namespace).contains(key)) {
-			setString(namespace, key, value);
+			// TODO: use different units based on user Locale, right now we use default values from unit
+			/*
+			 * Locale locale = Locale.getDefault(); if (locale.getCountry() == "en") { initItemPreference(namespace, new TemperatureUnit(), TemperatureUnit.FAHRENHEIT); } else {
+			 * initItemDefaultPreference(namespace, new TemperatureUnit()); }
+			 */
 		}
 	}
 
-	private void setInt(String namespace, String key, int value) {
-		Editor settings = getSettings(namespace).edit();
-		settings.putInt(key, value);
-		settings.apply();
-	}
-
-	private void setString(String namespace, String key, String value) {
-		Editor settings = getSettings(namespace).edit();
-		settings.putString(key, value);
-		settings.apply();
-	}
-
-	private void setOrRemoveString(String namespace, String key, String value) {
-		Editor settings = getSettings(namespace).edit();
-
-		if (value == null)
-			settings.remove(key);
-		else
-			settings.putString(key, value);
-
-		settings.apply();
-	}
 
 	/**
-	 * Tries to get external cache dir and if it fails, then returns internal cache dir.
-	 * TODO dont cache it on its own but use any library which can download picture and cache it (Picassa)
-	 *
-	 * @return File representing cache dir
+	 * Global settings of application, only one for whole app.
 	 */
-	private File getCacheDir() {
-		return mContext.getCacheDir();
-	}
+	public static class Global {
+		/**
+		 * Namespace of global preferences
+		 */
+		public static final String NAMESPACE = "global";
 
-	/**
-	 * Saves bitmap on to storage
-	 *
-	 * @param picture  which will be saved
-	 * @param filename of the picture
-	 */
-	private void saveBitmap(Bitmap picture, String filename) {
-		OutputStream os = null;
-		try {
-			File file = new File(getCacheDir(), filename + ".jpg");
-			os = new FileOutputStream(file);
-			//picture.reconfigure(150, 150, Bitmap.Config.ARGB_8888);
-			picture.compress(Bitmap.CompressFormat.JPEG, 90, os);
-			os.flush();
-			os.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (os != null)
-					os.close();
-			} catch (IOException ignored) {
+
+		/**
+		 * Get global SharedPreferences for whole application
+		 */
+		@NonNull
+		public static SharedPreferences getSettings() {
+			return Persistence.getSettings(BeeeOnApplication.getContext(), NAMESPACE);
+		}
+
+
+		/**
+		 * Saves auth provider
+		 *
+		 * @param authProvider this will be saved by its classname + primary parameter (e-mail,..)
+		 */
+		public static void saveLastAuthProvider(@Nullable IAuthProvider authProvider) {
+			SharedPreferences globalSettings = getSettings();
+			if(authProvider == null) {
+				globalSettings.edit()
+						.remove(Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER)
+						.remove(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER)
+						.apply();
+			} else {
+				globalSettings.edit()
+						.putString(Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER, authProvider.getClass().getName())
+						.putString(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, authProvider.getPrimaryParameter())
+						.apply();
 			}
 		}
-	}
 
-	@Nullable
-	private Bitmap loadBitmap(String filename) {
-		File file = new File(getCacheDir(), filename + ".jpg");
-		return file.exists() ? BitmapFactory.decodeFile(file.getAbsolutePath()) : null;
-	}
 
-	/**
-	 * DATA MANIPULATION *
-	 */
+		/**
+		 * Returns last used login provider
+		 *
+		 * @return provider which was last used for login
+		 */
+		@Nullable
+		public static IAuthProvider getLastAuthProvider() {
+			SharedPreferences globalSettings = getSettings();
+			String className = globalSettings.getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER, "");
+			String parameter = globalSettings.getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, "");
 
-	// Last demo mode
-	public static boolean loadLastDemoMode(Context context) {
-		return getSettings(context, GLOBAL).getBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, false);
-	}
+			// Return null if we have no className found
+			if(className.isEmpty()) return null;
 
-	public static void saveLastDemoMode(Context context, Boolean demoMode) {
-		SharedPreferences.Editor editor = getSettings(context, GLOBAL).edit();
+			IAuthProvider provider = null;
+			try {
+				// Try to create provider class from last saved provider
+				Class<?> cl = Class.forName(className);
+				Constructor<?> ctor = cl.getConstructor((Class<?>[]) null);
 
-		if (demoMode == null)
-			editor.remove(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE);
-		else
-			editor.putBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, demoMode);
+				// Create instance and set primary parameter
+				provider = (IAuthProvider) ctor.newInstance();
+				provider.setPrimaryParameter(parameter);
+			} catch(ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | ClassCastException e) {
+				Timber.e("Cant create IAuthProvider class '%s' with parameter '%s'", className, parameter);
+			}
 
-		editor.apply();
-	}
-
-	// Last server
-	public static long loadLoginServerId(Context context) {
-		return getSettings(context, GLOBAL).getLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, Server.SERVER_ID_PRODUCTION);
-	}
-
-	public static void saveLoginServerId(Context context, long server) {
-		SharedPreferences.Editor editor = getSettings(context, GLOBAL).edit();
-
-		if (server <= 0)
-			editor.remove(Constants.PERSISTENCE_PREF_LOGIN_SERVER);
-		else
-			editor.putLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, server);
-
-		editor.apply();
-	}
-
-	// Last user
-
-	public void saveLastUserId(String userId) {
-		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_USER_ID, userId);
-	}
-
-	public String loadLastUserId() {
-		return getSettings(GLOBAL).getString(Constants.PERSISTENCE_PREF_LAST_USER_ID, "");
-	}
-
-	public void saveLastAuthProvider(IAuthProvider authProvider) {
-		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER, authProvider != null ? authProvider.getClass().getName() : null);
-		setOrRemoveString(GLOBAL, Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, authProvider != null ? authProvider.getPrimaryParameter() : null);
-	}
-
-	/**
-	 * Returns last used login provider
-	 *
-	 * @return provider which was last used for login
-	 */
-	public static IAuthProvider getLastAuthProvider() {
-		SharedPreferences globalSettings = getGlobalSettings();
-		String className = globalSettings.getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER, "");
-		String parameter = globalSettings.getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, "");
-
-		// Return null if we have no className found
-		if (className.isEmpty())
-			return null;
-
-		IAuthProvider provider = null;
-		try {
-			// Try to create provider class from last saved provider
-			Class<?> cl = Class.forName(className);
-			Constructor<?> ctor = cl.getConstructor((Class<?>[]) null);
-
-			// Create instance and set primary parameter
-			provider = (IAuthProvider) ctor.newInstance();
-			provider.setPrimaryParameter(parameter);
-		} catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | ClassCastException e) {
-			Timber.e("Cant create IAuthProvider class '%s' with parameter '%s'", className, parameter);
+			return provider;
 		}
 
-		return provider;
-	}
 
-	public void saveLastBT(String userId, String BT) {
-		setOrRemoveString(userId, Constants.PERSISTENCE_PREF_USER_BT, BT);
-	}
+		/**
+		 * Saves application version to persistence
+		 *
+		 * @param appVersion version of application
+		 */
+		public static void saveLastApplicationVersion(int appVersion) {
+			getSettings()
+					.edit()
+					.putInt(Constants.PREF_GCM_APP_VERSION, appVersion)
+					.apply();
+		}
 
-	public String loadLastBT(String userId) {
-		return getSettings(userId).getString(Constants.PERSISTENCE_PREF_USER_BT, "");
-	}
 
-	public void saveUserDetails(String userId, User user) {
-		getSettings(userId) //
-				.edit() //
-				.putString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()) //
-				.putString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()) //
-				.putString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()) //
-				.putString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()) //
-				.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()) //
-				.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()) //
-				.apply();
+		public static int loadLastApplicationVersion() {
+			return getSettings().getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
+		}
 
-		Bitmap picture = user.getPicture();
-		if (picture != null)
-			saveBitmap(picture, userId);
-	}
 
-	public void loadUserDetails(String userId, User user) {
-		SharedPreferences prefs = getSettings(userId);
+		public static String loadGCMRegistrationId() {
+			return getSettings().getString(Constants.PREF_GCM_REG_ID, "");
+		}
 
-		user.setId(prefs.getString(Constants.PERSISTENCE_PREF_USER_ID, user.getId()));
-		user.setEmail(prefs.getString(Constants.PERSISTENCE_PREF_USER_EMAIL, user.getEmail()));
-		user.setName(prefs.getString(Constants.PERSISTENCE_PREF_USER_NAME, user.getName()));
-		user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()));
-		user.setGender(Utils.getEnumFromId(Gender.class, prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()), Gender.UNKNOWN));
-		user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()));
 
-		user.setPicture(loadBitmap(userId));
-	}
+		public static void saveGCMRegistrationId(String regId) {
+			getSettings()
+					.edit()
+					.putString(Constants.PREF_GCM_REG_ID, regId)
+					.apply();
+		}
 
-	// GCM
 
-	public void saveGCMRegistrationId(String regId) {
-		setString(GLOBAL, Constants.PREF_GCM_REG_ID, regId);
-	}
+		// ----------- Last user
 
-	public String loadGCMRegistrationId() {
-		return getSettings(GLOBAL).getString(Constants.PREF_GCM_REG_ID, "");
-	}
 
-	public void saveLastApplicationVersion(int appVersion) {
-		setInt(GLOBAL, Constants.PREF_GCM_APP_VERSION, appVersion);
-	}
+		public static void saveLastUserId(@Nullable String userId) {
+			Editor editor = getSettings().edit();
+			if(userId == null) {
+				editor.remove(Constants.PERSISTENCE_PREF_LAST_USER_ID);
+			} else {
+				editor.putString(Constants.PERSISTENCE_PREF_LAST_USER_ID, userId);
+			}
 
-	public int loadLastApplicationVersion() {
-		return getSettings(GLOBAL).getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
+			editor.apply();
+		}
+
+
+		public static String loadLastUserId() {
+			return getSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER_ID, "");
+		}
+
+		// ----------- Last server
+
+
+		public static long loadLoginServerId() {
+			return getSettings().getLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, Server.SERVER_ID_PRODUCTION);
+		}
+
+
+		public static void saveLoginServerId(@Nullable Long server) {
+			Editor editor = getSettings().edit();
+
+			if(server == null)
+				editor.remove(Constants.PERSISTENCE_PREF_LOGIN_SERVER);
+			else
+				editor.putLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, server);
+
+			editor.apply();
+		}
+
+
+		public static void saveLastDemoMode(@Nullable Boolean demoMode) {
+			Editor editor = getSettings().edit();
+
+			if(demoMode == null)
+				editor.remove(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE);
+			else
+				editor.putBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, demoMode);
+
+			editor.apply();
+		}
+
+
+		/**
+		 * DATA MANIPULATION *
+		 */
+
+		public static boolean loadLastDemoMode() {
+			return getSettings().getBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, false);
+		}
 	}
 
 }

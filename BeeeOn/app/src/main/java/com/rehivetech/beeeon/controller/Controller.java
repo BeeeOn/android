@@ -72,11 +72,6 @@ public final class Controller {
 	private final Context mContext;
 
 	/**
-	 * Persistence service for caching purposes
-	 */
-	private final Persistence mPersistence;
-
-	/**
 	 * Network service for communication with server
 	 */
 	private final INetwork mNetwork;
@@ -124,11 +119,10 @@ public final class Controller {
 	private Controller(@NonNull Context context) {
 		mContext = context.getApplicationContext();
 		// Load last used mode
-		mDemoMode = Persistence.loadLastDemoMode(mContext);
+		mDemoMode = Persistence.Global.loadLastDemoMode();
 		// Create basic objects
 		mNetwork = loadNetwork();
 
-		mPersistence = new Persistence(mContext);
 		mUser = new User();
 
 		// In demo mode immediately load user data
@@ -137,19 +131,19 @@ public final class Controller {
 		}
 
 		// Load previous user
-		String userId = mPersistence.loadLastUserId();
+		String userId = Persistence.Global.loadLastUserId();
 		if (!userId.isEmpty()) {
 			mUser.setId(userId);
 			// Load rest of user details (if available)
-			mPersistence.loadUserDetails(userId, mUser);
+			Persistence.UserSettings.loadProfile(mContext, userId, mUser);
 			// Finally load sessionId - we can call it directly like that because here we doesn't care whether it's empty because it's empty since Network creation
-			mNetwork.setSessionId(mPersistence.loadLastBT(userId));
+			mNetwork.setSessionId(Persistence.UserSettings.loadLastBT(mContext, userId));
 		}
 	}
 
 	public INetwork loadNetwork() throws AppException {
 		// Load login server
-		long serverId = Persistence.loadLoginServerId(mContext);
+		long serverId = Persistence.Global.loadLoginServerId();
 
 		// get login server
 		Server server = Server.getServerSafeById(serverId);
@@ -159,7 +153,7 @@ public final class Controller {
 
 	/**
 	 * Recreates the actual Controller object to use with different user or demo mode.
-	 * <p/>
+	 * <p>
 	 * This internally creates new instance of Controller with changed mode (e.g. demoMode or normal).
 	 * You MUST call getInstance() again to get fresh instance and DON'T remember or use the previous.
 	 *
@@ -168,7 +162,7 @@ public final class Controller {
 	 */
 	public static synchronized void setDemoMode(@NonNull Context context, boolean demoMode) {
 		// Remember last used mode
-		Persistence.saveLastDemoMode(context, demoMode);
+		Persistence.Global.saveLastDemoMode(demoMode);
 
 		// We always need to create a new Controller, due to account switch and first (not) loading of demo
 		sController = new Controller(context);
@@ -196,8 +190,10 @@ public final class Controller {
 				if (!mModels.containsKey(name)) {
 					CacheHoldTime.Item cacheHoldTime = (CacheHoldTime.Item) new CacheHoldTime().fromSettings(getUserSettings());
 
+					Persistence persistence = new Persistence(); 	// TODO remove from module initialization
+
 					// Known parameters we can automatically give to model constructor
-					final Object[] supportedParams = {mNetwork, mContext, mPersistence, mUser, cacheHoldTime};
+					final Object[] supportedParams = {mNetwork, mContext, persistence, mUser, cacheHoldTime};
 
 					// Create instance of the given model class
 					final Constructor constructor = modelClass.getConstructors()[0];
@@ -286,7 +282,7 @@ public final class Controller {
 			return null;
 		}
 
-		return mPersistence.getSettings(userId);
+		return Persistence.getSettings(mContext, userId);
 	}
 
 	/** Communication methods ***********************************************/
@@ -299,7 +295,7 @@ public final class Controller {
 	public void loadUserData(@Nullable String userId) {
 		// Load cached user details, if this is not first login
 		if (userId != null) {
-			mPersistence.loadUserDetails(userId, mUser);
+			Persistence.UserSettings.loadProfile(mContext, userId, mUser);
 		}
 
 		// Load user data from server
@@ -315,13 +311,7 @@ public final class Controller {
 					Timber.e("Loaded userId from server (%s), this is first login.", user.getId());
 				}
 				// So save the correct userId
-				mPersistence.saveLastUserId(user.getId());
-			}
-
-			// If we have no or changed picture, lets download it from server
-			if (!user.getPictureUrl().isEmpty() && (user.getPicture() == null || !mUser.getPictureUrl().equals(user.getPictureUrl()))) {
-				Bitmap picture = Utils.fetchImageFromUrl(user.getPictureUrl());
-				user.setPicture(picture);
+				Persistence.Global.saveLastUserId(user.getId());
 			}
 		}
 
@@ -333,11 +323,10 @@ public final class Controller {
 		mUser.setGender(user.getGender());
 		mUser.setEmail(user.getEmail());
 		mUser.setPictureUrl(user.getPictureUrl());
-		mUser.setPicture(user.getPicture());
 
 		// We have fresh user details, save them to cache (but not in demoMode)
 		if (!(mNetwork instanceof DemoNetwork)) {
-			mPersistence.saveUserDetails(user.getId(), mUser);
+			Persistence.UserSettings.saveProfile(mContext, user.getId(), mUser);
 		}
 	}
 
@@ -373,17 +362,17 @@ public final class Controller {
 		}
 
 		// Then initialize default settings
-		mPersistence.initializeDefaultSettings(userId);
+		Persistence.UserSettings.initializeDefaultSettings(mContext, userId);
 
 		if (!(mNetwork instanceof DemoNetwork)) {
 			// Save our new sessionId
 			String bt = mNetwork.getSessionId();
 			Timber.e("Loaded for user '%s' fresh new sessionId: %s", userId, bt);
-			mPersistence.saveLastBT(userId, bt);
+			Persistence.UserSettings.saveLastBT(mContext, userId, bt);
 
 			// Remember this email to use with auto login
-			mPersistence.saveLastUserId(mUser.getId());
-			mPersistence.saveLastAuthProvider(authProvider);
+			Persistence.Global.saveLastUserId(mUser.getId());
+			Persistence.Global.saveLastAuthProvider(authProvider);
 
 			Intent intent = new Intent(mContext, GcmRegistrationIntentService.class);
 			mContext.startService(intent);
@@ -433,9 +422,9 @@ public final class Controller {
 			prefs.edit().remove(Constants.PERSISTENCE_PREF_USER_BT).apply();
 
 		// Forgot info about last user
-		Persistence.saveLastDemoMode(mContext, null);
-		mPersistence.saveLastAuthProvider(null);
-		mPersistence.saveLastUserId(null);
+		Persistence.Global.saveLastDemoMode(null);
+		Persistence.Global.saveLastAuthProvider(null);
+		Persistence.Global.saveLastUserId(null);
 
 		// send logout broadcast so widget can set cached
 		mContext.sendBroadcast(new Intent(Constants.BROADCAST_USER_LOGOUT));
@@ -485,7 +474,7 @@ public final class Controller {
 
 	/**
 	 * Sets active gate and load all locations and devices, if needed (or if forceReload = true)
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 *
 	 * @param id
@@ -531,7 +520,7 @@ public final class Controller {
 
 	/**
 	 * Interrupts actual connection (opened socket) of Network module.
-	 * <p/>
+	 * <p>
 	 * This CAN'T be called on UI thread!
 	 */
 	public void interruptConnection() {
@@ -548,7 +537,10 @@ public final class Controller {
 	 */
 	public List<BaseItem> getDashboardViewItems(int index, String gateId) {
 		String userId = getActualUser().getId();
-		List<List<BaseItem>> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		List<List<BaseItem>> items = DashBoardPersistence.load(
+				Persistence.getSettings(mContext, getDashboardKey(userId, gateId)),
+				Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS
+		);
 
 		return items != null && items.size() > index ? items.get(index) : null;
 	}
@@ -556,7 +548,10 @@ public final class Controller {
 	@Nullable
 	public List<List<BaseItem>> getDashboardViews(String gateId) {
 		String userId = getActualUser().getId();
-		return DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		return DashBoardPersistence.load(
+				Persistence.getSettings(mContext, getDashboardKey(userId, gateId)),
+				Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS
+		);
 	}
 
 	/**
@@ -567,7 +562,10 @@ public final class Controller {
 	 */
 	public void saveDashboardItems(int index, String gateId, List<BaseItem> items) {
 		String userId = getActualUser().getId();
-		List<List<BaseItem>> itemsList = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		List<List<BaseItem>> itemsList = DashBoardPersistence.load(
+				Persistence.getSettings(mContext, getDashboardKey(userId, gateId)),
+				Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS
+		);
 
 		if (itemsList != null && itemsList.size() > index && itemsList.get(index) != null) {
 			itemsList.get(index).clear();
@@ -579,7 +577,11 @@ public final class Controller {
 			itemsList.add(items);
 		}
 
-		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, itemsList);
+		DashBoardPersistence.save(
+				Persistence.getSettings(mContext, getDashboardKey(userId, gateId)),
+				Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS,
+				itemsList
+		);
 	}
 
 	/**
@@ -590,14 +592,12 @@ public final class Controller {
 	 * @param item      to be added
 	 */
 	public void addDashboardItem(int viewIndex, String gateId, BaseItem item) {
-		String userId = getActualUser().getId();
 		List<BaseItem> items = getDashboardViewItems(viewIndex, gateId);
 		if (items == null) {
 			items = new ArrayList<>();
 		}
 
 		items.add(item);
-
 		saveDashboardItems(viewIndex, gateId, items);
 	}
 
@@ -609,7 +609,7 @@ public final class Controller {
 
 	public void addDashboardView(String gateId) {
 		String userId = getActualUser().getId();
-		SharedPreferences dashboardSettings = mPersistence.getSettings(getDashboardKey(userId, gateId));
+		SharedPreferences dashboardSettings = Persistence.getSettings(mContext, getDashboardKey(userId, gateId));
 		List<List<BaseItem>> itemsList = DashBoardPersistence.load(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 		if (itemsList == null) {
 			Timber.e("addDashboardView - null items list");
@@ -627,7 +627,7 @@ public final class Controller {
 	 */
 	public void removeDashboardView(int index, String gateId) {
 		String userId = getActualUser().getId();
-		SharedPreferences dashboardSettings = mPersistence.getSettings(getDashboardKey(userId, gateId));
+		SharedPreferences dashboardSettings = Persistence.getSettings(mContext, getDashboardKey(userId, gateId));
 		if (index > Constants.NO_INDEX) {
 			List<List<BaseItem>> itemsList = DashBoardPersistence.load(dashboardSettings, Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
@@ -652,7 +652,7 @@ public final class Controller {
 	 */
 	public void removeDeviceFromDashboard(String gateId, String removedDeviceId) {
 		String userId = getActualUser().getId();
-		List<List<BaseItem>> items = DashBoardPersistence.load(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+		List<List<BaseItem>> items = DashBoardPersistence.load(Persistence.getSettings(mContext, getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
 		if (items == null) return; // we don't have any dashboard preferences
 
@@ -698,7 +698,7 @@ public final class Controller {
 
 		}
 
-		DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
+		DashBoardPersistence.save(Persistence.getSettings(mContext, getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, items);
 	}
 
 	public void migrateDashboard() {
@@ -707,12 +707,12 @@ public final class Controller {
 
 		for (Gate gate : gates) {
 			String gateId = gate.getId();
-			List<BaseItem> dashboardOld = DashBoardPersistence.loadOld(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
+			List<BaseItem> dashboardOld = DashBoardPersistence.loadOld(Persistence.getSettings(mContext, getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS);
 
 			if (dashboardOld != null) {
 				List<List<BaseItem>> dashboardNew = new ArrayList<>();
 				dashboardNew.add(dashboardOld);
-				DashBoardPersistence.save(mPersistence.getSettings(getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, dashboardNew);
+				DashBoardPersistence.save(Persistence.getSettings(mContext, getDashboardKey(userId, gateId)), Constants.PERSISTENCE_PREF_DASHBOARD_ITEMS, dashboardNew);
 			}
 		}
 	}
@@ -727,7 +727,7 @@ public final class Controller {
 	 */
 	public GraphSettingsPersistence getGraphSettingsPersistence(String gateId, String absoluteModuleId, @ChartHelper.DataRange int graphRange) {
 		String key = getGraphSettingsKey(gateId, absoluteModuleId, graphRange);
-		SharedPreferences preferences = mPersistence.getSettings(key);
+		SharedPreferences preferences = Persistence.getSettings(mContext, key);
 
 		return new GraphSettingsPersistence(preferences);
 	}

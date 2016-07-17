@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
+import com.rehivetech.beeeon.persistence.Persistence;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +100,16 @@ public abstract class SettingsItem {
 		// NOTE: optimization is to cache this value (e.g. in static attribute of child object - or in some extra object with all settings), and update it automatically when settings is changed...
 		String id = prefs.getString(getPersistenceKey(), String.valueOf(defaultItem.getId()));
 		return getItemById(Utils.parseIntSafely(id, defaultItem.getId()));
+	}
+
+	public void initDefaultSettings(Context context, String namespace) {
+		SharedPreferences settings = Persistence.getSettings(context, namespace);
+		String key = getPersistenceKey();
+		String value = String.valueOf(getDefaultId());
+
+		if (!settings.contains(key)) {
+			settings.edit().putString(key, value).apply();
+		}
 	}
 
 }
