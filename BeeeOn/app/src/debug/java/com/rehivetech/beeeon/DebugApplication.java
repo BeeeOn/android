@@ -23,9 +23,6 @@ public class DebugApplication extends BeeeOnApplication {
 						.build()
 		);
 
-		Picasso.with(this).setIndicatorsEnabled(true);
-
-
 //		RealmInspectorModulesProvider.builder(this)
 //				.withFolder(getCacheDir())
 //				.withEncryptionKey("encrypted.realm", key)

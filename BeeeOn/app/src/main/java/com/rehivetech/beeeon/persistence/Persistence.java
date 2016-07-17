@@ -34,52 +34,52 @@ import java.lang.reflect.InvocationTargetException;
 
 import timber.log.Timber;
 
+
 /**
  * Persistence service that handles caching data on this module.
  *
  * @author Robyer
+ * @author Tomas Mlynaric
  */
 public class Persistence {
-	private static final String TAG = Persistence.class.getSimpleName();
-
-	private final Context mContext;
-
-	public Persistence(Context context) {
-		mContext = context;
-	}
 
 	/**
-	 * SHAREDPREFERENCES MANIPULATION *
+	 * Gets formatted filename for shared preferences
+	 * @param namespace postfix for the filename
+	 * @return forrmated filename as string
 	 */
-
 	public static String getPreferencesFilename(String namespace) {
 		return String.format(Constants.PERSISTENCE_PREF_FILENAME, namespace);
 	}
 
+	/**
+	 * Gets settings by namespace (shared preferences file name is formatted)
+	 *
+	 * @param context   might be app context
+	 * @param namespace file postfix
+	 * @return opened shared prefs
+	 */
 	public static SharedPreferences getSettings(Context context, String namespace) {
 		String name = getPreferencesFilename(namespace);
 		return context.getSharedPreferences(name, Context.MODE_PRIVATE);
 	}
 
-	public SharedPreferences getSettings(String namespace) {
-		return getSettings(mContext, namespace);
-	}
 
 	/**
-	 * INITIALIZATION OF DEFAULT SETTINGS *
+	 * User specific settings.
+	 * Contains data for one user, might be more users in the app.
 	 */
-
-
 	public static class UserSettings {
 
 		public static String loadLastBT(Context context, String userId) {
 			return getSettings(context, userId).getString(Constants.PERSISTENCE_PREF_USER_BT, "");
 		}
 
+
 		public static void saveLastBT(Context context, String userId, @Nullable String beeeonToken) {
 			Editor settings = getSettings(context, userId).edit();
 
-			if (beeeonToken == null) {
+			if(beeeonToken == null) {
 				settings.remove(Constants.PERSISTENCE_PREF_USER_BT);
 			} else {
 				settings.putString(Constants.PERSISTENCE_PREF_USER_BT, beeeonToken);
@@ -87,6 +87,7 @@ public class Persistence {
 
 			settings.apply();
 		}
+
 
 		public static void loadProfile(Context context, String userId, User user) {
 			SharedPreferences prefs = getSettings(context, userId);
@@ -97,9 +98,8 @@ public class Persistence {
 			user.setSurname(prefs.getString(Constants.PERSISTENCE_PREF_USER_SURNAME, user.getSurname()));
 			user.setGender(Utils.getEnumFromId(Gender.class, prefs.getString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString()), Gender.UNKNOWN));
 			user.setPictureUrl(prefs.getString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl()));
-
-			user.setPicture(loadBitmap(context, userId));
 		}
+
 
 		public static void saveProfile(Context context, String userId, User user) {
 			getSettings(context, userId)
@@ -111,43 +111,8 @@ public class Persistence {
 					.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString())
 					.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl())
 					.apply();
-
-			Bitmap picture = user.getPicture();
-			if (picture != null)
-				saveBitmap(context, picture, userId);
 		}
 
-		/**
-		 * Saves bitmap on to storage
-		 *
-		 * @param picture  which will be saved
-		 * @param filename of the picture
-		 */
-		private static void saveBitmap(Context context, Bitmap picture, String filename) {
-			OutputStream os = null;
-			try {
-				File file = new File(context.getCacheDir(), filename + ".jpg");
-				os = new FileOutputStream(file);
-				//picture.reconfigure(150, 150, Bitmap.Config.ARGB_8888);
-				picture.compress(Bitmap.CompressFormat.JPEG, 90, os);
-				os.flush();
-				os.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (os != null)
-						os.close();
-				} catch (IOException ignored) {
-				}
-			}
-		}
-
-		@Nullable
-		private static Bitmap loadBitmap(Context context, String filename) {
-			File file = new File(context.getCacheDir(), filename + ".jpg");
-			return file.exists() ? BitmapFactory.decodeFile(file.getAbsolutePath()) : null;
-		}
 
 		/**
 		 * Initializes settings for specified namespace
@@ -172,14 +137,16 @@ public class Persistence {
 		}
 	}
 
+
 	/**
-	 * Global settings of application
+	 * Global settings of application, only one for whole app.
 	 */
 	public static class Global {
 		/**
 		 * Namespace of global preferences
 		 */
 		public static final String NAMESPACE = "global";
+
 
 		/**
 		 * Get global SharedPreferences for whole application
@@ -189,6 +156,7 @@ public class Persistence {
 			return Persistence.getSettings(BeeeOnApplication.getContext(), NAMESPACE);
 		}
 
+
 		/**
 		 * Saves auth provider
 		 *
@@ -196,7 +164,7 @@ public class Persistence {
 		 */
 		public static void saveLastAuthProvider(@Nullable IAuthProvider authProvider) {
 			SharedPreferences globalSettings = getSettings();
-			if (authProvider == null) {
+			if(authProvider == null) {
 				globalSettings.edit()
 						.remove(Constants.PERSISTENCE_PREF_LAST_AUTH_PROVIDER)
 						.remove(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER)
@@ -208,6 +176,7 @@ public class Persistence {
 						.apply();
 			}
 		}
+
 
 		/**
 		 * Returns last used login provider
@@ -221,7 +190,7 @@ public class Persistence {
 			String parameter = globalSettings.getString(Constants.PERSISTENCE_PREF_LAST_AUTH_PARAMETER, "");
 
 			// Return null if we have no className found
-			if (className.isEmpty()) return null;
+			if(className.isEmpty()) return null;
 
 			IAuthProvider provider = null;
 			try {
@@ -232,7 +201,7 @@ public class Persistence {
 				// Create instance and set primary parameter
 				provider = (IAuthProvider) ctor.newInstance();
 				provider.setPrimaryParameter(parameter);
-			} catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | ClassCastException e) {
+			} catch(ClassNotFoundException | NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException | ClassCastException e) {
 				Timber.e("Cant create IAuthProvider class '%s' with parameter '%s'", className, parameter);
 			}
 
@@ -252,13 +221,16 @@ public class Persistence {
 					.apply();
 		}
 
+
 		public static int loadLastApplicationVersion() {
 			return getSettings().getInt(Constants.PREF_GCM_APP_VERSION, Integer.MIN_VALUE);
 		}
 
+
 		public static String loadGCMRegistrationId() {
 			return getSettings().getString(Constants.PREF_GCM_REG_ID, "");
 		}
+
 
 		public static void saveGCMRegistrationId(String regId) {
 			getSettings()
@@ -270,9 +242,10 @@ public class Persistence {
 
 		// ----------- Last user
 
+
 		public static void saveLastUserId(@Nullable String userId) {
 			Editor editor = getSettings().edit();
-			if (userId == null) {
+			if(userId == null) {
 				editor.remove(Constants.PERSISTENCE_PREF_LAST_USER_ID);
 			} else {
 				editor.putString(Constants.PERSISTENCE_PREF_LAST_USER_ID, userId);
@@ -281,20 +254,23 @@ public class Persistence {
 			editor.apply();
 		}
 
+
 		public static String loadLastUserId() {
 			return getSettings().getString(Constants.PERSISTENCE_PREF_LAST_USER_ID, "");
 		}
 
 		// ----------- Last server
 
+
 		public static long loadLoginServerId() {
 			return getSettings().getLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, Server.SERVER_ID_PRODUCTION);
 		}
 
+
 		public static void saveLoginServerId(@Nullable Long server) {
 			Editor editor = getSettings().edit();
 
-			if (server == null)
+			if(server == null)
 				editor.remove(Constants.PERSISTENCE_PREF_LOGIN_SERVER);
 			else
 				editor.putLong(Constants.PERSISTENCE_PREF_LOGIN_SERVER, server);
@@ -302,16 +278,18 @@ public class Persistence {
 			editor.apply();
 		}
 
+
 		public static void saveLastDemoMode(@Nullable Boolean demoMode) {
 			Editor editor = getSettings().edit();
 
-			if (demoMode == null)
+			if(demoMode == null)
 				editor.remove(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE);
 			else
 				editor.putBoolean(Constants.PERSISTENCE_PREF_LAST_DEMO_MODE, demoMode);
 
 			editor.apply();
 		}
+
 
 		/**
 		 * DATA MANIPULATION *

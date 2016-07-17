@@ -251,10 +251,8 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		User user = controller.getActualUser();
 		name.setText(user.getFullName());
 		email.setText(user.getEmail());
-
-//		Bitmap bitmap = user.getPicture();
+		// asynchronously loads user picture by Picasso
 		user.loadPicture(this, pictureView);
-
 
 		// Fill gates list in the header of navigation drawer
 		List<Gate> gates = controller.getGatesModel().getGates();

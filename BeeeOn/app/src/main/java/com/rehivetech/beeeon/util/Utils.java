@@ -21,6 +21,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.widget.ImageView;
@@ -61,6 +62,7 @@ import java.util.Scanner;
 import io.realm.Realm;
 import timber.log.Timber;
 
+
 final public class Utils {
 
 	private static final int[] sGraphColors = new int[]{R.color.graph1, R.color.graph2, R.color.graph3, R.color.graph4, R.color.graph5,
@@ -77,87 +79,16 @@ final public class Utils {
 	private Utils() {
 	}
 
-	public static Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
-		int targetWidth = 200;
-		int targetHeight = 200;
-
-		if (scaleBitmapImage == null) {
-			return null;
-		}
-
-		Bitmap targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
-
-		Canvas canvas = new Canvas(targetBitmap);
-		Path path = new Path();
-		path.addCircle((targetWidth - 1) / 2, (targetHeight - 1) / 2, (Math.min((targetWidth), (targetHeight)) / 2), Path.Direction.CCW);
-
-		canvas.clipPath(path);
-		canvas.drawBitmap(scaleBitmapImage, new Rect(0, 0, scaleBitmapImage.getWidth(), scaleBitmapImage.getHeight()), new Rect(0, 0, targetWidth, targetHeight), null);
-		return targetBitmap;
-	}
-
-	/**
-	 * Downloads image from URL address
-	 * <p/>
-	 * This CAN'T be called on UI thread.
-	 *
-	 * @param requestUrl
-	 * @return Bitmap or null
-	 */
-	public static Bitmap fetchImageFromUrl(String requestUrl) {
-		Bitmap bitmap = null;
-
-		try {
-			URL url = new URL(requestUrl);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			try {
-				InputStream in = con.getInputStream();
-				bitmap = BitmapFactory.decodeStream(in); // Convert to bitmap
-			} finally {
-				con.disconnect();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return bitmap;
-	}
 
 	public static String getUtf8StringFromInputStream(InputStream stream) throws IOException {
 		int n;
 		char[] buffer = new char[1024 * 4];
 		InputStreamReader reader = new InputStreamReader(stream, "UTF8");
 		StringWriter writer = new StringWriter();
-		while (-1 != (n = reader.read(buffer))) writer.write(buffer, 0, n);
+		while(-1 != (n = reader.read(buffer))) writer.write(buffer, 0, n);
 		return writer.toString();
 	}
 
-	/**
-	 * Reads the response from the input stream and returns it as a string.
-	 * <p/>
-	 * This CAN'T be called on UI thread.
-	 *
-	 * @param requestUrl
-	 * @return content from url or empty string
-	 */
-	public static String fetchStringFromUrl(String requestUrl) {
-		String data = "";
-
-		try {
-			URL url = new URL(requestUrl);
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			try {
-				InputStream in = con.getInputStream();
-				data = getUtf8StringFromInputStream(in);
-			} finally {
-				con.disconnect();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return data;
-	}
 
 	/**
 	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
@@ -175,7 +106,7 @@ final public class Utils {
 		URL url = new URL(requestUrl);
 
 		String query = "";
-		for (String key : params.keySet())
+		for(String key : params.keySet())
 			query += key + "=" + params.get(key) + "&";
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -183,7 +114,7 @@ final public class Utils {
 		//Set to POST
 		connection.setDoOutput(true);
 		connection.setRequestMethod("POST");
-		connection.setReadTimeout(10000);
+		connection.setReadTimeout(10 * (int) DateUtils.SECOND_IN_MILLIS);
 		Writer writer = new OutputStreamWriter(connection.getOutputStream());
 		writer.write(query);
 		writer.flush();
@@ -192,6 +123,7 @@ final public class Utils {
 		return new JSONObject(getUtf8StringFromInputStream((InputStream) connection.getContent()));
 	}
 
+
 	/**
 	 * @return Application's version code from the {@code PackageManager}.
 	 */
@@ -199,21 +131,23 @@ final public class Utils {
 		try {
 			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
 			return packageInfo.versionCode;
-		} catch (NameNotFoundException e) {
+		} catch(NameNotFoundException e) {
 			// should never happen
 		}
 
 		return 0;
 	}
 
+
 	public static String uriEncode(final String s) {
 		try {
 			return URLEncoder.encode(s, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch(UnsupportedEncodingException e) {
 			/* will never happen for UTF-8 */
 			throw new RuntimeException("failed call encode with UTF-8");
 		}
 	}
+
 
 	/**
 	 * Formats double value to String without trailing zeros
@@ -223,16 +157,18 @@ final public class Utils {
 	 */
 	public static String formatDouble(double d) {
 		// NOTE: This trick won't work for values that can't fit into long
-		if (d == (long) d)
+		if(d == (long) d)
 			return String.format(Locale.getDefault(), "%d", (long) d);
 		else
 			return String.format(Locale.getDefault(), "%.2f", d);
 	}
 
+
 	public static boolean isBlackBerry() {
 		final String osName = System.getProperty("os.name");
 		return "qnx".equals(osName);
 	}
+
 
 	/**
 	 * Checks if Google Play Services are available on this module.
@@ -242,18 +178,19 @@ final public class Utils {
 	 * @return true if available, false otherwise
 	 */
 	public static boolean isGooglePlayServicesAvailable(Context context) {
-		if (isBlackBerry())
+		if(isBlackBerry())
 			return false;
 
 		try {
 			int resultCode = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context);
 			return resultCode == ConnectionResult.SUCCESS;
-		} catch (Exception e) {
+		} catch(Exception e) {
 			// NOTE: Ignore exception (probably only class not found one), because we just want the true/false result
 		}
 
 		return false;
 	}
+
 
 	/**
 	 * Checks if Internet connection is available.
@@ -266,6 +203,7 @@ final public class Utils {
 		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
+
 	/**
 	 * Returns the type which actual network uses
 	 *
@@ -274,11 +212,12 @@ final public class Utils {
 	public static int getNetworkConnectionType() {
 		ConnectivityManager connectivityManager = (ConnectivityManager) BeeeOnApplication.getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-		if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+		if(activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
 			return -1; // the same as ConnectivityManager.TYPE_NONE which can't be used;
 		}
 		return activeNetworkInfo.getType();
 	}
+
 
 	/**
 	 * Returns the consumer friendly module name.
@@ -287,35 +226,37 @@ final public class Utils {
 	public static String getPhoneName() {
 		final String manufacturer = Build.MANUFACTURER;
 		final String model = Build.MODEL;
-		if (model.startsWith(manufacturer)) {
+		if(model.startsWith(manufacturer)) {
 			return capitalize(model);
 		}
-		if (manufacturer.equalsIgnoreCase("HTC")) {
+		if(manufacturer.equalsIgnoreCase("HTC")) {
 			// make sure "HTC" is fully capitalized.
 			return "HTC " + model;
 		}
 		return capitalize(manufacturer) + " " + model;
 	}
 
+
 	private static String capitalize(String str) {
-		if (str.isEmpty()) {
+		if(str.isEmpty()) {
 			return str;
 		}
 		final char[] arr = str.toCharArray();
 		boolean capitalizeNext = true;
 		String phrase = "";
-		for (final char c : arr) {
-			if (capitalizeNext && Character.isLetter(c)) {
+		for(final char c : arr) {
+			if(capitalizeNext && Character.isLetter(c)) {
 				phrase += Character.toUpperCase(c);
 				capitalizeNext = false;
 				continue;
-			} else if (Character.isWhitespace(c)) {
+			} else if(Character.isWhitespace(c)) {
 				capitalizeNext = true;
 			}
 			phrase += c;
 		}
 		return phrase;
 	}
+
 
 	/**
 	 * Helper for showing toasts from any thread.
@@ -332,6 +273,7 @@ final public class Utils {
 		});
 	}
 
+
 	/**
 	 * For getting index in array so that we can set selected object to spinner or etc.
 	 *
@@ -342,12 +284,13 @@ final public class Utils {
 	 */
 	public static <T extends IIdentifier> int getObjectIndexFromList(Object id, List<T> objects) {
 		int index = 0;
-		for (T tempObj : objects) {
-			if (tempObj.getId().equals(id)) return index;
+		for(T tempObj : objects) {
+			if(tempObj.getId().equals(id)) return index;
 			index++;
 		}
 		return -1;
 	}
+
 
 	/**
 	 * Somehow manage to merge it with other function for gettin index
@@ -359,12 +302,13 @@ final public class Utils {
 	 */
 	public static <T extends com.rehivetech.beeeon.model.entity.IIdentifier> int getIndexFromList(Object id, List<T> objects) {
 		int index = 0;
-		for (T tempObj : objects) {
-			if (tempObj.getId().equals(id)) return index;
+		for(T tempObj : objects) {
+			if(tempObj.getId().equals(id)) return index;
 			index++;
 		}
 		return -1;
 	}
+
 
 	/**
 	 * For getting objects from lists (Location / Device / etc)
@@ -376,16 +320,17 @@ final public class Utils {
 	 */
 	@Nullable
 	public static <T extends IIdentifier> T getFromList(String id, List<T> objects) {
-		if (id == null) {
+		if(id == null) {
 			Timber.i("getFromList given NULL id");
 			return null;
 		}
 
-		for (T tempObj : objects) {
-			if (tempObj.getId().equals(id)) return tempObj;
+		for(T tempObj : objects) {
+			if(tempObj.getId().equals(id)) return tempObj;
 		}
 		return null;
 	}
+
 
 	/**
 	 * Temporary auto increment helper for realm database
@@ -397,12 +342,13 @@ final public class Utils {
 	public synchronized static long autoIncrement(Realm realm, Class clazz) {
 		Number currentMax = realm.where(clazz).max("id"); // TODO "id" should have only identifiers or sth
 		long nextId = 1;
-		if (currentMax != null) {
+		if(currentMax != null) {
 			nextId = currentMax.longValue() + 1;
 		}
 
 		return nextId;
 	}
+
 
 	/**
 	 * Gets index and object from list of objects
@@ -414,19 +360,20 @@ final public class Utils {
 	 */
 	@Nullable
 	public static <T extends IIdentifier> Pair<Integer, T> getIndexAndObjectFromList(String id, List<T> objects) {
-		if (id == null) {
+		if(id == null) {
 			Timber.i("getIndexAndObjectFromList given NULL id");
 			return null;
 		}
 		int index = 0;
-		for (T tempObj : objects) {
-			if (tempObj.getId().equals(id)) {
+		for(T tempObj : objects) {
+			if(tempObj.getId().equals(id)) {
 				return new Pair<>(index, tempObj);
 			}
 			index++;
 		}
 		return null;
 	}
+
 
 	/**
 	 * Converting array of Integer to array of primitive ints
@@ -437,15 +384,16 @@ final public class Utils {
 	public static int[] convertIntegers(List<Integer> integers) {
 		int[] ret = new int[integers.size()];
 		Iterator<Integer> iterator = integers.iterator();
-		for (int i = 0; i < ret.length; i++) {
+		for(int i = 0; i < ret.length; i++) {
 			ret[i] = iterator.next();
 		}
 		return ret;
 	}
 
+
 	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id, T defaultItem) {
-		for (T item : enumClass.getEnumConstants()) {
-			if (item.getId().equalsIgnoreCase(id)) {
+		for(T item : enumClass.getEnumConstants()) {
+			if(item.getId().equalsIgnoreCase(id)) {
 				return item;
 			}
 		}
@@ -453,9 +401,10 @@ final public class Utils {
 		return defaultItem;
 	}
 
+
 	public static <T extends Enum<T> & IIdentifier> T getEnumFromId(Class<T> enumClass, String id) throws AppException {
-		for (T item : enumClass.getEnumConstants()) {
-			if (item.getId().equalsIgnoreCase(id)) {
+		for(T item : enumClass.getEnumConstants()) {
+			if(item.getId().equalsIgnoreCase(id)) {
 				return item;
 			}
 		}
@@ -463,15 +412,17 @@ final public class Utils {
 		throw new AppException(String.format("Unknown enum id '%s' for '%s'", id, enumClass.getSimpleName()), ClientError.UNEXPECTED_RESPONSE);
 	}
 
+
 	public static <T extends Enum<T> & INameIdentifier> T getEnumFromValue(Class<T> enumClass, String value, T defaultItem) {
-		for (T item : enumClass.getEnumConstants()) {
-			if (item.getName().equalsIgnoreCase(value)) {
+		for(T item : enumClass.getEnumConstants()) {
+			if(item.getName().equalsIgnoreCase(value)) {
 				return item;
 			}
 		}
 
 		return defaultItem;
 	}
+
 
 	/**
 	 * Taken from https://gist.github.com/laaptu/7867851
@@ -482,6 +433,7 @@ final public class Utils {
 		return Math.round(dp);
 	}
 
+
 	/**
 	 * Taken from https://gist.github.com/laaptu/7867851
 	 */
@@ -490,6 +442,7 @@ final public class Utils {
 		float px = dp * (metrics.densityDpi / 160f);
 		return Math.round(px);
 	}
+
 
 	/**
 	 * Set alpha channel of the given color.
@@ -505,9 +458,10 @@ final public class Utils {
 		return Color.argb(alpha, red, green, blue);
 	}
 
+
 	@ColorInt
 	public static int getGraphColor(Context context, int index) {
-		if (index < sGraphColors.length) {
+		if(index < sGraphColors.length) {
 			return ContextCompat.getColor(context, sGraphColors[index]);
 		}
 
@@ -515,21 +469,24 @@ final public class Utils {
 		return Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	}
 
+
 	public static int parseIntSafely(@Nullable String string, int defaultValue) {
 		try {
 			return (string != null && !string.isEmpty()) ? Integer.parseInt(string) : defaultValue;
-		} catch (NumberFormatException e) {
+		} catch(NumberFormatException e) {
 			return defaultValue;
 		}
 	}
 
+
 	public static double parseDoubleSafely(@Nullable String string, double defaultValue) {
 		try {
 			return (string != null && !string.isEmpty()) ? Double.parseDouble(string) : defaultValue;
-		} catch (NumberFormatException e) {
+		} catch(NumberFormatException e) {
 			return defaultValue;
 		}
 	}
+
 
 	public static int getToolbarHeight(Context context) {
 		final TypedArray styledAttributes = context.getTheme().obtainStyledAttributes(
@@ -539,6 +496,7 @@ final public class Utils {
 
 		return toolbarHeight;
 	}
+
 
 	/**
 	 * Safely gets units helper
@@ -553,6 +511,7 @@ final public class Utils {
 		return (prefs == null) ? null : new UnitsHelper(prefs, context);
 	}
 
+
 	public static
 	@Nullable
 	UnitsHelper getUnitsHelper(Context context) {
@@ -560,6 +519,7 @@ final public class Utils {
 		SharedPreferences prefs = controller.getUserSettings();
 		return getUnitsHelper(prefs, context);
 	}
+
 
 	/**
 	 * Safely gets time helper
@@ -573,6 +533,7 @@ final public class Utils {
 		return (prefs == null) ? null : new TimeHelper(prefs);
 	}
 
+
 	/**
 	 * Create absolute module id string
 	 *
@@ -584,6 +545,7 @@ final public class Utils {
 		return String.format("%s---%s", deviceId, moduleId);
 	}
 
+
 	/**
 	 * Parse absolute module id to device and module id
 	 *
@@ -593,6 +555,7 @@ final public class Utils {
 	public static String[] parseAbsoluteModuleId(String absoluteModuleId) {
 		return absoluteModuleId.split("---");
 	}
+
 
 	/**
 	 * Change drawable color
@@ -607,19 +570,21 @@ final public class Utils {
 		return wrapedDrawable;
 	}
 
+
 	@SuppressWarnings("deprecation")
 	public static void setBackgroundImageDrawable(ImageView imageView, Drawable drawable) {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 			imageView.setBackground(drawable);
 		} else {
 			imageView.setBackgroundDrawable(drawable);
 		}
 	}
 
+
 	@Nullable
 	public static String convertInputStreamToString(InputStream stream) {
 		Scanner s = new Scanner(stream).useDelimiter("\\A");
-		if (!s.hasNext()) return null;
+		if(!s.hasNext()) return null;
 
 		return s.next();
 	}

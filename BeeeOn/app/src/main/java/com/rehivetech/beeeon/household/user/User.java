@@ -1,28 +1,16 @@
 package com.rehivetech.beeeon.household.user;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.widget.ImageView;
 
-import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.INameIdentifier;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.gui.activity.MainActivity;
-import com.rehivetech.beeeon.network.server.xml.XmlParser;
 import com.rehivetech.beeeon.util.Utils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.HashMap;
-
-import timber.log.Timber;
 
 
 /**
@@ -41,8 +29,6 @@ public class User implements INameIdentifier {
 	private Role mRole = Role.Guest;
 
 	private Gender mGender = Gender.UNKNOWN;
-
-	private Bitmap mPicture = null;
 
 	private String mPictureUrl = "";
 
@@ -193,50 +179,21 @@ public class User implements INameIdentifier {
 	}
 
 
-	public boolean isEmpty() {
-		return mId.isEmpty() || mEmail.isEmpty() || mName.isEmpty() || (mPicture == null && !mPictureUrl.isEmpty());
-	}
-
-
 	/**
 	 * @return picture url or empty string
 	 */
 	public String getPictureUrl() {
-		return "http://graph.facebook.com/10206387578759322/picture";
+		return mPictureUrl;
 	}
 
 
 	/**
-	 * Setups picture from encoded url string (might have "&amp;" etc)
+	 * Sets url for user's picture. (Raw without URL decoding)
 	 *
 	 * @param encodedUrl string in raw format which might be urlencoded
 	 */
 	public void setPictureUrl(String encodedUrl) {
-		try {
-			mPictureUrl = URLDecoder.decode(encodedUrl, XmlParser.DEFAULT_CHARSET);
-		} catch(UnsupportedEncodingException e) {
-			e.printStackTrace();
-			mPictureUrl = "";
-		}
-	}
-
-
-	/**
-	 * @return user picture bitmap or null
-	 */
-	@Nullable
-	public Bitmap getPicture() {
-		return mPicture;
-	}
-
-
-	public void setPicture(@Nullable Bitmap picture) {
-		mPicture = Utils.getRoundedShape(picture);
-	}
-
-
-	public String toDebugString() {
-		return String.format("Id: %s\nEmail: %s\nRole: %s\nName: %s\nGender: %s", mId, mEmail, mRole, mName, mGender);
+		mPictureUrl = encodedUrl;
 	}
 
 
@@ -269,9 +226,11 @@ public class User implements INameIdentifier {
 					}
 
 
+					/**
+					 * Error shows error drawable + sets padding for it
+					 */
 					@Override
 					public void onError() {
-						Timber.e("asdfg");
 						pictureView.setPadding(padding, padding, padding, padding);
 					}
 				});
