@@ -617,13 +617,29 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "2", 0x08, null, null, null, false, null, null)
 			);
 		}
+	},
+	TYPE_24("24", "BeeeOn Gateway Led lights", R.string.devices__dev_beeeon_leds, R.string.devices__manufacturer_but) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__beeeon_leds_red, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
+					), null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__beeeon_leds_green, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
+					), null),
+					new Module(device, "2", 0x14, null, null, R.string.devices__beeeon_leds_blue, true, null, new BaseValue.Constraints(0.0, 101.0, 1.0), null)
+			);
+		}
 	};
 
 	/** Version from specification of this devices list */
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1468244353483l;
+	public static final long DEVICES_DATE = 1469654312758l;
 
 	/** END OF GENERATED CONTENT **/
 

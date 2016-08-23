@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.household.device;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BatteryValue;
-import com.rehivetech.beeeon.household.device.values.BooleanValue;
 import com.rehivetech.beeeon.household.device.values.EmissionValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
@@ -36,6 +35,7 @@ public enum ModuleType {
 	TYPE_BITARRAY(0x0B, R.string.devices__type_bitarray, UnknownValue.class, false), // FIXME: Implement this value type
 	TYPE_RAW_INT(0x0C, R.string.devices__type_raw_int, RawIntValue.class, false),
 	TYPE_RAW_FLOAT(0x0D, R.string.devices__type_raw_float, RawFloatValue.class, false),
+	TYP_LED(0x14, R.string.empty, RawFloatValue.class, false), //FIXME nameRes
 
 	TYPE_UNKNOWN(-1, R.string.devices__type_unknown, UnknownValue.class, false);
 

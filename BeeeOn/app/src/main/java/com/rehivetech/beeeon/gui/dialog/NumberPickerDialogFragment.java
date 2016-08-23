@@ -100,7 +100,12 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 						if (numberPickerDecimal.getVisibility() == View.VISIBLE) {
 							actualDecimalVal = decimalSteps.get(numberPickerDecimal.getValue());
 						}
-						String actualValue = String.format("%s.%s", actualWholeVal, actualDecimalVal);
+						String actualValue;
+						if (actualDecimalVal.isEmpty()) {
+							actualValue = actualWholeVal;
+						} else {
+							actualValue = String.format("%s.%s", actualWholeVal, actualDecimalVal);
+						}
 
 						listener.onSetNewValue(moduleId, actualValue);
 						dismiss();
