@@ -89,6 +89,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${project.ext.supportLibVersion}"
     compile "com.android.support:design:${project.ext.supportLibVersion}"
     compile "com.android.support:cardview-v7:${project.ext.supportLibVersion}"
+    compile "com.android.support:preference-v7:${project.ext.supportLibVersion}"
     // Google Play libraries
     compile "com.google.android.gms:play-services-analytics:${project.ext.playServicesVersion}"
     compile "com.google.android.gms:play-services-identity:${project.ext.playServicesVersion}"
