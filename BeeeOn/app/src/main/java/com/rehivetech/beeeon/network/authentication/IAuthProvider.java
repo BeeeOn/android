@@ -40,19 +40,7 @@ public interface IAuthProvider {
 	 */
 	Map<String, String> getParameters();
 
-	/**
-	 * This is used for remembering last logged in user and then automatic logging in.
-	 *
-	 * @return value of primary login field (e.g. e-mail or login).
-	 */
-	String getPrimaryParameter();
-
-	/**
-	 * Set primary parameter (probably from last login attempt) so it could e.g. fill the email/login field automatically.
-	 *
-	 * @param parameter
-	 */
-	void setPrimaryParameter(String parameter);
+	void setTokenParameter(String tokenParameter);
 
 	/**
 	 * Loads the data from the RESULT_AUTH activity result.

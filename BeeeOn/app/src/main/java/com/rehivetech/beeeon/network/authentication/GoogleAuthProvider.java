@@ -1,16 +1,15 @@
 package com.rehivetech.beeeon.network.authentication;
 
-import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.RequiresPermission;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
@@ -19,10 +18,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.GoogleAuthException;
-import com.google.android.gms.auth.GoogleAuthUtil;
-import com.google.android.gms.auth.UserRecoverableAuthException;
-import com.google.android.gms.common.AccountPicker;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
@@ -40,24 +39,20 @@ import timber.log.Timber;
 
 import static android.R.attr.description;
 
-public class GoogleAuthProvider implements IAuthProvider {
+public class GoogleAuthProvider implements IAuthProvider, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks {
+	private static final String TAG = GoogleAuthProvider.class.getSimpleName();
 
 	// This ID must be unique amongst all providers
 	public static final int PROVIDER_ID = 201;
 
 	private static final String PROVIDER_NAME = "google";
-
-	private static final String PARAMETER_TOKEN = "token";
-
+	private static final String PARAMETER_TOKEN = "authCode";
 	private static final String AUTH_INTENT_DATA_TOKEN = "token";
-
-	private static final String AUTH_INTENT_DATA_EMAIL = "email";
-
-	private static final String SCOPE = "oauth2:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 
 	private static Map<String, String> mParameters = new HashMap<>();
 
-	private String mEmail = "";
+	private GoogleApiClient mGoogleApiClient;
+	private LoginActivity mActivity;
 
 	@Override
 	public boolean isDemo() {
@@ -75,26 +70,12 @@ public class GoogleAuthProvider implements IAuthProvider {
 	}
 
 	@Override
-	public String getPrimaryParameter() {
-		return mEmail;
-	}
-
-	@Override
-	public void setPrimaryParameter(String parameter) {
-		mEmail = parameter;
+	public void setTokenParameter(String tokenParameter) {
+		mParameters.put(PARAMETER_TOKEN, tokenParameter);
 	}
 
 	@Override
 	public boolean loadAuthIntent(Intent data) {
-		String email = data.getStringExtra(AUTH_INTENT_DATA_EMAIL);
-		if (email != null)
-			mEmail = email;
-
-		String token = data.getStringExtra(AUTH_INTENT_DATA_TOKEN);
-		if (token == null)
-			return false;
-
-		mParameters.put(PARAMETER_TOKEN, token);
 		return true;
 	}
 
@@ -104,39 +85,23 @@ public class GoogleAuthProvider implements IAuthProvider {
 			webloginAuth(activity);
 		else
 			androidAuth(activity);
+		mActivity = activity;
+	}
+
+	public GoogleApiClient getGoogleApiClient() {
+		return mGoogleApiClient;
 	}
 
 	/**
 	 * Helper for invalidating Google authentication token.
 	 *
-	 * @param context app context
 	 */
-	public void invalidateToken(Context context) {
-		try {
-			GoogleAuthUtil.clearToken(context, mParameters.get(PARAMETER_TOKEN));
-		} catch (GoogleAuthException | IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Method mine users account names
-	 *
-	 * @return array of names to choose
-	 */
-	@RequiresPermission(Manifest.permission.GET_ACCOUNTS)
-	private String[] getAccountNames(Context context) {
-		AccountManager mAccountManager = AccountManager.get(context);
-		Account[] accounts = mAccountManager.getAccountsByType(GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE);
-		String[] names = new String[accounts.length];
-		for (int i = 0; i < names.length; i++) {
-			names[i] = accounts[i].name;
-		}
-		return names;
+	public void invalidateToken() {
+		Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
 	}
 
 	private void webloginAuth(final LoginActivity activity) {
-		Timber.d("Start webloginAuth");
+		Log.d(TAG, "Start webloginAuth");
 
 		final Intent intent = new Intent(activity, WebAuthActivity.class);
 		intent.putExtra(WebAuthActivity.EXTRA_PROVIDER_ID, PROVIDER_ID);
@@ -146,72 +111,39 @@ public class GoogleAuthProvider implements IAuthProvider {
 	}
 
 	private void androidAuth(final LoginActivity activity) {
-		Timber.d("Start androidAuth");
+		Log.d(TAG, "Start androidAuth");
 
-		String[] accounts = this.getAccountNames(activity);
-		if (!mEmail.isEmpty()) {
-			// Check if this e-mail still exists on this device
-			boolean found = false;
-			for (String account : accounts) {
-				if (account.equalsIgnoreCase(mEmail)) {
-					found = true;
-					break;
-				}
-			}
+		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+				.requestEmail()
+				.requestServerAuthCode(activity.getString(R.string.api_web))
+				.requestProfile()
+				.build();
 
-			// If this email was not found, delete it and let user choose the one again
-			if (!found)
-				mEmail = "";
-		}
+		// Build GoogleAPIClient with the Google Sign-In API and the above options.
+		mGoogleApiClient = new GoogleApiClient.Builder(activity)
+				.addConnectionCallbacks(this)
+				.addOnConnectionFailedListener(this)
+				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+				.build();
 
-		if (mEmail.isEmpty()) {
+		mGoogleApiClient.connect();
+	}
 
-			Timber.d("Found number of accounts on this device: %d", accounts.length);
+	@Override
+	public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+		Timber.e("Google Auth connection failed");
+	}
 
-			if (accounts.length == 1) {
-				// Set the only one email account used
-				mEmail = accounts[0];
-			} else {
-				// Start activity and let user choose the email account to use
-				Intent intent = AccountPicker.newChooseAccountIntent(null, null, new String[]{"com.google"}, false, null, null, null, null);
-				activity.startActivityForResult(intent, PROVIDER_ID);
-				return; // we need to finish initialization in activity's onResult
-			}
-		}
+	@Override
+	public void onConnected(@Nullable Bundle bundle) {
+		Timber.d("Google Auth connection success");
+		Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+		mActivity.startActivityForResult(signInIntent, GoogleAuthProvider.PROVIDER_ID);
+	}
 
-		if (!mEmail.isEmpty()) {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						// Load token from Google server and save it
-						String token = GoogleAuthUtil.getToken(activity, mEmail, SCOPE);
-
-						Intent data = new Intent();
-						data.putExtra(AUTH_INTENT_DATA_TOKEN, token);
-
-						// Remember also primary email this provider was started with
-						data.putExtra(AUTH_INTENT_DATA_EMAIL, mEmail);
-
-						// Report success to caller
-						activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_AUTH, data);
-					} catch (UserRecoverableAuthException e) {
-						Intent intent = e.getIntent();
-						if (intent != null) {
-							activity.startActivityForResult(intent, PROVIDER_ID);
-						}
-					} catch (GoogleAuthException | IOException e) {
-						// Return error to caller
-						activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_ERROR, null);
-					}
-				}
-			}).start();
-
-			return;
-		}
-
-		// Return error to LoginActivity
-		activity.onActivityResult(PROVIDER_ID, IAuthProvider.RESULT_ERROR, null);
+	@Override
+	public void onConnectionSuspended(int i) {
+		Timber.d("Google Auth connection suspended");
 	}
 
 	public static class GoogleWebViewClient extends WebViewClient implements IWebAuthProvider {
@@ -228,6 +160,14 @@ public class GoogleAuthProvider implements IAuthProvider {
 			mActivity = activity;
 
 			webView.setWebViewClient(this);
+
+//			Uri.Builder uri = Uri.parse("https://accounts.google.com/o/oauth2/auth").buildUpon();
+//
+//			uri.appendQueryParameter("client_id", mActivity.getString(R.string.api_keys_web_login_client_id));
+//			uri.appendQueryParameter("scope", "openid email profile");
+//			uri.appendQueryParameter("redirect_uri", REDIRECT_URL);
+//			uri.appendQueryParameter("state", "foobar");
+//			uri.appendQueryParameter("response_type", "code");
 
 			StringBuilder url = new StringBuilder();
 			url.append("https://accounts.google.com/o/oauth2/auth?client_id=");
@@ -264,7 +204,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 			if (!done) {
 				done = true;
 
-				Timber.e("Received SSL error: %s", error.toString());
+				Log.e(TAG, String.format("Received SSL error: %s", error.toString()));
 				Toast.makeText(mActivity, R.string.login_toast_ssl_error, Toast.LENGTH_LONG).show();
 
 				mActivity.setResult(IAuthProvider.RESULT_ERROR);
@@ -296,7 +236,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 
 			final String error = parsed.getQueryParameter("error");
 			if (error != null)
-				Timber.e("received error: %s", error);
+				Log.e(TAG, String.format("received error: %s", error));
 
 			final String code = parsed.getQueryParameter("code");
 			if (code == null) {
@@ -317,10 +257,10 @@ public class GoogleAuthProvider implements IAuthProvider {
 				done = true;
 
 				if ((errorCode == ERROR_HOST_LOOKUP || errorCode == ERROR_CONNECT) && failingUrl.startsWith(REDIRECT_URL)) {
-					Timber.w("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl);
+					Log.w(TAG, String.format("ignoring errorCode: %d and failingUrl: %s", errorCode, failingUrl));
 					finishWebLoginAuth(failingUrl);
 				} else {
-					Timber.e("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description);
+					Log.e(TAG, String.format("received errorCode: %d and failingUrl: %s\ndescription: %s", errorCode, failingUrl, description));
 
 					// Report error to caller
 					mActivity.setResult(IAuthProvider.RESULT_ERROR);
@@ -349,7 +289,7 @@ public class GoogleAuthProvider implements IAuthProvider {
 				String token = "";
 				try {
 					JSONObject tokenJson = Utils.fetchJsonByPost(TOKEN_URL, params);
-					Timber.d("received: %s", tokenJson.toString());
+					Log.d(TAG, String.format("received: %s", tokenJson.toString()));
 					token = tokenJson.getString("access_token");
 				} catch (IOException | JSONException e) {
 					e.printStackTrace();

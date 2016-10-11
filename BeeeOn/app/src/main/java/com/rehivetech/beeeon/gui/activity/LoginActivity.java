@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
 import android.Manifest;
-import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -12,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.WorkerThread;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -27,6 +27,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -133,7 +135,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		mAuthProvider = Persistence.Global.getLastAuthProvider();
 		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
 			// Automatic login with last used provider
-			Timber.d("Automatic login with last provider '%s' and user '%s'...", mAuthProvider.getProviderName(), mAuthProvider.getPrimaryParameter());
+			Timber.d("Automatic login with last provider %s", mAuthProvider.getProviderName());
 			loginWithPermissionCheck(mAuthProvider);
 		}
 	}
@@ -326,17 +328,25 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			case Activity.RESULT_OK: {
 				// This result can go from Google Play Services intent as the choose of user account
 				if (authProvider instanceof GoogleAuthProvider) {
-					String email = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-					if (email == null) {
-						Timber.w( "Received RESULT_OK from GoogleAuthProvider but without email");
-						mLoginCancel = true;
-						mProgress.dismiss();
-						return;
-					}
 
-					// Set given e-mail as parameter and repeat authProcess of getting token
-					authProvider.setPrimaryParameter(email);
-					authProvider.prepareAuth(this);
+					GoogleSignInAccount account = Auth.GoogleSignInApi.getSignInResultFromIntent(data).getSignInAccount();
+
+                    if (account != null) {
+
+
+                        authProvider.setTokenParameter(account.getServerAuthCode());
+                        ((GoogleAuthProvider) mAuthProvider).getGoogleApiClient().disconnect();
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // After changing demo mode must be controller reloaded
+                                Controller.setDemoMode(LoginActivity.this, authProvider.isDemo());
+                                loggingBackgroundAction(authProvider);
+                            }
+                        }).start();
+                    }
+
 				}
 				break;
 			}
@@ -485,10 +495,9 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	}
 
 	/**
-	 * MUST BE CALLED IN BACKGROUND THREAD
-	 *
 	 * @param authProvider which will be set to login
 	 */
+	@WorkerThread
 	private void loggingBackgroundAction(final IAuthProvider authProvider) {
 		String errMessage = getString(R.string.login_toast_login_failed);
 		boolean errFlag = true;
@@ -536,7 +545,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 						if (authProvider instanceof GoogleAuthProvider) {
 							// Probably wrong Google token so invalidate the token and then try it again
 							if (Utils.isGooglePlayServicesAvailable(LoginActivity.this)) {
-								((GoogleAuthProvider) authProvider).invalidateToken(LoginActivity.this);
+								((GoogleAuthProvider) authProvider).invalidateToken();
 
 								// FIXME: try it again somehow (if we haven't tried it yet)
 							}
@@ -561,10 +570,9 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	}
 
 	/**
-	 * MUST BE CALLED IN BACKGROUND THREAD
-	 *
 	 * @param authProvider which will be set to login
 	 */
+    @WorkerThread
 	private void registeringBackgroundAction(final IAuthProvider authProvider) {
 		mProgress.setMessageResource(R.string.login_progress_signup);
 

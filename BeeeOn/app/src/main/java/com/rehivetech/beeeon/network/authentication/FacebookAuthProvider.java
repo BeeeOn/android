@@ -80,18 +80,13 @@ public class FacebookAuthProvider implements IAuthProvider {
 	}
 
 	@Override
-	public String getPrimaryParameter() {
-		return "";
-	}
-
-	@Override
 	public Map<String, String> getParameters() {
 		return mParameters;
 	}
 
 	@Override
-	public void setPrimaryParameter(String parameter) {
-		return;
+	public void setTokenParameter(String tokenParameter) {
+
 	}
 
 	@Override

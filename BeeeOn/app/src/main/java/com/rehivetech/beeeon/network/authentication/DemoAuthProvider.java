@@ -22,18 +22,13 @@ public class DemoAuthProvider implements IAuthProvider {
 	}
 
 	@Override
-	public String getPrimaryParameter() {
-		return "";
-	}
-
-	@Override
 	public Map<String, String> getParameters() {
 		return null;
 	}
 
 	@Override
-	public void setPrimaryParameter(String parameter) {
-		return;
+	public void setTokenParameter(String tokenParameter) {
+
 	}
 
 	@Override
