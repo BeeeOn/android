@@ -4,7 +4,7 @@ apply plugin: 'android-apt'
 
 project.ext.set("versionName", "1.7.0")
 project.ext.set("supportLibVersion", "23.4.0")
-project.ext.set("playServicesVersion", "8.4.0")
+project.ext.set("playServicesVersion", "9.6.1")
 
 android {
     compileSdkVersion 23
@@ -92,6 +92,7 @@ dependencies {
     // Google Play libraries
     compile "com.google.android.gms:play-services-analytics:${project.ext.playServicesVersion}"
     compile "com.google.android.gms:play-services-identity:${project.ext.playServicesVersion}"
+    compile "com.google.android.gms:play-services-auth:${project.ext.playServicesVersion}"
     compile "com.google.android.gms:play-services-gcm:${project.ext.playServicesVersion}"
     compile "com.google.android.gms:play-services-maps:${project.ext.playServicesVersion}"
     // UI libraries
