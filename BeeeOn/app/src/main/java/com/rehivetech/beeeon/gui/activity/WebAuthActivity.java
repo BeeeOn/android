@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,13 +11,12 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
-import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+
+import java.util.Locale;
 
 public class WebAuthActivity extends AppCompatActivity {
 
 	public static final String EXTRA_PROVIDER_ID = "provider_id";
-
-	private IAuthProvider.IWebAuthProvider mWebAuthProvider;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,13 @@ public class WebAuthActivity extends AppCompatActivity {
 		final int providerId = data.getIntExtra(EXTRA_PROVIDER_ID, 0);
 		switch (providerId) {
 			case GoogleAuthProvider.PROVIDER_ID: {
-				mWebAuthProvider = new GoogleAuthProvider.GoogleWebViewClient(this, webView);
+				GoogleAuthProvider.GoogleWebViewClient webViewClient = new GoogleAuthProvider.GoogleWebViewClient(this);
+				webView.setWebViewClient(webViewClient);
+				webView.loadUrl(webViewClient.getLoadUrl());
 				break;
 			}
 			default: {
-				throw new IllegalStateException(String.format("Unknown provider (%d)", providerId));
+				throw new IllegalStateException(String.format(Locale.getDefault(), "Unknown provider (%d)", providerId));
 			}
 		}
 	}
@@ -67,6 +69,7 @@ public class WebAuthActivity extends AppCompatActivity {
 		return progressBar;
 	}
 
+	@SuppressLint("setJavascriptEnabled")
 	private WebView initWebView() {
 		WebView webView = new WebView(this);
 
@@ -76,14 +79,4 @@ public class WebAuthActivity extends AppCompatActivity {
 
 		return webView;
 	}
-
-	@Override
-	public void onStop() {
-		super.onStop();
-
-		if (mWebAuthProvider != null) {
-			mWebAuthProvider.onActivityStop();
-		}
-	}
-
 }

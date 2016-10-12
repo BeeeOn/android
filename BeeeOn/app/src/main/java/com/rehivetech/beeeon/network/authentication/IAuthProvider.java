@@ -58,15 +58,4 @@ public interface IAuthProvider {
 	 * This will be called (probably) on UI thread so Provider must start the separate thread by itself.
 	 */
 	void prepareAuth(LoginActivity activity);
-
-	/**
-	 * Interface for providers using WebAuthActivity.
-	 */
-	interface IWebAuthProvider {
-		/**
-		 * This is called when in parent WebAuthActivity is called onStop method.
-		 */
-		void onActivityStop();
-	}
-
 }

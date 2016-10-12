@@ -7,12 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Path;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,7 +16,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.widget.ImageView;
@@ -39,23 +33,12 @@ import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.gui.view.CircleTransformation;
 import com.squareup.picasso.Transformation;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -78,51 +61,6 @@ final public class Utils {
 	 */
 	private Utils() {
 	}
-
-
-	public static String getUtf8StringFromInputStream(InputStream stream) throws IOException {
-		int n;
-		char[] buffer = new char[1024 * 4];
-		InputStreamReader reader = new InputStreamReader(stream, "UTF8");
-		StringWriter writer = new StringWriter();
-		while(-1 != (n = reader.read(buffer))) writer.write(buffer, 0, n);
-		return writer.toString();
-	}
-
-
-	/**
-	 * Fetch JSON content by a HTTP POST request defined by the requestUrl and params given
-	 * as a map of (key, value) pairs. Encoding is solved internally.
-	 * <p/>
-	 * This CAN'T be called on UI thread.
-	 *
-	 * @param requestUrl
-	 * @param params
-	 * @return
-	 * @throws JSONException
-	 * @throws IOException
-	 */
-	public static JSONObject fetchJsonByPost(String requestUrl, Map<String, String> params) throws JSONException, IOException {
-		URL url = new URL(requestUrl);
-
-		String query = "";
-		for(String key : params.keySet())
-			query += key + "=" + params.get(key) + "&";
-
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		//connection.setRequestProperty("Cookie", cookie);
-		//Set to POST
-		connection.setDoOutput(true);
-		connection.setRequestMethod("POST");
-		connection.setReadTimeout(10 * (int) DateUtils.SECOND_IN_MILLIS);
-		Writer writer = new OutputStreamWriter(connection.getOutputStream());
-		writer.write(query);
-		writer.flush();
-		writer.close();
-
-		return new JSONObject(getUtf8StringFromInputStream((InputStream) connection.getContent()));
-	}
-
 
 	/**
 	 * @return Application's version code from the {@code PackageManager}.
