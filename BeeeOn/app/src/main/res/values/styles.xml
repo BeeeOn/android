@@ -275,4 +275,68 @@
     <style name="BeeeOn.LoginActivity.LoginSlogan" parent="">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
     </style>
+    
+    
+    
+    
+    <!-- Automation base item -->
+
+    <style name="BeeeOn.Automation.BaseItem.CardView" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/space_mini</item>
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="BeeeOn.Automation.BaseItem.Switch" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="BeeeOn.Automation.BaseItem.Header" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/space_normal</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+    </style>
+
+    <!-- Automation ventilation item -->
+
+    <style name="BeeeOn.Automation.VentilationItem.TemperatureIcon" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/ic_val_temperature_gray</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.RoomName" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.Temperature" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/beeeon_primary_dark</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.AdviceIcon" parent="">
+        <item name="android:layout_height">@dimen/automation_ventilation_item_icon_size</item>
+        <item name="android:layout_width">@dimen/automation_ventilation_item_icon_size</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:padding">@dimen/space_normal</item>
+        <item name="android:background">@drawable/oval_primary</item>
+        <item name="android:src">@drawable/ic_done_white_24dp</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.AdviceText" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_margin">@dimen/space_mini</item>
+    </style>
+
 </resources>

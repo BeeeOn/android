@@ -1,110 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="8dp"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:contentPadding="8dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BeeeOn.Automation.BaseItem.CardView"
+    app:contentPadding="@dimen/space_normal">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
             android:id="@+id/automation_item_ventilation_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginBottom="@dimen/space_normal"
             android:text="Rule name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+            style="@style/BeeeOn.Automation.BaseItem.Header"
+            />
+
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/automation_item_ventilation_enabled"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            style="@style/BeeeOn.Automation.BaseItem.Switch"
             />
-        <RelativeLayout
-            android:id="@+id/automation_item_ventilation_rl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_below="@+id/automation_item_ventilation_name">
 
-            <ImageView
-                android:id="@+id/automation_item_ventilation_iv_inside"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_val_temperature_gray"/>
+        <ImageView
+            android:id="@+id/automation_item_ventilation_iv_inside"
+            android:layout_below="@+id/automation_item_ventilation_name"
+            style="@style/BeeeOn.Automation.VentilationItem.TemperatureIcon"
+            />
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_toRightOf="@+id/automation_item_ventilation_iv_inside"
-                android:layout_alignTop="@+id/automation_item_ventilation_iv_inside"
-                android:layout_alignBottom="@+id/automation_item_ventilation_iv_inside"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/automation_ventilation_item_inside"
-                    />
-                <TextView
-                    android:id="@+id/automation_item_ventilation_temp_inside"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="28°C"
-                    android:textColor="@color/beeeon_primary_dark"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    />
-            </LinearLayout>
-            <ImageView
-                android:id="@+id/automation_item_iv"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_centerHorizontal="true"
-                android:padding="5dp"
-                android:background="@drawable/oval_primary"
-                android:src="@drawable/ic_done_white_24dp"/>
-            <ImageView
-                android:id="@+id/automation_item_ventilation_iv_outside"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toLeftOf="@+id/automation_item_ventilation_ll_outside"
-                android:src="@drawable/ic_val_temperature_gray"
-                />
-            <LinearLayout
-                android:id="@+id/automation_item_ventilation_ll_outside"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignTop="@+id/automation_item_ventilation_iv_outside"
-                android:layout_alignBottom="@+id/automation_item_ventilation_iv_outside"
-                android:layout_alignParentRight="true"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/automation_ventilation_item_outside"
-                    />
-                <TextView
-                    android:id="@+id/automation_item_ventilation_temp_outside"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="28°C"
-                    android:textColor="@color/beeeon_primary_dark"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                    />
-            </LinearLayout>
-        </RelativeLayout>
+        <TextView
+            android:id="@+id/automation_item_ventilation_tv_inside"
+            android:layout_alignTop="@+id/automation_item_ventilation_iv_inside"
+            android:layout_toRightOf="@+id/automation_item_ventilation_iv_inside"
+            android:text="@string/automation_ventilation_item_inside"
+            style="@style/BeeeOn.Automation.VentilationItem.RoomName"
+            />
+
+        <TextView
+            android:id="@+id/automation_item_ventilation_temp_inside"
+            android:layout_alignLeft="@+id/automation_item_ventilation_tv_inside"
+            android:layout_below="@+id/automation_item_ventilation_tv_inside"
+            android:text="28°C"
+            style="@style/BeeeOn.Automation.VentilationItem.Temperature"
+            />
+
+        <ImageView
+            android:id="@+id/automation_item_ventilation_iv"
+            android:layout_alignTop="@+id/automation_item_ventilation_tv_inside"
+            style="@style/BeeeOn.Automation.VentilationItem.AdviceIcon"
+            />
+
+        <ImageView
+            android:id="@+id/automation_item_ventilation_iv_outside"
+            android:layout_alignTop="@id/automation_item_ventilation_iv_inside"
+            android:layout_toLeftOf="@+id/automation_item_ventilation_tv_outside"
+            style="@style/BeeeOn.Automation.VentilationItem.TemperatureIcon"
+            />
+
+        <TextView
+            android:id="@+id/automation_item_ventilation_tv_outside"
+            android:layout_alignTop="@id/automation_item_ventilation_iv_inside"
+            android:layout_alignLeft="@+id/automation_item_ventilation_temp_outside"
+            android:text="@string/automation_ventilation_item_outside"
+            style="@style/BeeeOn.Automation.VentilationItem.RoomName"
+            />
+
+        <TextView
+            android:id="@+id/automation_item_ventilation_temp_outside"
+            android:layout_below="@+id/automation_item_ventilation_tv_outside"
+            android:layout_alignParentRight="true"
+            android:text="28°C"
+            style="@style/BeeeOn.Automation.VentilationItem.Temperature"
+            />
+
         <TextView
             android:id="@+id/automation_item_ventilation_advice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/automation_item_ventilation_rl"
-            android:visibility="gone"
-            android:gravity="center"/>
+            android:layout_below="@+id/automation_item_ventilation_iv"
+            android:text="@string/automation_ventilation_item_advice_light"
+            tools:visibility="visible"
+            style="@style/BeeeOn.Automation.VentilationItem.AdviceText"
+            />
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
