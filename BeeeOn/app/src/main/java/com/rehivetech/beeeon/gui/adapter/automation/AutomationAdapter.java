@@ -10,7 +10,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -223,7 +222,7 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
             mRuleName = (TextView) view.findViewById(R.id.automation_item_ventilation_name);
             mInsideTemp = (TextView) view.findViewById(R.id.automation_item_ventilation_temp_inside);
             moutsideTemp = (TextView) view.findViewById(R.id.automation_item_ventilation_temp_outside);
-            mAdviceImage = (ImageView) view.findViewById(R.id.automation_item_iv);
+            mAdviceImage = (ImageView) view.findViewById(R.id.automation_item_ventilation_iv);
             mAdviceText = (TextView) view.findViewById(R.id.automation_item_ventilation_advice);
             mActive = (SwitchCompat) view.findViewById(R.id.automation_item_ventilation_enabled);
             view.setOnClickListener(this);
@@ -254,19 +253,23 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
             }
 
 
+
             Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.oval_primary);
 
             if (outsideTemp <= insideTemp) {
                 mAdviceImage.setImageResource(R.drawable.ic_done_white_24dp);
+                mAdviceText.setVisibility(View.GONE);
                 drawable = Utils.setDrawableTint(drawable, ContextCompat.getColor(mContext, R.color.beeeon_primary));
 
             } else if (outsideTemp - 5 <= insideTemp){
                 mAdviceImage.setImageResource(R.drawable.ic_val_win_open);
-
+                mAdviceText.setVisibility(View.VISIBLE);
+                mAdviceText.setText(R.string.automation_ventilation_item_advice_light);
                 drawable = Utils.setDrawableTint(drawable, ContextCompat.getColor(mContext, R.color.beeeon_accent));
             } else {
                 drawable = Utils.setDrawableTint(drawable, ContextCompat.getColor(mContext, R.color.red));
-
+                mAdviceText.setVisibility(View.VISIBLE);
+                mAdviceText.setText(R.string.automation_ventilation_item_advice_hard);
                 mAdviceImage.setImageResource(R.drawable.ic_val_win_open);
             }
 
