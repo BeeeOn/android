@@ -488,6 +488,11 @@
     <string name="automation_ventilation_item_advice_light">You should open your windows.</string>
     <string name="automation_ventilation_item_advice_hard">Open your windows or you will die.</string>
 
+    <string name="automation_dewing_item_probability">Window drewing probability</string>
+    <string name="automation_dewing_item_probability_low">Low</string>
+    <string name="automation_dewing_item_probability_very_high">Very high</string>
+    <string name="automation_dewing_item_advice">You should open your windows or lower the temperature</string>
+
     <!--Days shortcuts-->
     <string name="monday">Mo</string>
     <string name="tuesday">Tu</string>

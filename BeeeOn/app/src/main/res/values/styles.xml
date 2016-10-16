@@ -339,4 +339,51 @@
         <item name="android:layout_margin">@dimen/space_mini</item>
     </style>
 
+    <!-- Automation window drewing item -->
+
+    <style name="BeeeOn.Automation.DewingItem" parent="">
+
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Text" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+    
+    <style name="BeeeOn.Automation.DewingItem.Probability.Image" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Image.Low" parent="BeeeOn.Automation.DewingItem.Probability.Image">
+        <item name="android:src">@drawable/ic_val_win_closed_gray</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Image.High" parent="BeeeOn.Automation.DewingItem.Probability.Image">
+        <item name="android:src">@drawable/ic_warning_black_24dp</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Text" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display1</item>
+    </style>
+
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Text.Low" parent="BeeeOn.Automation.DewingItem.Probability.Text">
+        <item name="android:textColor">@color/beeeon_primary_dark</item>
+    </style>
+
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Text.High" parent="BeeeOn.Automation.DewingItem.Probability.Text">
+        <item name="android:textColor">@color/beeeon_accent</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Advice" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+    </style>
+
 </resources>

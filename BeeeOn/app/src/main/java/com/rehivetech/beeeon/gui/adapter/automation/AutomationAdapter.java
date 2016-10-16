@@ -19,6 +19,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
+import com.rehivetech.beeeon.gui.adapter.automation.items.DewingItem;
 import com.rehivetech.beeeon.gui.adapter.automation.items.VentilationItem;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.util.TimeHelper;
@@ -35,7 +36,8 @@ import java.util.List;
 
 public class AutomationAdapter extends RecyclerViewSelectableAdapter {
 
-    private static final int VENTILATION_VIEW_TYPE = 0;
+    private static final int VENTILATION_VIEW_TYPE      = 0;
+    private static final int WINDOW_DEWING_VIEW_TYPE    = 1;
 
     private final TimeHelper mTimeHelper;
     private final UnitsHelper mUnitsHelper;
@@ -63,8 +65,10 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
         BaseItem item = mItems.get(position);
         if(item instanceof VentilationItem){
             return VENTILATION_VIEW_TYPE;
+        } else {
+            return WINDOW_DEWING_VIEW_TYPE;
         }
-        return VENTILATION_VIEW_TYPE;
+
     }
 
     @Override
@@ -83,7 +87,17 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
             });
             return holder;
         } else {
-            return null;
+            View view = LayoutInflater.from(mContext).inflate(R.layout.automation_item_dewing, parent, false);
+            final AutomationDewingViewHolder holder = new AutomationDewingViewHolder(view);
+            holder.mActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    int position = holder.getAdapterPosition();
+                    BaseItem item = mItems.get(position);
+                    item.setActive(b);
+                }
+            });
+            return  holder;
         }
 
     }
@@ -95,6 +109,12 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
             ((AutomationVentilationViewHolder) holder).bind(
                     Controller.getInstance(mContext),
                     (VentilationItem) item,
+                    position
+            );
+        } else {
+            ((AutomationDewingViewHolder) holder).bind(
+                    Controller.getInstance(mContext),
+                    (DewingItem) item,
                     position
             );
         }
@@ -294,5 +314,78 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
     public interface ActionModeCallback {
         void finishActionMode();
     }
+
+    public class AutomationDewingViewHolder extends BaseAutomationViewHolder implements View.OnClickListener {
+
+        public TextView mRuleName;
+        public TextView mProbabilityText;
+        public ImageView mProbabilityImage;
+        public TextView mAdvice;
+        public SwitchCompat mActive;
+
+        public AutomationDewingViewHolder(View view){
+            super(view);
+            mRuleName = (TextView) view.findViewById(R.id.automation_item_dewing_name);
+            mProbabilityImage = (ImageView) view.findViewById(R.id.automation_item_dewing_probability_image);
+            mProbabilityText = (TextView) view.findViewById(R.id.automation_item_dewing_probability_text);
+            mAdvice = (TextView) view.findViewById(R.id.automation_item_dewing_advice);
+            mActive = (SwitchCompat) view.findViewById(R.id.automation_item_dewing_active);
+            view.setOnClickListener(this);
+            view.setOnLongClickListener(this);
+        }
+
+        public void bind(Controller controller, DewingItem item, int position) {
+            float outsideTemp = 0.0F;
+            float insideTemp = 0.0F;
+            float humidity = 0.0F;
+            if (item.getOutstideTemeperatureModuleId() == null) {
+                outsideTemp = controller.getWeatherModel().getWeather(item.getGateId()).getTemp();
+
+            } else {
+                Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getOutstideTemeperatureModuleId());
+
+                if (module != null) {
+                    outsideTemp = (float) module.getValue().getDoubleValue();
+                }
+            }
+
+            Module insideModule = controller.getDevicesModel().getModule(item.getGateId(), item.getInsideTemperatureModuleId());
+
+            if (insideModule != null) {
+                insideTemp = (float) insideModule.getValue().getDoubleValue();
+            }
+
+            Module humidityModule = controller.getDevicesModel().getModule(item.getGateId(), item.getHumidityModuleId());
+
+            if(humidityModule != null){
+                humidity = (float) humidityModule.getValue().getDoubleValue();
+            }
+
+            if((humidity * insideTemp * outsideTemp) % 2 == 0){
+                mAdvice.setVisibility(View.VISIBLE);
+                mProbabilityImage.setImageResource(R.drawable.ic_val_win_closed_gray);
+                mProbabilityText.setText(R.string.automation_dewing_item_probability_very_high);
+            } else {
+                mAdvice.setVisibility(View.GONE);
+                mProbabilityImage.setImageResource(R.drawable.ic_val_emission_gray);
+                mProbabilityText.setText(R.string.automation_dewing_item_probability_low);
+            }
+
+            mActive.setChecked(item.isActive());
+            mRuleName.setText(item.getName());
+
+            setSelected(isSelected(position));
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            if (!handleSelection() && mItemClickListener != null) {
+                mItemClickListener.onRecyclerViewItemClick(getAdapterPosition(), AutomationAdapter.VENTILATION_VIEW_TYPE);
+                handleGoogleAnalytics();
+            }
+        }
+    }
+
 
 }

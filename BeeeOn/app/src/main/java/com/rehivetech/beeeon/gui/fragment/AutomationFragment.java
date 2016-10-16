@@ -20,6 +20,7 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.automation.AutomationAdapter;
+import com.rehivetech.beeeon.gui.adapter.automation.items.DewingItem;
 import com.rehivetech.beeeon.gui.adapter.automation.items.VentilationItem;
 import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
 import com.rehivetech.beeeon.household.device.Device;
@@ -86,14 +87,15 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
 
     private void createDemoData()
     {
-        VentilationItem item = null;
+        BaseItem item = null;
         Controller controller = Controller.getInstance(getActivity());
         List devices = controller.getDevicesModel().getDevicesByGate(mGateId);
-        Module insideTemp = null, outsideTemp = null;
+        Module insideTemp = null, outsideTemp = null, humid = null;
         for(Object object : devices){
             if(object instanceof Device){
                 Device device = (Device)object;
                 Module module = device.getFirstModuleByType(ModuleType.TYPE_TEMPERATURE);
+                Module humidM = device.getFirstModuleByType(ModuleType.TYPE_HUMIDITY);
                 if(module != null){
                     if(insideTemp == null){
                         insideTemp = module;
@@ -101,17 +103,32 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                         outsideTemp = module;
                     }
 
-                    if(insideTemp != null && outsideTemp != null){
-                        item = new VentilationItem("Living room windows",
-                                mGateId,
-                                true,
-                                null,
-                                outsideTemp.getModuleId().absoluteId,
-                                insideTemp.getModuleId().absoluteId);
-                        insideTemp = null;
 
-                        mAdapter.addItem(item);
-                    }
+                }
+                if(humidM != null){
+                    humid = module;
+                }
+
+                if(insideTemp != null && outsideTemp != null && humid != null){
+                    item = new DewingItem("Living room dewing",
+                            mGateId,
+                            true,
+                            insideTemp.getModuleId().absoluteId,
+                            outsideTemp.getModuleId().absoluteId,
+                            humid.getModuleId().absoluteId);
+                    mAdapter.addItem(item);
+                }
+
+                if(insideTemp != null && outsideTemp != null){
+                    item = new VentilationItem("Living room windows",
+                            mGateId,
+                            true,
+                            null,
+                            outsideTemp.getModuleId().absoluteId,
+                            insideTemp.getModuleId().absoluteId);
+                    insideTemp = null;
+                    outsideTemp = null;
+                    mAdapter.addItem(item);
                 }
             }
         }
