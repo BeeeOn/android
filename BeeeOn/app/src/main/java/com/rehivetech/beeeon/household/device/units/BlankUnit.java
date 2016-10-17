@@ -22,4 +22,8 @@ public class BlankUnit extends BaseUnit {
 		return value;
 	}
 
+	@Override
+	public double convertToDefaultValue(Item from, double value) {
+		return value;
+	}
 }

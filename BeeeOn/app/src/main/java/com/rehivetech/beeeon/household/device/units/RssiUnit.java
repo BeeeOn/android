@@ -23,4 +23,9 @@ public class RssiUnit extends BaseUnit {
 	public double convertValue(Item to, double value) {
 		return value;
 	}
+
+	@Override
+	public double convertToDefaultValue(Item from, double value) {
+		return value;
+	}
 }

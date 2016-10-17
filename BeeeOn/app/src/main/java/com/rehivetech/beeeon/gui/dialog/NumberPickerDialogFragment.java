@@ -28,7 +28,8 @@ import timber.log.Timber;
 
 
 /**
- * Created by martin on 31.10.15.
+ * @author martin
+ * @since 31.10.15.
  */
 public class NumberPickerDialogFragment extends BaseDialogFragment {
 
@@ -44,17 +45,29 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 
 
 	public static void showNumberPickerDialog(AppCompatActivity context, Module module, SharedPreferences prefs, Fragment targetFragment) {
+		BaseUnit.Item item = module.getValue().getUnit().fromSettings(prefs);
+		BaseValue.Constraints constraints = module.getValue().getConstraints();
+
+		if (constraints == null) {
+			return;
+		}
+
+		BaseUnit unit = module.getValue().getUnit();
+		Double minValue = unit.convertValue(item, constraints.getMin());
+		Double maxValue = unit.convertValue(item, constraints.getMax());
+
 		NumberPickerDialogFragment.createBuilder(context, context.getSupportFragmentManager())
 				.setTitle(module.getName(context))
-				.setConstraints(module.getValue().getConstraints())
+				.setMinValue(minValue)
+				.setMaxValue(maxValue)
+				.setValueGranularity(constraints.getGranularity())
 				.setPositiveButtonText(context.getString(R.string.activity_fragment_btn_set))
 				.setNegativeButtonText(context.getString(R.string.activity_fragment_btn_cancel))
 				.setActualValue(module.getValue().getDoubleValue())
-				.setValuesUnit(module.getValue().getUnit().fromSettings(prefs))
+				.setValuesUnit(item)
 				.setModuleId(module.getId())
 				.setTargetFragment(targetFragment, 0)
 				.show();
-
 	}
 
 	private static NumberPickerDialogBuilder createBuilder(Context context, FragmentManager fragmentManager) {
@@ -220,11 +233,18 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			return this;
 		}
 
-		public NumberPickerDialogBuilder setConstraints(BaseValue.Constraints constraints) {
-			mModuleMinValue = constraints.getMin();
-			mModuleMaxValue = constraints.getMax();
-			mModuleGranularity = constraints.getGranularity();
+		public NumberPickerDialogBuilder setMinValue(Double minValue) {
+			mModuleMinValue = minValue;
+			return this;
+		}
 
+		public NumberPickerDialogBuilder setMaxValue(Double maxValue) {
+			mModuleMaxValue = maxValue;
+			return this;
+		}
+
+		public NumberPickerDialogBuilder setValueGranularity(Double granularity) {
+			mModuleGranularity = granularity;
 			return this;
 		}
 

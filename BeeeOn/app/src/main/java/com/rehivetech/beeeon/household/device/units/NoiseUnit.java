@@ -34,4 +34,16 @@ public class NoiseUnit extends BaseUnit {
 				return value;
 		}
 	}
+
+	@Override
+	public double convertToDefaultValue(Item from, double value) {
+		switch (from.getId()) {
+			case R.string.pref_unit_noise_bel:
+				return value * 10;
+			case R.string.pref_unit_noise_nepper:
+				return value * (20 * Math.log10(Math.E));
+			default:
+				return value;
+		}
+	}
 }

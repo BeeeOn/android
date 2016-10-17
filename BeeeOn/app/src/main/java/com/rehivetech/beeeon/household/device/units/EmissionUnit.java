@@ -24,4 +24,8 @@ public class EmissionUnit extends BaseUnit {
 		return value;
 	}
 
+	@Override
+	public double convertToDefaultValue(Item from, double value) {
+		return value;
+	}
 }

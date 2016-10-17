@@ -34,4 +34,16 @@ public class TemperatureUnit extends BaseUnit {
 				return value;
 		}
 	}
+
+	@Override
+	public double convertToDefaultValue(Item from, double value) {
+		switch (from.getId()) {
+			case R.string.pref_unit_temperature_fahrenheit:
+				return (value - 32) * 5 / 9;
+			case R.string.pref_unit_temperature_kelvin:
+				return value - 273.15;
+			default:
+				return value;
+		}
+	}
 }

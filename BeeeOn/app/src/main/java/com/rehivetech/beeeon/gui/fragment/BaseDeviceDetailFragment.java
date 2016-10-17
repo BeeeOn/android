@@ -155,12 +155,16 @@ public abstract class BaseDeviceDetailFragment extends BaseApplicationFragment i
 	@Override
 	public void onSetNewValue(String moduleId, String actualValue, BaseUnit.Item unit) {
 		Module module = mDevice.getModuleById(moduleId);
+
 		if (module == null) {
 			Timber.e("Can't load module for changing its value");
 			return;
 		}
 
-		module.setValue(actualValue);
+		//convert value to base unit
+		Double convertedValue = module.getValue().getUnit().convertToDefaultValue(unit, Utils.parseDoubleSafely(actualValue, 0d));
+		module.setValue(String.valueOf(convertedValue));
+
 		doChangeStateModuleTask(module);
 	}
 

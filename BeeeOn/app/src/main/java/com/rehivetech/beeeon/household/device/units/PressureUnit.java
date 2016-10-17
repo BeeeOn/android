@@ -31,4 +31,14 @@ public class PressureUnit extends BaseUnit {
 				return value;
 		}
 	}
+
+	@Override
+	public double convertToDefaultValue(Item from, double value) {
+		switch (from.getId()) {
+			case R.string.pref_unit_pressure_bar:
+				return value * 1000;
+			default:
+				return value;
+		}
+	}
 }

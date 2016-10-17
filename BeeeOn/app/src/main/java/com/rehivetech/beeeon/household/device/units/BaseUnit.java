@@ -27,7 +27,9 @@ public abstract class BaseUnit {
 	 */
 	public abstract BaseUnit.Item fromSettings(SharedPreferences prefs);
 
-	abstract public double convertValue(Item to, double value);
+	public abstract double convertValue(Item to, double value);
+
+	public abstract double convertToDefaultValue(Item from, double value);
 
 	public class Item implements Parcelable {
 		static final int DEFAULT_ID = 0;
