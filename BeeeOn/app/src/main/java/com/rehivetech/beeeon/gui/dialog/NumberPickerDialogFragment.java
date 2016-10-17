@@ -55,6 +55,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 		BaseUnit unit = module.getValue().getUnit();
 		Double minValue = unit.convertValue(item, constraints.getMin());
 		Double maxValue = unit.convertValue(item, constraints.getMax());
+		Double actaulValue = unit.convertValue(item, module.getValue().getDoubleValue());
 
 		NumberPickerDialogFragment.createBuilder(context, context.getSupportFragmentManager())
 				.setTitle(module.getName(context))
@@ -63,7 +64,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 				.setValueGranularity(constraints.getGranularity())
 				.setPositiveButtonText(context.getString(R.string.activity_fragment_btn_set))
 				.setNegativeButtonText(context.getString(R.string.activity_fragment_btn_cancel))
-				.setActualValue(module.getValue().getDoubleValue())
+				.setActualValue(actaulValue)
 				.setValuesUnit(item)
 				.setModuleId(module.getId())
 				.setTargetFragment(targetFragment, 0)
