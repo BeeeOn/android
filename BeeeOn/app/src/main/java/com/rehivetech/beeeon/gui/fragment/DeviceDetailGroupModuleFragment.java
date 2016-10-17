@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,61 +7,38 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.TextView;
 
-import com.avast.android.dialogs.fragment.ListDialogFragment;
-import com.avast.android.dialogs.iface.IListDialogListener;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
-import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.household.device.values.EnumValue;
-import com.rehivetech.beeeon.threading.CallbackTask;
-import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.util.PreferencesHelper;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import timber.log.Timber;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author martin on 15.8.2015.
  */
-public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment implements IListDialogListener,
-		DeviceModuleAdapter.ItemClickListener, NumberPickerDialogFragment.SetNewValueListener {
+public class DeviceDetailGroupModuleFragment extends BaseDeviceDetailFragment {
 
 	private static final String KEY_GROUP_NAME = "group_name";
-	private static final String KEY_GATE_ID = "gate_id";
-	private static final String KEY_DEVICE_ID = "device_id";
 
-	private static final int REQUEST_SET_ACTUATOR = 7894;
-
-	private String mGateId;
-	private String mDeviceId;
 	private String mGroupName;
 
-	private Device mDevice;
-	private String mModuleId;
-
-	private DeviceDetailFragment.UpdateDevice mDeviceCallback;
-	private View mView;
 	private DeviceModuleAdapter mModuleAdapter;
 
-	private RecyclerView mRecyclerView;
-	private TextView mEmptyListView;
-	private boolean mHideUnavailableModules;
+	@BindView(R.id.device_detail_modules_list)
+	RecyclerView mRecyclerView;
+
+	@BindView(R.id.device_detail_group_module_list_empty_view)
+	TextView mEmptyListView;
 
 	public static DeviceDetailGroupModuleFragment newInstance(String gateId, String deviceId, String groupName) {
 		Bundle args = new Bundle();
-		args.putString(KEY_GATE_ID, gateId);
-		args.putString(KEY_DEVICE_ID, deviceId);
+		fillArguments(args, gateId, deviceId);
 		args.putString(KEY_GROUP_NAME, groupName);
 
 		DeviceDetailGroupModuleFragment fragment = new DeviceDetailGroupModuleFragment();
@@ -73,31 +47,23 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	}
 
 	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		mDeviceCallback = (DeviceDetailFragment.UpdateDevice) context;
-	}
-
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mGateId = getArguments().getString(KEY_GATE_ID);
-		mDeviceId = getArguments().getString(KEY_DEVICE_ID);
 		mGroupName = getArguments().getString(KEY_GROUP_NAME);
 		mModuleId = "-1";
-
-		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
-		mHideUnavailableModules = PreferencesHelper.getBoolean(mActivity, prefs, R.string.pref_hide_unavailable_modules_key);
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		mView = inflater.inflate(R.layout.fragment_device_detail_group_module, container, false);
+		View view = inflater.inflate(R.layout.fragment_device_detail_group_module, container, false);
 
-		mEmptyListView = (TextView) mView.findViewById(R.id.device_detail_group_module_list_empty_view);
-		initLayout();
-		return mView;
+		mUnbinder = ButterKnife.bind(this, view);
+
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+		mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
+		mRecyclerView.setAdapter(mModuleAdapter);
+		return view;
 	}
 
 	@Override
@@ -107,13 +73,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		updateData();
 	}
 
-	private void initLayout() {
-		mRecyclerView = (RecyclerView) mView.findViewById(R.id.device_detail_modules_list);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-		mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
-		mRecyclerView.setAdapter(mModuleAdapter);
-	}
-
+	@Override
 	public void updateData() {
 		mDevice = mDeviceCallback.getDevice();
 
@@ -128,48 +88,10 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		}
 	}
 
-	@Override
-	public void onItemClick(String moduleId) {
-		Timber.d("onItemClick %s:", moduleId);
-		Intent intent = ModuleGraphActivity.getActivityIntent(mActivity, mGateId, mDeviceId, moduleId);
-		startActivity(intent);
-	}
-
-	@Override
-	public void onButtonChangeState(String moduleId) {
-		Timber.d("onButtonChangeState");
-		mModuleId = moduleId;
-		showListDialog(moduleId);
-	}
-
-	@Override
-	public void onButtonSetNewValue(String moduleId) {
-		Timber.d("onButtonSetNewValue");
-		SharedPreferences preferences = Controller.getInstance(mActivity).getUserSettings();
-		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), preferences, this);
-	}
-
-	@Override
-	public void onSwitchChange(String moduleId) {
-		Timber.d("onSwitchChange");
-		Module module = mDevice.getModuleById(moduleId);
-		doActorAction(module);
-	}
-
-	@Override
-	public void onListItemSelected(CharSequence charSequence, int number, int requestCode) {
-		if (requestCode == REQUEST_SET_ACTUATOR) {
-			Module module = mDevice.getModuleById(mModuleId);
-			if (module == null) {
-				Timber.e("Can't load module for changing its value");
-				return;
-			}
-
-			module.setValue(String.valueOf(number));
-			doChangeStateModuleTask(module);
-		}
-	}
-
+	/**
+	 * Filter all device modules by group name from bundle arguments
+	 * @return list of filtered modules
+	 */
 	private List<Module> getModulesByGroup() {
 		List<Module> modules = mDevice.getVisibleModules(mHideUnavailableModules);
 		Iterator<Module> iterator = modules.iterator();
@@ -180,88 +102,5 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 			}
 		}
 		return modules;
-	}
-
-	private void showListDialog(String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		EnumValue value = (EnumValue) module.getValue();
-		List<EnumValue.Item> items = value.getEnumItems();
-
-		List<String> namesList = new ArrayList<>();
-		for (EnumValue.Item item : items) {
-			namesList.add(getString(item.getStringResource()));
-		}
-		ListDialogFragment
-				.createBuilder(mActivity, getFragmentManager())
-				.setTitle(module.getName(mActivity))
-				.setItems(namesList.toArray(new CharSequence[namesList.size()]))
-				.setSelectedItem(value.getActive().getId())
-				.setRequestCode(REQUEST_SET_ACTUATOR)
-				.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-				.setConfirmButtonText(R.string.activity_fragment_btn_set)
-				.setCancelButtonText(R.string.activity_fragment_btn_cancel)
-				.setTargetFragment(DeviceDetailGroupModuleFragment.this, REQUEST_SET_ACTUATOR)
-				.show();
-		Timber.d("dialog is created");
-	}
-
-	private void doChangeStateModuleTask(final Module module) {
-		ActorActionTask changeStateModuleTask = new ActorActionTask(mActivity);
-
-		changeStateModuleTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
-					updateData();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(changeStateModuleTask, module);
-	}
-
-	private void doActorAction(final Module module) {
-		if (!module.isActuator()) {
-			return;
-		}
-
-		// SET NEW VALUE
-		BaseValue value = module.getValue();
-		if (value instanceof EnumValue) {
-			((EnumValue) value).setNextValue();
-		} else {
-			Timber.e("We can't switch actor, which value isn't inherited from EnumValue, yet");
-			return;
-		}
-
-		ActorActionTask actorActionTask = new ActorActionTask(mActivity);
-		actorActionTask.setListener(new CallbackTask.ICallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
-					updateData();
-				}
-			}
-
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
-	}
-
-	@Override
-	public void onSetNewValue(String moduleId, String actualValue) {
-		Module module = mDevice.getModuleById(moduleId);
-		if (module == null) {
-			Timber.e("Can't load module for changing its value");
-			return;
-		}
-
-		module.setValue(actualValue);
-		doChangeStateModuleTask(module);
 	}
 }

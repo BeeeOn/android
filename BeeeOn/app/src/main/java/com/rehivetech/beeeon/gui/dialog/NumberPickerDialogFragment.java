@@ -82,7 +82,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 
 		final String moduleId = args.getString(ARG_MODULE_ID);
 
-		BaseUnit.Item unitItem = args.getParcelable(ARG_VALUES_UNIT);
+		final BaseUnit.Item unitItem = args.getParcelable(ARG_VALUES_UNIT);
 
 		if (unitItem != null) {
 			unitTextView.setText(unitItem.getStringUnit(getContext()));
@@ -113,7 +113,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 							actualValue = String.format("%s.%s", actualWholeVal, actualDecimalVal);
 						}
 
-						listener.onSetNewValue(moduleId, actualValue);
+						listener.onSetNewValue(moduleId, actualValue, unitItem);
 						dismiss();
 					}
 				}
@@ -269,6 +269,6 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 	}
 
 	public interface SetNewValueListener {
-		void onSetNewValue(String moduleId, String actualValue);
+		void onSetNewValue(String moduleId, String actualValue, BaseUnit.Item unit);
 	}
 }
