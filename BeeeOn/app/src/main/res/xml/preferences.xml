@@ -1,0 +1,82 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="@string/pref_root_key">
+
+    <PreferenceCategory
+        android:title="@string/settings_general_category_title">
+        <ListPreference
+            android:dialogTitle="@string/gate_detail_timezone"
+            android:key="@string/pref_timezone_key"
+            android:defaultValue="0"
+            android:summary="%s"
+            android:entries="@array/pref_time_zone_labels"
+            android:entryValues="@array/pref_time_zone"
+            android:title="@string/gate_detail_timezone">
+        </ListPreference>
+
+        <PreferenceScreen
+            android:key="@string/pref_units_key"
+            android:persistent="false"
+            android:title="@string/settings_unit_unit">
+
+            <ListPreference
+                android:dialogTitle="@string/settings_unit_preferences_temperature"
+                android:key="@string/pref_unit_temperature_key"
+                android:defaultValue="0"
+                android:summary="%s"
+                android:entryValues="@array/pref_units_temperature"
+                android:entries="@array/pref_units_temperature_labels"
+                android:title="@string/settings_unit_preferences_temperature" >
+            </ListPreference>
+
+            <ListPreference
+                android:dialogTitle="@string/settings_unit_preferences_noise"
+                android:key="@string/pref_unit_noise_key"
+                android:title="@string/settings_unit_preferences_noise"
+                android:defaultValue="0"
+                android:summary="%s"
+                android:entryValues="@array/pref_units_noise"
+                android:entries="@array/pref_units_noise_labels">
+            </ListPreference>
+
+            <ListPreference
+                android:dialogTitle="@string/settings_unit_preferences_pressure"
+                android:key="@string/pref_unit_pressure_key"
+                android:title="@string/settings_unit_preferences_pressure"
+                android:defaultValue="0"
+                android:summary="%s"
+                android:entryValues="@array/pref_units_pressure"
+                android:entries="@array/pref_units_pressure_labels">
+            </ListPreference>
+
+        </PreferenceScreen>
+
+        <CheckBoxPreference
+            android:key="@string/pref_hide_unavailable_modules_key"
+            android:title="@string/settings_hide_unavailable_modules"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_actualization_category_title">
+
+        <ListPreference
+            android:key="@string/pref_actualization_time_key"
+            android:title="@string/settings_actualization_screen_title"
+            android:summary="%s"
+            android:defaultValue="0"
+            android:entryValues="@array/pref_actualization"
+            android:entries="@array/pref_actualization_labels"
+            />
+
+        <ListPreference
+            android:key="@string/pref_cache_key"
+            android:title="@string/settings_cache_reload_title"
+            android:summary="%s"
+            android:defaultValue="5"
+            android:entryValues="@array/pref_cache_time"
+            android:entries="@array/pref_cache_time_labels"
+            />
+
+    </PreferenceCategory>
+</PreferenceScreen>

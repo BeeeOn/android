@@ -1,44 +1,37 @@
 package com.rehivetech.beeeon.household.device.units;
 
-import com.rehivetech.beeeon.Constants;
+import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 
 public class NoiseUnit extends BaseUnit {
 
-	public static final int DECIBEL = 0;
-	public static final int BEL = 1;
-	public static final int NEPER = 2;
-
 	public NoiseUnit() {
-		super();
+		super(R.string.pref_unit_noise_key);
 
-		mItems.add(this.new Item(DECIBEL, R.string.unit_noise_decibel_full, R.string.unit_noise_decibel));
-		mItems.add(this.new Item(BEL, R.string.unit_noise_bel_full, R.string.unit_noise_bel));
-		mItems.add(this.new Item(NEPER, R.string.unit_noise_neper_full, R.string.unit_noise_neper));
-	}
-
-
-
-	@Override
-	public int getDefaultId() {
-		return DECIBEL;
+		mItems.add(this.new Item(R.string.pref_unit_noise_decibel, R.string.unit_noise_decibel_full, R.string.unit_noise_decibel));
+		mItems.add(this.new Item(R.string.pref_unit_noise_bel, R.string.unit_noise_bel_full, R.string.unit_noise_bel));
+		mItems.add(this.new Item(R.string.pref_unit_noise_nepper, R.string.unit_noise_neper_full, R.string.unit_noise_neper));
 	}
 
 	@Override
-	public String getPersistenceKey() {
-		return Constants.PERSISTENCE_PREF_NOISE;
+	public Item fromSettings(@Nullable SharedPreferences prefs) {
+		int itemId = PreferencesHelper.getInt(BeeeOnApplication.getContext(), prefs, mPreferenceKey);
+		return mItems.get(itemId);
 	}
 
 	@Override
 	public double convertValue(Item to, double value) {
 		switch (to.getId()) {
-			case BEL:
+			case R.string.pref_unit_noise_bel:
 				return value * 0.1;
-			case NEPER:
+			case R.string.pref_unit_noise_nepper:
 				return value / (20 * Math.log10(Math.E));
 			default:
 				return value;
 		}
 	}
-
 }

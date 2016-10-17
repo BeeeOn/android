@@ -50,9 +50,8 @@ import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.util.ActualizationTime;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnavailableModules;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
@@ -147,7 +146,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		SharedPreferences prefs = controller.getUserSettings();
 		mTimeHelper = Utils.getTimeHelper(prefs);
 
-		mHideUnavailableModules = UnavailableModules.fromSettings(prefs);
+		mHideUnavailableModules = PreferencesHelper.getBoolean(mActivity, prefs, R.string.pref_hide_unavailable_modules_key);
 
 		setHasOptionsMenu(true);
 		mModuleId = "-1";
@@ -265,8 +264,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	private void setAutoReloadDataTimer() {
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
-		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
-		int period = item.getSeconds();
+		int period = PreferencesHelper.getInt(mActivity, prefs, R.string.pref_actualization_time_key);
+
 		if (period > 0)    // zero means do not update
 			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID, period);
 	}
@@ -433,7 +432,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
-		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
+		SharedPreferences preferences = Controller.getInstance(mActivity).getUserSettings();
+		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), preferences, this);
 	}
 
 	@Override

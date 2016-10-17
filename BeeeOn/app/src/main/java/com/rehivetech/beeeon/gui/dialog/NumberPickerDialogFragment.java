@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,17 +43,18 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 	private static final String ARG_MODULE_ID = "module_id";
 
 
-	public static void showNumberPickerDialog(AppCompatActivity context, Module module, Fragment targetFragment) {
+	public static void showNumberPickerDialog(AppCompatActivity context, Module module, SharedPreferences prefs, Fragment targetFragment) {
 		NumberPickerDialogFragment.createBuilder(context, context.getSupportFragmentManager())
 				.setTitle(module.getName(context))
 				.setConstraints(module.getValue().getConstraints())
 				.setPositiveButtonText(context.getString(R.string.activity_fragment_btn_set))
 				.setNegativeButtonText(context.getString(R.string.activity_fragment_btn_cancel))
 				.setActualValue(module.getValue().getDoubleValue())
-				.setValuesUnit(((BaseUnit.Item)module.getValue().getUnit().getDefault()).getStringUnit(context))
+				.setValuesUnit(module.getValue().getUnit().fromSettings(prefs))
 				.setModuleId(module.getId())
 				.setTargetFragment(targetFragment, 0)
 				.show();
+
 	}
 
 	private static NumberPickerDialogBuilder createBuilder(Context context, FragmentManager fragmentManager) {
@@ -80,7 +82,11 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 
 		final String moduleId = args.getString(ARG_MODULE_ID);
 
-		unitTextView.setText(args.getString(ARG_VALUES_UNIT));
+		BaseUnit.Item unitItem = args.getParcelable(ARG_VALUES_UNIT);
+
+		if (unitItem != null) {
+			unitTextView.setText(unitItem.getStringUnit(getContext()));
+		}
 
 		builder.setTitle(args.getString(ARG_TITLE));
 
@@ -185,7 +191,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 		private Double mModuleMaxValue;
 		private Double mModuleGranularity;
 		private Double mActualValue;
-		private String mUnit;
+		private BaseUnit.Item mUnit;
 		private String mModuleId;
 
 		public NumberPickerDialogBuilder(Context context, FragmentManager fragmentManager) {
@@ -228,7 +234,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			return this;
 		}
 
-		public NumberPickerDialogBuilder setValuesUnit(String unit) {
+		public NumberPickerDialogBuilder setValuesUnit(BaseUnit.Item unit) {
 			mUnit = unit;
 
 			return this;
@@ -251,7 +257,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			args.putDouble(ARG_MAX_VALUE, mModuleMaxValue);
 			args.putDouble(ARG_GRANULARITY, mModuleGranularity);
 			args.putDouble(ARG_ACTUAL_VALUE, mActualValue);
-			args.putString(ARG_VALUES_UNIT, mUnit);
+			args.putParcelable(ARG_VALUES_UNIT, mUnit);
 			args.putString(ARG_MODULE_ID, mModuleId);
 
 			return args;

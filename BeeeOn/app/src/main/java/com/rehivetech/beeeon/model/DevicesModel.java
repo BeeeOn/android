@@ -5,7 +5,6 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -24,9 +23,9 @@ public class DevicesModel extends BaseModel {
 
 	private final MultipleDataHolder<Device> mDevices = new MultipleDataHolder<>(); // gateId => device dataHolder
 
-	public DevicesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
+	public DevicesModel(INetwork network, int reloadEverySecs) {
 		super(network);
-		mReloadEverySecs = cacheHoldTime.getSeconds();
+		mReloadEverySecs = reloadEverySecs;
 	}
 
 	/**

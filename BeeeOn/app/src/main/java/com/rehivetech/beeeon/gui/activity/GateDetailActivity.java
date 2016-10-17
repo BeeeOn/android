@@ -17,7 +17,7 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.CallbackTaskManager;
 import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateInfoTask;
-import com.rehivetech.beeeon.util.ActualizationTime;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 
 import timber.log.Timber;
 
@@ -93,8 +93,8 @@ public class GateDetailActivity extends BaseApplicationActivity implements GateD
 
 	private void setAutoReloadDataTimer() {
 		SharedPreferences prefs = Controller.getInstance(this).getUserSettings();
-		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
-		int period = item.getSeconds();
+		int period = PreferencesHelper.getInt(this, prefs, R.string.pref_actualization_time_key);
+
 		if (period > 0)
 			callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, GATE_DETAIL_ACIVITY_AUTO_RELOAD_ID, period);
 	}

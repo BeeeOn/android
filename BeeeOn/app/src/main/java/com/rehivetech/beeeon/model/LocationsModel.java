@@ -6,7 +6,6 @@ import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -22,10 +21,10 @@ public class LocationsModel extends BaseModel {
 
 	private final MultipleDataHolder<Location> mLocations = new MultipleDataHolder<>(); // gateId => location dataHolder
 
-	public LocationsModel(INetwork network, Context context, CacheHoldTime.Item cacheHoldTime) {
+	public LocationsModel(INetwork network, Context context, int reloadEverySecs) {
 		super(network);
 		mNoLocationName = context.getString(R.string.loc_none);
-		mReloadEverySecs = cacheHoldTime.getSeconds();
+		mReloadEverySecs = reloadEverySecs;
 	}
 
 	private Location createNoLocation(String gateId) {

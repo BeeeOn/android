@@ -38,7 +38,7 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.RemoveDeviceTask;
-import com.rehivetech.beeeon.util.ActualizationTime;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -139,8 +139,8 @@ public class DevicesListFragment extends BaseApplicationFragment implements Devi
 
 	private void setAutoReloadDataTimer() {
 		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
-		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
-		int period = item.getSeconds();
+		int period = PreferencesHelper.getInt(mActivity, prefs, R.string.pref_actualization_time_key);
+
 		if (period > 0)    // zero means do not update
 			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_LIST_FRAGMENT_AUTO_RELOAD_ID, period);
 	}

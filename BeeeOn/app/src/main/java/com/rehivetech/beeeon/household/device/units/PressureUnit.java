@@ -1,40 +1,34 @@
 package com.rehivetech.beeeon.household.device.units;
 
-import com.rehivetech.beeeon.Constants;
+import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 
 public class PressureUnit extends BaseUnit {
 
-	public static final int HPA = 0;
-	public static final int BAR = 1;
-
 	public PressureUnit() {
-		super();
+		super(R.string.pref_unit_pressure_key);
 
-		mItems.add(this.new Item(HPA, R.string.unit_pressure, R.string.unit_pressure));
-		mItems.add(this.new Item(BAR, R.string.unit_pressure_bar_full, R.string.unit_pressure_bar));
+		mItems.add(this.new Item(R.string.pref_unit_pressure, R.string.unit_pressure, R.string.unit_pressure));
+		mItems.add(this.new Item(R.string.pref_unit_pressure_bar, R.string.unit_pressure_bar_full, R.string.unit_pressure_bar));
 	}
 
 	@Override
-	public int getDefaultId() {
-		return HPA;
-	}
-
-	@Override
-	public String getPersistenceKey() {
-		return Constants.PERSISTENCE_PREF_PRESSURE;
+	public Item fromSettings(@Nullable SharedPreferences prefs) {
+		int itemId = PreferencesHelper.getInt(BeeeOnApplication.getContext(), prefs, mPreferenceKey);
+		return mItems.get(itemId);
 	}
 
 	@Override
 	public double convertValue(Item to, double value) {
 		switch (to.getId()) {
-			case BAR:
+			case R.string.pref_unit_pressure_bar:
 				return value * 0.001;
 			default:
 				return value;
 		}
-
-
 	}
-
 }

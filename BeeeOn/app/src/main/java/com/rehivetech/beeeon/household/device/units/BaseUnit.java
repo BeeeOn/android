@@ -1,20 +1,63 @@
 package com.rehivetech.beeeon.household.device.units;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.StringRes;
 
-import com.rehivetech.beeeon.util.SettingsItem;
+import java.util.ArrayList;
+import java.util.List;
 
-public abstract class BaseUnit extends SettingsItem {
+public abstract class BaseUnit {
+	protected final List<BaseUnit.Item> mItems = new ArrayList<>();
 
-	public class Item extends BaseItem {
-		private final int mResUnitName;
-		private final int mResUnitShortName;
+	@StringRes
+	int mPreferenceKey;
 
-		protected Item(int id, int resUnitName, int resUnitShortName) {
-			super(id, 0); // we set resName to 0, because we use own 2 res field and rewrite default getSettingsName(Context) method anyway
+	public BaseUnit(@StringRes int preferenceKey) {
+		mPreferenceKey = preferenceKey;
+	}
 
-			this.mResUnitName = resUnitName;
-			this.mResUnitShortName = resUnitShortName;
+	/**
+	 * Get Item representing value chosen by user in settings.
+	 *
+	 * @param prefs
+	 * @return user chosen Item or default Item, if user didn't chose it in settings yet.
+	 */
+	public abstract BaseUnit.Item fromSettings(SharedPreferences prefs);
+
+	abstract public double convertValue(Item to, double value);
+
+	public class Item implements Parcelable {
+		static final int DEFAULT_ID = 0;
+
+		public final Creator<Item> CREATOR = new Creator<Item>() {
+			@Override
+			public Item createFromParcel(Parcel source) {
+				return new Item(source);
+			}
+
+			@Override
+			public Item[] newArray(int size) {
+				return new Item[0];
+			}
+		};
+
+		private int mResUnitName;
+		private int mResUnitShortName;
+		private int mId;
+
+		protected Item(@StringRes int id, int resUnitName, int resUnitShortName) {
+			mId = id;
+			mResUnitName = resUnitName;
+			mResUnitShortName = resUnitShortName;
+		}
+
+		public Item(Parcel source) {
+			mId = source.readInt();
+			mResUnitName = source.readInt();
+			mResUnitShortName = source.readInt();
 		}
 
 		/**
@@ -47,15 +90,20 @@ public abstract class BaseUnit extends SettingsItem {
 			return String.format("%s (%s)", getStringName(context), getStringUnit(context));
 		}
 
-		/**
-		 * {@inheritDoc}
-		 */
+		public int getId() {
+			return mId;
+		}
+
 		@Override
-		public String getSettingsName(Context context) {
-			return getStringNameUnit(context);
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeInt(mId);
+			dest.writeInt(mResUnitName);
+			dest.writeInt(mResUnitShortName);
 		}
 	}
-
-	abstract public double convertValue(Item to, double value);
-
 }

@@ -7,9 +7,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -20,7 +18,7 @@ import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
-import com.rehivetech.beeeon.util.UnavailableModules;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
@@ -91,7 +89,7 @@ public abstract class BaseAddDashBoardItemFragment extends BaseApplicationFragme
 
 	protected void fillAdapter(boolean withEnumTypes, @Nullable ModuleType filterBy) {
 		Controller controller = Controller.getInstance(mActivity);
-		boolean withoutUnavailable = UnavailableModules.fromSettings(controller.getUserSettings());
+		boolean withoutUnavailable = PreferencesHelper.getBoolean(mActivity, controller.getUserSettings(), R.string.pref_hide_unavailable_modules_key);
 		List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
 		List<Object> items = new ArrayList<>();

@@ -26,7 +26,7 @@ import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.util.UnavailableModules;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -87,7 +87,7 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 		mModuleId = "-1";
 
 		SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
-		mHideUnavailableModules = UnavailableModules.fromSettings(prefs);
+		mHideUnavailableModules = PreferencesHelper.getBoolean(mActivity, prefs, R.string.pref_hide_unavailable_modules_key);
 	}
 
 	@Nullable
@@ -145,8 +145,8 @@ public class DeviceDetailGroupModuleFragment extends BaseApplicationFragment imp
 	@Override
 	public void onButtonSetNewValue(String moduleId) {
 		Timber.d("onButtonSetNewValue");
-
-		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
+		SharedPreferences preferences = Controller.getInstance(mActivity).getUserSettings();
+		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), preferences, this);
 	}
 
 	@Override
