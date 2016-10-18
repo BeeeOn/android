@@ -2,6 +2,7 @@ package com.rehivetech.beeeon;
 
 import android.text.TextUtils;
 
+import java.math.BigInteger;
 import java.util.Comparator;
 
 public class IdentifierComparator implements Comparator<IIdentifier> {
@@ -17,7 +18,7 @@ public class IdentifierComparator implements Comparator<IIdentifier> {
 
 		if (TextUtils.isDigitsOnly(lhsId) && TextUtils.isDigitsOnly(rhsId)) {
 			// Numeric comparison
-			return Long.valueOf(lhsId).compareTo(Long.valueOf(rhsId));
+			return new BigInteger(lhsId).compareTo(new BigInteger(rhsId));
 		} else {
 			// String comparison
 			return lhsId.compareTo(rhsId);
