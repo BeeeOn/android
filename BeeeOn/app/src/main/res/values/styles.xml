@@ -348,6 +348,7 @@
     <style name="BeeeOn.Automation.DewingItem.Text" parent="BeeeOn.Automation.DewingItem">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/space_normal</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
     </style>
     
@@ -383,6 +384,7 @@
     <style name="BeeeOn.Automation.DewingItem.Advice" parent="BeeeOn.Automation.DewingItem">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/space_normal</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
     </style>
 
