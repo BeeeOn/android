@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/beeeon_background_gray">
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_module_select_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.rehivetech.beeeon.gui.view.FloatingActionButton
+        android:id="@+id/fragment_module_select_done_btn"
+        style="@style/BeeeOn.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/space_big"
+        android:layout_marginEnd="@dimen/space_big"
+        android:layout_marginRight="@dimen/space_big"
+        android:src="@drawable/ic_done_white_24dp"
+        />
+</RelativeLayout>

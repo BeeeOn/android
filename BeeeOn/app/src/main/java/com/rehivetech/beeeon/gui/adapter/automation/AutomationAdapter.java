@@ -132,7 +132,7 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
     public void addItem(BaseItem item) {
         mItems.add(item);
         setEmptyViewVisibility(mItems.isEmpty());
-        notifyItemRangeInserted(0, mItems.size());
+        notifyDataSetChanged();
     }
 
     private void setEmptyViewVisibility(boolean empty) {

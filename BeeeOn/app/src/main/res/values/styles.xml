@@ -371,11 +371,9 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display1</item>
     </style>
 
-
     <style name="BeeeOn.Automation.DewingItem.Probability.Text.Low" parent="BeeeOn.Automation.DewingItem.Probability.Text">
         <item name="android:textColor">@color/beeeon_primary_dark</item>
     </style>
-
 
     <style name="BeeeOn.Automation.DewingItem.Probability.Text.High" parent="BeeeOn.Automation.DewingItem.Probability.Text">
         <item name="android:textColor">@color/beeeon_accent</item>
@@ -386,6 +384,45 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/space_normal</item>
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+    </style>
+
+    <!--Automation add item -->
+    <style name="BeeeOn.Automation.AddItem" parent="">
+
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.SectionHeader" parent="BeeeOn.Automation.AddItem">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Caption" parent="BeeeOn.Automation.AddItem">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Image" parent="BeeeOn.Automation.AddItem">
+        <item name="android:layout_margin">@dimen/space_normal</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Image.Temperature" parent="BeeeOn.Automation.AddItem.Sensor.Image">
+        <item name="android:src">@drawable/ic_val_temperature_gray</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Image.Humidity" parent="BeeeOn.Automation.AddItem.Sensor.Image">
+        <item name="android:src">@drawable/ic_val_humidity_gray</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Text" parent="BeeeOn.Automation.AddItem">
+        <item name="android:textColor">@color/beeeon_accent</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.AdditionalOptions.Caption" parent="BeeeOn.Automation.AddItem">
+        <item name="android:layout_margin">@dimen/space_normal</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.AdditionalOptions.Edit" parent="BeeeOn.Automation.AddItem">
+        <item name="android:layout_marginRight">@dimen/space_normal</item>
+        <item name="android:layout_marginLeft">@dimen/space_normal</item>
     </style>
 
 </resources>

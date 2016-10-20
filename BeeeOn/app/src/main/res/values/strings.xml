@@ -479,6 +479,8 @@
     <string name="dashboard_ventilation_card_inside_label">Inside</string>
 
     <!-- Automation -->
+    <string name="automation_add_rule">Add automation rule</string>
+
     <string name="automation_empty">Rules are empty</string>
     <string name="automation_tab_summer_rules">Summer</string>
     <string name="automation_tab_winter_rules">Winter</string>
@@ -492,6 +494,39 @@
     <string name="automation_dewing_item_probability_low">Low</string>
     <string name="automation_dewing_item_probability_very_high">Very high</string>
     <string name="automation_dewing_item_advice">You should open your windows or lower the temperature</string>
+
+    <string name="automation_add_rule_title">Add automation rule</string>
+
+    <string name="automation_add_rule_name">Rule name</string>
+    <string name="automation_add_rule_name_hint">Enter rule name</string>
+
+    <string name="automation_add_rule_type">Rule type</string>
+    <string-array name="automation_add_rule_types_array">
+        <item>Ventilation rule</item>
+        <item>Windows dewing rule</item>
+    </string-array>
+
+    <string name="automation_add_rule_sensors">Sensors</string>
+    <string name="automation_add_rule_sensors_tap">Tap to select module</string>
+    <string name="automation_add_rule_sensors_inside_temperature">Inside temperature</string>
+    <string name="automation_add_rule_sensors_outside_temperature">Outside temperature</string>
+    <string name="automation_add_rule_sensors_humidity_sensor">Humidity sensor</string>
+
+    <string name="automation_add_rule_preferences">Preferences</string>
+    <string name="automation_add_rule_preferences_notifications">send notification </string>
+    <string-array name="automation_add_rule_preferences_notifications_time">
+        <item>5 minutes before</item>
+        <item>10 minutes before</item>
+        <item>15 minutes before</item>
+        <item>20 minutes before</item>
+    </string-array>
+
+    <string name="automation_add_rule_more_options">More options</string>
+    <string name="automation_add_rule_ventilation_more_heat_transfer">Heat transfer coefficient UG - W/(m^2K)</string>
+    <string name="automation_add_rule_ventilation_more_frame_factor">Factor UF of the frame - W/(m^2K)</string>
+
+    <string name="automation_add_rule_error_missing_name">You have to fill the rule in order to create rule.</string>
+    <string name="automation_add_rule_error_missing_sensor">You have not selected all the necessary sensors.</string>
 
     <!--Days shortcuts-->
     <string name="monday">Mo</string>

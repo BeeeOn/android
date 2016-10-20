@@ -30,4 +30,23 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
+    <com.rehivetech.beeeon.gui.view.FloatingActionMenu
+        android:id="@+id/automation_fab_menu"
+        style="@style/BeeeOn.FloatingActionMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <com.rehivetech.beeeon.gui.view.FloatingActionButton
+            android:id="@+id/automation_add_rule_fab"
+            style="@style/BeeeOn.FloatingActionButton.MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white_24dp"
+            app:fab_label="@string/automation_add_rule"
+            />
+
+
+    </com.rehivetech.beeeon.gui.view.FloatingActionMenu>
+
 </android.support.design.widget.CoordinatorLayout>

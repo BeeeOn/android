@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/fragment_add_automation_ventilation_sensors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/automation_add_rule_sensors"
+        style="@style/BeeeOn.Automation.AddItem.SectionHeader"
+        />
+
+    <ImageView
+        android:id="@+id/fragment_add_automation_ventilation_inside_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_add_automation_ventilation_sensors"
+        style="@style/BeeeOn.Automation.AddItem.Sensor.Image.Temperature"
+        />
+
+    <TextView
+        android:id="@+id/fragment_add_automation_ventilation_inside_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fragment_add_automation_ventilation_inside_iv"
+        android:layout_toRightOf="@+id/fragment_add_automation_ventilation_inside_iv"
+        android:layout_toEndOf="@+id/fragment_add_automation_ventilation_inside_iv"
+        android:text="@string/automation_add_rule_sensors_inside_temperature"
+        style="@style/BeeeOn.Automation.AddItem.Sensor.Caption"
+        />
+
+
+    <TextView
+        android:id="@+id/fragment_add_automation_ventilation_inside_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_add_automation_ventilation_inside_tv"
+        android:layout_toRightOf="@id/fragment_add_automation_ventilation_inside_iv"
+        android:text="@string/automation_add_rule_sensors_tap"
+        style="@style/BeeeOn.Automation.AddItem.Sensor.Text"
+        />
+
+
+    <ImageView
+        android:id="@+id/fragment_add_automation_ventilation_outside_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_add_automation_ventilation_inside_iv"
+        style="@style/BeeeOn.Automation.AddItem.Sensor.Image.Temperature"
+        />
+
+    <TextView
+        android:id="@+id/fragment_add_automation_ventilation_outside_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/fragment_add_automation_ventilation_outside_iv"
+        android:layout_toRightOf="@+id/fragment_add_automation_ventilation_outside_iv"
+        android:layout_toEndOf="@+id/fragment_add_automation_ventilation_outside_iv"
+        android:text="@string/automation_add_rule_sensors_outside_temperature"
+        style="@style/BeeeOn.Automation.AddItem.Sensor.Caption"
+        />
+
+
+    <TextView
+        android:id="@+id/fragment_add_automation_ventilation_outside_select"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_add_automation_ventilation_outside_tv"
+        android:layout_toRightOf="@id/fragment_add_automation_ventilation_outside_iv"
+        android:text="@string/automation_add_rule_sensors_tap"
+        style="@style/BeeeOn.Automation.AddItem.Sensor.Text"
+        />
+    <TextView
+        android:id="@+id/fragment_add_automation_ventilation_preferences"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_add_automation_ventilation_outside_iv"
+        android:text="@string/automation_add_rule_preferences"
+        style="@style/BeeeOn.Automation.AddItem.SectionHeader"
+        />
+
+    <CheckBox
+        android:id="@+id/fragment_add_automation_ventilation_preferences_notifications"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_add_automation_ventilation_preferences"
+        android:text="@string/automation_add_rule_preferences_notifications"
+        style="@style/BeeeOn.Automation.AddItem.AdditionalOptions.Caption"
+        />
+
+    <Spinner
+        android:id="@+id/fragment_add_automation_ventilation_preferences_notifications_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/fragment_add_automation_ventilation_preferences_notifications"
+        android:layout_alignTop="@id/fragment_add_automation_ventilation_preferences_notifications"
+        android:layout_toRightOf="@id/fragment_add_automation_ventilation_preferences_notifications"
+        />
+
+
+
+</RelativeLayout>

@@ -171,6 +171,10 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
         }
     }
 
+    public void addItem(BaseItem item) {
+        mAdapter.addItem(item);
+    }
+
     public class ActionModeAutomation implements ActionMode.Callback{
 
         @Override
