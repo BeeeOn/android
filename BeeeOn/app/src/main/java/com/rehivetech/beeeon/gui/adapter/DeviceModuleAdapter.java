@@ -64,9 +64,13 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 		if (module.isActuator()) {
 			BaseValue value = module.getValue();
 
-			if (value instanceof BooleanValue) {
+			if (value instanceof BooleanValue
+					|| (value instanceof  EnumValue &&
+					((EnumValue) value).getEnumItems().size() == 2)) {
 				holder.mButton.setVisibility(View.GONE);
-
+				if(value instanceof  EnumValue){
+					holder.mSwitch.setChecked(((EnumValue)value).getActive().getId() == 1);
+				}
 				holder.mSwitch.setVisibility(View.VISIBLE);
 				holder.mSwitch.setOnClickListener(new View.OnClickListener() {
 					@Override
