@@ -149,12 +149,6 @@
             >
         </activity>
         <activity
-            android:name=".gui.activity.SettingsUnitActivity"
-            android:label="@string/settings_unit_unit"
-            android:theme="@style/SettingsActivity"
-            >
-        </activity>
-        <activity
             android:name=".gui.activity.GateUsersActivity"
             android:label="@string/gate_users_title_gate_users"
             >

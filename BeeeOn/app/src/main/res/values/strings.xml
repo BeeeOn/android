@@ -360,15 +360,17 @@
 	<string name="settings_actualization_category_title">Data fetching settings</string>
 	<string name="settings_actualization_screen_title">Automatic data fetching interval</string>
 	<string name="settings_cache_reload_title">Cache reload time</string>
-	<plurals name="settings_actualization_time_listpreference_seconds">
-		<item quantity="other">%d seconds</item>
-	</plurals>
-	<string name="settings_actualizationtime_listpreference_dont_actualize">Manually</string>
-	<plurals name="settings_cache_listpreference_minutes">
-		<item quantity="one">1 minute</item>
-		<item quantity="other">%d minutes</item>
-	</plurals>
-	<string name="settings_cache_listpreference_no_cache">Don\'t use cache</string>
+	<string name="settings_actualization_time_5_seconds">5 seconds</string>
+	<string name="settings_actualization_time_10_seconds">10 seconds</string>
+	<string name="settings_actualization_time_30_seconds">30 seconds</string>
+	<string name="settings_actualization_time_60_seconds">60 seconds</string>
+	<string name="settings_actualization_time_dont_actualize">Manually</string>
+	<string name="settings_cache_no_cache">Don\'t use cache</string>
+	<string name="settings_cache_1_minute">1 minute</string>
+	<string name="settings_cache_2_minutes">2 minutes</string>
+	<string name="settings_cache_5_minutes">5 minutes</string>
+	<string name="settings_cache_10_minutes">10 minutes</string>
+	<string name="settings_cache_30_minutes">30 minutes</string>
 	<string name="settings_prefs_choose_language">Language</string>
 	<string name="settings_language_listpreference_default">Use the system language</string>
 	<string name="settings_language_listpreference_english">English</string>
