@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -32,8 +31,6 @@ import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.task.ReloadGateDataTask;
 import com.rehivetech.beeeon.threading.task.SwitchGateTask;
 import com.rehivetech.beeeon.util.Migration;
-import com.rehivetech.beeeon.util.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -185,24 +182,24 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	private void redrawContent(@Nullable String newContentTag, boolean shouldRedrawDrawer) {
 		Timber.d("redrawContent");
 
+		String activeGateId = null;
+
 		if(newContentTag == null) newContentTag = mActiveContentTag;
 		Controller controller = Controller.getInstance(this);
 
 		Gate activeGate = controller.getActiveGate();
-		if(activeGate == null) {
-			Fragment emptyFragment = EmptyFragment.newInstance(getString(R.string.nav_drawer_menu_no_gates)); // FIXME: Better string / data
-			fragmentReplace(emptyFragment, CONTENT_TAG_EMPTY);
-			return;
+		if (activeGate != null) {
+			activeGateId = activeGate.getId();
+		} else {
+			newContentTag = CONTENT_TAG_EMPTY;
 		}
-
-		String activeGateId = activeGate.getId();
 
 		if(shouldRedrawDrawer) {
 			redrawNavDrawer(activeGateId);
 		}
 
 		// if the same page and same gate skips instantiating new fragment
-		if(activeGateId.equals(mActiveGateId) && mActiveContentTag.equals(newContentTag)) {
+		if(activeGateId != null && activeGateId.equals(mActiveGateId) && mActiveContentTag.equals(newContentTag)) {
 			// FIXME this is not proper way to prevent multiple restarts of fragment. Existing fragment might be updated by some method in it
 //			getSupportFragmentManager().findFragmentByTag(newContentTag);
 			Timber.i("Skipping reloading fragment");
@@ -218,10 +215,13 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 				break;
 
 			case CONTENT_TAG_DEVICES:
-			default:
 				mNavigationView.setCheckedItem(R.id.nav_drawer_devices);
 				fragment = DevicesListFragment.newInstance(activeGateId);
 				break;
+			default:
+				fragment = EmptyFragment.newInstance(getString(R.string.nav_drawer_menu_no_gates));
+				break;
+
 		}
 
 		fragmentReplace(fragment, newContentTag);
@@ -240,7 +240,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 	 *
 	 * @param actualGateId id of active gate
 	 */
-	private void redrawNavDrawer(String actualGateId) {
+	private void redrawNavDrawer(@Nullable String actualGateId) {
 		Controller controller = Controller.getInstance(this);
 
 		// Fill user info in the header of navigation drawer
