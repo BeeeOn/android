@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -363,11 +364,11 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
 
             if((humidity * insideTemp * outsideTemp) % 2 == 0){
                 mAdvice.setVisibility(View.VISIBLE);
-                mProbabilityImage.setImageResource(R.drawable.ic_val_win_closed_gray);
+                DrawableCompat.setTint(mProbabilityImage.getDrawable(), ContextCompat.getColor(mContext, R.color.beeeon_accent));
                 mProbabilityText.setText(R.string.automation_dewing_item_probability_very_high);
             } else {
                 mAdvice.setVisibility(View.GONE);
-                mProbabilityImage.setImageResource(R.drawable.ic_val_emission_gray);
+                DrawableCompat.setTint(mProbabilityImage.getDrawable(), ContextCompat.getColor(mContext, R.color.beeeon_primary_dark));
                 mProbabilityText.setText(R.string.automation_dewing_item_probability_low);
             }
 

@@ -358,11 +358,13 @@
     </style>
 
     <style name="BeeeOn.Automation.DewingItem.Probability.Image.Low" parent="BeeeOn.Automation.DewingItem.Probability.Image">
-        <item name="android:src">@drawable/ic_val_win_closed_gray</item>
+        <item name="android:src">@drawable/ic_window_dewing</item>
+        <item name="android:tint">@color/beeeon_primary_dark</item>
     </style>
 
     <style name="BeeeOn.Automation.DewingItem.Probability.Image.High" parent="BeeeOn.Automation.DewingItem.Probability.Image">
-        <item name="android:src">@drawable/ic_warning_black_24dp</item>
+        <item name="android:src">@drawable/ic_window_dewing</item>
+        <item name="android:tint">@color/beeeon_accent</item>
     </style>
 
     <style name="BeeeOn.Automation.DewingItem.Probability.Text" parent="BeeeOn.Automation.DewingItem">
