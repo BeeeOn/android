@@ -485,13 +485,13 @@ public enum DeviceType implements IIdentifier {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__hm_magnetic_door_contact, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hm_magnetic_door_contact_state_unknown),
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hm_magnetic_door_contact, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hm_magnetic_door_contact_state_closed),
 							new EnumValue.Item(1, "1", R.string.devices__hm_magnetic_door_contact_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__hm_magnetic_door_contact_state_closed)
+							new EnumValue.Item(2, "2", R.string.devices__hm_magnetic_door_contact_state_unknown)
 					), null),
-					new Module(device, "1", 0x02, null, null, R.string.devices__type_temperature, false, null, null),
-					new Module(device, "2", 0x05, null, null, R.string.devices__type_light, false, null, null),
+					new Module(device, "1", 0x02, null, R.string.devices__zone_1, R.string.devices__type_temperature, false, null, null),
+					new Module(device, "2", 0x05, null, R.string.devices__zone_1, R.string.devices__type_light, false, null, null),
 					new Module(device, "3", 0x08, null, null, null, false, null, null)
 			);
 		}
@@ -622,15 +622,115 @@ public enum DeviceType implements IIdentifier {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__beeeon_leds_red, true, null, Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_red, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
 					), null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__beeeon_leds_green, true, null, Arrays.asList(
+					new Module(device, "1", 0x01, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_green, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
 					), null),
-					new Module(device, "2", 0x14, null, null, R.string.devices__beeeon_leds_blue, true, null, new BaseValue.Constraints(0.0, 101.0, 1.0), null)
+					new Module(device, "2", 0x14, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_blue, true, null, new BaseValue.Constraints(0.0, 101.0, 1.0), null)
+			);
+		}
+	},
+	TYPE_25("25", "Z-Wave FIBARO Door/Window Sensor FGK-107", R.string.devices__dev_z_wave_fgk_107, R.string.devices__manufacturer_fibaro) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__fibaro_fgk_107_magnetic_door_contact, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__fibaro_fgk_107_magnetic_door_contact_state_closed),
+							new EnumValue.Item(1, "1", R.string.devices__fibaro_fgk_107_magnetic_door_contact_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__fibaro_fgk_107_magnetic_door_contact_state_unknown)
+					), null),
+					new Module(device, "1", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_26("26", "Z-Wave D-Link DCH_Z120 PIR sensor", R.string.devices__dev_dlink_dch_z120, R.string.devices__manufacturer_dlink) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__dlink_dch_z120_pir_sensor_state_idle),
+							new EnumValue.Item(1, "1", R.string.devices__dlink_dch_z120_pir_sensor_state_motion),
+							new EnumValue.Item(2, "2", R.string.devices__dlink_dch_z120_pir_sensor_state_unknown)
+					), null),
+					new Module(device, "1", 0x05, null, R.string.devices__zone_1, R.string.devices__mod_light, false, null, null),
+					new Module(device, "2", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_room_temperature, false, null, null),
+					new Module(device, "3", 0x01, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor_alarm, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__dlink_dch_z120_pir_sensor_alarm_state_opened),
+							new EnumValue.Item(1, "1", R.string.devices__dlink_dch_z120_pir_sensor_alarm_state_closed),
+							new EnumValue.Item(2, "2", R.string.devices__dlink_dch_z120_pir_sensor_alarm_state_unknown)
+					), null),
+					new Module(device, "4", 0x1a, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor_sensitivity, true, null, new BaseValue.Constraints(0.0, 99.0, 1.0), null),
+					new Module(device, "5", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_27("27", "Z-Wave Aeotec Multisensor 6 ZW-100", R.string.devices__dev_aeotec_zw100, R.string.devices__manufacturer_aeotec) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__aeotec_shake_sensor, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__aeotec_shake_sensor_state_closed),
+							new EnumValue.Item(1, "1", R.string.devices__aeotec_shake_sensor_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__aeotec_shake_sensor_state_unknown)
+					), null),
+					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__aeotec_multisensor_pir_sensor, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__aeotec_multisensor_pir_sensor_state_closed),
+							new EnumValue.Item(1, "1", R.string.devices__aeotec_multisensor_pir_sensor_state_opened),
+							new EnumValue.Item(2, "2", R.string.devices__aeotec_multisensor_pir_sensor_state_unknown)
+					), null),
+					new Module(device, "2", 0x19, null, R.string.devices__zone_1, R.string.devices__mod_ultraviolet, false, null, null),
+					new Module(device, "3", 0x05, null, R.string.devices__zone_1, R.string.devices__mod_light, false, null, null),
+					new Module(device, "4", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_room_temperature, false, null, null),
+					new Module(device, "5", 0x03, null, R.string.devices__zone_1, R.string.devices__mod_room_humidity, false, null, null),
+					new Module(device, "6", 0x1a, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor_sensitivity, true, null, new BaseValue.Constraints(0.0, 6.0, 1.0), null),
+					new Module(device, "7", 0x08, null, null, null, false, null, null),
+					new Module(device, "8", 0x0A, null, null, null, true, null, new BaseValue.Constraints(1.0, 2678400.0, 1.0), "3600")
+			);
+		}
+	},
+	TYPE_28("28", "Z-Wave+ NodOn CWS-3-1-01 Wall Switch", R.string.devices__dev_nodon_cws3101_wall_switch, R.string.devices__manufacturer_nodon) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_led_wall_switch, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__nodon_cws3101_led_wall_switch_state_led_off),
+							new EnumValue.Item(1, "1", R.string.devices__nodon_cws3101_led_wall_switch_state_led_blink_on_button_action),
+							new EnumValue.Item(2, "2", R.string.devices__nodon_cws3101_led_wall_switch_state_led_blink_on_transmission_result),
+							new EnumValue.Item(3, "3", R.string.devices__nodon_cws3101_led_wall_switch_state_led_blink_on_button_action_and_transmission)
+					), null),
+					new Module(device, "1", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_1, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
+					), null),
+					new Module(device, "2", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_2, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
+					), null),
+					new Module(device, "3", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_3, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
+					), null),
+					new Module(device, "4", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_4, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
+					), null),
+					new Module(device, "5", 0x08, null, null, null, false, null, null)
+			);
+		}
+	},
+	TYPE_29("29", "Z-Wave Everspring Wireless SmokeDetector SF812", R.string.devices__dev_everspring_sf812_smoke_detector, R.string.devices__manufacturer_everspring) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x03, null, R.string.devices__zone_1, R.string.devices__everspring_sf812_smoke_sensor, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__everspring_sf812_smoke_sensor_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__everspring_sf812_smoke_sensor_state_on)
+					), null),
+					new Module(device, "1", 0x08, null, null, null, false, null, null)
 			);
 		}
 	};
@@ -639,10 +739,9 @@ public enum DeviceType implements IIdentifier {
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1469654312758l;
+	public static final long DEVICES_DATE = 1478119563711l;
 
 	/** END OF GENERATED CONTENT **/
-
 
 	private final String mTypeId;
 	private final String mTypeName;
