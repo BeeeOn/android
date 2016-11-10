@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.rehivetech.beeeon"
-          android:installLocation="auto"
+          android:installLocation="internalOnly"
     >
 
     <!-- The Google Maps Android API uses OpenGL ES version 2 to render the map. -->
