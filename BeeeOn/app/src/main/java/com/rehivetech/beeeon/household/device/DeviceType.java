@@ -634,7 +634,7 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	},
-	TYPE_25("25", "Z-Wave FIBARO Door/Window Sensor FGK-107", R.string.devices__dev_z_wave_fgk_107, R.string.devices__manufacturer_fibaro) {
+	TYPE_25("25", "FIBARO Door/Window Sensor FGK-107 Z-Wave battery powered reed sensor.", R.string.devices__dev_z_wave_fgk_107, R.string.devices__manufacturer_fibaro) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -647,7 +647,7 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	},
-	TYPE_26("26", "Z-Wave D-Link DCH_Z120 PIR sensor", R.string.devices__dev_dlink_dch_z120, R.string.devices__manufacturer_dlink) {
+	TYPE_26("26", "D-Link DCH_Z120 PIR sensor", R.string.devices__dev_dlink_dch_z120, R.string.devices__manufacturer_dlink) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -668,7 +668,7 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	},
-	TYPE_27("27", "Z-Wave Aeotec Multisensor 6 ZW-100", R.string.devices__dev_aeotec_zw100, R.string.devices__manufacturer_aeotec) {
+	TYPE_27("27", "Aeotec Multisensor 6 ZW-100", R.string.devices__dev_aeotec_zw100, R.string.devices__manufacturer_aeotec) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -692,7 +692,7 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	},
-	TYPE_28("28", "Z-Wave+ NodOn CWS-3-1-01 Wall Switch", R.string.devices__dev_nodon_cws3101_wall_switch, R.string.devices__manufacturer_nodon) {
+	TYPE_28("28", "NodOn CWS-3-1-01 Wall Switch Z-Wave+", R.string.devices__dev_nodon_cws3101_wall_switch, R.string.devices__manufacturer_nodon) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -722,7 +722,7 @@ public enum DeviceType implements IIdentifier {
 			);
 		}
 	},
-	TYPE_29("29", "Z-Wave Everspring Wireless SmokeDetector SF812", R.string.devices__dev_everspring_sf812_smoke_detector, R.string.devices__manufacturer_everspring) {
+	TYPE_29("29", "Everspring Wireless SmokeDetector SF812", R.string.devices__dev_everspring_sf812_smoke_detector, R.string.devices__manufacturer_everspring) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
@@ -733,13 +733,121 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "1", 0x08, null, null, null, false, null, null)
 			);
 		}
+	},
+	TYPE_30("30", "Philips HUE On/off light", R.string.devices__dev_hue_onoff_light, R.string.devices__manufacturer_philips) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
+					), null),
+					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
+							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
+							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
+					), null)
+			);
+		}
+	},
+	TYPE_31("31", "Philips HUE Dimmable light", R.string.devices__dev_hue_dimmable_light, R.string.devices__manufacturer_philips) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
+					), null),
+					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
+							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
+							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
+					), null),
+					new Module(device, "2", 0x18, null, R.string.devices__zone_1, R.string.devices__hue_brightness_light, true, null, new BaseValue.Constraints(0.0, 100.0, 10.0), null)
+			);
+		}
+	},
+	TYPE_32("32", "Philips HUE Color temperature light", R.string.devices__dev_hue_ct_light, R.string.devices__manufacturer_philips) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
+					), null),
+					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
+							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
+							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
+					), null),
+					new Module(device, "2", 0x15, null, R.string.devices__zone_1, R.string.devices__hue_ct_light, true, null, new BaseValue.Constraints(0.0, 100.0, 5.0), null)
+			);
+		}
+	},
+	TYPE_33("33", "Philips HUE Color light", R.string.devices__dev_hue_color_light, R.string.devices__manufacturer_philips) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
+					), null),
+					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
+							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
+							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
+					), null),
+					new Module(device, "2", 0x18, null, R.string.devices__zone_1, R.string.devices__hue_brightness_light, true, null, new BaseValue.Constraints(0.0, 100.0, 10.0), null),
+					new Module(device, "3", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_effect_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_effect_light_state_none),
+							new EnumValue.Item(1, "1", R.string.devices__hue_effect_light_state_colorloop)
+					), null),
+					new Module(device, "4", 0x16, null, R.string.devices__zone_1, R.string.devices__hue_hue_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
+					new Module(device, "5", 0x17, null, R.string.devices__zone_1, R.string.devices__hue_sat_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null)
+			);
+		}
+	},
+	TYPE_34("34", "Philips HUE Extended Color light", R.string.devices__dev_hue_extended_color_light, R.string.devices__manufacturer_philips) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
+					), null),
+					new Module(device, "1", 0x01, null, null, R.string.devices__hue_alert_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
+							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
+							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
+					), null),
+					new Module(device, "2", 0x18, null, null, R.string.devices__hue_brightness_light, true, null, new BaseValue.Constraints(0.0, 100.0, 10.0), null),
+					new Module(device, "3", 0x01, null, null, R.string.devices__hue_effect_light, true, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_effect_light_state_none),
+							new EnumValue.Item(1, "1", R.string.devices__hue_effect_light_state_colorloop)
+					), null),
+					new Module(device, "4", 0x16, null, null, R.string.devices__hue_hue_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
+					new Module(device, "5", 0x17, null, null, R.string.devices__hue_sat_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
+					new Module(device, "6", 0x15, null, null, R.string.devices__hue_ct_light, true, null, new BaseValue.Constraints(0.0, 100.0, 5.0), null)
+			);
+		}
+	},
+	TYPE_35("35", "Philips HUE bridge", R.string.devices__dev_hue_bridge, R.string.devices__manufacturer_philips) {
+		@Override
+		public List<Module> createModules(Device device) {
+			return Arrays.asList(
+					new Module(device, "0", 0x01, null, null, R.string.devices__hue_bridge_switch, false, null, Arrays.asList(
+							new EnumValue.Item(0, "0", R.string.devices__hue_bridge_switch_state_off),
+							new EnumValue.Item(1, "1", R.string.devices__hue_bridge_switch_state_on)
+					), null)
+			);
+		}
 	};
 
 	/** Version from specification of this devices list */
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1478119563711l;
+	public static final long DEVICES_DATE = 1479767800116l;
 
 	/** END OF GENERATED CONTENT **/
 
