@@ -41,7 +41,8 @@ public enum ModuleType {
 	TYPE_HUE_COLOR(0x16, R.string.empty, RawIntValue.class, false),
 	TYPE_SATURATION_PERCENT(0x17, R.string.empty, RawPercentValue.class, false),
 	TYPE_BRIGHTNESS_PERCENT(0x18, R.string.empty, RawPercentValue.class, false),
-
+	TYPE_ULTRAVIOLET(0x19, R.string.empty, RawIntValue.class, false),
+	TYPE_PIR_SENSITIVITY(0x1a, R.string.empty, RawIntValue.class, false),
 
 
 	TYPE_UNKNOWN(-1, R.string.devices__type_unknown, UnknownValue.class, false);
