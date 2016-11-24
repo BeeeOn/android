@@ -19,11 +19,6 @@ android {
         resConfigs "en", "cs", "sk"
     }
 
-    dexOptions{
-        javaMaxHeapSize "2g"
-    }
-
-
     signingConfigs {
         debug {
             storeFile file('../keystores/debug.keystore')
