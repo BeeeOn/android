@@ -2,14 +2,15 @@ package com.rehivetech.beeeon.household.device.values;
 
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.household.device.units.NoiseUnit;
+import com.rehivetech.beeeon.household.device.units.BaseUnit;
+import com.rehivetech.beeeon.household.device.units.BlankUnit;
 import com.rehivetech.beeeon.util.Utils;
 
 public final class RawIntValue extends BaseValue {
 
 	private double mValue = Double.NaN;
 
-	private static NoiseUnit mUnit = new NoiseUnit();
+	private static BlankUnit mUnit = new BlankUnit();
 
 	@Override
 	public void setValue(String value) {
@@ -29,7 +30,7 @@ public final class RawIntValue extends BaseValue {
 	}
 
 	@Override
-	public NoiseUnit getUnit() {
+	public BaseUnit getUnit() {
 		return mUnit;
 	}
 
