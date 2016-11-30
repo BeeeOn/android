@@ -152,8 +152,8 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 
 		if (granularity > 1) {
 
-			for (double i = minValue; i < maxValue; i += granularity) {
-				wholeSteps.add(String.valueOf(i));
+			for (double i = minValue; i <= maxValue; i += granularity) {
+				wholeSteps.add(String.valueOf((long) i));
 			}
 		} else {
 

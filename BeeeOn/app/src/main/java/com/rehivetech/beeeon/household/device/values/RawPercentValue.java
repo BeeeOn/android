@@ -3,31 +3,17 @@ package com.rehivetech.beeeon.household.device.values;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.units.BaseUnit;
-import com.rehivetech.beeeon.household.device.units.BlankUnit;
+import com.rehivetech.beeeon.household.device.units.PercentUnit;
 import com.rehivetech.beeeon.util.Utils;
 
-public final class RawIntValue extends BaseValue {
+/**
+ * @author martin
+ * @since 23/11/2016.
+ */
 
-	private double mValue = Double.NaN;
+public class RawPercentValue extends BaseValue {
 
-	private static BlankUnit mUnit = new BlankUnit();
-
-	@Override
-	public void setValue(String value) {
-		super.setValue(value);
-		mValue = Utils.parseIntSafely(value, -1);
-	}
-
-	@Override
-	public int getIconResource(IconResourceType type) {
-		return type == IconResourceType.WHITE ? R.drawable.ic_val_unknown : R.drawable.ic_val_unknown_gray; // FIXME: Use correct icon
-	}
-
-	@Override
-	public int getActorIconResource(IconResourceType type) {
-		// FIXME: Use real resource when we will have real actor icon
-		return getIconResource(type);
-	}
+	private static PercentUnit mUnit = new PercentUnit();
 
 	@Override
 	public BaseUnit getUnit() {
@@ -35,8 +21,18 @@ public final class RawIntValue extends BaseValue {
 	}
 
 	@Override
+	public int getIconResource(IconResourceType type) {
+		return type == IconResourceType.WHITE ? R.drawable.ic_val_unknown : R.drawable.ic_val_unknown_gray;
+	}
+
+	@Override
+	public int getActorIconResource(IconResourceType type) {
+		return type == IconResourceType.WHITE ? R.drawable.ic_val_unknown : R.drawable.ic_val_unknown_gray;
+	}
+
+	@Override
 	public double getDoubleValue() {
-		return mValue;
+		return Utils.parseDoubleSafely(getRawValue(), 0);
 	}
 
 	@Override
