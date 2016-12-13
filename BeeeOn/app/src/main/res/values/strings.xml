@@ -572,7 +572,5 @@
 	<string name="server_detail_certificate_not_selected">You must provide certificate</string>
 	<string name="server_detail_certificate_wrong_type">Wrong certificate type</string>
 	<string name="server_detail_certificate_file_not_found">Selected file not found</string>
-    <string name="title_activity_add_automation_item">AddAutomationItemActivity</string>
-    <string name="action_settings">Settings</string>
 </resources>
 
