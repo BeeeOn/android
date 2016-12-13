@@ -150,6 +150,7 @@
     <string name="nav_drawer_menu_menu_devices">Zařízení</string>
     <string name="nav_drawer_menu_menu_gate">Brána</string>
     <string name="nav_drawer_menu_menu_household">Přehled</string>
+    <string name="nav_drawer_menu_menu_automation">Automatizace</string>
     <string name="nav_drawer_menu_no_gates">Nemáte žádné brány</string>
     <string name="nav_drawer_menu_action_gate_add">Přidat bránu</string>
 
