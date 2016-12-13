@@ -24,7 +24,7 @@ public class UnitsHelper {
 			return mContext.getString(resId);
 		}
 
-		BaseUnit.Item to = (BaseUnit.Item) item.getUnit().fromSettings(mPrefs);
+		BaseUnit.Item to = item.getUnit().fromSettings(mPrefs);
 		double d = item.getUnit().convertValue(to, value);
 		return Utils.formatDouble(d);
 	}

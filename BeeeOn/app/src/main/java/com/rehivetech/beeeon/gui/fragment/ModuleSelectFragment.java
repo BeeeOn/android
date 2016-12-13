@@ -14,7 +14,7 @@ import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter;
 import com.rehivetech.beeeon.gui.adapter.dashboard.DashboardModuleSelectAdapter.ModuleItem;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.util.UnavailableModules;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
@@ -90,7 +90,7 @@ public class ModuleSelectFragment extends BaseApplicationFragment
 
     protected void fillAdapter() {
         Controller controller = Controller.getInstance(mActivity);
-        boolean withoutUnavailable = UnavailableModules.fromSettings(controller.getUserSettings());
+        boolean withoutUnavailable = PreferencesHelper.getBoolean(mActivity, controller.getUserSettings(), R.string.pref_hide_unavailable_modules_key);
         List<Device> devices = controller.getDevicesModel().getDevicesByGate(mGateId);
 
         List<Object> items = new ArrayList<>();

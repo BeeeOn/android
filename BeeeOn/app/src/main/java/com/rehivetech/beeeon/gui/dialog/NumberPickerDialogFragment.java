@@ -2,6 +2,7 @@ package com.rehivetech.beeeon.gui.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,7 +28,8 @@ import timber.log.Timber;
 
 
 /**
- * Created by martin on 31.10.15.
+ * @author martin
+ * @since 31.10.15.
  */
 public class NumberPickerDialogFragment extends BaseDialogFragment {
 
@@ -42,14 +44,28 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 	private static final String ARG_MODULE_ID = "module_id";
 
 
-	public static void showNumberPickerDialog(AppCompatActivity context, Module module, Fragment targetFragment) {
+	public static void showNumberPickerDialog(AppCompatActivity context, Module module, SharedPreferences prefs, Fragment targetFragment) {
+		BaseUnit.Item item = module.getValue().getUnit().fromSettings(prefs);
+		BaseValue.Constraints constraints = module.getValue().getConstraints();
+
+		if (constraints == null) {
+			return;
+		}
+
+		BaseUnit unit = module.getValue().getUnit();
+		Double minValue = unit.convertValue(item, constraints.getMin());
+		Double maxValue = unit.convertValue(item, constraints.getMax());
+		Double actaulValue = unit.convertValue(item, module.getValue().getDoubleValue());
+
 		NumberPickerDialogFragment.createBuilder(context, context.getSupportFragmentManager())
 				.setTitle(module.getName(context))
-				.setConstraints(module.getValue().getConstraints())
+				.setMinValue(minValue)
+				.setMaxValue(maxValue)
+				.setValueGranularity(constraints.getGranularity())
 				.setPositiveButtonText(context.getString(R.string.activity_fragment_btn_set))
 				.setNegativeButtonText(context.getString(R.string.activity_fragment_btn_cancel))
-				.setActualValue(module.getValue().getDoubleValue())
-				.setValuesUnit(((BaseUnit.Item)module.getValue().getUnit().getDefault()).getStringUnit(context))
+				.setActualValue(actaulValue)
+				.setValuesUnit(item)
 				.setModuleId(module.getId())
 				.setTargetFragment(targetFragment, 0)
 				.show();
@@ -80,7 +96,11 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 
 		final String moduleId = args.getString(ARG_MODULE_ID);
 
-		unitTextView.setText(args.getString(ARG_VALUES_UNIT));
+		final BaseUnit.Item unitItem = args.getParcelable(ARG_VALUES_UNIT);
+
+		if (unitItem != null) {
+			unitTextView.setText(unitItem.getStringUnit(getContext()));
+		}
 
 		builder.setTitle(args.getString(ARG_TITLE));
 
@@ -107,7 +127,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 							actualValue = String.format("%s.%s", actualWholeVal, actualDecimalVal);
 						}
 
-						listener.onSetNewValue(moduleId, actualValue);
+						listener.onSetNewValue(moduleId, actualValue, unitItem);
 						dismiss();
 					}
 				}
@@ -132,8 +152,8 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 
 		if (granularity > 1) {
 
-			for (double i = minValue; i < maxValue; i += granularity) {
-				wholeSteps.add(String.valueOf(i));
+			for (double i = minValue; i <= maxValue; i += granularity) {
+				wholeSteps.add(String.valueOf((long) i));
 			}
 		} else {
 
@@ -185,7 +205,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 		private Double mModuleMaxValue;
 		private Double mModuleGranularity;
 		private Double mActualValue;
-		private String mUnit;
+		private BaseUnit.Item mUnit;
 		private String mModuleId;
 
 		public NumberPickerDialogBuilder(Context context, FragmentManager fragmentManager) {
@@ -214,11 +234,18 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			return this;
 		}
 
-		public NumberPickerDialogBuilder setConstraints(BaseValue.Constraints constraints) {
-			mModuleMinValue = constraints.getMin();
-			mModuleMaxValue = constraints.getMax();
-			mModuleGranularity = constraints.getGranularity();
+		public NumberPickerDialogBuilder setMinValue(Double minValue) {
+			mModuleMinValue = minValue;
+			return this;
+		}
 
+		public NumberPickerDialogBuilder setMaxValue(Double maxValue) {
+			mModuleMaxValue = maxValue;
+			return this;
+		}
+
+		public NumberPickerDialogBuilder setValueGranularity(Double granularity) {
+			mModuleGranularity = granularity;
 			return this;
 		}
 
@@ -228,7 +255,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			return this;
 		}
 
-		public NumberPickerDialogBuilder setValuesUnit(String unit) {
+		public NumberPickerDialogBuilder setValuesUnit(BaseUnit.Item unit) {
 			mUnit = unit;
 
 			return this;
@@ -251,7 +278,7 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			args.putDouble(ARG_MAX_VALUE, mModuleMaxValue);
 			args.putDouble(ARG_GRANULARITY, mModuleGranularity);
 			args.putDouble(ARG_ACTUAL_VALUE, mActualValue);
-			args.putString(ARG_VALUES_UNIT, mUnit);
+			args.putParcelable(ARG_VALUES_UNIT, mUnit);
 			args.putString(ARG_MODULE_ID, mModuleId);
 
 			return args;
@@ -263,6 +290,6 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 	}
 
 	public interface SetNewValueListener {
-		void onSetNewValue(String moduleId, String actualValue);
+		void onSetNewValue(String moduleId, String actualValue, BaseUnit.Item unit);
 	}
 }
