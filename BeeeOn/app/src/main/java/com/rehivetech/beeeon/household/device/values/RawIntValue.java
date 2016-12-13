@@ -8,14 +8,14 @@ import com.rehivetech.beeeon.util.Utils;
 
 public final class RawIntValue extends BaseValue {
 
-	private double mValue = Double.NaN;
+	private int mValue = -1;
 
 	private static BlankUnit mUnit = new BlankUnit();
 
 	@Override
 	public void setValue(String value) {
 		super.setValue(value);
-		mValue = Utils.parseIntSafely(value, -1);
+		mValue = (int) Utils.parseDoubleSafely(value, -1);
 	}
 
 	@Override
