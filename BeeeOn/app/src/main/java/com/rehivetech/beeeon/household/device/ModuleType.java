@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.household.device;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BatteryValue;
+import com.rehivetech.beeeon.household.device.values.RawPercentValue;
 import com.rehivetech.beeeon.household.device.values.EmissionValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
@@ -35,7 +36,14 @@ public enum ModuleType {
 	TYPE_BITARRAY(0x0B, R.string.devices__type_bitarray, UnknownValue.class, false), // FIXME: Implement this value type
 	TYPE_RAW_INT(0x0C, R.string.devices__type_raw_int, RawIntValue.class, false),
 	TYPE_RAW_FLOAT(0x0D, R.string.devices__type_raw_float, RawFloatValue.class, false),
-	TYP_LED(0x14, R.string.empty, RawFloatValue.class, false), //FIXME nameRes
+	TYPE_LED(0x14, R.string.empty, RawFloatValue.class, false), //FIXME nameRes
+	TYPE_CT_PERCENT(0x15, R.string.empty, RawPercentValue.class, false),
+	TYPE_HUE_COLOR(0x16, R.string.empty, RawIntValue.class, false),
+	TYPE_SATURATION_PERCENT(0x17, R.string.empty, RawPercentValue.class, false),
+	TYPE_BRIGHTNESS_PERCENT(0x18, R.string.empty, RawPercentValue.class, false),
+	TYPE_ULTRAVIOLET(0x19, R.string.empty, RawIntValue.class, false),
+	TYPE_PIR_SENSITIVITY(0x1a, R.string.empty, RawIntValue.class, false),
+
 
 	TYPE_UNKNOWN(-1, R.string.devices__type_unknown, UnknownValue.class, false);
 

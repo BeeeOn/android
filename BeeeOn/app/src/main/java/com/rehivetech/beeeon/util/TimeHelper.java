@@ -1,7 +1,10 @@
 package com.rehivetech.beeeon.util;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.rehivetech.beeeon.BeeeOnApplication;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.gate.Gate;
 
 import org.joda.time.DateTime;
@@ -13,22 +16,17 @@ public class TimeHelper {
 
 	private SharedPreferences mPrefs;
 
-	// private Gate mAdapter;
-
-	public TimeHelper(SharedPreferences prefs/* , Gate gate */) {
+	public TimeHelper(SharedPreferences prefs) {
 		mPrefs = prefs;
-		// mAdapter = gate;
 	}
 
-	/*
-	 * private final DateTimeZone mTimezone;
-	 * 
-	 * public TimeFormatter(SharedPreferences prefs, Gate gate) { mTimezone = Timezone.fromPreferences(prefs).getDateTimeZone(gate); }
-	 */
-
 	private boolean useLocalTimezone() {
-		Timezone.BaseItem item = new Timezone().fromSettings(mPrefs);
-		return item.getId() == Timezone.ACTUAL;
+		Context context = BeeeOnApplication.getContext();
+
+		String actualTimeZoneValue = PreferencesHelper.getString(context, mPrefs, R.string.pref_timezone_key);
+		String actualTimePrefValue = context.getResources().getStringArray(R.array.pref_time_zone)[0];
+
+		return actualTimePrefValue.equals(actualTimeZoneValue);
 	}
 
 	public DateTimeZone getDateTimeZone(Gate gate) {

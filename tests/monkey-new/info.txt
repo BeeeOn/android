@@ -1,0 +1,24 @@
+android update sdk -a -u -e -t sys-img-x86-android-19 --nutne pro spusteni emulatoru bez gui na serveru
+
+emulator -avd JMENO -no-skin -no-audio -no-window --spusti emulator bez GUI
+emulator -list-avds --seznam dostupnych avd ke spusteni
+
+abd devices --seznam pripojenych zarizeni
+
+adb -s NAME logcat --log emulatoru NAME
+
+adb -s NAME shell monkey 100 -- 100 monkey kliknuti na zarizeni NAME
+adb shell monkey -p ${package_name} -- zustane v danem baliku
+
+adb shell pm list packages | grep "beeeon" -- ziska zaznam o package beeeonu na zarizeni
+package_name=com.rehivetech.beeeon.debug 
+adb shell monkey -p ${package_name} -c android.intent.category.LAUNCHER 1; --spusti startovaciho aktivitu daneho package
+
+adb shell logcat -d | grep 'START u0' | tail -n 1 | sed 's/.*cmp=\(.*\)} .*/\1/g' --vyparsuje jmeno startovani aktivity (pri exekuci po predchozich dvou radcich)
+
+adb shell input keyevent 26 --zamknuti a zhasnuti displaye
+
+adb -s JMENO emu kill --ukonci cinnosti emulatoru
+
+#export PACKAGE_NAME=$(adb -s ${devices} shell pm list packages | grep "${APP_NAME}" | cut -d':' -f2 | head -1)
+

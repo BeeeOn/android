@@ -3,32 +3,17 @@ package com.rehivetech.beeeon.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.Constants;
-import com.rehivetech.beeeon.household.device.units.NoiseUnit;
-import com.rehivetech.beeeon.household.device.units.TemperatureUnit;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.household.user.User.Gender;
 import com.rehivetech.beeeon.model.entity.Server;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
-import com.rehivetech.beeeon.util.ActualizationTime;
-import com.rehivetech.beeeon.util.CacheHoldTime;
-import com.rehivetech.beeeon.util.Language;
-import com.rehivetech.beeeon.util.SettingsItem;
-import com.rehivetech.beeeon.util.Timezone;
 import com.rehivetech.beeeon.util.Utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
@@ -111,29 +96,6 @@ public class Persistence {
 					.putString(Constants.PERSISTENCE_PREF_USER_GENDER, user.getGender().toString())
 					.putString(Constants.PERSISTENCE_PREF_USER_PICTURE, user.getPictureUrl())
 					.apply();
-		}
-
-
-		/**
-		 * Initializes settings for specified namespace
-		 *
-		 * @param context
-		 * @param namespace
-		 */
-		public static void initializeDefaultSettings(Context context, String namespace) {
-			new Language().initDefaultSettings(context, namespace);
-			new Timezone().initDefaultSettings(context, namespace);
-			new ActualizationTime().initDefaultSettings(context, namespace);
-			new CacheHoldTime().initDefaultSettings(context, namespace);
-
-			new TemperatureUnit().initDefaultSettings(context, namespace);
-			new NoiseUnit().initDefaultSettings(context, namespace);
-
-			// TODO: use different units based on user Locale, right now we use default values from unit
-			/*
-			 * Locale locale = Locale.getDefault(); if (locale.getCountry() == "en") { initItemPreference(namespace, new TemperatureUnit(), TemperatureUnit.FAHRENHEIT); } else {
-			 * initItemDefaultPreference(namespace, new TemperatureUnit()); }
-			 */
 		}
 	}
 

@@ -19,18 +19,6 @@ public final class Constants {
 	public static final String PERSISTENCE_PREF_FILENAME = "persistence_%s";
 	public static final String PERSISTENCE_PREF_ACTIVE_GATE = "active_adapter";
 	public static final String PERSISTENCE_PREF_IGNORE_NO_GATE = "ignore_no_adapter";
-	public static final String PERSISTENCE_PREF_TIMEZONE = "pref_timezone";
-	public static final String PERSISTENCE_PREF_UNAVAILABLE_MODULES = "pref_hide_unavailable_modules";
-
-	public static final String PERSISTENCE_PREF_TEMPERATURE = "pref_temperature";
-	public static final String PERSISTENCE_PREF_NOISE = "pref_noise";
-	public static final String PERSISTENCE_PREF_EMISSION = "pref_emission";
-	public static final String PERSISTENCE_PREF_HUMIDITY = "pref_humidity";
-	public static final String PERSISTENCE_PREF_ILLUMINATION = "pref_illumination";
-	public static final String PERSISTENCE_PREF_PRESSURE = "pref_pressure";
-	public static final String PERSISTENCE_PREF_BATTERY = "pref_battery";
-	public static final String PERSISTENCE_PREF_RSSI = "pref_rssi";
-	public static final String PERSISTENCE_PREF_REFRESH = "pref_refresh";
 
 	public static final String PERSISTENCE_PREF_LAST_USER_ID = "last_user_id";
 	public static final String PERSISTENCE_PREF_LAST_AUTH_PROVIDER = "last_auth_provider";
@@ -52,8 +40,6 @@ public final class Constants {
 
 	public static final String PERSISTENCE_PREF_DASHBOARD_ITEMS = "dashboard_items";
 	public static final String PERSISTENCE_KEY_DASHBOARD_MIGRATE = "dashboard_migrate";
-
-	public static final String KEY_UNITS = "key_units";
 
 	/**
 	 * GCM preference keys
