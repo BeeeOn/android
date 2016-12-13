@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -20,9 +19,9 @@ import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.automation.AutomationAdapter;
+import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
 import com.rehivetech.beeeon.gui.adapter.automation.items.DewingItem;
 import com.rehivetech.beeeon.gui.adapter.automation.items.VentilationItem;
-import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
@@ -110,7 +109,7 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                 }
 
                 if(insideTemp != null && outsideTemp != null && humid != null){
-                    item = new DewingItem("Living room dewing",
+                    item = new DewingItem(getString(R.string.demo_automation_living_room_dewing),
                             mGateId,
                             true,
                             insideTemp.getModuleId().absoluteId,
@@ -120,7 +119,7 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                 }
 
                 if(insideTemp != null && outsideTemp != null){
-                    item = new VentilationItem("Living room windows",
+                    item = new VentilationItem(getString(R.string.demo_automation_living_room_windows),
                             mGateId,
                             true,
                             null,

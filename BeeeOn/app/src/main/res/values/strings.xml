@@ -529,6 +529,8 @@
 
     <string name="automation_add_rule_error_missing_name">You have to fill the rule in order to create rule.</string>
     <string name="automation_add_rule_error_missing_sensor">You have not selected all the necessary sensors.</string>
+	<string name="demo_automation_living_room_dewing">Obývací pokoj - mlžení oken</string>
+	<string name="demo_automation_living_room_windows">Obývací pokoj - ventilace</string>
 
     <!--Days shortcuts-->
     <string name="monday">Mo</string>

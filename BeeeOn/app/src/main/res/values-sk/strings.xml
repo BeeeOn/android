@@ -516,6 +516,8 @@
 
     <string name="automation_add_rule_error_missing_name">Musíte vyplniť celé pravidlo</string>
     <string name="automation_add_rule_error_missing_sensor">Nevybrali ste všetky potrebné senzory</string>
+    <string name="demo_automation_living_room_dewing">Obývacia izba - rosenie okien</string>
+    <string name="demo_automation_living_room_windows">Obývacia izba - vetranie</string>
 
     <!--Days shortcuts-->
     <string name="monday">Po</string>

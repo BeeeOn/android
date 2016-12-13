@@ -560,5 +560,6 @@
     <string name="automation_add_rule_error_missing_name">Vyplňte prosím jméno pravidla.</string>
     <string name="automation_add_rule_error_missing_sensor">Vyberte prosím všechny potřebné moudly.</string>
 
-
+    <string name="demo_automation_living_room_dewing">Obývací pokoj - mlžení oken</string>
+    <string name="demo_automation_living_room_windows">Obývací pokoj - ventilace</string>
 </resources>
