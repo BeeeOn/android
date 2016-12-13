@@ -22,6 +22,7 @@ public class GoogleAnalyticsManager {
 	public static final String ADD_GATE_SCREEN = "AddGateScreen";
 	public static final String ADD_GATE_USER_SCREEN = "AddGateUserScreen";
 	public static final String DASHBOARD_SCREEN= "DashboardScreen";
+	public static final String AUTOMATION_SCREEN = "AutomationScreen";
 	public static final String DASHBOARD_GRAPH_DETAIL_SCREEN = "DashboardGraphDetailScreen";
 	public static final String DASHBOARD_OVERVIEW_GRAPH_DETAIL_SCREEN = "DashboardOverviewGraphDetailScreen";
 	public static final String DEVICE_EDIT_SCREEN = "DeviceEditScreen";

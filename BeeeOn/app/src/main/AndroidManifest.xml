@@ -172,6 +172,8 @@
             android:label="@string/app_name"
             />
         <activity android:name=".gui.activity.ModuleGraphActivity"/>
+        <activity android:name=".gui.activity.AddAutomationRuleActivity"
+            android:label="@string/automation_add_rule_title"/>
         <!-- Facebook login screen -->
         <activity
             android:name="com.facebook.FacebookActivity"

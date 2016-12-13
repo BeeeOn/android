@@ -150,6 +150,7 @@
     <string name="nav_drawer_menu_menu_devices">Zariadenia</string>
     <string name="nav_drawer_menu_menu_gate">Brána</string>
     <string name="nav_drawer_menu_menu_household">Prehľad</string>
+    <string name="nav_drawer_menu_menu_automation">Automatizácia</string>
     <string name="nav_drawer_menu_no_gates">Nemáte žiadne brány</string>
     <string name="nav_drawer_menu_action_gate_add">Pridať bránu</string>
 
@@ -465,6 +466,56 @@
     <string name="dashboard_ventilation_card_label">Asistent pri vetraní</string>
     <string name="dashboard_ventilation_card_outside_label">Von</string>
     <string name="dashboard_ventilation_card_inside_label">Dnu</string>
+
+    <!-- Automation -->
+    <string name="automation_add_rule">Pridať pravidlo automatizácie</string>
+
+    <string name="automation_empty">Pravidlá sú prázdne</string>
+    <string name="automation_tab_summer_rules">Leto</string>
+    <string name="automation_tab_winter_rules">Zima</string>
+
+    <string name="automation_ventilation_item_outside">Von</string>
+    <string name="automation_ventilation_item_inside">Dnu</string>
+    <string name="automation_ventilation_item_advice_light">Môžete si otvoriť okno</string>
+    <string name="automation_ventilation_item_advice_hard">Otvorte si okno lebo zomriete Open your windows or you will die.</string>
+
+    <string name="automation_dewing_item_probability">Pravdepodobnosť rosenia okna</string>
+    <string name="automation_dewing_item_probability_low">Nízka</string>
+    <string name="automation_dewing_item_probability_very_high">Veľmi vysoká</string>
+    <string name="automation_dewing_item_advice">Mali by ste otvoriť okno alebo znížiť teplotu</string>
+
+    <string name="automation_add_rule_title">Pridať pravidlo automatizácie</string>
+
+    <string name="automation_add_rule_name">Názov pravidla</string>
+    <string name="automation_add_rule_name_hint">Zadajte názov pravidla</string>
+
+    <string name="automation_add_rule_type">Typ pravidla</string>
+    <string-array name="automation_add_rule_types_array">
+        <item>Pravidlo vetrania</item>
+        <item>Pravidlo rosenia okna</item>
+    </string-array>
+
+    <string name="automation_add_rule_sensors">Senzory</string>
+    <string name="automation_add_rule_sensors_tap">Ťuknite pre vybratie modulu</string>
+    <string name="automation_add_rule_sensors_inside_temperature">Vnútorná teplota</string>
+    <string name="automation_add_rule_sensors_outside_temperature">Vonkajšia teplota</string>
+    <string name="automation_add_rule_sensors_humidity_sensor">Senzor vhlkosti</string>
+
+    <string name="automation_add_rule_preferences">Predvoľby</string>
+    <string name="automation_add_rule_preferences_notifications">poslať notifikáciu</string>
+    <string-array name="automation_add_rule_preferences_notifications_time">
+        <item>5 minút pred</item>
+        <item>10 minút pred</item>
+        <item>15 minút pred</item>
+        <item>20 minút pred</item>
+    </string-array>
+
+    <string name="automation_add_rule_more_options">Viac možností</string>
+    <string name="automation_add_rule_ventilation_more_heat_transfer">Koeficient prenosu tepla UG - W/(m^2K)</string>
+    <string name="automation_add_rule_ventilation_more_frame_factor">UF faktor okna- W/(m^2K)</string>
+
+    <string name="automation_add_rule_error_missing_name">Musíte vyplniť celé pravidlo</string>
+    <string name="automation_add_rule_error_missing_sensor">Nevybrali ste všetky potrebné senzory</string>
 
     <!--Days shortcuts-->
     <string name="monday">Po</string>

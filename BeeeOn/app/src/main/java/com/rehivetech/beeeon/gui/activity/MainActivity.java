@@ -23,6 +23,8 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
+import com.rehivetech.beeeon.gui.fragment.AutomationFragment;
+import com.rehivetech.beeeon.gui.fragment.AutomationPagerFragment;
 import com.rehivetech.beeeon.gui.fragment.DashboardPagerFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
 import com.rehivetech.beeeon.gui.fragment.EmptyFragment;
@@ -47,6 +49,7 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 
 	private static final String CONTENT_TAG_DEVICES = "tag_devices";
 	private static final String CONTENT_TAG_DASHBOARD = "tag_dashboard";
+	private static final String CONTENT_TAG_AUTOMATION = "tag_automation";
 	private static final String CONTENT_TAG_EMPTY = "tag_empty";
 
 	public static final String GATE_ID = "last_gate_id";
@@ -216,7 +219,10 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 				mNavigationView.setCheckedItem(R.id.nav_drawer_dashboard);
 				fragment = DashboardPagerFragment.newInstance(activeGateId);
 				break;
-
+			case CONTENT_TAG_AUTOMATION:
+				mNavigationView.setCheckedItem(R.id.nav_drawer_automation);
+				fragment = AutomationPagerFragment.NewInstance(activeGateId);
+				break;
 			case CONTENT_TAG_DEVICES:
 			default:
 				mNavigationView.setCheckedItem(R.id.nav_drawer_devices);
@@ -279,6 +285,9 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		// Show / hide menu items based on existence of any gates
 		mNavigationMenu.setGroupVisible(R.id.item_overview, hasGates);
 		mNavigationMenu.findItem(R.id.item_no_gates).setVisible(!hasGates);
+
+		// Hide automation for current version if not in demo modes
+		mNavigationMenu.findItem(R.id.nav_drawer_automation).setVisible(controller.isDemoMode());
 	}
 
 
@@ -350,7 +359,11 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 				shouldCloseDrawer = true;
 				shouldStaySelected = true;
 				break;
-
+			case R.id.nav_drawer_automation:
+				redrawContent(CONTENT_TAG_AUTOMATION, false);
+				shouldCloseDrawer = true;
+				shouldStaySelected = true;
+				break;
 			case R.id.nav_drawer_gateway:
 				String gateId = Controller.getInstance(this).getActiveGateId();
 				showGateActivity(gateId);
