@@ -2,7 +2,7 @@
 <resources>
 
 	<!--=== TIMEZONE ===-->
-    <string-array name="pref_time_zone">
+    <string-array name="pref_time_zone" translatable="false">
         <item>0</item>
         <item>1</item>
     </string-array>
@@ -13,9 +13,9 @@
     </string-array>
 
 	<!--=== TEMPERATURE UNIT ===-->
-	<string name="pref_unit_temperature_celsius">0</string>
-	<string name="pref_unit_temperature_fahrenheit">1</string>
-	<string name="pref_unit_temperature_kelvin">2</string>
+	<string name="pref_unit_temperature_celsius" translatable="false">0</string>
+	<string name="pref_unit_temperature_fahrenheit" translatable="false">1</string>
+	<string name="pref_unit_temperature_kelvin" translatable="false">2</string>
 
     <string-array name="pref_units_temperature">
         <item>@string/pref_unit_temperature_celsius</item>
@@ -30,9 +30,9 @@
     </string-array>
 
 	<!--=== NOISE UNIT ===-->
-	<string name="pref_unit_noise_decibel">0</string>
-	<string name="pref_unit_noise_bel">1</string>
-	<string name="pref_unit_noise_nepper">2</string>
+	<string name="pref_unit_noise_decibel" translatable="false">0</string>
+	<string name="pref_unit_noise_bel" translatable="false">1</string>
+	<string name="pref_unit_noise_nepper" translatable="false">2</string>
 
 	<string-array name="pref_units_noise">
 		<item>@string/pref_unit_noise_decibel</item>
@@ -47,8 +47,8 @@
     </string-array>
 
 	<!--=== PRESSURE UNIT ===-->
-	<string name="pref_unit_pressure">0</string>
-	<string name="pref_unit_pressure_bar">1</string>
+	<string name="pref_unit_pressure" translatable="false">0</string>
+	<string name="pref_unit_pressure_bar" translatable="false">1</string>
 
     <string-array name="pref_units_pressure">
         <item>@string/pref_unit_pressure</item>
@@ -61,7 +61,7 @@
     </string-array>
 
 	<!--=== ACTUALIZATION TIME ===-->
-    <string-array name="pref_actualization">
+    <string-array name="pref_actualization" translatable="false">
         <item>0</item>
         <item>5</item>
         <item>10</item>
@@ -78,7 +78,7 @@
     </string-array>
 
 	<!--=== CACHE TIME === -->
-    <string-array name="pref_cache_time">
+    <string-array name="pref_cache_time" translatable="false">
         <item>0</item>
         <item>1</item>
         <item>2</item>
