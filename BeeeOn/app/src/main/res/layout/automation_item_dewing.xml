@@ -4,17 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:contentPadding="@dimen/space_normal"
     style="@style/BeeeOn.Automation.BaseItem.CardView">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/automation_item_dewing_name"
-            android:text="Rule name"
+            tools:text="Rule name"
             style="@style/BeeeOn.Automation.BaseItem.Header"
+            android:layout_toLeftOf="@+id/automation_item_dewing_active"
+            android:layout_toStartOf="@id/automation_item_dewing_active"
             />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/automation_item_dewing_active"
+            android:id="@id/automation_item_dewing_active"
             style="@style/BeeeOn.Automation.BaseItem.Switch"
             />
 
