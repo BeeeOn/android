@@ -477,7 +477,7 @@
     <string name="automation_ventilation_item_outside">Von</string>
     <string name="automation_ventilation_item_inside">Dnu</string>
     <string name="automation_ventilation_item_advice_light">Môžete si otvoriť okno</string>
-    <string name="automation_ventilation_item_advice_hard">Otvorte si okno lebo zomriete Open your windows or you will die.</string>
+    <string name="automation_ventilation_item_advice_hard">Otvorte si okno lebo zomriete.</string>
 
     <string name="automation_dewing_item_probability">Pravdepodobnosť rosenia okna</string>
     <string name="automation_dewing_item_probability_low">Nízka</string>
