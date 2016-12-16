@@ -15,16 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.automation.AutomationAdapter;
-import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
-import com.rehivetech.beeeon.gui.adapter.automation.items.DewingItem;
-import com.rehivetech.beeeon.gui.adapter.automation.items.VentilationItem;
-import com.rehivetech.beeeon.household.device.Device;
-import com.rehivetech.beeeon.household.device.Module;
-import com.rehivetech.beeeon.household.device.ModuleType;
+import com.rehivetech.beeeon.model.entity.automation.AutomationItem;
 
 import java.util.List;
 import java.util.Map;
@@ -33,6 +26,8 @@ import java.util.TreeMap;
 import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 /**
  *  @author xmrnus01
@@ -76,7 +71,9 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Bundle args = getArguments();
+
         if(args != null) {
             mGateId = args.getString(KEY_GATE_ID);
             mPageIndex = args.getInt(KEY_PAGE_INDEX);
@@ -84,66 +81,19 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
 
     }
 
-    private void createDemoData()
-    {
-        BaseItem item = null;
-        Controller controller = Controller.getInstance(getActivity());
-        List devices = controller.getDevicesModel().getDevicesByGate(mGateId);
-        Module insideTemp = null, outsideTemp = null, humid = null;
-        for(Object object : devices){
-            if(object instanceof Device){
-                Device device = (Device)object;
-                Module module = device.getFirstModuleByType(ModuleType.TYPE_TEMPERATURE);
-                Module humidM = device.getFirstModuleByType(ModuleType.TYPE_HUMIDITY);
-                if(module != null){
-                    if(insideTemp == null){
-                        insideTemp = module;
-                    } else {
-                        outsideTemp = module;
-                    }
-
-
-                }
-                if(humidM != null){
-                    humid = module;
-                }
-
-                if(insideTemp != null && outsideTemp != null && humid != null){
-                    item = new DewingItem(getString(R.string.demo_automation_living_room_dewing),
-                            mGateId,
-                            true,
-                            insideTemp.getModuleId().absoluteId,
-                            outsideTemp.getModuleId().absoluteId,
-                            humid.getModuleId().absoluteId);
-                    mAdapter.addItem(item);
-                }
-
-                if(insideTemp != null && outsideTemp != null){
-                    item = new VentilationItem(getString(R.string.demo_automation_living_room_windows),
-                            mGateId,
-                            true,
-                            null,
-                            outsideTemp.getModuleId().absoluteId,
-                            insideTemp.getModuleId().absoluteId);
-                    insideTemp = null;
-                    outsideTemp = null;
-                    mAdapter.addItem(item);
-                }
-            }
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_automation, container, false);
+
         mUnbinder = ButterKnife.bind(this, view);
-        mAdapter = new AutomationAdapter((BaseApplicationActivity) getActivity(), this, this);
+
+        mAdapter = new AutomationAdapter(getContext(), this, this);
         mAdapter.setEmptyView(mEmptyView);
+        mAdapter.setItems(Realm.getDefaultInstance().where(AutomationItem.class).equalTo("gateId", mGateId).findAll());
+
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(mGridSpanCount, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
-        if(Controller.getInstance(getActivity()).isDemoMode())
-            createDemoData();
 
         return view;
     }
@@ -170,10 +120,6 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
         }
     }
 
-    public void addItem(BaseItem item) {
-        mAdapter.addItem(item);
-    }
-
     public class ActionModeAutomation implements ActionMode.Callback{
 
         @Override
@@ -196,13 +142,23 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                 if(mActionMode != null){
                     mActionMode.finish();
                 }
-                final Map<Integer, BaseItem> tempSelectedItems = new TreeMap<>();
+
+                final Map<Integer, AutomationItem> tempSelectedItems = new TreeMap<>();
+
                 for (Object itemPosition : selectedItems) {
                     Integer position = (Integer) itemPosition;
                     tempSelectedItems.put(position, mAdapter.getItem(position));
                 }
 
-                for (Map.Entry<Integer, BaseItem> entry : tempSelectedItems.entrySet()) {
+                final Realm realm = Realm.getDefaultInstance();
+                //return if realm is in transaction
+                if (realm.isInTransaction()) {
+                    return false;
+                }
+
+                //begin realm transaction for item removing
+                realm.beginTransaction();
+                for (Map.Entry<Integer, AutomationItem> entry : tempSelectedItems.entrySet()) {
                     mAdapter.deleteItem(entry.getValue());
                 }
 
@@ -211,14 +167,26 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                 View.OnClickListener listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        for (Map.Entry<Integer, BaseItem> entry : tempSelectedItems.entrySet()) {
-                            mAdapter.addItem(entry.getKey(), entry.getValue());
-                        }
+                        //rollback realm transaction if user cancel it
+                        realm.cancelTransaction();
+                        RealmResults<AutomationItem> results = realm.where(AutomationItem.class).equalTo("gateId", mGateId).findAll();
+                        mAdapter.setItems(results);
                     }
                 };
 
                 Snackbar.make(fragment.mRootView, getResources().getQuantityString(R.plurals.dashboard_delete_snackbar, selectedItems.size()), Snackbar.LENGTH_LONG)
                         .setAction(R.string.dashboard_undo, listener)
+                        .setCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                super.onDismissed(snackbar, event);
+                                // if user wont cancel deleting, than commit changes
+                                if (realm.isInTransaction()) {
+                                    realm.commitTransaction();
+                                }
+                                realm.close();
+                            }
+                        })
                         .show();
                 return true;
             }
