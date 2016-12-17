@@ -30,6 +30,7 @@ import com.rehivetech.beeeon.util.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 /**
@@ -143,8 +144,23 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
     }
 
     public void setItems(RealmResults<AutomationItem> items) {
+		if (mItems != null) {
+			mItems.removeChangeListeners();
+		}
+
 		mItems = items;
-		mGateId = mItems.get(0).getGateId();
+
+		if (mItems.size() != 0) {
+			mGateId = mItems.get(0).getGateId();
+		}
+
+		mItems.addChangeListener(new RealmChangeListener<RealmResults<AutomationItem>>() {
+			@Override
+			public void onChange(RealmResults<AutomationItem> element) {
+				setEmptyViewVisibility(mItems.isEmpty());
+				notifyDataSetChanged();
+			}
+		});
 
 		setEmptyViewVisibility(mItems.isEmpty());
         notifyDataSetChanged();
@@ -164,6 +180,14 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
         setEmptyViewVisibility(mItems.isEmpty());
         notifyItemRemoved(position);
     }
+
+	@Override
+	public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+		super.onDetachedFromRecyclerView(recyclerView);
+		if (mItems != null) {
+			mItems.removeChangeListeners();
+		}
+	}
 
 	public abstract class BaseAutomationViewHolder extends SelectableViewHolder implements View.OnLongClickListener {
         public final CardView mCardView;

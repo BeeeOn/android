@@ -14,10 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.rehivetech.beeeon.BeeeOnApplication;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
 import com.rehivetech.beeeon.gui.adapter.automation.AutomationAdapter;
 import com.rehivetech.beeeon.model.entity.automation.AutomationItem;
+import com.rehivetech.beeeon.model.entity.automation.DewingItem;
+import com.rehivetech.beeeon.model.entity.automation.VentilationItem;
 
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,7 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
     public TextView mEmptyView;
 
     private AutomationAdapter mAdapter;
+    private Realm mRealm;
 
     /**
      * Fragment instance creation.
@@ -79,6 +83,7 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
             mPageIndex = args.getInt(KEY_PAGE_INDEX);
         }
 
+        mRealm = Realm.getDefaultInstance();
     }
 
     @Nullable
@@ -90,7 +95,17 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
 
         mAdapter = new AutomationAdapter(getContext(), this, this);
         mAdapter.setEmptyView(mEmptyView);
-        mAdapter.setItems(Realm.getDefaultInstance().where(AutomationItem.class).equalTo("gateId", mGateId).findAll());
+
+        RealmResults<AutomationItem> realmResults = mRealm.where(AutomationItem.class)
+                .equalTo("automationType", mPageIndex)
+                .equalTo("gateId", mGateId)
+                .findAll();
+
+        if (realmResults.isEmpty()) {
+            mRealm.executeTransaction(new AutomationDemoDatabaseSeed());
+        }
+
+        mAdapter.setItems(realmResults);
 
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(mGridSpanCount, StaggeredGridLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
@@ -117,6 +132,15 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
     public void finishActionMode() {
         if(mActionMode != null){
             mActionMode.finish();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        if (mRealm != null && !mRealm.isClosed()) {
+            mRealm.close();
         }
     }
 
@@ -150,14 +174,13 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                     tempSelectedItems.put(position, mAdapter.getItem(position));
                 }
 
-                final Realm realm = Realm.getDefaultInstance();
                 //return if realm is in transaction
-                if (realm.isInTransaction()) {
+                if (mRealm.isInTransaction()) {
                     return false;
                 }
 
                 //begin realm transaction for item removing
-                realm.beginTransaction();
+                mRealm.beginTransaction();
                 for (Map.Entry<Integer, AutomationItem> entry : tempSelectedItems.entrySet()) {
                     mAdapter.deleteItem(entry.getValue());
                 }
@@ -168,8 +191,8 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                     @Override
                     public void onClick(View v) {
                         //rollback realm transaction if user cancel it
-                        realm.cancelTransaction();
-                        RealmResults<AutomationItem> results = realm.where(AutomationItem.class).equalTo("gateId", mGateId).findAll();
+                        mRealm.cancelTransaction();
+                        RealmResults<AutomationItem> results = mRealm.where(AutomationItem.class).equalTo("gateId", mGateId).equalTo("automationType", mPageIndex).findAll();
                         mAdapter.setItems(results);
                     }
                 };
@@ -181,10 +204,9 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                             public void onDismissed(Snackbar snackbar, int event) {
                                 super.onDismissed(snackbar, event);
                                 // if user wont cancel deleting, than commit changes
-                                if (realm.isInTransaction()) {
-                                    realm.commitTransaction();
+                                if (mRealm.isInTransaction()) {
+                                    mRealm.commitTransaction();
                                 }
-                                realm.close();
                             }
                         })
                         .show();
@@ -200,4 +222,41 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
         }
     }
 
+
+	/**
+     * Demo data for automation use cases
+     */
+    public class AutomationDemoDatabaseSeed implements Realm.Transaction {
+
+        @Override
+        public void execute(Realm realm) {
+            AutomationItem item1 = new AutomationItem();
+            item1.setGateId("64206");
+            item1.setAutomationType(0); // summer type
+
+            DewingItem dewingItem = new DewingItem();
+            dewingItem.setName(BeeeOnApplication.getContext().getString(R.string.demo_automation_living_room_dewing));
+            dewingItem.setActive(true);
+            dewingItem.setInsideTempAbsoluteModuleId("1001---0");
+            dewingItem.setOutsideTempAbsoluteModueId("1003---1");
+            dewingItem.setHumidityAbsoluteModuleId("1003---2");
+
+            item1.setDewingItem(dewingItem);
+
+            AutomationItem item2 = new AutomationItem();
+            item2.setAutomationType(0); // summer type
+            item2.setGateId("64206");
+
+            VentilationItem ventilationItem = new VentilationItem();
+            ventilationItem.setName(BeeeOnApplication.getContext().getString(R.string.demo_automation_living_room_windows));
+            ventilationItem.setInSideAbsoluteModuleId("1003---0");
+            ventilationItem.setOutsideAbsoluteModuleId("1003---1");
+            ventilationItem.setActive(true);
+
+            item2.setVentilationItem(ventilationItem);
+
+            realm.copyToRealm(item1);
+            realm.copyToRealm(item2);
+        }
+    }
 }

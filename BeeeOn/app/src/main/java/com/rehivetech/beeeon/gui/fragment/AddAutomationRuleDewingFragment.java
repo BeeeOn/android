@@ -154,7 +154,7 @@ public class AddAutomationRuleDewingFragment extends BaseApplicationFragment imp
             public void execute(Realm realm) {
                 AutomationItem item = new AutomationItem();
                 item.setGateId(mGateId);
-
+                item.setAutomationType(mIndex);
                 DewingItem dewingItem = new DewingItem();
                 dewingItem.setName(ruleName);
                 dewingItem.setOutsideTempAbsoluteModueId(mOutsideModuleId);

@@ -6,10 +6,10 @@ import io.realm.RealmObject;
  * @author martin
  * @since 15/12/2016.
  */
-
 public class AutomationItem extends RealmObject {
 
 	private String gateId;
+	private int automationType;
 
 	private VentilationItem mVentilationItem;
 	private DewingItem mDewingItem;
@@ -23,6 +23,14 @@ public class AutomationItem extends RealmObject {
 
 	public String getGateId() {
 		return gateId;
+	}
+
+	public int getAutomationType() {
+		return automationType;
+	}
+
+	public void setAutomationType(int automationType) {
+		this.automationType = automationType;
 	}
 
 	public VentilationItem getVentilationItem() {

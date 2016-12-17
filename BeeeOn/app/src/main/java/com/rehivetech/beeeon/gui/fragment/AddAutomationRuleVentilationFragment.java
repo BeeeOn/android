@@ -140,6 +140,7 @@ public class AddAutomationRuleVentilationFragment extends BaseApplicationFragmen
             public void execute(Realm realm) {
                 AutomationItem automationItem = new AutomationItem();
                 automationItem.setGateId(mGateId);
+                automationItem.setAutomationType(mIndex);
                 VentilationItem item = new VentilationItem();
                 item.setName(ruleName);
                 item.setOutsideAbsoluteModuleId(mOutsideModuleId);
