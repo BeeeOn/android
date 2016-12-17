@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -94,13 +95,15 @@ public class AddAutomationRuleVentilationFragment extends BaseApplicationFragmen
     }
 
     @OnClick(R.id.fragment_add_automation_ventilation_outside_select)
-    public void onOutsideSelectClicked(){
+    public void onOutsideSelectClicked(View view){
         showModuleSelectFragment(REQUEST_CODE_OUTSIDE, ModuleType.TYPE_TEMPERATURE);
+        hideKeyboard(view);
     }
 
     @OnClick(R.id.fragment_add_automation_ventilation_inside_select)
-    public void onInsideSelectClicked(){
+    public void onInsideSelectClicked(View view){
         showModuleSelectFragment(REQUEST_CODE_INSIDE, ModuleType.TYPE_TEMPERATURE);
+        hideKeyboard(view);
     }
 
     private void showModuleSelectFragment(int requestCode, ModuleType type) {
@@ -112,7 +115,6 @@ public class AddAutomationRuleVentilationFragment extends BaseApplicationFragmen
                 add(R.id.activity_add_automation_rule_container, fragment).
                 addToBackStack(null).
                 commit();
-
     }
 
     @Override
@@ -171,5 +173,10 @@ public class AddAutomationRuleVentilationFragment extends BaseApplicationFragmen
                     break;
             }
         }
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm =(InputMethodManager)getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

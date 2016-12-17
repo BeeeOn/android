@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -101,20 +102,23 @@ public class AddAutomationRuleDewingFragment extends BaseApplicationFragment imp
 
 
     @OnClick(R.id.fragment_add_automation_dewing_inside_select)
-    public void onInsideSensorClicked(){
+    public void onInsideSensorClicked(View view){
         showModuleSelectFragment(REQUEST_CODE_INSIDE, ModuleType.TYPE_TEMPERATURE);
+        hideKeyboard(view);
     }
 
     @OnClick(R.id.fragment_add_automation_dewing_outside_select)
-    public void onOutsideSensorClicked(){
+    public void onOutsideSensorClicked(View view){
         showModuleSelectFragment(REQUEST_CODE_OUTSIDE, ModuleType.TYPE_TEMPERATURE);
+        hideKeyboard(view);
     }
 
 
 
     @OnClick(R.id.fragment_add_automation_dewing_humidity_select)
-    public void onHumiditySensorClicked(){
+    public void onHumiditySensorClicked(View view){
         showModuleSelectFragment(REQUEST_CODE_HUMIDITY, ModuleType.TYPE_HUMIDITY);
+        hideKeyboard(view);
     }
 
     private void showModuleSelectFragment(int requestCode, ModuleType type) {
@@ -191,5 +195,10 @@ public class AddAutomationRuleDewingFragment extends BaseApplicationFragment imp
                     break;
             }
         }
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager imm =(InputMethodManager)getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
