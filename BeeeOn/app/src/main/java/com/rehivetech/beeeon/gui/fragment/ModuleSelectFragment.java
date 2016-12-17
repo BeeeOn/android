@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -46,15 +47,27 @@ public class ModuleSelectFragment extends BaseApplicationFragment
         return instance;
     }
 
-
     private int mTypeId = -1;
     private String mGateId;
     private int mRequestCode;
+
+    IOnModuleSelectListener mSelectListener;
 
     @BindView(R.id.fragment_module_select_rv)
     public RecyclerView mRecycler;
 
     private DashboardModuleSelectAdapter mAdapter;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mSelectListener = (IOnModuleSelectListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Activity must implement IOnModuleSelectListener");
+        }
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +79,6 @@ public class ModuleSelectFragment extends BaseApplicationFragment
             mRequestCode = args.getInt(ARG_REQUEST_CODE);
         }
     }
-
 
     @Nullable
     @Override
@@ -86,7 +98,6 @@ public class ModuleSelectFragment extends BaseApplicationFragment
         fillAdapter();
         return view;
     }
-
 
     protected void fillAdapter() {
         Controller controller = Controller.getInstance(mActivity);
@@ -146,12 +157,14 @@ public class ModuleSelectFragment extends BaseApplicationFragment
 
     @OnClick(R.id.fragment_module_select_done_btn)
     public void onDoneClicked(){
-        IOnModuleSelectListener listener = (IOnModuleSelectListener) getActivity();
-        ModuleItem selected = (ModuleItem) mAdapter.getItem(mAdapter.getFirstSelectedItem());
-        if(selected != null) {
-            String absoluteId = selected.getAbsoluteId();
-            listener.onModuleSelected(mRequestCode,absoluteId);
-        }
+        try {
+
+            ModuleItem selected = (ModuleItem) mAdapter.getItem(mAdapter.getFirstSelectedItem());
+            if (selected != null) {
+                String absoluteId = selected.getAbsoluteId();
+                mSelectListener.onModuleSelected(mRequestCode, absoluteId);
+            }
+        } catch (ClassCastException ignored) {}
     }
 
     @Override
