@@ -1,7 +1,6 @@
 package com.rehivetech.beeeon.gui.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,24 +14,17 @@ import android.widget.Toast;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.AddAutomationRuleActivity;
-import com.rehivetech.beeeon.gui.adapter.ModuleArrayAdapter;
-import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
-import com.rehivetech.beeeon.gui.adapter.automation.items.DewingItem;
-import com.rehivetech.beeeon.gui.adapter.automation.items.VentilationItem;
 import com.rehivetech.beeeon.gui.fragment.AddAutomationRuleFragment.RuleSaveClickedListener;
 import com.rehivetech.beeeon.gui.fragment.ModuleSelectFragment.IOnModuleSelectListener;
-import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
-import com.rehivetech.beeeon.household.location.Location;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.rehivetech.beeeon.model.entity.automation.AutomationItem;
+import com.rehivetech.beeeon.model.entity.automation.DewingItem;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 /**
  * Created by mrnda on 20/10/2016.
@@ -102,11 +94,8 @@ public class AddAutomationRuleDewingFragment extends BaseApplicationFragment imp
     }
 
 
-    protected void finishActivity(BaseItem item) {
-        Intent data = new Intent();
-        data.putExtra(AutomationPagerFragment.EXTRA_ADD_ITEM, item);
-        data.putExtra(AutomationPagerFragment.EXTRA_INDEX, mIndex);
-        mActivity.setResult(Activity.RESULT_OK, data);
+    protected void finishActivity() {
+        mActivity.setResult(Activity.RESULT_OK);
         mActivity.finish();
     }
 
@@ -141,7 +130,7 @@ public class AddAutomationRuleDewingFragment extends BaseApplicationFragment imp
     }
 
     @Override
-    public void RuleSaveClicked(String ruleName) {
+    public void RuleSaveClicked(final String ruleName) {
 
         if(ruleName == null || ruleName.isEmpty()){
             Toast.makeText(getActivity(),
@@ -159,14 +148,26 @@ public class AddAutomationRuleDewingFragment extends BaseApplicationFragment imp
             return;
         }
 
-        BaseItem item = new DewingItem(ruleName,
-                mGateId,
-                true,
-                mOutsideModuleId,
-                mInsideModuleId,
-                mHumidityModuleId);
+        Realm realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                AutomationItem item = new AutomationItem();
+                item.setGateId(mGateId);
 
-        finishActivity(item);
+                DewingItem dewingItem = new DewingItem();
+                dewingItem.setName(ruleName);
+                dewingItem.setOutsideTempAbsoluteModueId(mOutsideModuleId);
+                dewingItem.setInsideTempAbsoluteModuleId(mInsideModuleId);
+                dewingItem.setHumidityAbsoluteModuleId(mHumidityModuleId);
+                dewingItem.setActive(true);
+                item.setDewingItem(dewingItem);
+                realm.copyToRealm(item);
+            }
+        });
+        realm.close();
+
+        finishActivity();
     }
 
     @Override
