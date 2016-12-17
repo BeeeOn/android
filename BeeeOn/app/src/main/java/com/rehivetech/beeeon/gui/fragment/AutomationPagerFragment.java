@@ -1,12 +1,10 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -18,9 +16,7 @@ import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.AddAutomationRuleActivity;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.adapter.ViewPagerAdapter;
-import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
 import com.rehivetech.beeeon.gui.view.FloatingActionMenu;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -96,20 +92,6 @@ public class AutomationPagerFragment extends BaseApplicationFragment
 
         setupViewPager();
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQ_CODE_ADD_AUTOMATION_ITEM){
-            if(resultCode == Activity.RESULT_OK){
-                BaseItem item = data.getParcelableExtra(EXTRA_ADD_ITEM);
-                int index = data.getIntExtra(EXTRA_INDEX, 0);
-                Fragment fragment = mViewsAdapter.getItem(index);
-                ((AutomationFragment) fragment).addItem(item);
-            }
-        }
-
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
