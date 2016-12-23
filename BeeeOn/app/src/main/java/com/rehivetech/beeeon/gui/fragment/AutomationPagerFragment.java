@@ -3,6 +3,7 @@ package com.rehivetech.beeeon.gui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -73,12 +74,6 @@ public class AutomationPagerFragment extends BaseApplicationFragment
         setHasOptionsMenu(true);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Toolbar toolbar = mActivity.setupToolbar(R.string.nav_drawer_menu_menu_automation, BaseApplicationActivity.INDICATOR_MENU);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -92,6 +87,15 @@ public class AutomationPagerFragment extends BaseApplicationFragment
 
         setupViewPager();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Toolbar toolbar = mActivity.setupToolbar(R.string.nav_drawer_menu_menu_automation, BaseApplicationActivity.INDICATOR_MENU);
+        AppBarLayout.LayoutParams layoutParams = (AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        layoutParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        toolbar.setLayoutParams(layoutParams);
     }
 
     @Override
