@@ -2,7 +2,6 @@ package com.rehivetech.beeeon.model;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.controller.Controller;
@@ -26,7 +25,6 @@ import timber.log.Timber;
 public class GcmModel extends BaseModel {
 
 	private final Context mContext;
-	private final Persistence mPersistence;
 	private final User mUser;
 
 	/**
@@ -34,10 +32,9 @@ public class GcmModel extends BaseModel {
 	 */
 	private final WeakHashMap<INotificationReceiver, Boolean> mNotificationReceivers = new WeakHashMap<>();
 
-	public GcmModel(INetwork network, Context context, Persistence persistence, User user) {
+	public GcmModel(INetwork network, Context context, User user) {
 		super(network);
 		mContext = context;
-		mPersistence = persistence;
 		mUser = user;
 	}
 

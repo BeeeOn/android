@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.rehivetech.beeeon"
-          android:installLocation="auto"
+          android:installLocation="internalOnly"
     >
 
     <!-- The Google Maps Android API uses OpenGL ES version 2 to render the map. -->
@@ -149,12 +149,6 @@
             >
         </activity>
         <activity
-            android:name=".gui.activity.SettingsUnitActivity"
-            android:label="@string/settings_unit_unit"
-            android:theme="@style/SettingsActivity"
-            >
-        </activity>
-        <activity
             android:name=".gui.activity.GateUsersActivity"
             android:label="@string/gate_users_title_gate_users"
             >
@@ -178,6 +172,8 @@
             android:label="@string/app_name"
             />
         <activity android:name=".gui.activity.ModuleGraphActivity"/>
+        <activity android:name=".gui.activity.AddAutomationRuleActivity"
+            android:label="@string/automation_add_rule_title"/>
         <!-- Facebook login screen -->
         <activity
             android:name="com.facebook.FacebookActivity"

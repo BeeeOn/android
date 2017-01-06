@@ -19,6 +19,12 @@
 			android:icon="@drawable/ic_router_black_24dp"
 			android:title="@string/nav_drawer_menu_menu_gate"
 			/>
+
+		<item
+			android:id="@+id/nav_drawer_automation"
+			android:icon="@drawable/ic_tune_black_24dp"
+			android:title="@string/nav_drawer_menu_menu_automation"
+			/>
 	</group>
 
 	<item

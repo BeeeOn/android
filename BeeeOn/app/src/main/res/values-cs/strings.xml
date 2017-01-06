@@ -150,6 +150,7 @@
     <string name="nav_drawer_menu_menu_devices">Zařízení</string>
     <string name="nav_drawer_menu_menu_gate">Brána</string>
     <string name="nav_drawer_menu_menu_household">Přehled</string>
+    <string name="nav_drawer_menu_menu_automation">Automatizace</string>
     <string name="nav_drawer_menu_no_gates">Nemáte žádné brány</string>
     <string name="nav_drawer_menu_action_gate_add">Přidat bránu</string>
 
@@ -346,18 +347,17 @@
     <string name="settings_actualization_category_title">Nastavení načítání dat</string>
     <string name="settings_actualization_screen_title">Interval automatického načítávání</string>
     <string name="settings_cache_reload_title">Doba uchovávání cache</string>
-    <plurals name="settings_actualization_time_listpreference_seconds">
-        <item quantity="one">1 sekunda</item>
-        <item quantity="few">%d sekundy</item>
-        <item quantity="other">%d sekund</item>
-    </plurals>
-    <string name="settings_actualizationtime_listpreference_dont_actualize">Manuálně</string>
-    <plurals name="settings_cache_listpreference_minutes">
-        <item quantity="one">1 minuta</item>
-        <item quantity="few">%d minuty</item>
-        <item quantity="other">%d minut</item>
-    </plurals>
-    <string name="settings_cache_listpreference_no_cache">Neuchovávat cache</string>
+    <string name="settings_actualization_time_5_seconds">5 sekund</string>
+    <string name="settings_actualization_time_10_seconds">10 sekund</string>
+    <string name="settings_actualization_time_30_seconds">30 sekund</string>
+    <string name="settings_actualization_time_60_seconds">60 sekund</string>
+    <string name="settings_actualization_time_dont_actualize">Manuálně</string>
+    <string name="settings_cache_no_cache">Neuchovávat cache</string>
+    <string name="settings_cache_1_minute">1 minuta</string>
+    <string name="settings_cache_2_minutes">2 minuty</string>
+    <string name="settings_cache_5_minutes">5 minut</string>
+    <string name="settings_cache_10_minutes">10 minut</string>
+    <string name="settings_cache_30_minutes">30 minut</string>
     <string name="settings_prefs_choose_language">Jazyk</string>
     <string name="settings_language_listpreference_default">Použít jazyk systému</string>
     <string name="settings_language_listpreference_english">Angličtina</string>
@@ -510,4 +510,56 @@
     <string name="server_detail_certificate_file_not_found">Vybraný soubor nebyl nalezen</string>
     <string name="server_detail_certificate_wrong_type">Špatný typ certifikátu</string>
 
+    <!-- Automation -->
+    <string name="automation_add_rule">Přidat pravidlo</string>
+
+    <string name="automation_empty">Neexistují žádná pravidla</string>
+    <string name="automation_tab_summer_rules">Léto</string>
+    <string name="automation_tab_winter_rules">Zima</string>
+
+    <string name="automation_ventilation_item_outside">Venku</string>
+    <string name="automation_ventilation_item_inside">Vevnitř</string>
+    <string name="automation_ventilation_item_advice_light">Měli byste otevřít okno.</string>
+    <string name="automation_ventilation_item_advice_hard">Otevřete okna nebo zemřete.</string>
+
+    <string name="automation_dewing_item_probability">Pravděpodobnost mlžení oken</string>
+    <string name="automation_dewing_item_probability_low">Nízká</string>
+    <string name="automation_dewing_item_probability_very_high">Vysoká</string>
+    <string name="automation_dewing_item_advice">Měl byste otevřít okna nebo snížit teplotu v místnosti</string>
+
+    <string name="automation_add_rule_title">Přidat pravidlo</string>
+
+    <string name="automation_add_rule_name">Jméno pravidla</string>
+    <string name="automation_add_rule_name_hint">Vložte jméno pravidla</string>
+
+    <string name="automation_add_rule_type">Typ pravidla</string>
+    <string-array name="automation_add_rule_types_array">
+        <item>Pravidlo pro ventilaci</item>
+        <item>Pravidlo pro mlžení oken</item>
+    </string-array>
+
+    <string name="automation_add_rule_sensors">Senzory</string>
+    <string name="automation_add_rule_sensors_tap">Ťukněte pro vybrání senzoru</string>
+    <string name="automation_add_rule_sensors_inside_temperature">Vnitřní teplota</string>
+    <string name="automation_add_rule_sensors_outside_temperature">Vnější teplota</string>
+    <string name="automation_add_rule_sensors_humidity_sensor">Senzor vlhkosti</string>
+
+    <string name="automation_add_rule_preferences">Nastavení pravidla</string>
+    <string name="automation_add_rule_preferences_notifications">poslat notifikaci </string>
+    <string-array name="automation_add_rule_preferences_notifications_time">
+        <item>5 minut předem</item>
+        <item>10 minut předem</item>
+        <item>15 minut předem</item>
+        <item>20 minut předem</item>
+    </string-array>
+
+    <string name="automation_add_rule_more_options">Více možností</string>
+    <string name="automation_add_rule_ventilation_more_heat_transfer">Koeficient přenosu tepla UG - W/(m^2K)</string>
+    <string name="automation_add_rule_ventilation_more_frame_factor">UF faktor okna - W/(m^2K)</string>
+
+    <string name="automation_add_rule_error_missing_name">Vyplňte prosím jméno pravidla.</string>
+    <string name="automation_add_rule_error_missing_sensor">Vyberte prosím všechny potřebné moudly.</string>
+
+    <string name="demo_automation_living_room_dewing">Obývací pokoj - mlžení oken</string>
+    <string name="demo_automation_living_room_windows">Obývací pokoj - ventilace</string>
 </resources>

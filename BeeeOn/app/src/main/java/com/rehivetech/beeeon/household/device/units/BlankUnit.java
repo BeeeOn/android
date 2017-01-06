@@ -1,25 +1,20 @@
 package com.rehivetech.beeeon.household.device.units;
 
+import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
+
 import com.rehivetech.beeeon.R;
 
 public class BlankUnit extends BaseUnit {
 
-	public static final int DEFAULT = 0;
-
 	public BlankUnit() {
-		super();
-
-		mItems.add(this.new Item(DEFAULT, R.string.empty, R.string.empty));
+		super(-1);
+		mItems.add(new Item(Item.DEFAULT_ID, R.string.empty, R.string.empty));
 	}
 
 	@Override
-	public int getDefaultId() {
-		return DEFAULT;
-	}
-
-	@Override
-	public String getPersistenceKey() {
-		return "";
+	public Item fromSettings(@Nullable SharedPreferences prefs) {
+		return mItems.get(0);
 	}
 
 	@Override
@@ -27,4 +22,8 @@ public class BlankUnit extends BaseUnit {
 		return value;
 	}
 
+	@Override
+	public double convertToDefaultValue(Item from, double value) {
+		return value;
+	}
 }

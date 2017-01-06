@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="pref_root_key" translatable="false">key_root</string>
+	<string name="pref_timezone_key" translatable="false">pref_timezone</string>
+	<string name="pref_actualization_time_key" translatable="false">pref_actualization</string>
+	<string name="pref_hide_unavailable_modules_key" translatable="false">pref_hide_unavailable_modules</string>
+	<string name="pref_cache_key" translatable="false">pref_cache</string>
+	<string name="pref_unit_noise_key" translatable="false">pref_noise</string>
+	<string name="pref_unit_pressure_key" translatable="false">pref_pressure</string>
+	<string name="pref_unit_temperature_key" translatable="false">pref_temperature</string>
+	<string name="pref_units_key" translatable="false">key_units</string>
+</resources>

@@ -25,6 +25,7 @@
 	<string name="unit_battery" translatable="false">%</string>
 	<string name="unit_rssi" translatable="false">%</string>
 	<string name="unit_refresh" translatable="false">s</string>
+	<string name="unit_percent" translatable="false">%</string>
 
 	<!-- Names of default locations -->
 	<string name="loc_none">- Not specified -</string>

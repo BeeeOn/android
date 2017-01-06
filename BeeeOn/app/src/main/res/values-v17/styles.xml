@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<style name="BeeeOn.PreferenceFragmentList" parent="">
+		<item name="android:paddingLeft">0dp</item>
+		<item name="android:paddingRight">0dp</item>
+	</style>
+
+	<style name="BeeeOn.Preference.Category" parent="">
+		<item name="android:textColor">@color/beeeon_accent</item>
+		<item name="android:textStyle">bold</item>
+		<item name="android:paddingLeft">@dimen/space_double</item>
+		<item name="android:paddingTop">@dimen/space_normal</item>
+		<item name="android:paddingBottom">@dimen/space_normal</item>
+	</style>
+
+</resources>

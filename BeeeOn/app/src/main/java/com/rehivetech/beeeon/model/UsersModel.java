@@ -3,7 +3,6 @@ package com.rehivetech.beeeon.model;
 import com.rehivetech.beeeon.NameIdentifierComparator;
 import com.rehivetech.beeeon.household.user.User;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.MultipleDataHolder;
 
 import org.joda.time.DateTime;
@@ -17,9 +16,9 @@ public class UsersModel extends BaseModel {
 
 	private final MultipleDataHolder<User> mUsers = new MultipleDataHolder<>(); // gateId => user dataHolder
 
-	public UsersModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
+	public UsersModel(INetwork network, int reloadEverySecs) {
 		super(network);
-		mReloadEverySecs = cacheHoldTime.getSeconds();
+		mReloadEverySecs = reloadEverySecs;
 	}
 
 	/**

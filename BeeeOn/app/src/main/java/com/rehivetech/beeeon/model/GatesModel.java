@@ -7,7 +7,6 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.network.INetwork;
-import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.DataHolder;
 import com.rehivetech.beeeon.util.GpsData;
 
@@ -24,9 +23,9 @@ public class GatesModel extends BaseModel {
 
 	private final DataHolder<GateInfo> mGatesInfoHolder = new DataHolder<>();
 
-	public GatesModel(INetwork network, CacheHoldTime.Item cacheHoldTime) {
+	public GatesModel(INetwork network, int reloadEverySecs) {
 		super(network);
-		mReloadEverySecs = cacheHoldTime.getSeconds();
+		mReloadEverySecs = reloadEverySecs;
 	}
 
 	/**

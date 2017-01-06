@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/beeeon_background">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/beeeon_toolbar">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/space_normal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/automation_add_rule_name"
+                style="@style/BeeeOn.Automation.AddItem.SectionHeader"/>
+            <EditText
+                android:id="@+id/automation_add_rule_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/automation_add_rule_name_hint"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/automation_add_rule_type"
+                style="@style/BeeeOn.Automation.AddItem.SectionHeader"
+                />
+
+            <Spinner
+                android:id="@+id/automation_add_rule_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <FrameLayout
+                android:id="@+id/fragment_add_automation_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="@dimen/space_normal"
+                />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.rehivetech.beeeon.gui.view.FloatingActionButton
+        android:id="@+id/fragment_add_automation_item_done"
+        style="@style/BeeeOn.FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/space_big"
+        android:layout_marginEnd="@dimen/space_big"
+        android:layout_marginRight="@dimen/space_big"
+        android:src="@drawable/ic_save_white_24dp"
+        />
+</RelativeLayout>

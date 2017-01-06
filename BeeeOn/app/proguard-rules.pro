@@ -216,3 +216,5 @@
     @icepick.* <fields>;
 }
 -keepnames class * { @icepick.State *;}
+# picasso library
+-dontwarn com.squareup.okhttp.**

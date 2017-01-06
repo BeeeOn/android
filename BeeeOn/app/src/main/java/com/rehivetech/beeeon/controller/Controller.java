@@ -4,11 +4,11 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.rehivetech.beeeon.Constants;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.gcm.GcmRegistrationIntentService;
 import com.rehivetech.beeeon.gui.adapter.dashboard.items.ActualValueItem;
@@ -35,11 +35,9 @@ import com.rehivetech.beeeon.network.server.Network;
 import com.rehivetech.beeeon.persistence.DashBoardPersistence;
 import com.rehivetech.beeeon.persistence.GraphSettingsPersistence;
 import com.rehivetech.beeeon.persistence.Persistence;
-import com.rehivetech.beeeon.util.CacheHoldTime;
 import com.rehivetech.beeeon.util.ChartHelper;
-import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -188,43 +186,36 @@ public final class Controller {
 		if (!mModels.containsKey(name)) {
 			synchronized (mModels) {
 				if (!mModels.containsKey(name)) {
-					CacheHoldTime.Item cacheHoldTime = (CacheHoldTime.Item) new CacheHoldTime().fromSettings(getUserSettings());
+					int reloadEverySecs = PreferencesHelper.getInt(mContext, getUserSettings(), R.string.pref_cache_key);
 
-					Persistence persistence = new Persistence(); 	// TODO remove from module initialization
+					BaseModel model = null;
 
-					// Known parameters we can automatically give to model constructor
-					final Object[] supportedParams = {mNetwork, mContext, persistence, mUser, cacheHoldTime};
+					if (modelClass == GatesModel.class) {
+						model = new GatesModel(mNetwork, reloadEverySecs);
 
-					// Create instance of the given model class
-					final Constructor constructor = modelClass.getConstructors()[0];
-					final List<Object> params = new ArrayList<>();
-					for (Class<?> pType : constructor.getParameterTypes()) {
-						Object param = null;
-						for (Object obj : supportedParams) {
-							if (pType.isInstance(obj)) {
-								param = obj;
-								break;
-							}
-						}
+					} else if (modelClass == LocationsModel.class) {
+						model = new LocationsModel(mNetwork, mContext, reloadEverySecs);
 
-						if (param == null) {
-							String error = String.format("Unsupported model parameter type (%s) for automatic model construction.", pType.getSimpleName());
-							throw new UnsupportedOperationException(error);
-						}
+					} else if (modelClass == DevicesModel.class) {
+						model = new DevicesModel(mNetwork, reloadEverySecs);
 
-						params.add(param);
+					} else if (modelClass == UninitializedDevicesModel.class) {
+						model = new UninitializedDevicesModel(mNetwork, reloadEverySecs);
+
+					} else if (modelClass == ModuleLogsModel.class) {
+						model = new ModuleLogsModel(mNetwork);
+
+					} else if (modelClass == GcmModel.class) {
+						model = new GcmModel(mNetwork, mContext, getActualUser());
+
+					} else if (modelClass == UsersModel.class) {
+						model = new UsersModel(mNetwork, reloadEverySecs);
+
+					} else if (modelClass == WeatherModel.class) {
+						model = new WeatherModel(mNetwork);
 					}
 
-					try {
-						// Try to create new model instance
-						final BaseModel model = (BaseModel) constructor.newInstance(params.toArray());
-
-						// Put this created model to map
-						mModels.put(name, model);
-					} catch (Exception e) {
-						// NOTE: Catching base Exception because of Android's merging more exceptions into one, which is not supported before API 19
-						e.printStackTrace();
-					}
+					mModels.put(name, model);
 				}
 			}
 		}
@@ -360,9 +351,6 @@ public final class Controller {
 			Timber.e( "UserId wasn't received. We can't continue with login.");
 			return false;
 		}
-
-		// Then initialize default settings
-		Persistence.UserSettings.initializeDefaultSettings(mContext, userId);
 
 		if (!(mNetwork instanceof DemoNetwork)) {
 			// Save our new sessionId

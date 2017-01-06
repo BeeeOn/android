@@ -1,8 +1,5 @@
 package com.rehivetech.beeeon.gui.fragment;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,70 +20,69 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.avast.android.dialogs.fragment.ListDialogFragment;
-import com.avast.android.dialogs.iface.IListDialogListener;
 import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
-import com.rehivetech.beeeon.gui.activity.ModuleGraphActivity;
 import com.rehivetech.beeeon.gui.adapter.DeviceModuleAdapter;
-import com.rehivetech.beeeon.gui.dialog.NumberPickerDialogFragment;
 import com.rehivetech.beeeon.gui.view.DeviceFeatureView;
 import com.rehivetech.beeeon.household.device.Device;
 import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleType;
 import com.rehivetech.beeeon.household.device.RefreshInterval;
 import com.rehivetech.beeeon.household.device.Status;
-import com.rehivetech.beeeon.household.device.values.BaseValue;
-import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.threading.CallbackTask;
 import com.rehivetech.beeeon.threading.ICallbackTaskFactory;
-import com.rehivetech.beeeon.threading.task.ActorActionTask;
-import com.rehivetech.beeeon.util.ActualizationTime;
-import com.rehivetech.beeeon.util.TimeHelper;
-import com.rehivetech.beeeon.util.UnavailableModules;
-import com.rehivetech.beeeon.util.Utils;
+import com.rehivetech.beeeon.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import icepick.State;
 import timber.log.Timber;
 
 /**
  * @author martin
  * @since 04.08.2015
  */
-public class DeviceDetailFragment extends BaseApplicationFragment implements DeviceModuleAdapter.ItemClickListener,
-		AppBarLayout.OnOffsetChangedListener, IListDialogListener, NumberPickerDialogFragment.SetNewValueListener {
+public class DeviceDetailFragment extends BaseDeviceDetailFragment implements AppBarLayout.OnOffsetChangedListener {
 
-	private static final String KEY_GATE_ID = "gateId";
-	private static final String KEY_DEVICE_ID = "deviceId";
-	private static final String KEY_VIEW_PAGER_SELECTED_ITEM = "selected_item";
 	private static final String DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID = "deviceDetailFragmentAutoReload";
 
+	@BindView(R.id.device_detail_root_layout)
+	CoordinatorLayout mRootLayout;
 
-	private static final int REQUEST_SET_ACTUATOR = 7894;
+	@BindView(R.id.device_detail_icon)
+	ImageView mIcon;
 
-	private UpdateDevice mDeviceCallback;
-	private Device mDevice;
-	private TimeHelper mTimeHelper;
-	private String mGateId;
-	private String mDeviceId;
-	private String mModuleId;
-	private boolean mHideUnavailableModules;
+	@BindView(R.id.device_detail_status_icon)
+	ImageView mStatusIcon;
 
-	private CoordinatorLayout mRootLayout;
-	private ImageView mIcon;
-	private ImageView mStatusIcon;
-	private TextView mDeviceName;
+	@BindView(R.id.device_detail_device_name)
+	TextView mDeviceName;
+
+	@BindView(R.id.device_detail_module_list_empty_view)
+	TextView mEmptyTextView;
+
+	@BindView(R.id.device_detail_modules_list)
+	RecyclerView mRecyclerView;
+
+	@BindView(R.id.device_detail_group_pager)
+	ViewPager mViewPager;
+
+	@BindView(R.id.device_detail_group_tab_layout)
+	TabLayout mTabLayout;
+
+	private DeviceModuleAdapter mModuleAdapter;
 
 	private DeviceFeatureView mDeviceLocation;
 	private DeviceFeatureView mDeviceLastUpdate;
@@ -94,12 +90,8 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	private DeviceFeatureView mDeviceBattery;
 	private DeviceFeatureView mDeviceRefresh;
 
-	private TextView mEmptyTextView;
-	private RecyclerView mRecyclerView;
-	private DeviceModuleAdapter mModuleAdapter;
-
-	private ViewPager mViewPager;
-	private TabLayout mTabLayout;
+	@State
+	int mSelectedTabIndex;
 
 	private final ICallbackTaskFactory mICallbackTaskFactory = new ICallbackTaskFactory() {
 		@Override
@@ -115,42 +107,16 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 	public static DeviceDetailFragment newInstance(String gateId, String deviceId) {
 		Bundle args = new Bundle();
-		args.putString(KEY_GATE_ID, gateId);
-		args.putString(KEY_DEVICE_ID, deviceId);
-
+		fillArguments(args, gateId, deviceId);
 		DeviceDetailFragment fragment = new DeviceDetailFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
 
 	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-
-		try {
-			mDeviceCallback = (UpdateDevice) context;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(context.toString() + " must implement UpdateDevice");
-		}
-	}
-
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Controller controller = Controller.getInstance(mActivity);
-
-		mGateId = getArguments().getString(KEY_GATE_ID);
-		mDeviceId = getArguments().getString(KEY_DEVICE_ID);
-
-		mDevice = controller.getDevicesModel().getDevice(mGateId, mDeviceId);
-
-		SharedPreferences prefs = controller.getUserSettings();
-		mTimeHelper = Utils.getTimeHelper(prefs);
-
-		mHideUnavailableModules = UnavailableModules.fromSettings(prefs);
-
 		setHasOptionsMenu(true);
-		mModuleId = "-1";
 	}
 
 	@Nullable
@@ -158,34 +124,19 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_device_detail, container, false);
 
-		// FIXME: Why this doesn't work when it's in DeviceDetailActivity?
-//		Toolbar toolbar = (Toolbar) view.findViewById(R.id.beeeon_toolbar);
+		mUnbinder = ButterKnife.bind(this, view);
 
-//		AppCompatActivity activity = (AppCompatActivity) getActivity();
-//		activity.setSupportActionBar(toolbar);
-//		ActionBar actionBar = activity.getSupportActionBar();
-//
-//		if (actionBar != null) {
-//			actionBar.setDisplayHomeAsUpEnabled(true);
-//			actionBar.setDisplayShowTitleEnabled(false);
-//		}
-
-		mRootLayout = (CoordinatorLayout) view.findViewById(R.id.device_detail_root_layout);
-
-		AppBarLayout appBarLayout = (AppBarLayout) view.findViewById(R.id.device_detail_appbar);
+		AppBarLayout appBarLayout = ButterKnife.findById(view, R.id.device_detail_appbar);
 		appBarLayout.addOnOffsetChangedListener(this);
 
-		mIcon = (ImageView) view.findViewById(R.id.device_detail_icon);
 		setParallaxMultiplier(mIcon, 0.9f);
-		mStatusIcon = (ImageView) view.findViewById(R.id.device_detail_status_icon);
 		setParallaxMultiplier(mStatusIcon, 0.9f);
-		mDeviceName = (TextView) view.findViewById(R.id.device_detail_device_name);
 		setParallaxMultiplier(mDeviceName, 0.9f);
 
 		if (mDevice == null)
 			return view;
 
-		LinearLayout featuresLayout = (LinearLayout) view.findViewById(R.id.device_detail_features_layout);
+		LinearLayout featuresLayout = ButterKnife.findById(view, R.id.device_detail_features_layout);
 
 		final Module rssi = mDevice.getFirstModuleByType(ModuleType.TYPE_RSSI);
 		if (rssi != null) {
@@ -243,18 +194,13 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 
 		List<String> moduleGroups = mDevice.getModulesGroups(mActivity, mHideUnavailableModules);
 
-		mRecyclerView = (RecyclerView) view.findViewById(R.id.device_detail_modules_list);
-		mViewPager = (ViewPager) view.findViewById(R.id.device_detail_group_pager);
-
 		if (moduleGroups.size() <= 1) {
 			mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-			mEmptyTextView = (TextView) view.findViewById(R.id.device_detail_module_list_empty_view);
 			mModuleAdapter = new DeviceModuleAdapter(mActivity, this);
 			mRecyclerView.setAdapter(mModuleAdapter);
 			mRootLayout.removeView(mViewPager);
 			mViewPager = null;
 		} else {
-			mTabLayout = (TabLayout) view.findViewById(R.id.device_detail_group_tab_layout);
 			mTabLayout.setVisibility(View.VISIBLE);
 			mRootLayout.removeView(mRecyclerView);
 			setupViewPager(mViewPager, mTabLayout, mDevice.getModulesGroups(mActivity, mHideUnavailableModules));
@@ -263,21 +209,12 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		return view;
 	}
 
-	private void setAutoReloadDataTimer() {
-		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
-		ActualizationTime.Item item = (ActualizationTime.Item) new ActualizationTime().fromSettings(prefs);
-		int period = item.getSeconds();
-		if (period > 0)    // zero means do not update
-			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID, period);
-	}
-
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		if (savedInstanceState != null && mViewPager != null) {
-			mViewPager.setCurrentItem(savedInstanceState.getInt(KEY_VIEW_PAGER_SELECTED_ITEM));
-			Timber.d("restore instance");
+		if (mViewPager != null) {
+			mViewPager.setCurrentItem(mSelectedTabIndex);
 		}
 
 		Toolbar toolbar = mActivity.setupToolbar("", BaseApplicationActivity.INDICATOR_BACK);
@@ -312,7 +249,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		if (mViewPager != null) {
-			outState.putInt(KEY_VIEW_PAGER_SELECTED_ITEM, mViewPager.getCurrentItem());
+			mSelectedTabIndex = mViewPager.getCurrentItem();
 		}
 	}
 
@@ -323,17 +260,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		inflater.inflate(R.menu.activity_device_detail_menu, menu);
 	}
 
-	private void setupViewPager(ViewPager viewPager, TabLayout tabLayout, List<String> moduleGroups) {
-		ModuleGroupPagerAdapter adapter = new ModuleGroupPagerAdapter(getChildFragmentManager());
-		for (String group : moduleGroups) {
-			DeviceDetailGroupModuleFragment fragment = DeviceDetailGroupModuleFragment.newInstance(mGateId, mDeviceId, group);
-			adapter.addFragment(fragment, group);
-		}
-		viewPager.setAdapter(adapter);
-		tabLayout.setupWithViewPager(viewPager);
-	}
-
-	@SuppressLint("DefaultLocale")
+	@Override
 	public void updateData() {
 		Controller controller = Controller.getInstance(mActivity);
 
@@ -370,13 +297,13 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		// signal
 		Integer rssi = mDevice.getRssi();
 		if (rssi != null && mDeviceSignal != null) {
-			mDeviceSignal.setValue(String.format("%d%%", rssi));
+			mDeviceSignal.setValue(String.format(Locale.getDefault(), "%d%%", rssi));
 			mDeviceSignal.setIcon(rssi == 0 ? R.drawable.ic_signal_wifi_off_black_24dp : R.drawable.ic_signal_wifi_4_bar_black_24dp);
 		}
 
 		// battery
 		if (mDevice.getBattery() != null && mDeviceBattery != null) {
-			mDeviceBattery.setValue(String.format("%d%%", mDevice.getBattery()));
+			mDeviceBattery.setValue(String.format(Locale.getDefault(), "%d%%", mDevice.getBattery()));
 		}
 
 		// refresh
@@ -404,9 +331,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 					fragment.updateData();
 				}
 			}
-
 		}
-
 	}
 
 	@Override
@@ -419,150 +344,78 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 		}
 	}
 
-	@Override
-	public void onItemClick(String moduleId) {
-		Intent intent = ModuleGraphActivity.getActivityIntent(mActivity, mGateId, mDeviceId, moduleId);
-		startActivity(intent);
+	/**
+	 * Set automatic reload UI timer if is set in app settings
+	 */
+	private void setAutoReloadDataTimer() {
+		SharedPreferences prefs = Controller.getInstance(getActivity()).getUserSettings();
+		int period = PreferencesHelper.getInt(mActivity, prefs, R.string.pref_actualization_time_key);
+
+		if (period > 0)    // zero means do not update
+			mActivity.callbackTaskManager.executeTaskEvery(mICallbackTaskFactory, DEVICE_DETAIL_FRAGMENT_AUTO_RELOAD_ID, period);
 	}
 
-	@Override
-	public void onButtonChangeState(String moduleId) {
-		mModuleId = moduleId;
-		showListDialog(moduleId);
-	}
-
-	@Override
-	public void onButtonSetNewValue(String moduleId) {
-		NumberPickerDialogFragment.showNumberPickerDialog(mActivity, mDevice.getModuleById(moduleId), this);
-	}
-
-	@Override
-	public void onListItemSelected(CharSequence charSequence, int number, int requestCode) {
-		if (requestCode == REQUEST_SET_ACTUATOR) {
-			Module module = mDevice.getModuleById(mModuleId);
-			if (module == null) {
-				Timber.e("Can't load module for changing its value");
-				return;
-			}
-
-			module.setValue(String.valueOf(number));
-			doChangeStateModuleTask(module);
+	/**
+	 * Fill ViewPager with fragments by number of module groups and TabLayout with group title
+	 * @param viewPager
+	 * @param tabLayout
+	 * @param moduleGroups
+	 */
+	private void setupViewPager(ViewPager viewPager, TabLayout tabLayout, List<String> moduleGroups) {
+		ModuleGroupPagerAdapter adapter = new ModuleGroupPagerAdapter(getChildFragmentManager());
+		for (String group : moduleGroups) {
+			DeviceDetailGroupModuleFragment fragment = DeviceDetailGroupModuleFragment.newInstance(mGateId, mDeviceId, group);
+			adapter.addFragment(fragment, group);
 		}
+
+		viewPager.setAdapter(adapter);
+		tabLayout.setupWithViewPager(viewPager);
 	}
 
-	@Override
-	public void onSwitchChange(String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		doActorAction(module);
-	}
-
-	private void showListDialog(String moduleId) {
-		Module module = mDevice.getModuleById(moduleId);
-		EnumValue value = (EnumValue) module.getValue();
-		List<EnumValue.Item> items = value.getEnumItems();
-
-		List<String> namesList = new ArrayList<>();
-		for (EnumValue.Item item : items) {
-			namesList.add(getString(item.getStringResource()));
-		}
-		ListDialogFragment
-				.createBuilder(mActivity, getFragmentManager())
-				.setTitle(module.getName(mActivity))
-				.setItems(namesList.toArray(new CharSequence[namesList.size()]))
-				.setSelectedItem(value.getActive().getId())
-				.setRequestCode(REQUEST_SET_ACTUATOR)
-				.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-				.setConfirmButtonText(R.string.activity_fragment_btn_set)
-				.setCancelButtonText(R.string.activity_fragment_btn_cancel)
-				.setTargetFragment(DeviceDetailFragment.this, REQUEST_SET_ACTUATOR)
-				.show();
-	}
-
-	protected void doReloadDevicesTask(final String gateId, final boolean forceReload) {
+	/**
+	 * Create and execute task for device refresh from server
+	 * @param gateId ID of current gateway
+	 * @param forceReload true if can force refresh
+	 */
+	private void doReloadDevicesTask(final String gateId, final boolean forceReload) {
 		// Execute and remember task so it can be stopped automatically
 		if (mDeviceCallback != null)
 			mActivity.callbackTaskManager.executeTask(mDeviceCallback.createReloadDevicesTask(forceReload), gateId);
 	}
 
-
-	private void doChangeStateModuleTask(final Module module) {
-		ActorActionTask changeStateModuleTask = new ActorActionTask(mActivity);
-
-		changeStateModuleTask.setListener(new CallbackTask.ICallbackTaskListener() {
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					mDevice = Controller.getInstance(mActivity).getDevicesModel().getDevice(mGateId, mDeviceId);
-					updateData();
-				}
-			}
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(changeStateModuleTask, module);
-	}
-
-	private void doActorAction(final Module module) {
-		if (!module.isActuator()) {
-			return;
-		}
-
-		// SET NEW VALUE
-		BaseValue value = module.getValue();
-		if (value instanceof EnumValue) {
-			((EnumValue) value).setNextValue();
-		} else {
-			Timber.e("We can't switch actor, which value isn't inherited from EnumValue, yet");
-			return;
-		}
-
-		ActorActionTask actorActionTask = new ActorActionTask(mActivity);
-		actorActionTask.setListener(new CallbackTask.ICallbackTaskListener() {
-
-			@Override
-			public void onExecute(boolean success) {
-				if (success) {
-					updateData();
-				}
-			}
-
-		});
-
-		// Execute and remember task so it can be stopped automatically
-		mActivity.callbackTaskManager.executeTask(actorActionTask, module);
-	}
-
+	/**
+	 * Set Collapsing Toolbar LayoutParams with parallax multiplier
+	 *
+	 * See
+	 * @link {{@link android.support.design.widget.CollapsingToolbarLayout.LayoutParams#setParallaxMultiplier(float)}}
+	 *
+	 * @param view View to set
+	 * @param multiplier
+	 */
 	private void setParallaxMultiplier(View view, float multiplier) {
 		CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) view.getLayoutParams();
 		layoutParams.setParallaxMultiplier(multiplier);
 		view.setLayoutParams(layoutParams);
 	}
 
-	@Override
-	public void onSetNewValue(String moduleId, String actualValue) {
-		Module module = mDevice.getModuleById(moduleId);
-		if (module == null) {
-			Timber.e("Can't load module for changing its value");
-			return;
-		}
-
-		module.setValue(actualValue);
-		doChangeStateModuleTask(module);
-	}
-
-
+	/**
+	 * Interface for updating Device via Activity
+	 */
 	public interface UpdateDevice {
 		CallbackTask createReloadDevicesTask(boolean forceReload);
 
 		Device getDevice();
 	}
 
+	/**
+	 * FragmentPagerAdapter for ViewPager
+	 */
 	static class ModuleGroupPagerAdapter extends FragmentPagerAdapter {
 		private final List<Fragment> mFragments = new ArrayList<>();
 		private final List<String> mFragmentTitles = new ArrayList<>();
 		private final FragmentManager mFragmentManager;
 
-		public ModuleGroupPagerAdapter(FragmentManager fm) {
+		ModuleGroupPagerAdapter(FragmentManager fm) {
 			super(fm);
 			mFragmentManager = fm;
 		}
@@ -582,7 +435,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			return mFragmentTitles.get(position);
 		}
 
-		public Fragment getActiveFragment(ViewPager container, int position) {
+		Fragment getActiveFragment(ViewPager container, int position) {
 			String name = makeFragmentName(container.getId(), position);
 			return mFragmentManager.findFragmentByTag(name);
 		}
@@ -591,7 +444,7 @@ public class DeviceDetailFragment extends BaseApplicationFragment implements Dev
 			return "android:switcher:" + viewId + ":" + index;
 		}
 
-		public void addFragment(Fragment fragment, String title) {
+		void addFragment(Fragment fragment, String title) {
 			mFragments.add(fragment);
 			mFragmentTitles.add(title);
 		}

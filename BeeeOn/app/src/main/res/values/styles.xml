@@ -24,7 +24,7 @@
 
         <item name="android:windowBackground">@color/beeeon_background</item>
         <item name="android:colorBackground">@color/beeeon_background</item>
-
+        <item name="preferenceTheme">@style/BeeeOn.PreferenceTheme</item>
     </style>
 
     <!-- Application theme. -->
@@ -48,6 +48,26 @@
 
     <!--MainActivity custom theme-->
     <style name="MainActivityTheme" parent="AppTheme"/>
+
+    <style name="BeeeOn"/>
+
+    <style name="BeeeOn.PreferenceTheme" parent="@style/PreferenceThemeOverlay">
+        <item name="preferenceFragmentListStyle">@style/BeeeOn.PreferenceFragmentList</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:listSeparatorTextViewStyle">@style/BeeeOn.Preference.Category</item>
+    </style>
+
+    <style name="BeeeOn.PreferenceFragmentList" parent="">
+        <item name="android:paddingLeft">@dimen/space_double</item>
+        <item name="android:paddingRight">@dimen/space_double</item>
+    </style>
+
+    <style name="BeeeOn.Preference.Category" parent="">
+        <item name="android:textColor">@color/beeeon_accent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingTop">@dimen/space_normal</item>
+        <item name="android:paddingBottom">@dimen/space_normal</item>
+    </style>
 
     <!-- style for preference activity which has no appcompat support (overwritten in api 21+)-->
     <style name="SettingsActivity" parent="AppTheme">
@@ -129,8 +149,6 @@
     <style name="AppWidget.ActionButton.Overflow" parent="@style/AppWidget.Base.ActionButton.Overflow">
         <item name="android:background">@drawable/appwidget_actionbar_background</item>
     </style>
-
-    <style name="BeeeOn"/>
 
     <style name="BeeeOn.Spinner" parent="Base.Widget.AppCompat.Spinner">
         <item name="android:layout_width">wrap_content</item>
@@ -275,4 +293,160 @@
     <style name="BeeeOn.LoginActivity.LoginSlogan" parent="">
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
     </style>
+    
+    
+    
+    
+    <!-- Automation base item -->
+
+    <style name="BeeeOn.Automation.BaseItem.CardView" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/space_mini</item>
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="BeeeOn.Automation.BaseItem.Switch" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+    </style>
+
+    <style name="BeeeOn.Automation.BaseItem.Header" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_marginBottom">@dimen/space_normal</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <!-- Automation ventilation item -->
+
+    <style name="BeeeOn.Automation.VentilationItem.TemperatureIcon" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/ic_val_temperature_gray</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.RoomName" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.Temperature" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/beeeon_primary_dark</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Headline</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.AdviceIcon" parent="">
+        <item name="android:layout_height">@dimen/automation_ventilation_item_icon_size</item>
+        <item name="android:layout_width">@dimen/automation_ventilation_item_icon_size</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:padding">@dimen/space_normal</item>
+        <item name="android:background">@drawable/oval_primary</item>
+        <item name="android:src">@drawable/ic_done_white_24dp</item>
+    </style>
+
+    <style name="BeeeOn.Automation.VentilationItem.AdviceText" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_margin">@dimen/space_mini</item>
+    </style>
+
+    <!-- Automation window drewing item -->
+
+    <style name="BeeeOn.Automation.DewingItem" parent="">
+
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Text" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/space_normal</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+    
+    <style name="BeeeOn.Automation.DewingItem.Probability.Image" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Image.Low" parent="BeeeOn.Automation.DewingItem.Probability.Image">
+        <item name="android:src">@drawable/ic_window_dewing</item>
+        <item name="android:tint">@color/beeeon_primary_dark</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Image.High" parent="BeeeOn.Automation.DewingItem.Probability.Image">
+        <item name="android:src">@drawable/ic_window_dewing</item>
+        <item name="android:tint">@color/beeeon_accent</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Text" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Display1</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Text.Low" parent="BeeeOn.Automation.DewingItem.Probability.Text">
+        <item name="android:textColor">@color/beeeon_primary_dark</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Probability.Text.High" parent="BeeeOn.Automation.DewingItem.Probability.Text">
+        <item name="android:textColor">@color/beeeon_accent</item>
+    </style>
+
+    <style name="BeeeOn.Automation.DewingItem.Advice" parent="BeeeOn.Automation.DewingItem">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">@dimen/space_normal</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+    </style>
+
+    <!--Automation add item -->
+    <style name="BeeeOn.Automation.AddItem" parent="">
+
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.SectionHeader" parent="BeeeOn.Automation.AddItem">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Caption" parent="BeeeOn.Automation.AddItem">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Caption</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Image" parent="BeeeOn.Automation.AddItem">
+        <item name="android:layout_margin">@dimen/space_normal</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Image.Temperature" parent="BeeeOn.Automation.AddItem.Sensor.Image">
+        <item name="android:src">@drawable/ic_val_temperature_gray</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Image.Humidity" parent="BeeeOn.Automation.AddItem.Sensor.Image">
+        <item name="android:src">@drawable/ic_val_humidity_gray</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.Sensor.Text" parent="BeeeOn.Automation.AddItem">
+        <item name="android:textColor">@color/beeeon_accent</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.AdditionalOptions.Caption" parent="BeeeOn.Automation.AddItem">
+        <item name="android:layout_margin">@dimen/space_normal</item>
+    </style>
+
+    <style name="BeeeOn.Automation.AddItem.AdditionalOptions.Edit" parent="BeeeOn.Automation.AddItem">
+        <item name="android:layout_marginRight">@dimen/space_normal</item>
+        <item name="android:layout_marginLeft">@dimen/space_normal</item>
+    </style>
+
 </resources>
