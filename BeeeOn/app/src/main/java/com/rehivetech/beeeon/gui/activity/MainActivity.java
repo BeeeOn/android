@@ -22,7 +22,6 @@ import android.widget.TextView;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.fragment.AutomationFragment;
 import com.rehivetech.beeeon.gui.fragment.AutomationPagerFragment;
 import com.rehivetech.beeeon.gui.fragment.DashboardPagerFragment;
 import com.rehivetech.beeeon.gui.fragment.DevicesListFragment;
@@ -193,6 +192,9 @@ public class MainActivity extends BaseApplicationActivity implements NavigationV
 		Gate activeGate = controller.getActiveGate();
 		if (activeGate != null) {
 			activeGateId = activeGate.getId();
+			if (newContentTag.equals(CONTENT_TAG_EMPTY)) {
+				newContentTag = CONTENT_TAG_DEVICES;
+			}
 		} else {
 			newContentTag = CONTENT_TAG_EMPTY;
 		}
