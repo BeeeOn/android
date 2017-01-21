@@ -3,16 +3,16 @@ apply plugin: 'realm-android'
 apply plugin: 'android-apt'
 
 project.ext.set("versionName", "1.7.0")
-project.ext.set("supportLibVersion", "23.4.0")
+project.ext.set("supportLibVersion", "24.2.1")
 project.ext.set("playServicesVersion", "9.6.1")
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 79
         versionName project.versionName
         signingConfig signingConfigs.debug
