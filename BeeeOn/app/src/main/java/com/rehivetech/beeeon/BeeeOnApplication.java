@@ -13,11 +13,8 @@ import com.google.android.gms.analytics.Tracker;
 import com.rehivetech.beeeon.gcm.analytics.GoogleAnalyticsManager;
 import com.rehivetech.beeeon.model.DatabaseSeed;
 
-import io.realm.DynamicRealm;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmMigration;
-import io.realm.RealmSchema;
 import timber.log.Timber;
 
 /**
@@ -37,22 +34,10 @@ public class BeeeOnApplication extends Application {
 		GoogleAnalyticsManager.getInstance().init(sContext, getString(R.string.api_keys_google_analytics_tracking_id));
 		// initialize database
 		RealmConfiguration config = new RealmConfiguration.Builder(this)
-//				.deleteRealmIfMigrationNeeded() // only for developing purposes
+				.deleteRealmIfMigrationNeeded() // only for this migration!!
 				.schemaVersion(2)
 				.name("beeeon.realm")
 				.initialData(new DatabaseSeed())
-				.migration(new RealmMigration() {
-					@Override
-					public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-						RealmSchema schema = realm.getSchema();
-
-						if (oldVersion == 1) {
-							schema.create("VentilationItem");
-							schema.create("VentilationItem");
-							schema.create("DewingItem");
-						}
-					}
-				})
 				.build();
 		Realm.setDefaultConfiguration(config);
 	}
