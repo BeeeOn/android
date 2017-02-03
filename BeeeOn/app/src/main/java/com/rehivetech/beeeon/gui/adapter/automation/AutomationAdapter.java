@@ -1,6 +1,6 @@
 package com.rehivetech.beeeon.gui.adapter.automation;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -17,22 +17,26 @@ import android.widget.TextView;
 
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
-import com.rehivetech.beeeon.gui.activity.BaseApplicationActivity;
 import com.rehivetech.beeeon.gui.adapter.RecyclerViewSelectableAdapter;
-import com.rehivetech.beeeon.gui.adapter.automation.items.BaseItem;
-import com.rehivetech.beeeon.gui.adapter.automation.items.DewingItem;
-import com.rehivetech.beeeon.gui.adapter.automation.items.VentilationItem;
 import com.rehivetech.beeeon.household.device.Module;
+import com.rehivetech.beeeon.model.entity.automation.AutomationItem;
+import com.rehivetech.beeeon.model.entity.automation.DewingItem;
+import com.rehivetech.beeeon.model.entity.automation.IAutomationItem;
+import com.rehivetech.beeeon.model.entity.automation.VentilationItem;
 import com.rehivetech.beeeon.util.TimeHelper;
 import com.rehivetech.beeeon.util.UnitsHelper;
 import com.rehivetech.beeeon.util.Utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
 /**
- * Created by Mrnda on 10/14/2016.
+ * @author Mrnda
+ * @author Martin Matejcik
+ * @since 10/14/2016.
  */
 
 public class AutomationAdapter extends RecyclerViewSelectableAdapter {
@@ -43,160 +47,165 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
     private final TimeHelper mTimeHelper;
     private final UnitsHelper mUnitsHelper;
 
-    private Activity mActivity;
     private IItemClickListener mItemClickListener;
     private ActionModeCallback mActionModeCallback;
-    private List<BaseItem> mItems = new ArrayList<>();
+	private RealmResults<AutomationItem> mItems;
+	private String mGateId;
     private View mEmptyView;
 
-
-    public AutomationAdapter(BaseApplicationActivity activity, IItemClickListener itemClickListener, ActionModeCallback actionModeCallback) {
-        super(activity);
-        mActivity = activity;
+    public AutomationAdapter(Context context, IItemClickListener itemClickListener, ActionModeCallback actionModeCallback) {
+        super(context);
         mItemClickListener = itemClickListener;
         mActionModeCallback = actionModeCallback;
 
-        SharedPreferences prefs = Controller.getInstance(mActivity).getUserSettings();
+        SharedPreferences prefs = Controller.getInstance(mContext).getUserSettings();
         mTimeHelper = Utils.getTimeHelper(prefs);
-        mUnitsHelper = Utils.getUnitsHelper(prefs, mActivity);
+        mUnitsHelper = Utils.getUnitsHelper(prefs, mContext);
     }
 
     @Override
     public int getItemViewType(int position) {
-        BaseItem item = mItems.get(position);
-        if(item instanceof VentilationItem){
-            return VENTILATION_VIEW_TYPE;
-        } else {
-            return WINDOW_DEWING_VIEW_TYPE;
-        }
-
+		if (mItems.get(position).getDewingItem() != null) {
+			return WINDOW_DEWING_VIEW_TYPE;
+		} else {
+			return VENTILATION_VIEW_TYPE;
+		}
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        if(viewType == VENTILATION_VIEW_TYPE){
-            View view = LayoutInflater.from(mContext).inflate(R.layout.automation_item_ventilation, parent, false);
-            final AutomationVentilationViewHolder holder = new AutomationVentilationViewHolder(view);
-            holder.mActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    int position = holder.getAdapterPosition();
-                    BaseItem item = mItems.get(position);
-                    item.setActive(b);
-                }
-            });
-            return holder;
-        } else {
-            View view = LayoutInflater.from(mContext).inflate(R.layout.automation_item_dewing, parent, false);
-            final AutomationDewingViewHolder holder = new AutomationDewingViewHolder(view);
-            holder.mActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                    int position = holder.getAdapterPosition();
-                    BaseItem item = mItems.get(position);
-                    item.setActive(b);
-                }
-            });
-            return  holder;
-        }
+		BaseAutomationViewHolder holder;
 
+		if (viewType == VENTILATION_VIEW_TYPE) {
+			View view = LayoutInflater.from(mContext).inflate(R.layout.automation_item_ventilation, parent, false);
+			holder = new AutomationVentilationViewHolder(view);
+		} else {
+			View view = LayoutInflater.from(mContext).inflate(R.layout.automation_item_dewing, parent, false);
+			holder = new AutomationDewingViewHolder(view);
+		}
+
+		final BaseAutomationViewHolder finalHolder = holder;
+		finalHolder.mActive.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+				final IAutomationItem item = getItemInPosition(finalHolder.getAdapterPosition());
+				Realm realm = Realm.getDefaultInstance();
+
+				if (realm.isInTransaction()) {
+					return;
+				}
+
+				realm.executeTransaction(new Realm.Transaction() {
+					@Override
+					public void execute(Realm realm) {
+						item.setActive(isChecked);
+					}
+				});
+				realm.close();
+			}
+		});
+
+		return finalHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        BaseItem item = mItems.get(position);
-        if(holder instanceof AutomationVentilationViewHolder) {
-            ((AutomationVentilationViewHolder) holder).bind(
-                    Controller.getInstance(mContext),
-                    (VentilationItem) item,
-                    position
-            );
-        } else {
-            ((AutomationDewingViewHolder) holder).bind(
-                    Controller.getInstance(mContext),
-                    (DewingItem) item,
-                    position
-            );
-        }
-    }
+		((BaseAutomationViewHolder) holder).bind(Controller.getInstance(mContext), getItemInPosition(position), position);
+	}
 
     @Override
     public int getItemCount() {
-        return mItems.size();
-    }
+		return mItems == null ? 0 : mItems.size();
+	}
+
+	private IAutomationItem getItemInPosition(int position) {
+		IAutomationItem item;
+
+		if ((item = mItems.get(position).getDewingItem()) == null) {
+			item = mItems.get(position).getVentilationItem();
+		}
+
+		return item;
+	}
 
     public void setEmptyView(View emptyView){
         this.mEmptyView = emptyView;
     }
 
-    public void addItem(BaseItem item) {
-        mItems.add(item);
-        setEmptyViewVisibility(mItems.isEmpty());
-        notifyDataSetChanged();
-    }
-
     private void setEmptyViewVisibility(boolean empty) {
         if(mEmptyView != null){
-            if(empty == false){
+            if(!empty){
                 mEmptyView.setVisibility(View.GONE);
             } else {
                 mEmptyView.setVisibility(View.VISIBLE);
             }
         }
-
     }
 
-    public void addItem(int position, BaseItem item) {
-        mItems.add(position, item);
-        setEmptyViewVisibility(mItems.isEmpty());
-        notifyItemInserted(position);
-    }
+    public void setItems(RealmResults<AutomationItem> items) {
+		if (mItems != null) {
+			mItems.removeChangeListeners();
+		}
 
-    public List<BaseItem> getItems() {
-        return mItems;
-    }
+		mItems = items;
 
-    public void setItems(List<BaseItem> items) {
-        mItems.clear();
-        mItems.addAll(items);
-        setEmptyViewVisibility(mItems.isEmpty());
+		if (mItems.size() != 0) {
+			mGateId = mItems.get(0).getGateId();
+		}
+
+		mItems.addChangeListener(new RealmChangeListener<RealmResults<AutomationItem>>() {
+			@Override
+			public void onChange(RealmResults<AutomationItem> element) {
+				setEmptyViewVisibility(mItems.isEmpty());
+				notifyDataSetChanged();
+			}
+		});
+
+		setEmptyViewVisibility(mItems.isEmpty());
         notifyDataSetChanged();
     }
 
-    public BaseItem getItem(int position) {
-        return mItems.get(position);
+	public AutomationItem getItem(int position) {
+		return mItems.get(position);
     }
 
+	public RealmResults<AutomationItem> getItems() {
+		return mItems;
+	}
 
-    public void moveItem(int fromPosition, int toPosition) {
-        Collections.swap(mItems, fromPosition, toPosition);
-        swapSelectedPosition(fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
-    }
-
-    public void deleteItem(BaseItem item) {
-        int position = mItems.indexOf(item);
-        mItems.remove(item);
+    public void deleteItem(AutomationItem item) {
+		int position = mItems.indexOf(item);
+		mItems.deleteFromRealm(position);
         setEmptyViewVisibility(mItems.isEmpty());
         notifyItemRemoved(position);
     }
 
+	@Override
+	public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+		super.onDetachedFromRecyclerView(recyclerView);
+		if (mItems != null) {
+			mItems.removeChangeListeners();
+		}
+	}
 
-    public class BaseAutomationViewHolder extends SelectableViewHolder implements View.OnLongClickListener {
+	public abstract class BaseAutomationViewHolder extends SelectableViewHolder implements View.OnLongClickListener {
         public final CardView mCardView;
+		public SwitchCompat mActive;
 
         public BaseAutomationViewHolder(View itemView) {
             super(itemView);
             mCardView = (CardView) itemView;
         }
 
+		public abstract void bind(Controller controller, IAutomationItem item, int position);
+
         @Override
         protected void setSelectedBackground(boolean isSelected) {
             if (isSelected) {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.gray_material_400));
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.gray_material_400));
             } else {
-                mCardView.setCardBackgroundColor(ContextCompat.getColor(mActivity, R.color.white));
+                mCardView.setCardBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
             }
 
         }
@@ -231,49 +240,44 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
 
     public class AutomationVentilationViewHolder extends BaseAutomationViewHolder implements View.OnClickListener {
 
+		@BindView(R.id.automation_item_ventilation_name)
         public TextView mRuleName;
+		@BindView(R.id.automation_item_ventilation_temp_inside)
         public TextView mInsideTemp;
+		@BindView(R.id.automation_item_ventilation_temp_outside)
         public TextView moutsideTemp;
+		@BindView(R.id.automation_item_ventilation_iv)
         public ImageView mAdviceImage;
+		@BindView(R.id.automation_item_ventilation_advice)
         public TextView mAdviceText;
-        public SwitchCompat mActive;
 
-        public AutomationVentilationViewHolder(View view){
-            super(view);
-            mRuleName = (TextView) view.findViewById(R.id.automation_item_ventilation_name);
-            mInsideTemp = (TextView) view.findViewById(R.id.automation_item_ventilation_temp_inside);
-            moutsideTemp = (TextView) view.findViewById(R.id.automation_item_ventilation_temp_outside);
-            mAdviceImage = (ImageView) view.findViewById(R.id.automation_item_ventilation_iv);
-            mAdviceText = (TextView) view.findViewById(R.id.automation_item_ventilation_advice);
-            mActive = (SwitchCompat) view.findViewById(R.id.automation_item_ventilation_enabled);
-            view.setOnClickListener(this);
-            view.setOnLongClickListener(this);
-        }
+		public AutomationVentilationViewHolder(View view) {
+			super(view);
+			ButterKnife.bind(this, view);
+			mActive = ButterKnife.findById(view, R.id.automation_item_ventilation_enabled);
+			view.setOnClickListener(this);
+			view.setOnLongClickListener(this);
+		}
 
-        public void bind(Controller controller, VentilationItem item, int position) {
-            float outsideTemp = 0.0F;
-            float insideTemp = 0.0F;
+		@Override
+        public void bind(Controller controller, IAutomationItem item, int position) {
+            float outsideTemp = 0.0f;
+            float insideTemp = 0.0f;
+			VentilationItem ventilationItem = (VentilationItem) item;
 
-            if (item.getOutsideAbsoluteModuleId() == null) {
-                outsideTemp = controller.getWeatherModel().getWeather(item.getGateId()).getTemp();
+			Module module = controller.getDevicesModel().getModule(mGateId, ventilationItem.getOutsideAbsoluteModuleId());
 
-            } else {
-                Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getOutsideAbsoluteModuleId());
+			if (module != null) {
+				outsideTemp = (float) module.getValue().getDoubleValue();
+			}
 
-                if (module != null) {
-                    outsideTemp = (float) module.getValue().getDoubleValue();
-                }
-            }
-
-            Module insideModule = controller.getDevicesModel().getModule(item.getGateId(), item.getInSideAbsoluteModuleId());
+            Module insideModule = controller.getDevicesModel().getModule(mGateId, ventilationItem.getInSideAbsoluteModuleId());
 
             if (insideModule != null) {
                 insideTemp = (float) insideModule.getValue().getDoubleValue();
                 moutsideTemp.setText(String.format("%s %s", mUnitsHelper.getStringValue(insideModule.getValue(), outsideTemp), mUnitsHelper.getStringUnit(insideModule.getValue())));
                 mInsideTemp.setText(mUnitsHelper.getStringValueUnit(insideModule.getValue()));
             }
-
-
 
             Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.oval_primary);
 
@@ -318,45 +322,48 @@ public class AutomationAdapter extends RecyclerViewSelectableAdapter {
 
     public class AutomationDewingViewHolder extends BaseAutomationViewHolder implements View.OnClickListener {
 
+		@BindView(R.id.automation_item_dewing_name)
         public TextView mRuleName;
+		@BindView(R.id.automation_item_dewing_probability_text)
         public TextView mProbabilityText;
-        public ImageView mProbabilityImage;
+		@BindView(R.id.automation_item_dewing_probability_image)
+		public ImageView mProbabilityImage;
+		@BindView(R.id.automation_item_dewing_advice)
         public TextView mAdvice;
-        public SwitchCompat mActive;
 
         public AutomationDewingViewHolder(View view){
             super(view);
-            mRuleName = (TextView) view.findViewById(R.id.automation_item_dewing_name);
-            mProbabilityImage = (ImageView) view.findViewById(R.id.automation_item_dewing_probability_image);
-            mProbabilityText = (TextView) view.findViewById(R.id.automation_item_dewing_probability_text);
-            mAdvice = (TextView) view.findViewById(R.id.automation_item_dewing_advice);
-            mActive = (SwitchCompat) view.findViewById(R.id.automation_item_dewing_active);
+			ButterKnife.bind(this, view);
+			mActive = ButterKnife.findById(view, R.id.automation_item_dewing_active);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
 
-        public void bind(Controller controller, DewingItem item, int position) {
-            float outsideTemp = 0.0F;
-            float insideTemp = 0.0F;
-            float humidity = 0.0F;
-            if (item.getOutstideTemeperatureModuleId() == null) {
-                outsideTemp = controller.getWeatherModel().getWeather(item.getGateId()).getTemp();
+		@Override
+        public void bind(Controller controller, IAutomationItem item, int position) {
+            float outsideTemp = 0.0f;
+            float insideTemp = 0.0f;
+            float humidity = 0.0f;
+
+			DewingItem dewingItem = (DewingItem) item;
+            if (dewingItem.getOutsideTempAbsoluteModueId() == null) {
+                outsideTemp = controller.getWeatherModel().getWeather(mGateId).getTemp();
 
             } else {
-                Module module = controller.getDevicesModel().getModule(item.getGateId(), item.getOutstideTemeperatureModuleId());
+                Module module = controller.getDevicesModel().getModule(mGateId, dewingItem.getOutsideTempAbsoluteModueId());
 
                 if (module != null) {
                     outsideTemp = (float) module.getValue().getDoubleValue();
                 }
             }
 
-            Module insideModule = controller.getDevicesModel().getModule(item.getGateId(), item.getInsideTemperatureModuleId());
+            Module insideModule = controller.getDevicesModel().getModule(mGateId, dewingItem.getInsideTempAbsoluteModuleId());
 
             if (insideModule != null) {
                 insideTemp = (float) insideModule.getValue().getDoubleValue();
             }
 
-            Module humidityModule = controller.getDevicesModel().getModule(item.getGateId(), item.getHumidityModuleId());
+            Module humidityModule = controller.getDevicesModel().getModule(mGateId, dewingItem.getHumidityAbsoluteModuleId());
 
             if(humidityModule != null){
                 humidity = (float) humidityModule.getValue().getDoubleValue();
