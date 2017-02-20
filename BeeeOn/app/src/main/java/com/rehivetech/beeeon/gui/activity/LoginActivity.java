@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.BuildConfig;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.controller.Controller;
@@ -46,6 +47,7 @@ import com.rehivetech.beeeon.network.authentication.DemoAuthProvider;
 import com.rehivetech.beeeon.network.authentication.FacebookAuthProvider;
 import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
+import com.rehivetech.beeeon.network.authentication.PresentationAuthProvider;
 import com.rehivetech.beeeon.network.server.Network;
 import com.rehivetech.beeeon.persistence.Persistence;
 import com.rehivetech.beeeon.util.Utils;
@@ -289,6 +291,10 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 			}
 			case FacebookAuthProvider.PROVIDER_ID: {
 				authProvider = new FacebookAuthProvider();
+				break;
+			}
+			case PresentationAuthProvider.PROVIDER_ID: {
+				authProvider = new PresentationAuthProvider(this);
 				break;
 			}
 			default: {
@@ -656,21 +662,32 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 */
 	@OnClick({R.id.login_demo_button, R.id.login_google_button, R.id.login_facebook_button})
 	public void onClickLoginButton(View view) {
+		IAuthProvider authProvider = null;
+
 		switch (view.getId()) {
 			case R.id.login_demo_button:
+				authProvider = new DemoAuthProvider();
 				mProgress.setMessageResource(R.string.login_progress_loading_demo);
-				loginWithPermissionCheck(new DemoAuthProvider());
 				break;
 
 			case R.id.login_google_button:
-				loginWithPermissionCheck(new GoogleAuthProvider());
+				if (BuildConfig.BUILD_TYPE.equals("presentation")) {
+					authProvider = new PresentationAuthProvider(this);
+				} else {
+					authProvider = new GoogleAuthProvider();
+				}
 				break;
 
 			case R.id.login_facebook_button:
-				loginWithPermissionCheck(new FacebookAuthProvider());
+				if (BuildConfig.BUILD_TYPE.equals("presentation")) {
+					authProvider = new PresentationAuthProvider(this);
+				} else {
+					authProvider = new FacebookAuthProvider();
+				}
 				break;
 		}
 
+		loginWithPermissionCheck(authProvider);
 		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 	}
 

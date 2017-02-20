@@ -47,6 +47,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "BeeeOn Beta"
         }
+
+        presentation {
+            debuggable true
+            signingConfig signingConfigs.debug
+            versionNameSuffix " demo"
+            applicationIdSuffix ".debug"
+            resValue "string", "app_name", "BeeeOn Demo"
+        }
     }
     productFlavors {
     }
