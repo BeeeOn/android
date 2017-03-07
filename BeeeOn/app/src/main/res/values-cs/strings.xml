@@ -364,7 +364,7 @@
     <string name="settings_language_listpreference_czech">Čeština</string>
     <string name="settings_language_listpreference_slovak">Slovenština</string>
     <string name="settings_language_dialog_message">Pro změnu jazyka je nutné restartovat aplikaci.\n\n Chcete aplikaci restartovat?</string>
-
+    <string name="settings_other_category_title">Ostatní</string>
     <string name="settings_privacy_policy_title">Zásady ochrany osobních údajů</string>
 
     <!-- Task register gate -->

@@ -378,7 +378,7 @@
 	<string name="settings_language_listpreference_czech">Czech</string>
 	<string name="settings_language_listpreference_slovak">Slovak</string>
 	<string name="settings_language_dialog_message">App restart is required to change the language.\n\n Do you want to restart application?</string>
-
+	<string name="settings_other_category_title">Others</string>
 	<string name="settings_privacy_policy_title">Privacy policy</string>
 	<string name="settings_privacy_policy_url" translatable="false">https://beeeon.org/wiki/BeeeOn:Privacy_policy</string>
 	<!-- Task register gate -->
