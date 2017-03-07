@@ -8,7 +8,7 @@ project.ext.set("playServicesVersion", "8.4.0")
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 15
