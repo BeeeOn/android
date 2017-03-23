@@ -230,7 +230,7 @@
 	<string name="device_setup_device_list_paired_label">Paired:</string>
 
 	<!-- Device add -->
-	<string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?lang=en</string>
+	<string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?language=en</string>
 
 	<string name="device_add_title">Add device</string>
 	<string name="device_add_guide_text">BeeeOn gateway supports devices from multiple vendors. More information about connecting your device with your gateway can be found at the list of supported devices.</string>

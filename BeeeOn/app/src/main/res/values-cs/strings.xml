@@ -241,7 +241,7 @@
 
     <!-- Device add -->
 
-    <string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?lang=cz</string>
+    <string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?language=cz</string>
 
     <string name="device_add_title">Přidat zařízení</string>
     <string name="device_add_guide_text">BeeeOn brána podporuje zařízení od různých výrobců. Více informací, jak připojit vaše zařízení k bráně, najdete v seznamu podporovaných zařízení.</string>
