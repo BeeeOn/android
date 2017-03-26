@@ -101,7 +101,7 @@ public class AutomationFragment extends BaseApplicationFragment implements Recyc
                 .equalTo("gateId", mGateId)
                 .findAll();
 
-        if (realmResults.isEmpty()) {
+        if (realmResults.isEmpty() && mPageIndex == 0) {
             mRealm.executeTransaction(new AutomationDemoDatabaseSeed());
         }
 
