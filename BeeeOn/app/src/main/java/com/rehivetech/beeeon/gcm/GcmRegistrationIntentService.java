@@ -30,7 +30,7 @@ public class GcmRegistrationIntentService extends IntentService {
 			Controller controller = Controller.getInstance(this);
 			GcmModel gcmModel = controller.getGcmModel();
 			gcmModel.saveGcm(token);
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			Timber.e("Error while getting GCM token");
 			e.printStackTrace();
 		}
