@@ -230,7 +230,7 @@
 	<string name="device_setup_device_list_paired_label">Paired:</string>
 
 	<!-- Device add -->
-	<string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?lang=en</string>
+	<string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?language=en</string>
 
 	<string name="device_add_title">Add device</string>
 	<string name="device_add_guide_text">BeeeOn gateway supports devices from multiple vendors. More information about connecting your device with your gateway can be found at the list of supported devices.</string>
@@ -343,7 +343,7 @@
 	<string name="dialog_info_btn_rate">Rate</string>
 	<string name="dialog_info_company_email" translatable="false">info@beeeon.org</string>
 	<string name="dialog_info_company_web" translatable="false">http://beeeon.org/</string>
-	<string name="dialog_info_copyright">\u00A9 2014–16 BeeeOn Team. All rights reserved.</string>
+	<string name="dialog_info_copyright">\u00A9 2014–17 BeeeOn Team. All rights reserved.</string>
 	<string name="dialog_info_play_link" translatable="false">market://details?id=com.rehivetech.beeeon</string>
 	<string name="dialog_info_version">Version</string>
 
@@ -378,7 +378,9 @@
 	<string name="settings_language_listpreference_czech">Czech</string>
 	<string name="settings_language_listpreference_slovak">Slovak</string>
 	<string name="settings_language_dialog_message">App restart is required to change the language.\n\n Do you want to restart application?</string>
-
+	<string name="settings_other_category_title">Others</string>
+	<string name="settings_privacy_policy_title">Privacy policy</string>
+	<string name="settings_privacy_policy_url" translatable="false">https://beeeon.org/wiki/BeeeOn:Privacy_policy</string>
 	<!-- Task register gate -->
 	<string name="task_register_gate_gate_default_name">%1$s\'s gateway #%2$d</string>
 

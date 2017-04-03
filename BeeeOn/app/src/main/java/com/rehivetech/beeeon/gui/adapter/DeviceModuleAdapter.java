@@ -67,6 +67,8 @@ public class DeviceModuleAdapter extends RecyclerView.Adapter<DeviceModuleAdapte
 			if (value instanceof BooleanValue) {
 				holder.mButton.setVisibility(View.GONE);
 
+				holder.mSwitch.setChecked(((EnumValue)value).getActive().getId() == 1);
+
 				holder.mSwitch.setVisibility(View.VISIBLE);
 				holder.mSwitch.setOnClickListener(new View.OnClickListener() {
 					@Override

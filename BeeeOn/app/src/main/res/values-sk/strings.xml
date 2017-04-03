@@ -240,7 +240,7 @@
     <string name="device_edit_warning_refresh">Zmena se prejaví pri ďalšom prebudení zariadenia (približne v %s). Ak chcete prebudiť zariadenie ručne, zatraste zariadením alebo stlačte jeho tlačidlo pre párovanie.</string>
     <!-- Device add -->
 
-    <string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?lang=sk</string>
+    <string name="device_supported_list_url" formatted="false">https://devices.beeeon.org/?language=sk</string>
 
     <string name="device_add_title">Pridať zariadenie</string>
     <string name="device_add_guide_text">BeeeOn brána podporuje zariadenia od rôznych výrobcov. Viacej informácií ako pripojiť vaše zariadenie k bráne, nájdete v zozname podporovaných zariadení.</string>
@@ -332,7 +332,7 @@
 
     <!-- Dialog info -->
     <string name="dialog_info_btn_rate">Hodnotenie</string>
-    <string name="dialog_info_copyright">\u00A9 2014–16 BeeeOn Team. Všetky práva vyhradené.</string>
+    <string name="dialog_info_copyright">\u00A9 2014–17 BeeeOn Team. Všetky práva vyhradené.</string>
     <string name="dialog_info_version">Verzia</string>
 
     <!-- Settings -->
@@ -365,6 +365,8 @@
     <string name="settings_language_listpreference_czech">Čeština</string>
     <string name="settings_language_listpreference_slovak">Slovenčina</string>
     <string name="settings_language_dialog_message">Na zmenu jazyka je potrebný reštart aplikácie.\n\n Chcete reštartovať aplikáciu?</string>
+    <string name="settings_other_category_title">Ostatné</string>
+    <string name="settings_privacy_policy_title">Zásady ochrany osobných údajov</string>
 
     <!-- Task register gate -->
     <string name="task_register_gate_gate_default_name">%1$s brána #%2$d</string>
@@ -477,7 +479,7 @@
     <string name="automation_ventilation_item_outside">Von</string>
     <string name="automation_ventilation_item_inside">Dnu</string>
     <string name="automation_ventilation_item_advice_light">Môžete si otvoriť okno</string>
-    <string name="automation_ventilation_item_advice_hard">Otvorte si okno lebo zomriete Open your windows or you will die.</string>
+    <string name="automation_ventilation_item_advice_hard">Otvorte si okno lebo zomriete.</string>
 
     <string name="automation_dewing_item_probability">Pravdepodobnosť rosenia okna</string>
     <string name="automation_dewing_item_probability_low">Nízka</string>

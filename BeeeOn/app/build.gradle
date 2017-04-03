@@ -2,18 +2,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 apply plugin: 'android-apt'
 
-project.ext.set("versionName", "1.7.0")
+project.ext.set("versionName", "1.8.0")
 project.ext.set("supportLibVersion", "24.2.1")
 project.ext.set("playServicesVersion", "9.6.1")
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    buildToolsVersion '25.0.0'
     defaultConfig {
         applicationId "com.rehivetech.beeeon"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 79
+        versionCode 80
         versionName project.versionName
         signingConfig signingConfigs.debug
         resConfigs "en", "cs", "sk"
@@ -46,6 +46,14 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "BeeeOn Beta"
+        }
+
+        presentation {
+            debuggable true
+            signingConfig signingConfigs.debug
+            versionNameSuffix " demo"
+            applicationIdSuffix ".debug"
+            resValue "string", "app_name", "BeeeOn Demo"
         }
     }
     productFlavors {
@@ -99,8 +107,8 @@ dependencies {
     compile 'me.dm7.barcodescanner:zxing:1.8.4'
     compile 'com.flipboard:bottomsheet-core:1.5.0'
     // tools (db, binding, state, ..)
-    compile 'com.jakewharton:butterknife:8.0.1'
-    apt 'com.jakewharton:butterknife-compiler:8.0.1'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'joda-time:joda-time:2.7'
     compile 'frankiesardo:icepick:3.2.0'
     provided 'frankiesardo:icepick-processor:3.2.0'

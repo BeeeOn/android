@@ -79,4 +79,13 @@
             />
 
     </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/settings_other_category_title">
+        <Preference
+            android:title="@string/settings_privacy_policy_title">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/settings_privacy_policy_url"/>
+        </Preference>
+    </PreferenceCategory>
 </PreferenceScreen>

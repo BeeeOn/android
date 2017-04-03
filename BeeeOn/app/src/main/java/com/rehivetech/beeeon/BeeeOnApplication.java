@@ -34,8 +34,8 @@ public class BeeeOnApplication extends Application {
 		GoogleAnalyticsManager.getInstance().init(sContext, getString(R.string.api_keys_google_analytics_tracking_id));
 		// initialize database
 		RealmConfiguration config = new RealmConfiguration.Builder(this)
-//				.deleteRealmIfMigrationNeeded() // only for developing purposes
-				.schemaVersion(1)
+				.deleteRealmIfMigrationNeeded() // only for this migration!!
+				.schemaVersion(2)
 				.name("beeeon.realm")
 				.initialData(new DatabaseSeed())
 				.build();

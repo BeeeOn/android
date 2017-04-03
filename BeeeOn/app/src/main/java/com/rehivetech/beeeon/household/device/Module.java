@@ -9,6 +9,7 @@ import com.rehivetech.beeeon.IconResourceType;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.household.device.values.OnOffValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,6 +84,33 @@ public final class Module implements IOrderIdentifier {
 		mValue = new EnumValue(enumValues);
 		mValue.setDefaultValue(defaultValue);
 
+		mModuleId = new ModuleId(device.getGateId(), device.getAddress(), id);
+	}
+
+	public Module(@NonNull Device device, @NonNull String id, int typeId, @Nullable Integer sort, @Nullable Integer groupRes, @Nullable Integer nameRes, boolean isActuator, @Nullable List<Rule> rules,
+				  @Nullable List<EnumValue.Item> enumValues, @Nullable String defaultValue, boolean isSwitch) throws IllegalArgumentException {
+		mDevice = device;
+		mId = id;
+		mSort = sort;
+		mGroupRes = groupRes != null ? groupRes : R.string.device_detail_default_group;
+		mNameRes = nameRes != null ? nameRes : 0;
+		mIsActuator = isActuator;
+		mRules = rules != null ? Collections.unmodifiableList(rules) : null;
+
+		mType = ModuleType.fromTypeId(typeId);
+		if (mType.getValueClass() != EnumValue.class) {
+			throw new IllegalArgumentException("ValueClass received from ModuleType is not EnumValue, but constructor was called with enumValues.");
+		}
+		if (enumValues == null) {
+			enumValues = new ArrayList<EnumValue.Item>();
+		}
+		if(isSwitch) {
+			mValue = new OnOffValue(enumValues.get(0), enumValues.get(1));
+			mValue.setDefaultValue(defaultValue);
+		} else {
+			mValue = new EnumValue(enumValues);
+			mValue.setDefaultValue(defaultValue);
+		}
 		mModuleId = new ModuleId(device.getGateId(), device.getAddress(), id);
 	}
 

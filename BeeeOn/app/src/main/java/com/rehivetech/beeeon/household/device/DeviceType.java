@@ -259,7 +259,7 @@ public enum DeviceType implements IIdentifier {
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
-					), null),
+					), null, true),
 					new Module(device, "26", 0x02, 64, R.string.devices__zone_2, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
 					new Module(device, "27", 0x02, 65, R.string.devices__zone_2, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
 					new Module(device, "77", 0x02, 53, R.string.devices__zone_2, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
@@ -298,7 +298,7 @@ public enum DeviceType implements IIdentifier {
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
-					), null),
+					), null, true),
 					new Module(device, "40", 0x02, 114, R.string.devices__zone_3, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
 					new Module(device, "41", 0x02, 115, R.string.devices__zone_3, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
 					new Module(device, "81", 0x02, 103, R.string.devices__zone_3, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
@@ -337,7 +337,7 @@ public enum DeviceType implements IIdentifier {
 					), Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
 							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
-					), null),
+					), null, true),
 					new Module(device, "54", 0x02, 164, R.string.devices__zone_4, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
 					new Module(device, "55", 0x02, 165, R.string.devices__zone_4, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
 					new Module(device, "85", 0x02, 153, R.string.devices__zone_4, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
@@ -372,7 +372,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, null, R.string.devices__fs20_switch, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__fs20_switch_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__fs20_switch_state_on)
-					), null)
+					), null, true)
 			);
 		}
 	},
@@ -383,7 +383,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, null, R.string.devices__ac_88_mains_outlet, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__ac_88_mains_outlet_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__ac_88_mains_outlet_state_on)
-					), null)
+					), null, true)
 			);
 		}
 	},
@@ -394,7 +394,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, null, R.string.devices__ja_80l_internal_siren, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__ja_80l_internal_siren_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__ja_80l_internal_siren_state_on)
-					), null)
+					), null, true)
 			);
 		}
 	},
@@ -433,7 +433,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, null, R.string.devices__hm_switch, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hm_switch_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__hm_switch_state_on)
-					), null),
+					), null, true),
 					new Module(device, "1", 0x0E, null, null, R.string.devices__type_voltage, false, null, null),
 					new Module(device, "2", 0x0F, null, null, R.string.devices__type_current, false, null, null),
 					new Module(device, "3", 0x10, null, null, R.string.devices__type_frequency, false, null, null),
@@ -503,7 +503,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, null, R.string.devices__fs20_switch, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__fs20_switch_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__fs20_switch_state_on)
-					), null)
+					), null, true)
 			);
 		}
 	},
@@ -609,11 +609,11 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "1", 0x01, null, null, R.string.devices__iqrf_led1, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__iqrf_led1_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__iqrf_led1_state_on)
-					), null),
+					), null, true),
 					new Module(device, "2", 0x01, null, null, R.string.devices__iqrf_led2, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
-					), null),
+					), null, true),
 					new Module(device, "2", 0x08, null, null, null, false, null, null)
 			);
 		}
@@ -625,11 +625,11 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_red, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
-					), null),
+					), null, true),
 					new Module(device, "1", 0x01, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_green, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
-					), null),
+					), null, true),
 					new Module(device, "2", 0x14, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_blue, true, null, new BaseValue.Constraints(0.0, 101.0, 1.0), null)
 			);
 		}
@@ -741,7 +741,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null),
+					), null, true),
 					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
 							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
@@ -757,7 +757,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null),
+					), null, true),
 					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
 							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
@@ -774,7 +774,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null),
+					), null, true),
 					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
 							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
@@ -791,7 +791,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null),
+					), null, true),
 					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
 							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
@@ -814,7 +814,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, null, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null),
+					), null, true),
 					new Module(device, "1", 0x01, null, null, R.string.devices__hue_alert_light, true, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
 							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
@@ -838,7 +838,7 @@ public enum DeviceType implements IIdentifier {
 					new Module(device, "0", 0x01, null, null, R.string.devices__hue_bridge_switch, false, null, Arrays.asList(
 							new EnumValue.Item(0, "0", R.string.devices__hue_bridge_switch_state_off),
 							new EnumValue.Item(1, "1", R.string.devices__hue_bridge_switch_state_on)
-					), null)
+					), null, true)
 			);
 		}
 	};
@@ -847,8 +847,9 @@ public enum DeviceType implements IIdentifier {
 	public static final String DEVICES_VERSION = "1";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1479767800116l;
+	public static final long DEVICES_DATE = 1480595449912l;
 
+	
 	/** END OF GENERATED CONTENT **/
 
 	private final String mTypeId;
