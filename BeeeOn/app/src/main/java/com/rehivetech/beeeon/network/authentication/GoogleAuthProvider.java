@@ -93,7 +93,9 @@ public class GoogleAuthProvider implements IAuthProvider, GoogleApiClient.OnConn
      * Helper for invalidating Google authentication token.
      */
     public void invalidateToken() {
-        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
+        try {
+            Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
+        } catch (NullPointerException ignored) {}
     }
 
     private void webloginAuth(final LoginActivity activity) {
