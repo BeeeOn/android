@@ -2,8 +2,6 @@ package com.rehivetech.beeeon.gui.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -11,11 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.annotation.WorkerThread;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.avast.android.dialogs.fragment.ProgressDialogFragment;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.rehivetech.beeeon.BuildConfig;
@@ -40,7 +41,6 @@ import com.rehivetech.beeeon.exception.NetworkError;
 import com.rehivetech.beeeon.gui.adapter.ServerAdapter;
 import com.rehivetech.beeeon.gui.adapter.base.ClickableRecyclerViewAdapter;
 import com.rehivetech.beeeon.gui.dialog.BaseBeeeOnDialog;
-import com.rehivetech.beeeon.gui.dialog.BetterProgressDialog;
 import com.rehivetech.beeeon.gui.dialog.ServerDetailDialog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.model.DatabaseSeed;
@@ -92,7 +92,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	@BindView(R.id.login_select_server_icon)
 	ImageView mSelectServerIcon;
 
-	private BetterProgressDialog mProgress;
+	private DialogFragment mProgress;
 	private boolean mLoginCancel = false;
 	private IAuthProvider mAuthProvider;
 	private Realm mRealm;
@@ -128,8 +128,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 
 		// show intro if was not shown
 		showIntroFirstTime();
-		// Prepare progressDialog
-		prepareProgressDialog();
 		// Initialize server related views
 		prepareServers();
 
@@ -171,19 +169,14 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	}
 
 	/**
-	 * Prepares UI for progress dialog
+	 * Shows progress dialog
 	 */
-	private void prepareProgressDialog() {
-		mProgress = new BetterProgressDialog(this);
-		mProgress.setCancelable(true);
-		mProgress.setCanceledOnTouchOutside(false);
-		mProgress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		mProgress.setOnCancelListener(new DialogInterface.OnCancelListener() {
-			@Override
-			public void onCancel(DialogInterface dialog) {
-				mLoginCancel = true;
-			}
-		});
+	private void showProgressDialog(@StringRes int message) {
+		mProgress = ProgressDialogFragment.createBuilder(this, getSupportFragmentManager())
+				.setMessage(getString(message))
+				.setCancelableOnTouchOutside(false)
+				.setCancelable(true)
+				.showAllowingStateLoss();
 	}
 
 	/**
@@ -364,8 +357,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				}
 
 				// Authorization parameters are prepared
-				mProgress.setMessageResource(R.string.login_progress_signing);
-				mProgress.show();
+				showProgressDialog(R.string.login_progress_signing);
 
 				new Thread(new Runnable() {
 					@Override
@@ -495,8 +487,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 */
 	private void startAuthenticating() {
 		mLoginCancel = false;
-		mProgress.setMessageResource(R.string.login_progress_signing);
-		mProgress.show();
+		showProgressDialog(R.string.login_progress_signing);
 		mAuthProvider.prepareAuth(LoginActivity.this);
 	}
 
@@ -516,13 +507,11 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				errFlag = false;
 
 				// Load all gates and data for active one on login
-				mProgress.setMessageResource(R.string.login_progress_loading_gates);
 				controller.getGatesModel().reloadGates(true);
 
 				Gate active = controller.getActiveGate();
 				if (active != null) {
 					// Load data for active gate
-					mProgress.setMessageResource(R.string.login_progress_loading_gate);
 					controller.getLocationsModel().reloadLocationsByGate(active.getId(), true);
 					controller.getDevicesModel().reloadDevicesByGate(active.getId(), true);
 				}
@@ -580,8 +569,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 */
     @WorkerThread
 	private void registeringBackgroundAction(final IAuthProvider authProvider) {
-		mProgress.setMessageResource(R.string.login_progress_signup);
-
 		String errMessage = getString(R.string.login_toast_registration_failed);
 		boolean errFlag = true;
 		Controller controller = Controller.getInstance(LoginActivity.this);
@@ -675,7 +662,6 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		switch (view.getId()) {
 			case R.id.login_demo_button:
 				authProvider = new DemoAuthProvider();
-				mProgress.setMessageResource(R.string.login_progress_loading_demo);
 				break;
 
 			case R.id.login_google_button:
