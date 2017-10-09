@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.network.authentication;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
@@ -48,7 +49,7 @@ public interface IAuthProvider {
 	 * @param data
 	 * @return true when this provider has authorization parameters correctly loaded; false when given data aren't correct/expected.
 	 */
-	boolean loadAuthIntent(Intent data);
+	boolean loadAuthIntent(Context context, Intent data);
 
 	/**
 	 * Do steps required for filling the parameters map (e.g. open login dialog to set login/password or load Google auth token).

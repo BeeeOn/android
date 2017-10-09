@@ -3,6 +3,8 @@
  */
 package com.rehivetech.beeeon;
 
+import android.net.Uri;
+
 /**
  * Class for all constants
  *
@@ -87,4 +89,24 @@ public final class Constants {
 	public static final int PERMISSION_CODE_CAMERA = 2;
 	public static final int PERMISSION_CODE_LOCATION = 3;
 	public static final int PERMISSION_CODE_STORAGE = 4;
+
+	public interface GoogleOauth {
+		Uri AUTHORIZATION_ENDPOINT = Uri.parse("https://accounts.google.com/o/oauth2/v2/auth");
+		Uri REDIRECT_URI = Uri.parse("com.rehivetech.beeeon:/oauthcallback");
+	}
+
+	public interface OAuthParams {
+		String REQUEST_REDIRECT_URI = "redirect_uri";
+		String REQUEST_RESPONSE_TYPE = "response_type";
+		String REQUEST_RESPONSE_TYPE_VALUE_CODE = "code";
+		String REQUEST_RESPONSE_TYPE_VALUE_TOKEN = "token";
+		String REQUEST_RESPONSE_MODE = "response_mode";
+		String REQUEST_SCOPE = "scope";
+		String REQUEST_CLIENT_ID = "client_id";
+		String RESPONSE_KEY_STATE = "state";
+		String RESPONSE_KEY_TOKEN_TYPE = "token_type";
+		String RESPONSE_KEY_AUTHORIZATION_CODE = "code";
+		String RESPONSE_KEY_ACCESS_TOKEN = "access_token";
+		String RESPONSE_KEY_EXPIRES_IN = "expires_in";
+	}
 }

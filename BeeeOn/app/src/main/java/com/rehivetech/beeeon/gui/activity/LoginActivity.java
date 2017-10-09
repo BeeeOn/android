@@ -350,7 +350,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				break;
 			}
 			case IAuthProvider.RESULT_AUTH: {
-				if (!authProvider.loadAuthIntent(data)) {
+				if (!authProvider.loadAuthIntent(this, data)) {
 					Timber.e( "Received RESULT_AUTH but authProvider can't load the required data");
 					mProgress.dismiss();
 					return;

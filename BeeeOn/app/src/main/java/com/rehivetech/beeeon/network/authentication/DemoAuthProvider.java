@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.network.authentication;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
@@ -32,7 +33,7 @@ public class DemoAuthProvider implements IAuthProvider {
 	}
 
 	@Override
-	public boolean loadAuthIntent(Intent data) {
+	public boolean loadAuthIntent(Context context, Intent data) {
 		return true;
 	}
 

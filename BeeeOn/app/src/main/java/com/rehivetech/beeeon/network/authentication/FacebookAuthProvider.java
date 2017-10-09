@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.network.authentication;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.facebook.CallbackManager;
@@ -90,7 +91,7 @@ public class FacebookAuthProvider implements IAuthProvider {
 	}
 
 	@Override
-	public boolean loadAuthIntent(Intent data) {
+	public boolean loadAuthIntent(Context context, Intent data) {
 		String token = data.getStringExtra(AUTH_INTENT_DATA_TOKEN);
 		if (token == null)
 			return false;

@@ -63,7 +63,7 @@ public class PresentationAuthProvider implements IAuthProvider {
     }
 
     @Override
-    public boolean loadAuthIntent(Intent data) {
+    public boolean loadAuthIntent(Context context, Intent data) {
         return true;
     }
 

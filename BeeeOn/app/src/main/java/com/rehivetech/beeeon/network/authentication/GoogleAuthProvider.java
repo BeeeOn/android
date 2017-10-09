@@ -1,6 +1,7 @@
 package com.rehivetech.beeeon.network.authentication;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -70,9 +71,16 @@ public class GoogleAuthProvider implements IAuthProvider, GoogleApiClient.OnConn
     }
 
     @Override
-    public boolean loadAuthIntent(Intent data) {
-        String token = data.getExtras().getString(AUTH_INTENT_DATA_TOKEN);
-        setTokenParameter(token);
+    public boolean loadAuthIntent(Context context, Intent data) {
+        if(!Utils.isGooglePlayServicesAvailable(context))
+        {
+            String token = data.getExtras().getString(WebAuthActivity.EXTRA_AUTH_CODE);
+            setTokenParameter(token);
+        }
+        else {
+            String token = data.getExtras().getString(AUTH_INTENT_DATA_TOKEN);
+            setTokenParameter(token);
+        }
         return true;
     }
 
