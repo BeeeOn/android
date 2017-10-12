@@ -1,10 +1,8 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,11 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.annotation.WorkerThread;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -136,7 +131,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		if (mAuthProvider != null && !mAuthProvider.isDemo()) {
 			// Automatic login with last used provider
 			Timber.d("Automatic login with last provider %s", mAuthProvider.getProviderName());
-			loginWithPermissionCheck(mAuthProvider);
+			login(mAuthProvider);
 		}
 	}
 
@@ -430,7 +425,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 	 *
 	 * @param authProvider to login with
 	 */
-	private void loginWithPermissionCheck(final IAuthProvider authProvider) {
+	private void login(final IAuthProvider authProvider) {
 		if (!authProvider.isDemo() && !Utils.isInternetAvailable()) {
 			mProgress.dismiss();
 			Toast.makeText(this, getString(R.string.login_toast_internet_connection), Toast.LENGTH_LONG).show();
@@ -438,48 +433,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 		}
 
 		mAuthProvider = authProvider; // note: need to have it as field because we use it in onRequestPermissionsResult
-		if (checkAccountsPermission()) {
-			startAuthenticating();
-		}
-	}
-
-	/**
-	 * Checks if app has permission to check user's accounts
-	 *
-	 * @return success
-	 */
-	private boolean checkAccountsPermission() {
-		if (ContextCompat.checkSelfPermission(this, Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-			// explanation shown
-			ActivityCompat.requestPermissions(this, new String[]{
-					Manifest.permission.GET_ACCOUNTS,
-			}, Constants.PERMISSION_CODE_GET_ACCOUNTS);
-			return false;
-		}
-		return true;
-	}
-
-	/**
-	 * When request dialog was confirmed/canceled
-	 *
-	 * @param requestCode  which request was managed
-	 * @param permissions  array of checking permissions
-	 * @param grantResults array of flags (granted/denied) for specified permission
-	 */
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-		switch (requestCode) {
-			case Constants.PERMISSION_CODE_GET_ACCOUNTS:
-				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-					// permission granted
-					startAuthenticating();
-				} else {
-					// permission denied
-					Snackbar.make(mRootView, R.string.permission_accounts_warning, Snackbar.LENGTH_LONG).show();
-				}
-				break;
-		}
+		startAuthenticating();
 	}
 
 	/**
@@ -681,7 +635,7 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				break;
 		}
 
-		loginWithPermissionCheck(authProvider);
+		login(authProvider);
 		mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 	}
 
