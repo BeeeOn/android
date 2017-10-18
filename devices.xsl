@@ -12,6 +12,9 @@
 	<x:param name="VERBOSE" select="'no'" />
 
 	<x:variable name="types.xml" select="document('types.xml', .)/types" />
+	<x:variable name="enums.xml" select="document('enums.xml', .)/enums" />
+
+	<x:variable name="TYPE_ENUM_ID" select="'6'" />
 
 	<x:template match="/">
 		<x:message>generating file generated_strings_devices.xml...</x:message>
@@ -26,6 +29,7 @@
 			<resources tools:locale="en">
 				<x:apply-templates select="devices" mode="resources" />
 				<x:apply-templates select="$types.xml" mode="resources" />
+				<x:apply-templates select="$enums.xml" mode="resources" />
 			</resources>
 		</x:document>
 
@@ -144,6 +148,7 @@
 
 	<x:template match="sensor|control">
 		<x:variable name="type" select="@type" />
+		<x:variable name="subtype" select="@subtype" />
 
 		<x:message>
 			<x:text>  - </x:text>
@@ -206,6 +211,10 @@
 				<x:apply-templates select="$types.xml/type[@id=$type]/range" />
 			</x:when>
 
+			<x:when test="$type = $TYPE_ENUM_ID and $enums.xml/enum[@id=$subtype]/values">
+				<x:apply-templates select="$enums.xml/enum[@id=$subtype]/values" />
+			</x:when>
+
 			<x:when test="$types.xml/type[@id=$type]/values">
 				<x:apply-templates select="$types.xml/type[@id=$type]/values" />
 			</x:when>
@@ -222,7 +231,7 @@
 		</x:if>
 	</x:template>
 
-	<x:template match="type/values">
+	<x:template match="type/values|enum/values">
 		<x:text>Arrays.asList(&#xA;</x:text>
 
 		<x:for-each select="value">
@@ -239,7 +248,12 @@
 			<x:text>R.string.</x:text>
 			<x:call-template name="res-string-output">
 				<x:with-param name="name">
-					<x:text>devices__type_</x:text>
+					<x:if test="local-name(../..) = 'enum'">
+						<x:text>devices__enum_</x:text>
+					</x:if>
+					<x:if test="local-name(../..) = 'type'">
+						<x:text>devices__type_</x:text>
+					</x:if>
 					<x:value-of select="../../@id" />
 					<x:text>_val_</x:text>
 					<x:value-of select="@equals" />
@@ -308,6 +322,14 @@
 					<x:value-of select="translate(., '_-/', '   ')" />
 				</string>
 			</x:for-each>
+		</x:for-each>
+	</x:template>
+
+	<x:template match="enums" mode="resources">
+		<x:for-each select="enum/values/value">
+			<string name="devices__enum_{../../@id}_val_{@equals}">
+				<x:value-of select="translate(., '_-/', '   ')" />
+			</string>
 		</x:for-each>
 	</x:template>
 
