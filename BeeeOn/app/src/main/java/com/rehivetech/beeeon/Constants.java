@@ -92,7 +92,6 @@ public final class Constants {
 
 	public interface GoogleOauth {
 		Uri AUTHORIZATION_ENDPOINT = Uri.parse("https://accounts.google.com/o/oauth2/v2/auth");
-		Uri REDIRECT_URI = Uri.parse("com.rehivetech.beeeon:/oauthcallback");
 	}
 
 	public interface OAuthParams {

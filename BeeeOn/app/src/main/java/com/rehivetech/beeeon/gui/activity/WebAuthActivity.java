@@ -1,26 +1,18 @@
 package com.rehivetech.beeeon.gui.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.rehivetech.beeeon.BuildConfig;
 import com.rehivetech.beeeon.Constants;
 import com.rehivetech.beeeon.R;
-import com.rehivetech.beeeon.network.authentication.GoogleAuthProvider;
 import com.rehivetech.beeeon.network.authentication.IAuthProvider;
 import com.rehivetech.beeeon.util.Utils;
-
-import java.util.Locale;
 
 public class WebAuthActivity extends AppCompatActivity {
 
@@ -85,8 +77,12 @@ public class WebAuthActivity extends AppCompatActivity {
 
 	private Uri buildAuthorizationUri() {
 		Uri.Builder builder = Constants.GoogleOauth.AUTHORIZATION_ENDPOINT.buildUpon();
-		builder.appendQueryParameter(Constants.OAuthParams.REQUEST_REDIRECT_URI, Constants.GoogleOauth.REDIRECT_URI.toString());
-		builder.appendQueryParameter(Constants.OAuthParams.REQUEST_CLIENT_ID, Utils.uriEncode(getString(R.string.api_web)));
+		builder.appendQueryParameter(Constants.OAuthParams.REQUEST_REDIRECT_URI, getString(R.string.google_login_redirect_uri));
+		if (BuildConfig.DEBUG) {
+			builder.appendQueryParameter(Constants.OAuthParams.REQUEST_CLIENT_ID, Utils.uriEncode(getString(R.string.api_android_debug)));
+		} else {
+			builder.appendQueryParameter(Constants.OAuthParams.REQUEST_CLIENT_ID, Utils.uriEncode(getString(R.string.api_android_release)));
+		}
 		builder.appendQueryParameter(Constants.OAuthParams.REQUEST_RESPONSE_TYPE, Constants.OAuthParams.REQUEST_RESPONSE_TYPE_VALUE_CODE);
 		builder.appendQueryParameter(Constants.OAuthParams.REQUEST_SCOPE, "openid email profile");
 		return builder.build();
