@@ -20,837 +20,263 @@ public enum DeviceType implements IIdentifier {
 	},
 
 	/** BEGIN OF GENERATED CONTENT **/
-	TYPE_0("0", "BeeeOn v1.0", R.string.devices__dev_temperature_humidity, R.string.devices__manufacturer_but) {
+	TYPE_0("0", "Pressure Sensor", R.string.devices__dev_0_name, R.string.devices__dev_0_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x02, null, null, R.string.devices__mod_room_temperature, false, null, null),
-					new Module(device, "1", 0x02, null, null, R.string.devices__mod_outside_temperature, false, null, null),
-					new Module(device, "2", 0x03, null, null, R.string.devices__mod_room_humidity, false, null, null),
-					new Module(device, "3", 0x08, null, null, null, false, null, null),
-					new Module(device, "4", 0x09, null, null, null, false, null, null),
-					new Module(device, "5", 0x0A, null, null, null, true, null, new BaseValue.Constraints(5.0, 3600.0, 1.0), "30")
+				new Module(device, "0", 15, null, null, R.string.devices__mod_0_0, false, null, new BaseValue.Constraints(800d, 1100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_1("1", "Regulator VPT v1.0", R.string.devices__dev_regulator_vpt, R.string.devices__manufacturer_thermona) {
+	TYPE_1("1", "Temperature and Humidity Sensor", R.string.devices__dev_1_name, R.string.devices__dev_1_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {1, 2, 3, 4, 5}),
-							new Module.Rule(1, new int[] {4, 5}),
-							new Module.Rule(2, new int[] {4, 5}),
-							new Module.Rule(3, new int[] {2, 3}),
-							new Module.Rule(4, new int[] {2, 3})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_mode, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "2", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 0.5), null),
-					new Module(device, "3", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "4", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 0.5), null),
-					new Module(device, "5", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_current_water_temperature, false, null, null),
-					new Module(device, "6", 0x01, null, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {7, 8, 9, 10, 11}),
-							new Module.Rule(1, new int[] {10, 11}),
-							new Module.Rule(2, new int[] {10, 11}),
-							new Module.Rule(3, new int[] {8, 9}),
-							new Module.Rule(4, new int[] {8, 9})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "7", 0x01, null, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_mode, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "8", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 0.5), null),
-					new Module(device, "9", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "10", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 0.5), null),
-					new Module(device, "11", 0x02, null, R.string.devices__zone_2, R.string.devices__mod_current_water_temperature, false, null, null),
-					new Module(device, "12", 0x01, null, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {13, 14, 15, 16, 17}),
-							new Module.Rule(1, new int[] {16, 17}),
-							new Module.Rule(2, new int[] {16, 17}),
-							new Module.Rule(3, new int[] {14, 15}),
-							new Module.Rule(4, new int[] {14, 15})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "13", 0x01, null, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_mode, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "14", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 0.5), null),
-					new Module(device, "15", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "16", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 0.5), null),
-					new Module(device, "17", 0x02, null, R.string.devices__zone_3, R.string.devices__mod_current_water_temperature, false, null, null),
-					new Module(device, "18", 0x01, null, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {19, 20, 21, 22, 23}),
-							new Module.Rule(1, new int[] {22, 23}),
-							new Module.Rule(2, new int[] {22, 23}),
-							new Module.Rule(3, new int[] {20, 21}),
-							new Module.Rule(4, new int[] {20, 21})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "19", 0x01, null, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_mode, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "20", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 0.5), null),
-					new Module(device, "21", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "22", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 0.5), null),
-					new Module(device, "23", 0x02, null, R.string.devices__zone_4, R.string.devices__mod_current_water_temperature, false, null, null),
-					new Module(device, "24", 0x01, 0, null, R.string.devices__mod_boiler_status, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_status_undefined),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_status_heating),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_status_hot_water),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_status_failure),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_status_shutdown)
-					), null),
-					new Module(device, "25", 0x09, null, null, null, false, null, null)
+				new Module(device, "0", 2, null, null, R.string.devices__mod_1_0, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null),
+				new Module(device, "1", 19, null, null, R.string.devices__mod_1_1, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "2", 19, null, null, R.string.devices__mod_1_2, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "3", 8, null, null, R.string.devices__mod_1_3, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_2("2", "BeeeOn Internal Pressure v1.0", R.string.devices__dev_internal_pressure, R.string.devices__manufacturer_but) {
+	TYPE_2("10", "Remote Switch", R.string.devices__dev_10_name, R.string.devices__dev_10_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x04, null, null, R.string.devices__type_pressure, false, null, null),
-					new Module(device, "1", 0x0A, null, null, null, true, null, new BaseValue.Constraints(5.0, 3600.0, 1.0), "30")
+				new Module(device, "0", 13, null, null, R.string.devices__mod_10_0, true, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_13_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_13_val_1)
+				), null)
 			);
 		}
 	},
-	TYPE_3("3", "Virtual THN v1.0", R.string.devices__dev_virtual_thn, R.string.devices__manufacturer_virtual) {
+	TYPE_3("11", "Bulb", R.string.devices__dev_11_name, R.string.devices__dev_11_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x02, null, null, R.string.devices__type_temperature, false, null, null),
-					new Module(device, "1", 0x03, null, null, R.string.devices__type_humidity, false, null, null),
-					new Module(device, "2", 0x06, null, null, R.string.devices__type_noise, false, null, null)
+				new Module(device, "0", 13, null, null, R.string.devices__mod_11_0, true, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_13_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_13_val_1)
+				), null),
+				new Module(device, "1", 4, null, null, R.string.devices__mod_11_1, true, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_4("4", "Virtual THNx3 v1.0", R.string.devices__dev_virtual_thn_x3, R.string.devices__manufacturer_virtual) {
+	TYPE_4("20", "VPT Boiler Control", R.string.devices__dev_20_name, R.string.devices__dev_20_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x02, null, R.string.devices__zone_1, R.string.devices__type_temperature, false, null, null),
-					new Module(device, "1", 0x03, null, R.string.devices__zone_1, R.string.devices__type_humidity, false, null, null),
-					new Module(device, "2", 0x06, null, R.string.devices__zone_1, R.string.devices__type_noise, false, null, null),
-					new Module(device, "3", 0x02, null, R.string.devices__zone_2, R.string.devices__type_temperature, false, null, null),
-					new Module(device, "4", 0x03, null, R.string.devices__zone_2, R.string.devices__type_humidity, false, null, null),
-					new Module(device, "5", 0x06, null, R.string.devices__zone_2, R.string.devices__type_noise, false, null, null),
-					new Module(device, "6", 0x02, null, R.string.devices__zone_3, R.string.devices__type_temperature, false, null, null),
-					new Module(device, "7", 0x03, null, R.string.devices__zone_3, R.string.devices__type_humidity, false, null, null),
-					new Module(device, "8", 0x06, null, R.string.devices__zone_3, R.string.devices__type_noise, false, null, null)
+				new Module(device, "0", 6, null, null, R.string.devices__mod_20_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__enum_MOD_BOILER_STATUS_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__enum_MOD_BOILER_STATUS_val_1),
+					new EnumValue.Item(2, "2", R.string.devices__enum_MOD_BOILER_STATUS_val_2),
+					new EnumValue.Item(3, "3", R.string.devices__enum_MOD_BOILER_STATUS_val_3),
+					new EnumValue.Item(4, "4", R.string.devices__enum_MOD_BOILER_STATUS_val_4)
+				), null),
+				new Module(device, "1", 6, null, null, R.string.devices__mod_20_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__enum_MOD_BOILER_MODE_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__enum_MOD_BOILER_MODE_val_1),
+					new EnumValue.Item(2, "2", R.string.devices__enum_MOD_BOILER_MODE_val_2)
+				), null),
+				new Module(device, "2", 19, null, null, R.string.devices__mod_20_2, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "3", 19, null, null, R.string.devices__mod_20_3, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "4", 19, null, null, R.string.devices__mod_20_4, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "5", 14, null, null, R.string.devices__mod_20_5, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null),
+				new Module(device, "6", 15, null, null, R.string.devices__mod_20_6, false, null, new BaseValue.Constraints(800d, 1100d, 1d),
+				null),
+				new Module(device, "7", 3, null, null, R.string.devices__mod_20_7, false, null, null),
+				new Module(device, "8", 3, null, null, R.string.devices__mod_20_8, false, null, null)
 			);
 		}
 	},
-	TYPE_5("5", "OpenHAB Presence v1.0", R.string.devices__dev_presence_monitor, R.string.devices__manufacturer_openhab) {
+	TYPE_5("21", "VPT Zone Control", R.string.devices__dev_21_name, R.string.devices__dev_21_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__mod_presence_status, false, null, Arrays.asList(
-							new EnumValue.Item(-1, "-1", R.string.devices__val_presence_status_undefined),
-							new EnumValue.Item(0, "0", R.string.devices__val_presence_status_not_present),
-							new EnumValue.Item(1, "1", R.string.devices__val_presence_status_present)
-					), null)
+				new Module(device, "0", 6, null, null, R.string.devices__mod_21_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__enum_MOD_BOILER_OPERATION_TYPE_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__enum_MOD_BOILER_OPERATION_TYPE_val_1),
+					new EnumValue.Item(2, "2", R.string.devices__enum_MOD_BOILER_OPERATION_TYPE_val_2),
+					new EnumValue.Item(3, "3", R.string.devices__enum_MOD_BOILER_OPERATION_TYPE_val_3),
+					new EnumValue.Item(4, "4", R.string.devices__enum_MOD_BOILER_OPERATION_TYPE_val_4)
+				), null),
+				new Module(device, "1", 6, null, null, R.string.devices__mod_21_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__enum_MOD_BOILER_OPERATION_MODE_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__enum_MOD_BOILER_OPERATION_MODE_val_1),
+					new EnumValue.Item(2, "2", R.string.devices__enum_MOD_BOILER_OPERATION_MODE_val_2)
+				), null),
+				new Module(device, "2", 19, null, null, R.string.devices__mod_21_2, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "3", 19, null, null, R.string.devices__mod_21_3, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "4", 19, null, null, R.string.devices__mod_21_4, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "5", 19, null, null, R.string.devices__mod_21_5, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "6", 19, null, null, R.string.devices__mod_21_6, true, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "7", 19, null, null, R.string.devices__mod_21_7, true, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "8", 19, null, null, R.string.devices__mod_21_8, true, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null)
 			);
 		}
 	},
-	TYPE_6("6", "Regulator VPT LAN v1.0", R.string.devices__dev_regulator_vpt_lan, R.string.devices__manufacturer_thermona) {
+	TYPE_6("30", "Unknown Device", R.string.devices__dev_30_name, R.string.devices__dev_30_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "300", 0x0A, null, null, null, true, null, new BaseValue.Constraints(15.0, 3600.0, 15.0), "15"),
-					new Module(device, "0", 0x01, 11, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {1, 2, 3, 5, 6, 7, 11, 12, 13, 65, 73, 74, 75, 76}),
-							new Module.Rule(1, new int[] {6, 7, 74, 75}),
-							new Module.Rule(2, new int[] {2, 6, 7, 73, 74, 75}),
-							new Module.Rule(3, new int[] {2, 3, 6, 7, 73, 75, 76}),
-							new Module.Rule(4, new int[] {2, 3, 65, 73, 74, 76})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "1", 0x01, 12, R.string.devices__zone_1, R.string.devices__mod_boiler_operation_mode, true, Arrays.asList(
-							new Module.Rule(0, new int[] {6, 7, 73, 74, 75, 76}),
-							new Module.Rule(2, new int[] {6, 7, 73, 74, 75, 76})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "2", 0x02, 2, R.string.devices__zone_1, R.string.devices__mod_requested_room_temperature, false, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "3", 0x02, 1, R.string.devices__zone_1, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
-					new Module(device, "65", 0x02, 5, R.string.devices__zone_1, R.string.devices__mod_current_requested_water_temperature, false, null, new BaseValue.Constraints(10.0, 110.0, 1.0), null),
-					new Module(device, "5", 0x02, 4, R.string.devices__zone_1, R.string.devices__mod_current_water_temperature, false, null, new BaseValue.Constraints(20.0, 120.0, 1.0), null),
-					new Module(device, "6", 0x02, 9, R.string.devices__zone_1, R.string.devices__mod_minimal_water_temperature, true, null, new BaseValue.Constraints(20.0, 50.0, 1.0), null),
-					new Module(device, "7", 0x02, 10, R.string.devices__zone_1, R.string.devices__mod_maximal_water_temperature, true, null, new BaseValue.Constraints(40.0, 90.0, 1.0), null),
-					new Module(device, "11", 0x01, 13, R.string.devices__zone_1, R.string.devices__frost_protection, true, Arrays.asList(
-							new Module.Rule(0, new int[] {12, 13})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
-					), null),
-					new Module(device, "12", 0x02, 14, R.string.devices__zone_1, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
-					new Module(device, "13", 0x02, 15, R.string.devices__zone_1, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
-					new Module(device, "73", 0x02, 3, R.string.devices__zone_1, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "74", 0x02, 6, R.string.devices__zone_1, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "75", 0x02, 7, R.string.devices__zone_1, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "76", 0x02, 8, R.string.devices__zone_1, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
-					new Module(device, "14", 0x01, 61, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {15, 16, 17, 19, 20, 21, 25, 26, 27, 66, 77, 78, 79, 80}),
-							new Module.Rule(1, new int[] {20, 21, 78, 79}),
-							new Module.Rule(2, new int[] {16, 20, 21, 77, 78, 79}),
-							new Module.Rule(3, new int[] {16, 17, 20, 21, 77, 79, 80}),
-							new Module.Rule(4, new int[] {16, 17, 66, 77, 78, 80})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "15", 0x01, 62, R.string.devices__zone_2, R.string.devices__mod_boiler_operation_mode, true, Arrays.asList(
-							new Module.Rule(0, new int[] {20, 21, 77, 78, 79, 80}),
-							new Module.Rule(2, new int[] {20, 21, 77, 78, 79, 80})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "16", 0x02, 52, R.string.devices__zone_2, R.string.devices__mod_requested_room_temperature, false, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "17", 0x02, 51, R.string.devices__zone_2, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
-					new Module(device, "66", 0x02, 55, R.string.devices__zone_2, R.string.devices__mod_current_requested_water_temperature, false, null, new BaseValue.Constraints(10.0, 110.0, 1.0), null),
-					new Module(device, "19", 0x02, 54, R.string.devices__zone_2, R.string.devices__mod_current_water_temperature, false, null, new BaseValue.Constraints(20.0, 120.0, 1.0), null),
-					new Module(device, "20", 0x02, 59, R.string.devices__zone_2, R.string.devices__mod_minimal_water_temperature, true, null, new BaseValue.Constraints(20.0, 50.0, 1.0), null),
-					new Module(device, "21", 0x02, 60, R.string.devices__zone_2, R.string.devices__mod_maximal_water_temperature, true, null, new BaseValue.Constraints(40.0, 90.0, 1.0), null),
-					new Module(device, "25", 0x01, 63, R.string.devices__zone_2, R.string.devices__frost_protection, true, Arrays.asList(
-							new Module.Rule(0, new int[] {26, 27})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
-					), null, true),
-					new Module(device, "26", 0x02, 64, R.string.devices__zone_2, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
-					new Module(device, "27", 0x02, 65, R.string.devices__zone_2, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
-					new Module(device, "77", 0x02, 53, R.string.devices__zone_2, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "78", 0x02, 56, R.string.devices__zone_2, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "79", 0x02, 57, R.string.devices__zone_2, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "80", 0x02, 58, R.string.devices__zone_2, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
-					new Module(device, "28", 0x01, 111, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {29, 30, 31, 33, 34, 35, 39, 40, 41, 67, 81, 82, 83, 84}),
-							new Module.Rule(1, new int[] {34, 35, 82, 83}),
-							new Module.Rule(2, new int[] {30, 34, 35, 81, 82, 83}),
-							new Module.Rule(3, new int[] {30, 31, 34, 35, 81, 83, 84}),
-							new Module.Rule(4, new int[] {30, 31, 67, 81, 82, 84})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "29", 0x01, 112, R.string.devices__zone_3, R.string.devices__mod_boiler_operation_mode, true, Arrays.asList(
-							new Module.Rule(0, new int[] {34, 35, 81, 82, 83, 84}),
-							new Module.Rule(2, new int[] {34, 35, 81, 82, 83, 84})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "30", 0x02, 102, R.string.devices__zone_3, R.string.devices__mod_requested_room_temperature, false, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "31", 0x02, 101, R.string.devices__zone_3, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
-					new Module(device, "67", 0x02, 105, R.string.devices__zone_3, R.string.devices__mod_current_requested_water_temperature, false, null, new BaseValue.Constraints(10.0, 110.0, 1.0), null),
-					new Module(device, "33", 0x02, 104, R.string.devices__zone_3, R.string.devices__mod_current_water_temperature, false, null, new BaseValue.Constraints(20.0, 120.0, 1.0), null),
-					new Module(device, "34", 0x02, 109, R.string.devices__zone_3, R.string.devices__mod_minimal_water_temperature, true, null, new BaseValue.Constraints(20.0, 50.0, 1.0), null),
-					new Module(device, "35", 0x02, 110, R.string.devices__zone_3, R.string.devices__mod_maximal_water_temperature, true, null, new BaseValue.Constraints(40.0, 90.0, 1.0), null),
-					new Module(device, "39", 0x01, 113, R.string.devices__zone_3, R.string.devices__frost_protection, true, Arrays.asList(
-							new Module.Rule(0, new int[] {40, 41})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
-					), null, true),
-					new Module(device, "40", 0x02, 114, R.string.devices__zone_3, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
-					new Module(device, "41", 0x02, 115, R.string.devices__zone_3, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
-					new Module(device, "81", 0x02, 103, R.string.devices__zone_3, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "82", 0x02, 106, R.string.devices__zone_3, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "83", 0x02, 107, R.string.devices__zone_3, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "84", 0x02, 108, R.string.devices__zone_3, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
-					new Module(device, "42", 0x01, 161, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_type, true, Arrays.asList(
-							new Module.Rule(0, new int[] {43, 44, 45, 47, 48, 49, 53, 54, 55, 68, 85, 86, 87, 88}),
-							new Module.Rule(1, new int[] {48, 49, 86, 87}),
-							new Module.Rule(2, new int[] {44, 48, 49, 85, 86, 87}),
-							new Module.Rule(3, new int[] {44, 45, 48, 49, 85, 87, 88}),
-							new Module.Rule(4, new int[] {44, 45, 68, 85, 86, 88})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_type_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_type_room_regulator),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_type_equiterm_regulator),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_operation_type_constant_water_temperature),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_operation_type_hot_water)
-					), null),
-					new Module(device, "43", 0x01, 162, R.string.devices__zone_4, R.string.devices__mod_boiler_operation_mode, true, Arrays.asList(
-							new Module.Rule(0, new int[] {48, 49, 85, 86, 87, 88}),
-							new Module.Rule(2, new int[] {48, 49, 85, 86, 87, 88})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_operation_mode_automatic),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_operation_mode_manual),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_operation_mode_vacation)
-					), null),
-					new Module(device, "44", 0x02, 152, R.string.devices__zone_4, R.string.devices__mod_requested_room_temperature, false, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "45", 0x02, 151, R.string.devices__zone_4, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
-					new Module(device, "68", 0x02, 155, R.string.devices__zone_4, R.string.devices__mod_current_requested_water_temperature, false, null, new BaseValue.Constraints(10.0, 110.0, 1.0), null),
-					new Module(device, "47", 0x02, 154, R.string.devices__zone_4, R.string.devices__mod_current_water_temperature, false, null, new BaseValue.Constraints(20.0, 120.0, 1.0), null),
-					new Module(device, "48", 0x02, 159, R.string.devices__zone_4, R.string.devices__mod_minimal_water_temperature, true, null, new BaseValue.Constraints(20.0, 50.0, 1.0), null),
-					new Module(device, "49", 0x02, 160, R.string.devices__zone_4, R.string.devices__mod_maximal_water_temperature, true, null, new BaseValue.Constraints(40.0, 90.0, 1.0), null),
-					new Module(device, "53", 0x01, 163, R.string.devices__zone_4, R.string.devices__frost_protection, true, Arrays.asList(
-							new Module.Rule(0, new int[] {54, 55})
-					), Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_frost_protection_off),
-							new EnumValue.Item(1, "1", R.string.devices__val_frost_protection_on)
-					), null, true),
-					new Module(device, "54", 0x02, 164, R.string.devices__zone_4, R.string.devices__frost_protection_water_temperature, true, null, new BaseValue.Constraints(25.0, 50.0, 1.0), null),
-					new Module(device, "55", 0x02, 165, R.string.devices__zone_4, R.string.devices__frost_protection_threshold, true, null, new BaseValue.Constraints(0.0, 15.0, 1.0), null),
-					new Module(device, "85", 0x02, 153, R.string.devices__zone_4, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(0.0, 160.0, 1.0), null),
-					new Module(device, "86", 0x02, 156, R.string.devices__zone_4, R.string.devices__manual_requested_water_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "87", 0x02, 157, R.string.devices__zone_4, R.string.devices__manual_requested_tuv_temperature, true, null, new BaseValue.Constraints(20.0, 90.0, 1.0), null),
-					new Module(device, "88", 0x02, 158, R.string.devices__zone_4, R.string.devices__manual_offset_ekviterm_curve, true, null, new BaseValue.Constraints(0.0, 60.0, 1.0), null),
-					new Module(device, "56", 0x01, 206, R.string.devices__boiler, R.string.devices__mod_boiler_status, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_status_undefined),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_status_heating),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_status_hot_water),
-							new EnumValue.Item(3, "3", R.string.devices__val_boiler_status_failure),
-							new EnumValue.Item(4, "4", R.string.devices__val_boiler_status_shutdown)
-					), null),
-					new Module(device, "57", 0x01, 205, R.string.devices__boiler, R.string.devices__mod_boiler_mode, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__val_boiler_mode_undefined),
-							new EnumValue.Item(1, "1", R.string.devices__val_boiler_mode_on),
-							new EnumValue.Item(2, "2", R.string.devices__val_boiler_mode_off)
-					), null),
-					new Module(device, "58", 0x02, -10, R.string.devices__boiler, R.string.devices__mod_current_water_temperature, false, null, new BaseValue.Constraints(20.0, 120.0, 1.0), null),
-					new Module(device, "59", 0x02, -9, R.string.devices__boiler, R.string.devices__mod_current_outside_temperature, false, null, new BaseValue.Constraints(-50.0, 60.0, 1.0), null),
-					new Module(device, "60", 0x02, -8, R.string.devices__boiler, R.string.devices__mod_average_outside_temperature, false, null, new BaseValue.Constraints(-40.0, 40.0, 1.0), null),
-					new Module(device, "61", 0x03, -7, R.string.devices__boiler, R.string.devices__mod_current_boiler_performance, false, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
-					new Module(device, "62", 0x04, -6, R.string.devices__boiler, R.string.devices__mod_current_boiler_pressure, false, null, new BaseValue.Constraints(0.0, 10.0, 0.02), null),
-					new Module(device, "63", 0x0B, -5, R.string.devices__boiler, R.string.devices__mod_current_boiler_error, false, null, null)
+				new Module(device, "0", 1, null, null, R.string.devices__mod_30_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_1_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_1_val_1)
+				), null)
 			);
 		}
 	},
-	TYPE_7("7", "Conrad FS20 Wireless switch", R.string.devices__dev_fs20_switch, R.string.devices__manufacturer_conrad) {
+	TYPE_7("40", "AC-88 Wireless Mains Outlet", R.string.devices__dev_40_name, R.string.devices__dev_40_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__fs20_switch, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__fs20_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__fs20_switch_state_on)
-					), null, true)
+				new Module(device, "0", 13, null, null, R.string.devices__mod_40_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_13_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_13_val_1)
+				), null)
 			);
 		}
 	},
-	TYPE_8("8", "Jablotron AC-88 Wireless mains outlet", R.string.devices__dev_ac_88_mains_outlet, R.string.devices__manufacturer_jablotron) {
+	TYPE_8("41", "JA-82SH Wireless Shake Sensor", R.string.devices__dev_41_name, R.string.devices__dev_41_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__ac_88_mains_outlet, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ac_88_mains_outlet_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__ac_88_mains_outlet_state_on)
-					), null, true)
+				new Module(device, "0", 18, null, null, R.string.devices__mod_41_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_18_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_18_val_1)
+				), null),
+				new Module(device, "1", 17, null, null, R.string.devices__mod_41_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_17_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_17_val_1)
+				), null),
+				new Module(device, "2", 2, null, null, R.string.devices__mod_41_2, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_9("9", "Jablotron JA-80L Wireless internal siren", R.string.devices__dev_ja_80l_internal_siren, R.string.devices__manufacturer_jablotron) {
+	TYPE_9("42", "JA-85ST Wireless Fire Sensor", R.string.devices__dev_42_name, R.string.devices__dev_42_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__ja_80l_internal_siren, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_80l_internal_siren_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__ja_80l_internal_siren_state_on)
-					), null, true)
+				new Module(device, "0", 7, null, null, R.string.devices__mod_42_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_7_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_7_val_1)
+				), null),
+				new Module(device, "1", 17, null, null, R.string.devices__mod_42_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_17_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_17_val_1)
+				), null),
+				new Module(device, "2", 2, null, null, R.string.devices__mod_42_2, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_10("10", "Jablotron TP-82N Wireless thermostat", R.string.devices__dev_tp_82n_thermostat, R.string.devices__manufacturer_jablotron) {
+	TYPE_10("43", "JA-81M Wireless Magnetic Door Contact", R.string.devices__dev_43_name, R.string.devices__dev_43_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x02, null, null, R.string.devices__mod_current_room_temperature, false, null, null),
-					new Module(device, "1", 0x02, null, null, R.string.devices__mod_requested_room_temperature, false, null, null),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
+				new Module(device, "0", 12, null, null, R.string.devices__mod_43_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_12_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_12_val_1)
+				), null),
+				new Module(device, "1", 17, null, null, R.string.devices__mod_43_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_17_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_17_val_1)
+				), null),
+				new Module(device, "2", 2, null, null, R.string.devices__mod_43_2, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_11("11", "Jablotron JA-83M Wireless magnetic door contact", R.string.devices__dev_ja_83m_magnetic_door_contact, R.string.devices__manufacturer_jablotron) {
+	TYPE_11("44", "JA-83M Wireless Magnetic Door Contact", R.string.devices__dev_44_name, R.string.devices__dev_44_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__ja_83m_magnetic_door_contact, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_83m_magnetic_door_contact_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_83m_magnetic_door_contact_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_83m_magnetic_door_contact_state_closed)
-					), null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__ja_83m_magnetic_door_contact_alarm, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_83m_magnetic_door_contact_alarm_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_83m_magnetic_door_contact_alarm_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_83m_magnetic_door_contact_alarm_state_closed)
-					), null),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
+				new Module(device, "0", 12, null, null, R.string.devices__mod_44_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_12_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_12_val_1)
+				), null),
+				new Module(device, "1", 17, null, null, R.string.devices__mod_44_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_17_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_17_val_1)
+				), null),
+				new Module(device, "2", 2, null, null, R.string.devices__mod_44_2, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_12("12", "HomeMatic wireless switch with power meter HM-ES-PMSw1-PI", R.string.devices__dev_hm_switch, R.string.devices__manufacturer_eq3) {
+	TYPE_12("45", "RC-86K Wireless Remote Control", R.string.devices__dev_45_name, R.string.devices__dev_45_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__hm_switch, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hm_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__hm_switch_state_on)
-					), null, true),
-					new Module(device, "1", 0x0E, null, null, R.string.devices__type_voltage, false, null, null),
-					new Module(device, "2", 0x0F, null, null, R.string.devices__type_current, false, null, null),
-					new Module(device, "3", 0x10, null, null, R.string.devices__type_frequency, false, null, null),
-					new Module(device, "4", 0x11, null, null, R.string.devices__type_power, false, null, null),
-					new Module(device, "5", 0x12, null, null, R.string.devices__type_powermeter, false, null, null),
-					new Module(device, "6", 0x09, null, null, null, false, null, null)
+				new Module(device, "0", 12, null, null, R.string.devices__mod_45_0, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_12_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_12_val_1)
+				), null),
+				new Module(device, "1", 17, null, null, R.string.devices__mod_45_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_17_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_17_val_1)
+				), null),
+				new Module(device, "2", 2, null, null, R.string.devices__mod_45_2, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_13("13", "HomeMatic wireless magnetic door contact HM-SEC-SC-2", R.string.devices__dev_hm_magnetic_door_contact, R.string.devices__manufacturer_eq3) {
+	TYPE_13("46", "TP-82N Wireless Thermostat", R.string.devices__dev_46_name, R.string.devices__dev_46_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__hm_magnetic_door_contact, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hm_magnetic_door_contact_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__hm_magnetic_door_contact_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__hm_magnetic_door_contact_state_closed)
-					), null),
-					new Module(device, "1", 0x09, null, null, null, false, null, null),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
+				new Module(device, "0", 19, null, null, R.string.devices__mod_46_0, true, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "1", 18, null, null, R.string.devices__mod_46_1, false, null, Arrays.asList(
+					new EnumValue.Item(0, "0", R.string.devices__type_18_val_0),
+					new EnumValue.Item(1, "1", R.string.devices__type_18_val_1)
+				), null),
+				new Module(device, "2", 2, null, null, R.string.devices__mod_46_2, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	},
-	TYPE_14("14", "HomeMatic wireless radiator thermostat HM-CC-RT-DN", R.string.devices__dev_hm_radiator_thermostat, R.string.devices__manufacturer_eq3) {
+	TYPE_14("101", "Z-Wave Philio Wireless 3-in-1 Sensor PST02-C", R.string.devices__dev_101_name, R.string.devices__dev_101_vendor) {
 		@Override
 		public List<Module> createModules(Device device) {
 			return Arrays.asList(
-					new Module(device, "0", 0x02, null, null, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(5.0, 30.0, 1.0), null),
-					new Module(device, "1", 0x02, null, null, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
-					new Module(device, "2", 0x13, null, null, R.string.devices__hm_valve_position, false, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
-					new Module(device, "3", 0x09, null, null, null, false, null, null),
-					new Module(device, "4", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_15("15", "Wireless radiator thermostat eQ-3 MAX!", R.string.devices__dev_max_radiator_thermostat, R.string.devices__manufacturer_eq3) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x02, null, null, R.string.devices__manual_requested_room_temperature, true, null, new BaseValue.Constraints(5.0, 30.0, 1.0), null),
-					new Module(device, "1", 0x02, null, null, R.string.devices__mod_current_room_temperature, false, null, new BaseValue.Constraints(-20.0, 40.0, 1.0), null),
-					new Module(device, "2", 0x13, null, null, R.string.devices__max_valve_position, false, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
-					new Module(device, "3", 0x09, null, null, null, false, null, null),
-					new Module(device, "4", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_16("16", "Z-Wave Philio wireless 3in1 sensor PST02-C", R.string.devices__dev_zw_pst02c, R.string.devices__manufacturer_philio) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hm_magnetic_door_contact, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hm_magnetic_door_contact_state_closed),
-							new EnumValue.Item(1, "1", R.string.devices__hm_magnetic_door_contact_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__hm_magnetic_door_contact_state_unknown)
-					), null),
-					new Module(device, "1", 0x02, null, R.string.devices__zone_1, R.string.devices__type_temperature, false, null, null),
-					new Module(device, "2", 0x05, null, R.string.devices__zone_1, R.string.devices__type_light, false, null, null),
-					new Module(device, "3", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_17("17", "Z-Wave Popp Wireless switch", R.string.devices__dev_popp_switch, R.string.devices__manufacturer_popp) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__fs20_switch, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__fs20_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__fs20_switch_state_on)
-					), null, true)
-			);
-		}
-	},
-	TYPE_18("18", "Jablotron JA-81M Wireless magnetic door contact", R.string.devices__dev_ja_81m_magnetic_door_contact, R.string.devices__manufacturer_jablotron) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__ja_81m_magnetic_door_contact, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_81m_magnetic_door_contact_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_81m_magnetic_door_contact_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_81m_magnetic_door_contact_state_closed)
-					), null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__ja_83m_magnetic_door_contact_alarm, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_81m_magnetic_door_contact_alarm_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_81m_magnetic_door_contact_alarm_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_81m_magnetic_door_contact_alarm_state_closed)
-					), null),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_19("19", "Jablotron JA-82SH Wireless shake sensor", R.string.devices__dev_ja_82sh_shake_sensor, R.string.devices__manufacturer_jablotron) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__ja_82sh_shake_sensor, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_82sh_shake_sensor_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_82sh_shake_sensor_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_82sh_shake_sensor_state_closed)
-					), null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__ja_82sh_shake_sensor_alarm, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_82sh_shake_sensor_alarm_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_82sh_shake_sensor_alarm_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_82sh_shake_sensor_alarm_state_closed)
-					), null),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_20("20", "Jablotron JA-83P Wireless PIR sensor", R.string.devices__dev_ja_83p_pir_sensor, R.string.devices__manufacturer_jablotron) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__ja_83p_pir_sensor, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_83p_pir_sensor_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_83p_pir_sensor_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_83p_pir_sensor_state_closed)
-					), null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__ja_83p_pir_sensor_alarm, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_83p_pir_sensor_alarm_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_83p_pir_sensor_alarm_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_83p_pir_sensor_alarm_state_closed)
-					), null),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_21("21", "Jablotron JA-85ST Wireless fire sensor", R.string.devices__dev_ja_85st_fire_sensor, R.string.devices__manufacturer_jablotron) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__ja_85st_fire_sensor, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_85st_fire_sensor_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__ja_85st_fire_sensor_state_on)
-					), null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__ja_85st_fire_sensor_alarm, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_85st_fire_sensor_alarm_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_85st_fire_sensor_alarm_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_85st_fire_sensor_alarm_state_closed)
-					), null),
-					new Module(device, "2", 0x01, null, null, R.string.devices__ja_85st_fire_sensor_error, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__ja_85st_fire_sensor_error_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__ja_85st_fire_sensor_error_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__ja_85st_fire_sensor_error_state_closed)
-					), null),
-					new Module(device, "3", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_22("22", "Jablotron RC-86K Wireless remote control", R.string.devices__dev_rc_86k_remote_control, R.string.devices__manufacturer_jablotron) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__rc_86k_remote_control, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__rc_86k_remote_control_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__rc_86k_remote_control_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__rc_86k_remote_control_state_closed)
-					), null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__rc_86k_remote_control_alarm, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__rc_86k_remote_control_alarm_state_unknown),
-							new EnumValue.Item(1, "1", R.string.devices__rc_86k_remote_control_alarm_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__rc_86k_remote_control_alarm_state_closed)
-					), null),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_23("23", "IQRF demo temperature sensor with LEDs", R.string.devices__dev_iqrf_temp_demo, R.string.devices__manufacturer_iqrf) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x02, null, null, R.string.devices__type_temperature, false, null, null),
-					new Module(device, "1", 0x01, null, null, R.string.devices__iqrf_led1, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__iqrf_led1_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__iqrf_led1_state_on)
-					), null, true),
-					new Module(device, "2", 0x01, null, null, R.string.devices__iqrf_led2, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
-					), null, true),
-					new Module(device, "2", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_24("24", "BeeeOn Gateway Led lights", R.string.devices__dev_beeeon_leds, R.string.devices__manufacturer_but) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_red, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
-					), null, true),
-					new Module(device, "1", 0x01, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_green, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__iqrf_led2_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__iqrf_led2_state_on)
-					), null, true),
-					new Module(device, "2", 0x14, null, R.string.devices__group_leds, R.string.devices__beeeon_leds_blue, true, null, new BaseValue.Constraints(0.0, 101.0, 1.0), null)
-			);
-		}
-	},
-	TYPE_25("25", "FIBARO Door/Window Sensor FGK-107 Z-Wave battery powered reed sensor.", R.string.devices__dev_z_wave_fgk_107, R.string.devices__manufacturer_fibaro) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__fibaro_fgk_107_magnetic_door_contact, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__fibaro_fgk_107_magnetic_door_contact_state_closed),
-							new EnumValue.Item(1, "1", R.string.devices__fibaro_fgk_107_magnetic_door_contact_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__fibaro_fgk_107_magnetic_door_contact_state_unknown)
-					), null),
-					new Module(device, "1", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_26("26", "D-Link DCH_Z120 PIR sensor", R.string.devices__dev_dlink_dch_z120, R.string.devices__manufacturer_dlink) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__dlink_dch_z120_pir_sensor_state_idle),
-							new EnumValue.Item(1, "1", R.string.devices__dlink_dch_z120_pir_sensor_state_motion),
-							new EnumValue.Item(2, "2", R.string.devices__dlink_dch_z120_pir_sensor_state_unknown)
-					), null),
-					new Module(device, "1", 0x05, null, R.string.devices__zone_1, R.string.devices__mod_light, false, null, null),
-					new Module(device, "2", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_room_temperature, false, null, null),
-					new Module(device, "3", 0x01, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor_alarm, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__dlink_dch_z120_pir_sensor_alarm_state_opened),
-							new EnumValue.Item(1, "1", R.string.devices__dlink_dch_z120_pir_sensor_alarm_state_closed),
-							new EnumValue.Item(2, "2", R.string.devices__dlink_dch_z120_pir_sensor_alarm_state_unknown)
-					), null),
-					new Module(device, "4", 0x1a, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor_sensitivity, true, null, new BaseValue.Constraints(0.0, 99.0, 1.0), null),
-					new Module(device, "5", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_27("27", "Aeotec Multisensor 6 ZW-100", R.string.devices__dev_aeotec_zw100, R.string.devices__manufacturer_aeotec) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__aeotec_shake_sensor, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__aeotec_shake_sensor_state_closed),
-							new EnumValue.Item(1, "1", R.string.devices__aeotec_shake_sensor_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__aeotec_shake_sensor_state_unknown)
-					), null),
-					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__aeotec_multisensor_pir_sensor, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__aeotec_multisensor_pir_sensor_state_closed),
-							new EnumValue.Item(1, "1", R.string.devices__aeotec_multisensor_pir_sensor_state_opened),
-							new EnumValue.Item(2, "2", R.string.devices__aeotec_multisensor_pir_sensor_state_unknown)
-					), null),
-					new Module(device, "2", 0x19, null, R.string.devices__zone_1, R.string.devices__mod_ultraviolet, false, null, null),
-					new Module(device, "3", 0x05, null, R.string.devices__zone_1, R.string.devices__mod_light, false, null, null),
-					new Module(device, "4", 0x02, null, R.string.devices__zone_1, R.string.devices__mod_room_temperature, false, null, null),
-					new Module(device, "5", 0x03, null, R.string.devices__zone_1, R.string.devices__mod_room_humidity, false, null, null),
-					new Module(device, "6", 0x1a, null, R.string.devices__zone_1, R.string.devices__dlink_dch_z120_pir_sensor_sensitivity, true, null, new BaseValue.Constraints(0.0, 6.0, 1.0), null),
-					new Module(device, "7", 0x08, null, null, null, false, null, null),
-					new Module(device, "8", 0x0A, null, null, null, true, null, new BaseValue.Constraints(1.0, 2678400.0, 1.0), "3600")
-			);
-		}
-	},
-	TYPE_28("28", "NodOn CWS-3-1-01 Wall Switch Z-Wave+", R.string.devices__dev_nodon_cws3101_wall_switch, R.string.devices__manufacturer_nodon) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_led_wall_switch, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__nodon_cws3101_led_wall_switch_state_led_off),
-							new EnumValue.Item(1, "1", R.string.devices__nodon_cws3101_led_wall_switch_state_led_blink_on_button_action),
-							new EnumValue.Item(2, "2", R.string.devices__nodon_cws3101_led_wall_switch_state_led_blink_on_transmission_result),
-							new EnumValue.Item(3, "3", R.string.devices__nodon_cws3101_led_wall_switch_state_led_blink_on_button_action_and_transmission)
-					), null),
-					new Module(device, "1", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_1, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
-					), null),
-					new Module(device, "2", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_2, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
-					), null),
-					new Module(device, "3", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_3, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
-					), null),
-					new Module(device, "4", 0x03, null, R.string.devices__zone_1, R.string.devices__nodon_cws3101_wall_switch_button_4, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__nodon_cws_wall_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__nodon_cws_wall_switch_state_on)
-					), null),
-					new Module(device, "5", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_29("29", "Everspring Wireless SmokeDetector SF812", R.string.devices__dev_everspring_sf812_smoke_detector, R.string.devices__manufacturer_everspring) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x03, null, R.string.devices__zone_1, R.string.devices__everspring_sf812_smoke_sensor, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__everspring_sf812_smoke_sensor_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__everspring_sf812_smoke_sensor_state_on)
-					), null),
-					new Module(device, "1", 0x08, null, null, null, false, null, null)
-			);
-		}
-	},
-	TYPE_30("30", "Philips HUE On/off light", R.string.devices__dev_hue_onoff_light, R.string.devices__manufacturer_philips) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null, true),
-					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
-							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
-							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
-					), null)
-			);
-		}
-	},
-	TYPE_31("31", "Philips HUE Dimmable light", R.string.devices__dev_hue_dimmable_light, R.string.devices__manufacturer_philips) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null, true),
-					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
-							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
-							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
-					), null),
-					new Module(device, "2", 0x18, null, R.string.devices__zone_1, R.string.devices__hue_brightness_light, true, null, new BaseValue.Constraints(0.0, 100.0, 10.0), null)
-			);
-		}
-	},
-	TYPE_32("32", "Philips HUE Color temperature light", R.string.devices__dev_hue_ct_light, R.string.devices__manufacturer_philips) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null, true),
-					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
-							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
-							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
-					), null),
-					new Module(device, "2", 0x15, null, R.string.devices__zone_1, R.string.devices__hue_ct_light, true, null, new BaseValue.Constraints(0.0, 100.0, 5.0), null)
-			);
-		}
-	},
-	TYPE_33("33", "Philips HUE Color light", R.string.devices__dev_hue_color_light, R.string.devices__manufacturer_philips) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null, true),
-					new Module(device, "1", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_alert_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
-							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
-							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
-					), null),
-					new Module(device, "2", 0x18, null, R.string.devices__zone_1, R.string.devices__hue_brightness_light, true, null, new BaseValue.Constraints(0.0, 100.0, 10.0), null),
-					new Module(device, "3", 0x01, null, R.string.devices__zone_1, R.string.devices__hue_effect_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_effect_light_state_none),
-							new EnumValue.Item(1, "1", R.string.devices__hue_effect_light_state_colorloop)
-					), null),
-					new Module(device, "4", 0x16, null, R.string.devices__zone_1, R.string.devices__hue_hue_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
-					new Module(device, "5", 0x17, null, R.string.devices__zone_1, R.string.devices__hue_sat_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null)
-			);
-		}
-	},
-	TYPE_34("34", "Philips HUE Extended Color light", R.string.devices__dev_hue_extended_color_light, R.string.devices__manufacturer_philips) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__hue_onoff_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_onoff_light_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__hue_onoff_light_state_on)
-					), null, true),
-					new Module(device, "1", 0x01, null, null, R.string.devices__hue_alert_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_alert_light_state_none),
-							new EnumValue.Item(1, "1", R.string.devices__hue_alert_light_state_once),
-							new EnumValue.Item(2, "2", R.string.devices__hue_alert_light_state_repeat)
-					), null),
-					new Module(device, "2", 0x18, null, null, R.string.devices__hue_brightness_light, true, null, new BaseValue.Constraints(0.0, 100.0, 10.0), null),
-					new Module(device, "3", 0x01, null, null, R.string.devices__hue_effect_light, true, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_effect_light_state_none),
-							new EnumValue.Item(1, "1", R.string.devices__hue_effect_light_state_colorloop)
-					), null),
-					new Module(device, "4", 0x16, null, null, R.string.devices__hue_hue_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
-					new Module(device, "5", 0x17, null, null, R.string.devices__hue_sat_light, true, null, new BaseValue.Constraints(0.0, 100.0, 1.0), null),
-					new Module(device, "6", 0x15, null, null, R.string.devices__hue_ct_light, true, null, new BaseValue.Constraints(0.0, 100.0, 5.0), null)
-			);
-		}
-	},
-	TYPE_35("35", "Philips HUE bridge", R.string.devices__dev_hue_bridge, R.string.devices__manufacturer_philips) {
-		@Override
-		public List<Module> createModules(Device device) {
-			return Arrays.asList(
-					new Module(device, "0", 0x01, null, null, R.string.devices__hue_bridge_switch, false, null, Arrays.asList(
-							new EnumValue.Item(0, "0", R.string.devices__hue_bridge_switch_state_off),
-							new EnumValue.Item(1, "1", R.string.devices__hue_bridge_switch_state_on)
-					), null, true)
+				new Module(device, "0", 6, null, null, R.string.devices__mod_101_0, false, null, null),
+				new Module(device, "1", 19, null, null, R.string.devices__mod_101_1, false, null, new BaseValue.Constraints(-273.15d, 200d, 0.01d),
+				null),
+				new Module(device, "2", 9, null, null, R.string.devices__mod_101_2, false, null, new BaseValue.Constraints(0d, 1000000d, 1d),
+				null),
+				new Module(device, "3", 2, null, null, R.string.devices__mod_101_3, false, null, new BaseValue.Constraints(0d, 100d, 1d),
+				null)
 			);
 		}
 	};
 
 	/** Version from specification of this devices list */
-	public static final String DEVICES_VERSION = "1";
+	public static final String DEVICES_VERSION = "2";
 
 	/** Generation time (GMT) of this devices list */
-	public static final long DEVICES_DATE = 1480595449912l;
+	public static final long DEVICES_DATE = 1509025774000l;
 
-	
 	/** END OF GENERATED CONTENT **/
+
 
 	private final String mTypeId;
 	private final String mTypeName;
