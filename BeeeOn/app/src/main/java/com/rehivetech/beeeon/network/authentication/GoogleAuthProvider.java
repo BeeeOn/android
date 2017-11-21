@@ -27,7 +27,7 @@ public class GoogleAuthProvider implements IAuthProvider, GoogleApiClient.OnConn
 	// This ID must be unique amongst all providers
 	public static final int PROVIDER_ID = 201;
 
-	private static final String PROVIDER_NAME = "google";
+	private static final String PROVIDER_NAME = "google-android";
 	private static final String PARAMETER_TOKEN = "authCode";
 	private static final String AUTH_INTENT_DATA_TOKEN = "token";
 
