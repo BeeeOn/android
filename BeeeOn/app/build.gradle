@@ -102,7 +102,7 @@ dependencies {
     implementation 'joda-time:joda-time:2.7'
     implementation 'frankiesardo:icepick:3.2.0'
     annotationProcessor 'frankiesardo:icepick-processor:3.2.0'
-    implementation 'com.facebook.android:facebook-android-sdk:4.12.1'
+    implementation 'com.facebook.android:facebook-android-sdk:4.28.0'
     implementation 'com.google.code.gson:gson:2.6.1'
     implementation 'io.realm:android-adapters:1.2.2'
     implementation 'com.jakewharton.timber:timber:4.1.2'

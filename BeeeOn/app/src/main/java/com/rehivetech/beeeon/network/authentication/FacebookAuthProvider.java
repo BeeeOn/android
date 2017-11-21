@@ -6,7 +6,6 @@ import android.content.Intent;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
@@ -22,7 +21,7 @@ public class FacebookAuthProvider implements IAuthProvider {
 
 	private static final String PROVIDER_NAME = "facebook";
 
-	private static final String PARAMETER_TOKEN = "token";
+	private static final String PARAMETER_TOKEN = "authCode";
 
 	private static final String AUTH_INTENT_DATA_TOKEN = "token";
 
@@ -103,8 +102,8 @@ public class FacebookAuthProvider implements IAuthProvider {
 	@Override
 	public void prepareAuth(LoginActivity activity) {
 		// Initialize sdk (it is required)
-		if (!FacebookSdk.isInitialized())
-			FacebookSdk.sdkInitialize(activity, FACEBOOK_REQUEST_CODE_OFFSET);
+//		if (!FacebookSdk.isInitialized())
+//			FacebookSdk.sdkInitialize(activity);
 
 		// Do login, it will open Facebook's activity and then send result to our LoginActivity
 		LoginManager.getInstance().logInWithReadPermissions(activity, Arrays.asList("public_profile", "email"));

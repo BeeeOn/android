@@ -288,14 +288,14 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				break;
 			}
 			default: {
-				if (FacebookAuthProvider.isFacebookRequestCode(requestCode)) {
+//				if (FacebookAuthProvider.isFacebookRequestCode(requestCode)) {
 					authProvider = new FacebookAuthProvider();
 					((FacebookAuthProvider) authProvider).processResult(this, requestCode, resultCode, data);
-				} else {
-					Timber.e( String.format("Unknown requestCode (%d)", requestCode));
-					mLoginCancel = true;
-					mProgress.dismiss();
-				}
+//				} else {
+//					Timber.e( String.format("Unknown requestCode (%d)", requestCode));
+//					mLoginCancel = true;
+//					mProgress.dismiss();
+//				}
 				return;
 			}
 		}

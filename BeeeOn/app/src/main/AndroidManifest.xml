@@ -62,9 +62,8 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="@string/api_keys_google_maps" />
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/api_keys_facebook_app_id" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+                   android:value="@string/facebook_app_id" />
 
         <activity
             android:name=".gui.activity.LoginActivity"
@@ -139,11 +138,20 @@
             android:name=".gui.activity.AddAutomationRuleActivity"
             android:label="@string/automation_add_rule_title" />
         <!-- Facebook login screen -->
+        <activity android:name="com.facebook.FacebookActivity"
+                  android:configChanges=
+                      "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                  android:label="@string/app_name" />
         <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".gui.activity.DevicesListActivity"
             android:label="@string/nav_drawer_menu_menu_devices" />
