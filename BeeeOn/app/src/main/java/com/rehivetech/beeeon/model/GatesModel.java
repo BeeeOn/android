@@ -92,11 +92,11 @@ public class GatesModel extends BaseModel {
 	 *
 	 * @param id
 	 * @param name
-	 * @param offsetInMinutes
+	 * @param offsetInSeconds
 	 * @return true on success, false otherwise
 	 */
-	public boolean registerGate(String id, String name, int offsetInMinutes) {
-		if (mNetwork.isAvailable() && mNetwork.gates_register(id, name, offsetInMinutes)) {
+	public boolean registerGate(String id, String name, int offsetInSeconds) {
+		if (mNetwork.isAvailable() && mNetwork.gates_register(id, name, offsetInSeconds)) {
 			reloadGates(true); // TODO: do this somehow better? Like load data only for this registered gate as answer from server?
 			reloadGateInfo(id, true);
 			return true;
