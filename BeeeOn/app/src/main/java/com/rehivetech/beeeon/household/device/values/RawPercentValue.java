@@ -13,6 +13,8 @@ import com.rehivetech.beeeon.util.Utils;
 
 public class RawPercentValue extends BaseValue {
 
+	private double mValue = 0;
+
 	private static PercentUnit mUnit = new PercentUnit();
 
 	@Override
@@ -31,8 +33,14 @@ public class RawPercentValue extends BaseValue {
 	}
 
 	@Override
+	public void setValue(String value) {
+		super.setValue(value);
+		mValue = Utils.parseDoubleSafely(getRawValue(), 0);
+	}
+
+	@Override
 	public double getDoubleValue() {
-		return Utils.parseDoubleSafely(getRawValue(), 0);
+		return mValue;
 	}
 
 	@Override
