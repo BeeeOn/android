@@ -174,9 +174,11 @@ public class NumberPickerDialogFragment extends BaseDialogFragment {
 			decimalPoint.setVisibility(View.VISIBLE);
 
 			double granularityDecimalPart = granularity - granularity.intValue();
+			int numOfDecimalDigits = String.valueOf(granularityDecimalPart).substring(2).length();
+			granularityDecimalPart = granularityDecimalPart * Math.pow(10, numOfDecimalDigits);
 
-			for (double i = 0; i < 1; i += granularityDecimalPart) {
-				decimalSteps.add(String.valueOf(i).substring(2));
+			for (int i = 0; i < 1 * Math.pow(10, numOfDecimalDigits); i += (int) granularityDecimalPart) {
+				decimalSteps.add(String.valueOf(i));
 			}
 
 			numberPickerDecimal.setDisplayedValues(decimalSteps.toArray(new String[decimalSteps.size()]));
