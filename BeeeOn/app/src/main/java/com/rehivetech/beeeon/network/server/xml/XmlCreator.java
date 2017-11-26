@@ -861,10 +861,10 @@ public class XmlCreator {
 		 */
 		public static Request deleteGCMID(String bt, String userId, String gcmid) {
 			try {
-				Request req = beginXml("unregisterservice", bt, XmlParser.Result.OK);
+				Request req = beginXml("unregister", bt, XmlParser.Result.OK);
 
 				req.addTag("service",
-						"name", "gcm",
+						"name", "fcm",
 						"id", gcmid,
 						"userid", userId);
 
@@ -884,10 +884,10 @@ public class XmlCreator {
 		 */
 		public static Request setGCMID(String bt, String gcmid) {
 			try {
-				Request req = beginXml("registerservice", bt, XmlParser.Result.OK);
+				Request req = beginXml("register", bt, XmlParser.Result.OK);
 
 				req.addTag("service",
-						"name", "gcm",
+						"name", "fcm",
 						"id", gcmid);
 
 				return req.endXml();
