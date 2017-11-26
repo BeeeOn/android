@@ -3,15 +3,14 @@ package com.rehivetech.beeeon.household.device;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.BatteryValue;
-import com.rehivetech.beeeon.household.device.values.RawPercentValue;
 import com.rehivetech.beeeon.household.device.values.EmissionValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
 import com.rehivetech.beeeon.household.device.values.HumidityValue;
 import com.rehivetech.beeeon.household.device.values.IlluminationValue;
 import com.rehivetech.beeeon.household.device.values.NoiseValue;
 import com.rehivetech.beeeon.household.device.values.PressureValue;
-import com.rehivetech.beeeon.household.device.values.RawFloatValue;
 import com.rehivetech.beeeon.household.device.values.RawIntValue;
+import com.rehivetech.beeeon.household.device.values.RawPercentValue;
 import com.rehivetech.beeeon.household.device.values.RefreshValue;
 import com.rehivetech.beeeon.household.device.values.RssiValue;
 import com.rehivetech.beeeon.household.device.values.TemperatureValue;
@@ -39,7 +38,7 @@ public enum ModuleType {
 	TYPE_PERFORMANCE(14, R.string.devices__type_performance, RawPercentValue.class, false),
 	TYPE_PRESSURE(15, R.string.devices__type_pressure, PressureValue.class, false),
 	TYPE_RSSI(16, R.string.devices__type_rssi, RssiValue.class, true),
-	TYPE_SECURITY_ALERT(17, R.string.devices__type_security_alert, EnumValue.class, true),
+	TYPE_SECURITY_ALERT(17, R.string.devices__type_security_alert, EnumValue.class, false),
 	TYPE_SHAKE(18, R.string.devices__type_shake, EnumValue.class, true),
 	TYPE_TEMPERATURE(19, R.string.devices__type_temperature, TemperatureValue.class, false),
 	TYPE_ULTRAVIOLET(20, R.string.devices__type_ultraviolet, RawIntValue.class, false),
