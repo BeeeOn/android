@@ -46,7 +46,7 @@ public final class Module implements IOrderIdentifier {
 		mDevice = device;
 		mId = id;
 		mSort = sort;
-		mGroupRes = groupRes != null ? groupRes : 0;
+		mGroupRes = groupRes != null ? groupRes : R.string.device_detail_default_group;
 		mNameRes = nameRes != null ? nameRes : 0;
 		mIsActuator = isActuator;
 		mRules = rules != null ? Collections.unmodifiableList(rules) : null;
