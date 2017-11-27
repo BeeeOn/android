@@ -174,6 +174,13 @@ public class LoginActivity extends BaseActivity implements BaseBeeeOnDialog.IPos
 				.showAllowingStateLoss();
 	}
 
+	public void hideProgressDialog() {
+		if (mProgress != null) {
+			mProgress.dismiss();
+			mProgress = null;
+		}
+	}
+
 	/**
 	 * Prepares UI for server spinner
 	 */

@@ -79,11 +79,6 @@
             android:name=".gui.activity.WebViewActivity"
             android:label="@string/manifest_title_main"></activity>
         <activity
-            android:name=".gui.activity.WebAuthActivity"
-            android:label="@string/manifest_title_main"
-            android:launchMode="singleTask">
-        </activity>
-        <activity
             android:name=".gui.activity.MainActivity"
             android:label="@string/manifest_title_main"
             android:theme="@style/MainActivityTheme"></activity>
@@ -162,15 +157,6 @@
         <activity
             android:name=".gui.activity.DashboardDetailActivity"
             android:label="@string/app_name" />
-
-        <activity android:name=".gui.activity.OAuthRedirectActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="com.rehivetech.beeeon"/>
-            </intent-filter>
-        </activity>
 
         <!-- WIDGETS -->
         <service

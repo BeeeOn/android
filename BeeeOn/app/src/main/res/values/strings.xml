@@ -4,8 +4,6 @@
 	<!-- Application name -->
 	<!-- <string name="app_name" translatable="false">BeeeOn Beta</string> --> <!-- is defined in build.gradle -->
 
-	<string name="google_login_redirect_uri" translatable="false">com.rehivetech.beeeon:/oauthcallback</string>
-
 	<!-- Common strings -->
 	<string name="empty" translatable="false"/>
 	<string name="not_specified">Not specified</string>

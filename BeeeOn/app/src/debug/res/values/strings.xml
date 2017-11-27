@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="google_login_redirect_uri" translatable="false">com.rehivetech.beeeon.debug:/oauthcallback</string>
-</resources>

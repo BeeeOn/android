@@ -6,15 +6,6 @@
 
     <application
         android:name=".DebugApplication"
-        tools:replace="android:name">
+        tools:replace="android:name"/>
 
-        <activity android:name=".gui.activity.OAuthRedirectActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="com.rehivetech.beeeon.debug"/>
-            </intent-filter>
-        </activity>
-    </application>
 </manifest>

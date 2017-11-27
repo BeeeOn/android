@@ -10,10 +10,10 @@ import android.util.Log;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.gui.activity.LoginActivity;
-import com.rehivetech.beeeon.gui.activity.WebAuthActivity;
 import com.rehivetech.beeeon.util.Utils;
 
 import java.util.HashMap;
@@ -58,23 +58,26 @@ public class GoogleAuthProvider implements IAuthProvider, GoogleApiClient.OnConn
 
 	@Override
 	public boolean loadAuthIntent(Context context, Intent data) {
-		if (!Utils.isGooglePlayServicesAvailable(context)) {
-			String token = data.getExtras().getString(WebAuthActivity.EXTRA_AUTH_CODE);
-			setTokenParameter(token);
-		} else {
+		if (Utils.isGooglePlayServicesAvailable(context)) {
 			String token = data.getExtras().getString(AUTH_INTENT_DATA_TOKEN);
 			setTokenParameter(token);
+			return true;
+		} else {
+			return false;
 		}
-		return true;
 	}
 
 	@Override
 	public void prepareAuth(final LoginActivity activity) {
-		if (!Utils.isGooglePlayServicesAvailable(activity))
-			webloginAuth(activity);
-		else
+		if (Utils.isGooglePlayServicesAvailable(activity)) {
 			androidAuth(activity);
-		mActivity = activity;
+			mActivity = activity;
+		} else {
+			activity.hideProgressDialog();
+			GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+			int resultCode = apiAvailability.isGooglePlayServicesAvailable(activity);
+			apiAvailability.getErrorDialog(activity, resultCode, PROVIDER_ID).show();
+		}
 	}
 
 	public GoogleApiClient getGoogleApiClient() {
@@ -89,16 +92,6 @@ public class GoogleAuthProvider implements IAuthProvider, GoogleApiClient.OnConn
 			Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient);
 		} catch (NullPointerException ignored) {
 		}
-	}
-
-	private void webloginAuth(final LoginActivity activity) {
-		Log.d(TAG, "Start webloginAuth");
-
-		final Intent intent = new Intent(activity, WebAuthActivity.class);
-		intent.putExtra(WebAuthActivity.EXTRA_PROVIDER_ID, PROVIDER_ID);
-
-		// Start activity and let user login via web
-		activity.startActivityForResult(intent, PROVIDER_ID);
 	}
 
 	private void androidAuth(final LoginActivity activity) {
