@@ -75,7 +75,7 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 		// catch nullpointer if some of bundle values doesn't exist
 		// catch IllegalArgumentException if cannot cast
 		catch (NullPointerException | IllegalArgumentException e) {
-			Timber.w("Nullpointer or cannot parse to enum/number: %s", e.getLocalizedMessage());
+			Timber.w("Failed to parse notification: %s", e.getMessage());
 
 			return null;
 		}
