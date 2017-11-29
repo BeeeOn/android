@@ -94,7 +94,7 @@ public class GateEditFragment extends BaseApplicationFragment {
 			mGateNameEditText.setText(gate.getName());
 			mGateIdTextView.setText(gate.getId());
 
-			int offsetInMillis = gate.getUtcOffset() * 60 * 1000;
+			int offsetInMillis = gate.getUtcOffset() * 1000;
 			int index = mTimezones.indexOf(TimezoneWrapper.getZoneByOffset(offsetInMillis));
 			mTimezoneSpinner.setSelection(index != -1 ? index : 0);
 		}
@@ -120,8 +120,8 @@ public class GateEditFragment extends BaseApplicationFragment {
 
 		Spinner spinner = (Spinner) getView().findViewById(R.id.gate_edit_spinner);
 		TimezoneWrapper timezone = (TimezoneWrapper) spinner.getSelectedItem();
-		int offsetInMinutes = timezone.offsetInMillis / (1000 * 60);
-		gate.setUtcOffset(offsetInMinutes);
+		int offsetInSeconds = timezone.offsetInMillis / 1000;
+		gate.setUtcOffset(offsetInSeconds);
 
 		String altitudeText = ((EditText) view.findViewById(R.id.gate_edit_altitude)).getText().toString();
 		int altitude = altitudeText.isEmpty() ? 0 : Utils.parseIntSafely(altitudeText, 0);

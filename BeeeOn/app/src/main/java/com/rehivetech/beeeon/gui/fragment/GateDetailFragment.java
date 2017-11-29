@@ -131,7 +131,7 @@ public class GateDetailFragment extends BaseApplicationFragment {
 		else
 			mTitleText.setText(R.string.gate_detail_text_gate_no_name);
 
-		int offsetInMillis = gateInfo.getUtcOffset() * 60 * 1000;
+		int offsetInMillis = gateInfo.getUtcOffset() * 1000;
 		int altitude = gateInfo.getGpsData().getAltitude();
 
 		mDetailsItemList.get(0).text = gateInfo.getId();
