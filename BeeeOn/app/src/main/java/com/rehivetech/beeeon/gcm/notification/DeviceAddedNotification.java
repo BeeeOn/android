@@ -9,6 +9,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import timber.log.Timber;
 
 /**
@@ -25,10 +28,10 @@ public class DeviceAddedNotification extends VisibleNotification {
 		mDeviceId = deviceId;
 	}
 
-	protected static DeviceAddedNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static DeviceAddedNotification getInstance(Integer msgId, Long time, NotificationType type, JSONObject data) throws NullPointerException, IllegalArgumentException {
 		try {
-			String gateId = bundle.getString("gateid");
-			String deviceId = bundle.getString("did");
+			String gateId = data.getString("gateid");
+			String deviceId = data.getString("did");
 
 			if (gateId == null || deviceId == null) {
 				Timber.d("DeviceAdded: some compulsory value is missing.");
@@ -36,7 +39,7 @@ public class DeviceAddedNotification extends VisibleNotification {
 			}
 
 			return new DeviceAddedNotification(msgId, time, type, false, gateId, deviceId);
-		} catch (IllegalArgumentException | NullPointerException e) {
+		} catch (IllegalArgumentException | NullPointerException | JSONException e) {
 			return null;
 		}
 	}

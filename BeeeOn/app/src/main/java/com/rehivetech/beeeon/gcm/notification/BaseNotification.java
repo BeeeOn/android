@@ -15,6 +15,9 @@ import com.rehivetech.beeeon.controller.Controller;
 
 import java.util.Calendar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import timber.log.Timber;
 
 public abstract class BaseNotification implements IGcmNotification, Comparable<BaseNotification> {
@@ -47,16 +50,24 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 			return null;
 		}
 
+		final String raw = bundle.getString("gcm.notification.legacy");
+		if (raw == null) {
+			Log.d("%s", "missing key gcm.notification.legacy");
+			return null;
+		}
+
 		Controller controller = Controller.getInstance(context);
 
-		Log.d("%s", bundle.toString());
+		Log.d("%s", raw);
 		BaseNotification notification;
 		try {
-			NotificationName name = NotificationName.fromValue(bundle.getString("name"));
-			Integer msgId = Integer.valueOf(bundle.getString("mid"));
-			String userId = bundle.getString("uid");
-			Long time = Long.valueOf(bundle.getString("time"));
-			NotificationType type = NotificationType.fromValue(bundle.getString("type"));
+			final JSONObject data = new JSONObject(raw);
+
+			NotificationName name = NotificationName.fromValue(data.getString("name"));
+			Integer msgId = Integer.valueOf(data.getString("mid"));
+			String userId = data.getString("uid");
+			Long time = Long.valueOf(data.getString("time"));
+			NotificationType type = NotificationType.fromValue(data.getString("type"));
 
 			// control validity of message
 			if (name == null || msgId == null || userId == null || time == null || type == null) {
@@ -70,11 +81,11 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 				return null;
 			}
 
-			notification = getInstance(name, msgId, time, type, bundle);
+			notification = getInstance(name, msgId, time, type, data);
 		}
 		// catch nullpointer if some of bundle values doesn't exist
 		// catch IllegalArgumentException if cannot cast
-		catch (NullPointerException | IllegalArgumentException e) {
+		catch (NullPointerException | IllegalArgumentException | JSONException e) {
 			Timber.w("Failed to parse notification: %s", e.getMessage());
 
 			return null;
@@ -87,30 +98,30 @@ public abstract class BaseNotification implements IGcmNotification, Comparable<B
 
 	@Nullable
 	private static BaseNotification getInstance(NotificationName name, Integer msgId, Long time,
-												NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+												NotificationType type, JSONObject data) throws NullPointerException, IllegalArgumentException {
 		BaseNotification notification = null;
 
 		switch (name) {
 			case GATE_ADDED:
-				notification = GateAddedNotification.getInstance(msgId, time, type, bundle);
+				notification = GateAddedNotification.getInstance(msgId, time, type, data);
 				break;
 			case DEVICE_ADDED:
-				notification = DeviceAddedNotification.getInstance(msgId, time, type, bundle);
+				notification = DeviceAddedNotification.getInstance(msgId, time, type, data);
 				break;
 			case DELETE_NOTIF:
-				notification = DeleteNotification.getInstance(msgId, time, type, bundle);
+				notification = DeleteNotification.getInstance(msgId, time, type, data);
 				break;
 			case URI:
-				notification = UriNotification.getInstance(msgId, time, type, bundle);
+				notification = UriNotification.getInstance(msgId, time, type, data);
 				break;
 			case DEVICE_LOW_BATTERY:
-				notification = DeviceLowBatteryNotification.getInstance(msgId, time, type, bundle);
+				notification = DeviceLowBatteryNotification.getInstance(msgId, time, type, data);
 				break;
 			case DEVICE_LOW_SIGNAL:
-				notification = DeviceLowSignalNotification.getInstance(msgId, time, type, bundle);
+				notification = DeviceLowSignalNotification.getInstance(msgId, time, type, data);
 				break;
 			case GATE_OFFLINE:
-				notification = GateOfflineNotification.getInstance(msgId, time, type, bundle);
+				notification = GateOfflineNotification.getInstance(msgId, time, type, data);
 				break;
 		}
 

@@ -9,6 +9,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import timber.log.Timber;
 
 /**
@@ -27,11 +30,11 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 		mBatteryLevel = batteryLevel;
 	}
 
-	protected static DeviceLowBatteryNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static DeviceLowBatteryNotification getInstance(Integer msgId, Long time, NotificationType type, JSONObject data) throws NullPointerException, IllegalArgumentException {
 		try {
-			String gateId = bundle.getString("gateid");
-			String deviceId = bundle.getString("did");
-			String batterylevel = bundle.getString("batt");
+			String gateId = data.getString("gateid");
+			String deviceId = data.getString("did");
+			String batterylevel = data.getString("batt");
 
 			if (gateId == null || deviceId == null || batterylevel == null) {
 				Timber.d("DeviceAdded: some compulsory value is missing.");
@@ -39,7 +42,7 @@ public class DeviceLowBatteryNotification extends VisibleNotification {
 			}
 
 			return new DeviceLowBatteryNotification(msgId, time, type, false, gateId, deviceId, batterylevel);
-		} catch (IllegalArgumentException | NullPointerException e) {
+		} catch (IllegalArgumentException | NullPointerException | JSONException e) {
 			return null;
 		}
 	}

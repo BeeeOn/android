@@ -11,6 +11,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import timber.log.Timber;
 
 /**
@@ -25,9 +28,9 @@ public class GateAddedNotification extends VisibleNotification {
 		mGateId = gateId;
 	}
 
-	protected static GateAddedNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static GateAddedNotification getInstance(Integer msgId, Long time, NotificationType type, JSONObject data) throws NullPointerException, IllegalArgumentException {
 		try {
-			String gateId = bundle.getString("gateid");
+			String gateId = data.getString("gateid");
 
 			if (gateId == null) {
 				Timber.d("Gate added: some compulsory value is missing.");
@@ -35,7 +38,7 @@ public class GateAddedNotification extends VisibleNotification {
 			}
 
 			return new GateAddedNotification(msgId, time, type, false, gateId);
-		} catch (IllegalArgumentException | NullPointerException e) {
+		} catch (IllegalArgumentException | NullPointerException | JSONException e) {
 			return null;
 		}
 	}

@@ -4,6 +4,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import timber.log.Timber;
 
 /**
@@ -27,9 +30,9 @@ public class DeleteNotification extends BaseNotification {
 		mDeleteNotificationId = deleteNotificaitonId;
 	}
 
-	protected static DeleteNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static DeleteNotification getInstance(Integer msgId, Long time, NotificationType type, JSONObject data) throws NullPointerException, IllegalArgumentException {
 		try {
-			Integer delNotificationId = Integer.valueOf(bundle.getString(JSON_TAG_DEL_NOTIFICATION_ID));
+			Integer delNotificationId = Integer.valueOf(data.getString(JSON_TAG_DEL_NOTIFICATION_ID));
 
 			if (delNotificationId == null) {
 				Timber.d("DeleteNotification: some compulsory value is missing.");
@@ -37,7 +40,7 @@ public class DeleteNotification extends BaseNotification {
 			}
 
 			return new DeleteNotification(msgId, time, type, delNotificationId);
-		} catch (IllegalArgumentException | NullPointerException e) {
+		} catch (IllegalArgumentException | NullPointerException | JSONException e) {
 			return null;
 		}
 	}

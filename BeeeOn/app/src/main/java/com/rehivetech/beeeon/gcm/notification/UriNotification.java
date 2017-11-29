@@ -14,6 +14,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import timber.log.Timber;
 
 /**
@@ -30,10 +33,10 @@ public class UriNotification extends VisibleNotification {
 		mUri = uri;
 	}
 
-	protected static UriNotification getInstance(Integer msgId, Long time, NotificationType type, Bundle bundle) throws NullPointerException, IllegalArgumentException {
+	protected static UriNotification getInstance(Integer msgId, Long time, NotificationType type, JSONObject data) throws NullPointerException, IllegalArgumentException {
 		try {
-			String message = bundle.getString("msg");
-			String uri = bundle.getString("uri");
+			String message = data.getString("msg");
+			String uri = data.getString("uri");
 
 			if (message == null || uri == null) {
 				Timber.d( "Watdog: some compulsory value is missing.");
@@ -41,7 +44,7 @@ public class UriNotification extends VisibleNotification {
 			}
 
 			return new UriNotification(msgId, time, type, false, message, uri);
-		} catch (IllegalArgumentException | NullPointerException e) {
+		} catch (IllegalArgumentException | NullPointerException | JSONException e) {
 			return null;
 		}
 	}
