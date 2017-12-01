@@ -27,22 +27,6 @@ public class FacebookAuthProvider implements IAuthProvider {
 
 	private static Map<String, String> mParameters = new HashMap<>();
 
-	public static final int FACEBOOK_REQUEST_CODE_OFFSET = 6000;
-
-	/**
-	 * Checks requestCode whether it is used by this provider. We can't compare single PROVIDER_ID because Facebook can use more of them.
-	 *
-	 * @param code
-	 * @return
-	 */
-	public static boolean isFacebookRequestCode(int code) {
-		/**
-		 * As from FB docs: The request code offset that Facebook activities will be called with.
-		 * Please do not use the range between the value you set and another 100 entries after it in your other requests.
-		 */
-		return FACEBOOK_REQUEST_CODE_OFFSET <= code && code <= (FACEBOOK_REQUEST_CODE_OFFSET + 100);
-	}
-
 	public void processResult(final LoginActivity activity, int requestCode, int resultCode, Intent data) {
 		CallbackManager fbCallbackManager = CallbackManager.Factory.create();
 
