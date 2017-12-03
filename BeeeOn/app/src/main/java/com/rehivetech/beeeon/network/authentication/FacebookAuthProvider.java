@@ -19,7 +19,7 @@ public class FacebookAuthProvider implements IAuthProvider {
 	// This ID must be unique amongst all providers
 	public static final int PROVIDER_ID = 202;
 
-	private static final String PROVIDER_NAME = "facebook";
+	private static final String PROVIDER_NAME = "facebook-android";
 
 	private static final String PARAMETER_TOKEN = "accessToken";
 
