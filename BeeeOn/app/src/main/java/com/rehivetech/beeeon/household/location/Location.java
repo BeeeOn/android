@@ -15,7 +15,7 @@ public class Location implements INameIdentifier {
 	/**
 	 * Represents id of "no location" (server requires "null" string)
 	 */
-	public static final String NO_LOCATION_ID = "null";
+	public static final String NO_LOCATION_ID = "00000000-0000-0000-0000-000000000000";
 
 	/**
 	 * Represents type (= icon) of "no location"
