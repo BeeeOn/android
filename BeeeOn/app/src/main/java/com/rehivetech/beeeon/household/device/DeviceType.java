@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.household.device;
 
+import android.content.Context;
 import android.support.annotation.StringRes;
 
 import com.rehivetech.beeeon.IIdentifier;
@@ -179,14 +180,28 @@ public class DeviceType implements IIdentifier {
 	private final String mTypeId;
 	private final String mTypeName;
 	private final int mNameRes;
+	private final String mName;
 	private final int mManufacturerRes;
+	private final String mManufacturer;
 	private final List<Module.Factory> mModuleFactory;
 
 	DeviceType(String typeId, String typeName, @StringRes int nameRes, @StringRes int manufacturerRes, List<Module.Factory> moduleFactory) {
 		mTypeId = typeId;
 		mTypeName = typeName;
 		mNameRes = nameRes;
+		mName = null;
 		mManufacturerRes = manufacturerRes;
+		mManufacturer = null;
+		mModuleFactory = moduleFactory;
+	}
+
+	public DeviceType(String typeId, String typeName, String name, String manufacturer, List<Module.Factory> moduleFactory) {
+		mTypeId = typeId;
+		mTypeName = typeName;
+		mNameRes = -1;
+		mName = name;
+		mManufacturerRes = -1;
+		mManufacturer = manufacturer;
 		mModuleFactory = moduleFactory;
 	}
 
@@ -213,8 +228,22 @@ public class DeviceType implements IIdentifier {
 		return mNameRes;
 	}
 
+	public String getName(Context context) {
+		if (mName == null)
+			return context.getString(mNameRes);
+
+		return mName;
+	}
+
 	public int getManufacturerRes() {
 		return mManufacturerRes;
+	}
+
+	public String getManufacturer(Context context) {
+		if (mManufacturer == null)
+			return context.getString(mManufacturerRes);
+
+		return mManufacturer;
 	}
 
 	public static DeviceType getUnknown() {

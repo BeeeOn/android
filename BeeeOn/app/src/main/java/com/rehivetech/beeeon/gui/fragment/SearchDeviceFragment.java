@@ -290,20 +290,23 @@ public class SearchDeviceFragment extends BaseApplicationFragment implements Dev
 	 */
 	private void updateAdapter(List<Device> adapterData) {
 		// updates manufacturers
-		List<Integer> manufacturers = new ArrayList<>();
+		List<String> manufacturers = new ArrayList<>();
 		for (Device device : adapterData) {
-			if (!manufacturers.contains(device.getType().getManufacturerRes())) {
-				manufacturers.add(device.getType().getManufacturerRes());
+			final String manufacturer = device.getType().getManufacturer(mActivity);
+
+			if (!manufacturers.contains(manufacturer)) {
+				manufacturers.add(manufacturer);
 			}
 		}
 
 		ArrayList<Object> adapterList = new ArrayList<>();
-		for (int manufacturer : manufacturers) {
-			adapterList.add(getString(manufacturer));
+		for (String manufacturer : manufacturers) {
+			adapterList.add(manufacturer);
 			for (Device device : adapterData) {
-				if (manufacturer == device.getType().getManufacturerRes()) {
+				final String deviceManufacturer = device.getType().getManufacturer(mActivity);
+
+				if (manufacturer == deviceManufacturer)
 					adapterList.add(device);
-				}
 			}
 		}
 

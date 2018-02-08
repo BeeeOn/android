@@ -128,7 +128,7 @@ public class SetupDeviceFragment extends BaseApplicationFragment {
 		name.setText(mNewDevice.getName(mActivity));
 
 		TextView manufacturer = (TextView) view.findViewById(R.id.device_setup_header_manufacturer);
-		manufacturer.setText(getString(mNewDevice.getType().getManufacturerRes()));
+		manufacturer.setText(mNewDevice.getType().getManufacturer(mActivity));
 
 		// UserSettings can be null when user is not logged in!
 		SharedPreferences prefs = controller.getUserSettings();

@@ -70,7 +70,8 @@ public class DeviceDetailActivity extends BaseApplicationActivity implements Dev
 				return true;
 			case R.id.device_detail_menu_info:
 				if (mDevice != null) {
-					DeviceDetailInfoDialog.showDialog(this, getSupportFragmentManager(), mDeviceId, getString(mDevice.getType().getManufacturerRes()));
+					String manufacturer = mDevice.getType().getManufacturer(this);
+					DeviceDetailInfoDialog.showDialog(this, getSupportFragmentManager(), mDeviceId, manufacturer);
 				}
 		}
 

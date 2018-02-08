@@ -163,7 +163,7 @@ public class DeviceEditFragment extends BaseApplicationFragment implements AddLo
 		if (mDevice == null) return;
 
 		mDeviceNameText.setText(mDevice.getCustomName());
-		mDeviceNameText.setHint(mDevice.getType().getNameRes());
+		mDeviceNameText.setHint(mDevice.getType().getName(mActivity));
 
 		reloadLocationSpinner();
 		selectLocation(mDevice.getLocationId());

@@ -155,7 +155,10 @@ public final class Device implements IIdentifier {
 	 */
 	@NonNull
 	public String getName(Context context) {
-		return mCustomName.isEmpty() ? context.getString(getType().getNameRes()) : mCustomName;
+		if (mCustomName.isEmpty())
+			return getType().getName(context);
+
+		return mCustomName;
 	}
 
 	/**
