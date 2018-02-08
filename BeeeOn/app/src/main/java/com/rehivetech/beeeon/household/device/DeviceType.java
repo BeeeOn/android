@@ -309,4 +309,8 @@ public enum DeviceType implements IIdentifier {
 	public int getManufacturerRes() {
 		return mManufacturerRes;
 	}
+
+	public static DeviceType getUnknown() {
+		return TYPE_UNKNOWN;
+	}
 }
