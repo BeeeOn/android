@@ -386,8 +386,7 @@ public class DemoNetwork implements INetwork {
 		} while (mDevices.hasObject(gateId, address));
 
 		// Get random device type
-		DeviceType[] types = DeviceType.values();
-		DeviceType randType = types[1 + rand.nextInt(types.length - 1)]; // 1+ because we don't want unknown type, which is on beginning
+		DeviceType randType = DeviceType.getRandomDemoType(rand);
 
 		// Create new device
 		Device device = Device.createDeviceByType(randType.getId(), gateId, address);

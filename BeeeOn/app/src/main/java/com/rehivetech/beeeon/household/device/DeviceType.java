@@ -10,6 +10,7 @@ import com.rehivetech.beeeon.household.device.values.EnumValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public enum DeviceType implements IIdentifier {
 	TYPE_UNKNOWN("", "???", R.string.device_type_unknown_device, R.string.device_type_unknown_manufacturer) {
@@ -317,5 +318,11 @@ public enum DeviceType implements IIdentifier {
 	public static DeviceType getDemoType(int i) {
 		final DeviceType[] types = DeviceType.values();
 		return types[1 + i];
+	}
+
+	public static DeviceType getRandomDemoType(Random rand) {
+		final DeviceType[] types = DeviceType.values();
+		// 1+ because we don't want unknown type, which is on beginning
+		return types[1 + rand.nextInt(types.length - 1)];
 	}
 }
