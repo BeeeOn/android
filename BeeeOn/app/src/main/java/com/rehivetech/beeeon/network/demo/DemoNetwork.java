@@ -389,7 +389,7 @@ public class DemoNetwork implements INetwork {
 		DeviceType randType = DeviceType.getRandomDemoType(rand);
 
 		// Create new device
-		Device device = Device.createDeviceByType(randType.getId(), gateId, address);
+		Device device = Device.createDevice(randType, gateId, address);
 
 		Integer battery = device.getBattery();
 		if (battery != null) {
