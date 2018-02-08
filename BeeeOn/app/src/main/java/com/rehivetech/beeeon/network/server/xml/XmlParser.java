@@ -8,11 +8,16 @@ import com.rehivetech.beeeon.exception.AppException;
 import com.rehivetech.beeeon.exception.ClientError;
 import com.rehivetech.beeeon.gcm.notification.VisibleNotification;
 import com.rehivetech.beeeon.household.device.Device;
+import com.rehivetech.beeeon.household.device.DeviceType;
+import com.rehivetech.beeeon.household.device.Module;
 import com.rehivetech.beeeon.household.device.ModuleLog;
 import com.rehivetech.beeeon.household.gate.Gate;
 import com.rehivetech.beeeon.household.gate.GateInfo;
 import com.rehivetech.beeeon.household.location.Location;
 import com.rehivetech.beeeon.household.user.User;
+import com.rehivetech.beeeon.household.device.values.BaseValue;
+import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.util.GpsData;
 import com.rehivetech.beeeon.util.Utils;
 
@@ -27,6 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import timber.log.Timber;
 
@@ -231,6 +237,8 @@ public class XmlParser {
 	 * @return List of devices
 	 */
 	public List<Device> parseDevices() {
+		Timber.d("received device list...");
+
 		try {
 			mParser.nextTag(); // device start tag
 			List<Device> result = new ArrayList<>();
@@ -243,15 +251,33 @@ public class XmlParser {
 				String address = getSecureAttributeString("euid");
 				String gateId = getSecureAttributeString("gateid");
 
-				Device device = Device.createDeviceByType(type, gateId, address);
+				String customName = getSecureAttributeString("name");
+				String locationId = getSecureAttributeString("locationid");
+				long time = getSecureAttributeInt("time", 0) * 1000L;
+				long involved = getSecureAttributeInt("involved", 0) * 1000L;
+				String status = getSecureAttributeString("status");
 
-				device.setCustomName(getSecureAttributeString("name"));
-				device.setLocationId(getSecureAttributeString("locationid"));
-				device.setLastUpdate(new DateTime((long) getSecureAttributeInt("time", 0) * 1000, DateTimeZone.UTC));
-				// PairedTime is not used always...
-				device.setPairedTime(new DateTime((long) getSecureAttributeInt("involved", 0) * 1000, DateTimeZone.UTC));
-				//noinspection ResourceType
-				device.setStatus(getSecureAttributeString("status"));
+				DeviceType deviceType = DeviceType.getById(type);
+				boolean typeFinished = true;
+
+				if (deviceType == DeviceType.getUnknown()) {
+					final String name = getSecureAttributeString("type_name");
+
+					Timber.d("learning device type: " + name);
+
+					deviceType = new DeviceType(
+						type,
+						name,
+						getSecureAttributeString("name"),
+						getSecureAttributeString("vendor"),
+						new ArrayList<Module.Factory>());
+
+					typeFinished = false;
+				}
+
+				List<Module.Factory> modules = new ArrayList<Module.Factory>();
+				Map<String, String> moduleValueMap = new HashMap<>();
+				Map<String, String> moduleStatusMap = new HashMap<>();
 
 				// Load modules values
 				while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("device")) {
@@ -259,14 +285,104 @@ public class XmlParser {
 					String moduleId = getSecureAttributeString("id");
 					String moduleValue = getSecureAttributeString("value");
 					String moduleStatus = getSecureAttributeString("status");
-					device.setModuleValue(moduleId, moduleValue, moduleStatus);
+					moduleValueMap.put(moduleId, moduleValue);
+					moduleStatusMap.put(moduleId, moduleStatus);
+
+					if (!typeFinished) {
+						Timber.d("learning module type: " + moduleId);
+
+						if (!getSecureAttributeString("type-enum-values").equals("")) {
+							ArrayList<EnumValue.Item> items = new ArrayList<>();
+							final String raw = getSecureAttributeString("type-enum-values");
+							int i = 0;
+
+							Timber.d("parsing enum values: " + raw);
+
+							for (final String pair : raw.split(";")) {
+								if (pair.length() == 0) {
+									i += 1;
+									continue;
+								}
+
+								final String[] parts = pair.split(":");
+								if (parts.length != 2) {
+									Timber.e("invalid enum pair: " + pair
+										+ " (" + Integer.toString(parts.length) + ")");
+									i += 1;
+									continue;
+								}
+
+								items.add(new EnumValue.Item(i++, parts[0], parts[1]));
+							}
+
+							Timber.d("learned module enum type: "
+									+ raw + " (" + Integer.toString(items.size()) + ")");
+
+							modules.add(new Module.Factory(
+								moduleId,
+								getSecureAttributeInt("type", -1),
+								null,
+								null,
+								getSecureAttributeString("name"),
+								getSecureAttributeString("actuator").equals("yes"),
+								null,
+								items,
+								null
+							));
+						}
+						else if (!getSecureAttributeString("type-range-max").equals("")) {
+							final double max = getSecureAttributeDouble("type-range-max", Double.NaN);
+							final double min = getSecureAttributeDouble("type-range-min", Double.NaN);
+							final double step = getSecureAttributeDouble("type-range-step", 1);
+
+							Timber.d("learned module constrained type: "
+									+ Double.toString(min) + ".." + Double.toString(max)
+									+ " (" + Double.toString(step) + ")");
+
+							modules.add(new Module.Factory(
+								moduleId,
+								getSecureAttributeInt("type", -1),
+								null,
+								null,
+								getSecureAttributeString("name"),
+								getSecureAttributeString("actuator").equals("yes"),
+								null,
+								new BaseValue.Constraints(min, max, step),
+								null
+							));
+						}
+						else {
+							Timber.d("skipped unspecified module type " + moduleId);
+						}
+					}
 
 					mParser.nextTag(); // module endtag
+				}
+
+				if (!typeFinished) {
+					deviceType.setModuleFactory(modules);
+					Timber.d("learned new device type " + deviceType.getId());
+				}
+
+				Device device = Device.createDevice(deviceType, gateId, address);
+
+				device.setCustomName(customName);
+				device.setLocationId(locationId);
+				device.setLastUpdate(new DateTime(time, DateTimeZone.UTC));
+				// PairedTime is not used always...
+				device.setPairedTime(new DateTime(involved, DateTimeZone.UTC));
+				//noinspection ResourceType
+				device.setStatus(status);
+
+				for (Map.Entry<String, String> entry : moduleValueMap.entrySet()) {
+					String moduleStatus = moduleStatusMap.get(entry.getKey());
+					device.setModuleValue(entry.getKey(), entry.getValue(), moduleStatus);
 				}
 
 				result.add(device);
 			} while (mParser.nextTag() != XmlPullParser.END_TAG && !mParser.getName().equals("response"));
 
+			Timber.d("parsed " + Integer.toString(result.size()) + " devices");
 			return result;
 		} catch (IOException | XmlPullParserException e) {
 			throw AppException.wrap(e, ClientError.XML);

@@ -301,12 +301,30 @@ public final class Module implements IOrderIdentifier {
 			mConstraints = constraints;
 		}
 
+		public Factory(@NonNull String id, int typeId, @Nullable Integer sort,
+				@Nullable Integer groupRes, @Nullable String name,
+				boolean isActuator, @Nullable List<Rule> rules,
+				@Nullable BaseValue.Constraints constraints,
+				@Nullable String defaultValue) {
+			this(id, typeId, sort, groupRes, name, isActuator, rules, defaultValue);
+			mConstraints = constraints;
+		}
+
 		Factory(@NonNull String id, int typeId, @Nullable Integer sort,
 				@Nullable Integer groupRes, @Nullable Integer nameRes,
 				boolean isActuator, @Nullable List<Rule> rules,
 				@Nullable List<EnumValue.Item> enumValues,
 				@Nullable String defaultValue) {
 			this(id, typeId, sort, groupRes, nameRes, isActuator, rules, defaultValue);
+			mEnumValues = enumValues;
+		}
+
+		public Factory(@NonNull String id, int typeId, @Nullable Integer sort,
+				@Nullable Integer groupRes, @Nullable String name,
+				boolean isActuator, @Nullable List<Rule> rules,
+				@Nullable List<EnumValue.Item> enumValues,
+				@Nullable String defaultValue) {
+			this(id, typeId, sort, groupRes, name, isActuator, rules, defaultValue);
 			mEnumValues = enumValues;
 		}
 

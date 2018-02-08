@@ -205,6 +205,13 @@ public class DeviceType implements IIdentifier {
 		mModuleFactory = moduleFactory;
 	}
 
+	public void setModuleFactory(final List<Module.Factory> factory) {
+		mModuleFactory.clear();
+
+		for (Module.Factory f : factory)
+			mModuleFactory.add(f);
+	}
+
 	public List<Module> createModules(Device device) {
 		List<Module> modules = new ArrayList<Module>();
 
