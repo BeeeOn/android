@@ -313,4 +313,9 @@ public enum DeviceType implements IIdentifier {
 	public static DeviceType getUnknown() {
 		return TYPE_UNKNOWN;
 	}
+
+	public static DeviceType getDemoType(int i) {
+		final DeviceType[] types = DeviceType.values();
+		return types[1 + i];
+	}
 }

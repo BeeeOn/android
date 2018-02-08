@@ -145,17 +145,17 @@ public class DemoData {
 
 		switch (gateId) {
 			case GATE_1_ID: {
-				devicesList.add(createDevice(DeviceType.TYPE_0, gateId, GATE_1_LOCATION1));
-				devicesList.add(createDevice(DeviceType.TYPE_2, gateId, GATE_1_LOCATION2));
-				devicesList.add(createDevice(DeviceType.TYPE_3, gateId, Location.NO_LOCATION_ID));
-				devicesList.add(createDevice(DeviceType.TYPE_4, gateId, Location.NO_LOCATION_ID));
-				devicesList.add(createDevice(DeviceType.TYPE_5, gateId, GATE_1_LOCATION3));
-				devicesList.add(createDevice(DeviceType.TYPE_7, gateId, GATE_1_LOCATION3));
+				devicesList.add(createDevice(DeviceType.getDemoType(0), gateId, GATE_1_LOCATION1));
+				devicesList.add(createDevice(DeviceType.getDemoType(2), gateId, GATE_1_LOCATION2));
+				devicesList.add(createDevice(DeviceType.getDemoType(3), gateId, Location.NO_LOCATION_ID));
+				devicesList.add(createDevice(DeviceType.getDemoType(4), gateId, Location.NO_LOCATION_ID));
+				devicesList.add(createDevice(DeviceType.getDemoType(5), gateId, GATE_1_LOCATION3));
+				devicesList.add(createDevice(DeviceType.getDemoType(7), gateId, GATE_1_LOCATION3));
 				break;
 			}
 			case GATE_2_ID: {
-				devicesList.add(createDevice(DeviceType.TYPE_1, gateId, GATE_2_LOCATION1));
-				devicesList.add(createDevice(DeviceType.TYPE_6, gateId, GATE_2_LOCATION1));
+				devicesList.add(createDevice(DeviceType.getDemoType(1), gateId, GATE_2_LOCATION1));
+				devicesList.add(createDevice(DeviceType.getDemoType(6), gateId, GATE_2_LOCATION1));
 				break;
 			}
 			default: {
