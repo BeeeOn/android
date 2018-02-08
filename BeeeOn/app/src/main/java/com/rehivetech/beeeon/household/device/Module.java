@@ -25,6 +25,7 @@ public final class Module implements IOrderIdentifier {
 	private final Integer mSort;
 	private final int mGroupRes;
 	private final int mNameRes;
+	private String mName;
 	private final boolean mIsActuator;
 	private final List<Rule> mRules;
 
@@ -126,6 +127,14 @@ public final class Module implements IOrderIdentifier {
 		mValue.setValue(value);
 	}
 
+	public void setName(String name) {
+		mName = name;
+	}
+
+	public String getName() {
+		return mName;
+	}
+
 	/**
 	 * Get resource for human readable string representing type of this module
 	 *
@@ -176,7 +185,11 @@ public final class Module implements IOrderIdentifier {
 	 */
 	public String getName(Context context, boolean withGroup) {
 		String group = mGroupRes > 0 ? context.getString(mGroupRes) : "";
-		String name = mNameRes > 0 ? context.getString(mNameRes) : "";
+		String name = mName;
+
+		if (name == null)
+			name = mNameRes > 0 ? context.getString(mNameRes) : "";
+
 		if (name.isEmpty()) name = context.getString(mType.getStringResource());
 
 		return withGroup ? String.format("%s %s", group, name).trim() : name;
@@ -242,6 +255,7 @@ public final class Module implements IOrderIdentifier {
 		private final Integer mSort;
 		private final Integer mGroupRes;
 		private final int mNameRes;
+		private final String mName;
 		private final boolean mIsActuator;
 		private final List<Rule> mRules;
 		private final String mValue;
@@ -257,6 +271,22 @@ public final class Module implements IOrderIdentifier {
 			mSort = sort;
 			mGroupRes = groupRes;
 			mNameRes = nameRes;
+			mName = null;
+			mIsActuator = isActuator;
+			mRules = rules;
+			mValue = defaultValue;
+		}
+
+		public Factory(@NonNull String id, int typeId, @Nullable Integer sort,
+				@Nullable Integer groupRes, @NonNull String name,
+				boolean isActuator, @Nullable List<Rule> rules,
+				@Nullable String defaultValue) {
+			mId = id;
+			mTypeId = typeId;
+			mSort = sort;
+			mGroupRes = groupRes;
+			mNameRes = -1;
+			mName = name;
 			mIsActuator = isActuator;
 			mRules = rules;
 			mValue = defaultValue;
@@ -281,8 +311,10 @@ public final class Module implements IOrderIdentifier {
 		}
 
 		public Module create(Device device) {
+			Module module;
+
 			if (mConstraints != null) {
-				return new Module(
+				module = new Module(
 					device,
 					mId,
 					mTypeId,
@@ -295,7 +327,7 @@ public final class Module implements IOrderIdentifier {
 					mValue);
 			}
 			else if (mEnumValues != null) {
-				return new Module(
+				module = new Module(
 					device,
 					mId,
 					mTypeId,
@@ -308,7 +340,7 @@ public final class Module implements IOrderIdentifier {
 					mValue);
 			}
 			else {
-				return new Module(
+				module = new Module(
 					device,
 					mId,
 					mTypeId,
@@ -317,8 +349,12 @@ public final class Module implements IOrderIdentifier {
 					mNameRes,
 					mIsActuator,
 					mRules,
+					mConstraints,
 					mValue);
 			}
+
+			module.setName(mName);
+			return module;
 		}
 	};
 
