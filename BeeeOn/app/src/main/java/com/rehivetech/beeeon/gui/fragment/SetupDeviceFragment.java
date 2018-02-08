@@ -82,15 +82,10 @@ public class SetupDeviceFragment extends BaseApplicationFragment {
 		NestedScrollView scrollView = (NestedScrollView) view.findViewById(R.id.device_setup_scrollview);
 		View deviceSetupView;
 
-		switch (mNewDevice.getType()) {
+		deviceSetupView = inflater.inflate(R.layout.device_setup_other_devices, null);
+		scrollView.addView(deviceSetupView);
+		initViews(view);
 
-			// TODO custom layout by device type
-			default:
-				deviceSetupView = inflater.inflate(R.layout.device_setup_other_devices, null);
-				scrollView.addView(deviceSetupView);
-				initViews(view);
-				break;
-		}
 		return view;
 	}
 
