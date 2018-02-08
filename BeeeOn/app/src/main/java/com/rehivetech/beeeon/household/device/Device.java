@@ -67,7 +67,11 @@ public final class Device implements IIdentifier {
 	 * @return Properly initialized new instance of Device.
 	 */
 	public static Device createDeviceByType(String typeId, String gateId, String address) {
-		return new Device(DeviceType.getById(typeId), gateId, address);
+		return createDevice(DeviceType.getById(typeId), gateId, address);
+	}
+
+	public static Device createDevice(DeviceType type, String gateId, String address) {
+		return new Device(type, gateId, address);
 	}
 
 	/**
