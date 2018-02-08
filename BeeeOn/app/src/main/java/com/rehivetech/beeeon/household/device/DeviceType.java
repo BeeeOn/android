@@ -6,6 +6,7 @@ import com.rehivetech.beeeon.IIdentifier;
 import com.rehivetech.beeeon.R;
 import com.rehivetech.beeeon.household.device.values.BaseValue;
 import com.rehivetech.beeeon.household.device.values.EnumValue;
+import com.rehivetech.beeeon.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -313,6 +314,10 @@ public enum DeviceType implements IIdentifier {
 
 	public static DeviceType getUnknown() {
 		return TYPE_UNKNOWN;
+	}
+
+	public static DeviceType getById(String id) {
+		return Utils.getEnumFromId(DeviceType.class, id, TYPE_UNKNOWN);
 	}
 
 	public static DeviceType getDemoType(int i) {
