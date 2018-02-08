@@ -236,6 +236,92 @@ public final class Module implements IOrderIdentifier {
 		mStatus = status;
 	}
 
+	public static class Factory {
+		private final String mId;
+		private final int mTypeId;
+		private final Integer mSort;
+		private final Integer mGroupRes;
+		private final int mNameRes;
+		private final boolean mIsActuator;
+		private final List<Rule> mRules;
+		private final String mValue;
+		private BaseValue.Constraints mConstraints = null;
+		private List<EnumValue.Item> mEnumValues = null;
+
+		Factory(@NonNull String id, int typeId, @Nullable Integer sort,
+				@Nullable Integer groupRes, @Nullable Integer nameRes,
+				boolean isActuator, @Nullable List<Rule> rules,
+				@Nullable String defaultValue) {
+			mId = id;
+			mTypeId = typeId;
+			mSort = sort;
+			mGroupRes = groupRes;
+			mNameRes = nameRes;
+			mIsActuator = isActuator;
+			mRules = rules;
+			mValue = defaultValue;
+		}
+
+		Factory(@NonNull String id, int typeId, @Nullable Integer sort,
+				@Nullable Integer groupRes, @Nullable Integer nameRes,
+				boolean isActuator, @Nullable List<Rule> rules,
+				@Nullable BaseValue.Constraints constraints,
+				@Nullable String defaultValue) {
+			this(id, typeId, sort, groupRes, nameRes, isActuator, rules, defaultValue);
+			mConstraints = constraints;
+		}
+
+		Factory(@NonNull String id, int typeId, @Nullable Integer sort,
+				@Nullable Integer groupRes, @Nullable Integer nameRes,
+				boolean isActuator, @Nullable List<Rule> rules,
+				@Nullable List<EnumValue.Item> enumValues,
+				@Nullable String defaultValue) {
+			this(id, typeId, sort, groupRes, nameRes, isActuator, rules, defaultValue);
+			mEnumValues = enumValues;
+		}
+
+		public Module create(Device device) {
+			if (mConstraints != null) {
+				return new Module(
+					device,
+					mId,
+					mTypeId,
+					mSort,
+					mGroupRes,
+					mNameRes,
+					mIsActuator,
+					mRules,
+					mConstraints,
+					mValue);
+			}
+			else if (mEnumValues != null) {
+				return new Module(
+					device,
+					mId,
+					mTypeId,
+					mSort,
+					mGroupRes,
+					mNameRes,
+					mIsActuator,
+					mRules,
+					mEnumValues,
+					mValue);
+			}
+			else {
+				return new Module(
+					device,
+					mId,
+					mTypeId,
+					mSort,
+					mGroupRes,
+					mNameRes,
+					mIsActuator,
+					mRules,
+					mValue);
+			}
+		}
+	};
+
 	public static class Rule {
 		public final int value;
 		public final int[] hideModulesIds;
