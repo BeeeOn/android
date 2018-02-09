@@ -67,15 +67,14 @@ public final class Device implements IIdentifier {
 	 * @return Properly initialized new instance of Device.
 	 */
 	public static Device createDeviceByType(String typeId, String gateId, String address) {
-		DeviceType type = Utils.getEnumFromId(DeviceType.class, typeId, DeviceType.TYPE_UNKNOWN);
-		return new Device(type, gateId, address);
+		return new Device(DeviceType.getById(typeId), gateId, address);
 	}
 
 	/**
 	 * @return True if this device has unknown type, false otherwise.
 	 */
 	public boolean isUnknownType() {
-		return mType == DeviceType.TYPE_UNKNOWN;
+		return mType == DeviceType.getUnknown();
 	}
 
 	/**
