@@ -10,6 +10,7 @@ import com.rehivetech.beeeon.household.device.values.EnumValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -17,7 +18,9 @@ public class DeviceType implements IIdentifier {
 	private static DeviceType UNKNOWN = new DeviceType(
 		"", "???", R.string.device_type_unknown_device, R.string.device_type_unknown_manufacturer, new ArrayList<Module.Factory>());
 
-	private static DeviceType[] TYPES = {
+	private static HashMap<String, DeviceType> REGISTRY = new HashMap<>();
+
+	private static DeviceType[] DEMO_TYPES = {
 		UNKNOWN,
 	/** BEGIN OF GENERATED CONTENT **/
 	new DeviceType("0", "Pressure Sensor", R.string.devices__dev_0_name, R.string.devices__dev_0_vendor, Arrays.asList(
@@ -257,21 +260,31 @@ public class DeviceType implements IIdentifier {
 		return UNKNOWN;
 	}
 
+	public static boolean registerType(DeviceType type, boolean force) {
+		synchronized (REGISTRY) {
+			if (REGISTRY.containsKey(type.getId()) && !force)
+				return false;
+
+			REGISTRY.put(type.getId(), type);
+			return true;
+		}
+	}
+
 	public static DeviceType getById(String id) {
-		for (DeviceType type : TYPES) {
-			if (type.getId().equalsIgnoreCase(id))
-				return type;
+		synchronized (REGISTRY) {
+			if (REGISTRY.containsKey(id))
+				return REGISTRY.get(id);
 		}
 
-		return UNKNOWN;
+		return getUnknown();
 	}
 
 	public static DeviceType getDemoType(int i) {
-		return TYPES[1 + i];
+		return DEMO_TYPES[1 + i];
 	}
 
 	public static DeviceType getRandomDemoType(Random rand) {
 		// 1+ because we don't want unknown type, which is on beginning
-		return TYPES[1 + rand.nextInt(TYPES.length - 1)];
+		return DEMO_TYPES[1 + rand.nextInt(DEMO_TYPES.length - 1)];
 	}
 }

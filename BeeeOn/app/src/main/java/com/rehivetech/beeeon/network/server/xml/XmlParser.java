@@ -361,6 +361,7 @@ public class XmlParser {
 
 				if (!typeFinished) {
 					deviceType.setModuleFactory(modules);
+					DeviceType.registerType(deviceType, true);
 					Timber.d("learned new device type " + deviceType.getId());
 				}
 
