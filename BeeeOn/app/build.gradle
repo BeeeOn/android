@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 
-project.ext.set("versionName", "1.8.0")
+project.ext.set("versionName", "1.9.0")
 project.ext.set("supportLibVersion", "24.2.1")
 project.ext.set("playServicesVersion", "9.6.1")
 
@@ -36,7 +36,7 @@ android {
             signingConfig signingConfigs.debug
             versionNameSuffix " debug"
             applicationIdSuffix ".debug"
-            resValue "string", "app_name", "BeeeOn Debug"
+            resValue "string", "app_name", "BeeeOn Debug (legacy)"
         }
 
         release {
@@ -44,7 +44,7 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "app_name", "BeeeOn Beta"
+            resValue "string", "app_name", "BeeeOn Legacy"
         }
 
         presentation {
@@ -52,7 +52,7 @@ android {
             signingConfig signingConfigs.debug
             versionNameSuffix " demo"
             applicationIdSuffix ".debug"
-            resValue "string", "app_name", "BeeeOn Demo"
+            resValue "string", "app_name", "BeeeOn Demo (legacy)"
         }
     }
     productFlavors {
