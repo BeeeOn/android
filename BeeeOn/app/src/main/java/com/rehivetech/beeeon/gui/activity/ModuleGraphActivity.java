@@ -213,7 +213,7 @@ public class ModuleGraphActivity extends BaseApplicationActivity implements OnSh
 	private void updateActualValue() {
 		BaseValue value = Controller.getInstance(this).getDevicesModel().getDevice(mGateId, mDeviceId).getModuleById(mModuleId).getValue();
 		if (value instanceof EnumValue) {
-			mActValue.setText(((EnumValue) value).getStateStringResource());
+			mActValue.setText(((EnumValue) value).getState(this));
 
 		} else {
 			mActValue.setText(UnitsHelper.format(mUnitsHelper, value));

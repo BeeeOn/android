@@ -1,5 +1,6 @@
 package com.rehivetech.beeeon.gui.adapter.dashboard;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -436,7 +437,7 @@ public class DashboardAdapter extends RecyclerViewSelectableAdapter {
 			mIcon.setImageResource(module.getIconResource(IconResourceType.DARK));
 
 			if (module.getValue() instanceof EnumValue) {
-				mValue.setText(((EnumValue) module.getValue()).getStateStringResource());
+				mValue.setText(((EnumValue) module.getValue()).getState(mActivity));
 				mTrend.setVisibility(View.GONE);
 			} else {
 				mValue.setText(String.format("%s %s", unitsHelper.getStringValue(module.getValue()), unitsHelper.getStringUnit(module.getValue())));

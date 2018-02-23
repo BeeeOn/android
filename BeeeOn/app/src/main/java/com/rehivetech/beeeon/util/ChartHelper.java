@@ -120,7 +120,7 @@ final public class ChartHelper {
 			if (labels.size() > 2) {
 				int j = 1;
 				for (int i = labels.size() - 1; i > -1; i--) {
-					yLabels.append(String.format("%d. %s\n", j++, context.getString(labels.get(i).getStringResource())));
+					yLabels.append(String.format("%d. %s\n", j++, labels.get(i).getName(context)));
 				}
 			}
 
@@ -353,7 +353,7 @@ final public class ChartHelper {
 			return new YAxisValueFormatter() {
 				@Override
 				public String getFormattedValue(float value, YAxis yAxis) {
-					return context.getString(yLabels.get((int) value).getStringResource());
+					return yLabels.get((int) value).getName(context);
 				}
 			};
 		}

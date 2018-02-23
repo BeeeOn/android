@@ -1,5 +1,7 @@
 package com.rehivetech.beeeon.household.device.values;
 
+import android.content.Context;
+
 import android.support.annotation.NonNull;
 
 import com.rehivetech.beeeon.IconResourceType;
@@ -24,12 +26,19 @@ public class EnumValue extends BaseValue {
 	public static class Item {
 		private final int mId;
 		private final String mValue;
-		private final int mStringResource;
+		private Integer mStringResource;
+		private String mName;
 
 		public Item(int id, String value,  int stringResource) {
 			mId = id;
 			mValue = value;
 			mStringResource = stringResource;
+		}
+
+		public Item(int id, String value, String name) {
+			mId = id;
+			mValue = value;
+			mName = name;
 		}
 
 		public int getId() {
@@ -40,8 +49,11 @@ public class EnumValue extends BaseValue {
 			return mValue;
 		}
 
-		public int getStringResource() {
-			return mStringResource;
+		public String getName(Context context) {
+			if (mStringResource != null)
+				return context.getString(mStringResource);
+
+			return mName;
 		}
 	}
 
@@ -109,10 +121,10 @@ public class EnumValue extends BaseValue {
 	}
 
 	/**
-	 * @return Resource for human readable string representing active value
+	 * @return human readable string representing active value
 	 */
-	public int getStateStringResource() {
-		return mValue.getStringResource();
+	public String getState(Context context) {
+		return mValue.getName(context);
 	}
 
 	public List<Item> getEnumItems() {

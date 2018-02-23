@@ -179,7 +179,7 @@ public abstract class BaseDeviceDetailFragment extends BaseApplicationFragment i
 
 		List<String> namesList = new ArrayList<>();
 		for (EnumValue.Item item : items) {
-			namesList.add(getString(item.getStringResource()));
+			namesList.add(item.getName(mActivity));
 		}
 
 		ListDialogFragment

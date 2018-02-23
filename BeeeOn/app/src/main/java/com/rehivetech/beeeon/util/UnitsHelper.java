@@ -20,8 +20,7 @@ public class UnitsHelper {
 
 	public String getStringValue(BaseValue item, double value) {
 		if (item instanceof EnumValue) {
-			int resId = ((EnumValue) item).getItemByDoubleValue(value).getStringResource();
-			return mContext.getString(resId);
+			return ((EnumValue) item).getItemByDoubleValue(value).getName(mContext);
 		}
 
 		BaseUnit.Item to = item.getUnit().fromSettings(mPrefs);
@@ -31,8 +30,7 @@ public class UnitsHelper {
 
 	public String getStringValue(BaseValue item) {
 		if (item instanceof EnumValue) {
-			int resId = ((EnumValue) item).getStateStringResource();
-			return mContext.getString(resId);
+			return ((EnumValue) item).getState(mContext);
 		} else if (item instanceof UnknownValue) {
 			return item.getRawValue();
 		}
