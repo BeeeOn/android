@@ -23,7 +23,7 @@ public class DatabaseSeed implements Realm.Transaction {
 		Server devel = new Server(
 				Server.SERVER_ID_DEVEL,
 				R.string.server_development,
-				"ant-2.fit.vutbr.cz",
+				"antwork.fit.vutbr.cz",
 				8011
 		);
 		realm.copyToRealm(devel);

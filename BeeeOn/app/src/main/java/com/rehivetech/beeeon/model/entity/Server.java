@@ -27,10 +27,10 @@ public class Server extends RealmObject implements IIdentifier {
 
 	public static final long SERVER_ID_PRODUCTION = 1;
 	public static final long SERVER_ID_DEVEL = 2;
-	public static final int DEFAULT_PORT = 4565;
+	public static final int DEFAULT_PORT = 8011;
 
 	// default production server
-	public static final Server PRODUCTION_SERVER = new Server(SERVER_ID_PRODUCTION, R.string.server_production, "cloud.beeeon.com", DEFAULT_PORT);
+	public static final Server PRODUCTION_SERVER = new Server(SERVER_ID_PRODUCTION, R.string.server_production, "antwork.fit.vutbr.cz", DEFAULT_PORT);
 
 	@PrimaryKey
 	private long id;
