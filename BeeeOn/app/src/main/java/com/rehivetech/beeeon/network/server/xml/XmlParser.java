@@ -418,7 +418,12 @@ public class XmlParser {
 
 					// Parse values
 					Long dateMillis = Long.parseLong(parts[0]) * 1000;
-					Float value = Float.parseFloat(parts[1]);
+					Float value;
+
+					if (parts[1].equalsIgnoreCase("nan"))
+						value = Float.NaN;
+					else
+						value = Float.parseFloat(parts[1]);
 
 					if (!repeat.isEmpty() && !interval.isEmpty()) {
 						log.addValueInterval(dateMillis, value, Integer.parseInt(repeat), Integer.parseInt(interval));
